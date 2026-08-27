@@ -234,6 +234,8 @@ export function startPlayerTurn(state: GameState, playerId: string): GameState {
   if (state.activePlayerId !== playerId) return state
   return applyBaseHealthBonuses({
     ...state,
+    // 回合開始歸零本回合傷害累積（供「單回合最高傷害」戰績計算）。
+    damageDealtThisRound: 0,
     players: state.players.map((player) => player.id === playerId
       ? {
         ...player,

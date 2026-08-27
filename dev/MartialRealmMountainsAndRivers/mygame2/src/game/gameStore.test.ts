@@ -10,6 +10,8 @@ import { getMaxHealth, getMaxStamina, getMaxInnerPower } from './rules/playerSta
 import { getBaseMaxHealth, getPlayerMaxHealth, getBaseMaxBuildingMaterials, getResourceCollectionMaterialGain } from './rules/baseRules'
 import { getGlobalBuffMagnitudeForLevel } from './rules/globalBuffRules'
 import { formatItemBurstResult } from './actionResultFormatters'
+import { createEmptyRunStats } from './runStats'
+import { createCharacter } from './characterRoster'
 
 function makePlayer(overrides: Partial<CreatureState> = {}): CreatureState {
   const attributes = { armStrength: 8, constitution: 8, agility: 7, innerEnergy: 5, insight: 7 }
@@ -99,6 +101,106 @@ function makeGameState(overrides: Partial<GameState> = {}): GameState {
 
 beforeEach(() => {
   gameStore.resetForTest()
+})
+
+describe('局末殘卷結算防重（bug.md：讀檔時殘卷被重複計算）', () => {
+  function stubLocalStorage() {
+    const store = new Map<string, string>()
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => (store.has(key) ? store.get(key) ?? null : null),
+      setItem: (key: string, value: string) => { store.set(key, value) },
+      removeItem: (key: string) => { store.delete(key) },
+    })
+    return store
+  }
+
+  it('同一局二次 settle 冪等：第二次回傳 null', () => {
+    stubLocalStorage()
+    const character = createCharacter({ name: '冪等測試' })!
+    gameStore.startGame({ playerCount: 1 } as never, { id: character.id, attributeBonuses: { armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 } })
+    const first = gameStore.settleActiveCharacterRewards(createEmptyRunStats(), true, [])
+    expect(first).toBeDefined()
+    const second = gameStore.settleActiveCharacterRewards(createEmptyRunStats(), true, [])
+    expect(second).toBeNull()
+  })
+
+  it('restartGame 後可重新結算', () => {
+    stubLocalStorage()
+    const character = createCharacter({ name: '重開測試' })!
+    gameStore.startGame({ playerCount: 1 } as never, { id: character.id, attributeBonuses: { armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 } })
+    expect(gameStore.settleActiveCharacterRewards(createEmptyRunStats(), true, [])).toBeDefined()
+    gameStore.restartGame()
+    expect(gameStore.settleActiveCharacterRewards(createEmptyRunStats(), true, [])).toBeDefined()
+  })
+
+  it('載入局末存檔視為已結算：settle 回傳 null', () => {
+    const store = stubLocalStorage()
+    // 直接把局末狀態寫入主存檔（模擬「先前已結算又讀檔」）。
+    store.set('mygame2.game-save', JSON.stringify({
+      version: 1,
+      savedAt: new Date().toISOString(),
+      state: makeGameState({ gameWon: true }),
+      activeCharacterId: 'char-9',
+    }))
+    expect(gameStore.loadGame().ok).toBe(true)
+    expect(gameStore.getActiveCharacterId()).toBe('char-9')
+    expect(gameStore.settleActiveCharacterRewards(createEmptyRunStats(), true, [])).toBeNull()
+  })
+
+  it('載入進行中存檔不鎖結算，且還原 activeCharacterId', () => {
+    const store = stubLocalStorage()
+    store.set('mygame2.game-save.slot.2', JSON.stringify({
+      version: 1,
+      savedAt: new Date().toISOString(),
+      state: makeGameState(),
+      activeCharacterId: 'char-5',
+    }))
+    expect(gameStore.loadGameFromSlot(2).ok).toBe(true)
+    expect(gameStore.getActiveCharacterId()).toBe('char-5')
+    const character = createCharacter({ name: '進行中測試' })!
+    gameStore.setStateForTest(makeGameState())
+    gameStore.startGame({ playerCount: 1 } as never, { id: character.id, attributeBonuses: { armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 } })
+    expect(gameStore.settleActiveCharacterRewards(createEmptyRunStats(), true, [])).toBeDefined()
+  })
+
+  it('跨欄位去重（runId 登記制）：同 runId 的局只結算一次（V3）', () => {
+    const store = stubLocalStorage()
+    const character = createCharacter({ name: '跨欄位測試' })!
+    gameStore.startGame({ playerCount: 1 } as never, { id: character.id, attributeBonuses: { armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 } })
+    const runId = gameStore.getState().runId!
+    // 同一局的存檔複製到 slot 1 與 slot 2。
+    for (const slot of [1, 2]) {
+      store.set(`mygame2.game-save.slot.${slot}`, JSON.stringify({
+        version: 1,
+        savedAt: new Date().toISOString(),
+        state: makeGameState({ runId }),
+        activeCharacterId: character.id,
+      }))
+    }
+    // 從 slot 1 讀檔玩到結局 → 結算一次。
+    expect(gameStore.loadGameFromSlot(1).ok).toBe(true)
+    expect(gameStore.settleActiveCharacterRewards(createEmptyRunStats(), true, [])).toBeDefined()
+    // 從 slot 2 讀同一局 → 登記表命中，不再結算。
+    expect(gameStore.loadGameFromSlot(2).ok).toBe(true)
+    expect(gameStore.settleActiveCharacterRewards(createEmptyRunStats(), true, [])).toBeNull()
+  })
+
+  it('局末但 runId 未登記（pending）：讀檔後可補結算（V1 修復語意）', () => {
+    const store = stubLocalStorage()
+    const character = createCharacter({ name: '補結算測試' })!
+    // 模擬「勝利對話期間存檔」：局末狀態但尚未登記。
+    store.set('mygame2.game-save.slot.3', JSON.stringify({
+      version: 1,
+      savedAt: new Date().toISOString(),
+      state: makeGameState({ runId: 'run-pending', gameWon: true }),
+      activeCharacterId: character.id,
+    }))
+    expect(gameStore.loadGameFromSlot(3).ok).toBe(true)
+    expect(gameStore.settleActiveCharacterRewards(createEmptyRunStats(), true, [])).toBeDefined()
+    // 再讀一次同檔：已登記，不重算。
+    expect(gameStore.loadGameFromSlot(3).ok).toBe(true)
+    expect(gameStore.settleActiveCharacterRewards(createEmptyRunStats(), true, [])).toBeNull()
+  })
 })
 
 describe('AI 戰略命令與建設計畫', () => {

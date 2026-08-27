@@ -19,6 +19,7 @@ import { getCreatureInnerSkillId } from '../../game/rules/creatureBehaviorRules'
 import { getPlayerVisibleCellIds } from '../../game/rules/visibilityRules'
 import { createCharacterState } from '../../game/characterFactory'
 import { createEmptyRunStats } from '../../game/runStats'
+import { generateRunId } from '../../game/settledRuns'
 import { getExplorationEventDefinition } from '../../game/events/eventCatalog'
 import type { ScenarioDefinition, ScenarioEntityPlacement, CustomEventChoice } from '../editorTypes'
 
@@ -478,6 +479,7 @@ export function buildGameStateFromScenario(scenario: ScenarioDefinition): GameSt
     operation: { type: 'idle' },
     blockingModal: null,
     runStats: createEmptyRunStats(),
+    runId: generateRunId(),
     sharedWarehouse: [],
     sharedEquipmentWarehouse: [],
     aiOrders: [],

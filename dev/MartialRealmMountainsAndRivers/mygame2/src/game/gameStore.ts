@@ -145,6 +145,7 @@ import { learnSkillAtMartialHall as learnSkillAtMartialHallAction } from './acti
 import { learnSkillAtSectGate as learnSectGateSkillAction, practiceSkillAtSectGate as practiceSectGateSkillAction } from './actions/sectGateActions'
 import { clearRuin as clearRuinAction, reconstructRuin as reconstructRuinAction } from './actions/ruinActions'
 import { AUTO_SAVE_SLOT, getGameSaveSlots, loadGameState, loadGameStateFromSlot, saveGameState, saveGameStateToSlot, deleteGameStateFromSlot } from './gameSave'
+import { isRunSettled, markRunSettled } from './settledRuns'
 import { recordScenarioClearance } from './campaignClearance'
 import { createGameState as createWorldGameState, createDebugGameState as createWorldDebugGameState, createTestCampaignGameState as createWorldTestCampaignGameState } from './worldSetup'
 import {
@@ -160,7 +161,7 @@ import {
   getLearnableSkill,
 } from './lootFactory'
 import { runActionExecution, runActionOutcome } from './storeAdapters'
-import { recordMaxLevel } from './runStats'
+import { recordMaxLevel, recordDamageDealt } from './runStats'
 import { applyEndGameRewards } from './characterRoster'
 import { enqueueDialogue, skipAllDialogue } from './actions/dialogueActions'
 import { collectTriggeredDialogues } from './rules/dialogueTriggerRules'
@@ -234,6 +235,17 @@ const listeners = new Set<() => void>()
 let currentScenarioId: string | null = null
 /** 目前對局選用的名册角色 id；未選用（預設角色）為 null。 */
 let activeCharacterId: string | null = null
+/**
+ * 本局殘卷獎勵是否已結算（防重旗標）。
+ *
+ * 為何需要它：SystemOverlays 的結算 useEffect 只防「同一 mount 內」重複，
+ * 讀檔會讓元件重新 mount 並再次呼叫 settleActiveCharacterRewards；
+ * 若存檔恰為局末狀態（gameWon/gameOver = true），殘卷會被重複累加。
+ *
+ * 生命週期：startGame / restartGame 重置為 false；settle 成功後設為 true；
+ * 載入局末存檔時視為已結算（true），避免讀檔即重算。
+ */
+let rewardSettled = false
 
 /**
  * 暫存的敵人行動結果（回合結束觸發探索事件時延後執行）。
@@ -381,17 +393,42 @@ export const gameStore = {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
     activeCharacterId = selectedCharacter?.id ?? null
-    gameState = createGameState(lastGameSettings, selectedCharacter)
+    rewardSettled = false
+    gameState = { ...createGameState(lastGameSettings, selectedCharacter), activeCharacterId }
     listeners.forEach((listener) => listener())
   },
 
   /** 取得目前對局選用的名册角色 id；未選用為 null。 */
   getActiveCharacterId: () => activeCharacterId,
 
-  /** 局末回寫：將本局表現結算為卷並併入功法庫。 */
+  /**
+   * 局末回寫：將本局表現結算為卷並併入功法庫。同一局只結算一次（冪等）。
+   *
+   * 冪等檢查鏈（設計文件 scroll-reward-settlement-dedup-design.md §4.1）：
+   * 1. 未選用名册角色 → null
+   * 2. 模組旗標 rewardSettled（session 內快速路徑）→ null
+   * 3. runId 已在持久化登記表（跨 session 最終防線，解跨欄位重複領取）→ null
+   * 4. 通過 → 結算 + markRunSettled 落盤
+   */
   settleActiveCharacterRewards: (stats: RunStats, won: boolean, learnedSkillIds: string[]) => {
     if (!activeCharacterId) return null
-    return applyEndGameRewards(activeCharacterId, stats, won, learnedSkillIds)
+    if (rewardSettled) return null
+    const runId = gameState.runId
+    if (runId && isRunSettled(runId)) {
+      rewardSettled = true
+      return null
+    }
+    const result = applyEndGameRewards(activeCharacterId, stats, won, learnedSkillIds)
+    if (result) {
+      rewardSettled = true
+      if (runId) markRunSettled(runId)
+      // 結算發生在 GameOverModal 顯示後；此時原本的自動存檔仍是局末前狀態，
+      // 因此要把包含局末旗標與同一 runId 的最新狀態寫回自動存檔，
+      // 讓存檔摘要能顯示「已領取殘卷」，讀檔也能正確沿用防重登記。
+      // activeCharacterId 已隨 GameState 序列化，故不需再以參數傳入。
+      saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
+    }
+    return result
   },
 
   /**
@@ -474,14 +511,14 @@ export const gameStore = {
   },
 
   saveGame: (): ActionOutcome => {
-    const result = saveGameState(gameState)
+    const result = saveGameState(gameState, activeCharacterId)
     return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '儲存失敗。' }
   },
 
   getSaveSlots: () => getGameSaveSlots(),
 
   saveGameToSlot: (slot: number): ActionOutcome => {
-    const result = saveGameStateToSlot(gameState, slot)
+    const result = saveGameStateToSlot(gameState, slot, activeCharacterId)
     return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '儲存失敗。' }
   },
 
@@ -495,6 +532,15 @@ export const gameStore = {
       aiOrders: result.state.aiOrders ?? [],
       aiConstructionPlans: result.state.aiConstructionPlans ?? [],
     }
+    // 還原名册角色 id：優先取 GameState.activeCharacterId（隨存檔序列化），
+    // 舊存檔缺漏時回退到 payload 的 activeCharacterId（向下相容）。
+    activeCharacterId = gameState.activeCharacterId ?? result.activeCharacterId ?? null
+    // 以 runId 登記表判斷是否已結算；局末但尚未登記的存檔需允許補發殘卷。
+    // 舊存檔沒有 runId 時，沿用舊規則視為局末已結算，避免重複發放。
+    rewardSettled = Boolean(
+      (gameState.runId && isRunSettled(gameState.runId))
+      || (!gameState.runId && (gameState.gameWon || gameState.gameOver)),
+    )
     listeners.forEach((listener) => listener())
     return { ok: true }
   },
@@ -512,6 +558,15 @@ export const gameStore = {
       aiOrders: result.state.aiOrders ?? [],
       aiConstructionPlans: result.state.aiConstructionPlans ?? [],
     }
+    // 還原名册角色 id：優先從 GameState.activeCharacterId（隨存檔序列化），
+    // 舊存檔無此欄位時回退到 payload 的 activeCharacterId，避免結算回寫錯誤角色。
+    activeCharacterId = gameState.activeCharacterId ?? result.activeCharacterId ?? null
+    // 以 runId 登記表判斷是否已結算；局末但未 runId 的存檔需允許補發殘卷。
+    // 舊存檔沒有 runId 時，回退舊規則視為局末已結算，避免重複發放。
+    rewardSettled = Boolean(
+      (gameState.runId && isRunSettled(gameState.runId))
+      || (!gameState.runId && (gameState.gameWon || gameState.gameOver)),
+    )
     listeners.forEach((listener) => listener())
     return { ok: true }
   },
@@ -594,7 +649,9 @@ export const gameStore = {
   },
 
   loadDebugMap: () => {
-    gameState = createDebugGameState()
+    // Debug 地圖不綁定名册角色，清除並同步 state。
+    activeCharacterId = null
+    gameState = { ...createDebugGameState(), activeCharacterId: null }
     listeners.forEach((listener) => listener())
   },
 
@@ -602,7 +659,9 @@ export const gameStore = {
   startTestCampaign: () => {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
-    gameState = createTestCampaignGameState()
+    // 測試劇情不綁定名册角色，清除並同步 state。
+    activeCharacterId = null
+    gameState = { ...createTestCampaignGameState(), activeCharacterId: null }
     // 觸發開局（on-start）對話：收集符合的步驟並填入佇列（updateGameState 會自動顯示）。
     updateGameState((state) => {
       const steps = collectTriggeredDialogues(state, { type: 'on-start' })
@@ -631,7 +690,9 @@ export const gameStore = {
     }
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
-    gameState = buildGameStateFromScenario(scenario)
+    // 劇本模式不綁定名册角色，清除並同步 state。
+    activeCharacterId = null
+    gameState = { ...buildGameStateFromScenario(scenario), activeCharacterId: null }
     currentScenarioId = scenario.id
     // 觸發開局（on-start）對話與觸發器。
     updateGameState((state) => {
@@ -647,7 +708,9 @@ export const gameStore = {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
     currentScenarioId = null
-    gameState = createGameState(lastGameSettings)
+    rewardSettled = false
+    // 刻意沿用目前選用的名册角色（bug.md 記錄的設計），並同步寫入新 state。
+    gameState = { ...createGameState(lastGameSettings), activeCharacterId }
     listeners.forEach((listener) => listener())
   },
 
@@ -1482,7 +1545,8 @@ export const gameStore = {
       }
     })
     animateCreatureTurn({ ...scheduled, players: currentPlayers })
-    if (!gameState.gameOver) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
+    // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
+    if (!gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
   },
 
   movePlayer: (playerId: string, rowDelta: number, columnDelta: number) => {
@@ -1817,7 +1881,8 @@ export const gameStore = {
 
       // 統一死亡流程：血量歸零時由 applyTargetDefeat 移除目標（生物/巢穴）並處理勝利。
       const baseState: GameState = {
-        ...state,
+        // 元素爆發傷害計入「單回合最高傷害」戰績（僅人類玩家）。
+        ...(player.isAI ? state : recordDamageDealt(state, damage)),
         operation: { type: 'idle' },
         itemBurstPreview: null,
         creatures: targetType === 'creature'
@@ -2478,9 +2543,9 @@ export const gameStore = {
         animateCreatureTurn(scheduledCreatureTurn)
       }
     }
-    // 遊戲失敗的回合不自動保存，避免自動存檔直接停在失敗畫面。
+    // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
     // 觸發探索事件時，敵人行動尚未執行，改由 flushPendingCreatureTurn 結算後保存。
-    if (!triggeredEvent && !gameState.gameOver) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
+    if (!triggeredEvent && !gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
   },
 
   startPlayerTurn: (playerId: string) => {
@@ -2503,12 +2568,16 @@ export const gameStore = {
   resetForTest: () => {
     gameState = initialGameState
     lastGameSettings = { ...DEFAULT_GAME_SETTINGS }
+    activeCharacterId = null
+    rewardSettled = false
     listeners.forEach((listener) => listener())
   },
 
   /** 僅供測試使用：直接覆寫目前狀態。 */
   setStateForTest: (nextState: GameState) => {
     gameState = nextState
+    // 同步還原名册角色 id（若測試 state 有帶）。
+    activeCharacterId = nextState.activeCharacterId ?? null
     listeners.forEach((listener) => listener())
   },
 }

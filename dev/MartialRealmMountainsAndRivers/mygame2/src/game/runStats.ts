@@ -14,6 +14,7 @@ export function createEmptyRunStats(): RunStats {
     defenseStructuresBuilt: 0,
     maxNormalAttackDamage: 0,
     maxExternalSkillDamage: 0,
+    maxDamageInSingleRound: 0,
     maxLevelReached: 0,
     attributesAtMaxLevel: null,
     moneySpent: 0,
@@ -49,10 +50,38 @@ export function bumpRunStatMax(
   key: 'maxNormalAttackDamage' | 'maxExternalSkillDamage' | 'maxLevelReached',
   value: number,
 ): GameState {
+  if (!Number.isFinite(value)) return state
   const stats = getRunStats(state)
+  const previous = Number.isFinite(stats[key]) ? stats[key] : 0
   return withRunStats(state, {
     ...stats,
-    [key]: Math.max(stats[key], value),
+    [key]: Math.max(previous, value),
+  })
+}
+
+/**
+ * 累加本回合傷害並刷新「單回合最高傷害」峰值。
+ *
+ * 設計：回合內傷害累積在 GameState.damageDealtThisRound（隨存檔序列化，
+ * 讀檔後仍能正確續算），回合開始時歸零；每次造成傷害時累加並以 Math.max
+ * 刷新 maxDamageInSingleRound。
+ */
+export function recordDamageDealt(state: GameState, amount: number): GameState {
+  if (!Number.isFinite(amount) || amount <= 0) return state
+  const previousThisRound = typeof state.damageDealtThisRound === 'number' && Number.isFinite(state.damageDealtThisRound)
+    ? state.damageDealtThisRound
+    : 0
+  const dealtThisRound = previousThisRound + amount
+  const stats = getRunStats(state)
+  const previousPeak = typeof stats.maxDamageInSingleRound === 'number' && Number.isFinite(stats.maxDamageInSingleRound)
+    ? stats.maxDamageInSingleRound
+    : 0
+  return withRunStats({
+    ...state,
+    damageDealtThisRound: dealtThisRound,
+  }, {
+    ...stats,
+    maxDamageInSingleRound: Math.max(previousPeak, dealtThisRound),
   })
 }
 

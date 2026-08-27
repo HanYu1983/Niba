@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getGameSaveSlots, loadGameState, loadGameStateFromSlot, saveGameState, saveGameStateToSlot } from './gameSave'
+import { markRunSettled } from './settledRuns'
 import type { GameState } from './types'
 
 const state = { round: 7 } as GameState
@@ -69,5 +70,32 @@ describe('gameSave', () => {
     expect(saveGameStateToSlot(state, 3).ok).toBe(true)
     expect(loadGameStateFromSlot(3)).toMatchObject({ ok: true, state: { round: 7 } })
     expect(loadGameStateFromSlot(2).ok).toBe(false)
+  })
+
+  it('摘要三態判定：runId 已登記為 settled、局末未登記為 pending、進行中為 in-progress', () => {
+    const store = new Map<string, string>()
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => (store.has(key) ? store.get(key) ?? null : null),
+      setItem: (key: string, value: string) => { store.set(key, value) },
+      removeItem: (key: string) => { store.delete(key) },
+    })
+    // slot 1：有 runId、已登記 → settled
+    saveGameStateToSlot({ ...state, runId: 'run-a' } as GameState, 1)
+    markRunSettled('run-a')
+    // slot 2：有 runId、局末未登記 → pending
+    saveGameStateToSlot({ ...state, runId: 'run-b', gameWon: true } as GameState, 2)
+    // slot 3：有 runId、進行中 → in-progress
+    saveGameStateToSlot({ ...state, runId: 'run-c' } as GameState, 3)
+    // slot 4：無 runId（舊存檔）、局末 → settled（退回推斷）
+    saveGameStateToSlot({ ...state, gameOver: true } as GameState, 4)
+    // slot 5：無 runId、非局末 → in-progress
+    saveGameStateToSlot(state, 5)
+
+    const slots = getGameSaveSlots()
+    expect(slots.find((entry) => entry.slot === 1)?.rewardStatus).toBe('settled')
+    expect(slots.find((entry) => entry.slot === 2)?.rewardStatus).toBe('pending')
+    expect(slots.find((entry) => entry.slot === 3)?.rewardStatus).toBe('in-progress')
+    expect(slots.find((entry) => entry.slot === 4)?.rewardStatus).toBe('settled')
+    expect(slots.find((entry) => entry.slot === 5)?.rewardStatus).toBe('in-progress')
   })
 })
