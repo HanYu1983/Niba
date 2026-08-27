@@ -9,8 +9,8 @@ type GameOverModalProps = {
   won?: boolean
   reason?: 'all-players-defeated' | 'any-base-destroyed'
   record?: BattleRecord
-  /** 本局結算獲得的武學殘卷（null 表示未選用名册角色）。 */
-  scrollReward?: number | null
+  /** 本局結算獲得的武學殘卷（null 表示未選用名册角色；'skipped' 表示此局已領取過）。 */
+  scrollReward?: number | 'skipped' | null
   onRestart: () => void
 }
 
@@ -34,7 +34,13 @@ function GameOverModal({ open, won = false, reason, record, scrollReward, onRest
           {won ? '玩家成功清除地圖上的所有威脅，本局冒險勝利！' : anyBaseDestroyed ? '有一個據點被摧毀，本局冒險結束。' : 'Creature 已消滅所有玩家，本局冒險結束。'}
         </Typography.Paragraph>
 
-        {scrollReward != null && (
+        {scrollReward === 'skipped' && (
+          <Flex justify="center" align="center" style={{ border: '1px solid #666', borderRadius: 12, padding: '12px' }}>
+            <Typography.Text type="secondary">此局已領取過武學殘卷獎勵。</Typography.Text>
+          </Flex>
+        )}
+
+        {typeof scrollReward === 'number' && (
           <Flex
             justify="center"
             align="center"

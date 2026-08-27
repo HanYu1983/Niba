@@ -33,6 +33,7 @@ import { pickRandom, createSeededRandom } from './rules/randomRules'
 import { createExplorationEventsFromCatalog } from './events/eventSpawner'
 import { DEFAULT_GAME_SETTINGS } from './gameSettings'
 import { createEmptyRunStats } from './runStats'
+import { generateRunId } from './settledRuns'
 import { buildGameStateFromScenario } from '../editor/rules/scenarioCompiler'
 import { campaignScenarioCatalog } from './catalogs/campaignScenarioCatalog'
 
@@ -157,6 +158,7 @@ export function createGameState(
     operation: { type: 'idle' },
     blockingModal: null,
     runStats: createEmptyRunStats(),
+    runId: generateRunId(),
     sharedWarehouse: [],
     sharedEquipmentWarehouse: [],
     aiOrders,
@@ -474,6 +476,7 @@ export function createPrologueGameState(): GameState {
     operation: { type: 'idle' },
     blockingModal: null,
     runStats: createEmptyRunStats(),
+    runId: generateRunId(),
     sharedWarehouse: [],
     sharedEquipmentWarehouse: [],
     aiOrders: [],

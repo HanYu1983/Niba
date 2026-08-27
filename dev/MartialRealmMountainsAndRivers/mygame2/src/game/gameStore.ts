@@ -145,6 +145,7 @@ import { learnSkillAtMartialHall as learnSkillAtMartialHallAction } from './acti
 import { learnSkillAtSectGate as learnSectGateSkillAction, practiceSkillAtSectGate as practiceSectGateSkillAction } from './actions/sectGateActions'
 import { clearRuin as clearRuinAction, reconstructRuin as reconstructRuinAction } from './actions/ruinActions'
 import { AUTO_SAVE_SLOT, getGameSaveSlots, loadGameState, loadGameStateFromSlot, saveGameState, saveGameStateToSlot, deleteGameStateFromSlot } from './gameSave'
+import { isRunSettled, markRunSettled } from './settledRuns'
 import { recordScenarioClearance } from './campaignClearance'
 import { createGameState as createWorldGameState, createDebugGameState as createWorldDebugGameState, createTestCampaignGameState as createWorldTestCampaignGameState } from './worldSetup'
 import {
@@ -234,6 +235,17 @@ const listeners = new Set<() => void>()
 let currentScenarioId: string | null = null
 /** 目前對局選用的名册角色 id；未選用（預設角色）為 null。 */
 let activeCharacterId: string | null = null
+/**
+ * 本局殘卷獎勵是否已結算（防重旗標）。
+ *
+ * 為何需要它：SystemOverlays 的結算 useEffect 只防「同一 mount 內」重複，
+ * 讀檔會讓元件重新 mount 並再次呼叫 settleActiveCharacterRewards；
+ * 若存檔恰為局末狀態（gameWon/gameOver = true），殘卷會被重複累加。
+ *
+ * 生命週期：startGame / restartGame 重置為 false；settle 成功後設為 true；
+ * 載入局末存檔時視為已結算（true），避免讀檔即重算。
+ */
+let rewardSettled = false
 
 /**
  * 暫存的敵人行動結果（回合結束觸發探索事件時延後執行）。
@@ -381,6 +393,7 @@ export const gameStore = {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
     activeCharacterId = selectedCharacter?.id ?? null
+    rewardSettled = false
     gameState = createGameState(lastGameSettings, selectedCharacter)
     listeners.forEach((listener) => listener())
   },
@@ -388,10 +401,27 @@ export const gameStore = {
   /** 取得目前對局選用的名册角色 id；未選用為 null。 */
   getActiveCharacterId: () => activeCharacterId,
 
-  /** 局末回寫：將本局表現結算為卷並併入功法庫。 */
+  /**
+   * 局末回寫：將本局表現結算為卷並併入功法庫。同一局只結算一次（冪等）。
+   *
+   * 冪等檢查鏈（設計文件 scroll-reward-settlement-dedup-design.md §4.1）：
+   * 1. 未選用名册角色 → null
+   * 2. 模組旗標 rewardSettled（session 內快速路徑）→ null
+   * 3. runId 已在持久化登記表（跨 session 最終防線，解跨欄位重複領取）→ null
+   * 4. 通過 → 結算 + markRunSettled 落盤
+   */
   settleActiveCharacterRewards: (stats: RunStats, won: boolean, learnedSkillIds: string[]) => {
     if (!activeCharacterId) return null
-    return applyEndGameRewards(activeCharacterId, stats, won, learnedSkillIds)
+    if (rewardSettled) return null
+    const runId = gameState.runId
+    if (runId && isRunSettled(runId)) {
+      rewardSettled = true
+      return null
+    }
+    rewardSettled = true
+    const result = applyEndGameRewards(activeCharacterId, stats, won, learnedSkillIds)
+    if (result && runId) markRunSettled(runId)
+    return result
   },
 
   /**
@@ -474,14 +504,14 @@ export const gameStore = {
   },
 
   saveGame: (): ActionOutcome => {
-    const result = saveGameState(gameState)
+    const result = saveGameState(gameState, activeCharacterId)
     return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '儲存失敗。' }
   },
 
   getSaveSlots: () => getGameSaveSlots(),
 
   saveGameToSlot: (slot: number): ActionOutcome => {
-    const result = saveGameStateToSlot(gameState, slot)
+    const result = saveGameStateToSlot(gameState, slot, activeCharacterId)
     return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '儲存失敗。' }
   },
 
@@ -495,6 +525,10 @@ export const gameStore = {
       aiOrders: result.state.aiOrders ?? [],
       aiConstructionPlans: result.state.aiConstructionPlans ?? [],
     }
+    // 還原名册角色 id：避免局末結算回寫到錯誤角色（bug.md 殘卷重複計算）。
+    activeCharacterId = result.activeCharacterId
+    // 載入局末存檔視為已結算：SystemOverlays 重新 mount 時不得重算殘卷。
+    rewardSettled = gameState.gameWon === true || gameState.gameOver === true
     listeners.forEach((listener) => listener())
     return { ok: true }
   },
@@ -512,6 +546,10 @@ export const gameStore = {
       aiOrders: result.state.aiOrders ?? [],
       aiConstructionPlans: result.state.aiConstructionPlans ?? [],
     }
+    // 還原名册角色 id：避免局末結算回寫到錯誤角色（bug.md 殘卷重複計算）。
+    activeCharacterId = result.activeCharacterId
+    // 載入局末存檔視為已結算：SystemOverlays 重新 mount 時不得重算殘卷。
+    rewardSettled = gameState.gameWon === true || gameState.gameOver === true
     listeners.forEach((listener) => listener())
     return { ok: true }
   },
@@ -647,6 +685,7 @@ export const gameStore = {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
     currentScenarioId = null
+    rewardSettled = false
     gameState = createGameState(lastGameSettings)
     listeners.forEach((listener) => listener())
   },
@@ -1482,7 +1521,8 @@ export const gameStore = {
       }
     })
     animateCreatureTurn({ ...scheduled, players: currentPlayers })
-    if (!gameState.gameOver) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
+    // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
+    if (!gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
   },
 
   movePlayer: (playerId: string, rowDelta: number, columnDelta: number) => {
@@ -2474,9 +2514,9 @@ export const gameStore = {
         animateCreatureTurn(scheduledCreatureTurn)
       }
     }
-    // 遊戲失敗的回合不自動保存，避免自動存檔直接停在失敗畫面。
+    // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
     // 觸發探索事件時，敵人行動尚未執行，改由 flushPendingCreatureTurn 結算後保存。
-    if (!triggeredEvent && !gameState.gameOver) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
+    if (!triggeredEvent && !gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
   },
 
   startPlayerTurn: (playerId: string) => {
@@ -2499,6 +2539,7 @@ export const gameStore = {
   resetForTest: () => {
     gameState = initialGameState
     lastGameSettings = { ...DEFAULT_GAME_SETTINGS }
+    rewardSettled = false
     listeners.forEach((listener) => listener())
   },
 

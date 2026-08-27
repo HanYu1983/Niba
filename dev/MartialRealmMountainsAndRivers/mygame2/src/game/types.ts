@@ -981,6 +981,8 @@ export type GameState = {
   gameOver?: boolean
   gameOverReason?: 'all-players-defeated' | 'any-base-destroyed'
   gameWon?: boolean
+  /** 本局唯一識別（startGame/restartGame/loadScenario 時產生），隨存檔序列化；供殘卷結算跨 session 去重。 */
+  runId?: string
   /** 本局累積戰績；由各行動模組累加，供結局彈窗結算顯示。 */
   runStats?: RunStats
   /** 劇情模式運行狀態；沙盒模式不設定此欄位。 */
