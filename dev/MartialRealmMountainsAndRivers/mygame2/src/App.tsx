@@ -255,8 +255,8 @@ function App() {
     },
   })
 
-  const startGame = (settings: GameSettings, selectedCharacter?: PersistentCharacter) => {
-    gameStore.startGame(settings, selectedCharacter)
+  const startGame = (settings: GameSettings, selectedCharacters?: (PersistentCharacter | undefined)[]) => {
+    gameStore.startGame(settings, selectedCharacters?.map((c) => c ?? null))
     setScreen('game')
     trackEvent('Gameplay', 'game_start', 'quick_start')
   }
