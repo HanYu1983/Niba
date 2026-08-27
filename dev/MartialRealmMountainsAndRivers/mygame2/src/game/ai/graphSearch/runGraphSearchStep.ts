@@ -9,6 +9,7 @@ const MAX_DEPTH = 3
 /**
  * V3 圖搜索貪婪演算法入口函數。
  * 建立根節點 → 搜索最佳路徑 → 提取行動序列。
+ * 不產出 end-turn 行動：無可用行動時回傳空序列＋ exitReason，由 runStep／scheduler 結束回合。
  */
 export function runGraphSearchStep(
   state: GameState,

@@ -4,7 +4,6 @@ import type { AiNode, AiEdge } from './types'
 import { AiNodeImpl } from './AiNodeImpl'
 import { executePure } from './executePure'
 import { getTierScore, canKillThisTurn } from './scoring'
-import { validateAiAction } from '../validation/validateAiAction'
 import { getAiActionStaminaCost } from '../../rules/actionCostRules'
 import { listHostileActors, getHostileActorPosition } from '../perception/targetDiscovery'
 import { collectReachableCells } from '../perception/reachablePositions'
@@ -19,20 +18,6 @@ function makeActorRef(playerId: string): AiActorRef {
 
 function manhattan(a: Position, b: Position): number {
   return Math.abs(a.row - b.row) + Math.abs(a.column - b.column)
-}
-
-/** Tier 1: 結束回合（必定可行）。 */
-function generateEndTurn(node: AiNode): AiEdge[] {
-  const playerId = node.state.players.find(
-    (p) => p.id === (node.action?.actor.id ?? node.state.activePlayerId),
-  )?.id ?? node.state.activePlayerId
-  const actor = makeActorRef(playerId)
-  const action: AiAction = { type: 'end-turn', actor, reason: '無可行動，結束回合' }
-  const cost = 0
-  const validation = validateAiAction(node.state, action)
-  if (!validation.valid) return []
-  const childNode = new AiNodeImpl(node.state, action, node, cost, node.depth + 1, node.remainingStamina)
-  return [{ node: childNode, action, score: getTierScore(1), cost }]
 }
 
 /** Tier 5: 撤退（血量過低）。 */
@@ -310,7 +295,6 @@ export function getAdjacentNodes(
     ...generateMoveToEnemy(node, dependencies),    // Tier 4
     ...generateCollectResource(node, dependencies),// Tier 3
     ...generateExplore(node, dependencies),        // Tier 2
-    ...generateEndTurn(node),                      // Tier 1
   ]
 
   // 按分數降序排列，取前 MAX_BRANCHES 個

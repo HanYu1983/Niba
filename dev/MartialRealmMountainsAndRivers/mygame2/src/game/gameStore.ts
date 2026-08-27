@@ -2462,6 +2462,10 @@ export const gameStore = {
       }
     }
 
+    // ── 出口邏輯 ──────────────────────────────────────────────
+    // 圖搜索不再把 end-turn 當行動執行。迴圈結束後只走兩個出口：
+    // - 無 exitReason（體力耗盡／迴圈上限）：此處 endPlayerTurn，ok:true（scheduler 不重複結束）
+    // - 有 exitReason（無可行動／驗證失敗等）：ok:false，由 scheduler.endTurn 結束回合
     if (!exitReason) {
       const endAction = { type: 'end-turn' as const, actor, reason: `圖搜索迴圈結束（${loopCount} 步）` }
       gameStore.endPlayerTurn(playerId)
