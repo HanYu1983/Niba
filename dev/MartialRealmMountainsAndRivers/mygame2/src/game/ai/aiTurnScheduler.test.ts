@@ -17,6 +17,7 @@ describe('aiTurnScheduler', () => {
       constructionSteps: [] as string[],
       fuzzySteps: [] as string[],
       decisionTreeSteps: [] as string[],
+      graphSearchSteps: [] as string[],
       endedTurns: [] as string[],
       stepFailures: [] as { actorId: string; reason: string }[],
     }
@@ -40,6 +41,10 @@ describe('aiTurnScheduler', () => {
       },
       runDecisionTreeStep: (actorId) => {
         calls.decisionTreeSteps.push(actorId)
+        return { ok: true }
+      },
+      runGraphSearchStep: (actorId) => {
+        calls.graphSearchSteps.push(actorId)
         return { ok: true }
       },
       endTurn: (actorId) => {
