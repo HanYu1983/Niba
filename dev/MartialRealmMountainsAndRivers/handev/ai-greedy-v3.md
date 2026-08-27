@@ -319,7 +319,8 @@ getAdjacentNodes(): AiEdge[] {
 
 **體力計算**：統一由 `getAiActionStaminaCost(state, action)` 處理（見重構文件 `refactor-validate-stamina.md` §2.1）。  
 此函數接受 `GameState` + `AiAction`，回傳正確的體力消耗：
-- `move`：從 `state.players` 取 player.position，算 manhattan 距離 × 2
+- `move`（相鄰格）：`getTerrainStaminaCost(destTerrain, player)` — 精確計算，含 buff 覆寫
+- `move`（非相鄰格）：`manhattan × 2` — 估算值
 - `attack`：5
 - `build` / `defense-build`：3
 - `collect`：2（resource）/ 0（item）

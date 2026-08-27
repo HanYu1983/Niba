@@ -51,13 +51,13 @@ use-facility, defense-build, buy-item
 
 ```typescript
 import type { AiAction } from '../ai/aiAction'
-
-const MOVEMENT_STAMINA_PER_TILE = 2
+import { getTerrainStaminaCost } from '../rules/playerDerivedRules'
 
 /**
  * 從 AiAction + GameState 計算體力消耗。validateAiAction 和 V3 search 共用此函數。
  *
- * - move：從 player.position 到 action.destination 計算格數 × 2
+ * - move（相鄰格）：用 getTerrainStaminaCost 精確計算目的地地形消耗
+ * - move（非相鄰格）：manhattan 距離 × 平均地形成本（估算）
  * - 其他 action：查 ACTION_STAMINA_COSTS
  */
 export function getAiActionStaminaCost(state: GameState, action: AiAction): number {
@@ -67,7 +67,19 @@ export function getAiActionStaminaCost(state: GameState, action: AiAction): numb
       if (!player) return Infinity  // 玩家不存在，視為不可行
       const dist = Math.abs(player.position.row - action.destination.row)
                  + Math.abs(player.position.column - action.destination.column)
-      return dist * MOVEMENT_STAMINA_PER_TILE
+
+      // 相鄰格：精確計算目的地地形消耗（含 buff 覆寫）
+      if (dist <= 1) {
+        const destCell = state.map.cells.find(
+          (c) => c.row === action.destination.row && c.column === action.destination.column,
+        )
+        if (!destCell) return Infinity  // 目的地不存在
+        return getTerrainStaminaCost(destCell.terrain, player)
+      }
+
+      // 非相鄰格：估算 = 距離 × 平均地形成本（平原 2 為基準）
+      const AVG_TERRAIN_COST = 2
+      return dist * AVG_TERRAIN_COST
     }
     case 'attack':        return ACTION_STAMINA_COSTS.attack          // 5
     case 'collect':       return action.target.kind === 'item'
@@ -131,7 +143,8 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
 
 | AiAction type | 計算方式 | 體力 | 備註 |
 |---|---|---|---|
-| `move` | `dist × 2`（manhattan） | 動態 | 從 GameState 取 player.position |
+| `move`（相鄰格） | `getTerrainStaminaCost(destTerrain, player)` | 精確 | 含 buff 覆寫（破壁、疾行等） |
+| `move`（非相鄰） | `manhattan × 2` | 估算 | 平原基準，實際由 Dijkstra 決定 |
 | `attack` | `ACTION_STAMINA_COSTS.attack` | 5 | |
 | `collect` | `collectResource` / `collectItem` | 2 / 0 | 依 target.kind |
 | `build` | `ACTION_STAMINA_COSTS.build` | 3 | |
