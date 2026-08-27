@@ -74,6 +74,7 @@ function GameOverModal({ open, won = false, reason, record, scrollReward, onRest
               { key: 'nests', label: '摧毀巢穴', children: stats?.nestsDestroyed ?? 0 },
               { key: 'maxNormal', label: '最高普攻傷害', children: stats?.maxNormalAttackDamage ?? 0 },
               { key: 'maxExternal', label: '最高外功傷害', children: stats?.maxExternalSkillDamage ?? 0 },
+              { key: 'maxRoundDamage', label: '單回合最高傷害', children: stats?.maxDamageInSingleRound ?? 0 },
               { key: 'built', label: '建造建築', children: stats?.buildingsBuilt ?? 0 },
               { key: 'upgraded', label: '升級建築', children: stats?.buildingsUpgraded ?? 0 },
               { key: 'defense', label: '建造防禦設施', children: stats?.defenseStructuresBuilt ?? 0 },

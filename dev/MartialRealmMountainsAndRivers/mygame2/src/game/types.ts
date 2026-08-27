@@ -924,6 +924,8 @@ export type RunStats = {
   defenseStructuresBuilt: number
   maxNormalAttackDamage: number
   maxExternalSkillDamage: number
+  /** 單回合最高傷害：人類玩家在單一回內行造成的總傷害（含普攻/外功/元素爆發，跨目標累加）。 */
+  maxDamageInSingleRound: number
   maxLevelReached: number
   attributesAtMaxLevel: PlayerAttributes | null
   moneySpent: number
@@ -983,6 +985,8 @@ export type GameState = {
   gameWon?: boolean
   /** 本局唯一識別（startGame/restartGame/loadScenario 時產生），隨存檔序列化；供殘卷結算跨 session 去重。 */
   runId?: string
+  /** 人類玩家本回合已造成的傷害累積（供「單回合最高傷害」戰績計算）；回合開始時歸零。 */
+  damageDealtThisRound?: number
   /** 本局累積戰績；由各行動模組累加，供結局彈窗結算顯示。 */
   runStats?: RunStats
   /** 劇情模式運行狀態；沙盒模式不設定此欄位。 */

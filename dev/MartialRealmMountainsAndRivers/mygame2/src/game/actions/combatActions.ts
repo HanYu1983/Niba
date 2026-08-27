@@ -24,7 +24,7 @@ import { defaultRandomSource, rollChance, type RandomSource } from '../rules/ran
 import { getFunctionalSkillBuffOverrides } from '../rules/functionalSkillScaling'
 import { getGlobalSkillExperienceMultiplier } from '../rules/globalBuffRules'
 import { getFunctionalSkillBuffIds } from '../catalogs/functionalSkillRegistry'
-import { bumpRunStatMax, incrementRunStat } from '../runStats'
+import { bumpRunStatMax, incrementRunStat, recordDamageDealt } from '../runStats'
 import { getTerrainAtPosition, getTerrainResonanceDamageMultiplier, getTerrainResonanceInnerPowerDiscount, getTerrainResonanceLabel, isTripleResonance } from '../rules/terrainCombatRules'
 import { collectTriggeredDialogues, type DialogueTrigger } from '../rules/dialogueTriggerRules'
 import { enqueueDialogue } from './dialogueActions'
@@ -333,7 +333,13 @@ function applyCombatHitState(
   const withDamagePeak = options.externalSkillId
     ? bumpRunStatMax(nextState, 'maxExternalSkillDamage', damage)
     : bumpRunStatMax(nextState, 'maxNormalAttackDamage', damage)
-  return applyTargetDefeat(withDamagePeak, targetType, targetId, nextHealth)
+  // 累加本回合傷害並刷新「單回合最高傷害」峰值（僅人類玩家）。
+  return applyTargetDefeat(
+    (attacker.isAI ? withDamagePeak : recordDamageDealt(withDamagePeak, damage)),
+    targetType,
+    targetId,
+    nextHealth,
+  )
 }
 
 export function executeExternalDamage(

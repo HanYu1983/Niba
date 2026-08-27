@@ -161,7 +161,7 @@ import {
   getLearnableSkill,
 } from './lootFactory'
 import { runActionExecution, runActionOutcome } from './storeAdapters'
-import { recordMaxLevel } from './runStats'
+import { recordMaxLevel, recordDamageDealt } from './runStats'
 import { applyEndGameRewards } from './characterRoster'
 import { enqueueDialogue, skipAllDialogue } from './actions/dialogueActions'
 import { collectTriggeredDialogues } from './rules/dialogueTriggerRules'
@@ -1857,7 +1857,8 @@ export const gameStore = {
 
       // 統一死亡流程：血量歸零時由 applyTargetDefeat 移除目標（生物/巢穴）並處理勝利。
       const baseState: GameState = {
-        ...state,
+        // 元素爆發傷害計入「單回合最高傷害」戰績（僅人類玩家）。
+        ...(player.isAI ? state : recordDamageDealt(state, damage)),
         operation: { type: 'idle' },
         itemBurstPreview: null,
         creatures: targetType === 'creature'
