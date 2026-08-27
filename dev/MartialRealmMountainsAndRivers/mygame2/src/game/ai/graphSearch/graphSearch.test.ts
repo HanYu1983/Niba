@@ -119,19 +119,23 @@ describe('scoring', () => {
 })
 
 describe('runGraphSearchStep', () => {
-  it('stamina 0 回無行動', () => {
+  it('stamina 0 回無行動且結束回合', () => {
     const state = makeState()
     state.players[0].stamina = 0
     const result = runGraphSearchStep(state, 'ai-1', deps)
     expect(result.actions).toEqual([])
+    expect(result.endTurn).toBe(true)
   })
 
-  it('無威脅時回退探索或結束回合', () => {
+  it('無威脅時回退探索或直接結束回合', () => {
     const state = makeState()
     state.map.cells = state.map.cells.map((c) => ({ ...c, terrain: c.terrain }))
     const result = runGraphSearchStep(state, 'ai-1', deps)
-    expect(result.actions.length).toBeGreaterThan(0)
-    expect(['move', 'end-turn']).toContain(result.actions[0].type)
+    if (result.actions.length > 0) {
+      expect(result.actions[0].type).toBe('move')
+    } else {
+      expect(result.endTurn).toBe(true)
+    }
   })
 
   it('鄰近擊殺目標時優先攻擊', () => {

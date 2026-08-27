@@ -21,6 +21,19 @@ function manhattan(a: Position, b: Position): number {
   return Math.abs(a.row - b.row) + Math.abs(a.column - b.column)
 }
 
+/** 收集目前節點路徑上所有 move 的目的地（含節點自身已有行動），用於避免重複移動。 */
+function visitedMovePositions(node: AiNode): Set<string> {
+  const visited = new Set<string>()
+  let current: AiNode | null = node
+  while (current !== null) {
+    if (current.action && current.action.type === 'move') {
+      visited.add(`${current.action.destination.row}-${current.action.destination.column}`)
+    }
+    current = current.parent
+  }
+  return visited
+}
+
 /** Tier 1: 結束回合（必定可行）。 */
 function generateEndTurn(node: AiNode): AiEdge[] {
   const playerId = node.state.players.find(
@@ -47,10 +60,13 @@ function generateRetreat(node: AiNode, dependencies: ExecuteAiActionDependencies
 
   const reachable = collectReachableCells(node.state, player)
   const threatPositions = threats.map(getHostileActorPosition)
+  const visited = visitedMovePositions(node)
+  visited.add(`${player.position.row}-${player.position.column}`) // 原地不算撤退
 
   // 找離所有威脅最遠的可达格
   let bestCell: { cellId: string; position: Position; dist: number } | null = null
   for (const cell of reachable) {
+    if (visited.has(cell.cellId)) continue
     const minDist = Math.min(...threatPositions.map((tp) => manhattan(cell.position, tp)))
     if (minDist > 0 && (!bestCell || minDist > bestCell.dist)) {
       bestCell = { cellId: cell.cellId, position: cell.position, dist: minDist }
@@ -195,6 +211,8 @@ function generateMoveToEnemy(node: AiNode, dependencies: ExecuteAiActionDependen
 
   const threats = listHostileActors(node.state)
   const reachable = collectReachableCells(node.state, player)
+  const visited = visitedMovePositions(node)
+  visited.add(`${player.position.row}-${player.position.column}`)
   const results: AiEdge[] = []
 
   for (const threat of threats) {
@@ -205,6 +223,7 @@ function generateMoveToEnemy(node: AiNode, dependencies: ExecuteAiActionDependen
     // 找離敵人最近的可达格
     let bestCell: { position: Position; dist: number } | null = null
     for (const cell of reachable) {
+      if (visited.has(cell.cellId)) continue
       const cellDist = manhattan(cell.position, pos)
       if (cellDist < dist && (!bestCell || cellDist < bestCell.dist)) {
         bestCell = { position: cell.position, dist: cellDist }
@@ -267,11 +286,14 @@ function generateExplore(node: AiNode, dependencies: ExecuteAiActionDependencies
   if (!player) return []
 
   const reachable = collectReachableCells(node.state, player)
+  const visited = visitedMovePositions(node)
+  visited.add(`${player.position.row}-${player.position.column}`)
   const results: AiEdge[] = []
 
   // 找未探索的可达格
   for (const cell of reachable) {
     if (cell.cost <= 0) continue // 原地不探索
+    if (visited.has(cell.cellId)) continue
     const cellState = node.state.map.cells.find((c) => c.id === cell.cellId)
     if (!cellState) continue
     const visibility = getCellVisibility(node.state, playerId, cellState)

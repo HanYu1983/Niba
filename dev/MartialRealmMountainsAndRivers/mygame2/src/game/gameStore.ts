@@ -2370,10 +2370,10 @@ export const gameStore = {
       loopCount++
       const currentPlayer = gameState.players.find((p) => p.id === playerId)!
 
-      const { actions, exitReason: searchExit } = runGraphSearchStep(gameState, playerId, aiDeps)
+      const { actions, endTurn } = runGraphSearchStep(gameState, playerId, aiDeps)
 
-      if (actions.length === 0) {
-        exitReason = searchExit ?? '圖搜索無結果'
+      if (actions.length === 0 && !endTurn) {
+        exitReason = '圖搜索無結果'
         continue
       }
 
@@ -2394,6 +2394,12 @@ export const gameStore = {
           exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
           break
         }
+      }
+
+      // 最佳路徑以結束回合收尾：淨空 exitReason 交由出口邏輯統一結束回合，
+      // 不在此迴圈內執行 end-turn 行動。
+      if (endTurn) {
+        break
       }
     }
 
