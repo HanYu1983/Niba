@@ -217,6 +217,7 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
         <Flex className="game-settings__grid" gap={16} wrap>
           <label>據點數量<InputNumber min={1} max={12} value={settings.baseCount} onChange={(value) => update('baseCount', value)} /></label>
           <label>巢穴數量<InputNumber min={0} max={30} value={settings.nestCount} onChange={(value) => update('nestCount', value)} /></label>
+          <label>巢穴回血(%)<InputNumber min={0} max={10} step={0.5} value={(settings.nestHealthRegenPercent ?? 0.01) * 100} onChange={(value) => update('nestHealthRegenPercent', value === null ? null : value / 100)} /></label>
           <label>資源點數量<InputNumber min={0} max={60} value={settings.resourcePointCount} onChange={(value) => update('resourcePointCount', value)} /></label>
           <label>道具點數量<InputNumber min={0} max={60} value={settings.itemPointCount} onChange={(value) => update('itemPointCount', value)} /></label>
           <label>人類玩家數量<InputNumber min={1} max={4} value={settings.playerCount} onChange={(value) => update('playerCount', value)} /></label>

@@ -28,6 +28,8 @@ export type GameSettings = {
   explorationEventCount: number
   /** 人類玩家回合結束時，隨機觸發探索事件的機率（0~1）。 */
   explorationTriggerChance?: number
+  /** 巢穴每回合回復的最大生命比例（0~1，預設 0.01）。 */
+  nestHealthRegenPercent?: number
   creatureCount: number
   ruinCount: number
   /** 地圖上生成的中立門派據點數量，上限 6（六門派各一）。 */
@@ -953,6 +955,8 @@ export type GameState = {
   pendingExplorationEventPlayerId?: string | null
   /** 回合結束隨機觸發探索事件的機率（開局時從 settings 帶入）。 */
   explorationTriggerChance?: number
+  /** 巢穴每回合回復的最大生命比例（開局時從 settings 帶入，預設 0.01）。 */
+  nestHealthRegenPercent?: number
   /** 中立門派據點。 */
   sectGates?: SectGateState[]
   /** 貿易市場賦予的全局靈氣 buff；來源據點失活時自動失效。 */

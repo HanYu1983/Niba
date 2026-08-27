@@ -144,6 +144,7 @@ export function createGameState(
     itemPoints,
     explorationEvents,
     explorationTriggerChance: settings.explorationTriggerChance ?? 0.2,
+    nestHealthRegenPercent: settings.nestHealthRegenPercent ?? 0.01,
     sectGates,
     players,
     creatures,

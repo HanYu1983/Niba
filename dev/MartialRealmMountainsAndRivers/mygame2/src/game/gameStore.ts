@@ -195,10 +195,11 @@ export function spawnCreaturesFromNests(
   bases: BaseState[],
   round: number,
   blockedPositions: Position[] = [],
+  healthRegenPercent?: number,
 ): { nests: CreatureNestState[]; creatures: CreatureState[]; logs: CreatureActionLog[] } {
   return spawnCreaturesFromNestsAction(nests, creatures, map, players, bases, round, {
     createCreatureState: (input) => createCharacterState(input),
-  }, blockedPositions)
+  }, blockedPositions, healthRegenPercent)
 }
 
 /** 掃描人類玩家，記錄最高等級與該等級五維快照。 */
@@ -1738,6 +1739,8 @@ export const gameStore = {
           players,
           currentState.bases,
           currentState.round + 1,
+          undefined,
+          currentState.nestHealthRegenPercent,
         ),
       },
     }), 'AI 行動失敗。')
@@ -2266,6 +2269,8 @@ export const gameStore = {
           players,
           currentState.bases,
           currentState.round + 1,
+          undefined,
+          currentState.nestHealthRegenPercent,
         ),
       },
     }
@@ -2427,6 +2432,8 @@ export const gameStore = {
           players,
           currentState.bases,
           currentState.round + 1,
+          undefined,
+          currentState.nestHealthRegenPercent,
         ),
       },
     }
@@ -2507,6 +2514,7 @@ export const gameStore = {
           currentState.bases,
           currentState.round + 1,
           getBlockedPositions({ ...currentState, players } as GameState, '', { includeInteractionPoints: true }),
+          currentState.nestHealthRegenPercent,
         ),
       })
       if (action.creatureTurn) {

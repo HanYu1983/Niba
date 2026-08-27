@@ -62,8 +62,8 @@ export const NEST_SPAWN_COOLDOWN_ROUNDS = 3
 export const NEST_BASE_MAX_HEALTH = 120
 /** 巢穴每升一級最大生命的成長比例（+10%）。 */
 export const NEST_MAX_HEALTH_GROWTH_PER_LEVEL = 0.1
-/** 巢穴每回合回復的最大生命比例（+2%）。 */
-export const NEST_HEALTH_REGEN_PER_ROUND = 0.02
+/** 巢穴每回合回復的最大生命比例（+1%）。 */
+export const NEST_HEALTH_REGEN_PER_ROUND = 0.01
 
 /** 依巢穴等級計算最大生命：Lv.1 = 120，每級 +10%。 */
 export function getNestMaxHealth(level: number): number {
@@ -79,6 +79,7 @@ export function spawnCreaturesFromNests(
   round: number,
   dependencies: CreatureActionDependencies,
   blockedPositions: Position[] = [],
+  healthRegenPercent: number = NEST_HEALTH_REGEN_PER_ROUND,
 ): { nests: CreatureNestState[]; creatures: CreatureState[]; logs: CreatureActionLog[] } {
   const occupied = [
     ...blockedPositions,
@@ -104,8 +105,8 @@ export function spawnCreaturesFromNests(
   }
 
   const nextNests = nests.map((nest) => {
-    // 每回合回復 2% 最大生命（上限為最大生命）。
-    const regenHealth = Math.min(nest.maxHealth, nest.health + Math.floor(nest.maxHealth * NEST_HEALTH_REGEN_PER_ROUND))
+    // 每回合回復 healthRegenPercent 比例的最大生命（上限為最大生命）。
+    const regenHealth = Math.min(nest.maxHealth, nest.health + Math.floor(nest.maxHealth * healthRegenPercent))
 
     // 規則 2：生成後有 3 回合冷卻，冷卻期間不生成。
     if (nest.cooldownRounds > 0) {
