@@ -3,6 +3,7 @@ import { equipmentCatalog, type EquipmentDefinition } from '../catalogs/equipmen
 import { innerSkillCatalog } from '../catalogs/innerSkillCatalog'
 import { allExternalSkillCatalog } from '../catalogs/martialHallSkillCatalog'
 import { getFunctionalSkillBuffOverrides } from './functionalSkillScaling'
+import { elementHomeTurfBuffs } from '../catalogs/martialSchoolCatalog'
 import type {
   ActionOutcome,
   EquipmentInstance,
@@ -16,7 +17,12 @@ import type {
 } from '../types'
 import { terrainStaminaCost, type GameState } from '../types'
 import { restoreAfterAttributeChange } from '../characterFactory'
-
+import { getSchoolElement } from '../catalogs/skillProgressionCatalog'
+import {
+  getResourceLimit,
+  type ResourceLimit,
+  type ResourceLimitModifiers,
+} from './playerStatsRules'
 /** 以 ID 快取目錄查詢，避免重複線性掃描；目錄在模組載入時固定。 */
 const buffById = new Map(buffCatalog.map((buff) => [buff.id, buff] as const))
 const equipmentById = new Map(equipmentCatalog.map((equipment) => [equipment.id, equipment] as const))
@@ -68,7 +74,7 @@ function getEffectiveBuffDefinition(instance: BuffInstance): BuffDefinition | un
     'lifestealPercent', 'innerPowerLeechPercent', 'damageReductionPercent', 'healthRegenPercent',
     'innerPowerHealthRegenPercent', 'innerPowerRegenPercent', 'damageDealtPercent', 'externalSkillDamagePercent', 'evasionRateBonus',
     'staminaToInnerPowerRatio', 'externalSkillInnerCostReduction', 'insightTrueDamageMultiplier',
-    'visionRadiusBonus', 'maxStaminaBonus', 'gatherStaminaCostReduction', 'gatherDoubleYieldChance',
+    'visionRadiusBonus', 'maxStaminaBonus', 'maxHealthMultiplier', 'maxStaminaMultiplier', 'maxInnerPowerMultiplier', 'gatherStaminaCostReduction', 'gatherDoubleYieldChance',
     'buildingMaterialCostReduction', 'buildingReputationBonus', 'shopBuyPriceDiscount',
     'shopSellPriceBonus', 'questRewardBonus', 'skillExpGainPercent', 'confused', 'damageTakenFromAlliesBonus', 'basicAttackStaminaCostReduction', 'conditional',
   ] as const) {
@@ -119,22 +125,9 @@ function getEquippedExternalSkillBuffs(player: PlayerState): BuffInstance[] {
   })
 }
 
-const creatureHomeTurfBuffs: Partial<Record<string, { terrain: TerrainType; definitionId: string }>> = {
-  'swift-wind': { terrain: 'forest', definitionId: 'home-turf-forest' },
-  'earth-mountain': { terrain: 'mountain', definitionId: 'home-turf-mountain' },
-  'frost-water': { terrain: 'water', definitionId: 'home-turf-water' },
-  'scarlet-flame': { terrain: 'desert', definitionId: 'home-turf-desert' },
-  'golden-body': { terrain: 'mountain', definitionId: 'home-turf-ruin' },
-  'hundred-poison': { terrain: 'forest', definitionId: 'home-turf-forest' },
-  'sharp-edge': { terrain: 'mountain', definitionId: 'home-turf-mountain' },
-  'misty-rain': { terrain: 'water', definitionId: 'home-turf-water' },
-  'blazing-sun': { terrain: 'desert', definitionId: 'home-turf-desert' },
-  'yellow-earth': { terrain: 'forest', definitionId: 'home-turf-forest' },
-}
-
-/** 取得怪物目前生效的 Buff；主場 Buff 僅依當前站立地形動態注入，不寫入 state。 */
+/** 取得怪物目前正在變的 Buff；主場 Buff 依「五行屬性」推導，僅依當前站立地形動態注入，不寫入 state。 */
 export function getActiveBuffsForCreature(creature: CreatureState, terrain?: TerrainType): BuffInstance[] {
-  const homeTurf = terrain ? creatureHomeTurfBuffs[creature.schoolId ?? ''] : undefined
+  const homeTurf = terrain ? elementHomeTurfBuffs[getSchoolElement(creature.schoolId)] : undefined
   const homeTurfBuff = homeTurf && homeTurf.terrain === terrain
     ? [{ id: `home-turf:${creature.id}:${homeTurf.definitionId}`, definitionId: homeTurf.definitionId, sourceId: 'terrain', remainingRounds: null }]
     : []
@@ -403,6 +396,38 @@ export function getShopSellPriceBonus(player: PlayerState): number {
 /** 最大體力加成（神行八卦步）。 */
 export function getMaxStaminaBonus(player: PlayerState): number {
   return sumBuffPercent(player, 'maxStaminaBonus')
+}
+
+/**
+ * 依玩家狀態計算某資源上限（統一入口；含 buff 的 multiplier / fixed bonus）。
+ *
+ * - base 使用 `getEffectiveAttributesForPlayer` 的有效五維（已含 attributeMultiplier 等）。
+ * - multiplier 疊乘所有生效 buff 的 max{Health,Stamina,InnerPower}Multiplier 欄位
+ *   （resource-limit 天賦以此表達，如 qi-master 內力 ×1.1）；可再疊加傳入的 talentMods。
+ * - stamina 的 fixed bonus 彙整所有生效 buff 的 maxStaminaBonus 欄位。
+ */
+export function getPlayerResourceLimit(
+  player: PlayerState,
+  resource: ResourceLimit,
+  modifiers?: ResourceLimitModifiers,
+): number {
+  const effective = getEffectiveAttributesForPlayer(player)
+  const definitions = getActiveBuffDefinitions(player)
+  const multiplierField =
+    resource === 'health'
+      ? 'maxHealthMultiplier'
+      : resource === 'stamina'
+        ? 'maxStaminaMultiplier'
+        : 'maxInnerPowerMultiplier'
+  const buffMultiplier = definitions.reduce((product, definition) => product * (definition[multiplierField] ?? 1), 1)
+  const multi = (modifiers?.multiplier?.[resource] ?? 1) * buffMultiplier
+  return getResourceLimit(effective, resource, {
+    multiplier: { [resource]: multi },
+    bonus: {
+      ...(resource === 'stamina' ? { stamina: getMaxStaminaBonus(player) } : {}),
+      ...modifiers?.bonus,
+    },
+  })
 }
 
 /** 建築材料消耗減免比例（天工開物；0.25 代表 -25%）。 */

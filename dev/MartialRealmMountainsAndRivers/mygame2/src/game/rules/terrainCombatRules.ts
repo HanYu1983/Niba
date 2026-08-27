@@ -1,6 +1,6 @@
+import { getSchoolElement, type SchoolElement } from '../catalogs/skillProgressionCatalog'
 import type { TerrainType } from '../types'
-import type { MartialElement } from './skillRules'
-import { getElementDamageMultiplier, getSchoolElement, isElementGenerating } from './skillRules'
+import { getElementDamageMultiplier, isElementGenerating } from './skillRules'
 
 /** 天地共鳴的傷害倍率。 */
 export const TERRAIN_RESONANCE_DAMAGE_MULTIPLIER = 1.25
@@ -8,7 +8,7 @@ export const TERRAIN_RESONANCE_DAMAGE_MULTIPLIER = 1.25
 export const TERRAIN_RESONANCE_INNER_POWER_DISCOUNT = 1
 export const TERRAIN_RESONANCE_CRITICAL_RATE_BONUS = 5
 
-const resonantTerrains: Record<Exclude<MartialElement, 'none'>, TerrainType[]> = {
+const resonantTerrains: Record<Exclude<SchoolElement, 'none'>, TerrainType[]> = {
   metal: ['mountain'],
   wood: ['forest'],
   water: ['water'],
@@ -16,20 +16,20 @@ const resonantTerrains: Record<Exclude<MartialElement, 'none'>, TerrainType[]> =
   earth: ['plain'],
 }
 
-export function isTerrainResonant(skillElement: MartialElement | undefined, terrain: TerrainType | undefined): boolean {
+export function isTerrainResonant(skillElement: SchoolElement | undefined, terrain: TerrainType | undefined): boolean {
   if (!skillElement || skillElement === 'none' || !terrain) return false
   return resonantTerrains[skillElement].includes(terrain)
 }
 
 export function getTerrainResonanceDamageMultiplier(
-  skillElement: MartialElement | undefined,
+  skillElement: SchoolElement | undefined,
   terrain: TerrainType | undefined,
 ): number {
   return isTerrainResonant(skillElement, terrain) ? TERRAIN_RESONANCE_DAMAGE_MULTIPLIER : 1
 }
 
 export function getTerrainResonanceInnerPowerDiscount(
-  skillElement: MartialElement | undefined,
+  skillElement: SchoolElement | undefined,
   terrain: TerrainType | undefined,
 ): number {
   return isTerrainResonant(skillElement, terrain) ? TERRAIN_RESONANCE_INNER_POWER_DISCOUNT : 0
@@ -37,7 +37,7 @@ export function getTerrainResonanceInnerPowerDiscount(
 
 /** 金屬性功法在山嶽共鳴時的額外暴擊率。 */
 export function getTerrainResonanceCriticalRateBonus(
-  skillElement: MartialElement | undefined,
+  skillElement: SchoolElement | undefined,
   terrain: TerrainType | undefined,
 ): number {
   return skillElement === 'metal' && terrain === 'mountain' ? TERRAIN_RESONANCE_CRITICAL_RATE_BONUS : 0
@@ -51,7 +51,7 @@ export function getTerrainAtPosition(
 }
 
 export function getTerrainResonanceLabel(
-  skillElement: MartialElement | undefined,
+  skillElement: SchoolElement | undefined,
   terrain: TerrainType | undefined,
 ): string | undefined {
   return isTerrainResonant(skillElement, terrain)
@@ -64,8 +64,8 @@ export function getTerrainResonanceLabel(
  * 觸發時對目標施加震懾，並播放地圖震動動畫。
  */
 export function isTripleResonance(params: {
-  innerElement: MartialElement | undefined
-  outerElement: MartialElement | undefined
+  innerElement: SchoolElement | undefined
+  outerElement: SchoolElement | undefined
   terrain: TerrainType | undefined
   targetSchoolId?: string
 }): boolean {

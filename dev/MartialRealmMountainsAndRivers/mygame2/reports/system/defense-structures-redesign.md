@@ -1,6 +1,6 @@
 # 防禦設施系統設計文件（Defense Structures System Design，現況版）
 
-> **版本**：2026-08-25（對齊目前程式碼實作）
+> **版本**：2026-08-26（對齊目前程式碼實作；後期設施與建造範圍官階增長已落地）
 > **取代**：舊版 `defense-structures-design.md`（已標註廢棄，僅存歷史參考）
 > **狀態**：本文件記錄「目前實際實作」與「已規劃但未實作」項目，供後續開發與設計對齊。
 
@@ -55,33 +55,40 @@
 
 ---
 
-## 2. 目前實作狀態總覽（2026-08-25）
+## 2. 目前實作狀態總覽（2026-08-26 更新）
 
 ### 2.1 已完成
 
 | 項目 | 說明 |
 | :--- | :--- |
-| 資料模型與建造目錄 | `defenseStructureCatalog.ts`（含通用、大型、道路、廢墟小型設施） |
+| 資料模型與建造目錄 | `defenseStructureCatalog.ts`（含通用、大型、後期旗艦、道路、廢墟小型設施） |
 | 防禦建設入口 | 據點詳情 modal 的「防禦建設」 |
 | 設施選擇 modal | 含官階解鎖判定 |
-| 建造範圍判定 | 目前固定 5 格（曼哈頓距離） |
+| **建造範圍判定** | **隨官階增長（§4.1 已實作）：基礎 5 +（官階 - 1），官階 6 達最大 10 格** |
 | 建造驗證 | 官階、建料、範圍、地形、佔位、玩家回合 |
 | 道路設施 | 不佔格，改寫目標格地形為道路 |
 | marker 與詳情 modal | 顯示與詳細資料 |
 | 建造結果彈窗 | 結束回合 |
+| **建造流程簡化** | **選擇建築後自動進入「選擇建造位置」，省去額外按鈕點擊** |
 | 箭塔自動攻擊 | Creature 回合自動攻擊射程內目標 |
 | 瞭望塔視野 | 標準 3 格、大型 5 格、小型 2 格 |
 | 廢墟修復 | 廢墟可修復為小型瞭望臺／箭塔／驛站 |
 | 官階限制 | 設施需達指定官階（`requiredRank`） |
 | 廢墟同步移除 | 防禦設施被摧毀時連同來源廢墟移除 |
+| **堅壘** | 木柵進階，HP 120、阻擋通行（`strong-barricade`，§3.3） |
+| **輜重庫** | 建造時生成採集量 ×3 的大型資源點（`supply-depot`，§3.6） |
+| **軍壘** | 強化 3 格內箭塔／瞭望塔（HP×2、箭塔攻擊×2），非持久性動態查詢（§3.6） |
+| **烽燧臺** | 每回合 50% 機率揭示全圖敵軍、建成瞬間立即揭示（`warning-beacon`，§3.6） |
+| **轟城砲** | 範圍砲擊（射程 4、傷害 35、冷卻 2 回合）（`bombard-cannon`，§3.6） |
+| **軍壘效果 UI 可視化** | 被強化塔類顯示 ✦ 徽記、金色邊框；詳情 modal 顯示強化後有效值 |
 
 ### 2.2 尚未實作（規劃）
 
-- 設施維修、拆除與建料回收。
-- 建造範圍隨官階增長（§4.1 為規劃）。
-- 五行地形專屬防禦設施（§8 為設計草案）。
-- 後期通用型防禦建築（§3.6 為設計草案）：軍壘、轟城砲、輜重庫、烽燧臺。
+- 設施維修、拆除與建料回收（§8.3）。
+- 五行地形專屬防禦設施（§3.5 為設計草案）。
 - 石牆、陷阱、警戒柱。
+
+> **進度**：後期通用型防禦建築（軍壘、轟城砲、輜重庫、烽燧臺）與建造範圍官階增長已於 2026-08-26 實作完成。
 
 ---
 
@@ -95,6 +102,8 @@ type DefenseStructureType =
   | 'barricade' | 'strong-barricade'
   | 'watchtower' | 'advanced-watchtower'
   | 'arrow-tower' | 'advanced-arrow-tower' | 'road'
+  // 後期通用型（不限地形，高官階高成本）
+  | 'supply-depot' | 'warcamp-bastion' | 'warning-beacon' | 'bombard-cannon'
   // 廢墟修復產生（不透過據點建造）
   | 'small-watchtower' | 'small-arrow-tower' | 'small-waystation'
 ```
@@ -118,6 +127,10 @@ type DefenseStructureDefinition = {
   attackDamage: number
   /** 道路等不佔格子的設施：建造時改寫地形，而非新增防禦設施。 */
   changesTerrain?: boolean
+  /** 轟城砲等範圍砲擊設施的冷卻回合數（0 = 無冷卻）。 */
+  cooldownRounds?: number
+  /** 輜重庫等設施：建造時生成採集量為一般資源點多倍的大型資源點。 */
+  resourceIncomeMultiplier?: number
 }
 ```
 
@@ -128,12 +141,16 @@ type DefenseStructureDefinition = {
 | type | 名稱 | 成本 | 官階 | 生命 | 地形限制 | 阻擋 | 視野 | 射程 | 傷害 | 備註 |
 | :--- | :--- | ---: | ---: | ---: | :--- | :--: | :--: | ---: | ---: | :--- |
 | `road` | 道路 | 5 | 1 | 0 | 無（通用） | ❌ | ❌ | 0 | 0 | 改地形為道路 |
-| `barricade` | 木柵 | 20 | 1 | 50 | 無（通用） | ✅ | ❌ | 0 | 0 | |
+| `barricade` | 木柵 | 20 | 1 | 25 | 無（通用） | ✅ | ❌ | 0 | 0 | |
 | `strong-barricade` | 堅壘 | 50 | 2 | 120 | 無（通用） | ✅ | ❌ | 0 | 0 | 木柵高級版，更堅固 |
 | `arrow-tower` | 箭塔 | 40 | 1 | 50 | 無（通用） | ❌ | ❌ | 2 | 10 | 自動攻擊 |
 | `advanced-arrow-tower` | 大型箭塔 | 80 | 3 | 70 | 無（通用） | ❌ | ❌ | 3 | 18 | 自動攻擊 |
 | `watchtower` | 瞭望塔 | 30 | 2 | 40 | 無（通用） | ❌ | ✅ | 0 | 0 | 視野 3 格 |
 | `advanced-watchtower` | 大型瞭望塔 | 60 | 4 | 60 | 無（通用） | ❌ | ✅ | 0 | 0 | 視野 5 格 |
+| `supply-depot` | 輜重庫 | 120 | 3 | — | 無（通用） | ❌ | ❌ | 0 | 0 | 生成大型資源點（採集 ×3 = 45） |
+| `warcamp-bastion` | 軍壘 | 150 | 4 | 100 | 無（通用） | ❌ | ❌ | 0 | 0 | 強化 3 格內塔類 HP×2、箭塔攻擊×2 |
+| `warning-beacon` | 烽燧臺 | 100 | 6 | 140 | 無（通用） | ❌ | ❌ | 0 | 0 | 每回合 50% 揭示全圖敵軍 |
+| `bombard-cannon` | 轟城砲 | 200 | 5 | 180 | 無（通用） | ❌ | ❌ | 4 | 35 | 範圍砲擊，冷卻 2 回合 |
 | `small-watchtower` | 小型瞭望臺 | — | 0 | 15 | 無（通用） | ✅ | ✅ | 0 | 0 | 廢墟修復，視野 2 格 |
 | `small-arrow-tower` | 小型箭塔 | — | 0 | 20 | 無（通用） | ✅ | ✅ | 1 | 5 | 廢墟修復，視野 1 格 |
 | `small-waystation` | 小型驛站 | — | 0 | 15 | 無（通用） | ✅ | ❌ | 0 | 0 | 廢墟修復，傳送 |
@@ -230,59 +247,62 @@ buildableDefenseStructureCatalog = defenseStructureCatalog.filter(
 
 > **共通效果模型**：以上設施效果的「靈氣」皆對齊 `auraRules.ts` 的 `AuraEffectKind`（damage-reduction / damage-over-time / movement-cost / reflection / immobilized 等），不另造一套系統；五行相剋復用 `skillRules.ts` 的 `getElementDamageMultiplier`。**效果數值為草案，實作前需平衡測試。**
 
-### 3.6 後期通用型防禦建築（規劃草案，尚未實作）
+### 3.6 後期通用型防禦建築（2026-08-26 已實作）
 
 > 本節為**後期旗艦設施**：高官階解鎖、高建料成本、不限地形（通用），效果**大幅改變戰局走向**而非堆疊數值。
 > 每一座設施具單一「戰局級」效果，定位分明，避免疊加失衡。
+> **2026-08-26 已全部實作**（軍壘、轟城砲、輜重庫、烽燧臺），以下為實際代碼數值與機制。
 
-| type（規劃） | 名稱 | 成本 | 官階 | 生命 | 類別 | 效果定位 |
+| type | 名稱 | 成本 | 官階 | 生命 | 類別 | 效果定位 |
 | :--- | :--- | ---: | ---: | ---: | :--- | :--- |
 | `warcamp-bastion` | 軍壘 | 150 | 4 | 100 | 據點強化 | 強化自身 3 格內箭塔／瞭望塔系列（HP ×2、箭塔攻擊 ×2） |
-| `bombard-cannon` | 轟城砲 | 200 | 5 | 180 | 範圍大殺器 | 超遠距範圍砲擊 |
-| `supply-depot` | 輜重庫 | 120 | 3 | 160 | 資源經濟 | 建造大型資源點（採集量 ×3） |
-| `warning-beacon` | 烽燧臺 | 100 | 6 | 140 | 全局支援 | 全圖揭示敵軍動向 |
+| `bombard-cannon` | 轟城砲 | 200 | 5 | 180 | 範圍大殺器 | 範圍砲擊（射程 4、傷害 35、冷卻 2 回合） |
+| `supply-depot` | 輜重庫 | 120 | 3 | — | 資源經濟 | 建造大型資源點（採集量 ×3 = 45） |
+| `warning-beacon` | 烽燧臺 | 100 | 6 | 140 | 全局支援 | 每回合 50% 揭示全圖敵軍 |
 
 #### 軍壘 `warcamp-bastion`（據點強化）
 
 - **核心效果**：強化**軍壘自身 3 格範圍內**的箭塔、大型箭塔、瞭望塔與大型瞭望塔，使其火力／耐久大幅提升。
 - **效果類型**：範圍內防禦設施強化（箭塔／大型箭塔／瞭望塔／大型瞭望塔）。
-- **數值草案**：
+- **實際實作**：
   - 以軍壘為中心，**半徑 3 格（曼哈頓距離）**內的所有箭塔／瞭望塔系列設施獲得強化。
   - **箭塔、大型箭塔**：**HP ×2**、**攻擊力 ×2**。
   - **瞭望塔、大型瞭望塔**：**HP ×2**（無攻擊力，故不適用攻擊強化）。
   - **建造完成的瞬間**，軍壘 3 格範圍內的所有箭塔／瞭望塔系列設施**回復所有 HP**。
-  - 範圍外不受影響；軍壘被摧毀後，強化效果立即消失（設施回復原數值）。
+  - **非持久性動態查詢**：不直接改寫 `DefenseStructureState.health/maxHealth`，而是於攻擊結算與 HP 檢視時動態查詢（見 §10.4）；軍壘被摧毀後強化自動失效，無需還原狀態。
+  - **UI 可視化**：被強化塔類在地圖上顯示 ✦ 徽記與金色發光邊框，詳情彈窗顯示強化後的有效數值。
 - **定位**：讓玩家以一座軍壘在指定防線範圍提升塔類設施火力與耐久，並在建造當下重置範圍內塔類設施耐久，是後期「局部塔防樞紐」型的據點強化設施。
 
 #### 轟城砲 `bombard-cannon`（範圍大殺器）
 
-- **核心效果**：超遠距、大範圍砲擊，可打擊據點範圍外的敵軍集中區域。
-- **效果類型**：範圍傷害（`damage-over-time` 瞬間爆發）。
-- **數值草案**：
-  - 射程極遠（如半徑 8-10 格），範圍內所有生物受到高額傷害。
-  - 有冷卻（每 N 回合可發射一次）。
+- **核心效果**：範圍砲擊，對射程（曼哈頓距離）內所有敵軍造成範圍傷害。
+- **效果類型**：範圍傷害。
+- **實際數值**：
+  - **射程 4**、**傷害 35**、**冷卻 2 回合**（`cooldownRounds`，冷卻未歸零不發射）。
+  - 每回合於 Creature 回合管線中：先遞減冷卻，再對射程內所有存活生物造成範圍傷害，並設置冷卻。
+  - 冷卻狀態以 `DefenseStructureState.cooldownRemaining` / `lastFiredRound` 追蹤（見 `types.ts`）。
 - **定位**：後期反制敵軍集結與巢穴增援，一擊改寫野戰局面。
 
 #### 輜重庫 `supply-depot`（資源經濟）
 
 - **核心效果**：建造一座「大型資源點」——與一般資源點功能完全相同，但**資源採集量 ×3**。
 - **效果類型**：資源點（`ResourcePointState`）。
-- **數值草案**：
-  - 建造後於輜重庫位置生成一座大型資源點，歸屬所屬據點。
-  - 功能與 `ResourcePointState`（資源點）一致：玩家可採集、每回合被動建料收入、可被 Creature 攻擊等。
-  - **採集量為一般資源點的 3 倍**（`materialIncome` ×3）。
+- **實際數值**：
+  - 建造後於輜重庫位置生成一座大型資源點（`materialIncome = 15 × 3 = 45`），歸屬所屬據點。
+  - **注意**：輜重庫**不新增實體防禦設施**（僅在 `state.resourcePoints` 建立資源點），避免地圖上雙 icon 疊加。
 - **定位**：後期為據點提供一座高產資源點，顯著提升建料來源，支撐長期戰線與大型建設。
 
 #### 烽燧臺 `warning-beacon`（全局支援）
 
-- **核心效果**：全局揭示範圍外敵軍動向，預警敵軍集結／攻擊路線。
-- **效果類型**：情報（全圖敵軍揭示）＋預警。
-- **數值草案**：
-  - 每回合揭示地圖上所有生物的動向（或指定距離內）。
-  - 生物接近我方據點時觸發警示。
+- **核心效果**：全局揭示敵軍動向，預警敵軍集結／攻擊路線。
+- **效果類型**：情報（全圖敵軍揭示）。
+- **實際數值**：
+  - **每回合以 50% 機率揭示全圖所有生物位置**。
+  - **剛建造完成時立即揭示一次**（不經機率）。
+  - 揭示機制復用「鳴鑼符」的 `revealedCreatureCellIds` + `revealedCreatureUntilRound`（下回合清空），不需另作視野系統（見 §10.3）。
 - **定位**：後期掌握全局敵情，決定調度與防守優先級，是情報戰的核心。
 
-> **共通原則**：以上後期設施同樣不限地形、可疊加數值但有清晰定位；多數支援「改變戰局」的戰術價值，而非單純傷害／生命數字。**皆為草案，實作前需平衡測試。**
+> **共通原則**：以上後期設施同樣不限地形、可疊加數值但有清晰定位；多數支援「改變戰局」的戰術價值，而非單純傷害／生命數字。**已實作，數值可於平衡測試時調整。**
 
 ---
 
@@ -290,15 +310,26 @@ buildableDefenseStructureCatalog = defenseStructureCatalog.filter(
 
 ### 4.1 建造範圍
 
-> **目前代碼**：固定 5 格曼哈頓距離（`defenseRules.ts` 的 `distance > 5`）。**未有官階加成**。
+> **目前代碼（2026-08-26 已實作）**：建造範圍隨玩家官階增長。
 
 ```ts
-const distance =
-  Math.abs(base.row - target.row) + Math.abs(base.column - target.column)
-const canBuildInRange = distance <= 5
+// defenseRules.ts
+export const DEFENSE_BUILD_RANGE = 5
+export function getDefenseBuildRange(rank: number): number {
+  return DEFENSE_BUILD_RANGE + Math.max(0, rank - 1)
+}
 ```
 
-> **規劃**（未實作）：建造範圍隨據點所屬玩家官階增長——官階每高 1 級 +1，官階 6 總共 +5，最大 11 格。此為設計目標，代碼尚未實作。
+- **基礎範圍 5 格**（曼哈頓距離），官階每高 1 級 +1。
+- **官階 6 達最大 10 格**。
+- `DEFENSE_BUILD_RANGE` 為唯一來源，後端驗證（`validateDefenseBuild`）、地圖高亮（`MapGrid`）、UI 文案（`DefenseStructureBuildModal`）三處共用，避免數值漂移。
+
+| 官階 | 建造範圍 |
+| ---: | ---: |
+| 1 | 5 |
+| 3 | 7 |
+| 4 | 8 |
+| 6 | 10 |
 
 ### 4.2 建造驗證（`validateDefenseBuild`）
 
@@ -324,8 +355,8 @@ const canBuildInRange = distance <= 5
 ### 4.4 建造流程（Stage）
 
 1. **開啟防禦建設**：據點詳情點擊「防禦建設」（`operation = building-defense`）。
-2. **選擇設施**：顯示設施清單、建料、建造範圍、官階需求；建料或官階不足時 disabled。
-3. **選擇位置**：依所選設施的範圍與地形過濾高亮可建造格。
+2. **選擇設施**：顯示設施清單、建料、建造範圍（依官階動態）、官階需求；建料或官階不足時 disabled。
+3. **選擇位置（自動）**：選擇設施後**自動進入「選擇建造位置」**（2026-08-26 簡化，省去額外按鈕點擊），依所選設施的範圍與地形過濾高亮可建造格。
 4. **確認建造**：再次驗證建料、官階、範圍、位置、玩家回合。
 5. **結果確認**：彈窗確認後結束回合。
 
@@ -391,6 +422,17 @@ const canBuildInRange = distance <= 5
 - 修復後設施具 `originName`，被摧毀時連同對應廢墟移除。
 - 小型設施 `constructionCost`／`requiredRank` 為 0（不透過據點建造）。
 
+### 6.5 軍壘強化（動態查詢）
+
+- 軍壘強化 3 格內箭塔／瞭望塔系列（HP×2、箭塔攻擊×2），實作於 `defenseBastionRules.ts`。
+- **非持久性**：不改寫設施永久 `health/maxHealth`，攻擊結算（箭塔 ×2 傷害、塔類減半承傷）與 HP 檢視時動態套用。
+- 軍壘被摧毀後強化自動失效，無需還原狀態（見 §10.4）。
+
+### 6.6 範圍砲擊與揭示
+
+- **轟城砲**（`bombardCannonRules.ts`）：每回合於 Creature 回合管線先遞減冷卻，再對射程內所有生物範圍傷害，並設置冷卻（§6.6）。
+- **烽燧臺**（`warningBeaconRules.ts`）：每回合 50% 機率揭示全圖生物，建成瞬間立即揭示一次，復用鳴鑼符的 `revealedCreatureCellIds` 欄位（§10.3）。
+
 ---
 
 ## 7. 與相關系統的關聯
@@ -415,12 +457,12 @@ const canBuildInRange = distance <= 5
 
 ## 8. 已規劃但未實作（設計草案）
 
-> 以下為設計目標，尚未寫入代碼。
+> 以下為設計目標，尚未寫入代碼。§8.1 已於 2026-08-26 實作完成。
 
-### 8.1 建造範圍隨官階增長
+### 8.1 建造範圍隨官階增長（✅ 2026-08-26 已實作）
 
-- 目標：基礎 5 格（或 6 格）＋（官階 - 1），官階 6 總 +5。
-- 目前代碼固定 5 格。
+- 目標：基礎 5 格＋（官階 - 1），官階 6 總 +5，最大 10 格。
+- 已實作於 `defenseRules.ts` 的 `getDefenseBuildRange`（見 §4.1）。
 
 ### 8.2 五行地形專屬防禦設施
 
@@ -444,12 +486,14 @@ const canBuildInRange = distance <= 5
 
 ## 9. 開發檢查清單
 
-- [ ] 確認數值：木柵 20/25、瞭望塔 30/40、箭塔 40/50、大型版、道路、廢墟小型設施。
-- [ ] 確認建造範圍固定 5 格；官階增長為規劃。
-- [ ] 箭塔自動攻擊、瞭望塔視野、道路改地形皆已接入。
-- [ ] 官階限制（`requiredRank`）已接入。
-- [ ] 廢墟修復與同步移除已接入。
-- [ ] 五行地形專屬設施、建造範圍官階增長為未實作草案。
+- [x] 確認數值：木柵 20/25、瞭望塔 30/40、箭塔 40/50、大型版、道路、廢墟小型設施。
+- [x] 確認建造範圍隨官階增長（§4.1）；官階 1 = 5 格、官階 6 = 10 格。
+- [x] 箭塔自動攻擊、瞭望塔視野、道路改地形皆已接入。
+- [x] 官階限制（`requiredRank`）已接入。
+- [x] 廢墟修復與同步移除已接入。
+- [x] 後期設施（堅壘、軍壘、輜重庫、烽燧臺、轟城砲）已接入。
+- [ ] 五行地形專屬設施為未實作草案（§8.2）。
+- [ ] 設施維修、拆除與建料回收為未實作草案（§8.3）。
 
 ---
 
@@ -461,13 +505,15 @@ const canBuildInRange = distance <= 5
 
 - `DefenseStructureType` 目前定義於 `src/game/catalogs/defenseStructureCatalog.ts`，新增設施時需在此 union 增加 type。
 - `DefenseStructureDefinition` 已含 `requiredRank`，但**無 `element`、`activeEffect`、`terrainRequirements` 欄位**。五行／後期設施若需五行相剋或區域靈氣，須先擴充此型別。
+- 已新增 `cooldownRounds`（轟城砲冷卻）、`resourceIncomeMultiplier`（輜重庫採集倍率）可選欄位。
 - 道路設施用 `changesTerrain?: boolean` 標記「不佔格、改地形」；若將來有其他「非實體」設施，可沿用此模式。
 
 ### 10.2 建造流程與驗證
 
 - 建造核心在 `buildingActions.ts` 的 `constructDefenseStructure` + `defenseRules.ts` 的 `validateDefenseBuild`。
-- `validateDefenseBuild` 目前**硬編碼 `distance > 5`**（固定 5 格），尚無官階加成——實作 §4.1「官階增長」需改此處，用 `getGovernanceRank(player.prestige).rank` 計算加成為 `5 + (rank - 1)`。
+- **建造範圍**：2026-08-26 已改為隨官階動態（`getDefenseBuildRange`，§4.1），`DEFENSE_BUILD_RANGE` 為唯一常量來源，後端／地圖高亮／UI 三方共用。
 - 新建設施需在 `defenseStructureCatalog` 加入完整定義，否則 `validateDefenseBuild` 找不到 definition 會回傳「據點或設施不存在」。
+- 輜重庫（`resourceIncomeMultiplier`）在建 `state.resourcePoints` 而不建 `defenseStructures`；軍壘／烽燧臺／轟城砲在 `constructDefenseStructure` 內有其專屬建造後處理。
 
 ### 10.3 Creature 回合效果掛載點
 
@@ -499,12 +545,11 @@ const canBuildInRange = distance <= 5
 - 五行相剋傷害可復用 `skillRules.ts` 的 `getElementDamageMultiplier`；區域靈氣效果需擴充 `auraRules.ts` 的 `AuraEffectKind`（目前僅 `damage-over-time` / `heal-over-time`，缺 `evasion-rate-bonus`、`movement-cost`、`reflection`、`immobilized` 等，需先補上）。
 - 水閘／樹靈祠／金煞罡壇等被動靈氣效果，時序上對齊 `resolveRoundEndAuraEffects`（每回合累積型）或即時查詢（被動型），並遵從「來源失活即失效」。
 
-### 10.8 建造官階增長（§4.1）
+### 10.8 建造官階增長（§4.1）（✅ 2026-08-26 已實作）
 
-- 官階函式 `getGovernanceRank(player.prestige).rank`（`governanceRules.ts`），`maxBuildingLevel` 已用於據點內建築限制，可參考其用法。
-- 建造範圍改成動態後，`MapGrid` 的建造高亮（`defenseBuildMode`）需同步以 `buildRange` 過濾，而非寫死 5。
+- 官階函式 `getGovernanceRank(player.prestige).rank`（`governanceRules.ts`）。
+- 已實作 `getDefenseBuildRange`（§4.1），`MapGrid` 建造高亮與 `validateDefenseBuild` 均以 `defenseBuildRange` 動態過濾，取代寫死 5。
 
-### 10.9 測試注意
+### 10.9 測試注意（✅ 已補）
 
-- 新增設施需補 `defenseStructureCatalog` 定義測試、`validateDefenseBuild` 官階/地形/佔位測試。
-- 軍壘強化、轟城砲、烽燧台等週期效果需在 `creatureTurnPipeline` 或回合結算測試中驗證，確保多設施疊加與失效邏輯正確。
+- 已新增後期設施定義、`validateDefenseBuild` 官階/範圍/佔位測試，以及軍壘強化、轟城砲、烽燧臺的週期效果單元測試（`defenseStructures.test.ts`、`defenseRules.test.ts`）。

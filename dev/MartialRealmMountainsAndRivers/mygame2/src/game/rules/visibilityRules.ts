@@ -10,10 +10,6 @@ import { getActiveBuffDefinitions } from './playerDerivedRules'
 
 export const DEFAULT_VISION_RANGE = 3
 export const BASE_VISION_RANGE = 5
-export const WATCHTOWER_VISION_RANGE = 3
-export const ADVANCED_WATCHTOWER_VISION_RANGE = 5
-export const SMALL_WATCHTOWER_VISION_RANGE = 2
-export const SMALL_ARROW_TOWER_VISION_RANGE = 1
 
 function getVisionCellIds(map: MapState, position: Position, range: number): Set<string> {
   return new Set(
@@ -58,26 +54,10 @@ export function getPlayerVisibleCellIds(state: GameState, playerId: string): Set
   }
 
   for (const structure of state.defenseStructures ?? []) {
-    // 標準瞭望塔提供 3 格視野。
-    if (structure.type === 'watchtower') {
-      getVisionCellIds(state.map, structure.position, WATCHTOWER_VISION_RANGE)
-        .forEach((cellId) => visibleIds.add(cellId))
-    }
-    // 進階瞭望塔提供 5 格視野。
-    if (structure.type === 'advanced-watchtower') {
-      getVisionCellIds(state.map, structure.position, ADVANCED_WATCHTOWER_VISION_RANGE)
-        .forEach((cellId) => visibleIds.add(cellId))
-    }
-    // 廢墟修復的小型瞭望臺提供 2 格視野。
-    if (structure.type === 'small-watchtower') {
-      getVisionCellIds(state.map, structure.position, SMALL_WATCHTOWER_VISION_RANGE)
-        .forEach((cellId) => visibleIds.add(cellId))
-    }
-    // 廢墟修復的小型箭塔提供 1 格視野。
-    if (structure.type === 'small-arrow-tower') {
-      getVisionCellIds(state.map, structure.position, SMALL_ARROW_TOWER_VISION_RANGE)
-        .forEach((cellId) => visibleIds.add(cellId))
-    }
+    // 視野範圍由防禦建築參數（visionRange）決定；所有防禦建築至少 1（自身一格）。
+    const visionRange = Math.max(1, structure.visionRange ?? 0)
+    getVisionCellIds(state.map, structure.position, visionRange)
+      .forEach((cellId) => visibleIds.add(cellId))
   }
 
   return visibleIds

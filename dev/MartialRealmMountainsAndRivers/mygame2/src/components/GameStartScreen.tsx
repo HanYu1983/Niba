@@ -13,11 +13,16 @@ import {
   type MapTemplate,
 } from '../game/mapTemplates'
 import CampaignScenarioTab from './CampaignScenarioTab'
+import CharacterLibraryScreen from './CharacterLibraryScreen'
 import type { ScenarioDefinition } from '../editor/editorTypes'
 import { clearStoredScenarios } from '../game/scenarioStorage'
+import { getCharacters, type PersistentCharacter } from '../game/characterRoster'
+
+/** 記住玩家上次選擇的俠客 id（localStorage key）。 */
+const SELECTED_CHARACTER_KEY = 'mygame2.selected-character-id'
 
 type GameStartScreenProps = {
-  onStart: (settings: GameSettings) => void
+  onStart: (settings: GameSettings, selectedCharacter?: PersistentCharacter) => void
   onDebug: () => void
   onOpenSkillTest: () => void
   onOpenEditor: () => void
@@ -26,6 +31,40 @@ type GameStartScreenProps = {
 }
 
 function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onStartScenario }: GameStartScreenProps) {
+  const [rosterCharacters, setRosterCharacters] = useState<PersistentCharacter[]>(() => getCharacters())
+  const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>(() => {
+    // 讀回上次選擇的俠客（若仍存在於名册）。
+    const savedId = localStorage.getItem(SELECTED_CHARACTER_KEY)
+    return savedId ? getCharacters().find((character) => character.id === savedId)?.id : undefined
+  })
+  const [activeTab, setActiveTab] = useState('sandbox')
+
+  // 記住/清除玩家選擇的俠客；角色被刪除時一併清除快取。
+  const persistSelectedCharacter = (id: string | undefined) => {
+    if (id) {
+      localStorage.setItem(SELECTED_CHARACTER_KEY, id)
+    } else {
+      localStorage.removeItem(SELECTED_CHARACTER_KEY)
+    }
+  }
+
+  const handleSelectCharacter = (character: PersistentCharacter) => {
+    setSelectedCharacterId(character.id)
+    persistSelectedCharacter(character.id)
+    setActiveTab('sandbox')
+    message.success(`已選用「${character.name}」，可於沙盒地圖開始遊戲。`)
+  }
+
+  // 名册角色清單變更（新增／刪除／更新）時同步下拉選單；若選取的角色已不存在則清除選取。
+  const handleCharactersChanged = (characters: PersistentCharacter[]) => {
+    setRosterCharacters(characters)
+    setSelectedCharacterId((currentId) => {
+      const next = currentId && characters.some((character) => character.id === currentId) ? currentId : undefined
+      // 所選角色被刪除時，同步清除 localStorage 快取。
+      if (currentId && !next) persistSelectedCharacter(undefined)
+      return next
+    })
+  }
   // 每次進入地圖設定頁，套用上次選擇的模板（若無記錄則用「入門地圖」）。
   // 地圖設定不再自動寫入 localStorage，僅「儲存為模板」與「所選模板」會持久化。
   const [customTemplates, setCustomTemplates] = useState<MapTemplate[]>(() => getCustomTemplates())
@@ -120,7 +159,8 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
         </Typography.Paragraph>
 
         <Tabs
-          defaultActiveKey="sandbox"
+          activeKey={activeTab}
+          onChange={setActiveTab}
           items={[
             {
               key: 'sandbox',
@@ -189,8 +229,43 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
         </Flex>
 
         {invalid && <Typography.Text type="danger">地圖至少需要 15 x 15，且至少要有一個據點。</Typography.Text>}
+
+        <Divider>選擇角色</Divider>
+        <Flex className="game-settings__grid" gap={16} wrap align="center">
+          <label className="game-settings__template">
+            使用角色
+            <Select
+              style={{ minWidth: 220 }}
+              placeholder="預設角色（五維全 8）"
+              allowClear
+              value={selectedCharacterId}
+              onChange={(id) => {
+                setSelectedCharacterId(id)
+                persistSelectedCharacter(id)
+              }}
+              options={rosterCharacters.map((character) => ({
+                label: `${character.name}${character.title ? `（${character.title}）` : ''}`,
+                value: character.id,
+              }))}
+            />
+          </label>
+          <Typography.Text type="secondary">
+            選擇名冊角色後，其五維加成會疊加進開局基礎五維。
+          </Typography.Text>
+        </Flex>
+
         <Space className="start-screen__actions" wrap>
-          <Button type="primary" size="large" disabled={invalid} onClick={() => onStart(settings)}>開始新遊戲</Button>
+          <Button
+            type="primary"
+            size="large"
+            disabled={invalid}
+            onClick={() => {
+              const selected = rosterCharacters.find((character) => character.id === selectedCharacterId)
+              onStart(settings, selected)
+            }}
+          >
+            開始新遊戲
+          </Button>
         </Space>
                 </>
               ),
@@ -200,6 +275,13 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
               label: '📜 劇本地圖',
               children: (
                 <CampaignScenarioTab onStartScenario={onStartScenario} />
+              ),
+            },
+            {
+              key: 'roster',
+              label: '🗂️ 俠客名冊',
+              children: (
+                <CharacterLibraryScreen onSelect={handleSelectCharacter} onCharactersChanged={handleCharactersChanged} />
               ),
             },
             {

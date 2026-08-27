@@ -9,10 +9,12 @@ type GameOverModalProps = {
   won?: boolean
   reason?: 'all-players-defeated' | 'any-base-destroyed'
   record?: BattleRecord
+  /** 本局結算獲得的武學殘卷（null 表示未選用名册角色）。 */
+  scrollReward?: number | null
   onRestart: () => void
 }
 
-function GameOverModal({ open, won = false, reason, record, onRestart }: GameOverModalProps) {
+function GameOverModal({ open, won = false, reason, record, scrollReward, onRestart }: GameOverModalProps) {
   const anyBaseDestroyed = reason === 'any-base-destroyed'
   const stats = record?.stats
   const attributes = stats?.attributesAtMaxLevel
@@ -31,6 +33,23 @@ function GameOverModal({ open, won = false, reason, record, onRestart }: GameOve
         <Typography.Paragraph style={{ margin: 0 }}>
           {won ? '玩家成功清除地圖上的所有威脅，本局冒險勝利！' : anyBaseDestroyed ? '有一個據點被摧毀，本局冒險結束。' : 'Creature 已消滅所有玩家，本局冒險結束。'}
         </Typography.Paragraph>
+
+        {scrollReward != null && (
+          <Flex
+            justify="center"
+            align="center"
+            style={{
+              border: '2px solid #d4a93a',
+              borderRadius: 12,
+              background: 'linear-gradient(135deg, #2b2110, #4a3a14)',
+              padding: '16px 12px',
+            }}
+          >
+            <Typography.Text style={{ fontSize: 28, fontWeight: 700, color: '#f3d57c' }}>
+              📜 獲得武學殘卷 ×{scrollReward}
+            </Typography.Text>
+          </Flex>
+        )}
 
         {record && (
           <Descriptions

@@ -100,6 +100,7 @@ function makeDefenseStructure(overrides: Partial<DefenseStructureState> = {}): D
     healthBonus: 0,
     blocksMovement: true,
     providesVision: false,
+    visionRange: 1,
     attackRange: 0,
     attackDamage: 0,
     id: 'defense-1',

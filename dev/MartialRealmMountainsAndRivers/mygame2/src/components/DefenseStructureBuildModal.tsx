@@ -6,7 +6,7 @@ import type { DefenseStructureType } from '../game/catalogs/defenseStructureCata
 import { buildableDefenseStructureCatalog } from '../game/catalogs/defenseStructureCatalog'
 import { getGovernanceRank } from '../game/rules/governanceRules'
 import { ACTION_STAMINA_COSTS } from '../game/rules/actionCostRules'
-import { DEFENSE_BUILD_RANGE } from '../game/rules/defenseRules'
+import { getDefenseBuildRange } from '../game/rules/defenseRules'
 
 type DefenseStructureBuildModalProps = {
   base: BaseState | null
@@ -33,6 +33,7 @@ function DefenseStructureBuildModal({
 }: DefenseStructureBuildModalProps) {
   const [error, setError] = useState<string | null>(null)
   const selectedDefinition = buildableDefenseStructureCatalog.find((definition) => definition.type === structureType)
+  const buildRange = player ? getDefenseBuildRange(getGovernanceRank(player.prestige).rank) : 0
 
   return (
     <Modal
@@ -48,7 +49,7 @@ function DefenseStructureBuildModal({
       {base && selectedDefinition && (
         <Flex vertical gap={16}>
           <Typography.Paragraph style={{ margin: 0 }}>
-            選擇防禦建築後即自動進入「選擇建造位置」，點擊地圖上據點周圍 {DEFENSE_BUILD_RANGE} 格內的空格，再確認建造。
+            選擇防禦建築後即自動進入「選擇建造位置」，點擊地圖上據點周圍 {buildRange} 格內的空格，再確認建造。
           </Typography.Paragraph>
 
           <Typography.Text>

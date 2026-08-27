@@ -14,6 +14,7 @@ import QuestTrackerPanel from './components/QuestTrackerPanel'
 import useKeyboardShortcuts from './hooks/useKeyboardShortcuts'
 import useModalState from './hooks/useModalState'
 import GameStartScreen from './components/GameStartScreen'
+import type { PersistentCharacter } from './game/characterRoster'
 import SkillTestPage from './components/SkillTestPage'
 import EditorApp from './editor/EditorApp'
 import { allExternalSkillCatalog } from './game/catalogs/martialHallSkillCatalog'
@@ -221,6 +222,7 @@ function App() {
     modalOpen,
     creatureTurnInProgress: gameState.creatureTurnInProgress,
     movementUsed,
+    externalSkills: allExternalSkillCatalog,
     onToggleMovement: () => gameStore.setOperation({ type: movementEnabled ? 'idle' : 'moving', movementUsed: false }),
     onBeginAttackTargeting: () => {
       setSelectedCreatureId(null)
@@ -229,6 +231,20 @@ function App() {
     onOpenInventory: () => setInventoryPlayerId(gameState.activePlayerId),
     onOpenEquipment: () => setEquipmentPlayerId(gameState.activePlayerId),
     onOpenSkills: () => setSkillPlayerId(gameState.activePlayerId),
+    onUseExternalSkill: (skillId) => {
+      gameStore.setOperation({ type: 'idle' })
+      gameStore.clearExternalSkillPreview()
+      setSelectedCreatureId(null)
+      gameStore.beginExternalSkillTargeting(skillId)
+    },
+    onBuildRoad: () => {
+      const result = gameStore.buildRoad(gameState.activePlayerId)
+      if (result.ok) {
+        gameStore.setOperation({ type: 'idle' })
+      } else {
+        gameStore.showActionResult({ title: '修路失敗', message: result.reason, rewards: [] })
+      }
+    },
     onEndTurn: () => {
       if (gameState.creatureTurnInProgress) {
         return
@@ -238,8 +254,8 @@ function App() {
     },
   })
 
-  const startGame = (settings: GameSettings) => {
-    gameStore.startGame(settings)
+  const startGame = (settings: GameSettings, selectedCharacter?: PersistentCharacter) => {
+    gameStore.startGame(settings, selectedCharacter)
     setScreen('game')
     trackEvent('Gameplay', 'game_start', 'quick_start')
   }
@@ -422,6 +438,14 @@ function App() {
                 gameStore.beginExternalSkillTargeting(skillId)
               }}
               onToggleMovement={() => gameStore.setOperation({ type: movementEnabled ? 'idle' : 'moving', movementUsed: false })}
+              onBuildRoad={() => {
+                const result = gameStore.buildRoad(gameState.activePlayerId)
+                if (result.ok) {
+                  gameStore.setOperation({ type: 'idle' })
+                } else {
+                  gameStore.showActionResult({ title: '修路失敗', message: result.reason, rewards: [] })
+                }
+              }}
               onOpenOptions={() => setSystemCommandModalOpen(true)}
               onEndTurn={() => {
                 if (gameState.creatureTurnInProgress) {

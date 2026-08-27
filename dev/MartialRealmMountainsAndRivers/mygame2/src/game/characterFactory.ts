@@ -13,6 +13,7 @@ import {
   getEquipmentLoadout,
   getEffectiveAttributes,
   getEffectiveAttributesForPlayer,
+  getPlayerResourceLimit,
 } from './rules/playerDerivedRules'
 import {
   getExperienceRequired,
@@ -80,12 +81,12 @@ export function createCharacterState(
   return {
     ...player,
     attributes: attributesWithBuffs,
-    maxHealth: getMaxHealth(attributesWithBuffs),
-    health: getMaxHealth(attributesWithBuffs),
-    maxStamina: getMaxStamina(attributesWithBuffs),
-    stamina: getMaxStamina(attributesWithBuffs),
-    maxInnerPower: getMaxInnerPower(attributesWithBuffs),
-    innerPower: getMaxInnerPower(attributesWithBuffs),
+    maxHealth: getPlayerResourceLimit(player, 'health'),
+    health: getPlayerResourceLimit(player, 'health'),
+    maxStamina: getPlayerResourceLimit(player, 'stamina'),
+    stamina: getPlayerResourceLimit(player, 'stamina'),
+    maxInnerPower: getPlayerResourceLimit(player, 'innerPower'),
+    innerPower: getPlayerResourceLimit(player, 'innerPower'),
   }
 }
 
@@ -128,8 +129,8 @@ export function restoreAfterAttributeChange(player: PlayerState, attributes: Pla
   return {
     ...player,
     attributes,
-    maxHealth: getMaxHealth(attributes),
-    maxStamina: getMaxStamina(attributes),
-    maxInnerPower: getMaxInnerPower(attributes),
+    maxHealth: getPlayerResourceLimit(player, 'health'),
+    maxStamina: getPlayerResourceLimit(player, 'stamina'),
+    maxInnerPower: getPlayerResourceLimit(player, 'innerPower'),
   }
 }

@@ -1,5 +1,5 @@
 import type { BaseState, CreatureNestState, GameState, PlayerState, Position } from '../types'
-import type { MartialElement } from './skillRules'
+import type { SchoolElement } from './skillRules'
 import { isBaseActive } from './baseRules'
 import { BUILDING_TYPES } from '../catalogs/buildingCatalog'
 
@@ -11,7 +11,7 @@ import { BUILDING_TYPES } from '../catalogs/buildingCatalog'
  * 防衛營回血）共用同一套抽象底層。
  *
  * 設計原則（對齊 `reports/system/regional-spiritual-energy-design.md`）：
- * - 元素復用 `MartialElement`。
+ * - 元素復用 `SchoolElement`。
  * - 範圍採曼哈頓距離（對齊 `isPlayerWithinBaseVision`）。
  * - 解析時序僅兩種：每回合結束（累積型）與進入即時查詢（被動型）。
  * - 來源失活（巢穴 health === 0、據點 !isBaseActive）→ 靈氣失效。
@@ -39,7 +39,7 @@ export type AuraField = {
   position: Position
   /** 影響半徑（曼哈頓距離）。 */
   radius: number
-  element: MartialElement
+  element: SchoolElement
   effects: AuraEffect[]
 }
 
@@ -47,7 +47,7 @@ export type AuraField = {
 export const NEST_AURA_RADIUS = 3
 
 /** 巢穴靈氣每回合掉血比例（依元素）。 */
-export const NEST_AURA_DAMAGE_PERCENT: Partial<Record<Exclude<MartialElement, 'none'>, number>> = {
+export const NEST_AURA_DAMAGE_PERCENT: Partial<Record<Exclude<SchoolElement, 'none'>, number>> = {
   fire: 0.05,   // 灼燒：每回合損失最大生命 5%
   metal: 0.03,  // 金煞：每回合損失最大生命 3%
 }
@@ -130,7 +130,7 @@ export function getAuraEffectsAt(
 export type AuraDisplayEntry = {
   sourceId: string
   sourceName: string
-  element: MartialElement
+  element: SchoolElement
   kind: AuraEffectKind
   magnitude: number
   /** 可讀描述，例如「每回合損失最大生命 5%」。 */

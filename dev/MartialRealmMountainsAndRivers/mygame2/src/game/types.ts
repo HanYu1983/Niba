@@ -106,6 +106,9 @@ export type BuffInstance = {
   insightTrueDamageMultiplier?: number
   visionRadiusBonus?: number
   maxStaminaBonus?: number
+  maxHealthMultiplier?: number
+  maxStaminaMultiplier?: number
+  maxInnerPowerMultiplier?: number
   gatherStaminaCostReduction?: number
   gatherDoubleYieldChance?: number
   buildingMaterialCostReduction?: number
@@ -194,6 +197,10 @@ export type PlayerState = {
   equipmentInventory?: EquipmentInstance[]
   equipmentLoadout?: EquipmentLoadout
   buffs?: BuffInstance[]
+  /** 角色外觀 icon（來自名册角色，可選）。 */
+  portrait?: string
+  /** 角色稱號（來自名册角色，可選）。 */
+  title?: string
   turnEnded: boolean,
 }
 
@@ -212,22 +219,6 @@ export const governanceRankCatalog: GovernanceRank[] = [
   { rank: 5, name: '一方太守', requiredPrestige: 1100, maxBuildingLevel: 5 },
   { rank: 6, name: '勢力盟主', requiredPrestige: 1800, maxBuildingLevel: 6 },
 ]
-
-/** 建設相關聲望來源，用於追蹤建設指令的聲望發放。 */
-export type ConstructionPrestigeSource =
-  | 'build'
-  | 'upgrade'
-  | 'repair'
-  | 'heal'
-  | 'policy-switch'
-
-export const CONSTRUCTION_PRESTIGE: Record<ConstructionPrestigeSource, number> = {
-  build: 5,
-  upgrade: 8,
-  repair: 3,
-  heal: 2,
-  'policy-switch': 4,
-}
 
 export type UpgradeableAttribute = keyof PlayerAttributes
 
@@ -424,7 +415,7 @@ export type CreatureNestState = {
   /**
    * 巢穴主導元素（區域靈氣系統）。
    * 有屬性巢穴產生對應元素的靈氣場；無屬性巢穴（省略或 'none'）不產生靈氣。
-   * 對齊 `skillRules.ts` 的 `MartialElement`。
+   * 對齊 `skillRules.ts` 的 `SchoolElement`。
    */
   dominantElement?: 'none' | 'metal' | 'wood' | 'water' | 'fire' | 'earth'
 }

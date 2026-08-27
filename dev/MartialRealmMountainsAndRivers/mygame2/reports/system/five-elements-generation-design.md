@@ -303,8 +303,8 @@
  * 相生循環：金→土→水→木→火→金
  */
 export function isElementGenerating(
-  generator: MartialElement | undefined,
-  generated: MartialElement | undefined,
+  generator: SchoolElement | undefined,
+  generated: SchoolElement | undefined,
 ): boolean {
   // none / undefined → false
   // 生成循環判定
@@ -319,8 +319,8 @@ export function isElementGenerating(
  * 當內功元素生外功元素時返回 ×1.25，否則返回 ×1。
  */
 export function getGenerationSynergyMultiplier(
-  innerElement: MartialElement | undefined,
-  outerElement: MartialElement | undefined,
+  innerElement: SchoolElement | undefined,
+  outerElement: SchoolElement | undefined,
 ): number {
   return isElementGenerating(innerElement, outerElement) ? 1.25 : 1
 }

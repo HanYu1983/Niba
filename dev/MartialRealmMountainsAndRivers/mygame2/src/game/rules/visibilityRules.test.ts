@@ -113,6 +113,7 @@ describe('visibility rules', () => {
         healthBonus: 0,
         blocksMovement: false,
         providesVision: true,
+        visionRange: 3,
         attackRange: 0,
         attackDamage: 0,
         position: { row: 5, column: 9 },
@@ -139,6 +140,7 @@ describe('visibility rules', () => {
         healthBonus: 0,
         blocksMovement: true,
         providesVision: true,
+        visionRange: 2,
         attackRange: 0,
         attackDamage: 0,
         position: { row: 5, column: 9 },
@@ -168,6 +170,7 @@ describe('visibility rules', () => {
         healthBonus: 0,
         blocksMovement: true,
         providesVision: true,
+        visionRange: 1,
         attackRange: 1,
         attackDamage: 5,
         position: { row: 5, column: 9 },
@@ -181,6 +184,66 @@ describe('visibility rules', () => {
     expect(visibleIds.has('5-10')).toBe(true)
     // 2 格外不可見
     expect(visibleIds.has('5-11')).toBe(false)
+  })
+
+  it('所有防禦建築（即使 providesVision=false）至少提供自身一格視野', () => {
+    const state = makeState({
+      defenseStructures: [{
+        id: 'barricade-1',
+        type: 'barricade',
+        name: '木柵',
+        description: '阻擋通行',
+        icon: '🪵',
+        constructionCost: 20,
+        requiredRank: 1,
+        maxHealth: 25,
+        healthBonus: 0,
+        blocksMovement: true,
+        providesVision: false,
+        visionRange: 1,
+        attackRange: 0,
+        attackDamage: 0,
+        position: { row: 5, column: 9 },
+        ownerBaseId: 'base-1',
+        health: 25,
+      }],
+    })
+    const visibleIds = getPlayerVisibleCellIds(state, 'player-1')
+
+    // 自身格與相鄰一格可見
+    expect(visibleIds.has('5-9')).toBe(true)
+    expect(visibleIds.has('5-10')).toBe(true)
+    // 兩格外不可見
+    expect(visibleIds.has('5-11')).toBe(false)
+  })
+
+  it('視野範圍由 visionRange 參數決定', () => {
+    const state = makeState({
+      defenseStructures: [{
+        id: 'custom-tower-1',
+        type: 'watchtower',
+        name: '自訂瞭望塔',
+        description: '提供視野',
+        icon: '🗼',
+        constructionCost: 30,
+        requiredRank: 2,
+        maxHealth: 40,
+        healthBonus: 0,
+        blocksMovement: false,
+        providesVision: true,
+        visionRange: 4,
+        attackRange: 0,
+        attackDamage: 0,
+        position: { row: 5, column: 9 },
+        ownerBaseId: 'base-1',
+        health: 40,
+      }],
+    })
+    const visibleIds = getPlayerVisibleCellIds(state, 'player-1')
+
+    // visionRange=4 時，4 格內可見、5 格外不可見
+    expect(visibleIds.has('5-13')).toBe(true)
+    expect(visibleIds.has('5-14')).toBe(false)
   })
 
   it('更新視野會保留既有探索格並合併目前可見格', () => {

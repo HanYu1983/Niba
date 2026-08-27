@@ -28,7 +28,7 @@ function StatBar({ label, current, max, status = 'active', showValue = true, str
     <div className="stat-bar">
       <div className="stat-bar__head">
         <StatLabel>{label}</StatLabel>
-        {showValue && <Typography.Text strong>{current}{safeMax > 0 ? ` / ${max}` : ''}</Typography.Text>}
+        {showValue && <Typography.Text strong>{Math.floor(current)}{safeMax > 0 ? ` / ${Math.floor(max)}` : ''}</Typography.Text>}
       </div>
       <Progress
         percent={percent}

@@ -5,6 +5,7 @@ import {
   type GameSettings,
   type MapState,
   type PlayerState,
+  type PlayerAttributes,
   type CreatureState,
   type BaseState,
   type CreatureNestState,
@@ -31,6 +32,7 @@ import {
   type AiConstructionPlan,
   type AiConstructionPlanItem,
   type CampaignState,
+  type RunStats,
   isAdjacent,
   isSameOrAdjacent,
   isSamePosition,
@@ -46,14 +48,16 @@ import {
   getEffectiveAttributesForPlayer,
   getEquipmentInventory,
   canTraverseTerrain,
+  getBuildingReputationBonus,
+  getPlayerResourceLimit,
 } from './rules/playerDerivedRules'
-import { getExternalSkill, getPlayerTotalInsightCost, getElementDamageMultiplier, getSchoolElement, equipInnerSkillAction } from './rules/skillRules'
+import { getExternalSkill, getPlayerTotalInsightCost, getElementDamageMultiplier, equipInnerSkillAction } from './rules/skillRules'
 import {
   applyBaseHealthBonuses,
 } from './rules/baseRules'
 import { validateDefenseBuild } from './rules/defenseRules'
 import { getRepairSummary, getWorkshopLevel, repairEquipmentInventory } from './rules/buildingRules'
-import { applyConstructionPrestige } from './rules/governanceRules'
+import { applyMaterialPrestige } from './rules/governanceRules'
 import {
   canTransportPlayer,
   getTransportLandingPosition,
@@ -76,7 +80,7 @@ import {
   applyExperienceAndLevelUp,
   restoreAfterAttributeChange,
 } from './characterFactory'
-import { getMaxHealth, getMaxInnerPower, getMaxStamina } from './rules/playerStatsRules'
+import { getMaxInnerPower } from './rules/playerStatsRules'
 import {
   buyEquipment as buyEquipmentAction,
   buySectEquipment as buySectEquipmentAction,
@@ -85,6 +89,7 @@ import {
   sellItem as sellItemAction,
 } from './actions/shopActions'
 import {
+  buildRoadAtPlayer as buildRoadAtPlayerAction,
   constructBuilding as constructBuildingAction,
   constructDefenseStructure as constructDefenseStructureAction,
   upgradeBuilding as upgradeBuildingAction,
@@ -156,6 +161,7 @@ import {
 } from './lootFactory'
 import { runActionExecution, runActionOutcome } from './storeAdapters'
 import { recordMaxLevel } from './runStats'
+import { applyEndGameRewards } from './characterRoster'
 import { enqueueDialogue, skipAllDialogue } from './actions/dialogueActions'
 import { collectTriggeredDialogues } from './rules/dialogueTriggerRules'
 import { checkVictory } from './rules/campaignRules'
@@ -178,6 +184,7 @@ import { buildActionSequence } from './ai/fuzzy/goalActionMapper'
 import { decideNextAction } from './ai/decisionTree/decideNextAction'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
+import { getSchoolElement } from './catalogs/skillProgressionCatalog'
 
 export function spawnCreaturesFromNests(
   nests: CreatureNestState[],
@@ -225,6 +232,8 @@ let lastGameSettings = getSavedGameSettings()
 const listeners = new Set<() => void>()
 /** 目前載入的劇本關卡 id（記錄通關進度用）；非劇本模式為 null。 */
 let currentScenarioId: string | null = null
+/** 目前對局選用的名册角色 id；未選用（預設角色）為 null。 */
+let activeCharacterId: string | null = null
 
 /**
  * 暫存的敵人行動結果（回合結束觸發探索事件時延後執行）。
@@ -358,12 +367,31 @@ export const gameStore = {
     return allocated
   },
 
-  startGame: (settings: GameSettings) => {
+  startGame: (settings: GameSettings, selectedCharacter?: {
+    id?: string
+    attributeBonuses: PlayerAttributes
+    name?: string
+    portrait?: string
+    title?: string
+    initialInternalSkillId?: string
+    initialExternalSkillIds?: string[]
+    talentIds?: string[]
+  }) => {
     lastGameSettings = { ...settings }
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
-    gameState = createGameState(lastGameSettings)
+    activeCharacterId = selectedCharacter?.id ?? null
+    gameState = createGameState(lastGameSettings, selectedCharacter)
     listeners.forEach((listener) => listener())
+  },
+
+  /** 取得目前對局選用的名册角色 id；未選用為 null。 */
+  getActiveCharacterId: () => activeCharacterId,
+
+  /** 局末回寫：將本局表現結算為卷並併入功法庫。 */
+  settleActiveCharacterRewards: (stats: RunStats, won: boolean, learnedSkillIds: string[]) => {
+    if (!activeCharacterId) return null
+    return applyEndGameRewards(activeCharacterId, stats, won, learnedSkillIds)
   },
 
   /**
@@ -1190,28 +1218,27 @@ export const gameStore = {
         }
         return {
           ...state,
-          players: state.players.map((currentPlayer) =>
-            currentPlayer.id === playerId
-              ? {
-                ...currentPlayer,
-                buffs: [...(currentPlayer.buffs ?? []), buffInstance],
-                maxHealth: getMaxHealth(getEffectiveAttributesForPlayer({ ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] })),
-                maxStamina: getMaxStamina(getEffectiveAttributesForPlayer({ ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] })),
-                maxInnerPower: getMaxInnerPower(getEffectiveAttributesForPlayer({ ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] })),
-                inventory: currentPlayer.inventory
-                  .map((entry) =>
-                    entry.itemId === itemId
-                      ? { ...entry, quantity: entry.quantity - 1 }
-                      : entry,
-                  )
-                  .filter((entry) => entry.quantity > 0),
-                itemEffectsUsedThisTurn: item.effect === 'buff'
-                  ? [...(currentPlayer.itemEffectsUsedThisTurn ?? []), item.effect]
-                  : currentPlayer.itemEffectsUsedThisTurn,
-                turnEnded: currentPlayer.turnEnded,
-              }
-              : currentPlayer,
-          ),
+          players: state.players.map((currentPlayer) => {
+            if (currentPlayer.id !== playerId) return currentPlayer
+            const withBuff = { ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] }
+            return {
+              ...withBuff,
+              maxHealth: getPlayerResourceLimit(withBuff, 'health'),
+              maxStamina: getPlayerResourceLimit(withBuff, 'stamina'),
+              maxInnerPower: getPlayerResourceLimit(withBuff, 'innerPower'),
+              inventory: currentPlayer.inventory
+                .map((entry) =>
+                  entry.itemId === itemId
+                    ? { ...entry, quantity: entry.quantity - 1 }
+                    : entry,
+                )
+                .filter((entry) => entry.quantity > 0),
+              itemEffectsUsedThisTurn: item.effect === 'buff'
+                ? [...(currentPlayer.itemEffectsUsedThisTurn ?? []), item.effect]
+                : currentPlayer.itemEffectsUsedThisTurn,
+              turnEnded: currentPlayer.turnEnded,
+            }
+          }),
         }
       }
 
@@ -1295,7 +1322,7 @@ export const gameStore = {
       return {
         ...action.state,
         players: action.state.players.map((currentPlayer) => currentPlayer.id === playerId
-          ? applyConstructionPrestige(currentPlayer, 'build')
+          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0, getBuildingReputationBonus(currentPlayer))
           : currentPlayer),
       }
     })
@@ -1311,7 +1338,7 @@ export const gameStore = {
       return {
         ...action.state,
         players: action.state.players.map((currentPlayer) => currentPlayer.id === playerId
-          ? applyConstructionPrestige(currentPlayer, 'upgrade')
+          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0, getBuildingReputationBonus(currentPlayer))
           : currentPlayer),
       }
     })
@@ -1336,11 +1363,15 @@ export const gameStore = {
       return {
         ...action.state,
         players: action.state.players.map((currentPlayer) => currentPlayer.id === playerId
-          ? applyConstructionPrestige(currentPlayer, 'build')
+          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0, getBuildingReputationBonus(currentPlayer))
           : currentPlayer),
       }
     })
     return result
+  },
+
+  buildRoad: (playerId: string): ActionOutcome => {
+    return runActionOutcome(updateGameState, (state) => buildRoadAtPlayerAction(state, playerId), '修路失敗。')
   },
 
   reconstructRuin: (playerId: string, ruinId: string, structureType: DefenseStructureType): ActionOutcome => {
@@ -1375,7 +1406,7 @@ export const gameStore = {
       if (resourcePoint.active !== false) return { state, result: { ok: false, reason: '資源點目前不需要修復。' } }
       const actionCheck = canPlayerPerformAction(state, playerId, ACTION_STAMINA_COSTS.resourcePointBuild)
       if (!actionCheck.ok) return { state, result: { ok: false, reason: actionCheck.reason ?? '體力不足。' } }
-      if (!isAdjacent(player.position, resourcePoint.position)) return { state, result: { ok: false, reason: '玩家必須位於資源點旁。' } }
+      if (!isSameOrAdjacent(player.position, resourcePoint.position)) return { state, result: { ok: false, reason: '玩家需位於資源點自身格或周圍一格。' } }
       return {
         state: {
           ...state,

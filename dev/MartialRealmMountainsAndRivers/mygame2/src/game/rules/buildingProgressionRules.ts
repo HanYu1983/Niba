@@ -1,7 +1,7 @@
 import { BUILDING_TYPES, buildingCatalog, type BaseBuilding } from '../catalogs/buildingCatalog'
 import type { BaseState, PlayerState } from '../types'
 import { getGovernanceRank, getMaxBuildingLevelForPlayer } from './governanceRules'
-import { getBuildingMaterialCostReduction, getBuildingReputationBonus } from './playerDerivedRules'
+import { getBuildingMaterialCostReduction } from './playerDerivedRules'
 
 /** 固定功能建築：建造後提供完整功能，不進入一般等級升級流程。 */
 export const FIXED_FUNCTION_BUILDING_TYPES: string[] = [
@@ -54,12 +54,6 @@ export function getEffectiveBuildingUpgradeCost(building: BaseBuilding, player: 
   const baseCost = getBuildingUpgradeCost(building)
   const reduction = getBuildingMaterialCostReduction(player)
   return reduction > 0 ? Math.max(1, Math.floor(baseCost * (1 - reduction))) : baseCost
-}
-
-/** 依玩家自帶「建造聲望加成」計算建造/升級獲得的聲望（天工開物）。 */
-export function getEffectivePrestigeGain(player: PlayerState, basePrestige: number): number {
-  const bonus = getBuildingReputationBonus(player)
-  return bonus > 0 ? Math.floor(basePrestige * (1 + bonus)) : basePrestige
 }
 
 /** 判斷玩家官階是否足以解鎖指定建築類型。 */
