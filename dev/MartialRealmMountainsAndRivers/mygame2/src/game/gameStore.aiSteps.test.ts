@@ -5,7 +5,7 @@ import {
   makeAiTestState,
   makeProtectBaseOrder,
   makeSupportPlayerOrder,
-  makeTest1Order,
+  makeFuzzyOrder,
   makeTestCreature,
   makeTestHuman,
   makeTestPlayer,
@@ -210,7 +210,7 @@ describe('runAiDefenseStep／runAiSupportStep 整合', () => {
   })
 })
 
-describe('runTest1Step', () => {
+describe('runFuzzyStep', () => {
   it('無興趣點時直接結束回合', () => {
     // 全地圖已探索（exploration fallback 也為 0）→ 迴圈退出
     const allCellIds = Array.from({ length: 121 }, (_, i) => `${Math.floor(i / 11)}-${i % 11}`)
@@ -221,29 +221,29 @@ describe('runTest1Step', () => {
       ],
       bases: [],
       visibility: { exploredCellIds: allCellIds, mode: 'fog' },
-      aiOrders: [makeTest1Order()],
+      aiOrders: [makeFuzzyOrder()],
     })
-    const result = gameStore.runTest1Step('ai-1')
+    const result = gameStore.runFuzzyStep('ai-1')
     expect(result.ok).toBe(false)
     expect(playerById('ai-1').position.column).toBe(3) // 未移動
   })
 
-  it('非 AI、非其回合、無 active test1 命令時拒絕', () => {
+  it('非 AI、非其回合、無 active fuzzy 命令時拒絕', () => {
     load({
       players: [makeTestPlayer({ isAI: false }), makeTestHuman()],
-      aiOrders: [makeTest1Order()],
+      aiOrders: [makeFuzzyOrder()],
     })
-    expect(gameStore.runTest1Step('ai-1')).toEqual({ ok: false, reason: '目前無法執行 AI test1 回合。' })
+    expect(gameStore.runFuzzyStep('ai-1')).toEqual({ ok: false, reason: '目前無法執行模糊策略回合。' })
 
     load({
       activePlayerId: 'player-1',
-      aiOrders: [makeTest1Order()],
+      aiOrders: [makeFuzzyOrder()],
     })
-    expect(gameStore.runTest1Step('ai-1')).toEqual({ ok: false, reason: '目前無法執行 AI test1 回合。' })
+    expect(gameStore.runFuzzyStep('ai-1')).toEqual({ ok: false, reason: '目前無法執行模糊策略回合。' })
 
     load({
       aiOrders: [],
     })
-    expect(gameStore.runTest1Step('ai-1')).toEqual({ ok: false, reason: '目前無法執行 AI test1 回合。' })
+    expect(gameStore.runFuzzyStep('ai-1')).toEqual({ ok: false, reason: '目前無法執行模糊策略回合。' })
   })
 })

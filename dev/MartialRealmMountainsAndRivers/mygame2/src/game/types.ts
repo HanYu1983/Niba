@@ -1019,14 +1019,14 @@ export type AiOrder =
     }
   | {
       id: string
-      type: 'test1'
+      type: 'fuzzy'
       aiPlayerId: string
       priority: number
       status: AiOrderStatus
     }
   | {
       id: string
-      type: 'test2'
+      type: 'decision-tree'
       aiPlayerId: string
       priority: number
       status: AiOrderStatus
