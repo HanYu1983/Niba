@@ -246,7 +246,6 @@ export const SCROLL_REWARD = {
  * @param newSkillCount 本局新增入庫的功法數（去重後）。
  */
 export function computeScrollReward(stats: RunStats, won: boolean, newSkillCount = 0): number {
-  console.log(stats, won, newSkillCount)
   const base = won ? SCROLL_REWARD.winBase : SCROLL_REWARD.loseBase
   const levelBonus = (stats.maxLevelReached ?? 0) * SCROLL_REWARD.perLevel
   const creatureBonus = (stats.creaturesDefeated ?? 0) * SCROLL_REWARD.perCreature
