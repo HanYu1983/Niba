@@ -99,26 +99,26 @@ export function decideNextAction(
   }
 
   // 2.2 近距離有怪（2格內）+ 體力足 → 走過去
-  if (player.stamina >= 5) {
-    const visible = getVisibleCreatures(state, player.id)
-    const nearby = visible
-      .filter((a) => {
-        const pos = a.sourceType === 'creature' ? a.creature.position : a.nest.position
-        const dist = Math.abs(pos.row - player.position.row) + Math.abs(pos.column - player.position.column)
-        return dist <= 2
-      })
-      .sort((a, b) => {
-        const posA = a.sourceType === 'creature' ? a.creature.position : a.nest.position
-        const posB = b.sourceType === 'creature' ? b.creature.position : b.nest.position
-        const dA = Math.abs(posA.row - player.position.row) + Math.abs(posA.column - player.position.column)
-        const dB = Math.abs(posB.row - player.position.row) + Math.abs(posB.column - player.position.column)
-        return dA - dB
-      })[0]
-    if (nearby) {
-      const candidate = buildAttackAction(state, player, nearby)
-      if (passesValidation(state, candidate, '攻擊近距離怪', out)) return candidate
-    }
-  }
+  // if (player.stamina >= 5) {
+  //   const visible = getVisibleCreatures(state, player.id)
+  //   const nearby = visible
+  //     .filter((a) => {
+  //       const pos = a.sourceType === 'creature' ? a.creature.position : a.nest.position
+  //       const dist = Math.abs(pos.row - player.position.row) + Math.abs(pos.column - player.position.column)
+  //       return dist <= 2
+  //     })
+  //     .sort((a, b) => {
+  //       const posA = a.sourceType === 'creature' ? a.creature.position : a.nest.position
+  //       const posB = b.sourceType === 'creature' ? b.creature.position : b.nest.position
+  //       const dA = Math.abs(posA.row - player.position.row) + Math.abs(posA.column - player.position.column)
+  //       const dB = Math.abs(posB.row - player.position.row) + Math.abs(posB.column - player.position.column)
+  //       return dA - dB
+  //     })[0]
+  //   if (nearby) {
+  //     const candidate = buildAttackAction(state, player, nearby)
+  //     if (passesValidation(state, candidate, '攻擊近距離怪', out)) return candidate
+  //   }
+  // }
 
   // ═══════════════════════════════════════════════════
   // 中樹 3：撿道具

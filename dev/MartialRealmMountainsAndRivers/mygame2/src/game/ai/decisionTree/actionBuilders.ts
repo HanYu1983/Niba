@@ -225,7 +225,7 @@ export function buildExploreAction(
     type: 'move',
     actor,
     destination: dest,
-    reason: `探索未探索區域（目標 (${dest.row}, ${dest.column})，體力 ${Math.floor(player.stamina)}）`,
+    reason: `探索未探索區域（目標 (${dest.row}, ${dest.column})，目的 (${targetPos.row}, ${targetPos.column})，體力 ${Math.floor(player.stamina)}）`,
   }
 }
 
