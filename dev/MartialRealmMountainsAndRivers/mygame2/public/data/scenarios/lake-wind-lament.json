@@ -633,6 +633,16 @@
           "lingyuan-shelter-breath",
           "golden-body-inner"
         ],
+        "inventory": [
+          {
+            "itemId": "heal-wound-medicine",
+            "quantity": 1
+          },
+          {
+            "itemId": "gather-qi-pill",
+            "quantity": 1
+          }
+        ],
         "attributes": {
           "armStrength": 14,
           "constitution": 16,
@@ -681,11 +691,6 @@
               {
                 "type": "start-dialogue",
                 "dialogueId": "event-purify-spring"
-              },
-              {
-                "type": "item",
-                "itemId": "gather-yuan-pill",
-                "quantity": 1
               }
             ]
           }
@@ -724,11 +729,6 @@
               {
                 "type": "start-dialogue",
                 "dialogueId": "event-spring2-inspect"
-              },
-              {
-                "type": "item",
-                "itemId": "falling-rock-talisman",
-                "quantity": 1
               }
             ]
           }
@@ -767,11 +767,6 @@
               {
                 "type": "start-dialogue",
                 "dialogueId": "event-purify-marsh"
-              },
-              {
-                "type": "item",
-                "itemId": "heal-wound-medicine",
-                "quantity": 1
               }
             ]
           }
@@ -862,7 +857,7 @@
           "row": 2,
           "column": 2
         },
-        "name": "creature",
+        "name": "溺沼水鬼",
         "level": 2
       }
     },
@@ -878,7 +873,7 @@
           "row": 7,
           "column": 8
         },
-        "name": "creature",
+        "name": "蘆影湖妖",
         "level": 3
       }
     },
@@ -894,8 +889,71 @@
           "row": 3,
           "column": 8
         },
-        "name": "creature",
+        "name": "寒潭妖蟾",
         "level": 4
+      }
+    },
+    {
+      "id": "itemPoint-1-1-mtd646pz",
+      "kind": "itemPoint",
+      "position": {
+        "row": 1,
+        "column": 1
+      },
+      "data": {
+        "position": {
+          "row": 1,
+          "column": 1
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "heal-wound-medicine",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "itemPoint-9-9-mtd647nh",
+      "kind": "itemPoint",
+      "position": {
+        "row": 9,
+        "column": 9
+      },
+      "data": {
+        "position": {
+          "row": 9,
+          "column": 9
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "gather-qi-pill",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "itemPoint-1-9-mtd648aw",
+      "kind": "itemPoint",
+      "position": {
+        "row": 1,
+        "column": 9
+      },
+      "data": {
+        "position": {
+          "row": 1,
+          "column": 9
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "thunder-fire-bomb",
+            "chance": 100
+          }
+        ]
       }
     }
   ],
@@ -1051,6 +1109,12 @@
           "speakerName": "旁白",
           "speakerIcon": "📜",
           "content": "晨光灑落湖面，凌淵背起行囊，踏上新的征途。守護者的名字，將隨著他走過的每一寸山河，被更多人記住。"
+        },
+        {
+          "id": "victory-9",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "【功法解鎖】守護者武藝精進——凌淵習得外功「山河長養」,功法已存入俠客名冊，可在培養介面花費武學殘卷修習；沙盒對局即刻生效。"
         }
       ]
     },

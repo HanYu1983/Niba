@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0",
+  "version": "1.3.0",
   "id": "prologue-village",
   "title": "序章：青石遺恨",
   "description": "青石村妖氣頻生，村長委託凌淵討伐盤踞村外的妖物。",
@@ -522,26 +522,30 @@
       "data": {
         "name": "凌淵",
         "money": 50,
-        "innerSkillId": "tuna-gong",
+        "innerSkillId": "lingyuan-shelter-breath",
         "innerSkillIds": [
-          "tuna-gong"
+          "tuna-gong",
+          "lingyuan-shelter-breath"
         ],
-        "externalSkillIds": [
-          "sky-breaking-palm"
-        ],
-        "equippedExternalSkillIds": [
-          "sky-breaking-palm"
-        ],
+        "externalSkillIds": [],
+        "equippedExternalSkillIds": [],
         "inventory": [
           {
             "itemId": "heal-wound-medicine",
-            "quantity": 2
+            "quantity": 1
           },
           {
             "itemId": "gather-qi-pill",
             "quantity": 1
           }
-        ]
+        ],
+        "attributes": {
+          "armStrength": 10,
+          "constitution": 12,
+          "agility": 8,
+          "innerEnergy": 10,
+          "insight": 7
+        }
       }
     },
     {
@@ -603,13 +607,7 @@
         "schoolId": "swift-wind",
         "behaviorType": "sieger",
         "homeNestId": "nest-prologue",
-        "attributes": {
-          "armStrength": 11,
-          "constitution": 11,
-          "agility": 11,
-          "innerEnergy": 11,
-          "insight": 11
-        },
+        "attributes": {},
         "spawnOnLoad": false,
         "aggroRange": 5
       }
@@ -761,14 +759,9 @@
           "column": 6
         },
         "name": "藤林遊妖",
-        "attributes": {
-          "armStrength": 8,
-          "constitution": 8,
-          "agility": 8,
-          "innerEnergy": 8,
-          "insight": 8
-        },
-        "aggroRange": 2
+        "attributes": {},
+        "aggroRange": 2,
+        "level": 2
       }
     },
     {
@@ -839,13 +832,7 @@
           "column": 1
         },
         "name": "水澤殭",
-        "attributes": {
-          "armStrength": 8,
-          "constitution": 8,
-          "agility": 8,
-          "innerEnergy": 8,
-          "insight": 8
-        },
+        "attributes": {},
         "aggroRange": 1
       }
     }
@@ -867,7 +854,7 @@
     }
   },
   "dialogues": {
-    "event-xxx": {
+    "event-prologue-village-start": {
       "name": "序章對話",
       "steps": [
         {
@@ -1073,6 +1060,12 @@
           "speakerName": "村民們",
           "speakerIcon": "🎉",
           "content": "恭送少俠！願少俠一路平安，他日名動天下！"
+        },
+        {
+          "id": "victory-6",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "【功法解鎖】守護者傳承覺醒——凌淵領悟了內功「山河歸藏」！此功已存入俠客名冊，可在培養介面花費武學殘卷修習，日後沙盒對局即可裝備。"
         }
       ]
     }
@@ -1082,7 +1075,7 @@
       "id": "trigger-start-dialogue",
       "condition": "on-start",
       "action": "start-dialogue",
-      "actionParam": "event-xxx"
+      "actionParam": "event-prologue-village-start"
     },
     {
       "id": "trigger-spring-dialogue",

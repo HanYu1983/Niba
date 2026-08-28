@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0",
+  "version": "1.3.0",
   "id": "forest-hunt",
   "title": "第二章：林海迷蹤",
   "description": "主角進入林海，遇到獵人村落，發現妖氣源頭在森林深處的妖王巢穴。",
@@ -1147,32 +1147,33 @@
       "data": {
         "name": "凌淵",
         "money": 60,
-        "innerSkillId": "tuna-gong",
+        "innerSkillId": "lingyuan-shelter-breath",
         "innerSkillIds": [
-          "tuna-gong"
+          "tuna-gong",
+          "lingyuan-shelter-breath"
         ],
         "externalSkillIds": [
-          "sky-breaking-palm"
+          "lingyuan-mountain-pulse"
         ],
         "equippedExternalSkillIds": [
-          "sky-breaking-palm"
+          "lingyuan-mountain-pulse"
         ],
         "inventory": [
           {
             "itemId": "heal-wound-medicine",
-            "quantity": 3
+            "quantity": 1
           },
           {
             "itemId": "gather-qi-pill",
-            "quantity": 2
+            "quantity": 1
           }
         ],
         "attributes": {
-          "armStrength": 8,
-          "constitution": 8,
-          "agility": 8,
-          "innerEnergy": 8,
-          "insight": 8
+          "armStrength": 12,
+          "constitution": 14,
+          "agility": 10,
+          "innerEnergy": 12,
+          "insight": 9
         }
       }
     },
@@ -1253,17 +1254,11 @@
       "data": {
         "name": "妖衛首領",
         "isBoss": false,
-        "level": 2,
+        "level": 4,
         "schoolId": "swift-wind",
         "behaviorType": "hunter",
         "homeNestId": "nest-1",
-        "attributes": {
-          "armStrength": 15,
-          "constitution": 13,
-          "agility": 11,
-          "innerEnergy": 12,
-          "insight": 10
-        },
+        "attributes": {},
         "spawnOnLoad": false,
         "aggroRange": 4
       }
@@ -1279,18 +1274,12 @@
         "name": "巢穴妖衛",
         "isBoss": false,
         "level": 2,
-        "schoolId": "swift-wind",
-        "behaviorType": "hunter",
+        "schoolId": "earth-mountain",
+        "behaviorType": "roamer",
         "homeNestId": "nest-2",
-        "attributes": {
-          "armStrength": 11,
-          "constitution": 9,
-          "agility": 11,
-          "innerEnergy": 9,
-          "insight": 11
-        },
+        "attributes": {},
         "spawnOnLoad": true,
-        "aggroRange": 3
+        "aggroRange": 2
       }
     },
     {
@@ -1303,16 +1292,10 @@
       "data": {
         "name": "藤林遊妖",
         "isBoss": false,
-        "level": 1,
-        "schoolId": "void-spirit",
+        "level": 2,
+        "schoolId": "swift-wind",
         "behaviorType": "roamer",
-        "attributes": {
-          "armStrength": 8,
-          "constitution": 10,
-          "agility": 8,
-          "innerEnergy": 8,
-          "insight": 6
-        },
+        "attributes": {},
         "spawnOnLoad": true,
         "aggroRange": 2
       }
@@ -1328,15 +1311,9 @@
         "name": "藤林遊妖",
         "isBoss": false,
         "level": 1,
-        "schoolId": "void-spirit",
+        "schoolId": "frost-water",
         "behaviorType": "roamer",
-        "attributes": {
-          "armStrength": 8,
-          "constitution": 8,
-          "agility": 10,
-          "innerEnergy": 6,
-          "insight": 8
-        },
+        "attributes": {},
         "spawnOnLoad": true,
         "aggroRange": 2
       }
@@ -1658,6 +1635,12 @@
           "speakerName": "凌淵",
           "speakerIcon": "🥋",
           "content": "多謝老獵指點。江湖路長，我們後會有期。"
+        },
+        {
+          "id": "victory-6",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "【功法解鎖】守護者武藝精進——凌淵習得外功「山河脈動」,功法已存入俠客名冊，可在培養介面花費武學殘卷修習；沙盒對局即刻生效。"
         }
       ]
     },
