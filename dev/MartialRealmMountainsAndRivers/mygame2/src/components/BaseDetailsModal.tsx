@@ -58,7 +58,7 @@ function BaseDetailsModal({
         <LocationDetailsCard
           icon="🏯"
           name={base.name}
-          position={`位置 (${base.position.row + 1}, ${base.position.column + 1})`}
+          position={`位置 (${base.position.row}, ${base.position.column})`}
           statusLabel={base.health === 0 ? '已摧毀' : '防守中'}
           statusColor={base.health === 0 ? 'red' : 'gold'}
           health={base.health}

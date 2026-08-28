@@ -5,14 +5,12 @@ import { buildingCatalog } from '../../catalogs/buildingCatalog'
 import { canPlayerBuildBuildingType } from '../../rules/buildingProgressionRules'
 import {
   isHealthCritical,
-  isExhausted,
   findAdjacentCreature,
   findAdjacentItem,
   findAdjacentResourcePoint,
   needsBuildingMaterials,
   getVisibleOwnedBase,
   findUnexploredNearby,
-  getVisibleCreatures,
 } from './conditions'
 import {
   buildRetreatAction,
