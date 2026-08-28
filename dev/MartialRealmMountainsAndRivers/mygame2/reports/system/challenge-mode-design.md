@@ -101,7 +101,6 @@ export function resetChallengeState(): void       // 重置為 Lv.1（供除錯�
 │  初始遊蕩怪: 30                          │
 │  資源點: 9   道具點: 30  廢墟: 30        │
 │  門派據點: 12                            │
-│  怪物數量: 4                             │
 │  地形權重: 隨機                            │
 │  探索事件: 30   觸發機率: 5%             │
 │  巢穴回血: 1% / 回合                     │
@@ -170,7 +169,6 @@ export function resetChallengeState(): void       // 重置為 Lv.1（供除錯�
 | 道具點 | `基地數 × 10` | 同遊蕩怪數，福利度隨難度同升 |
 | 廢墟數 | `基地數 × 10` | 同遊蕩怪數，探索空間隨地圖擴大 |
 | 門派據點 | `基地數 × 4` | 可重複，不封頂 |
-| 怪物數量 | `3 + floor((level-1)/3)`，封頂 15 | 基礎數量 + 等級加成 |
 | 地形權重 | 每次隨機（值域相同 rand(10,80)）| 五種地形各自隨機，值域相同 |
 | 探索事件 | `基地數 × 10` | 同道具點數，地圖越大事件越豐富 |
 | 探索觸發機率 | 固定 0.05 | 不隨等級變化 |
@@ -307,13 +305,6 @@ sectGateCount = baseCount * 4
 > **原則**：門派據點可重複（同門派多個據點），不設封頂，
 > 跟隨基地數成比例成長——地圖越大中立據點越密集。
 
-#### 怪物數量 —— 線性成長，隨尺寸封頂
-
-```ts
-enemyCount = 3 + Math.floor((level - 1) / 3)   // 每 3 級 +1
-enemyCount = Math.min(enemyCount, 15)          // 隨地圖成長至 50×50 可容納更多
-```
-
 #### 地形權重 —— 五種地形值域相同，各自隨機
 
 ```ts
@@ -349,18 +340,11 @@ explorationTriggerChance = 0.05
 > **原則**：探索事件總數等同道具點數——地圖越大事件越豐富，
 > 保持隨機探索的樂趣與福利度，與難度同步成長。
 
-| 等級 | 怪物數 | | 等級 | 怪物數 |
-|---|---|---|---|---|
-| Lv.1 | 3 | | Lv.25 | 11 |
-| Lv.4 | 4 | | Lv.28 | 12 |
-| Lv.7 | 5 | | Lv.31 | 13 |
-| Lv.10 | 6 | | Lv.34 | 14 |
-| Lv.20 | 9 | | Lv.37+ | 15（封頂）|
+> **備註**：生物數值（怪物等級、怪物屬性、Boss、掉落）皆不屬於地圖設置
+> `GameSettings` 的參數——它們由生物 / 巢穴 / 結算生成邏輯決定，
+> 因此在挑戰關卡的**地圖設置換算中不列怪物等級、怪物屬性、Boss、掉落項**。
 
-> **封頂原因**：怪物數量受地圖格數與巢穴佈局限制；
-> 由於尺寸會成長至 50×50，數量上限放寬到 15，封頂落在 Lv.37。
-
-> **備註**：怪物數量以外的生物數值（怪物等級、怪物屬性、Boss、掉落）皆不屬於地圖設置\n> `GameSettings` 的參數——它們由生物 / 巢穴 / 結算生成邏輯決定，\n> 因此在挑戰關卡的**地圖設置換算中不列怪物等級、怪物屬性、Boss、掉落項**。\n\n#### 結束：地圖設置換算項目完畢
+#### 結束：地圖設置換算項目完畢
 
 ### 4.3 換算函式簽章
 
@@ -378,7 +362,6 @@ export type ChallengeMapConfig = {
   itemPointCount: number        // baseCount * 10：道具點（最多 250）
   ruinCount: number             // baseCount * 10：廢墟（最多 250）
   sectGateCount: number         // baseCount * 4：門派據點（可重複，不封頂）
-  enemyCount: number            // 3 + floor((level-1)/3)，封頂 15
   terrainWeights: TerrainWeights // 五種地形各 rand(10,80)，值域相同
   explorationEventCount: number // baseCount * 10：探索事件（最多 250）
   explorationTriggerChance: number // 固定 0.05
@@ -403,7 +386,7 @@ export function generateChallengeMapConfig(level: number): ChallengeMapConfig
 1. 玩家點擊「挑戰關卡」Tab
 2. 顯示當前闖關等級、歷史最高、總通關次數
 3. 玩家選擇要使用的名冊角色
-4. 顯示預估關卡資訊（地圖尺寸、基地/巢穴/怪物數量、地形權重等）
+4. 顯示預估關卡資訊（地圖尺寸、基地/巢穴/遊蕩怪/地形權重等）
 5. 點擊「開始挑戰」→ 呼叫 generateChallengeMapConfig(level)
 6. 生成 GameState（使用換算後的參數）
 7. 進入戰鬥

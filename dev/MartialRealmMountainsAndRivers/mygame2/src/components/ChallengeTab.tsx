@@ -2,7 +2,7 @@ import { Button, Card, Descriptions, Divider, Space, Typography, message } from 
 import { useMemo, useState } from 'react'
 import type { GameSettings } from '../game/types'
 import { getChallengeState, recordChallengeVictory, resetChallengeState } from '../game/challengeState'
-import { generateChallengeMapConfig, getChallengeEnemyCount } from '../game/challengeMapGenerator'
+import { generateChallengeMapConfig } from '../game/challengeMapGenerator'
 import { getCharacters, type PersistentCharacter } from '../game/characterRoster'
 
 type ChallengeTabProps = {
@@ -65,7 +65,6 @@ function ChallengeTab({ onStartChallenge }: ChallengeTabProps) {
         <Descriptions.Item label="道具點">{config.itemPointCount}</Descriptions.Item>
         <Descriptions.Item label="廢墟">{config.ruinCount}</Descriptions.Item>
         <Descriptions.Item label="門派據點">{config.sectGateCount}</Descriptions.Item>
-        <Descriptions.Item label="怪物數量">{getChallengeEnemyCount(state.level)}</Descriptions.Item>
         <Descriptions.Item label="地形權重">隨機（值域 10~80）</Descriptions.Item>
         <Descriptions.Item label="探索事件">{config.explorationEventCount}</Descriptions.Item>
         <Descriptions.Item label="觸發機率">{((config.explorationTriggerChance ?? 0.05) * 100).toFixed(0)}%</Descriptions.Item>
@@ -77,13 +76,13 @@ function ChallengeTab({ onStartChallenge }: ChallengeTabProps) {
           開始挑戰
         </Button>
         {/* 除錯用：模擬通關（暫不顯示，待正式通關結算接入後移除註解） */}
-        {false && (
+        {true && (
           <Button size="large" onClick={handleVictory}>
             ✅ 模擬通關（等級 +1）
           </Button>
         )}
         {/* 除錯用：重置挑戰狀態（暫不顯示） */}
-        {false && (
+        {true && (
           <Button
             size="large"
             danger

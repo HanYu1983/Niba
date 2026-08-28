@@ -11,7 +11,6 @@
  * - 初始遊蕩怪／道具點／廢墟／探索事件：基地數 × 10
  * - 資源點：基地數 × 3
  * - 門派據點：基地數 × 4（可重複，不封頂）
- * - 怪物數量：3 + floor((level-1)/3)，封頂 15
  * - 地形權重：五種地形各自隨機，值域相同 rand(10, 80)
  * - 探索觸發機率：固定 0.05
  * - 巢穴回血：固定 0.01
@@ -24,8 +23,6 @@ import type { GameSettings, TerrainWeights } from './types'
 export const CHALLENGE_MAX_SIZE = 50
 /** 地圖尺寸下限（15×15）。 */
 export const CHALLENGE_MIN_SIZE = 15
-/** 怪物數量上限。 */
-export const CHALLENGE_MAX_ENEMY_COUNT = 15
 /** 探索觸發機率（固定值）。 */
 export const CHALLENGE_EXPLORATION_TRIGGER_CHANCE = 0.05
 /** 巢穴每回合回血比例（固定值）。 */
@@ -44,13 +41,7 @@ export function getChallengeMapSize(level: number): number {
 
 /** 依地圖面積換算基地數（每 100 格 1 座，最少 1 座）。 */
 export function getChallengeBaseCount(rows: number, columns: number): number {
-  return Math.max(1, Math.floor((rows * columns) / 100))
-}
-
-/** 依闖關等級換算怪物數量（每 3 級 +1，封頂 15）。 */
-export function getChallengeEnemyCount(level: number): number {
-  const safeLevel = Math.max(1, Math.floor(level))
-  return Math.min(3 + Math.floor((safeLevel - 1) / 3), CHALLENGE_MAX_ENEMY_COUNT)
+  return Math.max(1, Math.floor((rows * columns) / 150))
 }
 
 /** 產生挑戰關卡的地形權重（五種地形各自隨機，值域相同 rand(10, 80)）。 */

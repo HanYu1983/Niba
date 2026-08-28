@@ -1,11 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import {
-  CHALLENGE_MAX_ENEMY_COUNT,
   CHALLENGE_MAX_SIZE,
   CHALLENGE_MIN_SIZE,
   generateChallengeMapConfig,
   getChallengeBaseCount,
-  getChallengeEnemyCount,
   getChallengeMapSize,
   getChallengeTerrainWeights,
 } from './challengeMapGenerator'
@@ -38,18 +36,6 @@ describe('challengeMapGenerator', () => {
     })
   })
 
-  describe('getChallengeEnemyCount', () => {
-    it('Lv.1 為 3，每 3 級 +1，封頂 15', () => {
-      expect(getChallengeEnemyCount(1)).toBe(3)
-      expect(getChallengeEnemyCount(4)).toBe(4)
-      expect(getChallengeEnemyCount(7)).toBe(5)
-      expect(getChallengeEnemyCount(10)).toBe(6)
-      expect(getChallengeEnemyCount(20)).toBe(9)
-      expect(getChallengeEnemyCount(37)).toBe(CHALLENGE_MAX_ENEMY_COUNT)
-      expect(getChallengeEnemyCount(100)).toBe(CHALLENGE_MAX_ENEMY_COUNT)
-    })
-  })
-
   describe('getChallengeTerrainWeights', () => {
     it('五種地形權重皆落在 [10, 80] 區間', () => {
       for (let i = 0; i < 50; i++) {
@@ -64,7 +50,7 @@ describe('challengeMapGenerator', () => {
   })
 
   describe('generateChallengeMapConfig', () => {
-    it('Lv.1：10×10、1 基地、3 巢、10 遊蕩怪、3 資源點、4 門派', () => {
+    it('Lv.1：15×15、2 基地、6 巢、20 遊蕩怪、6 資源點、8 門派', () => {
       const config = generateChallengeMapConfig(1)
       expect(config.rows).toBe(15)
       expect(config.columns).toBe(15)
@@ -76,7 +62,6 @@ describe('challengeMapGenerator', () => {
       expect(config.ruinCount).toBe(20)
       expect(config.explorationEventCount).toBe(20)
       expect(config.sectGateCount).toBe(8)
-      expect(getChallengeEnemyCount(1)).toBe(3)
     })
 
     it('固定參數：玩家 1、AI 0、觸發機率 0.05、巢穴回血 0.01', () => {
@@ -93,14 +78,13 @@ describe('challengeMapGenerator', () => {
       expect(a.seed).not.toBe(b.seed)
     })
 
-    it('高等級（Lv.100）：尺寸封頂 50、怪物數量封頂 15', () => {
+    it('高等級（Lv.100）：尺寸封頂 50', () => {
       const config = generateChallengeMapConfig(100)
       expect(config.rows).toBe(50)
       expect(config.columns).toBe(50)
       expect(config.baseCount).toBe(25)
       expect(config.nestCount).toBe(75)
       expect(config.creatureCount).toBe(250)
-      expect(getChallengeEnemyCount(100)).toBe(15)
     })
 
     it('地形權重皆在 [10, 80] 區間', () => {
