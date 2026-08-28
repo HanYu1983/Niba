@@ -87,19 +87,26 @@ export const lingyuan: OfficialCharacterDefinition = {
       scenarioId: 'prologue-village',
       skillIds: ['lingyuan-shelter-breath'],
     },
-    // 第二章「林海伏妖」：解鎖外功「山河脈動」（傷害型）＋天賦「金剛體魄」——
+    // 第二章「林海伏妖」：解鎖外功「山河脈動」（傷害型）——
     // 呼應林海中硬撼妖物、守護獵人村落的故事。
+    // 天賦「金剛體魄」（vital-body）為凌淵專屬、尚未定案，暫不移除引用前先不配置。
     {
       scenarioId: 'forest-hunt',
       skillIds: ['lingyuan-mountain-pulse'],
-      talentIds: ['vital-body'],
     },
-    // 第三章「寒水之殤」：解鎖外功「江河長養」（靈氣型）＋「五行歸元」（強化型）
-    // ＋天賦「丹田凝息」——呼應淨化水源、以內息驅動靈氣的故事。
+    // 第三章「寒水之殤」：解鎖外功「江河長養」（靈氣型）——
+    // 呼應淨化水源、以內息驅動靈氣的故事。
+    // 天賦「丹田凝息」（deep-dantian）為凌淵專屬、尚未定案，暫不移除引用前先不配置。
     {
       scenarioId: 'frost-water-lament',
-      skillIds: ['lingyuan-rivers-sustain', 'lingyuan-five-elements-mend'],
-      talentIds: ['deep-dantian'],
+      skillIds: ['lingyuan-rivers-sustain'],
+    },
+    // 第四章（尚未實作）：預計解鎖外功「五行歸元」（強化型）——
+    // 呼應「重整五行秩序」的主題。待第四章 scenario id 定案後，
+    // 將下方 scenarioId 替換為實際 id 即可生效。
+    {
+      scenarioId: 'chapter-4-tbd',
+      skillIds: ['lingyuan-five-elements-mend'],
     },
   ],
 }

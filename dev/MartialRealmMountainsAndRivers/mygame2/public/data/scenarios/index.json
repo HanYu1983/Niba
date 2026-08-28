@@ -1,21 +1,20 @@
 {
-  "version": "1.2.0",
+  "version": "1.3.0",
   "scenarios": [
     {
       "id": "prologue-village",
       "file": "prologue-village.json",
-      "version": "1.2.0"
+      "version": "1.3.0"
     },
     {
       "id": "forest-hunt",
       "file": "forest-hunt.json",
-      "version": "1.2.0"
+      "version": "1.3.0"
     },
     {
       "id": "frost-water-lament",
       "file": "lake-wind-lament.json",
-      "version": "1.2.0",
-      "inDevelopment": true
+      "version": "1.3.0"
     }
   ]
 }

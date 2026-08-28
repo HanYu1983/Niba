@@ -627,6 +627,10 @@ export type CampaignState = {
   chapterKey?: string
   /** 已觸發過的對話 stepId 集合（避免重複觸發）。 */
   triggeredDialogueIds: string[]
+  /** 已執行過的觸發器 id 集合（狀態型條件只執行一次；舊存檔可能缺此欄位）。 */
+  triggeredTriggerIds?: string[]
+  /** 已解決的探索事件 id 集合（供 on-events-resolved 觸發器比對；舊存檔可能缺此欄位）。 */
+  resolvedEventIds?: string[]
   /** 待顯示的對話佇列（FIFO；一次可能有多句排隊）。 */
   dialogueQueue: DialogueQueueEntry[]
   /** 本章節的對話定義（由 scenarioCompiler 從 ScenarioDefinition 注入）。 */

@@ -147,7 +147,7 @@ import { clearRuin as clearRuinAction, reconstructRuin as reconstructRuinAction 
 import { AUTO_SAVE_SLOT, getGameSaveSlots, loadGameState, loadGameStateFromSlot, saveGameState, saveGameStateToSlot, deleteGameStateFromSlot } from './gameSave'
 import { isRunSettled, markRunSettled } from './settledRuns'
 import { recordScenarioClearance } from './campaignClearance'
-import { createGameState as createWorldGameState, createDebugGameState as createWorldDebugGameState, createTestCampaignGameState as createWorldTestCampaignGameState } from './worldSetup'
+import { createGameState as createWorldGameState, createDebugGameState as createWorldDebugGameState } from './worldSetup'
 import {
   canExecuteRepair,
   createAttackPreview,
@@ -226,7 +226,6 @@ export function getDefenseBuildValidation(state: GameState, playerId: string, ba
 export { moveCreatures }
 export const createGameState = createWorldGameState
 export const createDebugGameState = createWorldDebugGameState
-export const createTestCampaignGameState = createWorldTestCampaignGameState
 const initialGameState = createGameState()
 
 let gameState = initialGameState
@@ -673,7 +672,6 @@ export const gameStore = {
     pendingCreatureTurnBasePlayers = null
     // 測試劇情不綁定名册角色，清除並同步 state。
     activeCharacterIds = []
-    gameState = { ...createTestCampaignGameState(), activeCharacterIds: [] }
     // 觸發開局（on-start）對話：收集符合的步驟並填入佇列（updateGameState 會自動顯示）。
     updateGameState((state) => {
       const steps = collectTriggeredDialogues(state, { type: 'on-start' })

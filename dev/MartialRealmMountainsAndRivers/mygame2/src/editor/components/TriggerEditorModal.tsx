@@ -19,6 +19,7 @@ const CONDITION_OPTIONS = [
   { value: 'on-defeat-boss', label: '擊敗首領時' },
   { value: 'on-round-reached', label: '到達指定回合' },
   { value: 'on-object-destroyed', label: '物件銷毀時' },
+  { value: 'on-events-resolved', label: '探索點事件解決時' },
   { value: 'on-failure', label: '失敗結算前' },
   { value: 'on-victory', label: '勝利結算前' },
 ]
@@ -30,7 +31,7 @@ const ACTION_OPTIONS = [
 ]
 
 /** 需要時機參數的條件。 */
-const CONDITIONS_WITH_PARAM = new Set(['on-objective-complete', 'on-enter-region', 'on-enter-area', 'on-exit-area', 'on-defeat-boss', 'on-round-reached', 'on-object-destroyed'])
+const CONDITIONS_WITH_PARAM = new Set(['on-objective-complete', 'on-enter-region', 'on-enter-area', 'on-exit-area', 'on-defeat-boss', 'on-round-reached', 'on-object-destroyed', 'on-events-resolved'])
 
 /** 時機參數的 placeholder 提示。 */
 const CONDITION_PARAM_PLACEHOLDER: Record<string, string> = {
@@ -41,6 +42,7 @@ const CONDITION_PARAM_PLACEHOLDER: Record<string, string> = {
   'on-defeat-boss': '首領 ID',
   'on-round-reached': '回合數',
   'on-object-destroyed': '物件 ID',
+  'on-events-resolved': '事件 ID（逗號分隔，全部解決才觸發）',
 }
 
 /**
@@ -70,6 +72,18 @@ function TriggerEditorModal({ open, scenario, onClose, onUpdateTriggers }: Trigg
     value: area.id,
     label: area.name || area.id,
   }))
+
+  /** 探索事件選項：供 on-events-resolved 多選（conditionParam 為逗號分隔 id 清單）。 */
+  const eventOptions = scenario.entities
+    .filter((entity) => entity.kind === 'event')
+    .map((entity) => ({
+      value: entity.id,
+      label: (entity.data.name as string) || entity.id,
+    }))
+
+  /** 將 conditionParam（逗號分隔）解析為多選值陣列。 */
+  const parseEventIds = (param?: string): string[] =>
+    (param ?? '').split(',').map((id) => id.trim()).filter(Boolean)
 
   const updateTrigger = (index: number, patch: Partial<ScenarioTrigger>) => {
     onUpdateTriggers(triggers.map((trigger, i) => (i === index ? { ...trigger, ...patch } : trigger)))
@@ -130,6 +144,16 @@ function TriggerEditorModal({ open, scenario, onClose, onUpdateTriggers }: Trigg
                   placeholder="選擇區域"
                   style={{ flex: 1 }}
                   onChange={(value) => updateTrigger(index, { conditionParam: value })}
+                />
+              ) : trigger.condition === 'on-events-resolved' ? (
+                <Select
+                  size="small"
+                  mode="multiple"
+                  value={parseEventIds(trigger.conditionParam)}
+                  options={eventOptions}
+                  placeholder="選擇需全部解決的事件（可多選）"
+                  style={{ flex: 1, minWidth: 0 }}
+                  onChange={(values) => updateTrigger(index, { conditionParam: values.length > 0 ? values.join(',') : undefined })}
                 />
               ) : (
                 <Input

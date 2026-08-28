@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0",
+  "version": "1.3.0",
   "id": "frost-water-lament",
   "title": "第三章：寒水之殤",
   "description": "主角來到湖畔，發現妖氣污染了水源。村民因水源污染而受苦，必須淨化汙染的水源。",
@@ -133,7 +133,7 @@
     {
       "row": 2,
       "column": 2,
-      "terrain": "road"
+      "terrain": "plain"
     },
     {
       "row": 2,
@@ -187,285 +187,285 @@
     },
     {
       "row": 3,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 4,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 7,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 4,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 7,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 5,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 5,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
       "column": 2,
       "terrain": "road"
     },
     {
-      "row": 3,
-      "column": 3,
-      "terrain": "plain"
-    },
-    {
-      "row": 3,
-      "column": 4,
-      "terrain": "water"
-    },
-    {
-      "row": 3,
-      "column": 5,
-      "terrain": "water"
-    },
-    {
-      "row": 3,
-      "column": 6,
-      "terrain": "water"
-    },
-    {
-      "row": 3,
-      "column": 7,
-      "terrain": "water"
-    },
-    {
-      "row": 3,
-      "column": 8,
-      "terrain": "plain"
-    },
-    {
-      "row": 3,
-      "column": 9,
-      "terrain": "plain"
-    },
-    {
-      "row": 3,
-      "column": 10,
-      "terrain": "wall"
-    },
-    {
-      "row": 4,
-      "column": 0,
-      "terrain": "wall"
-    },
-    {
-      "row": 4,
-      "column": 1,
-      "terrain": "forest"
-    },
-    {
-      "row": 4,
-      "column": 2,
-      "terrain": "plain"
-    },
-    {
-      "row": 4,
-      "column": 3,
-      "terrain": "plain"
-    },
-    {
-      "row": 4,
-      "column": 4,
-      "terrain": "water"
-    },
-    {
-      "row": 4,
-      "column": 5,
-      "terrain": "water"
-    },
-    {
-      "row": 4,
-      "column": 6,
-      "terrain": "water"
-    },
-    {
-      "row": 4,
-      "column": 7,
-      "terrain": "water"
-    },
-    {
-      "row": 4,
-      "column": 8,
-      "terrain": "plain"
-    },
-    {
-      "row": 4,
-      "column": 9,
-      "terrain": "forest"
-    },
-    {
-      "row": 4,
-      "column": 10,
-      "terrain": "wall"
-    },
-    {
-      "row": 5,
-      "column": 0,
-      "terrain": "wall"
-    },
-    {
-      "row": 5,
-      "column": 1,
-      "terrain": "forest"
-    },
-    {
-      "row": 5,
-      "column": 2,
-      "terrain": "plain"
-    },
-    {
-      "row": 5,
-      "column": 3,
-      "terrain": "plain"
-    },
-    {
-      "row": 5,
-      "column": 4,
-      "terrain": "plain"
-    },
-    {
-      "row": 5,
-      "column": 5,
-      "terrain": "water"
-    },
-    {
-      "row": 5,
-      "column": 6,
-      "terrain": "water"
-    },
-    {
-      "row": 5,
-      "column": 7,
-      "terrain": "plain"
-    },
-    {
-      "row": 5,
-      "column": 8,
-      "terrain": "plain"
-    },
-    {
-      "row": 5,
-      "column": 9,
-      "terrain": "forest"
-    },
-    {
-      "row": 5,
-      "column": 10,
-      "terrain": "wall"
-    },
-    {
-      "row": 6,
-      "column": 0,
-      "terrain": "wall"
-    },
-    {
-      "row": 6,
-      "column": 1,
-      "terrain": "forest"
-    },
-    {
-      "row": 6,
-      "column": 2,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 3,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 4,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 5,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 6,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 7,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 8,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 9,
-      "terrain": "forest"
-    },
-    {
-      "row": 6,
-      "column": 10,
-      "terrain": "wall"
-    },
-    {
-      "row": 7,
-      "column": 0,
-      "terrain": "wall"
-    },
-    {
-      "row": 7,
-      "column": 1,
-      "terrain": "forest"
-    },
-    {
-      "row": 7,
-      "column": 2,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 3,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 4,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 5,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 6,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 7,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 8,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 9,
-      "terrain": "forest"
-    },
-    {
-      "row": 7,
-      "column": 10,
-      "terrain": "wall"
-    },
-    {
-      "row": 8,
-      "column": 0,
-      "terrain": "wall"
-    },
-    {
-      "row": 8,
-      "column": 1,
-      "terrain": "plain"
-    },
-    {
-      "row": 8,
-      "column": 2,
-      "terrain": "road"
-    },
-    {
       "row": 8,
       "column": 3,
       "terrain": "plain"
@@ -473,17 +473,17 @@
     {
       "row": 8,
       "column": 4,
-      "terrain": "plain"
+      "terrain": "forest"
     },
     {
       "row": 8,
       "column": 5,
-      "terrain": "plain"
+      "terrain": "forest"
     },
     {
       "row": 8,
       "column": 6,
-      "terrain": "plain"
+      "terrain": "forest"
     },
     {
       "row": 8,
@@ -528,17 +528,17 @@
     {
       "row": 9,
       "column": 4,
-      "terrain": "plain"
+      "terrain": "forest"
     },
     {
       "row": 9,
       "column": 5,
-      "terrain": "plain"
+      "terrain": "forest"
     },
     {
       "row": 9,
       "column": 6,
-      "terrain": "plain"
+      "terrain": "forest"
     },
     {
       "row": 9,
@@ -627,17 +627,37 @@
       "data": {
         "name": "凌淵",
         "money": 80,
-        "innerSkillId": "tuna-gong",
+        "innerSkillId": "lingyuan-shelter-breath",
         "innerSkillIds": [
-          "tuna-gong"
+          "tuna-gong",
+          "lingyuan-shelter-breath",
+          "golden-body-inner"
+        ],
+        "inventory": [
+          {
+            "itemId": "heal-wound-medicine",
+            "quantity": 1
+          },
+          {
+            "itemId": "gather-qi-pill",
+            "quantity": 1
+          }
         ],
         "attributes": {
-          "armStrength": 19,
-          "constitution": 10,
-          "agility": 18,
-          "innerEnergy": 10,
-          "insight": 10
-        }
+          "armStrength": 14,
+          "constitution": 16,
+          "agility": 12,
+          "innerEnergy": 14,
+          "insight": 11
+        },
+        "externalSkillIds": [
+          "lingyuan-mountain-pulse",
+          "lingyuan-rivers-sustain"
+        ],
+        "equippedExternalSkillIds": [
+          "lingyuan-mountain-pulse",
+          "lingyuan-rivers-sustain"
+        ]
       }
     },
     {
@@ -675,7 +695,7 @@
             ]
           }
         ],
-        "spawnOnLoad": true
+        "spawnOnLoad": false
       }
     },
     {
@@ -713,7 +733,7 @@
             ]
           }
         ],
-        "spawnOnLoad": true
+        "spawnOnLoad": false
       }
     },
     {
@@ -751,7 +771,7 @@
             ]
           }
         ],
-        "spawnOnLoad": true
+        "spawnOnLoad": false
       }
     },
     {
@@ -784,26 +804,167 @@
               {
                 "type": "start-dialogue",
                 "dialogueId": "dialogue-villager"
+              },
+              {
+                "type": "spawn-event",
+                "eventId": "event-spring3"
+              },
+              {
+                "type": "spawn-event",
+                "eventId": "event-spring1"
+              },
+              {
+                "type": "spawn-event",
+                "eventId": "event-spring2"
               }
             ]
           }
         ],
         "spawnOnLoad": true
       }
+    },
+    {
+      "id": "creature-2-5-mtd3uug1",
+      "kind": "creature",
+      "position": {
+        "row": 2,
+        "column": 5
+      },
+      "data": {
+        "position": {
+          "row": 2,
+          "column": 5
+        },
+        "name": "湖中妖邪",
+        "spawnOnLoad": false,
+        "isBoss": true,
+        "schoolId": "frost-water",
+        "behaviorType": "hunter",
+        "aggroRange": 5,
+        "attributes": {},
+        "level": 6
+      }
+    },
+    {
+      "id": "creature-2-2-mtd5ieor",
+      "kind": "creature",
+      "position": {
+        "row": 2,
+        "column": 2
+      },
+      "data": {
+        "position": {
+          "row": 2,
+          "column": 2
+        },
+        "name": "溺沼水鬼",
+        "level": 2
+      }
+    },
+    {
+      "id": "creature-7-8-mtd5ig60",
+      "kind": "creature",
+      "position": {
+        "row": 7,
+        "column": 8
+      },
+      "data": {
+        "position": {
+          "row": 7,
+          "column": 8
+        },
+        "name": "蘆影湖妖",
+        "level": 3
+      }
+    },
+    {
+      "id": "creature-3-8-mtd5ii4k",
+      "kind": "creature",
+      "position": {
+        "row": 3,
+        "column": 8
+      },
+      "data": {
+        "position": {
+          "row": 3,
+          "column": 8
+        },
+        "name": "寒潭妖蟾",
+        "level": 4
+      }
+    },
+    {
+      "id": "itemPoint-1-1-mtd646pz",
+      "kind": "itemPoint",
+      "position": {
+        "row": 1,
+        "column": 1
+      },
+      "data": {
+        "position": {
+          "row": 1,
+          "column": 1
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "heal-wound-medicine",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "itemPoint-9-9-mtd647nh",
+      "kind": "itemPoint",
+      "position": {
+        "row": 9,
+        "column": 9
+      },
+      "data": {
+        "position": {
+          "row": 9,
+          "column": 9
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "gather-qi-pill",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "itemPoint-1-9-mtd648aw",
+      "kind": "itemPoint",
+      "position": {
+        "row": 1,
+        "column": 9
+      },
+      "data": {
+        "position": {
+          "row": 1,
+          "column": 9
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "thunder-fire-bomb",
+            "chance": 100
+          }
+        ]
+      }
     }
   ],
   "quests": {
     "victoryObjectives": [
       {
-        "id": "obj-purify-springs",
-        "title": "淨化 3 處水源",
-        "type": "interact-object",
-        "targetIds": [
-          "event-spring1",
-          "event-spring2",
-          "event-spring3"
-        ],
-        "targetValue": 3
+        "id": "objective-mtd3upyy",
+        "title": "新目標",
+        "type": "defeat-creature",
+        "targetValue": 1,
+        "targetId": "creature-2-5-mtd3uug1"
       }
     ],
     "failConditions": {
@@ -905,19 +1066,84 @@
           "id": "victory-1",
           "speakerName": "旁白",
           "speakerIcon": "📜",
-          "content": "三處水源皆已淨化，湖泊重現波光瀲灩。村民們欣喜紛盪至湖畔，摔起清澈湖水。"
+          "content": "湖中妖邪應聲倒下，化作點點螢光消散於水面。三處泉眼同時湧出清泉，湖泊重現波光瀲灩。村民們欣喜奔走至湖畔，捧起清澈湖水。"
         },
         {
           "id": "victory-2",
           "speakerName": "村民 王伯",
           "speakerIcon": "👴",
-          "content": "湖水清澈了！少快果然神通廣大，這下全村人都要謝你的大恩大德！"
+          "content": "湖水清澈了！少俠果然神通廣大，這下全村人都要謝你的大恩大德！敢問恩人尊姓大名，師承何處？"
         },
         {
           "id": "victory-3",
           "speakerName": "凌淵",
           "speakerIcon": "🥋",
-          "content": "湖底那封印痕跡，與我師藥的手法如出一轍。看來這片湖泊的妖氣，背後仍有更深層的布局。"
+          "content": "晚輩凌淵……至於師承，我自己也說不清了。我只知道，我是被師父帶到青石村，交給村裡撫養長大的。"
+        },
+        {
+          "id": "victory-4",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "師父臨終前告訴我，我們這一脈叫「守護者」——世代鎮守五行平衡，不屬於任何門派。當年妖王作亂，是師父以性命為代價，將它封印在這片地脈之下。"
+        },
+        {
+          "id": "victory-5",
+          "speakerName": "村民 王伯",
+          "speakerIcon": "👴",
+          "content": "守護者……難怪！老朽年輕時曾聽祖上說過，青石村建村之初，便有一位高人囑咐：若湖底封印鬆動，自有守護者一脈的傳人前來。原來……等的就是您啊！"
+        },
+        {
+          "id": "victory-6",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "湖底那道封印印記，與師父的手法如出一轍。可這次封印鬆動得太快了——妖王的力量不該這麼快復甦。背後恐怕還有人在暗中破壞封印。"
+        },
+        {
+          "id": "victory-7",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "王伯，謝謝你們。但我的旅途還沒有結束——守護者的使命，是走遍這片山河，守護每一寸被妖氣侵蝕的土地。下一站，我會繼續追查封印背後的黑手。"
+        },
+        {
+          "id": "victory-8",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "晨光灑落湖面，凌淵背起行囊，踏上新的征途。守護者的名字，將隨著他走過的每一寸山河，被更多人記住。"
+        },
+        {
+          "id": "victory-9",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "【功法解鎖】守護者武藝精進——凌淵習得外功「江河長養」，功法已存入俠客名冊，可在培養介面花費武學殘卷修習，日後沙盒對局即可裝備。"
+        }
+      ]
+    },
+    "dialogue-mtd4wfg9": {
+      "name": "處理三個泉水后, 妖物出現",
+      "steps": [
+        {
+          "id": "step-mtd4wfg9-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "三處水源皆已淨化，湖泊重現波光瀲灩。然而湖心深處，一道青黑色的妖氣自水底緩緩升起。"
+        },
+        {
+          "id": "step-mtd4wfg9-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "淨化了三處泉眼，妖氣非但沒有消散，反而全部匯往湖心……難道源頭一直藏在那裡？"
+        },
+        {
+          "id": "step-mtd4wfg9-3",
+          "speakerName": "村民 王伯",
+          "speakerIcon": "👴",
+          "content": "少俠小心！湖心那處漩渦，是村裡世代相傳的禁地——老一輩說底下鎮著什麼不得了的東西！"
+        },
+        {
+          "id": "step-mtd4wfg9-4",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "話音未落，湖心轟然炸開千層水浪——封印鬆動之處，湖中妖邪現身了！"
         }
       ]
     }
@@ -928,6 +1154,20 @@
       "condition": "on-start",
       "action": "start-dialogue",
       "actionParam": "event-chapter3-start"
+    },
+    {
+      "id": "trigger-all-springs-purified",
+      "condition": "on-events-resolved",
+      "conditionParam": "event-spring1,event-spring2,event-spring3",
+      "action": "start-dialogue",
+      "actionParam": "dialogue-mtd4wfg9"
+    },
+    {
+      "id": "trigger-all-springs-boss",
+      "condition": "on-events-resolved",
+      "conditionParam": "event-spring1,event-spring2,event-spring3",
+      "action": "spawn-creature",
+      "actionParam": "creature-2-5-mtd3uug1"
     },
     {
       "id": "trigger-victory",
