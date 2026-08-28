@@ -11,8 +11,11 @@ import {
   type StoredScenario,
   type StoredScenarioMap,
 } from '../game/scenarioStorage'
-import { getScenarioClearances } from '../game/campaignClearance'
+import { getScenarioClearances, type ScenarioClearanceMap } from '../game/campaignClearance'
 import { officialCharacterCatalog, getOfficialCharacterChapters, type OfficialCharacterDefinition } from '../game/catalogs/officialCharacterCatalog'
+import { getInnerSkill, getExternalSkill } from '../game/rules/skillRules'
+import { getTalent } from '../game/catalogs/talentCatalog'
+import { getCharacter as getRosterCharacter } from '../game/characterRoster'
 
 type CampaignScenarioTabProps = {
   /** 開始一個劇本關卡（載入完整劇本：任務 + 對話）。 */
@@ -113,6 +116,175 @@ export function groupScenariosByChapter(entries: StoredScenario[]): ChapterGroup
   return populated
 }
 
+/** 單一解鎖項目的狀態。 */
+export type UnlockItemStatus = 'unlocked' | 'pending-apply' | 'locked'
+
+/** 一個解鎖項目（功法 / 天賦），含顯示名稱與狀態。 */
+export type UnlockItem = {
+  id: string
+  name: string
+  description?: string
+  status: UnlockItemStatus
+}
+
+/** 一個篇章的通關 + 解鎖彙整。 */
+export type ChapterProgressEntry = {
+  scenarioId: string
+  scenarioTitle: string
+  chapterIndex: number | undefined
+  /** 通關狀態：true 通關 / false 失敗 / undefined 未挑戰。 */
+  cleared: boolean | undefined
+  /** 此篇章通關後會帶來的解鎖項目（已過濾為「此時此刻可呈現的狀態」）。 */
+  unlocks: {
+    innerSkillIds: string[]
+    externalSkillIds: string[]
+    talentIds: string[]
+  }
+}
+
+/** 攻略進度檢視（Collapse 群組內嵌顯示的資料源）。 */
+export type ChapterProgressView = {
+  character: OfficialCharacterDefinition
+  characterName: string
+  characterTitle: string
+  /** 名册中該角色的快照（若尚未建檔則為 null，例如首次安裝時）。 */
+  rosterSnapshot: {
+    unlockedSkillIds: string[]
+    learnedSkillIds: string[]
+    unlockedTalentIds: string[]
+    talentIds: string[]
+  } | null
+  chapters: ChapterProgressEntry[]
+  /** 累積已實際納入名册的解鎖清單（用於群組內「已解鎖」摘要）。 */
+  totalUnlocked: UnlockItem[]
+  /** 條件已達成但因尚未實作 hook 而「待套用」的項目。 */
+  totalPending: UnlockItem[]
+}
+
+/**
+ * 為某位官方角色建立「攻略進度」視圖資料。
+ *
+ * 規則：
+ * - 列出該角色綁定的所有篇章（含通關狀態）。
+ * - 累積每個通關篇章會帶來的解鎖（innerSkillIds / externalSkillIds / talentIds）。
+ * - 與名册中的官方角色快照比對：
+ *   - 已實際出現在 `unlockedSkillIds` / `unlockedTalentIds` → 'unlocked'
+ *   - 對應劇本已通關但名册內未含 → 'pending-apply'（待 applyEndGameRewards hook 串接）
+ *   - 對應劇本未通關 → 'locked'
+ *
+ * 純函式；不觸發任何 IO、不修改狀態。
+ */
+export function buildChapterProgressView(
+  character: OfficialCharacterDefinition,
+  clearances: ScenarioClearanceMap,
+): ChapterProgressView {
+  const roster = getRosterCharacter(character.characterId)
+  const rosterSnapshot = roster
+    ? {
+        unlockedSkillIds: [...roster.unlockedSkillIds],
+        learnedSkillIds: [...roster.learnedSkillIds],
+        unlockedTalentIds: [...roster.unlockedTalentIds],
+        talentIds: [...roster.talentIds],
+      }
+    : null
+
+  const clearedScenarioIds = new Set(
+    Object.entries(clearances)
+      .filter(([, cleared]) => cleared)
+      .map(([id]) => id),
+  )
+
+  const chapters: ChapterProgressEntry[] = getOfficialCharacterChapters(character).map((scenarioId) => {
+    // 從官方劇本目錄找對應 scenario（用 chapterId 比對）。
+    // 注意：這裡的 `campaignScenarioCatalog` 不在 import 範圍（避免循環），
+    // 所以僅以 scenarioId 呈現；詳細標題由呼叫端以 stored scenarios 覆寫。
+    const storyUnlock = character.storyUnlocks.find((unlock) => unlock.scenarioId === scenarioId)
+    return {
+      scenarioId,
+      scenarioTitle: scenarioId, // 真實標題由呼叫端以 stored scenarios 覆寫
+      chapterIndex: undefined,
+      cleared: clearances[scenarioId],
+      unlocks: {
+        innerSkillIds: storyUnlock?.skillIds?.filter((id) => getInnerSkill(id)?.exclusiveCharacterId === character.characterId) ?? [],
+        externalSkillIds: storyUnlock?.skillIds?.filter((id) => {
+          const skill = getExternalSkillSafe(id)
+          return skill?.exclusiveCharacterId === character.characterId
+        }) ?? [],
+        talentIds: storyUnlock?.talentIds ?? [],
+      },
+    }
+  })
+
+  // 已知有「未實作 hook」的情形：當某篇章已通關，但對應 storyUnlocks 的 skillId/talentId
+  // 仍未在名册快照中出現，標記為 pending-apply（這是 applyEndGameRewards 對官方角色尚未
+  // 串接 storyUnlocks 的設計缺口，由 UI 提前呈現給玩家）。
+  const totalUnlocked: UnlockItem[] = []
+  const totalPending: UnlockItem[] = []
+
+  // 先把「已解鎖」與「待套用」項目依狀態分桶。
+  const bucket = (id: string, fallbackKind: 'inner' | 'external' | 'talent') => {
+    const inRoster = rosterSnapshot
+      ? fallbackKind === 'talent'
+        ? rosterSnapshot.unlockedTalentIds.includes(id)
+        : rosterSnapshot.unlockedSkillIds.includes(id)
+      : false
+    const owner = fallbackKind === 'talent' ? getTalent(id) : fallbackKind === 'inner' ? getInnerSkill(id) : getExternalSkillSafe(id)
+    const name = owner?.name ?? id
+    const description = owner && 'description' in owner ? owner.description : undefined
+    const item: UnlockItem = { id, name, description, status: inRoster ? 'unlocked' : 'pending-apply' }
+    if (inRoster) totalUnlocked.push(item)
+    else totalPending.push(item)
+  }
+
+  // 名册初始帶入的功法（四件套）一律算已解鎖（即使沒通關）。
+  if (rosterSnapshot) {
+    for (const id of character.exclusiveExternalSkillIds) {
+      if (rosterSnapshot.unlockedSkillIds.includes(id)) {
+        const skill = getExternalSkillSafe(id)
+        totalUnlocked.push({ id, name: skill?.name ?? id, description: skill && 'description' in skill ? skill.description : undefined, status: 'unlocked' })
+      }
+    }
+    if (rosterSnapshot.unlockedSkillIds.includes(character.exclusiveInnerSkillId)) {
+      const skill = getInnerSkill(character.exclusiveInnerSkillId)
+      totalUnlocked.push({ id: character.exclusiveInnerSkillId, name: skill.name, description: skill.description, status: 'unlocked' })
+    }
+  }
+
+  // 通關章節帶來的解鎖：若條件已達成，依實際是否在名册分桶。
+  for (const entry of chapters) {
+    if (!entry.cleared) continue
+    for (const id of entry.unlocks.innerSkillIds) bucket(id, 'inner')
+    for (const id of entry.unlocks.externalSkillIds) bucket(id, 'external')
+    for (const id of entry.unlocks.talentIds) bucket(id, 'talent')
+  }
+
+  // pending-apply 中只保留「條件已達成」者；其餘屬於 locked 類別，於群組內章節列表呈現。
+  // 這裡若全無 cleared 篇章，totalPending 維持空陣列。
+  void clearedScenarioIds // 為將來擴充預留（e.g. 跨篇章累計解鎖）
+
+  return {
+    character,
+    characterName: character.name,
+    characterTitle: character.title,
+    rosterSnapshot,
+    chapters,
+    totalUnlocked,
+    totalPending,
+  }
+}
+
+/**
+ * 安全取得外功定義：getExternalSkill 若找不到會 throw，這裡改回傳 undefined。
+ * 避免劇本資料有未登錄的 skillId 時炸掉整個進度視圖。
+ */
+function getExternalSkillSafe(skillId: string): { name: string; description?: string; exclusiveCharacterId?: string } | undefined {
+  try {
+    return getExternalSkill(skillId)
+  } catch {
+    return undefined
+  }
+}
+
 /**
  * 劇本地圖 Tab：列出官方副本與自訂關卡，處理「官方已更新」提示，
  * 並提供開始劇本、刪除自訂關卡等功能。
@@ -193,66 +365,126 @@ function CampaignScenarioTab({ onStartScenario }: CampaignScenarioTabProps) {
         <Collapse
           accordion={false}
           defaultActiveKey={defaultActiveKeys}
-          items={groups.map((group) => ({
-            key: group.key,
-            label: (
-              <Space size="small" wrap>
-                <Typography.Text strong>{group.header}</Typography.Text>
-                {group.subtitle && (
-                  <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                    {group.subtitle}
-                  </Typography.Text>
-                )}
-                <Tag style={{ marginInlineEnd: 0 }}>{group.entries.length} 個關卡</Tag>
-              </Space>
-            ),
-            children: (
-              <List
-                dataSource={group.entries}
-                renderItem={(entry) => (
-                  <List.Item
-                    actions={[
-                      <Button
-                        key="start"
-                        type="primary"
-                        size="small"
-                        disabled={entry.inDevelopment ?? false}
-                        onClick={() => handleStart(entry)}
-                      >
-                        {entry.inDevelopment ? '開發中' : '開始'}
-                      </Button>,
-                      entry.source === 'custom' ? (
-                        <Button key="delete" size="small" danger onClick={() => handleDelete(entry.id)}>
-                          刪除
-                        </Button>
-                      ) : null,
-                    ]}
-                  >
-                    <List.Item.Meta
-                      title={
-                        <Space>
-                          <Typography.Text>{entry.scenario.title}</Typography.Text>
-                          {entry.inDevelopment ? (
-                            <Tag color="warning" style={{ marginInlineEnd: 0 }}>開發中</Tag>
-                          ) : null}
-                          {clearances[entry.id] === true ? (
-                            <Tag icon={<CheckCircleOutlined />} color="success" style={{ marginInlineEnd: 0 }}>已通關</Tag>
-                          ) : clearances[entry.id] === false ? (
-                            <Tag icon={<CloseCircleOutlined />} color="error" style={{ marginInlineEnd: 0 }}>未通過</Tag>
-                          ) : null}
-                          <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                            {entry.source === 'official' ? '官方' : '自訂'}
-                            {entry.modified ? ' · 已修改' : ''}
-                          </Typography.Text>
+          items={groups.map((group) => {
+            // 為有官方角色的群組建立進度視圖（章節標題由 stored scenarios 補上）。
+            const progressView = group.character
+              ? buildChapterProgressView(group.character, clearances)
+              : null
+            const enrichedChapters = progressView
+              ? progressView.chapters.map((entry) => {
+                  const stored = scenarios[entry.scenarioId]
+                  return {
+                    ...entry,
+                    scenarioTitle: stored?.scenario.title ?? entry.scenarioId,
+                    chapterIndex: stored?.scenario.chapterIndex ?? entry.chapterIndex,
+                  }
+                })
+              : []
+
+            return {
+              key: group.key,
+              label: (
+                <Space size="small" wrap>
+                  <Typography.Text strong>{group.header}</Typography.Text>
+                  {group.subtitle && (
+                    <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                      {group.subtitle}
+                    </Typography.Text>
+                  )}
+                  <Tag style={{ marginInlineEnd: 0 }}>{group.entries.length} 個關卡</Tag>
+                </Space>
+              ),
+              children: (
+                <>
+                  {/* 篇章進度 + 解鎖項目（僅官方角色群組顯示，位於關卡列表上方） */}
+                  {progressView && (
+                    <div style={{ marginBottom: 16, padding: 12, background: '#fafafa', borderRadius: 8 }}>
+                      <Typography.Title level={5} style={{ marginTop: 12, marginBottom: 8 }}>✅ 名冊角色已解鎖功法&天賦</Typography.Title>
+                      {progressView.totalUnlocked.length === 0 ? (
+                        <Typography.Text type="secondary">尚無已解鎖項目。</Typography.Text>
+                      ) : (
+                        <Space wrap>
+                          {progressView.totalUnlocked.map((item) => (
+                            <Tag key={item.id} color="green" title={item.description}>
+                              {item.name}
+                            </Tag>
+                          ))}
                         </Space>
-                      }
-                      description={`${entry.scenario.mapSize.rows}×${entry.scenario.mapSize.columns} · ${entry.scenario.quests.victoryObjectives.length} 個勝利目標 · ${Object.keys(entry.scenario.dialogues).length} 組對話`}
-                    />
-                  </List.Item>
-                )}
-              />
-            ),
-          }))}
+                      )}
+
+                      {progressView.totalPending.length > 0 && (
+                        <>
+                          <Typography.Title level={5} style={{ marginTop: 12, marginBottom: 8 }}>⏳ 已通關但待套用</Typography.Title>
+                          <Typography.Paragraph type="secondary" style={{ fontSize: 12 }}>
+                            對應篇章已通關，但解鎖合併流程尚未串接（將在後續 hook 補上）。
+                          </Typography.Paragraph>
+                          <Space wrap>
+                            {progressView.totalPending.map((item) => (
+                              <Tag key={item.id} color="orange" title={item.description}>
+                                {item.name}
+                              </Tag>
+                            ))}
+                          </Space>
+                        </>
+                      )}
+
+                      {!progressView.rosterSnapshot && (
+                        <Typography.Paragraph type="warning" style={{ marginTop: 12 }}>
+                          尚未在「俠客名冊」建立此角色；請進入名冊頁以建立預建角色。
+                        </Typography.Paragraph>
+                      )}
+                    </div>
+                  )}
+
+                  {/* 關卡列表 */}
+                  <List
+                    dataSource={group.entries}
+                    renderItem={(entry) => (
+                      <List.Item
+                        actions={[
+                          <Button
+                            key="start"
+                            type="primary"
+                            size="small"
+                            disabled={entry.inDevelopment ?? false}
+                            onClick={() => handleStart(entry)}
+                          >
+                            {entry.inDevelopment ? '開發中' : '開始'}
+                          </Button>,
+                          entry.source === 'custom' ? (
+                            <Button key="delete" size="small" danger onClick={() => handleDelete(entry.id)}>
+                              刪除
+                            </Button>
+                          ) : null,
+                        ]}
+                      >
+                        <List.Item.Meta
+                          title={
+                            <Space>
+                              <Typography.Text>{entry.scenario.title}</Typography.Text>
+                              {entry.inDevelopment ? (
+                                <Tag color="warning" style={{ marginInlineEnd: 0 }}>開發中</Tag>
+                              ) : null}
+                              {clearances[entry.id] === true ? (
+                                <Tag icon={<CheckCircleOutlined />} color="success" style={{ marginInlineEnd: 0 }}>已通關</Tag>
+                              ) : clearances[entry.id] === false ? (
+                                <Tag icon={<CloseCircleOutlined />} color="error" style={{ marginInlineEnd: 0 }}>未通過</Tag>
+                              ) : null}
+                              <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                                {entry.source === 'official' ? '官方' : '自訂'}
+                                {entry.modified ? ' · 已修改' : ''}
+                              </Typography.Text>
+                            </Space>
+                          }
+                          description={`${entry.scenario.mapSize.rows}×${entry.scenario.mapSize.columns} · ${entry.scenario.quests.victoryObjectives.length} 個勝利目標 · ${Object.keys(entry.scenario.dialogues).length} 組對話`}
+                        />
+                      </List.Item>
+                    )}
+                  />
+                </>
+              ),
+            }
+          })}
         />
       )}
 

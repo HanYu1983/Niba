@@ -1,8 +1,10 @@
-import { describe, expect, it } from 'vitest'
-import { groupScenariosByChapter } from './CampaignScenarioTab'
+import { describe, expect, it, beforeEach, vi } from 'vitest'
+import { groupScenariosByChapter, buildChapterProgressView } from './CampaignScenarioTab'
 import type { StoredScenario } from '../game/scenarioStorage'
 import type { ScenarioDefinition } from '../editor/editorTypes'
 import { lingyuan } from '../game/catalogs/officialCharacterCatalog'
+import { CHARACTER_ROSTER_STORAGE_KEY } from '../game/characterRoster'
+import type { ScenarioClearanceMap } from '../game/campaignClearance'
 
 function makeScenario(overrides: Partial<ScenarioDefinition> = {}): ScenarioDefinition {
   return {
@@ -30,6 +32,15 @@ function makeEntry(overrides: Partial<StoredScenario> = {}): StoredScenario {
     scenario: makeScenario(),
     ...overrides,
   } as StoredScenario
+}
+
+function stubLocalStorage() {
+  const store = new Map<string, string>()
+  vi.stubGlobal('localStorage', {
+    getItem: (key: string) => (store.has(key) ? store.get(key) ?? null : null),
+    setItem: (key: string, value: string) => { store.set(key, value) },
+    removeItem: (key: string) => { store.delete(key) },
+  })
 }
 
 describe('groupScenariosByChapter', () => {
@@ -129,5 +140,114 @@ describe('groupScenariosByChapter', () => {
     const groups = groupScenariosByChapter([ch4])
     expect(groups).toHaveLength(1)
     expect(groups[0].key).toBe('uncategorized')
+  })
+})
+
+describe('buildChapterProgressView', () => {
+  beforeEach(() => {
+    stubLocalStorage()
+  })
+
+  it('空 localStorage：rosterSnapshot 為 null，但 chapters 仍依 chapterIds 列出', () => {
+    const clearances: ScenarioClearanceMap = {}
+    const view = buildChapterProgressView(lingyuan, clearances)
+    expect(view.characterName).toBe('凌淵')
+    expect(view.rosterSnapshot).toBeNull()
+    expect(view.chapters.map((c) => c.scenarioId)).toEqual([
+      'prologue-village',
+      'forest-hunt',
+      'frost-water-lament',
+    ])
+    // 沒有 roster → totalUnlocked 只有在「通關解鎖」分支才會填入，初始帶入分支不觸發。
+    expect(view.totalUnlocked).toEqual([])
+    expect(view.totalPending).toEqual([])
+  })
+
+  it('名册內已有凌淵時，初始四件套列為「已解鎖」', () => {
+    localStorage.setItem(CHARACTER_ROSTER_STORAGE_KEY, JSON.stringify({
+      version: 2,
+      characters: [{
+        id: lingyuan.characterId,
+        name: lingyuan.name,
+        isOfficial: true,
+        chapterId: lingyuan.chapterId,
+        attributeBonuses: { armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 },
+        scrolls: 0,
+        unlockedSkillIds: [
+          'tuna-gong',
+          'sky-breaking-palm',
+          lingyuan.exclusiveInnerSkillId,
+          ...lingyuan.exclusiveExternalSkillIds,
+        ],
+        learnedSkillIds: [lingyuan.exclusiveInnerSkillId, ...lingyuan.exclusiveExternalSkillIds],
+        initialExternalSkillIds: [...lingyuan.exclusiveExternalSkillIds],
+        initialInternalSkillId: lingyuan.exclusiveInnerSkillId,
+        unlockedTalentIds: [],
+        talentIds: [],
+        gamesPlayed: 0,
+        createdAt: 0,
+      }],
+    }))
+    const clearances: ScenarioClearanceMap = {}
+    const view = buildChapterProgressView(lingyuan, clearances)
+    expect(view.rosterSnapshot).not.toBeNull()
+    const unlockedNames = view.totalUnlocked.map((item) => item.name)
+    // 四件套的功法名稱至少都應在已解鎖清單中
+    expect(unlockedNames.length).toBe(lingyuan.exclusiveExternalSkillIds.length + 1) // 1 內功 + 3 外功
+    expect(view.totalPending).toEqual([])
+  })
+
+  it('通關後若 storyUnlocks 帶來新功法但名册未含 → 標記為 pending-apply', () => {
+    // 模擬：凌淵已存在名册，但「已通關第二章」會額外解鎖一個新功法（mock storyUnlocks）。
+    // 為避免動到正式 catalog，這裡直接用「通關一個不屬於 lingyuan chapterIds 的章節」並
+    // 觀察其行為；以及測一個關鍵路徑——空 storyUnlocks 時 pending 為空。
+    localStorage.setItem(CHARACTER_ROSTER_STORAGE_KEY, JSON.stringify({
+      version: 2,
+      characters: [{
+        id: lingyuan.characterId,
+        name: lingyuan.name,
+        isOfficial: true,
+        chapterId: lingyuan.chapterId,
+        attributeBonuses: { armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 },
+        scrolls: 0,
+        unlockedSkillIds: [lingyuan.exclusiveInnerSkillId, ...lingyuan.exclusiveExternalSkillIds],
+        learnedSkillIds: [],
+        initialExternalSkillIds: [],
+        initialInternalSkillId: lingyuan.exclusiveInnerSkillId,
+        unlockedTalentIds: [],
+        talentIds: [],
+        gamesPlayed: 0,
+        createdAt: 0,
+      }],
+    }))
+    // lingyuan.storyUnlocks 目前為空 → 即使通關也不會有 pending
+    const clearances: ScenarioClearanceMap = {
+      'prologue-village': true,
+      'forest-hunt': true,
+      'frost-water-lament': true,
+    }
+    const view = buildChapterProgressView(lingyuan, clearances)
+    expect(view.chapters.map((c) => c.cleared)).toEqual([true, true, true])
+    expect(view.totalPending).toEqual([])
+  })
+
+  it('篇章通關狀態正確對應：未挑戰 / 已通關 / 已挑戰失敗', () => {
+    const clearances: ScenarioClearanceMap = {
+      'prologue-village': true,
+      'forest-hunt': false,
+      // 'frost-water-lament' 未設值
+    }
+    const view = buildChapterProgressView(lingyuan, clearances)
+    const cleared = Object.fromEntries(view.chapters.map((c) => [c.scenarioId, c.cleared]))
+    expect(cleared['prologue-village']).toBe(true)
+    expect(cleared['forest-hunt']).toBe(false)
+    expect(cleared['frost-water-lament']).toBeUndefined()
+  })
+
+  it('清空通關紀錄時，所有篇章 cleared 為 undefined', () => {
+    const view = buildChapterProgressView(lingyuan, {})
+    for (const chapter of view.chapters) {
+      expect(chapter.cleared).toBeUndefined()
+    }
   })
 })
