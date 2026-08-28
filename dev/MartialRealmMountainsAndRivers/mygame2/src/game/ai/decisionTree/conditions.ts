@@ -2,7 +2,7 @@ import type { GameState, PlayerState, Position } from '../../types'
 import { isAdjacent } from '../../types'
 import type { HostileActor } from '../perception/targetDiscovery'
 import { listHostileActors } from '../perception/targetDiscovery'
-import { getPlayerVisibleCellIds, DEFAULT_VISION_RANGE } from '../../rules/visibilityRules'
+import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
 
 // ─── 保命條件 ──────────────────────────────────────
 
@@ -79,16 +79,42 @@ export function getVisibleOwnedBase(state: GameState, playerId: string) {
 
 // ─── 探索條件 ──────────────────────────────────────
 
+/**
+ * 找出「最近的探索目標格」。
+ *
+ * 只考慮「無任何地上物、也非牆壁」的格子：把地圖上所有實體（玩家、怪物、
+ * 據點、巢穴、資源點、物品點、廢墟、門派據點、防禦設施、陷阱、探索事件）
+ * 佔據的格與牆一概排除，再以曼哈頓距離挑出離玩家最近的未探索格。
+ * 其餘一概不管（不校驗剩餘體力可達性、不設探索距離上限）。
+ */
 export function findUnexploredNearby(state: GameState, player: PlayerState): Position | null {
   const explored = getPlayerVisibleCellIds(state, player.id)
-  const lookahead = Math.max(4, DEFAULT_VISION_RANGE + 2)
+
+  const occupied = new Set<string>()
+  const add = (pos: Position | undefined): void => {
+    if (pos && Number.isFinite(pos.row) && Number.isFinite(pos.column)) {
+      occupied.add(`${pos.row}-${pos.column}`)
+    }
+  }
+  for (const p of state.players) add(p.position)
+  for (const c of state.creatures) add(c.position)
+  for (const b of state.bases) add(b.position)
+  for (const n of state.creatureNests ?? []) add(n.position)
+  for (const rp of state.resourcePoints) add(rp.position)
+  for (const ip of state.itemPoints) add(ip.position)
+  for (const r of state.ruins ?? []) add(r.position)
+  for (const s of state.sectGates ?? []) add(s.position)
+  for (const d of state.defenseStructures ?? []) add(d.position)
+  for (const t of state.traps ?? []) add(t.position)
+  for (const e of state.explorationEvents ?? []) add(e.position)
+
   let best: Position | null = null
   let bestDist = Infinity
   for (const cell of state.map.cells) {
+    if (cell.terrain === 'wall') continue
+    if (occupied.has(cell.id)) continue
     if (explored.has(cell.id)) continue
     const dist = manhattan(player.position, { row: cell.row, column: cell.column })
-    // 超出視線範圍太多（探索走遠點）就不急著去，避免滿圖亂跑。
-    if (dist > lookahead) continue
     if (dist < bestDist) {
       bestDist = dist
       best = { row: cell.row, column: cell.column }

@@ -82,10 +82,10 @@ export function decideNextAction(
   }
 
   // 1.2 體力耗盡 → 回據點
-  if (isExhausted(player)) {
-    const candidate = buildMoveToBaseAction(state, player)
-    if (passesValidation(state, candidate, '回據點（體力耗盡）', out)) return candidate
-  }
+  // if (isExhausted(player)) {
+  //   const candidate = buildMoveToBaseAction(state, player)
+  //   if (passesValidation(state, candidate, '回據點（體力耗盡）', out)) return candidate
+  // }
 
   // ═══════════════════════════════════════════════════
   // 小樹 2：即時戰鬥
