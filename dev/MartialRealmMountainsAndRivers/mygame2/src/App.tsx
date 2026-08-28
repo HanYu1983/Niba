@@ -10,6 +10,7 @@ import './App.css'
 import PlayerCommandPanel from './components/PlayerCommandPanel'
 import GameOverlays from './components/GameOverlays'
 import GameStatusCard from './components/GameStatusCard'
+import FiveElementsChart from './components/FiveElementsChart'
 import QuestTrackerPanel from './components/QuestTrackerPanel'
 import useKeyboardShortcuts from './hooks/useKeyboardShortcuts'
 import useModalState from './hooks/useModalState'
@@ -542,6 +543,8 @@ function App() {
               targetingSpec={targetingSpec}
               creatureShake={gameState.creatureShake}
             />
+
+            <FiveElementsChart />
 
           </Flex>
           <aside className="game-layout__players">

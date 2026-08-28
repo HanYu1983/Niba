@@ -5,7 +5,7 @@
  * 的定案公式換算出完整的 GameSettings 地圖參數。
  *
  * 換算原則：
- * - 地圖尺寸：10 + floor(level/2)×2，封頂 50（10×10 → 50×50）
+ * - 地圖尺寸：15 + floor(level/2)×2，封頂 50（15×15 → 50×50，Lv.36 封頂）
  * - 基地數：max(1, floor(行×列/100))
  * - 巢穴數：基地數 × 3
  * - 初始遊蕩怪／道具點／廢墟／探索事件：基地數 × 10
@@ -36,7 +36,7 @@ function randInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-/** 依闖關等級換算地圖尺寸（方形，10 → 50 封頂）。 */
+/** 依闖關等級換算地圖尺寸（方形，15 → 50 封頂）。 */
 export function getChallengeMapSize(level: number): number {
   const safeLevel = Math.max(1, Math.floor(level))
   return Math.min(CHALLENGE_MIN_SIZE + Math.floor(safeLevel / 2) * 2, CHALLENGE_MAX_SIZE)
