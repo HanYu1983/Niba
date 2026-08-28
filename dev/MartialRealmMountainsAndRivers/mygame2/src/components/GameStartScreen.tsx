@@ -22,7 +22,7 @@ import { getCharacters, type PersistentCharacter } from '../game/characterRoster
 const SELECTED_CHARACTER_KEY = 'mygame2.selected-character-id'
 
 type GameStartScreenProps = {
-  onStart: (settings: GameSettings, selectedCharacter?: PersistentCharacter) => void
+  onStart: (settings: GameSettings, selectedCharacters?: (PersistentCharacter | undefined)[]) => void
   onDebug: () => void
   onOpenSkillTest: () => void
   onOpenEditor: () => void
@@ -32,14 +32,15 @@ type GameStartScreenProps = {
 
 function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onStartScenario }: GameStartScreenProps) {
   const [rosterCharacters, setRosterCharacters] = useState<PersistentCharacter[]>(() => getCharacters())
-  const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>(() => {
+  // 依人類玩家順序記錄選用的名册角色 id（未選用為 undefined）。
+  const [selectedCharacterIds, setSelectedCharacterIds] = useState<(string | undefined)[]>(() => {
     // 讀回上次選擇的俠客（若仍存在於名册）。
     const savedId = localStorage.getItem(SELECTED_CHARACTER_KEY)
-    return savedId ? getCharacters().find((character) => character.id === savedId)?.id : undefined
+    return savedId && getCharacters().some((character) => character.id === savedId) ? [savedId] : []
   })
   const [activeTab, setActiveTab] = useState('sandbox')
 
-  // 記住/清除玩家選擇的俠客；角色被刪除時一併清除快取。
+  // 記住/清除玩家選擇的俠客；角色被刪除時由 handleCharactersChanged 清除快照。
   const persistSelectedCharacter = (id: string | undefined) => {
     if (id) {
       localStorage.setItem(SELECTED_CHARACTER_KEY, id)
@@ -48,20 +49,30 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
     }
   }
 
+  // 設定某位玩家的角色選擇（依玩家索引）。
+  const handleSelectCharacterForPlayer = (playerIndex: number, id: string | undefined) => {
+    setSelectedCharacterIds((current) => {
+      const next = [...current]
+      next[playerIndex] = id
+      return next
+    })
+    // 僅第一位玩家沿用 localStorage 記住上次選擇。
+    if (playerIndex === 0) persistSelectedCharacter(id)
+  }
+
   const handleSelectCharacter = (character: PersistentCharacter) => {
-    setSelectedCharacterId(character.id)
-    persistSelectedCharacter(character.id)
+    handleSelectCharacterForPlayer(0, character.id)
     setActiveTab('sandbox')
     message.success(`已選用「${character.name}」，可於沙盒地圖開始遊戲。`)
   }
 
-  // 名册角色清單變更（新增／刪除／更新）時同步下拉選單；若選取的角色已不存在則清除選取。
+  // 名册角色清單變更（新增／刪除／改名）時同步下拉選單；若選取的角色已不存在則清除選取。
   const handleCharactersChanged = (characters: PersistentCharacter[]) => {
     setRosterCharacters(characters)
-    setSelectedCharacterId((currentId) => {
-      const next = currentId && characters.some((character) => character.id === currentId) ? currentId : undefined
-      // 所選角色被刪除時，同步清除 localStorage 快取。
-      if (currentId && !next) persistSelectedCharacter(undefined)
+    setSelectedCharacterIds((current) => {
+      const next = current.map((id) => id && characters.some((character) => character.id === id) ? id : undefined)
+      // 第一位玩家所選角色被刪除時，同步清除 localStorage 快取。
+      if (current[0] && !next[0]) persistSelectedCharacter(undefined)
       return next
     })
   }
@@ -217,6 +228,7 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
         <Flex className="game-settings__grid" gap={16} wrap>
           <label>據點數量<InputNumber min={1} max={12} value={settings.baseCount} onChange={(value) => update('baseCount', value)} /></label>
           <label>巢穴數量<InputNumber min={0} max={30} value={settings.nestCount} onChange={(value) => update('nestCount', value)} /></label>
+          <label>巢穴回血(%)<InputNumber min={0} max={10} step={0.5} value={(settings.nestHealthRegenPercent ?? 0.01) * 100} onChange={(value) => update('nestHealthRegenPercent', value === null ? null : value / 100)} /></label>
           <label>資源點數量<InputNumber min={0} max={60} value={settings.resourcePointCount} onChange={(value) => update('resourcePointCount', value)} /></label>
           <label>道具點數量<InputNumber min={0} max={60} value={settings.itemPointCount} onChange={(value) => update('itemPointCount', value)} /></label>
           <label>人類玩家數量<InputNumber min={1} max={4} value={settings.playerCount} onChange={(value) => update('playerCount', value)} /></label>
@@ -232,25 +244,24 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
 
         <Divider>選擇角色</Divider>
         <Flex className="game-settings__grid" gap={16} wrap align="center">
-          <label className="game-settings__template">
-            使用角色
-            <Select
-              style={{ minWidth: 220 }}
-              placeholder="預設角色（五維全 8）"
-              allowClear
-              value={selectedCharacterId}
-              onChange={(id) => {
-                setSelectedCharacterId(id)
-                persistSelectedCharacter(id)
-              }}
-              options={rosterCharacters.map((character) => ({
-                label: `${character.name}${character.title ? `（${character.title}）` : ''}`,
-                value: character.id,
-              }))}
-            />
-          </label>
+          {Array.from({ length: settings.playerCount }, (_, playerIndex) => (
+            <label key={playerIndex} className="game-settings__template">
+              玩家 {playerIndex + 1} 角色
+              <Select
+                style={{ minWidth: 220 }}
+                placeholder="預設角色（五維全 8）"
+                allowClear
+                value={selectedCharacterIds[playerIndex]}
+                onChange={(id) => handleSelectCharacterForPlayer(playerIndex, id)}
+                options={rosterCharacters.map((character) => ({
+                  label: `${character.name}${character.title ? `（${character.title}）` : ''}`,
+                  value: character.id,
+                }))}
+              />
+            </label>
+          ))}
           <Typography.Text type="secondary">
-            選擇名冊角色後，其五維加成會疊加進開局基礎五維。
+            每位玩家可各自選擇名冊角色；其五維加成會疊加進開局基礎五維。未選擇者使用預設角色。
           </Typography.Text>
         </Flex>
 
@@ -260,7 +271,9 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
             size="large"
             disabled={invalid}
             onClick={() => {
-              const selected = rosterCharacters.find((character) => character.id === selectedCharacterId)
+              const selected = selectedCharacterIds.map((id) =>
+                id ? rosterCharacters.find((character) => character.id === id) : undefined,
+              )
               onStart(settings, selected)
             }}
           >

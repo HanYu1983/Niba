@@ -3,7 +3,7 @@ import type { AiAction } from '../aiAction'
 import { movePlayer } from '../../actions/movementActions'
 import { collectResourcePoint } from '../../actions/explorationActions'
 import { constructBuilding, constructDefenseStructure } from '../../actions/buildingActions'
-import { endPlayerTurn, type TurnActionDependencies } from '../../actions/turnActions'
+import type { TurnActionDependencies } from '../../actions/turnActions'
 import { executeAiAttack } from './executeAiAttack'
 import { collectItemPointAction } from '../../actions/itemActions'
 import { useItemAction } from '../../actions/itemActions'
@@ -95,9 +95,12 @@ export function executeAiAction(
     }
     case 'hold':
       return { state, result: { ok: true } }
-    case 'end-turn': {
-      const result = endPlayerTurn(state, action.actor.id, dependencies.turn)
-      return { state: result.state, result: { ok: true } }
-    }
+    case 'end-turn':
+      // 結束回合不在此執行：會觸發完整 endPlayerTurn 連鎖（生物移動／巢穴／事件）。
+      // 回傳 ok:false 不改 state，由 runStep 出口或 scheduler.endTurn 結束回合。
+      return {
+        state,
+        result: { ok: false, reason: 'end-turn 不可作為一般 AI 行動執行。' },
+      }
   }
 }

@@ -49,6 +49,9 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
   // 全局靈氣（貿易市場）與區域靈氣（巢穴/防衛營）統一整合在此區塊。
   const globalBuffEntries = getGlobalBuffDisplayEntries(getActiveGlobalBuffs(gameState))
   const auraEntries = getAuraDisplayEntries(gameState, player.position, 'player')
+  const hasFuzzyCommand = player.isAI && (gameState.aiOrders ?? []).some(
+    (order) => order.aiPlayerId === player.id && order.type === 'fuzzy' && order.status === 'active',
+  )
 
   return (
     <Card
@@ -74,7 +77,7 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
 
         <Collapse
           className="player-panel__collapse"
-          defaultActiveKey={['rank', 'basic', 'attributes', 'skills', 'qi', 'ai-debug']}
+          defaultActiveKey={['rank', 'basic', 'attributes', 'skills', 'qi', ...(hasFuzzyCommand ? ['ai-debug'] : [])]}
           items={[
             {
               key: 'rank',
@@ -224,12 +227,12 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
                 )}
               </Flex>,
             },
-            {
+            ...(hasFuzzyCommand ? [{
               key: 'ai-debug',
               label: <Typography.Text strong>AI 除錯</Typography.Text>,
               extra: <Typography.Text type="secondary">模糊邏輯決策</Typography.Text>,
               children: <AiDebugPanel player={player} gameState={gameState} />,
-            },
+            }] : []),
           ]}
         />
 

@@ -15,6 +15,7 @@ import useKeyboardShortcuts from './hooks/useKeyboardShortcuts'
 import useModalState from './hooks/useModalState'
 import GameStartScreen from './components/GameStartScreen'
 import type { PersistentCharacter } from './game/characterRoster'
+import { ensureOfficialCharacters } from './game/characterRoster'
 import SkillTestPage from './components/SkillTestPage'
 import EditorApp from './editor/EditorApp'
 import { allExternalSkillCatalog } from './game/catalogs/martialHallSkillCatalog'
@@ -31,6 +32,11 @@ import ActionLogPanel from './components/ActionLogPanel'
 function App() {
   const gameState = useGameState()
   const [screen, setScreen] = useState<'start' | 'game'>('start')
+  // 啟動時確保官方角色已預建於名册（冪等：缺漏才補，現有進度保留）。
+  // 必須在任何讀取 getCharacters() 之前完成，避免俠客名冊漏列凌淵。
+  useEffect(() => {
+    ensureOfficialCharacters()
+  }, [])
   const [skillTestPageOpen, setSkillTestPageOpen] = useState(false)
   const [editorOpen, setEditorOpen] = useState(false)
   const [playtestMode, setPlaytestMode] = useState(false)
@@ -255,8 +261,8 @@ function App() {
     },
   })
 
-  const startGame = (settings: GameSettings, selectedCharacter?: PersistentCharacter) => {
-    gameStore.startGame(settings, selectedCharacter)
+  const startGame = (settings: GameSettings, selectedCharacters?: (PersistentCharacter | undefined)[]) => {
+    gameStore.startGame(settings, selectedCharacters?.map((c) => c ?? null))
     setScreen('game')
     trackEvent('Gameplay', 'game_start', 'quick_start')
   }

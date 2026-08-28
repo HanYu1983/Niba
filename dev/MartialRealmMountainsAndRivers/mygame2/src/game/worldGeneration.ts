@@ -564,37 +564,39 @@ export function createRoamerCreatures(
   })
 }
 
+/** 名册角色注入開局玩家的參數（依人類玩家順序對應；null 表示預設角色）。 */
+export type InitialCharacterConfig = {
+  attributeBonuses: PlayerAttributes
+  name?: string
+  portrait?: string
+  title?: string
+  characterId?: string
+  initialInternalSkillId?: string
+  initialExternalSkillIds?: string[]
+  talentIds?: string[]
+}
+
 /**
  * 建立開局玩家清單。
  *
- * @param humanAttributeBonuses 可選：套用於人類玩家的五維永久加成（來自名册角色）。
- *   僅套用於 index < humanPlayerCount 的人類玩家；AI 玩家維持預設全 8。
- * @param humanName 可選：套用於第一位人類玩家的名稱（來自名册角色）。
- * @param initialInternalSkillId 可選：第一位人類玩家的初始內功（預設吐納功）。
- * @param initialExternalSkillIds 可選：第一位人類玩家的初始外功清單。
- * @param talentIds 可選：第一位人類玩家所屬名册角色的天賦 ids；開局會轉為常駐 buff 注入。
- * @param humanPortrait 可選：第一位人類玩家的外觀 icon（來自名册角色）。
- * @param humanTitle 可選：第一位人類玩家的稱號（來自名册角色）。
+ * @param selectedCharacters 可選：依人類玩家順序對應的名册角色參數陣列。
+ *   index < humanPlayerCount 的人類玩家取 selectedCharacters[index] 套用其五維、功法、天賦、外觀；
+ *   null 或缺漏則用預設角色（五維全 8、吐納功、無外功）。AI 玩家維持預設生成。
  */
 export function createInitialPlayers(
   playerPositions: Position[],
   seed = 20260803,
   humanPlayerCount = playerPositions.length,
-  humanAttributeBonuses?: PlayerAttributes,
-  humanName?: string,
-  initialInternalSkillId?: string,
-  initialExternalSkillIds?: string[],
-  talentIds?: string[],
-  humanPortrait?: string,
-  humanTitle?: string,
+  selectedCharacters?: (InitialCharacterConfig | null)[],
 ): PlayerState[] {
   const random = createSeededRandom(seed + 111)
   const availableNames = [...playerNames]
   const usedNames = new Set<string>()
   return playerPositions.map((position, index) => {
     const isAI = index >= humanPlayerCount
-    // 第一位人類玩家若指定了名册角色名稱，直接採用；其餘照常隨機取名。
-    let name = !isAI && index === 0 && humanName ? humanName : pickRandom(availableNames, random)
+    const character = !isAI ? selectedCharacters?.[index] : undefined
+    // 人類玩家若指定了名册角色名稱，直接採用；其餘照常隨機取名。
+    let name = !isAI && character?.name ? character.name : pickRandom(availableNames, random)
     const nameIndex = name ? availableNames.indexOf(name) : -1
     if (nameIndex >= 0) availableNames.splice(nameIndex, 1)
     if (!name || usedNames.has(name)) {
@@ -607,28 +609,29 @@ export function createInitialPlayers(
     }
     usedNames.add(name)
     const base = { armStrength: 8, constitution: 8, agility: 8, innerEnergy: 8, insight: 8 }
-    const attributes = !isAI && humanAttributeBonuses
+    const attributes = !isAI && character?.attributeBonuses
       ? {
-          armStrength: base.armStrength + (humanAttributeBonuses.armStrength ?? 0),
-          constitution: base.constitution + (humanAttributeBonuses.constitution ?? 0),
-          agility: base.agility + (humanAttributeBonuses.agility ?? 0),
-          innerEnergy: base.innerEnergy + (humanAttributeBonuses.innerEnergy ?? 0),
-          insight: base.insight + (humanAttributeBonuses.insight ?? 0),
+          armStrength: base.armStrength + (character.attributeBonuses.armStrength ?? 0),
+          constitution: base.constitution + (character.attributeBonuses.constitution ?? 0),
+          agility: base.agility + (character.attributeBonuses.agility ?? 0),
+          innerEnergy: base.innerEnergy + (character.attributeBonuses.innerEnergy ?? 0),
+          insight: base.insight + (character.attributeBonuses.insight ?? 0),
         }
       : base
-    // 第一位人類玩家套用名册角色的初始功法；其餘維持預設吐納功、無外功。
-    const useCharacterSkills = !isAI && index === 0
-    const innerSkillId = useCharacterSkills && initialInternalSkillId ? initialInternalSkillId : 'tuna-gong'
+    // 人類玩家套用名册角色的初始功法；其餘維持預設吐納功、無外功。
+    const useCharacterSkills = !isAI && Boolean(character)
+    const innerSkillId = useCharacterSkills && character?.initialInternalSkillId ? character.initialInternalSkillId : 'tuna-gong'
     // 已知內功清單需含初始內功（含吐納功），否則功法設定頁不會顯示名册角色帶入的內功。
     const innerSkillIds = [...new Set(['tuna-gong', innerSkillId])]
-    const externalSkillIds = useCharacterSkills ? (initialExternalSkillIds ?? []) : []
-    const talentBuffs = useCharacterSkills ? getTalentBuffs(talentIds ?? []) : []
+    const externalSkillIds = useCharacterSkills ? (character?.initialExternalSkillIds ?? []) : []
+    const talentBuffs = useCharacterSkills ? getTalentBuffs(character?.talentIds ?? []) : []
     return createCharacterState({
       id: `player-${index + 1}`,
       name,
       isAI,
-      portrait: useCharacterSkills ? humanPortrait : undefined,
-      title: useCharacterSkills ? humanTitle : undefined,
+      portrait: useCharacterSkills ? character?.portrait : undefined,
+      title: useCharacterSkills ? character?.title : undefined,
+      characterId: useCharacterSkills ? character?.characterId : undefined,
       innerSkillId,
       innerSkillIds,
       position,

@@ -6,7 +6,6 @@ import type {
   GameState,
   ItemPointState,
   MapState,
-  PlayerAttributes,
   ResourcePointState,
   RuinState,
   SectGateState,
@@ -27,6 +26,7 @@ import {
   createRoamerCreatures,
   createRuins,
   createSectGates,
+  type InitialCharacterConfig,
 } from './worldGeneration'
 import { playerNames } from './catalogs/placeNameCatalog'
 import { pickRandom, createSeededRandom } from './rules/randomRules'
@@ -49,15 +49,7 @@ const WORLD_SEED_OFFSETS = {
 
 export function createGameState(
   settings: GameSettings = DEFAULT_GAME_SETTINGS,
-  selectedCharacter?: {
-    attributeBonuses: PlayerAttributes
-    name?: string
-    portrait?: string
-    title?: string
-    initialInternalSkillId?: string
-    initialExternalSkillIds?: string[]
-    talentIds?: string[]
-  },
+  selectedCharacters?: (InitialCharacterConfig & { id?: string } | null)[],
 ): GameState {
   const humanPlayerCount = Math.min(4, Math.max(1, Math.round(settings.playerCount ?? 1)))
   const aiPlayerCount = Math.min(8, Math.max(0, Math.round(settings.aiPlayerCount ?? 0)))
@@ -103,13 +95,7 @@ export function createGameState(
     playerPositions,
     settings.seed + WORLD_SEED_OFFSETS.players,
     humanPlayerCount,
-    selectedCharacter?.attributeBonuses,
-    selectedCharacter?.name,
-    selectedCharacter?.initialInternalSkillId,
-    selectedCharacter?.initialExternalSkillIds,
-    selectedCharacter?.talentIds,
-    selectedCharacter?.portrait,
-    selectedCharacter?.title,
+    selectedCharacters,
   )
   const aiOrders: AiOrder[] = players
     .filter((p) => p.isAI)
@@ -144,6 +130,7 @@ export function createGameState(
     itemPoints,
     explorationEvents,
     explorationTriggerChance: settings.explorationTriggerChance ?? 0.2,
+    nestHealthRegenPercent: settings.nestHealthRegenPercent ?? 0.01,
     sectGates,
     players,
     creatures,
@@ -159,6 +146,8 @@ export function createGameState(
     blockingModal: null,
     runStats: createEmptyRunStats(),
     runId: generateRunId(),
+    // 依人類玩家順序記錄選用的名册角色 id（未選用為 null）。
+    activeCharacterIds: Array.from({ length: humanPlayerCount }, (_, i) => selectedCharacters?.[i]?.id ?? null),
     sharedWarehouse: [],
     sharedEquipmentWarehouse: [],
     aiOrders,

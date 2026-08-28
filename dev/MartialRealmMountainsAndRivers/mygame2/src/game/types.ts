@@ -28,6 +28,8 @@ export type GameSettings = {
   explorationEventCount: number
   /** 人類玩家回合結束時，隨機觸發探索事件的機率（0~1）。 */
   explorationTriggerChance?: number
+  /** 巢穴每回合回復的最大生命比例（0~1，預設 0.01）。 */
+  nestHealthRegenPercent?: number
   creatureCount: number
   ruinCount: number
   /** 地圖上生成的中立門派據點數量，上限 6（六門派各一）。 */
@@ -201,6 +203,8 @@ export type PlayerState = {
   portrait?: string
   /** 角色稱號（來自名册角色，可選）。 */
   title?: string
+  /** 名册角色 ID（官方角色或自訂角色）；事件掉落會依此判斷專屬功法解鎖。 */
+  characterId?: string
   turnEnded: boolean,
 }
 
@@ -953,6 +957,8 @@ export type GameState = {
   pendingExplorationEventPlayerId?: string | null
   /** 回合結束隨機觸發探索事件的機率（開局時從 settings 帶入）。 */
   explorationTriggerChance?: number
+  /** 巢穴每回合回復的最大生命比例（開局時從 settings 帶入，預設 0.01）。 */
+  nestHealthRegenPercent?: number
   /** 中立門派據點。 */
   sectGates?: SectGateState[]
   /** 貿易市場賦予的全局靈氣 buff；來源據點失活時自動失效。 */
@@ -985,7 +991,9 @@ export type GameState = {
   gameWon?: boolean
   /** 本局唯一識別（startGame/restartGame/loadScenario 時產生），隨存檔序列化；供殘卷結算跨 session 去重。 */
   runId?: string
-  /** 本局選用的名册角色 id（未選用為 null/缺漏）。隨存檔序列化，讀檔後還原，避免局末結算回寫到錯誤角色。 */
+  /** 本局各人類玩家選用的名册角色 id（依人類玩家順序；未選用為 null）。隨存檔序列化，讀檔後還原，避免局末結算回寫到錯誤角色。 */
+  activeCharacterIds?: (string | null)[]
+  /** 舊版單一角色欄位（向下相容，讀取舊存檔時轉換為 activeCharacterIds）。 */
   activeCharacterId?: string | null
   /** 人類玩家本回合已造成的傷害累積（供「單回合最高傷害」戰績計算）；回合開始時歸零。 */
   damageDealtThisRound?: number

@@ -40,32 +40,32 @@ function SystemOverlays({ gameState, onRestartToMap }: SystemOverlaysProps) {
         recordedRef.current = true
         gameStore.recordCurrentScenarioClearance(Boolean(gameState.gameWon))
         // 局末回寫：將本局表現結算為卷並併入名册角色的功法庫（若選用了名册角色）。
-        const humanPlayer = gameState.players.find((player) => !player.isAI)
-        const learnedSkillIds = humanPlayer
-          ? [...(humanPlayer.innerSkillIds ?? []), ...(humanPlayer.externalSkillIds ?? [])]
-          : []
-        const activeCharacterId = gameStore.getActiveCharacterId()
-        const beforeCount = activeCharacterId
-          ? (getCharacter(activeCharacterId)?.unlockedSkillIds ?? []).length
-          : 0
+        // 依人類玩家順序收集各自的功法清單，供各角色結算。
+        const humanPlayers = gameState.players.filter((player) => !player.isAI)
+        const learnedSkillIdsByPlayer = humanPlayers.map((player) =>
+          [...(player.innerSkillIds ?? []), ...(player.externalSkillIds ?? [])],
+        )
+        const activeCharacterIds = gameStore.getActiveCharacterIds()
+        const beforeCounts = activeCharacterIds.map((id) =>
+          id ? (getCharacter(id)?.unlockedSkillIds ?? []).length : 0,
+        )
         const settled = gameStore.settleActiveCharacterRewards(
           gameState.runStats ?? createEmptyRunStats(),
           Boolean(gameState.gameWon),
-          learnedSkillIds,
+          learnedSkillIdsByPlayer,
         )
-        if (settled === null && activeCharacterId) {
+        if (settled === null && activeCharacterIds.some(Boolean)) {
           // 已選角色但未結算：此局已領取過（runId 已登記或 session 旗標）。
           setScrollReward('skipped')
         } else {
-          // 計算本局「新增功法」帶來的卷獎勵與總獲得量，供結算畫面顯示。
-          const afterCount = activeCharacterId
-            ? (getCharacter(activeCharacterId)?.unlockedSkillIds ?? []).length
-            : 0
-          const newSkillCount = Math.max(0, afterCount - beforeCount)
-          const reward = settled
-            ? computeScrollReward(gameState.runStats ?? createEmptyRunStats(), Boolean(gameState.gameWon), newSkillCount)
-            : 0
-          setScrollReward(reward)
+          // 計算各角色本局「新增功法」帶來的卷獎勵，加總供結算畫面顯示。
+          const totalReward = activeCharacterIds.reduce((total, id, index) => {
+            if (!id) return total
+            const afterCount = (getCharacter(id)?.unlockedSkillIds ?? []).length
+            const newSkillCount = Math.max(0, afterCount - beforeCounts[index])
+            return total + computeScrollReward(gameState.runStats ?? createEmptyRunStats(), Boolean(gameState.gameWon), newSkillCount)
+          }, 0)
+          setScrollReward(settled ? totalReward : 0)
         }
         const record = computeBattleRecord(gameState)
         trackGameEnd(record.won, {

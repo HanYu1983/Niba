@@ -162,7 +162,7 @@ import {
 } from './lootFactory'
 import { runActionExecution, runActionOutcome } from './storeAdapters'
 import { recordMaxLevel, recordDamageDealt } from './runStats'
-import { applyEndGameRewards } from './characterRoster'
+import { applyEndGameRewards, applyStoryUnlocks } from './characterRoster'
 import { enqueueDialogue, skipAllDialogue } from './actions/dialogueActions'
 import { collectTriggeredDialogues } from './rules/dialogueTriggerRules'
 import { checkVictory } from './rules/campaignRules'
@@ -195,10 +195,11 @@ export function spawnCreaturesFromNests(
   bases: BaseState[],
   round: number,
   blockedPositions: Position[] = [],
+  healthRegenPercent?: number,
 ): { nests: CreatureNestState[]; creatures: CreatureState[]; logs: CreatureActionLog[] } {
   return spawnCreaturesFromNestsAction(nests, creatures, map, players, bases, round, {
     createCreatureState: (input) => createCharacterState(input),
-  }, blockedPositions)
+  }, blockedPositions, healthRegenPercent)
 }
 
 /** 掃描人類玩家，記錄最高等級與該等級五維快照。 */
@@ -233,8 +234,8 @@ let lastGameSettings = getSavedGameSettings()
 const listeners = new Set<() => void>()
 /** 目前載入的劇本關卡 id（記錄通關進度用）；非劇本模式為 null。 */
 let currentScenarioId: string | null = null
-/** 目前對局選用的名册角色 id；未選用（預設角色）為 null。 */
-let activeCharacterId: string | null = null
+/** 目前對局各人類玩家選用的名册角色 id（依人類玩家順序；未選用為 null）。 */
+let activeCharacterIds: (string | null)[] = []
 /**
  * 本局殘卷獎勵是否已結算（防重旗標）。
  *
@@ -379,7 +380,7 @@ export const gameStore = {
     return allocated
   },
 
-  startGame: (settings: GameSettings, selectedCharacter?: {
+  startGame: (settings: GameSettings, selectedCharacters?: ({
     id?: string
     attributeBonuses: PlayerAttributes
     name?: string
@@ -388,47 +389,54 @@ export const gameStore = {
     initialInternalSkillId?: string
     initialExternalSkillIds?: string[]
     talentIds?: string[]
-  }) => {
+  } | null)[]) => {
     lastGameSettings = { ...settings }
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
-    activeCharacterId = selectedCharacter?.id ?? null
+    const humanCount = Math.min(4, Math.max(1, Math.round(settings.playerCount ?? 1)))
+    activeCharacterIds = Array.from({ length: humanCount }, (_, i) => selectedCharacters?.[i]?.id ?? null)
     rewardSettled = false
-    gameState = { ...createGameState(lastGameSettings, selectedCharacter), activeCharacterId }
+    gameState = { ...createGameState(lastGameSettings, selectedCharacters), activeCharacterIds }
     listeners.forEach((listener) => listener())
   },
 
-  /** 取得目前對局選用的名册角色 id；未選用為 null。 */
-  getActiveCharacterId: () => activeCharacterId,
+  /** 取得目前對局各人類玩家選用的名册角色 id（依人類玩家順序；未選用為 null）。 */
+  getActiveCharacterIds: () => activeCharacterIds,
 
   /**
    * 局末回寫：將本局表現結算為卷並併入功法庫。同一局只結算一次（冪等）。
    *
    * 冪等檢查鏈（設計文件 scroll-reward-settlement-dedup-design.md §4.1）：
-   * 1. 未選用名册角色 → null
+   * 1. 未選用任何名册角色 → null
    * 2. 模組旗標 rewardSettled（session 內快速路徑）→ null
    * 3. runId 已在持久化登記表（跨 session 最終防線，解跨欄位重複領取）→ null
-   * 4. 通過 → 結算 + markRunSettled 落盤
+   * 4. 通過 → 依人類玩家逐一結算 + markRunSettled 落盤
    */
-  settleActiveCharacterRewards: (stats: RunStats, won: boolean, learnedSkillIds: string[]) => {
-    if (!activeCharacterId) return null
+  settleActiveCharacterRewards: (stats: RunStats, won: boolean, learnedSkillIdsByPlayer: string[][]) => {
+    const selectedIds = activeCharacterIds.filter((id): id is string => Boolean(id))
+    if (selectedIds.length === 0) return null
     if (rewardSettled) return null
     const runId = gameState.runId
     if (runId && isRunSettled(runId)) {
       rewardSettled = true
       return null
     }
-    const result = applyEndGameRewards(activeCharacterId, stats, won, learnedSkillIds)
-    if (result) {
+    // 依人類玩家順序，將各自的功法清單回寫到對應的名册角色。
+    const results = activeCharacterIds.map((characterId, index) => {
+      if (!characterId) return undefined
+      return applyEndGameRewards(characterId, stats, won, learnedSkillIdsByPlayer[index] ?? [])
+    })
+    const anySettled = results.some((result) => Boolean(result))
+    if (anySettled) {
       rewardSettled = true
       if (runId) markRunSettled(runId)
       // 結算發生在 GameOverModal 顯示後；此時原本的自動存檔仍是局末前狀態，
       // 因此要把包含局末旗標與同一 runId 的最新狀態寫回自動存檔，
-      // 讓存檔摘要能顯示「已領取殘卷」，讀檔也能正確沿用防重登記。
-      // activeCharacterId 已隨 GameState 序列化，故不需再以參數傳入。
+      // 讓存檔摘要能顯示「已領取殘卷」，讀檔也能正確讀取防重登記。
+      // activeCharacterIds 已隨 GameState 序列化，故不需再以參數傳入。
       saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
     }
-    return result
+    return results
   },
 
   /**
@@ -511,14 +519,14 @@ export const gameStore = {
   },
 
   saveGame: (): ActionOutcome => {
-    const result = saveGameState(gameState, activeCharacterId)
+    const result = saveGameState(gameState, activeCharacterIds[0] ?? null)
     return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '儲存失敗。' }
   },
 
   getSaveSlots: () => getGameSaveSlots(),
 
   saveGameToSlot: (slot: number): ActionOutcome => {
-    const result = saveGameStateToSlot(gameState, slot, activeCharacterId)
+    const result = saveGameStateToSlot(gameState, slot, activeCharacterIds[0] ?? null)
     return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '儲存失敗。' }
   },
 
@@ -532,9 +540,11 @@ export const gameStore = {
       aiOrders: result.state.aiOrders ?? [],
       aiConstructionPlans: result.state.aiConstructionPlans ?? [],
     }
-    // 還原名册角色 id：優先取 GameState.activeCharacterId（隨存檔序列化），
-    // 舊存檔缺漏時回退到 payload 的 activeCharacterId（向下相容）。
-    activeCharacterId = gameState.activeCharacterId ?? result.activeCharacterId ?? null
+    // 還原名册角色 id 陣列：優先取 GameState.activeCharacterIds（隨存檔序列化），
+    // 舊存檔缺漏時由單一 activeCharacterId 或 payload 的 activeCharacterId 轉換（向下相容）。
+    activeCharacterIds = gameState.activeCharacterIds
+      ?? (gameState.activeCharacterId !== undefined ? [gameState.activeCharacterId] : undefined)
+      ?? (result.activeCharacterId !== undefined ? [result.activeCharacterId] : [])
     // 以 runId 登記表判斷是否已結算；局末但尚未登記的存檔需允許補發殘卷。
     // 舊存檔沒有 runId 時，沿用舊規則視為局末已結算，避免重複發放。
     rewardSettled = Boolean(
@@ -558,9 +568,11 @@ export const gameStore = {
       aiOrders: result.state.aiOrders ?? [],
       aiConstructionPlans: result.state.aiConstructionPlans ?? [],
     }
-    // 還原名册角色 id：優先從 GameState.activeCharacterId（隨存檔序列化），
-    // 舊存檔無此欄位時回退到 payload 的 activeCharacterId，避免結算回寫錯誤角色。
-    activeCharacterId = gameState.activeCharacterId ?? result.activeCharacterId ?? null
+    // 還原名册角色 id 陣列：優先取 GameState.activeCharacterIds（隨存檔序列化），
+    // 舊存檔缺漏時由單 activeCharacterId / payload 的 activeCharacterId 轉換（向下相容）。
+    activeCharacterIds = gameState.activeCharacterIds
+      ?? (gameState.activeCharacterId !== undefined ? [gameState.activeCharacterId] : undefined)
+      ?? (result.activeCharacterId !== undefined ? [result.activeCharacterId] : [])
     // 以 runId 登記表判斷是否已結算；局末但未 runId 的存檔需允許補發殘卷。
     // 舊存檔沒有 runId 時，回退舊規則視為局末已結算，避免重複發放。
     rewardSettled = Boolean(
@@ -650,8 +662,8 @@ export const gameStore = {
 
   loadDebugMap: () => {
     // Debug 地圖不綁定名册角色，清除並同步 state。
-    activeCharacterId = null
-    gameState = { ...createDebugGameState(), activeCharacterId: null }
+    activeCharacterIds = []
+    gameState = { ...createDebugGameState(), activeCharacterIds: [] }
     listeners.forEach((listener) => listener())
   },
 
@@ -660,8 +672,8 @@ export const gameStore = {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
     // 測試劇情不綁定名册角色，清除並同步 state。
-    activeCharacterId = null
-    gameState = { ...createTestCampaignGameState(), activeCharacterId: null }
+    activeCharacterIds = []
+    gameState = { ...createTestCampaignGameState(), activeCharacterIds: [] }
     // 觸發開局（on-start）對話：收集符合的步驟並填入佇列（updateGameState 會自動顯示）。
     updateGameState((state) => {
       const steps = collectTriggeredDialogues(state, { type: 'on-start' })
@@ -691,8 +703,8 @@ export const gameStore = {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
     // 劇本模式不綁定名册角色，清除並同步 state。
-    activeCharacterId = null
-    gameState = { ...buildGameStateFromScenario(scenario), activeCharacterId: null }
+    activeCharacterIds = []
+    gameState = { ...buildGameStateFromScenario(scenario), activeCharacterIds: [] }
     currentScenarioId = scenario.id
     // 觸發開局（on-start）對話與觸發器。
     updateGameState((state) => {
@@ -710,13 +722,18 @@ export const gameStore = {
     currentScenarioId = null
     rewardSettled = false
     // 刻意沿用目前選用的名册角色（bug.md 記錄的設計），並同步寫入新 state。
-    gameState = { ...createGameState(lastGameSettings), activeCharacterId }
+    gameState = { ...createGameState(lastGameSettings), activeCharacterIds }
     listeners.forEach((listener) => listener())
   },
 
-  /** 記錄目前劇本的通關狀態（true = 闖關成功；false = 失敗）。 */
+  /** 記錄目前劇本的通關狀態（true = 闖關成功；false = 失敗）。
+   *  通關成功時，同步將該章節的 storyUnlocks 併入所有官方角色（功法＋天賦）。 */
   recordCurrentScenarioClearance: (cleared: boolean) => {
-    if (currentScenarioId) recordScenarioClearance(currentScenarioId, cleared)
+    if (!currentScenarioId) return
+    recordScenarioClearance(currentScenarioId, cleared)
+    // 劇本通關解鎖：官方角色（如凌淵）作為故事主角，通關即解鎖對應功法／天賦。
+    // 冪等（Set 去重），重複通關不會產生重複項目。
+    applyStoryUnlocks(currentScenarioId, cleared)
   },
 
   showActionResult: (
@@ -1738,6 +1755,8 @@ export const gameStore = {
           players,
           currentState.bases,
           currentState.round + 1,
+          undefined,
+          currentState.nestHealthRegenPercent,
         ),
       },
     }), 'AI 行動失敗。')
@@ -2266,6 +2285,8 @@ export const gameStore = {
           players,
           currentState.bases,
           currentState.round + 1,
+          undefined,
+          currentState.nestHealthRegenPercent,
         ),
       },
     }
@@ -2427,6 +2448,8 @@ export const gameStore = {
           players,
           currentState.bases,
           currentState.round + 1,
+          undefined,
+          currentState.nestHealthRegenPercent,
         ),
       },
     }
@@ -2462,6 +2485,10 @@ export const gameStore = {
       }
     }
 
+    // ── 出口邏輯 ──────────────────────────────────────────────
+    // 圖搜索不再把 end-turn 當行動執行。迴圈結束後只走兩個出口：
+    // - 無 exitReason（體力耗盡／迴圈上限）：此處 endPlayerTurn，ok:true（scheduler 不重複結束）
+    // - 有 exitReason（無可行動／驗證失敗等）：ok:false，由 scheduler.endTurn 結束回合
     if (!exitReason) {
       const endAction = { type: 'end-turn' as const, actor, reason: `圖搜索迴圈結束（${loopCount} 步）` }
       gameStore.endPlayerTurn(playerId)
@@ -2503,6 +2530,7 @@ export const gameStore = {
           currentState.bases,
           currentState.round + 1,
           getBlockedPositions({ ...currentState, players } as GameState, '', { includeInteractionPoints: true }),
+          currentState.nestHealthRegenPercent,
         ),
       })
       if (action.creatureTurn) {
@@ -2564,7 +2592,7 @@ export const gameStore = {
   resetForTest: () => {
     gameState = initialGameState
     lastGameSettings = { ...DEFAULT_GAME_SETTINGS }
-    activeCharacterId = null
+    activeCharacterIds = []
     rewardSettled = false
     listeners.forEach((listener) => listener())
   },
@@ -2572,8 +2600,9 @@ export const gameStore = {
   /** 僅供測試使用：直接覆寫目前狀態。 */
   setStateForTest: (nextState: GameState) => {
     gameState = nextState
-    // 同步還原名册角色 id（若測試 state 有帶）。
-    activeCharacterId = nextState.activeCharacterId ?? null
+    // 同步還原名册角色 id 陣列（若測試 state 有帶）。
+    activeCharacterIds = nextState.activeCharacterIds
+      ?? (nextState.activeCharacterId !== undefined ? [nextState.activeCharacterId] : [])
     listeners.forEach((listener) => listener())
   },
 }

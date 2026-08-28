@@ -212,13 +212,13 @@ describe('spawnCreaturesFromNests', () => {
       10,
     )
 
-    // 升級到 Lv.2：maxHealth = 120 * 1.1 = 132；先回血 2%（120*2%=2→102），升級不因升級回滿
+    // 升級到 Lv.2：maxHealth = 120 * 1.1 = 132；先回血 1%（120×1%=1 → 101），升級到不因升級回滿
     expect(result.nests[0].spawnLevel).toBe(2)
     expect(result.nests[0].maxHealth).toBe(132)
-    expect(result.nests[0].health).toBe(102)
+    expect(result.nests[0].health).toBe(101)
   })
 
-  it('每回合回復 2% 最大生命', () => {
+  it('每回合回復 1% 最大生命', () => {
     // 冷卻期間不生成，僅驗證回血
     const nest = makeNest({ spawnChance: 0.1, cooldownRounds: 3, health: 100, maxHealth: 120 })
     const result = spawnCreaturesFromNests(
@@ -230,8 +230,8 @@ describe('spawnCreaturesFromNests', () => {
       10,
     )
 
-    // 回復 120 * 2% = 2.4 → floor 2 → health 102
-    expect(result.nests[0].health).toBe(102)
+    // 回復 120 * 1% = 1.2 → floor 1 → health 101
+    expect(result.nests[0].health).toBe(101)
   })
 
   it('每回合回復不會超過最大生命', () => {

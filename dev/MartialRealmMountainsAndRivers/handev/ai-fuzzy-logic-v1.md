@@ -983,3 +983,147 @@ interface DecisionLog {
 | 情境化預設 | 低 | 中 | 解決不易調適 |
 
 **V2 最低可行改進**：加 Momentum + Hysteresis + DecisionLog，三件事就能大幅改善兩個缺陷。
+
+---
+
+## 13. 意圖作為通用 AI 抽象：潛在設計價值
+
+> 本節整合自 `refactor-fuzzy-evaluate-validate.md §8.6`，論述模糊邏輯的核心
+> `buildValidatedActionSequence` 其實是**通用計畫器（Planner）**，可被所有 AI 策略複用。
+
+### 13.1 核心洞察
+
+`buildValidatedActionSequence` 的本質是一個**計畫器（Planner）**：
+
+```
+意圖（GoalTarget） + 當前狀態（GameState） → 驗證過的行動序列（AiAction[]）
+```
+
+這個計畫器**不關心意圖從哪裡來**。它只負責：
+1. 拿到一個意圖
+2. 生成對應的行動序列
+3. 驗證每一步
+4. 回傳合法序列（或空陣列）
+
+這意味著：**任何 AI 策略只要能產生 GoalTarget，就能複用同一套計畫器。**
+
+### 13.2 通用架構
+
+```
+┌─────────────────────────────────────────────────┐
+│              AI 決策層（可替換）                    │
+│                                                   │
+│  模糊邏輯：fuzzyMath → score → GoalTarget          │
+│  決策樹：  conditions → GoalTarget                 │
+│  V3 圖搜索：node evaluation → GoalTarget           │
+│  手動規則：if HP < 30% → { kind: 'retreat' }       │
+│                                                   │
+│  共同產出：GoalTarget + score                      │
+└──────────────────────┬──────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────┐
+│           計畫器（共用）                            │
+│                                                   │
+│  buildValidatedActionSequence(target, state, deps)│
+│  → 生成 actions + 驗證 + apply                     │
+│  → 回傳 AiAction[]（必定合法）                      │
+└──────────────────────┬──────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────┐
+│           執行層（共用）                            │
+│                                                   │
+│  executeAiAction(state, action) → GameState       │
+│  保底 validate                                    │
+└─────────────────────────────────────────────────┘
+```
+
+### 13.3 決策樹的整合
+
+決策樹目前直接從條件生成 AiAction，不經過 GoalTarget。
+但可以重構為：
+
+```typescript
+// 現行決策樹：condition → action
+function decideNextAction(state, player): AiAction | null {
+  if (hp < 30%) return buildRetreatAction(state, player)
+  if (enemy nearby) return buildAttackAction(state, player)
+  return buildExploreAction(state, player)
+}
+
+// 重構後：condition → intent → plan
+function decideNextAction(state, player): AiAction[] | null {
+  let intent: GoalTarget | null = null
+
+  if (hp < 30%) {
+    intent = { kind: 'retreat', escapeDirection: computeEscapeDir(state, player) }
+  } else if (enemy nearby) {
+    intent = { kind: 'attack', targetId: enemy.id, targetType: 'creature', position: enemy.position }
+  } else {
+    intent = { kind: 'explore', position: pickExploreTarget(state, player) }
+  }
+
+  if (!intent) return null
+
+  // 複用同一套計畫器
+  const goalName = targetToGoalName(intent)  // 'selfPreservation' | 'engageCombat' | ...
+  return buildValidatedActionSequence(goalName, { score: 1, target: intent }, state, player, deps)
+}
+```
+
+**好處**：
+- 決策樹的 action 也經過 validate + apply，不再需要在 scheduler 做保底
+- 兩套 AI 系統共享同一套計畫器，邏輯一致
+- 新增 action 類型只需改 `buildActionSequence`，兩套系統同時受益
+
+### 13.4 設計價值
+
+| 價值 | 說明 |
+|------|------|
+| **統一驗證** | 所有 AI 策略的行動都經過同一套 validate + apply，不出現「模糊邏輯有驗證但決策樹沒有」的不一致 |
+| **模組化** | 決策層（怎麼選）和計畫層（怎麼做）分離，可獨立替換 |
+| **可測試** | 計畫器可獨立測試：給定任意 GoalTarget + state，驗證產出的 actions 合法 |
+| **可擴展** | 新增 AI 策略（如 V3）只需產出 GoalTarget，不需重寫 action 生成邏輯 |
+| **可除錯** | GoalTarget 作為意圖記錄，方便追溯「AI 為什麼做這個決定」 |
+| **向後相容** | 決策樹可逐步遷移，不必一次改完——先包一層 intent wrapper |
+
+### 13.5 統一介面（未來願景）
+
+```typescript
+// 所有 AI 策略 implement 同一介面
+interface AiStrategy {
+  evaluate(state: GameState, player: PlayerState): Array<{
+    intent: GoalTarget
+    score: number
+  }>
+}
+
+// 計畫器不關心意圖從哪來
+function plan(
+  intents: Array<{ intent: GoalTarget; score: number }>,
+  state: GameState,
+  player: PlayerState,
+  dependencies: ExecuteAiActionDependencies,
+): { actions: AiAction[]; intent: GoalTarget } | null {
+  const sorted = intents.sort((a, b) => b.score - a.score)
+  for (const { intent, score } of sorted) {
+    if (score <= 0) break
+    const goalName = targetToGoalName(intent)
+    const actions = buildValidatedActionSequence(goalName, { score, target: intent }, state, player, dependencies)
+    if (actions.length > 0) return { actions, intent }
+  }
+  return null
+}
+```
+
+```typescript
+// 使用
+const fuzzyStrategy: AiStrategy = { evaluate: (s, p) => evaluateAllGoals(computeFuzzyInputs(s, p), s, p, deps) }
+const dtStrategy: AiStrategy = { evaluate: (s, p) => decideAllIntents(s, p) }
+const v3Strategy: AiStrategy = { evaluate: (s, p) => graphSearch(s, p) }
+
+// 同一個 planner，同一個 executor
+const planResult = plan(strategy.evaluate(state, player), state, player, deps)
+if (planResult) executePlan(state, planResult.actions)
+```

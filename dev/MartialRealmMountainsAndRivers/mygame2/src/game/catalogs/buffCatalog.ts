@@ -104,6 +104,14 @@ export const buffCatalog: BuffDefinition[] = [
     attributeModifiers: { insight: 5 },
   },
   {
+    // 凌淵「山河歸藏」內功常駐 Buff：裝備期間提升悟性（呼應守護者持續領悟山河之道）。
+    id: 'lingyuan-shelter-breath-buff',
+    name: '山河歸藏',
+    description: '裝備山河歸藏期間，吐納山河靈氣入體，悟性 +3。',
+    duration: 'persistent',
+    attributeModifiers: { insight: 3 },
+  },
+  {
     id: 'iron-force-strength',
     name: '鐵臂鍛體',
     description: '裝備鐵臂功期間，提升臂力。',
