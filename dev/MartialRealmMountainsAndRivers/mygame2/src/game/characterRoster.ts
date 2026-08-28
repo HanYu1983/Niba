@@ -10,9 +10,14 @@
 
 import type { PlayerAttributes, RunStats } from './types'
 import { getTalent } from './catalogs/talentCatalog'
+import {
+  officialCharacterCatalog,
+  type OfficialCharacterDefinition,
+} from './catalogs/officialCharacterCatalog'
 
-/** 名冊版本：用於未來欄位演進的相容處理。 */
-export const CHARACTER_ROSTER_VERSION = 1
+/** 名冊版本：用於未來欄位演進的相容處理。
+ *  v2：新增 `isOfficial` 旗標，支援官方角色預建。 */
+export const CHARACTER_ROSTER_VERSION = 2
 export const CHARACTER_ROSTER_STORAGE_KEY = 'mygame2.character-roster'
 
 /** 五維預設值（全 0，代表無永久加成）。 */
@@ -50,6 +55,10 @@ export type PersistentCharacter = {
   /** 養成統計。 */
   gamesPlayed: number
   createdAt: number
+  /** 官方角色旗標：true 代表為預建的「守護者」官方角色，禁止改名／刪除。 */
+  isOfficial?: boolean
+  /** 官方角色所屬篇章（scenario id），與 `officialCharacterCatalog.chapterId` 對應。 */
+  chapterId?: string
 }
 
 /** 新角色預設已解鎖的內功（吐納功）。 */
@@ -112,6 +121,8 @@ function getStored(): PersistentCharacter[] {
           : Array.isArray(character.talentIds)
             ? character.talentIds
             : [],
+        // v2 起的官方角色旗標：舊存檔預設 false。
+        isOfficial: Boolean(character.isOfficial),
       }))
     }
     // 舊版存檔：缺少 unlockedSkillIds 欄位。將舊 learnedSkillIds 視為「已解鎖（可培養）」，
@@ -141,6 +152,70 @@ function persist(characters: PersistentCharacter[]) {
 /** 產生唯一 id（時間戳 + 隨機片段）。 */
 function generateId(): string {
   return `char-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
+}
+
+/** 將官方角色定義轉為名册預建角色（已帶四件套專屬功法、不持卷）。 */
+function buildOfficialCharacter(definition: OfficialCharacterDefinition): PersistentCharacter {
+  const defaults = createDefaultProgression()
+  // 專屬內功＋外功：建立時已「解鎖 + 學習 + 開啟」，
+  // 讓玩家進名册就能直接看到它們的設定入口（與培養進度正常運作）。
+  const exclusiveSkillIds = [definition.exclusiveInnerSkillId, ...definition.exclusiveExternalSkillIds]
+  const mergedUnlocked = [...new Set([...defaults.unlockedSkillIds, ...exclusiveSkillIds])]
+  return {
+    id: definition.characterId,
+    name: definition.name,
+    portrait: definition.portrait,
+    title: definition.title,
+    // 沙盒首次開局等級錨點在 worldGeneration.applyCharacterConfig 中處理；
+    // 此處不直接寫入 playerState.level（那是對局實例欄位），僅放在 description 供日後參考。
+    attributeBonuses: { ...DEFAULT_ATTRIBUTE_BONUSES, ...definition.initialAttributes },
+    scrolls: 0,
+    unlockedSkillIds: mergedUnlocked,
+    learnedSkillIds: exclusiveSkillIds,
+    initialExternalSkillIds: [...definition.exclusiveExternalSkillIds],
+    initialInternalSkillId: definition.exclusiveInnerSkillId,
+    unlockedTalentIds: [],
+    talentIds: [],
+    gamesPlayed: 0,
+    createdAt: Date.now(),
+    isOfficial: true,
+    chapterId: definition.chapterId,
+  }
+}
+
+/**
+ * 確保所有官方角色已預建於名册。
+ * - 已存在同 id 的角色不會被覆寫（保留玩家既有的培養進度與狀態）。
+ * - 缺漏的角色以「初始狀態」補建。
+ * - 若 `isOfficial` 旗標缺失（例如舊存檔），會回補。
+ *
+ * 應在 App 啟動時或進入「俠客名冊」畫面前呼叫一次。
+ * 回傳本次實際新增／回補的數量。
+ */
+export function ensureOfficialCharacters(): number {
+  const characters = getStored()
+  const existingById = new Map(characters.map((character) => [character.id, character]))
+  let dirty = false
+  let added = 0
+
+  for (const definition of officialCharacterCatalog) {
+    const existing = existingById.get(definition.characterId)
+    if (!existing) {
+      characters.push(buildOfficialCharacter(definition))
+      dirty = true
+      added += 1
+      continue
+    }
+    // 既有角色：若缺 `isOfficial` 旗標（例如舊存檔遷移而來），回補。
+    if (!existing.isOfficial) {
+      existing.isOfficial = true
+      existing.chapterId = definition.chapterId
+      dirty = true
+    }
+  }
+
+  if (dirty) persist(characters)
+  return added
 }
 
 /** 讀取所有名册角色。 */
@@ -186,7 +261,8 @@ export function createCharacter(input: {
 }
 
 /** 更新角色基本資料（名稱／外觀／稱號／五維加成）。名稱重複或空白時回傳 false。
- * 天賦的開啟／解除請用 setCharacterTalent（需先解鎖）。 */
+ * 天賦的開啟／解除請用 setCharacterTalent（需先解鎖）。
+ * 官方角色（`isOfficial: true`）禁止改名／外觀／稱號，僅允許花卷培養（attributeBonuses）。 */
 export function updateCharacter(
   id: string,
   patch: {
@@ -201,6 +277,10 @@ export function updateCharacter(
   if (index < 0) return false
 
   const current = characters[index]
+  // 官方角色禁止改 name/portrait/title，但允許培養五維。
+  if (current.isOfficial && (patch.name !== undefined || patch.portrait !== undefined || patch.title !== undefined)) {
+    return false
+  }
   const nextName = patch.name !== undefined ? patch.name.trim() : current.name
   if (!nextName || isCharacterNameTaken(nextName, id)) return false
 
@@ -220,11 +300,13 @@ export function updateCharacter(
   return true
 }
 
-/** 刪除角色；不存在回傳 false。 */
+/** 刪除角色；不存在回傳 false。官方角色禁止刪除。 */
 export function deleteCharacter(id: string): boolean {
   const characters = getStored()
+  const target = characters.find((character) => character.id === id)
+  if (!target) return false
+  if (target.isOfficial) return false
   const next = characters.filter((character) => character.id !== id)
-  if (next.length === characters.length) return false
   persist(next)
   return true
 }

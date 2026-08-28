@@ -6,6 +6,7 @@ import {
   updateCharacter,
   deleteCharacter,
   isCharacterNameTaken,
+  ensureOfficialCharacters,
   DEFAULT_ATTRIBUTE_BONUSES,
   computeScrollReward,
   applyEndGameRewards,
@@ -16,6 +17,7 @@ import {
   setInitialExternalSkill,
   setInitialInternalSkill,
 } from './characterRoster'
+import { lingyuan } from './catalogs/officialCharacterCatalog'
 import { createEmptyRunStats } from './runStats'
 
 function stubLocalStorage() {
@@ -351,5 +353,112 @@ describe('花卷：開啟初始功法', () => {
     const result = setInitialInternalSkill(character.id, 'some-inner')
     expect(result.ok).toBe(false)
     expect(result.reason).toContain('未學習')
+  })
+})
+
+describe('官方角色預建（ensureOfficialCharacters）', () => {
+  beforeEach(() => {
+    stubLocalStorage()
+  })
+
+  it('空名册呼叫後，凌淵會以預建狀態出現，含四件套專屬功法', () => {
+    const added = ensureOfficialCharacters()
+    expect(added).toBeGreaterThanOrEqual(1)
+    const lingyuanFromRoster = getCharacter(lingyuan.characterId)
+    expect(lingyuanFromRoster).toBeDefined()
+    expect(lingyuanFromRoster!.name).toBe(lingyuan.name)
+    expect(lingyuanFromRoster!.title).toBe(lingyuan.title)
+    expect(lingyuanFromRoster!.isOfficial).toBe(true)
+    expect(lingyuanFromRoster!.chapterId).toBe(lingyuan.chapterId)
+    // 四件套：1 內功 + 3 外功
+    expect(lingyuanFromRoster!.learnedSkillIds).toEqual(
+      expect.arrayContaining([
+        lingyuan.exclusiveInnerSkillId,
+        ...lingyuan.exclusiveExternalSkillIds,
+      ]),
+    )
+    // 已開啟為初始功法
+    expect(lingyuanFromRoster!.initialInternalSkillId).toBe(lingyuan.exclusiveInnerSkillId)
+    expect(lingyuanFromRoster!.initialExternalSkillIds).toEqual(
+      expect.arrayContaining(lingyuan.exclusiveExternalSkillIds),
+    )
+    // 五維加成包含 initialAttributes 設定
+    expect(lingyuanFromRoster!.attributeBonuses.armStrength).toBe(lingyuan.initialAttributes.armStrength)
+  })
+
+  it('重複呼叫不覆蓋玩家已培養的進度（冪等）', () => {
+    ensureOfficialCharacters()
+    addScrolls(lingyuan.characterId, 50)
+    spendScrollsOnAttribute(lingyuan.characterId, 'armStrength')
+    const before = getCharacter(lingyuan.characterId)!
+    const added = ensureOfficialCharacters()
+    expect(added).toBe(0)
+    const after = getCharacter(lingyuan.characterId)!
+    expect(after.scrolls).toBe(before.scrolls)
+    expect(after.attributeBonuses.armStrength).toBe(before.attributeBonuses.armStrength)
+  })
+
+  it('舊存檔若缺 isOfficial 旗標，會回補；既有資料保留', () => {
+    // 模擬只有基本欄位的舊存檔（isOfficial 為 undefined）
+    localStorage.setItem('mygame2.character-roster', JSON.stringify({
+      version: 1,
+      characters: [{
+        id: lingyuan.characterId,
+        name: lingyuan.name,
+        attributeBonuses: { ...DEFAULT_ATTRIBUTE_BONUSES, armStrength: 5 },
+        scrolls: 30,
+        unlockedSkillIds: ['tuna-gong', 'sky-breaking-palm'],
+        learnedSkillIds: ['tuna-gong'],
+        initialExternalSkillIds: [],
+        initialInternalSkillId: 'tuna-gong',
+        unlockedTalentIds: [],
+        talentIds: [],
+        gamesPlayed: 2,
+        createdAt: 0,
+      }],
+    }))
+    ensureOfficialCharacters()
+    const restored = getCharacter(lingyuan.characterId)!
+    expect(restored.isOfficial).toBe(true)
+    expect(restored.chapterId).toBe(lingyuan.chapterId)
+    // 既有進度不應被覆蓋
+    expect(restored.scrolls).toBe(30)
+    expect(restored.attributeBonuses.armStrength).toBe(5)
+    expect(restored.gamesPlayed).toBe(2)
+  })
+
+  it('官方角色禁止改名', () => {
+    ensureOfficialCharacters()
+    expect(updateCharacter(lingyuan.characterId, { name: '凌淵改名' })).toBe(false)
+    expect(getCharacter(lingyuan.characterId)!.name).toBe(lingyuan.name)
+  })
+
+  it('官方角色禁止改外觀／稱號', () => {
+    ensureOfficialCharacters()
+    expect(updateCharacter(lingyuan.characterId, { portrait: '🌊', title: '水神' })).toBe(false)
+    const c = getCharacter(lingyuan.characterId)!
+    expect(c.portrait).toBe(lingyuan.portrait)
+    expect(c.title).toBe(lingyuan.title)
+  })
+
+  it('官方角色允許花卷培養（attributeBonuses）', () => {
+    ensureOfficialCharacters()
+    addScrolls(lingyuan.characterId, 200)
+    expect(spendScrollsOnAttribute(lingyuan.characterId, 'insight')).toBe(true)
+    expect(getCharacter(lingyuan.characterId)!.attributeBonuses.insight).toBe(
+      lingyuan.initialAttributes.insight! + 1,
+    )
+  })
+
+  it('官方角色禁止刪除', () => {
+    ensureOfficialCharacters()
+    expect(deleteCharacter(lingyuan.characterId)).toBe(false)
+    expect(getCharacter(lingyuan.characterId)).toBeDefined()
+  })
+
+  it('自建角色仍可正常刪除', () => {
+    const custom = createCharacter({ name: '凡人' })!
+    expect(deleteCharacter(custom.id)).toBe(true)
+    expect(getCharacter(custom.id)).toBeUndefined()
   })
 })
