@@ -627,17 +627,26 @@
       "data": {
         "name": "凌淵",
         "money": 80,
-        "innerSkillId": "tuna-gong",
+        "innerSkillId": "lingyuan-shelter-breath",
         "innerSkillIds": [
-          "tuna-gong"
+          "tuna-gong",
+          "lingyuan-shelter-breath"
         ],
         "attributes": {
-          "armStrength": 19,
-          "constitution": 10,
-          "agility": 18,
-          "innerEnergy": 10,
-          "insight": 10
-        }
+          "armStrength": 14,
+          "constitution": 16,
+          "agility": 12,
+          "innerEnergy": 14,
+          "insight": 11
+        },
+        "externalSkillIds": [
+          "lingyuan-mountain-pulse",
+          "lingyuan-rivers-sustain"
+        ],
+        "equippedExternalSkillIds": [
+          "lingyuan-mountain-pulse",
+          "lingyuan-rivers-sustain"
+        ]
       }
     },
     {
