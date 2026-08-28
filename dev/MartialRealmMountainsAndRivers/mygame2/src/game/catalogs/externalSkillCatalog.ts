@@ -35,6 +35,8 @@ export type ExternalSkill = {
   target: ExternalSkillTarget
   /** 標記該功法不會從怪物/巢穴掉落（僅透過武館等指定途徑學習）。 */
   lootExcluded?: boolean
+  /** 官方角色專屬：僅該 characterId 可學（事件掉落池、武館進度皆跳過）。 */
+  exclusiveCharacterId?: string
   calculateDamage: (attributes: PlayerAttributes) => number
 }
 

@@ -6,6 +6,8 @@ import {
   updateCharacter,
   deleteCharacter,
   isCharacterNameTaken,
+  ensureOfficialCharacters,
+  applyStoryUnlocks,
   DEFAULT_ATTRIBUTE_BONUSES,
   computeScrollReward,
   applyEndGameRewards,
@@ -16,6 +18,7 @@ import {
   setInitialExternalSkill,
   setInitialInternalSkill,
 } from './characterRoster'
+import { lingyuan } from './catalogs/officialCharacterCatalog'
 import { createEmptyRunStats } from './runStats'
 
 function stubLocalStorage() {
@@ -351,5 +354,205 @@ describe('花卷：開啟初始功法', () => {
     const result = setInitialInternalSkill(character.id, 'some-inner')
     expect(result.ok).toBe(false)
     expect(result.reason).toContain('未學習')
+  })
+})
+
+describe('官方角色預建（ensureOfficialCharacters）', () => {
+  beforeEach(() => {
+    stubLocalStorage()
+  })
+
+  it('空名册呼叫後，凌淵會以預建狀態出現（不預學專屬功法，靠章節解鎖）', () => {
+    const added = ensureOfficialCharacters()
+    expect(added).toBeGreaterThanOrEqual(1)
+    const lingyuanFromRoster = getCharacter(lingyuan.characterId)
+    expect(lingyuanFromRoster).toBeDefined()
+    expect(lingyuanFromRoster!.name).toBe(lingyuan.name)
+    expect(lingyuanFromRoster!.title).toBe(lingyuan.title)
+    expect(lingyuanFromRoster!.isOfficial).toBe(true)
+    expect(lingyuanFromRoster!.chapterId).toBe(lingyuan.chapterId)
+    // 專屬功法不預學：維持標準新角狀態（吐納功），四件套靠章節通關解鎖。
+    expect(lingyuanFromRoster!.learnedSkillIds).toEqual(['tuna-gong'])
+    expect(lingyuanFromRoster!.unlockedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm'])
+    expect(lingyuanFromRoster!.initialInternalSkillId).toBe('tuna-gong')
+    expect(lingyuanFromRoster!.initialExternalSkillIds).toEqual([])
+    expect(lingyuanFromRoster!.unlockedTalentIds).toEqual([])
+    // 五維加成包含 initialAttributes 設定
+    expect(lingyuanFromRoster!.attributeBonuses.armStrength).toBe(lingyuan.initialAttributes.armStrength)
+  })
+
+  it('重複呼叫不覆蓋玩家已培養的進度（冪等）', () => {
+    ensureOfficialCharacters()
+    addScrolls(lingyuan.characterId, 50)
+    spendScrollsOnAttribute(lingyuan.characterId, 'armStrength')
+    const before = getCharacter(lingyuan.characterId)!
+    const added = ensureOfficialCharacters()
+    expect(added).toBe(0)
+    const after = getCharacter(lingyuan.characterId)!
+    expect(after.scrolls).toBe(before.scrolls)
+    expect(after.attributeBonuses.armStrength).toBe(before.attributeBonuses.armStrength)
+  })
+
+  it('舊存檔若缺 isOfficial 旗標，會回補；既有資料保留', () => {
+    // 模擬只有基本欄位的舊存檔（isOfficial 為 undefined）
+    localStorage.setItem('mygame2.character-roster', JSON.stringify({
+      version: 1,
+      characters: [{
+        id: lingyuan.characterId,
+        name: lingyuan.name,
+        attributeBonuses: { ...DEFAULT_ATTRIBUTE_BONUSES, armStrength: 5 },
+        scrolls: 30,
+        unlockedSkillIds: ['tuna-gong', 'sky-breaking-palm'],
+        learnedSkillIds: ['tuna-gong'],
+        initialExternalSkillIds: [],
+        initialInternalSkillId: 'tuna-gong',
+        unlockedTalentIds: [],
+        talentIds: [],
+        gamesPlayed: 2,
+        createdAt: 0,
+      }],
+    }))
+    ensureOfficialCharacters()
+    const restored = getCharacter(lingyuan.characterId)!
+    expect(restored.isOfficial).toBe(true)
+    expect(restored.chapterId).toBe(lingyuan.chapterId)
+    // 既有進度不應被覆蓋
+    expect(restored.scrolls).toBe(30)
+    expect(restored.attributeBonuses.armStrength).toBe(5)
+    expect(restored.gamesPlayed).toBe(2)
+  })
+
+  it('官方角色禁止改名', () => {
+    ensureOfficialCharacters()
+    expect(updateCharacter(lingyuan.characterId, { name: '凌淵改名' })).toBe(false)
+    expect(getCharacter(lingyuan.characterId)!.name).toBe(lingyuan.name)
+  })
+
+  it('官方角色禁止改外觀／稱號', () => {
+    ensureOfficialCharacters()
+    expect(updateCharacter(lingyuan.characterId, { portrait: '🌊', title: '水神' })).toBe(false)
+    const c = getCharacter(lingyuan.characterId)!
+    expect(c.portrait).toBe(lingyuan.portrait)
+    expect(c.title).toBe(lingyuan.title)
+  })
+
+  it('官方角色允許花卷培養（attributeBonuses）', () => {
+    ensureOfficialCharacters()
+    addScrolls(lingyuan.characterId, 200)
+    expect(spendScrollsOnAttribute(lingyuan.characterId, 'insight')).toBe(true)
+    expect(getCharacter(lingyuan.characterId)!.attributeBonuses.insight).toBe(
+      lingyuan.initialAttributes.insight! + 1,
+    )
+  })
+
+  it('官方角色禁止刪除', () => {
+    ensureOfficialCharacters()
+    expect(deleteCharacter(lingyuan.characterId)).toBe(false)
+    expect(getCharacter(lingyuan.characterId)).toBeDefined()
+  })
+
+  it('自建角色仍可正常刪除', () => {
+    const custom = createCharacter({ name: '凡人' })!
+    expect(deleteCharacter(custom.id)).toBe(true)
+    expect(getCharacter(custom.id)).toBeUndefined()
+  })
+})
+
+describe('劇本通關解鎖（applyStoryUnlocks）', () => {
+  beforeEach(() => {
+    stubLocalStorage()
+    ensureOfficialCharacters()
+  })
+
+  it('通關序章：山河歸藏僅入可培養清單（學習需花卷），天賦不受影響', () => {
+    const changed = applyStoryUnlocks('prologue-village', true)
+    expect(changed).toEqual([lingyuan.characterId])
+    const character = getCharacter(lingyuan.characterId)!
+    expect(character.unlockedSkillIds).toContain('lingyuan-shelter-breath')
+    // 不直接學會：需另行花卷學習
+    expect(character.learnedSkillIds).not.toContain('lingyuan-shelter-breath')
+    // 天賦不受影響
+    expect(character.unlockedTalentIds).toEqual([])
+  })
+
+  it('通關第二章：山河脈動入可培養清單、金剛體魄併入天賦並自動啟用', () => {
+    applyStoryUnlocks('forest-hunt', true)
+    const character = getCharacter(lingyuan.characterId)!
+    expect(character.unlockedSkillIds).toContain('lingyuan-mountain-pulse')
+    expect(character.learnedSkillIds).not.toContain('lingyuan-mountain-pulse')
+    expect(character.unlockedTalentIds).toContain('vital-body')
+    // 劇情解鎖的天賦自動啟用
+    expect(character.talentIds).toContain('vital-body')
+  })
+
+  it('通關第三章：兩個外功入可培養清單 + 丹田凝息自動啟用', () => {
+    applyStoryUnlocks('frost-water-lament', true)
+    const character = getCharacter(lingyuan.characterId)!
+    expect(character.unlockedSkillIds).toEqual(expect.arrayContaining([
+      'lingyuan-rivers-sustain',
+      'lingyuan-five-elements-mend',
+    ]))
+    // 不直接學會
+    expect(character.learnedSkillIds).not.toContain('lingyuan-rivers-sustain')
+    expect(character.learnedSkillIds).not.toContain('lingyuan-five-elements-mend')
+    expect(character.unlockedTalentIds).toContain('deep-dantian')
+    expect(character.talentIds).toContain('deep-dantian')
+  })
+
+  it('失敗（cleared: false）不套用任何解鎖', () => {
+    const changed = applyStoryUnlocks('prologue-village', false)
+    expect(changed).toEqual([])
+    const character = getCharacter(lingyuan.characterId)!
+    expect(character.unlockedSkillIds).not.toContain('lingyuan-shelter-breath')
+  })
+
+  it('冪等：重複套用同一章節不產生重複項目', () => {
+    applyStoryUnlocks('prologue-village', true)
+    applyStoryUnlocks('prologue-village', true)
+    const character = getCharacter(lingyuan.characterId)!
+    expect(character.unlockedSkillIds.filter((id) => id === 'lingyuan-shelter-breath')).toHaveLength(1)
+  })
+
+  it('解鎖後仍需花卷學習：learnSkill 成功後才加入 learnedSkillIds', () => {
+    applyStoryUnlocks('prologue-village', true)
+    // 新角預設 20 卷，第一門新功法成本 30 + 20 × 1 = 50 → 卷不足
+    expect(learnSkill(lingyuan.characterId, 'lingyuan-shelter-breath').ok).toBe(false)
+    addScrolls(lingyuan.characterId, 100)
+    expect(learnSkill(lingyuan.characterId, 'lingyuan-shelter-breath').ok).toBe(true)
+    expect(getCharacter(lingyuan.characterId)!.learnedSkillIds).toContain('lingyuan-shelter-breath')
+  })
+
+  it('三章全通關：四件套 + 兩天賦全部到位（功法待花卷學習、天賦已啟用）', () => {
+    applyStoryUnlocks('prologue-village', true)
+    applyStoryUnlocks('forest-hunt', true)
+    applyStoryUnlocks('frost-water-lament', true)
+    const character = getCharacter(lingyuan.characterId)!
+    expect(character.unlockedSkillIds).toEqual(expect.arrayContaining([
+      'lingyuan-shelter-breath',
+      'lingyuan-mountain-pulse',
+      'lingyuan-rivers-sustain',
+      'lingyuan-five-elements-mend',
+    ]))
+    expect(character.unlockedTalentIds).toEqual(expect.arrayContaining(['vital-body', 'deep-dantian']))
+    expect(character.talentIds).toEqual(expect.arrayContaining(['vital-body', 'deep-dantian']))
+  })
+
+  it('非官方角色不受影響；未綁定章節的官方角色也不受影響', () => {
+    const custom = createCharacter({ name: '凡人' })!
+    const changed = applyStoryUnlocks('prologue-village', true)
+    // 只有凌淵被變更
+    expect(changed).toEqual([lingyuan.characterId])
+    // 自建角色資料不變
+    expect(getCharacter(custom.id)!.unlockedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm'])
+  })
+
+  it('沙盒局末獎勵與劇本解鎖可並存：applyEndGameRewards 不會洗掉劇本解鎖', () => {
+    applyStoryUnlocks('prologue-village', true)
+    applyEndGameRewards(lingyuan.characterId, createEmptyRunStats(), true, ['some-sandbox-skill'])
+    const character = getCharacter(lingyuan.characterId)!
+    // 劇本解鎖保留
+    expect(character.unlockedSkillIds).toContain('lingyuan-shelter-breath')
+    // 沙盒獎勵也併入
+    expect(character.unlockedSkillIds).toContain('some-sandbox-skill')
   })
 })

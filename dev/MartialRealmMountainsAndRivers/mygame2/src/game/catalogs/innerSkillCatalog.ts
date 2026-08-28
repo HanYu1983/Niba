@@ -12,6 +12,10 @@ export type InnerSkill = {
   element?: 'none' | 'metal' | 'wood' | 'water' | 'fire' | 'earth'
   level?: number
   buffIds?: string[]
+  /** 標記該內功不會從怪物/巢穴掉落（僅透過武館等指定途徑學習）。 */
+  lootExcluded?: boolean
+  /** 官方角色專屬：僅該 characterId 可學（事件掉落池、武館進度皆跳過）。 */
+  exclusiveCharacterId?: string
   calculateDamage: (attributes: PlayerAttributes) => number
 }
 

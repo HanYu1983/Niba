@@ -84,7 +84,15 @@ function getRandomLearnableSkill(player: PlayerState, skillType: 'inner' | 'exte
     ? new Set(player.innerSkillIds)
     : new Set(player.externalSkillIds)
   const catalog = skillType === 'inner' ? allInnerSkillCatalog : allExternalSkillCatalog
-  const unlearned = catalog.filter((skill) => !learned.has(skill.id))
+  const playerCharacterId = player.characterId
+  const unlearned = catalog.filter((skill) => {
+    if (learned.has(skill.id)) return false
+    // 官方角色專屬：僅匹配 characterId 時才可取得；其他角色事件掉落直接跳過。
+    if (skill.exclusiveCharacterId && skill.exclusiveCharacterId !== playerCharacterId) return false
+    // 標記為 lootExcluded 的功法（如武館進度）不進入事件掉落池。
+    if (skill.lootExcluded) return false
+    return true
+  })
   if (unlearned.length === 0) return undefined
   return unlearned[Math.floor(Math.random() * unlearned.length)]
 }

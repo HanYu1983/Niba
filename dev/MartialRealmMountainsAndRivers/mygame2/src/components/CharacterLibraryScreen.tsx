@@ -1,4 +1,4 @@
-import { Button, Card, Flex, Form, Input, List, Modal, Popconfirm, Select, Space, Tabs, Typography, message } from 'antd'
+import { Button, Card, Flex, Form, Input, List, Modal, Popconfirm, Select, Space, Tabs, Tag, Typography, message } from 'antd'
 import { useState } from 'react'
 import {
   createCharacter,
@@ -7,6 +7,7 @@ import {
   updateCharacter,
   type PersistentCharacter,
 } from '../game/characterRoster'
+import { ensureOfficialCharacters } from '../game/characterRoster'
 import { ATTRIBUTE_NAMES, type UpgradeableAttribute } from '../game/types'
 import CharacterTrainingPanel from './CharacterTrainingPanel'
 import CharacterTalentPanel from './CharacterTalentPanel'
@@ -33,6 +34,8 @@ type CharacterLibraryScreenProps = {
 }
 
 function CharacterLibraryScreen({ onSelect, onCharactersChanged }: CharacterLibraryScreenProps) {
+  // 進入場景時先補建官方角色，避免舊存檔或首次進入的玩家看不到凌淵。
+  ensureOfficialCharacters()
   const [characters, setCharacters] = useState<PersistentCharacter[]>(() => getCharacters())
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<PersistentCharacter | null>(null)
@@ -70,6 +73,12 @@ function CharacterLibraryScreen({ onSelect, onCharactersChanged }: CharacterLibr
     const values = await form.validateFields()
 
     if (editing) {
+      // 官方角色在「基本資料」Tab 為唯讀說明，不應觸發更新。
+      if (editing.isOfficial) {
+        message.info('官方角色的名稱、外觀與稱號已鎖定。')
+        setModalOpen(false)
+        return
+      }
       // 五維加成僅由「培養」Tab 調整，儲存基本資料時不覆蓋。
       const ok = updateCharacter(editing.id, {
         name: values.name,
@@ -126,13 +135,17 @@ function CharacterLibraryScreen({ onSelect, onCharactersChanged }: CharacterLibr
             actions={[
               <Button key="select" type="link" onClick={() => onSelect?.(character)}>選用</Button>,
               <Button key="edit" type="link" onClick={() => openEdit(character)}>編輯／培養</Button>,
-              <Popconfirm
-                key="delete"
-                title="確定刪除此角色？"
-                onConfirm={() => handleDelete(character.id)}
-              >
-                <Button type="link" danger>刪除</Button>
-              </Popconfirm>,
+              ...(character.isOfficial
+                ? []
+                : [
+                    <Popconfirm
+                      key="delete"
+                      title="確定刪除此角色？"
+                      onConfirm={() => handleDelete(character.id)}
+                    >
+                      <Button type="link" danger>刪除</Button>
+                    </Popconfirm>,
+                  ]),
             ]}
           >
             <List.Item.Meta
@@ -140,6 +153,7 @@ function CharacterLibraryScreen({ onSelect, onCharactersChanged }: CharacterLibr
                 <Space>
                   <span>{character.portrait ? `${character.portrait} ` : ''}{character.name}</span>
                   {character.title && <Typography.Text type="secondary">{character.title}</Typography.Text>}
+                  {character.isOfficial && <Tag color="gold">官方角色</Tag>}
                 </Space>
               }
               description={
@@ -159,7 +173,11 @@ function CharacterLibraryScreen({ onSelect, onCharactersChanged }: CharacterLibr
       />
 
       <Modal
-        title={editing ? `編輯／培養「${editing.name}」` : '新建角色'}
+        title={
+          editing
+            ? `編輯／培養「${editing.name}」${editing.isOfficial ? '（官方角色）' : ''}`
+            : '新建角色'
+        }
         open={modalOpen}
         onOk={handleSubmit}
         onCancel={() => setModalOpen(false)}
@@ -174,8 +192,12 @@ function CharacterLibraryScreen({ onSelect, onCharactersChanged }: CharacterLibr
             items={[
               {
                 key: 'basic',
-                label: '基本資料',
-                children: (
+                label: editing.isOfficial ? '基本資料（鎖定）' : '基本資料',
+                children: editing.isOfficial ? (
+                  <Typography.Paragraph type="secondary">
+                    官方角色不可改名、調整外觀或稱號。請於「培養」分頁花費武學殘卷提升五維。
+                  </Typography.Paragraph>
+                ) : (
                   <Form form={form} layout="vertical" initialValues={{ portrait: '', title: '' }}>
                     <Form.Item
                       name="name"
