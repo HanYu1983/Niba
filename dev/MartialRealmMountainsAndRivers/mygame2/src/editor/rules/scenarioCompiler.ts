@@ -152,8 +152,10 @@ function compileCreatures(placements: ScenarioEntityPlacement[], nests: Creature
     const level = (data.level as number) ?? 1
     // 等級成長：未覆寫的五維以「基礎值 4 + 流派修正 + 每級成長」計算（與巢穴生成同公式）；
     // 編輯器明確指定的五維則直接採用（不再疊加等級成長）。
+    // 注意：`attributes: {}`（空物件）視為「未指定」，仍走等級成長路徑。
     const explicitAttributes = data.attributes as Partial<PlayerState['attributes']> | undefined
-    const attributes = explicitAttributes
+    const hasExplicitAttributes = explicitAttributes !== undefined && Object.keys(explicitAttributes).length > 0
+    const attributes = hasExplicitAttributes
       ? normalizePlayerAttributes(explicitAttributes)
       : getCreatureAttributes(
           { armStrength: 4, constitution: 4, agility: 4, innerEnergy: 4, insight: 4 },

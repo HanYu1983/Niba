@@ -92,6 +92,23 @@ describe('buildGameStateFromScenario', () => {
     expect(custom.attributes.constitution).toBe(10)
   })
 
+  it('attributes 為空物件時視為未指定，仍依等級成長', () => {
+    // 回歸測試：編輯器儲存 boss 時會寫入 "attributes": {}，
+    // 空物件是 truthy，原實作會誤走「明確指定」分支，導致等級不生效。
+    const scenario = makeScenario()
+    scenario.entities = [
+      { id: 'player-1', kind: 'player', position: { row: 8, column: 2 }, data: { name: '主角' } },
+      { id: 'boss-empty', kind: 'creature', position: { row: 2, column: 5 }, data: { name: '湖中妖邪', isBoss: true, level: 6, schoolId: 'frost-water', behaviorType: 'hunter', attributes: {} } },
+    ]
+    const state = buildGameStateFromScenario(scenario)
+    const boss = state.creatures.find((c) => c.id === 'boss-empty')!
+    expect(boss.level).toBe(6)
+    // frost-water 流派修正 + 每級 +3 × 5 級：五維應明顯高於預設 8
+    expect(boss.attributes.armStrength).toBeGreaterThan(8)
+    expect(boss.attributes.constitution).toBeGreaterThan(8)
+    expect(boss.maxHealth).toBeGreaterThan(20)
+  })
+
   it('部分調整玩家屬性時，未調整欄位補足預設值（不為 NaN）', () => {
     const scenario = makeScenario()
     scenario.entities[0].data = { name: '主角', attributes: { armStrength: 12 } }
