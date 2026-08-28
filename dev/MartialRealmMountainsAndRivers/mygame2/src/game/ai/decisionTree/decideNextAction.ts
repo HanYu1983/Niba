@@ -10,7 +10,7 @@ import {
   findAdjacentItem,
   findAdjacentResourcePoint,
   needsBuildingMaterials,
-  getOwnedBase,
+  getVisibleOwnedBase,
   findUnexploredNearby,
   getVisibleCreatures,
 } from './conditions'
@@ -134,7 +134,8 @@ export function decideNextAction(
   // 中樹 4：建造 / 採集
   // ═══════════════════════════════════════════════════
 
-  const base = getOwnedBase(state, player.id)
+  // 中樹 4 以「視野內可見的據點」為判斷依據（不可見據點不得據以規劃建造/採集）。
+  const base = getVisibleOwnedBase(state, player.id)
   if (base) {
     const isAtBase = Math.abs(player.position.row - base.position.row) + Math.abs(player.position.column - base.position.column) <= 1
 

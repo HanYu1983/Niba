@@ -42,18 +42,13 @@ export function describeCellUnreachable(
     (d) => `${d.position.row}-${d.position.column}` === cellKey,
   )
   if (defense) return `被防禦設施（${defense.type}）佔據`
-  if (cell.terrain === 'wall') return '該格是牆壁，無法通行'
-  if (!blockedByObstacle(state, actor, cellKey) && !canTraverseTerrain(cell.terrain, actor)) {
+  if (cell.terrain === 'wall' && !canTraverseTerrain(cell.terrain, actor)) {
+    return '牆壁無法通行（需破牆術等 buff 方可通行）'
+  }
+  if (!canTraverseTerrain(cell.terrain, actor)) {
     return `地形「${cell.terrain}」無法穿越`
   }
-  return '無通往該格的路徑'
-}
-
-/** 該格是否正交被阻擋實體佔據（描述不可達時用的補充檢查）。 */
-function blockedByObstacle(state: GameState, actor: PlayerState, cellId: string): boolean {
-  return getBlockedPositions(state, actor.id).some(
-    (p) => `${p.row}-${p.column}` === cellId,
-  )
+  return '該格被阻擋或無通往該格的路徑'
 }
 
 /**
@@ -77,8 +72,9 @@ export function collectReachableCells(
 
   const reachable: ReachableCell[] = []
   for (const cell of state.map.cells) {
-    if (cell.terrain === 'wall') {
-      if (reasons) reasons.push({ cellId: cell.id, position: { row: cell.row, column: cell.column }, reason: '該格是牆壁，無法通行' })
+    if (!canTraverseTerrain(cell.terrain, actor)) {
+      // 不可穿越地形（如無破牆術 buff 的牆）。與 buildMovementCostMap 一致，一律排除。
+      if (reasons) reasons.push({ cellId: cell.id, position: { row: cell.row, column: cell.column }, reason: `地形「${cell.terrain}」無法穿越` })
       continue
     }
     if (blockedKeys.has(cell.id)) {

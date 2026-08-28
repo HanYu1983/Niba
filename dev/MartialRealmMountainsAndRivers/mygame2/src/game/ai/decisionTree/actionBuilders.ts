@@ -5,6 +5,7 @@ import type { HostileActor } from '../perception/targetDiscovery'
 import { collectReachableCells } from '../perception/reachablePositions'
 import { getBlockedPositions } from '../perception/blockedPositions'
 import { canTraverseTerrain, getTerrainStaminaCost } from '../../rules/playerDerivedRules'
+import { getVisibleOwnedBase } from './conditions'
 
 // ─── Dijkstra cost map（從任意起點）──────────────
 
@@ -115,7 +116,7 @@ export function buildMoveToBaseAction(
   player: PlayerState,
 ): AiAction | null {
   const actor: AiActorRef = { id: player.id, kind: 'player' }
-  const base = state.bases.find((b) => b.active !== false && b.health > 0)
+  const base = getVisibleOwnedBase(state, player.id)
   if (!base) return null
 
   const dest = findClosestReachablePosition(state, player, base.position)
