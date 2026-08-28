@@ -34,8 +34,6 @@ import { createExplorationEventsFromCatalog } from './events/eventSpawner'
 import { DEFAULT_GAME_SETTINGS } from './gameSettings'
 import { createEmptyRunStats } from './runStats'
 import { generateRunId } from './settledRuns'
-import { buildGameStateFromScenario } from '../editor/rules/scenarioCompiler'
-import { campaignScenarioCatalog } from './catalogs/campaignScenarioCatalog'
 
 const WORLD_SEED_OFFSETS = {
   players: 101,
@@ -471,16 +469,4 @@ export function createPrologueGameState(): GameState {
     aiOrders: [],
     aiConstructionPlans: [],
   }
-}
-
-/**
- * 建立測試用劇情模式 GameState。
- *
- * 以序章「青石遺恨」的 ScenarioDefinition（campaignScenarioCatalog）為資料來源，
- * 透過 scenarioCompiler.buildGameStateFromScenario 編譯為 GameState，
- * 驗證「資料驅動 → 編譯 → 遊戲」的完整抽象層整合。
- */
-export function createTestCampaignGameState(): GameState {
-  const scenario = campaignScenarioCatalog['prologue-village']
-  return buildGameStateFromScenario(scenario)
 }
