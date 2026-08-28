@@ -3,6 +3,7 @@ import type { AiAction } from '../aiAction'
 import { validateAiAction } from '../validation/validateAiAction'
 import {
   isHealthCritical,
+  findHealingItemToUse,
   findAdjacentCreature,
   findAdjacentItem,
   findUnexploredNearby,
@@ -64,6 +65,21 @@ export function decideNextAction(
   // ═══════════════════════════════════════════════════
   // 小樹 1：保命
   // ═══════════════════════════════════════════════════
+
+  // 1.0 需要回血 → 使用回血道具
+  // 取得回血道具的量的陣列的排序, 由小到大[{itemId, healAmount}]
+  // 若現有血量和滿血的差距大於等於最小的回血道具量, 則使用回血道具
+  // 現有血量小於15也使用回血道具
+  const healTarget = findHealingItemToUse(player)
+  if (healTarget) {
+    const candidate: AiAction = {
+      type: 'use-item',
+      actor: { id: player.id, kind: 'player' },
+      itemId: healTarget.itemId,
+      reason: `使用回血道具 ${healTarget.itemId}（回血 ${healTarget.healAmount}，現有血量 ${player.health}/${player.maxHealth}）`,
+    }
+    if (passesValidation(state, candidate, '使用回血道具', out)) return candidate
+  }
 
   // 1.1 血量極低 → 逃命
   if (isHealthCritical(player)) {
