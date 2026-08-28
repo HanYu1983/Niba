@@ -19,6 +19,8 @@ import {
   setInitialInternalSkill,
 } from './characterRoster'
 import { lingyuan } from './catalogs/officialCharacterCatalog'
+import { recordScenarioClearance } from './campaignClearance'
+import { CHARACTER_ROSTER_STORAGE_KEY } from './characterRoster'
 import { createEmptyRunStats } from './runStats'
 
 function stubLocalStorage() {
@@ -558,6 +560,39 @@ describe('劇本通關解鎖（applyStoryUnlocks）', () => {
     const changed = applyStoryUnlocks('unknown-scenario', true)
     expect(changed).toEqual([])
     expect(getCharacter(custom.id)!.unlockedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm'])
+  })
+
+  it('先通關、後建角：新建自訂角色補算已通關章節的解鎖（僅入可培養清單）', () => {
+    // 模擬真實流程：gameStore 先記錄通關，再套用解鎖
+    recordScenarioClearance('prologue-village', true)
+    applyStoryUnlocks('prologue-village', true)
+    // 之後才建立自訂角色
+    const custom = createCharacter({ name: '後建俠客' })!
+    // 補算序章解鎖：山河歸藏入可培養清單
+    expect(custom.unlockedSkillIds).toContain('lingyuan-shelter-breath')
+    // 但不直接學會：需花卷學習
+    expect(custom.learnedSkillIds).not.toContain('lingyuan-shelter-breath')
+  })
+
+  it('先通關、後預建：官方角色補算已通關章節的解鎖（直接學會）', () => {
+    // 模擬：清空名冊（凌淵尚未預建），先記錄通關
+    localStorage.removeItem(CHARACTER_ROSTER_STORAGE_KEY)
+    recordScenarioClearance('prologue-village', true)
+    recordScenarioClearance('forest-hunt', true)
+    // 之後才執行官方角色預建
+    ensureOfficialCharacters()
+    const character = getCharacter(lingyuan.characterId)!
+    // 補算序章＋第二章解鎖：直接解鎖並學會
+    expect(character.unlockedSkillIds).toEqual(expect.arrayContaining([
+      'lingyuan-shelter-breath',
+      'lingyuan-mountain-pulse',
+    ]))
+    expect(character.learnedSkillIds).toEqual(expect.arrayContaining([
+      'lingyuan-shelter-breath',
+      'lingyuan-mountain-pulse',
+    ]))
+    // 第三章未通關 → 江河長養不出現
+    expect(character.unlockedSkillIds).not.toContain('lingyuan-rivers-sustain')
   })
 
   it('沙盒局末獎勵與劇本解鎖可並存：applyEndGameRewards 不會洗掉劇本解鎖', () => {
