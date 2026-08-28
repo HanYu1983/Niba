@@ -464,31 +464,30 @@ describe('劇本通關解鎖（applyStoryUnlocks）', () => {
     ensureOfficialCharacters()
   })
 
-  it('通關序章：山河歸藏僅入可培養清單（學習需花卷），天賦不受影響', () => {
+  it('通關序章：凌淵直接解鎖並學會山河歸藏（劇情解鎖免花卷），天賦不受影響', () => {
     const changed = applyStoryUnlocks('prologue-village', true)
     expect(changed).toEqual([lingyuan.characterId])
     const character = getCharacter(lingyuan.characterId)!
     expect(character.unlockedSkillIds).toContain('lingyuan-shelter-breath')
-    // 不直接學會：需另行花卷學習
-    expect(character.learnedSkillIds).not.toContain('lingyuan-shelter-breath')
+    // 官方角色：劇情解鎖直接學會
+    expect(character.learnedSkillIds).toContain('lingyuan-shelter-breath')
     // 天賦不受影響
     expect(character.unlockedTalentIds).toEqual([])
   })
 
-  it('通關第二章：山河脈動入可培養清單（天賦尚未定案，無天賦解鎖）', () => {
+  it('通關第二章：凌淵直接學會山河脈動（天賦尚未定案，無天賦解鎖）', () => {
     applyStoryUnlocks('forest-hunt', true)
     const character = getCharacter(lingyuan.characterId)!
     expect(character.unlockedSkillIds).toContain('lingyuan-mountain-pulse')
-    expect(character.learnedSkillIds).not.toContain('lingyuan-mountain-pulse')
+    expect(character.learnedSkillIds).toContain('lingyuan-mountain-pulse')
     expect(character.unlockedTalentIds).toEqual([])
   })
 
-  it('通關第三章：江河長養入可培養清單（天賦尚未定案，無天賦解鎖）', () => {
+  it('通關第三章：凌淵直接學會江河長養（五行歸元屬第四章，不出現）', () => {
     applyStoryUnlocks('frost-water-lament', true)
     const character = getCharacter(lingyuan.characterId)!
     expect(character.unlockedSkillIds).toContain('lingyuan-rivers-sustain')
-    // 不直接學會
-    expect(character.learnedSkillIds).not.toContain('lingyuan-rivers-sustain')
+    expect(character.learnedSkillIds).toContain('lingyuan-rivers-sustain')
     // 五行歸元屬第四章解鎖，第三章通關不應出現
     expect(character.unlockedSkillIds).not.toContain('lingyuan-five-elements-mend')
     expect(character.unlockedTalentIds).toEqual([])
@@ -508,16 +507,16 @@ describe('劇本通關解鎖（applyStoryUnlocks）', () => {
     expect(character.unlockedSkillIds.filter((id) => id === 'lingyuan-shelter-breath')).toHaveLength(1)
   })
 
-  it('解鎖後仍需花卷學習：learnSkill 成功後才加入 learnedSkillIds', () => {
+  it('官方角色劇情解鎖免花卷：learnSkill 不再需要（已直接學會）', () => {
     applyStoryUnlocks('prologue-village', true)
-    // 新角預設 20 卷，第一門新功法成本 30 + 20 × 1 = 50 → 卷不足
-    expect(learnSkill(lingyuan.characterId, 'lingyuan-shelter-breath').ok).toBe(false)
-    addScrolls(lingyuan.characterId, 100)
-    expect(learnSkill(lingyuan.characterId, 'lingyuan-shelter-breath').ok).toBe(true)
+    // 已直接學會，重複學習回「已學習」
+    const result = learnSkill(lingyuan.characterId, 'lingyuan-shelter-breath')
+    expect(result.ok).toBe(false)
+    expect(result.reason).toContain('已學習')
     expect(getCharacter(lingyuan.characterId)!.learnedSkillIds).toContain('lingyuan-shelter-breath')
   })
 
-  it('三章全通關：前三章解鎖到位（五行歸元屬第四章，不出現）', () => {
+  it('三章全通關：凌淵前三章功法全部學會（五行歸元屬第四章，不出現）', () => {
     applyStoryUnlocks('prologue-village', true)
     applyStoryUnlocks('forest-hunt', true)
     applyStoryUnlocks('frost-water-lament', true)
@@ -527,17 +526,37 @@ describe('劇本通關解鎖（applyStoryUnlocks）', () => {
       'lingyuan-mountain-pulse',
       'lingyuan-rivers-sustain',
     ]))
+    expect(character.learnedSkillIds).toEqual(expect.arrayContaining([
+      'lingyuan-shelter-breath',
+      'lingyuan-mountain-pulse',
+      'lingyuan-rivers-sustain',
+    ]))
     // 五行歸元屬第四章解鎖
     expect(character.unlockedSkillIds).not.toContain('lingyuan-five-elements-mend')
     expect(character.unlockedTalentIds).toEqual([])
   })
 
-  it('非官方角色不受影響；未綁定章節的官方角色也不受影響', () => {
-    const custom = createCharacter({ name: '凡人' })!
+  it('玩家自訂角色：通關後功法僅入可培養清單，需花卷學習', () => {
+    const custom = createCharacter({ name: '自訂俠客' })!
     const changed = applyStoryUnlocks('prologue-village', true)
-    // 只有凌淵被變更
-    expect(changed).toEqual([lingyuan.characterId])
-    // 自建角色資料不變
+    // 凌淵與自訂角色皆被變更
+    expect(changed).toEqual(expect.arrayContaining([lingyuan.characterId, custom.id]))
+    const customCharacter = getCharacter(custom.id)!
+    // 自訂角色：功法入可培養清單
+    expect(customCharacter.unlockedSkillIds).toContain('lingyuan-shelter-breath')
+    // 但不直接學會：需另行花卷學習
+    expect(customCharacter.learnedSkillIds).not.toContain('lingyuan-shelter-breath')
+    // 花卷學習後才學會
+    addScrolls(custom.id, 100)
+    expect(learnSkill(custom.id, 'lingyuan-shelter-breath').ok).toBe(true)
+    expect(getCharacter(custom.id)!.learnedSkillIds).toContain('lingyuan-shelter-breath')
+  })
+
+  it('自訂角色通關未綁定任何 storyUnlocks 的章節時不受影響', () => {
+    const custom = createCharacter({ name: '凡人' })!
+    // 'unknown-scenario' 沒有任何官方角色綁定 → 無可取得功法
+    const changed = applyStoryUnlocks('unknown-scenario', true)
+    expect(changed).toEqual([])
     expect(getCharacter(custom.id)!.unlockedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm'])
   })
 

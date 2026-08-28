@@ -598,18 +598,20 @@ export function closeInitialInternalSkill(id: string): boolean {
 }
 
 /**
- * 劇本通關解鎖：將指定章節的 storyUnlocks 併入官方角色。
+ * 劇本通關解鎖：將指定章節的 storyUnlocks 併入名冊角色。
  *
- * 與花卷培養路徑的關係：
- * - 功法：僅併入 `unlockedSkillIds`（可培養清單）；學習仍需花費武學殘卷（learnSkill）。
- * - 天賦：直接併入 `unlockedTalentIds` **並自動啟用（加入 `talentIds`）**（劇情解鎖免花卷解鎖）。
+ * 兩類角色的解鎖規則：
+ * - 官方角色（`isOfficial: true`，即該章節的守護者）：功法直接併入
+ *   `unlockedSkillIds` **並同時加入 `learnedSkillIds`**（劇情解鎖免花卷學習）。
+ * - 玩家自訂角色：功法僅併入 `unlockedSkillIds`（可培養清單），
+ *   學習仍需花費武學殘卷（learnSkill）——讓自訂俠客也能透過劇情進度取得功法。
+ * - 天賦（兩類角色皆同）：直接併入 `unlockedTalentIds` 並自動啟用（劇情解鎖免花卷）。
  *
  * 冪等：重複套用同一章節不會產生重複項目（Set 去重）。
- * 適用於所有官方角色（劇本模式不綁名册角色，官方角色作為故事主角全體受益）。
  *
  * @param scenarioId 通關的劇本 id。
  * @param cleared 是否通關成功（false 時不套用）。
- * @returns 有實際變更的官方角色 id 清單（無變更回傳空陣列）。
+ * @returns 有實際變更的角色 id 清單（無變更回傳空陣列）。
  */
 export function applyStoryUnlocks(scenarioId: string, cleared: boolean): string[] {
   if (!cleared) return []
@@ -617,28 +619,48 @@ export function applyStoryUnlocks(scenarioId: string, cleared: boolean): string[
   const changedIds: string[] = []
 
   const next = characters.map((character) => {
+    // 官方角色：比對自身 storyUnlocks 是否綁定此章節。
     const definition = officialCharacterCatalog.find((candidate) => candidate.characterId === character.id)
-    if (!definition) return character
-    const unlock = definition.storyUnlocks.find((entry) => entry.scenarioId === scenarioId)
-    if (!unlock) return character
+    const officialUnlock = definition?.storyUnlocks.find((entry) => entry.scenarioId === scenarioId)
+    // 玩家自訂角色：取得所有官方角色在此章節的解鎖功法（自訂俠客同樣能取得）。
+    const customUnlockSkillIds = definition
+      ? []
+      : officialCharacterCatalog.flatMap((candidate) =>
+          candidate.storyUnlocks
+            .find((entry) => entry.scenarioId === scenarioId)
+            ?.skillIds ?? [],
+        )
+
+    // 官方角色無綁定章節、自訂角色無可取得功法時跳過。
+    if (!officialUnlock && customUnlockSkillIds.length === 0) return character
 
     const unlockedSkills = new Set(character.unlockedSkillIds ?? [])
+    const learnedSkills = new Set(character.learnedSkillIds ?? [])
     const unlockedTalents = new Set(character.unlockedTalentIds ?? [])
     const enabledTalents = new Set(character.talentIds ?? [])
 
-    // 功法僅解鎖到可培養清單，學習需另行花卷（與沙盒獲得同路徑）。
-    for (const skillId of unlock.skillIds ?? []) {
-      unlockedSkills.add(skillId)
-    }
-    for (const talentId of unlock.talentIds ?? []) {
-      unlockedTalents.add(talentId)
-      enabledTalents.add(talentId)
+    if (officialUnlock) {
+      // 官方角色：功法直接解鎖並學會（劇情解鎖免花卷）。
+      for (const skillId of officialUnlock.skillIds ?? []) {
+        unlockedSkills.add(skillId)
+        learnedSkills.add(skillId)
+      }
+      for (const talentId of officialUnlock.talentIds ?? []) {
+        unlockedTalents.add(talentId)
+        enabledTalents.add(talentId)
+      }
+    } else {
+      // 玩家自訂角色：功法僅解鎖到可培養清單，學習需另行花卷。
+      for (const skillId of customUnlockSkillIds) {
+        unlockedSkills.add(skillId)
+      }
     }
 
     changedIds.push(character.id)
     return {
       ...character,
       unlockedSkillIds: [...unlockedSkills],
+      learnedSkillIds: [...learnedSkills],
       unlockedTalentIds: [...unlockedTalents],
       talentIds: [...enabledTalents],
     }
