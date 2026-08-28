@@ -437,7 +437,7 @@ export const gameStore = {
       // 因此要把包含局末旗標與同一 runId 的最新狀態寫回自動存檔，
       // 讓存檔摘要能顯示「已領取殘卷」，讀檔也能正確讀取防重登記。
       // activeCharacterIds 已隨 GameState 序列化，故不需再以參數傳入。
-      saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode)
+      saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode, currentScenarioId)
     }
     return results
   },
@@ -522,14 +522,14 @@ export const gameStore = {
   },
 
   saveGame: (): ActionOutcome => {
-    const result = saveGameState(gameState, activeCharacterIds[0] ?? null, isChallengeMode)
+    const result = saveGameState(gameState, activeCharacterIds[0] ?? null, isChallengeMode, currentScenarioId)
     return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '儲存失敗。' }
   },
 
   getSaveSlots: () => getGameSaveSlots(),
 
   saveGameToSlot: (slot: number): ActionOutcome => {
-    const result = saveGameStateToSlot(gameState, slot, activeCharacterIds[0] ?? null, isChallengeMode)
+    const result = saveGameStateToSlot(gameState, slot, activeCharacterIds[0] ?? null, isChallengeMode, currentScenarioId)
     return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '儲存失敗。' }
   },
 
@@ -538,8 +538,9 @@ export const gameStore = {
     pendingCreatureTurnBasePlayers = null
     const result = loadGameStateFromSlot(slot)
     if (!result.ok) return result
-    // 還原挑戰關卡模式旗標（舊存檔缺漏視為 false）。
+    // 還原挑戰關卡模式旗標與劇本 id（舊存檔缺漏視為 false/null）。
     isChallengeMode = result.isChallengeMode
+    currentScenarioId = result.scenarioId
     gameState = {
       ...result.state,
       aiOrders: result.state.aiOrders ?? [],
@@ -568,8 +569,9 @@ export const gameStore = {
   loadGame: (): ActionOutcome => {
     const result = loadGameState()
     if (!result.ok) return result
-    // 還原挑戰關卡模式旗標（舊存檔缺漏視為 false）。
+    // 還原挑戰關卡模式旗標與劇本 id（舊存檔缺漏視為 false/null）。
     isChallengeMode = result.isChallengeMode
+    currentScenarioId = result.scenarioId
     gameState = {
       ...result.state,
       aiOrders: result.state.aiOrders ?? [],
@@ -686,8 +688,10 @@ export const gameStore = {
     initialExternalSkillIds?: string[]
     talentIds?: string[]
   } | null)[]) => {
-    isChallengeMode = true
+    // 注意：startGame 內部會重置 isChallengeMode = false，
+    // 因此必須「先呼叫 startGame、再設旗標」，否則旗標會被覆蓋回 sandbox。
     gameStore.startGame(settings, selectedCharacters)
+    isChallengeMode = true
   },
 
   /** 目前對局是否為挑戰關卡模式。 */
@@ -697,6 +701,8 @@ export const gameStore = {
   startTestCampaign: () => {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
+    isChallengeMode = false
+    currentScenarioId = null
     // 測試劇情不綁定名册角色，清除並同步 state。
     activeCharacterIds = []
     // 觸發開局（on-start）對話：收集符合的步驟並填入佇列（updateGameState 會自動顯示）。
@@ -728,6 +734,7 @@ export const gameStore = {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
     // 劇本模式不綁定名册角色，清除並同步 state。
+    isChallengeMode = false
     activeCharacterIds = []
     gameState = { ...buildGameStateFromScenario(scenario), activeCharacterIds: [] }
     currentScenarioId = scenario.id
@@ -1593,7 +1600,7 @@ export const gameStore = {
     })
     animateCreatureTurn({ ...scheduled, players: currentPlayers })
     // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
-    if (!gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
+    if (!gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode, currentScenarioId)
   },
 
   movePlayer: (playerId: string, rowDelta: number, columnDelta: number) => {
@@ -2602,7 +2609,7 @@ export const gameStore = {
     }
     // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
     // 觸發探索事件時，敵人行動尚未執行，改由 flushPendingCreatureTurn 結算後保存。
-    if (!triggeredEvent && !gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
+    if (!triggeredEvent && !gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode, currentScenarioId)
   },
 
   startPlayerTurn: (playerId: string) => {
