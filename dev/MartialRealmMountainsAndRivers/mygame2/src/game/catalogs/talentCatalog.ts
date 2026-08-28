@@ -72,27 +72,9 @@ export const talentCatalog: TalentDefinition[] = [
     available: true,
     effects: [{ kind: 'passive-buff', buffId: 'talent-qi-master' }],
   },
-  {
-    id: 'vital-body',
-    name: '金剛體魄',
-    description: '最大血量 +10%。',
-    available: true,
-    effects: [{ kind: 'passive-buff', buffId: 'talent-vital-body' }],
-  },
-  {
-    id: 'deep-dantian',
-    name: '丹田凝息',
-    description: '最大內力 +10%。',
-    available: true,
-    effects: [{ kind: 'passive-buff', buffId: 'talent-deep-dantian' }],
-  },
-  {
-    id: 'sturdy-legs',
-    name: '力士雙足',
-    description: '最大體力 +2。',
-    available: true,
-    effects: [{ kind: 'passive-buff', buffId: 'talent-sturdy-legs' }],
-  },
+  // 以下三個天賦（金剛體魄／丹田凝息／力士雙足）設定上為凌淵專屬，
+  // 因尚未定案暫時移除；定案後連同 buffCatalog 的 talent-vital-body /
+  // talent-deep-dantian / talent-sturdy-legs 一併回歸。
 ]
 
 /** 依 id 查天賦定義；不存在回傳 undefined。 */

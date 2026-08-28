@@ -475,17 +475,15 @@ describe('劇本通關解鎖（applyStoryUnlocks）', () => {
     expect(character.unlockedTalentIds).toEqual([])
   })
 
-  it('通關第二章：山河脈動入可培養清單、金剛體魄併入天賦並自動啟用', () => {
+  it('通關第二章：山河脈動入可培養清單（天賦尚未定案，無天賦解鎖）', () => {
     applyStoryUnlocks('forest-hunt', true)
     const character = getCharacter(lingyuan.characterId)!
     expect(character.unlockedSkillIds).toContain('lingyuan-mountain-pulse')
     expect(character.learnedSkillIds).not.toContain('lingyuan-mountain-pulse')
-    expect(character.unlockedTalentIds).toContain('vital-body')
-    // 劇情解鎖的天賦自動啟用
-    expect(character.talentIds).toContain('vital-body')
+    expect(character.unlockedTalentIds).toEqual([])
   })
 
-  it('通關第三章：兩個外功入可培養清單 + 丹田凝息自動啟用', () => {
+  it('通關第三章：兩個外功入可培養清單（天賦尚未定案，無天賦解鎖）', () => {
     applyStoryUnlocks('frost-water-lament', true)
     const character = getCharacter(lingyuan.characterId)!
     expect(character.unlockedSkillIds).toEqual(expect.arrayContaining([
@@ -495,8 +493,7 @@ describe('劇本通關解鎖（applyStoryUnlocks）', () => {
     // 不直接學會
     expect(character.learnedSkillIds).not.toContain('lingyuan-rivers-sustain')
     expect(character.learnedSkillIds).not.toContain('lingyuan-five-elements-mend')
-    expect(character.unlockedTalentIds).toContain('deep-dantian')
-    expect(character.talentIds).toContain('deep-dantian')
+    expect(character.unlockedTalentIds).toEqual([])
   })
 
   it('失敗（cleared: false）不套用任何解鎖', () => {
@@ -522,7 +519,7 @@ describe('劇本通關解鎖（applyStoryUnlocks）', () => {
     expect(getCharacter(lingyuan.characterId)!.learnedSkillIds).toContain('lingyuan-shelter-breath')
   })
 
-  it('三章全通關：四件套 + 兩天賦全部到位（功法待花卷學習、天賦已啟用）', () => {
+  it('三章全通關：四件套全部到位（功法待花卷學習；天賦尚未定案）', () => {
     applyStoryUnlocks('prologue-village', true)
     applyStoryUnlocks('forest-hunt', true)
     applyStoryUnlocks('frost-water-lament', true)
@@ -533,8 +530,7 @@ describe('劇本通關解鎖（applyStoryUnlocks）', () => {
       'lingyuan-rivers-sustain',
       'lingyuan-five-elements-mend',
     ]))
-    expect(character.unlockedTalentIds).toEqual(expect.arrayContaining(['vital-body', 'deep-dantian']))
-    expect(character.talentIds).toEqual(expect.arrayContaining(['vital-body', 'deep-dantian']))
+    expect(character.unlockedTalentIds).toEqual([])
   })
 
   it('非官方角色不受影響；未綁定章節的官方角色也不受影響', () => {

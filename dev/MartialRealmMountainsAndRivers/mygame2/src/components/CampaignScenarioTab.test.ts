@@ -210,14 +210,12 @@ describe('buildChapterProgressView', () => {
     }
     const view = buildChapterProgressView(lingyuan, clearances)
     expect(view.chapters.map((c) => c.cleared)).toEqual([true, true, true])
-    // 序章 1 內功 + 第二章 1 外功 + 第三章 2 外功 = 4 功法；2 天賦
+    // 序章 1 內功 + 第二章 1 外功 + 第三章 2 外功 = 4 功法（天賦尚未定案，暫無解鎖）
     const pendingIds = view.totalPending.map((item) => item.id)
     expect(pendingIds).toContain('lingyuan-shelter-breath')
     expect(pendingIds).toContain('lingyuan-mountain-pulse')
     expect(pendingIds).toContain('lingyuan-rivers-sustain')
     expect(pendingIds).toContain('lingyuan-five-elements-mend')
-    expect(pendingIds).toContain('vital-body')
-    expect(pendingIds).toContain('deep-dantian')
     // 初始內功（吐納功）已解鎖，不會進 pending
     expect(view.totalUnlocked.map((item) => item.id)).toEqual(['tuna-gong'])
   })
@@ -242,17 +240,17 @@ describe('buildChapterProgressView', () => {
     }
   })
 
-  it('storyUnlocks 分配：序章 1 內功、第二章 1 外功 + 1 天賦、第三章 2 外功 + 1 天賦', () => {
+  it('storyUnlocks 分配：序章 1 內功、第二章 1 外功、第三章 2 外功（天賦尚未定案）', () => {
     const view = buildChapterProgressView(lingyuan, {})
     const byId = Object.fromEntries(view.chapters.map((c) => [c.scenarioId, c]))
     expect(byId['prologue-village'].unlocks.innerSkillIds).toEqual(['lingyuan-shelter-breath'])
     expect(byId['forest-hunt'].unlocks.externalSkillIds).toEqual(['lingyuan-mountain-pulse'])
-    expect(byId['forest-hunt'].unlocks.talentIds).toEqual(['vital-body'])
+    expect(byId['forest-hunt'].unlocks.talentIds).toEqual([])
     expect(byId['frost-water-lament'].unlocks.externalSkillIds).toEqual([
       'lingyuan-rivers-sustain',
       'lingyuan-five-elements-mend',
     ])
-    expect(byId['frost-water-lament'].unlocks.talentIds).toEqual(['deep-dantian'])
+    expect(byId['frost-water-lament'].unlocks.talentIds).toEqual([])
   })
 
   it('通關序章但名册未套用 → 山河歸藏進入 totalPending；第二章未通關 → 其解鎖不出現', () => {
@@ -265,10 +263,9 @@ describe('buildChapterProgressView', () => {
     // 序章解鎖的內功已通關但名册未含 → pending
     expect(view.totalPending.map((item) => item.id)).toEqual(['lingyuan-shelter-breath'])
     expect(view.totalPending[0].name).toBe('山河歸藏')
-    // 第二章未通關 → 山河脈動 / 金剛體魄不出現
+    // 第二章未通關 → 山河脈動不出現
     const allIds = [...view.totalUnlocked, ...view.totalPending].map((item) => item.id)
     expect(allIds).not.toContain('lingyuan-mountain-pulse')
-    expect(allIds).not.toContain('vital-body')
   })
 
   it('通關序章且名册已含內功 → 山河歸藏進入 totalUnlocked', () => {
@@ -297,7 +294,6 @@ describe('buildChapterProgressView', () => {
     // 第二章/第三章未通關 → 其解鎖項目不應出現
     const allIds = [...view.totalUnlocked, ...view.totalPending].map((item) => item.id)
     expect(allIds).not.toContain('lingyuan-mountain-pulse')
-    expect(allIds).not.toContain('vital-body')
-    expect(allIds).not.toContain('deep-dantian')
+    expect(allIds).not.toContain('lingyuan-rivers-sustain')
   })
 })
