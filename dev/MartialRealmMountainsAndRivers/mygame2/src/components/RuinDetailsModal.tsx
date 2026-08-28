@@ -39,7 +39,7 @@ function RuinDetailsModal({ ruin, player, onReconstruct, onClear, onClose }: Rui
             一座古代文明的廢墟，阻礙通行，但可以花費體力修復為小型防禦設施。
           </Typography.Paragraph>
           <Typography.Text type="secondary">
-            位置：({ruin.position.row + 1}, {ruin.position.column + 1})
+            位置：({ruin.position.row}, {ruin.position.column})
           </Typography.Text>
           {!adjacent && <Typography.Text type="warning">玩家需移動到廢墟周邊一格才能互動。</Typography.Text>}
           {ruin.status === 'reconstructed' && <Typography.Text type="secondary">此廢墟已修復，不能重複修復。</Typography.Text>}

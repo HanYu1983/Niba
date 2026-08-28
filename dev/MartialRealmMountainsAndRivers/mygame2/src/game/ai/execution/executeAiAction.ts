@@ -13,6 +13,7 @@ import { equipInnerSkillAction } from '../../rules/skillRules'
 import { learnSkillAtMartialHall } from '../../actions/martialHallActions'
 import { learnSkillAtSectGate, practiceSkillAtSectGate } from '../../actions/sectGateActions'
 import { useInfirmary, executeMission } from '../../actions/explorationActions'
+import { clearRuin } from '../../actions/ruinActions'
 import { buyItem } from '../../actions/shopActions'
 import type { CombatActionDependencies } from '../../actions/combatActions'
 
@@ -42,6 +43,10 @@ export function executeAiAction(
     case 'collect': {
       if (action.target.kind === 'item') {
         const result = collectItemPointAction(state, action.actor.id, action.target.id)
+        return { state: result.state, result: result.result }
+      }
+      if (action.target.kind === 'ruin') {
+        const result = clearRuin(state, action.actor.id, action.target.id)
         return { state: result.state, result: result.result }
       }
       const result = collectResourcePoint(state, action.actor.id, action.target.id)

@@ -446,7 +446,7 @@ export function executeCreatureAction(
     context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: health === 0 ? `${creature.name} 攻擊${adjacentDefense.name}，造成 ${damage} 點傷害並將其摧毀。` : `${creature.name} 攻擊${adjacentDefense.name}，造成 ${damage} 點傷害。` })
     return { type: 'attack', targetId: adjacentDefense.id, targetKind: 'defense', targetPosition: adjacentDefense.position, targetName: adjacentDefense.name }
   } else if (plan.moved && selection) {
-    context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: `${creature.name} 朝 ${selection.name ?? selection.id} 移動到 (${position.row + 1}, ${position.column + 1})。` })
+    context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: `${creature.name} 朝 ${selection.name ?? selection.id} 移動到 (${position.row}, ${position.column})。` })
     return { type: 'move' }
   }
   return { type: 'idle' }

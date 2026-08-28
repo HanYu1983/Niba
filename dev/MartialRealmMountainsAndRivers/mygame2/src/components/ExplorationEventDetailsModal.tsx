@@ -64,7 +64,7 @@ function ExplorationEventDetailsModal({ event, player, gameState, choices, onCho
           </Flex>
           <Typography.Paragraph style={{ margin: 0 }}><HighlightText>{event.description}</HighlightText></Typography.Paragraph>
           <Typography.Text type="secondary">
-            位置：({event.position.row + 1}, {event.position.column + 1})
+            位置：({event.position.row}, {event.position.column})
           </Typography.Text>
           {!adjacent && <Typography.Text type="warning">玩家需移動到事件點所在格才能互動。</Typography.Text>}
           {event.status === 'resolved' && <Typography.Text type="secondary">此事件已完成，不能重複領取。</Typography.Text>}

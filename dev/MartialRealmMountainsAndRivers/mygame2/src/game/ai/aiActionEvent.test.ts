@@ -29,7 +29,7 @@ describe('aiActionEvent', () => {
     resetAiActionEventSequenceForTest()
     const event = createAiActionEvent({ round: 2, actor, action: moveAction(), result: 'succeeded' })
 
-    expect(formatAiActionEvent(event)).toBe('[第 2 回合] AI 玩家 移動到 (5, 5)（返回據點防守範圍。）')
+    expect(formatAiActionEvent(event)).toBe('[第 2 回合] AI 玩家 移動到 (4, 4)（返回據點防守範圍。）')
   })
 
   it('格式化：失敗行動附加原因', () => {

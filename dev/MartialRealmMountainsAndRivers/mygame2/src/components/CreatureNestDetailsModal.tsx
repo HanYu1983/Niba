@@ -35,7 +35,7 @@ function CreatureNestDetailsModal({ nest, currentPlayer, onAttack, onClose }: Cr
         <LocationDetailsCard
           icon="🕳️"
           name={nest.name}
-          position={`位置 (${nest.position.row + 1}, ${nest.position.column + 1})`}
+          position={`位置 (${nest.position.row}, ${nest.position.column})`}
           statusLabel={nest.health === 0 ? '已摧毀' : '生成中'}
           statusColor={nest.health === 0 ? 'red' : 'purple'}
           health={nest.health}

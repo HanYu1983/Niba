@@ -61,7 +61,7 @@ describe('action result formatters', () => {
     expect(definition).toBeDefined()
     expect(formatDefenseStructureBuildResult(definition!, { row: 2, column: 3 })).toEqual({
       title: '防禦建築建造完成',
-      message: '已在 (3, 4) 建造設施。',
+      message: '已在 (2, 3) 建造設施。',
       rewards: ['消耗 40 建料', '玩家聲望 +8'],
     })
     expect(formatItemUseResult({

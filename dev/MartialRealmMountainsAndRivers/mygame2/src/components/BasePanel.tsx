@@ -36,7 +36,7 @@ function BasePanel({ bases, globalBuffs, selectedBaseId, onBaseSelect, onBaseDet
               <div className="base-panel__identity-copy">
                 <Typography.Title level={4}>{base.name}</Typography.Title>
                 <Typography.Text type="secondary">
-                  位置 ({base.position.row + 1}, {base.position.column + 1})
+                  位置 ({base.position.row}, {base.position.column})
                 </Typography.Text>
               </div>
               <Tag color={base.health === 0 ? 'red' : 'gold'}>

@@ -60,7 +60,7 @@ function ItemPointDetailsModal({
         <Flex vertical gap={12}>
           <Typography.Title level={4} style={{ margin: 0 }}>🎁 神秘道具點</Typography.Title>
           <Typography.Text type="secondary">
-            位置 ({itemPoint.position.row + 1}, {itemPoint.position.column + 1})
+            位置 ({itemPoint.position.row}, {itemPoint.position.column})
           </Typography.Text>
           {terrain && <Typography.Text strong>{terrainLabel[terrain] ?? '🎁 地形物產'}</Typography.Text>}
           <Typography.Paragraph style={{ margin: 0 }}>

@@ -3,7 +3,6 @@ import { isAdjacent } from '../../types'
 import type { HostileActor } from '../perception/targetDiscovery'
 import { listHostileActors } from '../perception/targetDiscovery'
 import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
-import { collectReachableCells } from '../perception/reachablePositions'
 
 // ─── 保命條件 ──────────────────────────────────────
 
@@ -47,26 +46,81 @@ export function findAdjacentResourcePoint(state: GameState, player: PlayerState)
   return state.resourcePoints.find((rp) => isAdjacent(player.position, rp.position)) ?? null
 }
 
-export function needsBuildingMaterials(state: GameState, _playerId: string): boolean {
-  const base = state.bases.find((b) => b.active !== false && b.health > 0)
+export function needsBuildingMaterials(state: GameState, playerId: string): boolean {
+  const base = getVisibleOwnedBase(state, playerId)
   if (!base) return false
   return base.buildingMaterials < base.maxBuildingMaterials * 0.7
 }
 
 // ─── 建造條件 ──────────────────────────────────────
 
+/** 所有存活據點（未限制視野；供「無據點可用」的最終情境判斷）。 */
 export function getOwnedBase(state: GameState, _playerId: string) {
   return state.bases.find((b) => b.active !== false && b.health > 0) ?? null
 }
 
+/**
+ * 視野內可見的存活據點。
+ *
+ * 決策樹的建造／採集／回據點邏輯必須以「玩家視野內可見的據點」為判斷依據，
+ * 而非地圖上所有據點（不可見據點等同未知，不應據以規劃動作）。
+ *
+ * 開通的據點（discovered）會永久提供其周邊視野（見 visibilityRules），
+ * 因此其所在格必然在可見集合內——只需以 getPlayerVisibleCellIds 判斷即可。
+ */
+export function getVisibleOwnedBase(state: GameState, playerId: string) {
+  const visible = getPlayerVisibleCellIds(state, playerId)
+  const base = getOwnedBase(state, playerId)
+  if (!base) return null
+  const cellKey = `${base.position.row}-${base.position.column}`
+  if (!visible.has(cellKey)) return null
+  return base
+}
+
 // ─── 探索條件 ──────────────────────────────────────
 
+/**
+ * 找出「最近的探索目標格」。
+ *
+ * 只考慮「無任何地上物、也非牆壁」的格子：把地圖上所有實體（玩家、怪物、
+ * 據點、巢穴、資源點、物品點、廢墟、門派據點、防禦設施、陷阱、探索事件）
+ * 佔據的格與牆一概排除，再以曼哈頓距離挑出離玩家最近的未探索格。
+ * 其餘一概不管（不校驗剩餘體力可達性、不設探索距離上限）。
+ */
 export function findUnexploredNearby(state: GameState, player: PlayerState): Position | null {
-  const reachable = collectReachableCells(state, player)
   const explored = getPlayerVisibleCellIds(state, player.id)
-  const unexplored = reachable.filter((c) => !explored.has(c.cellId))
-  if (unexplored.length === 0) return null
-  return unexplored[0].position
+
+  const occupied = new Set<string>()
+  const add = (pos: Position | undefined): void => {
+    if (pos && Number.isFinite(pos.row) && Number.isFinite(pos.column)) {
+      occupied.add(`${pos.row}-${pos.column}`)
+    }
+  }
+  for (const p of state.players) add(p.position)
+  for (const c of state.creatures) add(c.position)
+  for (const b of state.bases) add(b.position)
+  for (const n of state.creatureNests ?? []) add(n.position)
+  for (const rp of state.resourcePoints) add(rp.position)
+  for (const ip of state.itemPoints) add(ip.position)
+  for (const r of state.ruins ?? []) add(r.position)
+  for (const s of state.sectGates ?? []) add(s.position)
+  for (const d of state.defenseStructures ?? []) add(d.position)
+  for (const t of state.traps ?? []) add(t.position)
+  for (const e of state.explorationEvents ?? []) add(e.position)
+
+  let best: Position | null = null
+  let bestDist = Infinity
+  for (const cell of state.map.cells) {
+    if (cell.terrain === 'wall') continue
+    if (occupied.has(cell.id)) continue
+    if (explored.has(cell.id)) continue
+    const dist = manhattan(player.position, { row: cell.row, column: cell.column })
+    if (dist < bestDist) {
+      bestDist = dist
+      best = { row: cell.row, column: cell.column }
+    }
+  }
+  return best
 }
 
 // ─── 距離工具 ──────────────────────────────────────

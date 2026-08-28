@@ -128,7 +128,7 @@ function App() {
       runDecisionTreeStep: (actorId) => gameStore.runDecisionTreeStep(actorId),
       runGraphSearchStep: (actorId) => gameStore.runGraphSearchStep(actorId),
       endTurn: (actorId) => gameStore.endPlayerTurn(actorId),
-      onStepFailed: (_actorId, reason) => { message.warning(reason) },
+      onStepFailed: (_actorId, reason) => { message.warning({ content: reason, duration: 10 }) },
     }),
   )
   const modalOpen = Boolean(
