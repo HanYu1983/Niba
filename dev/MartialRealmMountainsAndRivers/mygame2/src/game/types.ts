@@ -203,6 +203,8 @@ export type PlayerState = {
   portrait?: string
   /** 角色稱號（來自名册角色，可選）。 */
   title?: string
+  /** 名册角色 ID（官方角色或自訂角色）；事件掉落會依此判斷專屬功法解鎖。 */
+  characterId?: string
   turnEnded: boolean,
 }
 

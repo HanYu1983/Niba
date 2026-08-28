@@ -570,6 +570,7 @@ export type InitialCharacterConfig = {
   name?: string
   portrait?: string
   title?: string
+  characterId?: string
   initialInternalSkillId?: string
   initialExternalSkillIds?: string[]
   talentIds?: string[]
@@ -630,6 +631,7 @@ export function createInitialPlayers(
       isAI,
       portrait: useCharacterSkills ? character?.portrait : undefined,
       title: useCharacterSkills ? character?.title : undefined,
+      characterId: useCharacterSkills ? character?.characterId : undefined,
       innerSkillId,
       innerSkillIds,
       position,

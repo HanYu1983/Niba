@@ -8,6 +8,10 @@ import {
 } from './skillProgressionCatalog'
 import { jianghuExternalSkills, springReturnEnhancement } from './jianghuExternalSkillCatalog'
 import { insightUtilityExternalSkills } from './insightUtilityExternalSkillCatalog'
+import {
+  lingyuanExclusiveExternalSkills,
+  lingyuanExclusiveInnerSkills,
+} from './officialExclusiveSkills'
 import type { MartialSchoolId } from './martialSchoolCatalog'
 
 /** 武館只販售太虛流進階功法；既有武館功法不列入商店。 */
@@ -15,8 +19,19 @@ export const martialHallInnerSkillCatalog: InnerSkill[] = martialHallInnerSkills
 export const martialHallExternalSkillCatalog: ExternalSkill[] = martialHallExternalSkills
 
 /** 完整查找目錄，供戰鬥、Buff 與已學功法使用。 */
-export const allInnerSkillCatalog: InnerSkill[] = [...innerSkillCatalog, ...progressionInnerSkills]
-export const allExternalSkillCatalog: ExternalSkill[] = [...externalSkillCatalog, ...progressionExternalSkills, ...jianghuExternalSkills, springReturnEnhancement, ...insightUtilityExternalSkills]
+export const allInnerSkillCatalog: InnerSkill[] = [
+  ...innerSkillCatalog,
+  ...lingyuanExclusiveInnerSkills,
+  ...progressionInnerSkills,
+]
+export const allExternalSkillCatalog: ExternalSkill[] = [
+  ...externalSkillCatalog,
+  ...lingyuanExclusiveExternalSkills,
+  ...progressionExternalSkills,
+  ...jianghuExternalSkills,
+  springReturnEnhancement,
+  ...insightUtilityExternalSkills,
+]
 
 export function getMartialHallSkills(schoolId: MartialSchoolId | undefined): {
   inner: InnerSkill[]

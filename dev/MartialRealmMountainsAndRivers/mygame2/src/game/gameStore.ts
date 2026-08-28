@@ -162,7 +162,7 @@ import {
 } from './lootFactory'
 import { runActionExecution, runActionOutcome } from './storeAdapters'
 import { recordMaxLevel, recordDamageDealt } from './runStats'
-import { applyEndGameRewards } from './characterRoster'
+import { applyEndGameRewards, applyStoryUnlocks } from './characterRoster'
 import { enqueueDialogue, skipAllDialogue } from './actions/dialogueActions'
 import { collectTriggeredDialogues } from './rules/dialogueTriggerRules'
 import { checkVictory } from './rules/campaignRules'
@@ -726,9 +726,14 @@ export const gameStore = {
     listeners.forEach((listener) => listener())
   },
 
-  /** 記錄目前劇本的通關狀態（true = 闖關成功；false = 失敗）。 */
+  /** 記錄目前劇本的通關狀態（true = 闖關成功；false = 失敗）。
+   *  通關成功時，同步將該章節的 storyUnlocks 併入所有官方角色（功法＋天賦）。 */
   recordCurrentScenarioClearance: (cleared: boolean) => {
-    if (currentScenarioId) recordScenarioClearance(currentScenarioId, cleared)
+    if (!currentScenarioId) return
+    recordScenarioClearance(currentScenarioId, cleared)
+    // 劇本通關解鎖：官方角色（如凌淵）作為故事主角，通關即解鎖對應功法／天賦。
+    // 冪等（Set 去重），重複通關不會產生重複項目。
+    applyStoryUnlocks(currentScenarioId, cleared)
   },
 
   showActionResult: (
