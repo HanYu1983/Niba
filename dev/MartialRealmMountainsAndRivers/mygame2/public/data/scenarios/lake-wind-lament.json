@@ -133,7 +133,7 @@
     {
       "row": 2,
       "column": 2,
-      "terrain": "road"
+      "terrain": "plain"
     },
     {
       "row": 2,
@@ -187,285 +187,285 @@
     },
     {
       "row": 3,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 4,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 7,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 4,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 7,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 5,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 5,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
       "column": 2,
       "terrain": "road"
     },
     {
-      "row": 3,
-      "column": 3,
-      "terrain": "plain"
-    },
-    {
-      "row": 3,
-      "column": 4,
-      "terrain": "water"
-    },
-    {
-      "row": 3,
-      "column": 5,
-      "terrain": "water"
-    },
-    {
-      "row": 3,
-      "column": 6,
-      "terrain": "water"
-    },
-    {
-      "row": 3,
-      "column": 7,
-      "terrain": "water"
-    },
-    {
-      "row": 3,
-      "column": 8,
-      "terrain": "plain"
-    },
-    {
-      "row": 3,
-      "column": 9,
-      "terrain": "plain"
-    },
-    {
-      "row": 3,
-      "column": 10,
-      "terrain": "wall"
-    },
-    {
-      "row": 4,
-      "column": 0,
-      "terrain": "wall"
-    },
-    {
-      "row": 4,
-      "column": 1,
-      "terrain": "forest"
-    },
-    {
-      "row": 4,
-      "column": 2,
-      "terrain": "plain"
-    },
-    {
-      "row": 4,
-      "column": 3,
-      "terrain": "plain"
-    },
-    {
-      "row": 4,
-      "column": 4,
-      "terrain": "water"
-    },
-    {
-      "row": 4,
-      "column": 5,
-      "terrain": "water"
-    },
-    {
-      "row": 4,
-      "column": 6,
-      "terrain": "water"
-    },
-    {
-      "row": 4,
-      "column": 7,
-      "terrain": "water"
-    },
-    {
-      "row": 4,
-      "column": 8,
-      "terrain": "plain"
-    },
-    {
-      "row": 4,
-      "column": 9,
-      "terrain": "forest"
-    },
-    {
-      "row": 4,
-      "column": 10,
-      "terrain": "wall"
-    },
-    {
-      "row": 5,
-      "column": 0,
-      "terrain": "wall"
-    },
-    {
-      "row": 5,
-      "column": 1,
-      "terrain": "forest"
-    },
-    {
-      "row": 5,
-      "column": 2,
-      "terrain": "plain"
-    },
-    {
-      "row": 5,
-      "column": 3,
-      "terrain": "plain"
-    },
-    {
-      "row": 5,
-      "column": 4,
-      "terrain": "plain"
-    },
-    {
-      "row": 5,
-      "column": 5,
-      "terrain": "water"
-    },
-    {
-      "row": 5,
-      "column": 6,
-      "terrain": "water"
-    },
-    {
-      "row": 5,
-      "column": 7,
-      "terrain": "plain"
-    },
-    {
-      "row": 5,
-      "column": 8,
-      "terrain": "plain"
-    },
-    {
-      "row": 5,
-      "column": 9,
-      "terrain": "forest"
-    },
-    {
-      "row": 5,
-      "column": 10,
-      "terrain": "wall"
-    },
-    {
-      "row": 6,
-      "column": 0,
-      "terrain": "wall"
-    },
-    {
-      "row": 6,
-      "column": 1,
-      "terrain": "forest"
-    },
-    {
-      "row": 6,
-      "column": 2,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 3,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 4,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 5,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 6,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 7,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 8,
-      "terrain": "plain"
-    },
-    {
-      "row": 6,
-      "column": 9,
-      "terrain": "forest"
-    },
-    {
-      "row": 6,
-      "column": 10,
-      "terrain": "wall"
-    },
-    {
-      "row": 7,
-      "column": 0,
-      "terrain": "wall"
-    },
-    {
-      "row": 7,
-      "column": 1,
-      "terrain": "forest"
-    },
-    {
-      "row": 7,
-      "column": 2,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 3,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 4,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 5,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 6,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 7,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 8,
-      "terrain": "plain"
-    },
-    {
-      "row": 7,
-      "column": 9,
-      "terrain": "forest"
-    },
-    {
-      "row": 7,
-      "column": 10,
-      "terrain": "wall"
-    },
-    {
-      "row": 8,
-      "column": 0,
-      "terrain": "wall"
-    },
-    {
-      "row": 8,
-      "column": 1,
-      "terrain": "plain"
-    },
-    {
-      "row": 8,
-      "column": 2,
-      "terrain": "road"
-    },
-    {
       "row": 8,
       "column": 3,
       "terrain": "plain"
@@ -473,17 +473,17 @@
     {
       "row": 8,
       "column": 4,
-      "terrain": "plain"
+      "terrain": "forest"
     },
     {
       "row": 8,
       "column": 5,
-      "terrain": "plain"
+      "terrain": "forest"
     },
     {
       "row": 8,
       "column": 6,
-      "terrain": "plain"
+      "terrain": "forest"
     },
     {
       "row": 8,
@@ -528,17 +528,17 @@
     {
       "row": 9,
       "column": 4,
-      "terrain": "plain"
+      "terrain": "forest"
     },
     {
       "row": 9,
       "column": 5,
-      "terrain": "plain"
+      "terrain": "forest"
     },
     {
       "row": 9,
       "column": 6,
-      "terrain": "plain"
+      "terrain": "forest"
     },
     {
       "row": 9,
@@ -630,7 +630,8 @@
         "innerSkillId": "lingyuan-shelter-breath",
         "innerSkillIds": [
           "tuna-gong",
-          "lingyuan-shelter-breath"
+          "lingyuan-shelter-breath",
+          "golden-body-inner"
         ],
         "attributes": {
           "armStrength": 14,
@@ -845,13 +846,56 @@
         "schoolId": "frost-water",
         "behaviorType": "hunter",
         "aggroRange": 5,
-        "attributes": {
-          "armStrength": 18,
-          "constitution": 18,
-          "agility": 18,
-          "innerEnergy": 18,
-          "insight": 18
-        }
+        "attributes": {},
+        "level": 6
+      }
+    },
+    {
+      "id": "creature-2-2-mtd5ieor",
+      "kind": "creature",
+      "position": {
+        "row": 2,
+        "column": 2
+      },
+      "data": {
+        "position": {
+          "row": 2,
+          "column": 2
+        },
+        "name": "creature",
+        "level": 2
+      }
+    },
+    {
+      "id": "creature-7-8-mtd5ig60",
+      "kind": "creature",
+      "position": {
+        "row": 7,
+        "column": 8
+      },
+      "data": {
+        "position": {
+          "row": 7,
+          "column": 8
+        },
+        "name": "creature",
+        "level": 3
+      }
+    },
+    {
+      "id": "creature-3-8-mtd5ii4k",
+      "kind": "creature",
+      "position": {
+        "row": 3,
+        "column": 8
+      },
+      "data": {
+        "position": {
+          "row": 3,
+          "column": 8
+        },
+        "name": "creature",
+        "level": 4
       }
     }
   ],

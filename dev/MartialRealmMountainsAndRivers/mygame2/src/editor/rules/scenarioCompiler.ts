@@ -15,7 +15,7 @@ import type {
 } from '../../game/types'
 import { buildingCatalog } from '../../game/catalogs/buildingCatalog'
 import { defenseStructureCatalog } from '../../game/catalogs/defenseStructureCatalog'
-import { getCreatureInnerSkillId } from '../../game/rules/creatureBehaviorRules'
+import { getCreatureInnerSkillId, getCreatureAttributes } from '../../game/rules/creatureBehaviorRules'
 import { getPlayerVisibleCellIds } from '../../game/rules/visibilityRules'
 import { createCharacterState } from '../../game/characterFactory'
 import { createEmptyRunStats } from '../../game/runStats'
@@ -149,12 +149,23 @@ function compileCreatures(placements: ScenarioEntityPlacement[], nests: Creature
     const homeNestId = data.homeNestId as string | undefined
     const homeNest = nests.find((nest) => nest.id === homeNestId)
     const maxHealthOverride = data.maxHealthOverride as number | undefined
+    const level = (data.level as number) ?? 1
+    // 等級成長：未覆寫的五維以「基礎值 4 + 流派修正 + 每級成長」計算（與巢穴生成同公式）；
+    // 編輯器明確指定的五維則直接採用（不再疊加等級成長）。
+    const explicitAttributes = data.attributes as Partial<PlayerState['attributes']> | undefined
+    const attributes = explicitAttributes
+      ? normalizePlayerAttributes(explicitAttributes)
+      : getCreatureAttributes(
+          { armStrength: 4, constitution: 4, agility: 4, innerEnergy: 4, insight: 4 },
+          { schoolId, behaviorType },
+          level,
+        )
     const creature = createCharacterState({
       id: placement.id,
       name: (data.name as string) ?? '妖物',
-      innerSkillId: (data.innerSkillId as string) ?? getCreatureInnerSkillId({ behaviorType, schoolId }, (data.level as number) ?? 1),
+      innerSkillId: (data.innerSkillId as string) ?? getCreatureInnerSkillId({ behaviorType, schoolId }, level),
       position: placement.position,
-      attributes: normalizePlayerAttributes(data.attributes as Partial<PlayerState['attributes']> | undefined),
+      attributes,
       prestige: 0,
       money: 0,
       experience: 0,
@@ -165,7 +176,7 @@ function compileCreatures(placements: ScenarioEntityPlacement[], nests: Creature
       homePosition: homeNest?.position,
       homeNestId,
       isBoss: (data.isBoss as boolean) ?? false,
-      level: (data.level as number) ?? 1,
+      level,
     })
     // 血量上限覆寫（maxHealthOverride）：套用後同時讓當前血量為滿血。
     if (typeof maxHealthOverride === 'number' && maxHealthOverride > 0) {

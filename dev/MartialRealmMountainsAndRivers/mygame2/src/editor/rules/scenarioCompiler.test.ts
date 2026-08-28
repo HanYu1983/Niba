@@ -59,6 +59,39 @@ describe('buildGameStateFromScenario', () => {
     expect(state.creatures[0].homeNestId).toBe('nest-1')
   })
 
+  it('怪物等級影響五維：未覆寫屬性時依等級成長（與巢穴生成同公式）', () => {
+    // 回歸測試：compileCreatures 原本未套用 getCreatureAttributes，
+    // 導致編輯器設定的 level 只顯示不生效（五維恆為預設值）。
+    const scenario = makeScenario()
+    scenario.entities = [
+      { id: 'player-1', kind: 'player', position: { row: 8, column: 2 }, data: { name: '主角' } },
+      { id: 'low', kind: 'creature', position: { row: 2, column: 2 }, data: { name: '低等妖物', level: 1, schoolId: 'void-spirit', behaviorType: 'sieger' } },
+      { id: 'high', kind: 'creature', position: { row: 3, column: 2 }, data: { name: '高等妖物', level: 6, schoolId: 'void-spirit', behaviorType: 'sieger' } },
+    ]
+    const state = buildGameStateFromScenario(scenario)
+    const low = state.creatures.find((c) => c.id === 'low')!
+    const high = state.creatures.find((c) => c.id === 'high')!
+    expect(low.level).toBe(1)
+    expect(high.level).toBe(6)
+    // 等級 6 的五維應明顯高於等級 1（每級 +3 成長 × 5 級 = +15）
+    expect(high.attributes.armStrength).toBe(low.attributes.armStrength + 15)
+    expect(high.attributes.constitution).toBe(low.attributes.constitution + 15)
+    // 血量上限也應隨等級成長
+    expect(high.maxHealth).toBeGreaterThan(low.maxHealth)
+  })
+
+  it('明確指定五維時直接採用，不疊加等級成長', () => {
+    const scenario = makeScenario()
+    scenario.entities = [
+      { id: 'player-1', kind: 'player', position: { row: 8, column: 2 }, data: { name: '主角' } },
+      { id: 'custom', kind: 'creature', position: { row: 2, column: 2 }, data: { name: '自訂妖物', level: 6, schoolId: 'void-spirit', behaviorType: 'sieger', attributes: { armStrength: 10, constitution: 10, agility: 10, innerEnergy: 10, insight: 10 } } },
+    ]
+    const state = buildGameStateFromScenario(scenario)
+    const custom = state.creatures.find((c) => c.id === 'custom')!
+    expect(custom.attributes.armStrength).toBe(10)
+    expect(custom.attributes.constitution).toBe(10)
+  })
+
   it('部分調整玩家屬性時，未調整欄位補足預設值（不為 NaN）', () => {
     const scenario = makeScenario()
     scenario.entities[0].data = { name: '主角', attributes: { armStrength: 12 } }
