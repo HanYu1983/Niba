@@ -76,13 +76,13 @@ function ChallengeTab({ onStartChallenge }: ChallengeTabProps) {
           開始挑戰
         </Button>
         {/* 除錯用：模擬通關（暫不顯示，待正式通關結算接入後移除註解） */}
-        {true && (
+        {false && (
           <Button size="large" onClick={handleVictory}>
             ✅ 模擬通關（等級 +1）
           </Button>
         )}
         {/* 除錯用：重置挑戰狀態（暫不顯示） */}
-        {true && (
+        {false && (
           <Button
             size="large"
             danger
