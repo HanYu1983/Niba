@@ -24,8 +24,12 @@ export type StoryUnlock = {
 export type OfficialCharacterDefinition = {
   /** 對應名冊角色 id（固定 id，建立後不可變動）。 */
   characterId: string
-  /** 綁定篇章（scenario id）。 */
+  /** 綁定篇章（scenario id 列表）。
+   *  一位守護者可同時肩負多個篇章（例如：凌淵貫穿序章～第三章，皆視為「凌淵篇」）。
+   *  為保留向後相容，`chapterId` 仍為單一值；查詢時請用 `getOfficialCharacterChapters`。 */
   chapterId: string
+  /** 綁定篇章清單（多個 scenario id 對應同一角色）。 */
+  chapterIds: string[]
   name: string
   title: string
   portrait: string
@@ -56,6 +60,9 @@ export type OfficialCharacterDefinition = {
 export const lingyuan: OfficialCharacterDefinition = {
   characterId: 'official-lingyuan',
   chapterId: 'prologue-village',
+  // 凌淵貫穿五章：序章（青石遺恨）→ 第二章（林海伏妖）→ 第三章（寒水之殤），
+  // 對應官方關卡 id 為 prologue-village / forest-hunt / frost-water-lament。
+  chapterIds: ['prologue-village', 'forest-hunt', 'frost-water-lament'],
   name: '凌淵',
   title: '山河守護者',
   portrait: '⚔️',
@@ -86,9 +93,14 @@ export const lingyuan: OfficialCharacterDefinition = {
 /** 所有官方角色定義。 */
 export const officialCharacterCatalog: OfficialCharacterDefinition[] = [lingyuan]
 
-/** 依 chapterId 查詢官方角色定義。 */
+/** 取得某位官方角色綁定的所有篇章 scenario id。 */
+export function getOfficialCharacterChapters(character: OfficialCharacterDefinition): string[] {
+  return character.chapterIds.length > 0 ? character.chapterIds : [character.chapterId]
+}
+
+/** 依 chapterId 查詢官方角色定義（接受單一章節；新篇章請用 chapterIds）。 */
 export function getOfficialCharacterByChapter(chapterId: string): OfficialCharacterDefinition | undefined {
-  return officialCharacterCatalog.find((character) => character.chapterId === chapterId)
+  return officialCharacterCatalog.find((character) => getOfficialCharacterChapters(character).includes(chapterId))
 }
 
 /** 依 characterId 查詢官方角色定義。 */
