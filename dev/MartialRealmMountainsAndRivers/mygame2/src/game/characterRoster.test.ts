@@ -464,37 +464,37 @@ describe('劇本通關解鎖（applyStoryUnlocks）', () => {
     ensureOfficialCharacters()
   })
 
-  it('通關序章：山河歸藏併入 unlocked + learned（免花卷學習）', () => {
+  it('通關序章：山河歸藏僅入可培養清單（學習需花卷），天賦不受影響', () => {
     const changed = applyStoryUnlocks('prologue-village', true)
     expect(changed).toEqual([lingyuan.characterId])
     const character = getCharacter(lingyuan.characterId)!
     expect(character.unlockedSkillIds).toContain('lingyuan-shelter-breath')
-    expect(character.learnedSkillIds).toContain('lingyuan-shelter-breath')
+    // 不直接學會：需另行花卷學習
+    expect(character.learnedSkillIds).not.toContain('lingyuan-shelter-breath')
     // 天賦不受影響
     expect(character.unlockedTalentIds).toEqual([])
   })
 
-  it('通關第二章：山河脈動併入功法、金剛體魄併入天賦並自動啟用', () => {
+  it('通關第二章：山河脈動入可培養清單、金剛體魄併入天賦並自動啟用', () => {
     applyStoryUnlocks('forest-hunt', true)
     const character = getCharacter(lingyuan.characterId)!
     expect(character.unlockedSkillIds).toContain('lingyuan-mountain-pulse')
-    expect(character.learnedSkillIds).toContain('lingyuan-mountain-pulse')
+    expect(character.learnedSkillIds).not.toContain('lingyuan-mountain-pulse')
     expect(character.unlockedTalentIds).toContain('vital-body')
     // 劇情解鎖的天賦自動啟用
     expect(character.talentIds).toContain('vital-body')
   })
 
-  it('通關第三章：兩個外功 + 丹田凝息全部套用', () => {
+  it('通關第三章：兩個外功入可培養清單 + 丹田凝息自動啟用', () => {
     applyStoryUnlocks('frost-water-lament', true)
     const character = getCharacter(lingyuan.characterId)!
     expect(character.unlockedSkillIds).toEqual(expect.arrayContaining([
       'lingyuan-rivers-sustain',
       'lingyuan-five-elements-mend',
     ]))
-    expect(character.learnedSkillIds).toEqual(expect.arrayContaining([
-      'lingyuan-rivers-sustain',
-      'lingyuan-five-elements-mend',
-    ]))
+    // 不直接學會
+    expect(character.learnedSkillIds).not.toContain('lingyuan-rivers-sustain')
+    expect(character.learnedSkillIds).not.toContain('lingyuan-five-elements-mend')
     expect(character.unlockedTalentIds).toContain('deep-dantian')
     expect(character.talentIds).toContain('deep-dantian')
   })
@@ -511,10 +511,18 @@ describe('劇本通關解鎖（applyStoryUnlocks）', () => {
     applyStoryUnlocks('prologue-village', true)
     const character = getCharacter(lingyuan.characterId)!
     expect(character.unlockedSkillIds.filter((id) => id === 'lingyuan-shelter-breath')).toHaveLength(1)
-    expect(character.learnedSkillIds.filter((id) => id === 'lingyuan-shelter-breath')).toHaveLength(1)
   })
 
-  it('三章全通關：四件套 + 兩天賦全部到位', () => {
+  it('解鎖後仍需花卷學習：learnSkill 成功後才加入 learnedSkillIds', () => {
+    applyStoryUnlocks('prologue-village', true)
+    // 新角預設 20 卷，第一門新功法成本 30 + 20 × 1 = 50 → 卷不足
+    expect(learnSkill(lingyuan.characterId, 'lingyuan-shelter-breath').ok).toBe(false)
+    addScrolls(lingyuan.characterId, 100)
+    expect(learnSkill(lingyuan.characterId, 'lingyuan-shelter-breath').ok).toBe(true)
+    expect(getCharacter(lingyuan.characterId)!.learnedSkillIds).toContain('lingyuan-shelter-breath')
+  })
+
+  it('三章全通關：四件套 + 兩天賦全部到位（功法待花卷學習、天賦已啟用）', () => {
     applyStoryUnlocks('prologue-village', true)
     applyStoryUnlocks('forest-hunt', true)
     applyStoryUnlocks('frost-water-lament', true)

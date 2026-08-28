@@ -600,8 +600,8 @@ export function closeInitialInternalSkill(id: string): boolean {
 /**
  * 劇本通關解鎖：將指定章節的 storyUnlocks 併入官方角色。
  *
- * 與花卷培養路徑的差異：
- * - 功法：直接併入 `unlockedSkillIds` **並同時加入 `learnedSkillIds`**（劇情解鎖免花卷學習）。
+ * 與花卷培養路徑的關係：
+ * - 功法：僅併入 `unlockedSkillIds`（可培養清單）；學習仍需花費武學殘卷（learnSkill）。
  * - 天賦：直接併入 `unlockedTalentIds` **並自動啟用（加入 `talentIds`）**（劇情解鎖免花卷解鎖）。
  *
  * 冪等：重複套用同一章節不會產生重複項目（Set 去重）。
@@ -623,13 +623,12 @@ export function applyStoryUnlocks(scenarioId: string, cleared: boolean): string[
     if (!unlock) return character
 
     const unlockedSkills = new Set(character.unlockedSkillIds ?? [])
-    const learnedSkills = new Set(character.learnedSkillIds ?? [])
     const unlockedTalents = new Set(character.unlockedTalentIds ?? [])
     const enabledTalents = new Set(character.talentIds ?? [])
 
+    // 功法僅解鎖到可培養清單，學習需另行花卷（與沙盒獲得同路徑）。
     for (const skillId of unlock.skillIds ?? []) {
       unlockedSkills.add(skillId)
-      learnedSkills.add(skillId)
     }
     for (const talentId of unlock.talentIds ?? []) {
       unlockedTalents.add(talentId)
@@ -640,7 +639,6 @@ export function applyStoryUnlocks(scenarioId: string, cleared: boolean): string[
     return {
       ...character,
       unlockedSkillIds: [...unlockedSkills],
-      learnedSkillIds: [...learnedSkills],
       unlockedTalentIds: [...unlockedTalents],
       talentIds: [...enabledTalents],
     }
