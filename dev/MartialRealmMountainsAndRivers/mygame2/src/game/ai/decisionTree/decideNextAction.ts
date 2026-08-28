@@ -1,24 +1,16 @@
 import type { GameState } from '../../types'
 import type { AiAction } from '../aiAction'
 import { validateAiAction } from '../validation/validateAiAction'
-import { buildingCatalog } from '../../catalogs/buildingCatalog'
-import { canPlayerBuildBuildingType } from '../../rules/buildingProgressionRules'
 import {
   isHealthCritical,
   findAdjacentCreature,
   findAdjacentItem,
-  findAdjacentResourcePoint,
-  needsBuildingMaterials,
-  getVisibleOwnedBase,
   findUnexploredNearby,
 } from './conditions'
 import {
   buildRetreatAction,
-  buildMoveToBaseAction,
   buildAttackAction,
   buildCollectItemAction,
-  buildCollectResourceAction,
-  buildCollectRuinAction,
   buildExploreAction,
 } from './actionBuilders'
 

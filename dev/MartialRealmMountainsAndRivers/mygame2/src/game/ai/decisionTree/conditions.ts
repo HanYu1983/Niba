@@ -1,5 +1,5 @@
 import type { GameState, PlayerState, Position } from '../../types'
-import { isAdjacent } from '../../types'
+import { isAdjacent, isSamePosition } from '../../types'
 import type { HostileActor } from '../perception/targetDiscovery'
 import { listHostileActors } from '../perception/targetDiscovery'
 import { getPlayerVisibleCellIds, getFoggedCellIds } from '../../rules/visibilityRules'
@@ -36,8 +36,9 @@ export function findAdjacentCreature(state: GameState, player: PlayerState): Hos
 
 // ─── 道具條件 ──────────────────────────────────────
 
+/** 道具只可「同格」拾取，因此以是否站在道具所在格判斷。 */
 export function findAdjacentItem(state: GameState, player: PlayerState) {
-  return state.itemPoints.find((item) => isAdjacent(player.position, item.position)) ?? null
+  return state.itemPoints.find((item) => isSamePosition(player.position, item.position)) ?? null
 }
 
 // ─── 資源條件 ──────────────────────────────────────
