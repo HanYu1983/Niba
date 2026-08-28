@@ -12,13 +12,13 @@ import {
 
 describe('challengeMapGenerator', () => {
   describe('getChallengeMapSize', () => {
-    it('Lv.1 為 10×10，每 2 級 +2，Lv.40+ 封頂 50', () => {
-      expect(getChallengeMapSize(1)).toBe(10)
-      expect(getChallengeMapSize(2)).toBe(12)
-      expect(getChallengeMapSize(10)).toBe(20)
-      expect(getChallengeMapSize(20)).toBe(30)
-      expect(getChallengeMapSize(30)).toBe(40)
-      expect(getChallengeMapSize(40)).toBe(CHALLENGE_MAX_SIZE)
+    it('Lv.1 為 15×15，每 2 級 +2，Lv.36+ 封頂 50', () => {
+      expect(getChallengeMapSize(1)).toBe(15)
+      expect(getChallengeMapSize(2)).toBe(17)
+      expect(getChallengeMapSize(10)).toBe(25)
+      expect(getChallengeMapSize(20)).toBe(35)
+      expect(getChallengeMapSize(30)).toBe(45)
+      expect(getChallengeMapSize(36)).toBe(CHALLENGE_MAX_SIZE)
       expect(getChallengeMapSize(100)).toBe(CHALLENGE_MAX_SIZE)
     })
 
@@ -66,16 +66,16 @@ describe('challengeMapGenerator', () => {
   describe('generateChallengeMapConfig', () => {
     it('Lv.1：10×10、1 基地、3 巢、10 遊蕩怪、3 資源點、4 門派', () => {
       const config = generateChallengeMapConfig(1)
-      expect(config.rows).toBe(10)
-      expect(config.columns).toBe(10)
-      expect(config.baseCount).toBe(1)
-      expect(config.nestCount).toBe(3)
-      expect(config.creatureCount).toBe(10)
-      expect(config.resourcePointCount).toBe(3)
-      expect(config.itemPointCount).toBe(10)
-      expect(config.ruinCount).toBe(10)
-      expect(config.explorationEventCount).toBe(10)
-      expect(config.sectGateCount).toBe(4)
+      expect(config.rows).toBe(15)
+      expect(config.columns).toBe(15)
+      expect(config.baseCount).toBe(2)
+      expect(config.nestCount).toBe(6)
+      expect(config.creatureCount).toBe(20)
+      expect(config.resourcePointCount).toBe(6)
+      expect(config.itemPointCount).toBe(20)
+      expect(config.ruinCount).toBe(20)
+      expect(config.explorationEventCount).toBe(20)
+      expect(config.sectGateCount).toBe(8)
       expect(getChallengeEnemyCount(1)).toBe(3)
     })
 

@@ -22,8 +22,8 @@ import type { GameSettings, TerrainWeights } from './types'
 
 /** 地圖尺寸上限（50×50）。 */
 export const CHALLENGE_MAX_SIZE = 50
-/** 地圖尺寸下限（10×10）。 */
-export const CHALLENGE_MIN_SIZE = 10
+/** 地圖尺寸下限（15×15）。 */
+export const CHALLENGE_MIN_SIZE = 15
 /** 怪物數量上限。 */
 export const CHALLENGE_MAX_ENEMY_COUNT = 15
 /** 探索觸發機率（固定值）。 */
