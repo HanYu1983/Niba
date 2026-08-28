@@ -137,4 +137,73 @@ describe('executeTriggers', () => {
     const destroyed = executeTriggers(state, { type: 'on-object-destroyed', param: 'creature-hidden' })
     expect(destroyed.campaignState?.dialogueQueue ?? []).toHaveLength(2)
   })
+
+  describe('on-events-resolved（多探索點事件解決後觸發）', () => {
+    /** 建立含 on-events-resolved 觸發器的劇本（對話 + 生成隱藏 boss）。 */
+    function makeEventsScenario(): ScenarioDefinition {
+      const scenario = makeScenario()
+      scenario.triggers = [
+        {
+          id: 'trigger-all-events',
+          condition: 'on-events-resolved',
+          conditionParam: 'event-a,event-b,event-c',
+          action: 'start-dialogue',
+          actionParam: 'group-intro',
+        },
+        {
+          id: 'trigger-all-events-boss',
+          condition: 'on-events-resolved',
+          conditionParam: 'event-a,event-b,event-c',
+          action: 'spawn-creature',
+          actionParam: 'creature-hidden',
+        },
+      ]
+      return scenario
+    }
+
+    /** 將指定事件標記為已解決。 */
+    function markResolved(state: ReturnType<typeof buildGameStateFromScenario>, ids: string[]) {
+      return {
+        ...state,
+        campaignState: state.campaignState
+          ? { ...state.campaignState, resolvedEventIds: [...new Set([...(state.campaignState.resolvedEventIds ?? []), ...ids])] }
+          : state.campaignState,
+      }
+    }
+
+    it('部分事件解決時不觸發', () => {
+      const state = buildGameStateFromScenario(makeEventsScenario())
+      const partial = markResolved(state, ['event-a', 'event-b'])
+      const next = executeTriggers(partial, { type: 'on-events-resolved', param: 'event-b' })
+      expect(next.campaignState?.dialogueQueue ?? []).toHaveLength(0)
+      expect(next.creatures.some((c) => c.id === 'creature-hidden')).toBe(false)
+    })
+
+    it('全部事件解決後觸發：對話入佇列 + boss 生成', () => {
+      const state = buildGameStateFromScenario(makeEventsScenario())
+      const all = markResolved(state, ['event-a', 'event-b', 'event-c'])
+      const next = executeTriggers(all, { type: 'on-events-resolved', param: 'event-c' })
+      expect(next.campaignState?.dialogueQueue ?? []).toHaveLength(2)
+      expect(next.creatures.some((c) => c.id === 'creature-hidden')).toBe(true)
+    })
+
+    it('只執行一次：再次檢查不重複觸發（對話不重播、boss 不重生）', () => {
+      const state = buildGameStateFromScenario(makeEventsScenario())
+      const all = markResolved(state, ['event-a', 'event-b', 'event-c'])
+      const first = executeTriggers(all, { type: 'on-events-resolved', param: 'event-c' })
+      const second = executeTriggers(first, { type: 'on-events-resolved', param: 'event-c' })
+      expect(second.campaignState?.dialogueQueue ?? []).toHaveLength(2)
+      expect(second.creatures.filter((c) => c.id === 'creature-hidden')).toHaveLength(1)
+    })
+
+    it('conditionParam 為空或格式錯誤時不觸發', () => {
+      const scenario = makeScenario()
+      scenario.triggers = [
+        { id: 'trigger-empty', condition: 'on-events-resolved', action: 'start-dialogue', actionParam: 'group-intro' },
+      ]
+      const state = buildGameStateFromScenario(scenario)
+      const next = executeTriggers(state, { type: 'on-events-resolved' })
+      expect(next.campaignState?.dialogueQueue ?? []).toHaveLength(0)
+    })
+  })
 })

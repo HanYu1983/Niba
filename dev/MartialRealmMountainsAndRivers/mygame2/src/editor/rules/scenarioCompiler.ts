@@ -333,6 +333,8 @@ function compileCampaignState(scenario: ScenarioDefinition): CampaignState {
     currentChapter: scenario.chapterIndex,
     chapterKey: scenario.id,
     triggeredDialogueIds: [],
+    triggeredTriggerIds: [],
+    resolvedEventIds: [],
     dialogueQueue: [],
     // 對話組：以對話組 id 為鍵，供觸發器 start-dialogue 使用。
     dialogueGroups: Object.fromEntries(

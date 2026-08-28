@@ -17,23 +17,47 @@ export type TriggerEvent = {
   param?: string
 }
 
-/**
- * 依觸發事件執行所有符合條件的觸發器。
- * 回傳更新後的 GameState。
- */
-export function executeTriggers(state: GameState, event: TriggerEvent): GameState {
-  const triggers = state.campaignState?.triggers ?? []
-  return triggers.reduce((currentState, trigger) => {
-    if (!matchesTrigger(trigger, event)) return currentState
-    return executeAction(currentState, trigger)
-  }, state)
-}
-
 /** 比對單一觸發器的條件是否與事件相符。 */
-function matchesTrigger(trigger: ScenarioTrigger, event: TriggerEvent): boolean {
+function matchesTrigger(trigger: ScenarioTrigger, event: TriggerEvent, state: GameState): boolean {
+  // on-events-resolved：conditionParam 為逗號分隔的事件 id 清單，
+  // 清單內「全部」事件皆已解決時觸發（與 event.type / param 無關，由狀態判定）。
+  if (trigger.condition === 'on-events-resolved') {
+    const requiredIds = (trigger.conditionParam ?? '')
+      .split(',')
+      .map((id) => id.trim())
+      .filter(Boolean)
+    if (requiredIds.length === 0) return false
+    const resolved = new Set(state.campaignState?.resolvedEventIds ?? [])
+    return requiredIds.every((id) => resolved.has(id))
+  }
   if (trigger.condition !== event.type) return false
   if (trigger.conditionParam !== undefined && trigger.conditionParam !== event.param) return false
   return true
+}
+
+/**
+ * 依觸發事件執行所有符合條件的觸發器。
+ * 回傳更新後的 GameState。
+ *
+ * 狀態型條件（如 on-events-resolved）在每次相關動作後都會被檢查，
+ * 因此以 `campaignState.triggeredTriggerIds` 記錄已執行的觸發器 id，確保只執行一次。
+ */
+export function executeTriggers(state: GameState, event: TriggerEvent): GameState {
+  const triggers = state.campaignState?.triggers ?? []
+  const executed = new Set(state.campaignState?.triggeredTriggerIds ?? [])
+  return triggers.reduce((currentState, trigger) => {
+    // 已執行過的觸發器不再重複執行（防止狀態型條件重複觸發）。
+    if (executed.has(trigger.id)) return currentState
+    if (!matchesTrigger(trigger, event, currentState)) return currentState
+    const nextState = executeAction(currentState, trigger)
+    executed.add(trigger.id)
+    return {
+      ...nextState,
+      campaignState: nextState.campaignState
+        ? { ...nextState.campaignState, triggeredTriggerIds: [...executed] }
+        : nextState.campaignState,
+    }
+  }, state)
 }
 
 /** 執行單一觸發器的行為。 */

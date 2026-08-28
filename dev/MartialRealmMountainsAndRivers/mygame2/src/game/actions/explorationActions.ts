@@ -13,6 +13,7 @@ import { getGatherDoubleYieldChance, getGatherStaminaCostReduction } from '../ru
 import { replenishInteractionPoint } from '../worldGeneration'
 import { incrementRunStat } from '../runStats'
 import { progressObjectives, checkVictory } from '../rules/campaignRules'
+import { executeTriggers } from '../rules/triggerRules'
 import { defaultRandomSource, type RandomSource } from '../rules/randomRules'
 
 export type ExplorationActionResult<T = ActionOutcome> = {
@@ -282,8 +283,20 @@ export function resolveExplorationEvent(state: GameState, playerId: string, even
   // 套用狀態層級效果（如 spawn-creature 生產怪物）。
   const withStateEffects = applyEventStateEffects(nextState, choice.effects)
 
+  // 記錄已解決事件 id，並檢查 on-events-resolved 觸發器（如「三處靈泉皆淨化 → 出現對話與 boss」）。
+  const withResolvedRecord = withStateEffects.campaignState
+    ? {
+        ...withStateEffects,
+        campaignState: {
+          ...withStateEffects.campaignState,
+          resolvedEventIds: [...new Set([...(withStateEffects.campaignState.resolvedEventIds ?? []), eventId])],
+        },
+      }
+    : withStateEffects
+  const withEventTriggers = executeTriggers(withResolvedRecord, { type: 'on-events-resolved', param: eventId })
+
   // 互動完成後推進 interact-object 目標並檢查勝利。
-  const withObjectives = progressObjectives(withStateEffects, { type: 'interact-object', targetId: eventId })
+  const withObjectives = progressObjectives(withEventTriggers, { type: 'interact-object', targetId: eventId })
   return {
     state: incrementRunStat(checkVictory(replenishInteractionPoint(withObjectives, false, target.event)), 'eventsResolved'),
     result: { ok: true },
