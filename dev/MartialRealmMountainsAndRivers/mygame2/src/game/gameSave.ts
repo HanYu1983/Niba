@@ -14,6 +14,8 @@ type GameSaveData = {
   state: GameState
   /** 目前對局選用的名册角色 id（未選用為 null/缺漏）。讀檔時還原，避免局末結算回寫到錯誤角色。 */
   activeCharacterId?: string | null
+  /** 目前對局是否為挑戰關卡模式（勝利時記錄闖關等級 +1）。舊存檔缺漏視為 false。 */
+  isChallengeMode?: boolean
 }
 
 /** 武學殘卷結算狀態（三態，設計文件 scroll-reward-settlement-dedup-design.md §3.3）。 */
@@ -72,21 +74,21 @@ export function getGameSaveSlots(): GameSaveSlotSummary[] {
   })
 }
 
-export function saveGameStateToSlot(state: GameState, slot: number, activeCharacterId: string | null = null): { ok: boolean; reason?: string } {
+export function saveGameStateToSlot(state: GameState, slot: number, activeCharacterId: string | null = null, isChallengeMode = false): { ok: boolean; reason?: string } {
   if (!isValidSlot(slot)) return { ok: false, reason: '存檔欄位不存在。' }
   if (typeof localStorage === 'undefined') return { ok: false, reason: '目前環境不支援儲存。' }
   try {
     // activeCharacterId 已隨 GameState 序列化；payload 欄位保留作向下相容，
     // 呼叫端未傳時回退讀取 state.activeCharacterId。
     const resolvedId = activeCharacterId ?? state.activeCharacterId ?? null
-    localStorage.setItem(getSlotKey(slot), JSON.stringify({ version: GAME_SAVE_VERSION, savedAt: new Date().toISOString(), state, activeCharacterId: resolvedId } satisfies GameSaveData))
+    localStorage.setItem(getSlotKey(slot), JSON.stringify({ version: GAME_SAVE_VERSION, savedAt: new Date().toISOString(), state, activeCharacterId: resolvedId, isChallengeMode } satisfies GameSaveData))
     return { ok: true }
   } catch {
     return { ok: false, reason: '儲存失敗，可能是瀏覽器儲存空間不足。' }
   }
 }
 
-export function loadGameStateFromSlot(slot: number): { ok: true; state: GameState; activeCharacterId: string | null } | { ok: false; reason: string } {
+export function loadGameStateFromSlot(slot: number): { ok: true; state: GameState; activeCharacterId: string | null; isChallengeMode: boolean } | { ok: false; reason: string } {
   if (!isValidSlot(slot)) return { ok: false, reason: '存檔欄位不存在。' }
   if (typeof localStorage === 'undefined') return { ok: false, reason: '目前環境不支援讀取。' }
   try {
@@ -94,7 +96,7 @@ export function loadGameStateFromSlot(slot: number): { ok: true; state: GameStat
     if (!raw) return { ok: false, reason: `存檔欄位 ${slot} 目前是空的。` }
     const payload = JSON.parse(raw) as Partial<GameSaveData>
     if (payload.version !== GAME_SAVE_VERSION || !payload.state || typeof payload.state !== 'object') return { ok: false, reason: '存檔版本不相容或資料損壞。' }
-    return { ok: true, state: payload.state, activeCharacterId: payload.activeCharacterId ?? null }
+    return { ok: true, state: payload.state, activeCharacterId: payload.activeCharacterId ?? null, isChallengeMode: payload.isChallengeMode === true }
   } catch {
     return { ok: false, reason: '存檔資料損壞，無法讀取。' }
   }
@@ -104,13 +106,13 @@ export function deleteGameStateFromSlot(slot: number): void {
   if (isValidSlot(slot) && typeof localStorage !== 'undefined') localStorage.removeItem(getSlotKey(slot))
 }
 
-export function saveGameState(state: GameState, activeCharacterId: string | null = null): { ok: boolean; reason?: string } {
+export function saveGameState(state: GameState, activeCharacterId: string | null = null, isChallengeMode = false): { ok: boolean; reason?: string } {
   if (typeof localStorage === 'undefined') return { ok: false, reason: '目前環境不支援儲存。' }
   try {
     // activeCharacterId 已隨 GameState 序列化；payload 欄位保留作向下相容，
     // 呼叫端未傳時回退讀取 state.activeCharacterId。
     const resolvedId = activeCharacterId ?? state.activeCharacterId ?? null
-    const payload: GameSaveData = { version: GAME_SAVE_VERSION, savedAt: new Date().toISOString(), state, activeCharacterId: resolvedId }
+    const payload: GameSaveData = { version: GAME_SAVE_VERSION, savedAt: new Date().toISOString(), state, activeCharacterId: resolvedId, isChallengeMode }
     localStorage.setItem(GAME_SAVE_STORAGE_KEY, JSON.stringify(payload))
     return { ok: true }
   } catch {
@@ -118,7 +120,7 @@ export function saveGameState(state: GameState, activeCharacterId: string | null
   }
 }
 
-export function loadGameState(): { ok: true; state: GameState; activeCharacterId: string | null } | { ok: false; reason: string } {
+export function loadGameState(): { ok: true; state: GameState; activeCharacterId: string | null; isChallengeMode: boolean } | { ok: false; reason: string } {
   if (typeof localStorage === 'undefined') return { ok: false, reason: '目前環境不支援讀取。' }
   try {
     const raw = localStorage.getItem(GAME_SAVE_STORAGE_KEY)
@@ -127,7 +129,7 @@ export function loadGameState(): { ok: true; state: GameState; activeCharacterId
     if (payload.version !== GAME_SAVE_VERSION || !payload.state || typeof payload.state !== 'object') {
       return { ok: false, reason: '存檔版本不相容或資料損壞。' }
     }
-    return { ok: true, state: payload.state, activeCharacterId: payload.activeCharacterId ?? null }
+    return { ok: true, state: payload.state, activeCharacterId: payload.activeCharacterId ?? null, isChallengeMode: payload.isChallengeMode === true }
   } catch {
     return { ok: false, reason: '存檔資料損壞，無法讀取。' }
   }

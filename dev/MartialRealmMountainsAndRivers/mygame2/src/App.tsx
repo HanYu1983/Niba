@@ -267,6 +267,12 @@ function App() {
     trackEvent('Gameplay', 'game_start', 'quick_start')
   }
 
+  const startChallengeGame = (settings: GameSettings, selectedCharacters?: (PersistentCharacter | undefined)[]) => {
+    gameStore.startChallengeGame(settings, selectedCharacters?.map((c) => c ?? null))
+    setScreen('game')
+    trackEvent('Gameplay', 'game_start', 'challenge')
+  }
+
   // 頁面瀏覽追蹤：切換 screen 時記錄。
   useEffect(() => {
     trackPageView(screen === 'start' ? '/start' : '/game')
@@ -298,6 +304,7 @@ function App() {
         <Layout.Content className="app-content">
           <GameStartScreen
             onStart={startGame}
+            onStartChallenge={startChallengeGame}
             onOpenSkillTest={() => setSkillTestPageOpen(true)}
             onOpenEditor={() => setEditorOpen(true)}
             onStartScenario={(scenario) => {
