@@ -13,6 +13,7 @@ import {
   type MapTemplate,
 } from '../game/mapTemplates'
 import CampaignScenarioTab from './CampaignScenarioTab'
+import ChallengeTab from './ChallengeTab'
 import CharacterLibraryScreen from './CharacterLibraryScreen'
 import type { ScenarioDefinition } from '../editor/editorTypes'
 import { clearStoredScenarios } from '../game/scenarioStorage'
@@ -288,6 +289,13 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
               label: '📜 劇本地圖',
               children: (
                 <CampaignScenarioTab onStartScenario={onStartScenario} />
+              ),
+            },
+            {
+              key: 'challenge',
+              label: '⚔️ 挑戰關卡',
+              children: (
+                <ChallengeTab onStartChallenge={(settings, character) => onStart(settings, [character])} />
               ),
             },
             {
