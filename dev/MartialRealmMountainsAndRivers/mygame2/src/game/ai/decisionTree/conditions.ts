@@ -2,8 +2,7 @@ import type { GameState, PlayerState, Position } from '../../types'
 import { isAdjacent } from '../../types'
 import type { HostileActor } from '../perception/targetDiscovery'
 import { listHostileActors } from '../perception/targetDiscovery'
-import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
-import { collectReachableCells } from '../perception/reachablePositions'
+import { getPlayerVisibleCellIds, DEFAULT_VISION_RANGE } from '../../rules/visibilityRules'
 
 // ─── 保命條件 ──────────────────────────────────────
 
@@ -81,11 +80,21 @@ export function getVisibleOwnedBase(state: GameState, playerId: string) {
 // ─── 探索條件 ──────────────────────────────────────
 
 export function findUnexploredNearby(state: GameState, player: PlayerState): Position | null {
-  const reachable = collectReachableCells(state, player)
   const explored = getPlayerVisibleCellIds(state, player.id)
-  const unexplored = reachable.filter((c) => !explored.has(c.cellId))
-  if (unexplored.length === 0) return null
-  return unexplored[0].position
+  const lookahead = Math.max(4, DEFAULT_VISION_RANGE + 2)
+  let best: Position | null = null
+  let bestDist = Infinity
+  for (const cell of state.map.cells) {
+    if (explored.has(cell.id)) continue
+    const dist = manhattan(player.position, { row: cell.row, column: cell.column })
+    // 超出視線範圍太多（探索走遠點）就不急著去，避免滿圖亂跑。
+    if (dist > lookahead) continue
+    if (dist < bestDist) {
+      bestDist = dist
+      best = { row: cell.row, column: cell.column }
+    }
+  }
+  return best
 }
 
 // ─── 距離工具 ──────────────────────────────────────
