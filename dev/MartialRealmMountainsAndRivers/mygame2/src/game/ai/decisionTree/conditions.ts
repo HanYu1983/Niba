@@ -2,7 +2,7 @@ import type { GameState, PlayerState, Position } from '../../types'
 import { isAdjacent } from '../../types'
 import type { HostileActor } from '../perception/targetDiscovery'
 import { listHostileActors } from '../perception/targetDiscovery'
-import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
+import { getPlayerVisibleCellIds, getFoggedCellIds } from '../../rules/visibilityRules'
 
 // ─── 保命條件 ──────────────────────────────────────
 
@@ -82,13 +82,13 @@ export function getVisibleOwnedBase(state: GameState, playerId: string) {
 /**
  * 找出「最近的探索目標格」。
  *
- * 只考慮「無任何地上物、也非牆壁」的格子：把地圖上所有實體（玩家、怪物、
- * 據點、巢穴、資源點、物品點、廢墟、門派據點、防禦設施、陷阱、探索事件）
- * 佔據的格與牆一概排除，再以曼哈頓距離挑出離玩家最近的未探索格。
+ * 只從有戰爭迷霧的格子中尋找：迷霧格 = 不在永久已探索清單（exploredCellIds）中的格，
+ * 與視野範圍無關。再排除有地上物（玩家、怪物、據點、巢穴、資源點、物品點、廢墟、
+ * 門派據點、防禦設施、陷阱、探索事件）與牆壁的格，以曼哈頓距離挑出離玩家最近者。
  * 其餘一概不管（不校驗剩餘體力可達性、不設探索距離上限）。
  */
 export function findUnexploredNearby(state: GameState, player: PlayerState): Position | null {
-  const explored = getPlayerVisibleCellIds(state, player.id)
+  const fogged = getFoggedCellIds(state)
 
   const occupied = new Set<string>()
   const add = (pos: Position | undefined): void => {
@@ -113,7 +113,7 @@ export function findUnexploredNearby(state: GameState, player: PlayerState): Pos
   for (const cell of state.map.cells) {
     if (cell.terrain === 'wall') continue
     if (occupied.has(cell.id)) continue
-    if (explored.has(cell.id)) continue
+    if (!fogged.has(cell.id)) continue
     const dist = manhattan(player.position, { row: cell.row, column: cell.column })
     if (dist < bestDist) {
       bestDist = dist

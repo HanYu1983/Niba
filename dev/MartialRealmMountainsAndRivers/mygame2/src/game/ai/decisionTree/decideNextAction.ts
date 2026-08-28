@@ -133,71 +133,71 @@ export function decideNextAction(
   // ═══════════════════════════════════════════════════
 
   // 中樹 4 以「視野內可見的據點」為判斷依據（不可見據點不得據以規劃建造/採集）。
-  const base = getVisibleOwnedBase(state, player.id)
-  if (base) {
-    const isAtBase = Math.abs(player.position.row - base.position.row) + Math.abs(player.position.column - base.position.column) <= 1
+  // const base = getVisibleOwnedBase(state, player.id)
+  // if (base) {
+  //   const isAtBase = Math.abs(player.position.row - base.position.row) + Math.abs(player.position.column - base.position.column) <= 1
 
-    // 4.1 已與據點相鄰 + 建料足夠 → 建造
-    if (isAtBase && base.buildingMaterials >= 3) {
-      const existingTypes = new Set(base.buildings.map((b) => b.type))
-      const buildable = buildingCatalog.find((template) => {
-        if (existingTypes.has(template.type)) return false
-        if (base.martialSchoolId && template.schoolId && template.schoolId !== base.martialSchoolId) return false
-        if (base.allowedBuildings && !base.allowedBuildings.some((a) => a.type === template.type)) return false
-        if (!canPlayerBuildBuildingType(player, template.type)) return false
-        if (base.buildingMaterials < template.constructionCost) return false
-        return true
-      })
-      if (buildable) {
-        const candidate: AiAction = {
-          type: 'build',
-          actor: { id: player.id, kind: 'player' },
-          baseId: base.id,
-          buildingType: buildable.id,
-          reason: `建造 ${buildable.name}`,
-        }
-        if (passesValidation(state, candidate, '建造', out)) return candidate
-      }
-    }
+  //   // 4.1 已與據點相鄰 + 建料足夠 → 建造
+  //   if (isAtBase && base.buildingMaterials >= 3) {
+  //     const existingTypes = new Set(base.buildings.map((b) => b.type))
+  //     const buildable = buildingCatalog.find((template) => {
+  //       if (existingTypes.has(template.type)) return false
+  //       if (base.martialSchoolId && template.schoolId && template.schoolId !== base.martialSchoolId) return false
+  //       if (base.allowedBuildings && !base.allowedBuildings.some((a) => a.type === template.type)) return false
+  //       if (!canPlayerBuildBuildingType(player, template.type)) return false
+  //       if (base.buildingMaterials < template.constructionCost) return false
+  //       return true
+  //     })
+  //     if (buildable) {
+  //       const candidate: AiAction = {
+  //         type: 'build',
+  //         actor: { id: player.id, kind: 'player' },
+  //         baseId: base.id,
+  //         buildingType: buildable.id,
+  //         reason: `建造 ${buildable.name}`,
+  //       }
+  //       if (passesValidation(state, candidate, '建造', out)) return candidate
+  //     }
+  //   }
 
-    // 4.2 旁邊有資源點 + 建料不足 → 採集
-    if (needsBuildingMaterials(state, player.id)) {
-      const resource = findAdjacentResourcePoint(state, player)
-      if (resource) {
-        const candidate = buildCollectResourceAction(state, player, resource.id, resource.position)
-        if (passesValidation(state, candidate, '採集資源', out)) return candidate
-      }
-    }
+  //   // 4.2 旁邊有資源點 + 建料不足 → 採集
+  //   if (needsBuildingMaterials(state, player.id)) {
+  //     const resource = findAdjacentResourcePoint(state, player)
+  //     if (resource) {
+  //       const candidate = buildCollectResourceAction(state, player, resource.id, resource.position)
+  //       if (passesValidation(state, candidate, '採集資源', out)) return candidate
+  //     }
+  //   }
 
-    // 4.2b 相鄰有完好廢墟 + 建料不足 → 清理廢墟採集建料（kind: 'ruin'）
-    // ⚠️ createRuins 未避開 resourcePoints，廢墟與資源點可能重疊，兩者皆可採集。
-    if (needsBuildingMaterials(state, player.id)) {
-      const candidate = buildCollectRuinAction(state, player)
-      if (passesValidation(state, candidate, '清理廢墟', out)) return candidate
-    }
+  //   // 4.2b 相鄰有完好廢墟 + 建料不足 → 清理廢墟採集建料（kind: 'ruin'）
+  //   // ⚠️ createRuins 未避開 resourcePoints，廢墟與資源點可能重疊，兩者皆可採集。
+  //   if (needsBuildingMaterials(state, player.id)) {
+  //     const candidate = buildCollectRuinAction(state, player)
+  //     if (passesValidation(state, candidate, '清理廢墟', out)) return candidate
+  //   }
 
-    // 4.3 不在據點旁 → 移動到據點
-    if (!isAtBase) {
-      const candidate = buildMoveToBaseAction(state, player)
-      if (passesValidation(state, candidate, '移動到據點', out)) return candidate
-    }
+  //   // 4.3 不在據點旁 → 移動到據點
+  //   if (!isAtBase) {
+  //     const candidate = buildMoveToBaseAction(state, player)
+  //     if (passesValidation(state, candidate, '移動到據點', out)) return candidate
+  //   }
 
-    // 4.4 需要建料 + 不在資源點旁 → 移動到資源點
-    if (needsBuildingMaterials(state, player.id)) {
-      const nearest = state.resourcePoints.reduce(
-        (best, rp) => {
-          const dRp = Math.abs(rp.position.row - player.position.row) + Math.abs(rp.position.column - player.position.column)
-          const dB = best ? Math.abs(best.position.row - player.position.row) + Math.abs(best.position.column - player.position.column) : Infinity
-          return dRp < dB ? rp : best
-        },
-        null as typeof state.resourcePoints[0] | null,
-      )
-      if (nearest) {
-        const candidate = buildCollectResourceAction(state, player, nearest.id, nearest.position)
-        if (passesValidation(state, candidate, '移動到資源點採集', out)) return candidate
-      }
-    }
-  }
+  //   // 4.4 需要建料 + 不在資源點旁 → 移動到資源點
+  //   if (needsBuildingMaterials(state, player.id)) {
+  //     const nearest = state.resourcePoints.reduce(
+  //       (best, rp) => {
+  //         const dRp = Math.abs(rp.position.row - player.position.row) + Math.abs(rp.position.column - player.position.column)
+  //         const dB = best ? Math.abs(best.position.row - player.position.row) + Math.abs(best.position.column - player.position.column) : Infinity
+  //         return dRp < dB ? rp : best
+  //       },
+  //       null as typeof state.resourcePoints[0] | null,
+  //     )
+  //     if (nearest) {
+  //       const candidate = buildCollectResourceAction(state, player, nearest.id, nearest.position)
+  //       if (passesValidation(state, candidate, '移動到資源點採集', out)) return candidate
+  //     }
+  //   }
+  // }
 
   // ═══════════════════════════════════════════════════
   // 大樹 5：探索（預設戰略）
