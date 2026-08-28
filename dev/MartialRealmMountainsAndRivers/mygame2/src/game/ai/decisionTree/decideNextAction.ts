@@ -20,6 +20,7 @@ import {
   buildAttackAction,
   buildCollectItemAction,
   buildCollectResourceAction,
+  buildCollectRuinAction,
   buildExploreAction,
 } from './actionBuilders'
 
@@ -167,6 +168,13 @@ export function decideNextAction(
         const candidate = buildCollectResourceAction(state, player, resource.id, resource.position)
         if (passesValidation(state, candidate, '採集資源', out)) return candidate
       }
+    }
+
+    // 4.2b 相鄰有完好廢墟 + 建料不足 → 清理廢墟採集建料（kind: 'ruin'）
+    // ⚠️ createRuins 未避開 resourcePoints，廢墟與資源點可能重疊，兩者皆可採集。
+    if (needsBuildingMaterials(state, player.id)) {
+      const candidate = buildCollectRuinAction(state, player)
+      if (passesValidation(state, candidate, '清理廢墟', out)) return candidate
     }
 
     // 4.3 不在據點旁 → 移動到據點

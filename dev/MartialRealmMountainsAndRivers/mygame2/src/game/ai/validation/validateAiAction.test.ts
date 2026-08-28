@@ -87,7 +87,9 @@ describe('validateAiAction 拒絕失效行動', () => {
     const state = makeAiTestState({ players: [makeTestPlayer({ stamina: 2, maxStamina: 2 })] })
     const action = defenseActionToAiAction(state, 'ai-1', { type: 'move', position: { row: 9, column: 5 }, reason: 'return-to-defense-radius' })
     // (9,5) 距 (5,5) 4 步 × 每格成本 2 = 8 > 體力 2。
-    expect(validateAiAction(state, action)).toEqual({ valid: false, reason: '目的地不可達或體力不足。' })
+    const result = validateAiAction(state, action)
+    expect(result.valid).toBe(false)
+    expect(result.valid === false ? result.reason : '').toMatch(/^目的地不可達：/)
   })
 
   it('move：被其他玩家佔住的格子與被牆隔離的格子 → 無效', () => {
@@ -97,14 +99,18 @@ describe('validateAiAction 拒絕失效行動', () => {
     })
     // 直接穿過佔位者需 2 步，但佔位格不可停留；繞路成本超出體力。
     const blockedMove = defenseActionToAiAction(blockedState, 'ai-1', { type: 'move', position: { row: 5, column: 7 }, reason: 'intercept-threat' })
-    expect(validateAiAction(blockedState, blockedMove)).toEqual({ valid: false, reason: '目的地不可達或體力不足。' })
+    const blockedResult = validateAiAction(blockedState, blockedMove)
+    expect(blockedResult.valid).toBe(false)
+    expect(blockedResult.valid === false ? blockedResult.reason : '').toMatch(/目的地不可達：/)
 
     const walledState: GameState = {
       ...makeAiTestState({ players: [makeTestPlayer()] }),
       map: makeMapWithWalls([{ row: 0, column: 0 }, { row: 0, column: 1 }, { row: 0, column: 2 }, { row: 1, column: 0 }, { row: 1, column: 2 }, { row: 2, column: 0 }, { row: 2, column: 1 }, { row: 2, column: 2 }]),
     }
     const pocketMove = defenseActionToAiAction(walledState, 'ai-1', { type: 'move', position: { row: 1, column: 1 }, reason: 'return-to-defense-radius' })
-    expect(validateAiAction(walledState, pocketMove)).toEqual({ valid: false, reason: '目的地不可達或體力不足。' })
+    const pocketResult = validateAiAction(walledState, pocketMove)
+    expect(pocketResult.valid).toBe(false)
+    expect(pocketResult.valid === false ? pocketResult.reason : '').toMatch(/目的地不可達：/)
   })
 
   it('行動者不存在或已死亡 → 無效', () => {
@@ -207,8 +213,9 @@ describe('validateAiDefenseDecision（切片 I：store step 執行前的單一�
       players: [makeTestPlayer()],
       map: makeMapWithWalls([{ row: 0, column: 0 }, { row: 0, column: 1 }, { row: 0, column: 2 }, { row: 1, column: 0 }, { row: 1, column: 2 }, { row: 2, column: 0 }, { row: 2, column: 1 }, { row: 2, column: 2 }]),
     })
-    expect(validateAiDefenseDecision(walledState, 'ai-1', { type: 'move', position: { row: 1, column: 1 }, reason: 'return-to-defense-radius' }))
-      .toEqual({ valid: false, reason: '目的地不可達或體力不足。' })
+    const pocketResult = validateAiDefenseDecision(walledState, 'ai-1', { type: 'move', position: { row: 1, column: 1 }, reason: 'return-to-defense-radius' })
+    expect(pocketResult.valid).toBe(false)
+    expect(pocketResult.valid === false ? pocketResult.reason : '').toMatch(/目的地不可達：/)
 
     const notMyTurn = makeAiTestState({ players: [makeTestPlayer(), makeTestHuman()], activePlayerId: 'player-1' })
     expect(validateAiDefenseDecision(notMyTurn, 'ai-1', { type: 'hold-position', reason: 'no-threat' }))

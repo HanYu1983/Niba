@@ -106,7 +106,7 @@ export function buildRetreatAction(
     type: 'move',
     actor,
     destination: bestEscape.position,
-    reason: `逃命：遠離 ${nearestThreat.name}`,
+    reason: `逃命：遠離 ${nearestThreat.name}（目標 (${bestEscape.position.row}, ${bestEscape.position.column})，體力 ${Math.floor(player.stamina)}）`,
   }
 }
 
@@ -125,7 +125,7 @@ export function buildMoveToBaseAction(
     type: 'move',
     actor,
     destination: dest,
-    reason: `回據點：${base.name}`,
+    reason: `回據點：${base.name}（目標 (${dest.row}, ${dest.column})，體力 ${Math.floor(player.stamina)}）`,
   }
 }
 
@@ -147,7 +147,7 @@ export function buildAttackAction(
       type: 'attack',
       actor,
       target: { id, kind, position: pos },
-      reason: `攻擊 ${name}`,
+      reason: `攻擊 ${name}（目標 (${pos.row}, ${pos.column})，體力 ${Math.floor(player.stamina)}）`,
     }
   }
 
@@ -156,7 +156,7 @@ export function buildAttackAction(
     type: 'move',
     actor,
     destination: moveDest,
-    reason: `移動到 ${name} 附近`,
+    reason: `移動到 ${name} 附近（目標 (${moveDest.row}, ${moveDest.column})，敵在 (${pos.row}, ${pos.column})，體力 ${Math.floor(player.stamina)}）`,
   }
 }
 
@@ -173,7 +173,7 @@ export function buildCollectItemAction(
       type: 'collect',
       actor,
       target: { id: itemId, kind: 'item', position: itemPosition },
-      reason: '拾取道具',
+      reason: `拾取道具（目標 (${itemPosition.row}, ${itemPosition.column})，體力 ${Math.floor(player.stamina)}）`,
     }
   }
 
@@ -182,7 +182,7 @@ export function buildCollectItemAction(
     type: 'move',
     actor,
     destination: dest,
-    reason: '移動到道具位置',
+    reason: `移動到道具位置（目標 (${dest.row}, ${dest.column})，道具在 (${itemPosition.row}, ${itemPosition.column})，體力 ${Math.floor(player.stamina)}）`,
   }
 }
 
@@ -199,7 +199,7 @@ export function buildCollectResourceAction(
       type: 'collect',
       actor,
       target: { id: rpId, kind: 'resource', position: rpPosition },
-      reason: '採集資源',
+      reason: `採集資源（體力 ${Math.floor(player.stamina)}）`,
     }
   }
 
@@ -208,7 +208,7 @@ export function buildCollectResourceAction(
     type: 'move',
     actor,
     destination: dest,
-    reason: '移動到資源點',
+    reason: `移動到資源點 (${dest.row}, ${dest.column}) 附近，資源點在 (${rpPosition.row}, ${rpPosition.column})，體力 ${Math.floor(player.stamina)}`,
   }
 }
 
@@ -224,6 +224,35 @@ export function buildExploreAction(
     type: 'move',
     actor,
     destination: dest,
-    reason: '探索未探索區域',
+    reason: `探索未探索區域（目標 (${dest.row}, ${dest.column})，體力 ${Math.floor(player.stamina)}）`,
+  }
+}
+
+/**
+ * 清理／採集廢墟（kind: 'ruin'）。
+ *
+ * ⚠️ 開發提醒：worldSetup 的 createRuins 目前「未避開 resourcePoints」，
+ * 可能使同一格同時存在廢墟與資源點（重疊實體）。決策樹選擇目標時
+ * 以 state.ruins（status === 'intact' 且相鄰）優先，若與資源點重疊，
+ * 兩者皆可採集——請留意世界生成層是否要修正為互斥。
+ *
+ * 需玩家位於廢墟周遭一格（與 clearRuin 的 isAdjacent 一致）。
+ */
+export function buildCollectRuinAction(
+  state: GameState,
+  player: PlayerState,
+): AiAction | null {
+  const actor: AiActorRef = { id: player.id, kind: 'player' }
+  const adjacentRuin = (state.ruins ?? []).find((ruin) => {
+    if (ruin.status !== 'intact') return false
+    const d = Math.abs(ruin.position.row - player.position.row) + Math.abs(ruin.position.column - player.position.column)
+    return d === 1
+  })
+  if (!adjacentRuin) return null
+  return {
+    type: 'collect',
+    actor,
+    target: { id: adjacentRuin.id, kind: 'ruin', position: adjacentRuin.position },
+    reason: `清理廢墟\n 採集（目標 (${adjacentRuin.position.row}, ${adjacentRuin.position.column})，體力 ${Math.floor(player.stamina)}）`,
   }
 }
