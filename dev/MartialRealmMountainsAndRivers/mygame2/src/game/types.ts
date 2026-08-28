@@ -712,6 +712,16 @@ export type BlockingModal =
   | { type: 'story-dialogue'; entry: DialogueQueueEntry; remaining: number }
   | null
 
+/** 挑戰關卡的全局共享狀態（所有角色共用，localStorage 持久化）。 */
+export type ChallengeState = {
+  /** 當前闖關等級（從 1 開始）。 */
+  level: number
+  /** 歷史最高到達等級。 */
+  highestLevel: number
+  /** 總通關次數。 */
+  totalClears: number
+}
+
 export type InsightCapacityBreakdown = {
   total: number
   inner: number

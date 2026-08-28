@@ -13,6 +13,7 @@ import {
   type MapTemplate,
 } from '../game/mapTemplates'
 import CampaignScenarioTab from './CampaignScenarioTab'
+import ChallengeTab from './ChallengeTab'
 import CharacterLibraryScreen from './CharacterLibraryScreen'
 import type { ScenarioDefinition } from '../editor/editorTypes'
 import { clearStoredScenarios } from '../game/scenarioStorage'
@@ -23,6 +24,8 @@ const SELECTED_CHARACTER_KEY = 'mygame2.selected-character-id'
 
 type GameStartScreenProps = {
   onStart: (settings: GameSettings, selectedCharacters?: (PersistentCharacter | undefined)[]) => void
+  /** 開始挑戰關卡（勝利時記錄闖關等級 +1）。 */
+  onStartChallenge?: (settings: GameSettings, selectedCharacters?: (PersistentCharacter | undefined)[]) => void
   onDebug: () => void
   onOpenSkillTest: () => void
   onOpenEditor: () => void
@@ -30,7 +33,7 @@ type GameStartScreenProps = {
   onStartScenario: (scenario: ScenarioDefinition) => void
 }
 
-function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onStartScenario }: GameStartScreenProps) {
+function GameStartScreen({ onStart, onStartChallenge, onDebug, onOpenSkillTest, onOpenEditor, onStartScenario }: GameStartScreenProps) {
   const [rosterCharacters, setRosterCharacters] = useState<PersistentCharacter[]>(() => getCharacters())
   // 依人類玩家順序記錄選用的名册角色 id（未選用為 undefined）。
   const [selectedCharacterIds, setSelectedCharacterIds] = useState<(string | undefined)[]>(() => {
@@ -288,6 +291,19 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
               label: '📜 劇本地圖',
               children: (
                 <CampaignScenarioTab onStartScenario={onStartScenario} />
+              ),
+            },
+            {
+              key: 'challenge',
+              label: '⚔️ 挑戰關卡',
+              children: (
+                <ChallengeTab onStartChallenge={(settings, character) => {
+                  if (onStartChallenge) {
+                    onStartChallenge(settings, [character])
+                  } else {
+                    onStart(settings, [character])
+                  }
+                }} />
               ),
             },
             {

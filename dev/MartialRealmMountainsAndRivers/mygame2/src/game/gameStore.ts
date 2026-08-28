@@ -163,6 +163,7 @@ import {
 import { runActionExecution, runActionOutcome } from './storeAdapters'
 import { recordMaxLevel, recordDamageDealt } from './runStats'
 import { applyEndGameRewards, applyStoryUnlocks } from './characterRoster'
+import { recordChallengeVictory } from './challengeState'
 import { enqueueDialogue, skipAllDialogue } from './actions/dialogueActions'
 import { collectTriggeredDialogues } from './rules/dialogueTriggerRules'
 import { checkVictory } from './rules/campaignRules'
@@ -233,6 +234,8 @@ let lastGameSettings = getSavedGameSettings()
 const listeners = new Set<() => void>()
 /** 目前載入的劇本關卡 id（記錄通關進度用）；非劇本模式為 null。 */
 let currentScenarioId: string | null = null
+/** 目前對局是否為挑戰關卡模式（勝利時記錄闖關等級 +1）。 */
+let isChallengeMode = false
 /** 目前對局各人類玩家選用的名册角色 id（依人類玩家順序；未選用為 null）。 */
 let activeCharacterIds: (string | null)[] = []
 /**
@@ -389,6 +392,7 @@ export const gameStore = {
     initialExternalSkillIds?: string[]
     talentIds?: string[]
   } | null)[]) => {
+    isChallengeMode = false
     lastGameSettings = { ...settings }
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
@@ -433,7 +437,7 @@ export const gameStore = {
       // 因此要把包含局末旗標與同一 runId 的最新狀態寫回自動存檔，
       // 讓存檔摘要能顯示「已領取殘卷」，讀檔也能正確讀取防重登記。
       // activeCharacterIds 已隨 GameState 序列化，故不需再以參數傳入。
-      saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
+      saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode, currentScenarioId)
     }
     return results
   },
@@ -518,14 +522,14 @@ export const gameStore = {
   },
 
   saveGame: (): ActionOutcome => {
-    const result = saveGameState(gameState, activeCharacterIds[0] ?? null)
+    const result = saveGameState(gameState, activeCharacterIds[0] ?? null, isChallengeMode, currentScenarioId)
     return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '儲存失敗。' }
   },
 
   getSaveSlots: () => getGameSaveSlots(),
 
   saveGameToSlot: (slot: number): ActionOutcome => {
-    const result = saveGameStateToSlot(gameState, slot, activeCharacterIds[0] ?? null)
+    const result = saveGameStateToSlot(gameState, slot, activeCharacterIds[0] ?? null, isChallengeMode, currentScenarioId)
     return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '儲存失敗。' }
   },
 
@@ -534,6 +538,9 @@ export const gameStore = {
     pendingCreatureTurnBasePlayers = null
     const result = loadGameStateFromSlot(slot)
     if (!result.ok) return result
+    // 還原挑戰關卡模式旗標與劇本 id（舊存檔缺漏視為 false/null）。
+    isChallengeMode = result.isChallengeMode
+    currentScenarioId = result.scenarioId
     gameState = {
       ...result.state,
       aiOrders: result.state.aiOrders ?? [],
@@ -562,6 +569,9 @@ export const gameStore = {
   loadGame: (): ActionOutcome => {
     const result = loadGameState()
     if (!result.ok) return result
+    // 還原挑戰關卡模式旗標與劇本 id（舊存檔缺漏視為 false/null）。
+    isChallengeMode = result.isChallengeMode
+    currentScenarioId = result.scenarioId
     gameState = {
       ...result.state,
       aiOrders: result.state.aiOrders ?? [],
@@ -662,14 +672,37 @@ export const gameStore = {
   loadDebugMap: () => {
     // Debug 地圖不綁定名册角色，清除並同步 state。
     activeCharacterIds = []
+    isChallengeMode = false
     gameState = { ...createDebugGameState(), activeCharacterIds: [] }
     listeners.forEach((listener) => listener())
   },
+
+  /** 以挑戰關卡模式開局：勝利流程比照沙盒，僅多記錄闖關等級。 */
+  startChallengeGame: (settings: GameSettings, selectedCharacters?: ({
+    id?: string
+    attributeBonuses: PlayerAttributes
+    name?: string
+    portrait?: string
+    title?: string
+    initialInternalSkillId?: string
+    initialExternalSkillIds?: string[]
+    talentIds?: string[]
+  } | null)[]) => {
+    // 注意：startGame 內部會重置 isChallengeMode = false，
+    // 因此必須「先呼叫 startGame、再設旗標」，否則旗標會被覆蓋回 sandbox。
+    gameStore.startGame(settings, selectedCharacters)
+    isChallengeMode = true
+  },
+
+  /** 目前對局是否為挑戰關卡模式。 */
+  isChallengeModeActive: () => isChallengeMode,
 
   /** 載入測試用劇情模式（Debug 地圖 + 序章對話）。 */
   startTestCampaign: () => {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
+    isChallengeMode = false
+    currentScenarioId = null
     // 測試劇情不綁定名册角色，清除並同步 state。
     activeCharacterIds = []
     // 觸發開局（on-start）對話：收集符合的步驟並填入佇列（updateGameState 會自動顯示）。
@@ -701,6 +734,7 @@ export const gameStore = {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
     // 劇本模式不綁定名册角色，清除並同步 state。
+    isChallengeMode = false
     activeCharacterIds = []
     gameState = { ...buildGameStateFromScenario(scenario), activeCharacterIds: [] }
     currentScenarioId = scenario.id
@@ -718,6 +752,7 @@ export const gameStore = {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
     currentScenarioId = null
+    isChallengeMode = false
     rewardSettled = false
     // 刻意沿用目前選用的名册角色（bug.md 記錄的設計），並同步寫入新 state。
     gameState = { ...createGameState(lastGameSettings), activeCharacterIds }
@@ -727,6 +762,10 @@ export const gameStore = {
   /** 記錄目前劇本的通關狀態（true = 闖關成功；false = 失敗）。
    *  通關成功時，同步將該章節的 storyUnlocks 併入所有官方角色（功法＋天賦）。 */
   recordCurrentScenarioClearance: (cleared: boolean) => {
+    // 挑戰關卡模式：勝利時記錄闖關等級 +1（殘卷結算已由 settleActiveCharacterRewards 比照沙盒處理）。
+    if (isChallengeMode && cleared) {
+      recordChallengeVictory()
+    }
     if (!currentScenarioId) return
     recordScenarioClearance(currentScenarioId, cleared)
     // 劇本通關解鎖：官方角色（如凌淵）作為故事主角，通關即解鎖對應功法／天賦。
@@ -1561,7 +1600,7 @@ export const gameStore = {
     })
     animateCreatureTurn({ ...scheduled, players: currentPlayers })
     // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
-    if (!gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
+    if (!gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode, currentScenarioId)
   },
 
   movePlayer: (playerId: string, rowDelta: number, columnDelta: number) => {
@@ -2570,7 +2609,7 @@ export const gameStore = {
     }
     // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
     // 觸發探索事件時，敵人行動尚未執行，改由 flushPendingCreatureTurn 結算後保存。
-    if (!triggeredEvent && !gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
+    if (!triggeredEvent && !gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode, currentScenarioId)
   },
 
   startPlayerTurn: (playerId: string) => {

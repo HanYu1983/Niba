@@ -10,6 +10,7 @@ import './App.css'
 import PlayerCommandPanel from './components/PlayerCommandPanel'
 import GameOverlays from './components/GameOverlays'
 import GameStatusCard from './components/GameStatusCard'
+import FiveElementsChart from './components/FiveElementsChart'
 import QuestTrackerPanel from './components/QuestTrackerPanel'
 import useKeyboardShortcuts from './hooks/useKeyboardShortcuts'
 import useModalState from './hooks/useModalState'
@@ -267,6 +268,12 @@ function App() {
     trackEvent('Gameplay', 'game_start', 'quick_start')
   }
 
+  const startChallengeGame = (settings: GameSettings, selectedCharacters?: (PersistentCharacter | undefined)[]) => {
+    gameStore.startChallengeGame(settings, selectedCharacters?.map((c) => c ?? null))
+    setScreen('game')
+    trackEvent('Gameplay', 'game_start', 'challenge')
+  }
+
   // 頁面瀏覽追蹤：切換 screen 時記錄。
   useEffect(() => {
     trackPageView(screen === 'start' ? '/start' : '/game')
@@ -298,6 +305,7 @@ function App() {
         <Layout.Content className="app-content">
           <GameStartScreen
             onStart={startGame}
+            onStartChallenge={startChallengeGame}
             onOpenSkillTest={() => setSkillTestPageOpen(true)}
             onOpenEditor={() => setEditorOpen(true)}
             onStartScenario={(scenario) => {
@@ -535,6 +543,8 @@ function App() {
               targetingSpec={targetingSpec}
               creatureShake={gameState.creatureShake}
             />
+
+            <FiveElementsChart />
 
           </Flex>
           <aside className="game-layout__players">
