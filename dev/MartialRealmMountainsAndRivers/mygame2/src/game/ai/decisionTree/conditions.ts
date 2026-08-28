@@ -3,6 +3,7 @@ import { isAdjacent, isSamePosition } from '../../types'
 import type { HostileActor } from '../perception/targetDiscovery'
 import { listHostileActors } from '../perception/targetDiscovery'
 import { getPlayerVisibleCellIds, getFoggedCellIds } from '../../rules/visibilityRules'
+import { itemCatalog } from '../../catalogs/itemCatalog'
 
 // ─── 保命條件 ──────────────────────────────────────
 
@@ -12,6 +13,34 @@ export function isHealthCritical(player: PlayerState): boolean {
 
 export function isHealthLow(player: PlayerState): boolean {
   return player.health <= player.maxHealth * 0.4
+}
+
+/** 玩家背包中所有回血道具（effect === 'health'），依回血量由小到大排序回 [{itemId, healAmount}]。 */
+export function getHealingItemsByAmount(player: PlayerState): { itemId: string; healAmount: number }[] {
+  return (player.inventory ?? [])
+    .filter((entry) => entry.quantity > 0)
+    .map((entry) => {
+      const def = itemCatalog.find((item) => item.id === entry.itemId)
+      if (!def || def.effect !== 'health' || !def.effectValue) return null
+      return { itemId: entry.itemId, healAmount: def.effectValue }
+    })
+    .filter((x): x is { itemId: string; healAmount: number } => x !== null)
+    .sort((a, b) => a.healAmount - b.healAmount)
+}
+
+/**
+ * 需要回血時要使用的回血道具（取回血量最小者）。
+ * 條件：現有血量與滿血的差距 ≧ 最小回血道具量，或現有血量 < 15。
+ * 無道具或不需要回血時回 null。
+ */
+export function findHealingItemToUse(player: PlayerState): { itemId: string; healAmount: number } | null {
+  const items = getHealingItemsByAmount(player)
+  if (items.length === 0) return null
+  const smallest = items[0]
+  const deficit = player.maxHealth - player.health
+  if (deficit >= smallest.healAmount) return smallest
+  if (player.health < 15) return smallest
+  return null
 }
 
 export function isExhausted(player: PlayerState): boolean {
