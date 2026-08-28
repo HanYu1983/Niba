@@ -282,7 +282,7 @@ describe('createInitialPlayers', () => {
       [{ row: 1, column: 1 }],
       20260803,
       1,
-      { armStrength: 2, constitution: 0, agility: 1, innerEnergy: 0, insight: 0 },
+      [{ attributeBonuses: { armStrength: 2, constitution: 0, agility: 1, innerEnergy: 0, insight: 0 } }],
     )
     expect(players[0]?.attributes.armStrength).toBe(10)
     expect(players[0]?.attributes.agility).toBe(9)
@@ -294,7 +294,7 @@ describe('createInitialPlayers', () => {
       [{ row: 1, column: 1 }, { row: 2, column: 2 }],
       20260803,
       1, // 只有第一位是人類
-      { armStrength: 5, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 },
+      [{ attributeBonuses: { armStrength: 5, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 } }],
     )
     expect(players[0]?.attributes.armStrength).toBe(13)
     expect(players[1]?.attributes.armStrength).toBe(8)
@@ -306,12 +306,48 @@ describe('createInitialPlayers', () => {
       [{ row: 1, column: 1 }, { row: 2, column: 2 }],
       20260803,
       1,
-      undefined,
-      '張三',
+      [{ attributeBonuses: { armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 }, name: '張三' }],
     )
     expect(players[0]?.name).toBe('張三')
     // AI 玩家不受影響，仍為隨機名稱。
     expect(players[1]?.name).not.toBe('張三')
+  })
+
+  it('雙人對局各自套用不同名册角色', () => {
+    const players = createInitialPlayers(
+      [{ row: 1, column: 1 }, { row: 2, column: 2 }],
+      20260803,
+      2, // 兩位都是人類玩家
+      [
+        { attributeBonuses: { armStrength: 2, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 }, name: '甲' },
+        { attributeBonuses: { armStrength: 0, constitution: 3, agility: 0, innerEnergy: 0, insight: 0 }, name: '乙' },
+      ],
+    )
+    // 玩家 1 套用「甲」的五維與名稱。
+    expect(players[0]?.name).toBe('甲')
+    expect(players[0]?.attributes.armStrength).toBe(10)
+    expect(players[0]?.isAI).toBe(false)
+    // 玩家 2 套用「乙」的五維與名稱。
+    expect(players[1]?.name).toBe('乙')
+    expect(players[1]?.attributes.constitution).toBe(11)
+    expect(players[1]?.isAI).toBe(false)
+  })
+
+  it('多人對局中未指定角色的玩家使用預設角色', () => {
+    const players = createInitialPlayers(
+      [{ row: 1, column: 1 }, { row: 2, column: 2 }],
+      20260803,
+      2,
+      [
+        { attributeBonuses: { armStrength: 2, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 }, name: '甲' },
+        null, // 玩家 2 未選角色 → 預設
+      ],
+    )
+    expect(players[0]?.name).toBe('甲')
+    expect(players[0]?.attributes.armStrength).toBe(10)
+    // 玩家 2 為預設角色：五維全 8、無外功。
+    expect(players[1]?.attributes.armStrength).toBe(8)
+    expect(players[1]?.externalSkillIds).toEqual([])
   })
 })
 

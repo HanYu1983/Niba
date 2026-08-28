@@ -12,6 +12,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   aiPlayerCount: 0,
   explorationEventCount: 5,
   explorationTriggerChance: 0.2,
+  nestHealthRegenPercent: 0.01,
   creatureCount: 2,
   ruinCount: 10,
   sectGateCount: 3,
@@ -48,6 +49,9 @@ export function getSavedGameSettings(): GameSettings {
       explorationTriggerChance: stored.explorationTriggerChance !== undefined && Number.isFinite(stored.explorationTriggerChance)
         ? Math.min(1, Math.max(0, stored.explorationTriggerChance))
         : DEFAULT_GAME_SETTINGS.explorationTriggerChance ?? 0.2,
+      nestHealthRegenPercent: stored.nestHealthRegenPercent !== undefined && Number.isFinite(stored.nestHealthRegenPercent)
+        ? Math.min(1, Math.max(0, stored.nestHealthRegenPercent))
+        : DEFAULT_GAME_SETTINGS.nestHealthRegenPercent ?? 0.01,
       creatureCount: Math.max(0, Math.round(stored.creatureCount)),
       ruinCount: Math.max(0, Math.round(stored.ruinCount)),
       sectGateCount: Math.min(30, Math.max(0, Math.round(stored.sectGateCount ?? DEFAULT_GAME_SETTINGS.sectGateCount ?? 3))),
