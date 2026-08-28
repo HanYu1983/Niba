@@ -51,7 +51,7 @@ function TransportModal({ player, open, title, isSmallWaystation, targets, onTra
               >
                 <List.Item.Meta
                   title={target.name}
-                  description={`${target.kind === 'small-waystation' ? '小型驛站' : '據點'} · 位置 (${target.position.row + 1}, ${target.position.column + 1})`}
+                  description={`${target.kind === 'small-waystation' ? '小型驛站' : '據點'} · 位置 (${target.position.row}, ${target.position.column})`}
                 />
               </List.Item>
             )

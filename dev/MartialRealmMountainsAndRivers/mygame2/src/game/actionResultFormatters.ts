@@ -160,7 +160,7 @@ export function formatDefenseStructureBuildResult(
   const prestigeGain = getMaterialPrestigeAmount(definition.constructionCost, bonus)
   return {
     title: '防禦建築建造完成',
-    message: `已在 (${position.row + 1}, ${position.column + 1}) 建造設施。`,
+    message: `已在 (${position.row}, ${position.column}) 建造設施。`,
     rewards: [`消耗 ${definition.constructionCost} 建料`, prestigeGain > 0 ? `玩家聲望 +${prestigeGain}` : '玩家聲望 +0'],
   }
 }

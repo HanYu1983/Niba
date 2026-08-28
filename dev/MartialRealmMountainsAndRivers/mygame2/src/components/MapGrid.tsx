@@ -380,7 +380,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                   data-cell-id={cell.id}
                   className={`map-grid__cell map-grid__cell--${cell.terrain}${isUnexplored ? ' map-grid__cell--unexplored' : cellVisibility === 'explored' ? ' map-grid__cell--explored' : ''}${cellAction.type === 'move' ? ' map-grid__cell--move-interactive' : ''}${cellAction.type === 'target-creature' || cellAction.type === 'target-nest' ? ' map-grid__cell--target-interactive' : ''}${cellAction.type === 'build-defense' ? ' map-grid__cell--defense-interactive' : ''}`}
                   role="gridcell"
-                  title={`${terrain.label} (${cell.row + 1}, ${cell.column + 1})`}
+                  title={`${terrain.label} (${cell.row}, ${cell.column})`}
                   style={{ backgroundColor: terrain.color }}
                   onClick={(event) => {
                     onClearSelectedBase?.()
@@ -525,7 +525,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                     <div
                       key={base.id}
                       className={`base-marker${base.active === false ? ' base-marker--inactive' : ''}`}
-                      title={`${base.name} · ${base.active === false ? '未啟用' : '運作中'} (${cell.row + 1}, ${cell.column + 1})`}
+                      title={`${base.name} · ${base.active === false ? '未啟用' : '運作中'} (${cell.row}, ${cell.column})`}
                       aria-label={`${base.name}${base.active === false ? '（未啟用）' : ''}`}
                       role="button"
                       tabIndex={0}

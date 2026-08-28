@@ -57,7 +57,7 @@ function DefenseStructureDetailsModal({ structure, onOpenTransport, onClose, all
           />
 
           <Typography.Text type="secondary">
-            位置 ({structure.position.row + 1}, {structure.position.column + 1})
+            位置 ({structure.position.row}, {structure.position.column})
           </Typography.Text>
           <StatBar
             label="設施生命"

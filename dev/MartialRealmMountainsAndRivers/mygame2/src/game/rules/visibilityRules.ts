@@ -63,6 +63,17 @@ export function getPlayerVisibleCellIds(state: GameState, playerId: string): Set
   return visibleIds
 }
 
+/** 戰爭迷霧格子集合：未在永久已探索清單（exploredCellIds）中的格子 id。
+ *  與視野範圍、暫時揭示無關；若已全圖揭示（mode === 'revealed'）則回傳空集合。 */
+export function getFoggedCellIds(state: GameState): Set<string> {
+  const visibility = state.visibility ?? { exploredCellIds: [], mode: 'fog' as const }
+  if (visibility.mode === 'revealed') return new Set()
+  const explored = new Set(visibility.exploredCellIds)
+  return new Set(
+    state.map.cells.filter((cell) => !explored.has(cell.id)).map((cell) => cell.id),
+  )
+}
+
 export function getCellVisibility(state: GameState, playerId: string, cell: MapCell): VisibilityState {
   const visibility = state.visibility ?? { exploredCellIds: [], mode: 'fog' as const }
   if (visibility.mode === 'revealed') return 'visible'

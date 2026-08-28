@@ -67,7 +67,7 @@ const ACTION_TYPE_LABELS: Record<AiAction['type'], string> = {
 function formatActionDetail(action: AiAction): string {
   switch (action.type) {
     case 'move':
-      return `移動到 (${action.destination.row + 1}, ${action.destination.column + 1})`
+      return `移動到 (${action.destination.row}, ${action.destination.column})`
     case 'attack':
       return `攻擊目標 ${action.target.id}`
     case 'collect':

@@ -52,7 +52,7 @@ function ResourcePointDetailsModal({
         <LocationDetailsCard
           icon="💎"
           name={resourcePoint.name}
-          position={`位置 (${resourcePoint.position.row + 1}, ${resourcePoint.position.column + 1})`}
+          position={`位置 (${resourcePoint.position.row}, ${resourcePoint.position.column})`}
           statusLabel={resourcePoint.active === false ? '已失活' : alreadyCollected ? '本回合已採集' : '可採集'}
           statusColor={resourcePoint.active === false ? 'red' : alreadyCollected ? 'default' : 'cyan'}
           health={resourcePoint.health}

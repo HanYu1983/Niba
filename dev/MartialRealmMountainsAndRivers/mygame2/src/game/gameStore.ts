@@ -2378,10 +2378,13 @@ export const gameStore = {
       loopCount++
       const currentPlayer = gameState.players.find((p) => p.id === playerId)!
 
-      const action = decideNextAction(gameState, playerId)
+      const diagnostics: import('./ai/decisionTree/decideNextAction').DecisionTreeDiagnostics = { reasons: [] }
+      const action = decideNextAction(gameState, playerId, diagnostics)
 
       if (!action) {
-        exitReason = '決策樹無可執行行動'
+        exitReason = diagnostics.reasons.length > 0
+          ? `決策樹無可執行行動（${diagnostics.reasons.join('；')}）`
+          : '決策樹無可執行行動'
         continue
       }
 

@@ -1,7 +1,7 @@
 import type { GameState, Position } from '../../types'
 import { isAdjacent } from '../../types'
 import { canPlayerPerformAction, getAiActionStaminaCost } from '../../rules/actionCostRules'
-import { collectReachableCells } from '../perception/reachablePositions'
+import { collectReachableCells, type CellUnreachableReason } from '../perception/reachablePositions'
 import { defenseActionToAiAction, type AiAction, type AiTargetRef } from '../aiAction'
 import type { AiDefenseAction } from '../../aiDefenseRules'
 import { buildingCatalog } from '../../catalogs/buildingCatalog'
@@ -25,6 +25,10 @@ function findTarget(state: GameState, target: AiTargetRef): { health: number; po
       return state.bases.find((candidate) => candidate.id === target.id) ?? null
     case 'resource':
       return state.resourcePoints.find((candidate) => candidate.id === target.id) ?? null
+    case 'ruin': {
+      const ruin = (state.ruins ?? []).find((candidate) => candidate.id === target.id)
+      return ruin ? { health: ruin.status === 'intact' ? 1 : 0, position: ruin.position } : null
+    }
     case 'defense':
       return (state.defenseStructures ?? []).find((candidate) => candidate.id === target.id) ?? null
     case 'item': {
@@ -63,10 +67,15 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
 
   switch (action.type) {
     case 'move': {
-      const reachable = collectReachableCells(state, actor).some((cell) => isSamePosition(cell.position, action.destination))
-      return reachable
-        ? { valid: true }
-        : { valid: false, reason: '目的地不可達或體力不足。' }
+      const reasons: CellUnreachableReason[] = []
+      const reachableSet = collectReachableCells(state, actor, reasons)
+      const isReachable = reachableSet.some((cell) => isSamePosition(cell.position, action.destination))
+      if (isReachable) return { valid: true }
+      const specific = reasons.find((reason) => isSamePosition(reason.position, action.destination))
+      const detail = specific
+        ? `${specific.reason}`
+        : '該格不在可達範圍（無路徑或超出剩餘體力）'
+      return { valid: false, reason: `目的地不可達：${detail}。` }
     }
     case 'attack': {
       const target = findTarget(state, action.target)
@@ -77,6 +86,9 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
     case 'collect': {
       const target = findTarget(state, action.target)
       if (!target || target.health <= 0) return { valid: false, reason: '採集目標不存在或已失效。' }
+      if (action.target.kind === 'ruin' && !isAdjacent(actor.position, target.position)) {
+        return { valid: false, reason: '需位於廢墟周遭一格。' }
+      }
       return { valid: true }
     }
     case 'build': {
