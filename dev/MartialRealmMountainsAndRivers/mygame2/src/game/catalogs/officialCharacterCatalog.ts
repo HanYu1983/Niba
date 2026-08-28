@@ -77,16 +77,30 @@ export const lingyuan: OfficialCharacterDefinition = {
     insight: 2,
   },
   element: 'none',
-  exclusiveInnerSkillId: 'lingyuan-shelter-breath',
+  exclusiveInnerSkillId: 'tuna-gong',
   exclusiveExternalSkillIds: [
-    'lingyuan-mountain-pulse',   // 傷害型：山河脈動
-    'lingyuan-rivers-sustain',    // 靈氣型：江河長養
-    'lingyuan-five-elements-mend', // 強化型：五行歸元
   ],
   storyUnlocks: [
-    // 序章通關不解鎖額外內容（專屬功法已隨建立直接學會）。
-    // 預留未來章節擴充；此處先不放任何項目，
-    // 待後續章節定義完成後再加入對應解鎖。
+    // 序章「青石遺恨」：解鎖專屬內功「山河歸藏」——
+    // 守護者一脈的基礎心法，先有內功才能運轉後續外功。
+    {
+      scenarioId: 'prologue-village',
+      skillIds: ['lingyuan-shelter-breath'],
+    },
+    // 第二章「林海伏妖」：解鎖外功「山河脈動」（傷害型）＋天賦「金剛體魄」——
+    // 呼應林海中硬撼妖物、守護獵人村落的故事。
+    {
+      scenarioId: 'forest-hunt',
+      skillIds: ['lingyuan-mountain-pulse'],
+      talentIds: ['vital-body'],
+    },
+    // 第三章「寒水之殤」：解鎖外功「江河長養」（靈氣型）＋「五行歸元」（強化型）
+    // ＋天賦「丹田凝息」——呼應淨化水源、以內息驅動靈氣的故事。
+    {
+      scenarioId: 'frost-water-lament',
+      skillIds: ['lingyuan-rivers-sustain', 'lingyuan-five-elements-mend'],
+      talentIds: ['deep-dantian'],
+    },
   ],
 }
 

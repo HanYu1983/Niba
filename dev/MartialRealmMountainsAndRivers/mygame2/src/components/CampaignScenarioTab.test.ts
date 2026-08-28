@@ -43,6 +43,26 @@ function stubLocalStorage() {
   })
 }
 
+/** 建立標準新角狀態的凌淵名册資料（不預學專屬功法——四件套靠章節解鎖）。 */
+function makeRosterLingyuan() {
+  return {
+    id: lingyuan.characterId,
+    name: lingyuan.name,
+    isOfficial: true,
+    chapterId: lingyuan.chapterId,
+    attributeBonuses: { armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 },
+    scrolls: 0,
+    unlockedSkillIds: ['tuna-gong', 'sky-breaking-palm'],
+    learnedSkillIds: ['tuna-gong'],
+    initialExternalSkillIds: [],
+    initialInternalSkillId: 'tuna-gong',
+    unlockedTalentIds: [],
+    talentIds: [],
+    gamesPlayed: 0,
+    createdAt: 0,
+  }
+}
+
 describe('groupScenariosByChapter', () => {
   it('空清單回傳空陣列', () => {
     expect(groupScenariosByChapter([])).toEqual([])
@@ -163,64 +183,26 @@ describe('buildChapterProgressView', () => {
     expect(view.totalPending).toEqual([])
   })
 
-  it('名册內已有凌淵時，初始四件套列為「已解鎖」', () => {
+  it('名册內已有凌淵但未通關任何章節 → 僅初始內功（吐納功）已解鎖，專屬功法靠章節解鎖', () => {
     localStorage.setItem(CHARACTER_ROSTER_STORAGE_KEY, JSON.stringify({
       version: 2,
-      characters: [{
-        id: lingyuan.characterId,
-        name: lingyuan.name,
-        isOfficial: true,
-        chapterId: lingyuan.chapterId,
-        attributeBonuses: { armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 },
-        scrolls: 0,
-        unlockedSkillIds: [
-          'tuna-gong',
-          'sky-breaking-palm',
-          lingyuan.exclusiveInnerSkillId,
-          ...lingyuan.exclusiveExternalSkillIds,
-        ],
-        learnedSkillIds: [lingyuan.exclusiveInnerSkillId, ...lingyuan.exclusiveExternalSkillIds],
-        initialExternalSkillIds: [...lingyuan.exclusiveExternalSkillIds],
-        initialInternalSkillId: lingyuan.exclusiveInnerSkillId,
-        unlockedTalentIds: [],
-        talentIds: [],
-        gamesPlayed: 0,
-        createdAt: 0,
-      }],
+      characters: [makeRosterLingyuan()],
     }))
     const clearances: ScenarioClearanceMap = {}
     const view = buildChapterProgressView(lingyuan, clearances)
     expect(view.rosterSnapshot).not.toBeNull()
-    const unlockedNames = view.totalUnlocked.map((item) => item.name)
-    // 四件套的功法名稱至少都應在已解鎖清單中
-    expect(unlockedNames.length).toBe(lingyuan.exclusiveExternalSkillIds.length + 1) // 1 內功 + 3 外功
+    // 初始內功（exclusiveInnerSkillId = tuna-gong）已解鎖
+    expect(view.totalUnlocked.map((item) => item.id)).toEqual(['tuna-gong'])
+    // 專屬功法尚未解鎖，無 pending
     expect(view.totalPending).toEqual([])
   })
 
-  it('通關後若 storyUnlocks 帶來新功法但名册未含 → 標記為 pending-apply', () => {
-    // 模擬：凌淵已存在名册，但「已通關第二章」會額外解鎖一個新功法（mock storyUnlocks）。
-    // 為避免動到正式 catalog，這裡直接用「通關一個不屬於 lingyuan chapterIds 的章節」並
-    // 觀察其行為；以及測一個關鍵路徑——空 storyUnlocks 時 pending 為空。
+  it('通關全部三章但名册未套用 → 全部解鎖項目進入 totalPending（pending-apply）', () => {
+    // 模擬：凌淵已存在名册（標準新角），三章皆通關，但解鎖尚未套用。
     localStorage.setItem(CHARACTER_ROSTER_STORAGE_KEY, JSON.stringify({
       version: 2,
-      characters: [{
-        id: lingyuan.characterId,
-        name: lingyuan.name,
-        isOfficial: true,
-        chapterId: lingyuan.chapterId,
-        attributeBonuses: { armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 },
-        scrolls: 0,
-        unlockedSkillIds: [lingyuan.exclusiveInnerSkillId, ...lingyuan.exclusiveExternalSkillIds],
-        learnedSkillIds: [],
-        initialExternalSkillIds: [],
-        initialInternalSkillId: lingyuan.exclusiveInnerSkillId,
-        unlockedTalentIds: [],
-        talentIds: [],
-        gamesPlayed: 0,
-        createdAt: 0,
-      }],
+      characters: [makeRosterLingyuan()],
     }))
-    // lingyuan.storyUnlocks 目前為空 → 即使通關也不會有 pending
     const clearances: ScenarioClearanceMap = {
       'prologue-village': true,
       'forest-hunt': true,
@@ -228,7 +210,16 @@ describe('buildChapterProgressView', () => {
     }
     const view = buildChapterProgressView(lingyuan, clearances)
     expect(view.chapters.map((c) => c.cleared)).toEqual([true, true, true])
-    expect(view.totalPending).toEqual([])
+    // 序章 1 內功 + 第二章 1 外功 + 第三章 2 外功 = 4 功法；2 天賦
+    const pendingIds = view.totalPending.map((item) => item.id)
+    expect(pendingIds).toContain('lingyuan-shelter-breath')
+    expect(pendingIds).toContain('lingyuan-mountain-pulse')
+    expect(pendingIds).toContain('lingyuan-rivers-sustain')
+    expect(pendingIds).toContain('lingyuan-five-elements-mend')
+    expect(pendingIds).toContain('vital-body')
+    expect(pendingIds).toContain('deep-dantian')
+    // 初始內功（吐納功）已解鎖，不會進 pending
+    expect(view.totalUnlocked.map((item) => item.id)).toEqual(['tuna-gong'])
   })
 
   it('篇章通關狀態正確對應：未挑戰 / 已通關 / 已挑戰失敗', () => {
@@ -249,5 +240,64 @@ describe('buildChapterProgressView', () => {
     for (const chapter of view.chapters) {
       expect(chapter.cleared).toBeUndefined()
     }
+  })
+
+  it('storyUnlocks 分配：序章 1 內功、第二章 1 外功 + 1 天賦、第三章 2 外功 + 1 天賦', () => {
+    const view = buildChapterProgressView(lingyuan, {})
+    const byId = Object.fromEntries(view.chapters.map((c) => [c.scenarioId, c]))
+    expect(byId['prologue-village'].unlocks.innerSkillIds).toEqual(['lingyuan-shelter-breath'])
+    expect(byId['forest-hunt'].unlocks.externalSkillIds).toEqual(['lingyuan-mountain-pulse'])
+    expect(byId['forest-hunt'].unlocks.talentIds).toEqual(['vital-body'])
+    expect(byId['frost-water-lament'].unlocks.externalSkillIds).toEqual([
+      'lingyuan-rivers-sustain',
+      'lingyuan-five-elements-mend',
+    ])
+    expect(byId['frost-water-lament'].unlocks.talentIds).toEqual(['deep-dantian'])
+  })
+
+  it('通關序章但名册未套用 → 山河歸藏進入 totalPending；第二章未通關 → 其解鎖不出現', () => {
+    localStorage.setItem(CHARACTER_ROSTER_STORAGE_KEY, JSON.stringify({
+      version: 2,
+      characters: [makeRosterLingyuan()],
+    }))
+    const clearances: ScenarioClearanceMap = { 'prologue-village': true }
+    const view = buildChapterProgressView(lingyuan, clearances)
+    // 序章解鎖的內功已通關但名册未含 → pending
+    expect(view.totalPending.map((item) => item.id)).toEqual(['lingyuan-shelter-breath'])
+    expect(view.totalPending[0].name).toBe('山河歸藏')
+    // 第二章未通關 → 山河脈動 / 金剛體魄不出現
+    const allIds = [...view.totalUnlocked, ...view.totalPending].map((item) => item.id)
+    expect(allIds).not.toContain('lingyuan-mountain-pulse')
+    expect(allIds).not.toContain('vital-body')
+  })
+
+  it('通關序章且名册已含內功 → 山河歸藏進入 totalUnlocked', () => {
+    localStorage.setItem(CHARACTER_ROSTER_STORAGE_KEY, JSON.stringify({
+      version: 2,
+      characters: [{
+        ...makeRosterLingyuan(),
+        unlockedSkillIds: ['tuna-gong', 'sky-breaking-palm', 'lingyuan-shelter-breath'],
+        learnedSkillIds: ['tuna-gong', 'lingyuan-shelter-breath'],
+        initialInternalSkillId: 'lingyuan-shelter-breath',
+      }],
+    }))
+    const clearances: ScenarioClearanceMap = { 'prologue-village': true }
+    const view = buildChapterProgressView(lingyuan, clearances)
+    expect(view.totalUnlocked.map((item) => item.id)).toContain('lingyuan-shelter-breath')
+    expect(view.totalPending).toEqual([])
+  })
+
+  it('未通關的篇章，其解鎖項目不出現在任何桶中（locked 不顯示於摘要）', () => {
+    localStorage.setItem(CHARACTER_ROSTER_STORAGE_KEY, JSON.stringify({
+      version: 2,
+      characters: [makeRosterLingyuan()],
+    }))
+    const clearances: ScenarioClearanceMap = { 'prologue-village': true }
+    const view = buildChapterProgressView(lingyuan, clearances)
+    // 第二章/第三章未通關 → 其解鎖項目不應出現
+    const allIds = [...view.totalUnlocked, ...view.totalPending].map((item) => item.id)
+    expect(allIds).not.toContain('lingyuan-mountain-pulse')
+    expect(allIds).not.toContain('vital-body')
+    expect(allIds).not.toContain('deep-dantian')
   })
 })

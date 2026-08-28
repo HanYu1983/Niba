@@ -13,7 +13,7 @@ import {
 } from '../game/scenarioStorage'
 import { getScenarioClearances, type ScenarioClearanceMap } from '../game/campaignClearance'
 import { officialCharacterCatalog, getOfficialCharacterChapters, type OfficialCharacterDefinition } from '../game/catalogs/officialCharacterCatalog'
-import { getInnerSkill, getExternalSkill } from '../game/rules/skillRules'
+import { allInnerSkillCatalog, allExternalSkillCatalog } from '../game/catalogs/martialHallSkillCatalog'
 import { getTalent } from '../game/catalogs/talentCatalog'
 import { getCharacter as getRosterCharacter } from '../game/characterRoster'
 
@@ -205,11 +205,8 @@ export function buildChapterProgressView(
       chapterIndex: undefined,
       cleared: clearances[scenarioId],
       unlocks: {
-        innerSkillIds: storyUnlock?.skillIds?.filter((id) => getInnerSkill(id)?.exclusiveCharacterId === character.characterId) ?? [],
-        externalSkillIds: storyUnlock?.skillIds?.filter((id) => {
-          const skill = getExternalSkillSafe(id)
-          return skill?.exclusiveCharacterId === character.characterId
-        }) ?? [],
+        innerSkillIds: storyUnlock?.skillIds?.filter((id) => findInnerSkillStrict(id) !== undefined) ?? [],
+        externalSkillIds: storyUnlock?.skillIds?.filter((id) => findExternalSkillStrict(id) !== undefined) ?? [],
         talentIds: storyUnlock?.talentIds ?? [],
       },
     }
@@ -228,7 +225,11 @@ export function buildChapterProgressView(
         ? rosterSnapshot.unlockedTalentIds.includes(id)
         : rosterSnapshot.unlockedSkillIds.includes(id)
       : false
-    const owner = fallbackKind === 'talent' ? getTalent(id) : fallbackKind === 'inner' ? getInnerSkill(id) : getExternalSkillSafe(id)
+    const owner = fallbackKind === 'talent'
+      ? getTalent(id)
+      : fallbackKind === 'inner'
+        ? findInnerSkillStrict(id)
+        : findExternalSkillStrict(id)
     const name = owner?.name ?? id
     const description = owner && 'description' in owner ? owner.description : undefined
     const item: UnlockItem = { id, name, description, status: inRoster ? 'unlocked' : 'pending-apply' }
@@ -240,13 +241,13 @@ export function buildChapterProgressView(
   if (rosterSnapshot) {
     for (const id of character.exclusiveExternalSkillIds) {
       if (rosterSnapshot.unlockedSkillIds.includes(id)) {
-        const skill = getExternalSkillSafe(id)
-        totalUnlocked.push({ id, name: skill?.name ?? id, description: skill && 'description' in skill ? skill.description : undefined, status: 'unlocked' })
+        const skill = findExternalSkillStrict(id)
+        totalUnlocked.push({ id, name: skill?.name ?? id, description: skill?.description, status: 'unlocked' })
       }
     }
     if (rosterSnapshot.unlockedSkillIds.includes(character.exclusiveInnerSkillId)) {
-      const skill = getInnerSkill(character.exclusiveInnerSkillId)
-      totalUnlocked.push({ id: character.exclusiveInnerSkillId, name: skill.name, description: skill.description, status: 'unlocked' })
+      const skill = findInnerSkillStrict(character.exclusiveInnerSkillId)
+      totalUnlocked.push({ id: character.exclusiveInnerSkillId, name: skill?.name ?? character.exclusiveInnerSkillId, description: skill?.description, status: 'unlocked' })
     }
   }
 
@@ -274,15 +275,17 @@ export function buildChapterProgressView(
 }
 
 /**
- * 安全取得外功定義：getExternalSkill 若找不到會 throw，這裡改回傳 undefined。
- * 避免劇本資料有未登錄的 skillId 時炸掉整個進度視圖。
+ * 嚴格查找功法定義（無 fallback）：找不到回傳 undefined。
+ *
+ * 為何不用 getInnerSkill / getExternalSkill：它們找不到時會 fallback 回目錄第一個項目，
+ * 無法用於「這個 id 是否真實存在」的判斷。
  */
-function getExternalSkillSafe(skillId: string): { name: string; description?: string; exclusiveCharacterId?: string } | undefined {
-  try {
-    return getExternalSkill(skillId)
-  } catch {
-    return undefined
-  }
+function findInnerSkillStrict(skillId: string): { name: string; description?: string } | undefined {
+  return allInnerSkillCatalog.find((skill) => skill.id === skillId)
+}
+
+function findExternalSkillStrict(skillId: string): { name: string; description?: string } | undefined {
+  return allExternalSkillCatalog.find((skill) => skill.id === skillId)
 }
 
 /**
@@ -366,20 +369,10 @@ function CampaignScenarioTab({ onStartScenario }: CampaignScenarioTabProps) {
           accordion={false}
           defaultActiveKey={defaultActiveKeys}
           items={groups.map((group) => {
-            // 為有官方角色的群組建立進度視圖（章節標題由 stored scenarios 補上）。
+            // 為有官方角色的群組建立進度視圖。
             const progressView = group.character
               ? buildChapterProgressView(group.character, clearances)
               : null
-            const enrichedChapters = progressView
-              ? progressView.chapters.map((entry) => {
-                  const stored = scenarios[entry.scenarioId]
-                  return {
-                    ...entry,
-                    scenarioTitle: stored?.scenario.title ?? entry.scenarioId,
-                    chapterIndex: stored?.scenario.chapterIndex ?? entry.chapterIndex,
-                  }
-                })
-              : []
 
             return {
               key: group.key,

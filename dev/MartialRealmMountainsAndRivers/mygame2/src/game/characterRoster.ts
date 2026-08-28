@@ -154,26 +154,22 @@ function generateId(): string {
   return `char-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
 }
 
-/** 將官方角色定義轉為名册預建角色（已帶四件套專屬功法、不持卷）。 */
+/** 將官方角色定義轉為名册預建角色（不預學專屬功法——四件套靠章節通關解鎖，不持卷）。 */
 function buildOfficialCharacter(definition: OfficialCharacterDefinition): PersistentCharacter {
   const defaults = createDefaultProgression()
-  // 專屬內功＋外功：建立時已「解鎖 + 學習 + 開啟」，
-  // 讓玩家進名册就能直接看到它們的設定入口（與培養進度正常運作）。
-  const exclusiveSkillIds = [definition.exclusiveInnerSkillId, ...definition.exclusiveExternalSkillIds]
-  const mergedUnlocked = [...new Set([...defaults.unlockedSkillIds, ...exclusiveSkillIds])]
+  // 專屬功法（1 內功 + 3 外功）與天賦皆透過 storyUnlocks 隨章節通關解鎖，
+  // 建立時維持標準新角狀態（吐納功已學、無外功、無天賦）。
   return {
     id: definition.characterId,
     name: definition.name,
     portrait: definition.portrait,
     title: definition.title,
-    // 沙盒首次開局等級錨點在 worldGeneration.applyCharacterConfig 中處理；
-    // 此處不直接寫入 playerState.level（那是對局實例欄位），僅放在 description 供日後參考。
     attributeBonuses: { ...DEFAULT_ATTRIBUTE_BONUSES, ...definition.initialAttributes },
     scrolls: 0,
-    unlockedSkillIds: mergedUnlocked,
-    learnedSkillIds: exclusiveSkillIds,
-    initialExternalSkillIds: [...definition.exclusiveExternalSkillIds],
-    initialInternalSkillId: definition.exclusiveInnerSkillId,
+    unlockedSkillIds: defaults.unlockedSkillIds,
+    learnedSkillIds: defaults.learnedSkillIds,
+    initialExternalSkillIds: [],
+    initialInternalSkillId: defaults.initialInternalSkillId,
     unlockedTalentIds: [],
     talentIds: [],
     gamesPlayed: 0,
@@ -599,4 +595,57 @@ export function closeInitialInternalSkill(id: string): boolean {
   next[index] = { ...current, initialInternalSkillId: '' }
   persist(next)
   return true
+}
+
+/**
+ * 劇本通關解鎖：將指定章節的 storyUnlocks 併入官方角色。
+ *
+ * 與花卷培養路徑的差異：
+ * - 功法：直接併入 `unlockedSkillIds` **並同時加入 `learnedSkillIds`**（劇情解鎖免花卷學習）。
+ * - 天賦：直接併入 `unlockedTalentIds` **並自動啟用（加入 `talentIds`）**（劇情解鎖免花卷解鎖）。
+ *
+ * 冪等：重複套用同一章節不會產生重複項目（Set 去重）。
+ * 適用於所有官方角色（劇本模式不綁名册角色，官方角色作為故事主角全體受益）。
+ *
+ * @param scenarioId 通關的劇本 id。
+ * @param cleared 是否通關成功（false 時不套用）。
+ * @returns 有實際變更的官方角色 id 清單（無變更回傳空陣列）。
+ */
+export function applyStoryUnlocks(scenarioId: string, cleared: boolean): string[] {
+  if (!cleared) return []
+  const characters = getStored()
+  const changedIds: string[] = []
+
+  const next = characters.map((character) => {
+    const definition = officialCharacterCatalog.find((candidate) => candidate.characterId === character.id)
+    if (!definition) return character
+    const unlock = definition.storyUnlocks.find((entry) => entry.scenarioId === scenarioId)
+    if (!unlock) return character
+
+    const unlockedSkills = new Set(character.unlockedSkillIds ?? [])
+    const learnedSkills = new Set(character.learnedSkillIds ?? [])
+    const unlockedTalents = new Set(character.unlockedTalentIds ?? [])
+    const enabledTalents = new Set(character.talentIds ?? [])
+
+    for (const skillId of unlock.skillIds ?? []) {
+      unlockedSkills.add(skillId)
+      learnedSkills.add(skillId)
+    }
+    for (const talentId of unlock.talentIds ?? []) {
+      unlockedTalents.add(talentId)
+      enabledTalents.add(talentId)
+    }
+
+    changedIds.push(character.id)
+    return {
+      ...character,
+      unlockedSkillIds: [...unlockedSkills],
+      learnedSkillIds: [...learnedSkills],
+      unlockedTalentIds: [...unlockedTalents],
+      talentIds: [...enabledTalents],
+    }
+  })
+
+  if (changedIds.length > 0) persist(next)
+  return changedIds
 }
