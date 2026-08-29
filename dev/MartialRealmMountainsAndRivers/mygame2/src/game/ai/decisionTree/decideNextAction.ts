@@ -5,6 +5,9 @@ import { buildingCatalog, BUILDING_TYPES } from '../../catalogs/buildingCatalog'
 import {
   isHealthCritical,
   findHealingItemToUse,
+  findEquipCandidate,
+  findBetterInnerSkill,
+  findLearnableExternalSkill,
   findAdjacentCreature,
   findAdjacentItem,
   findAdjacentBase,
@@ -64,6 +67,45 @@ export function decideNextAction(
 ): AiAction | null {
   const player = state.players.find((p) => p.id === playerId)
   if (!player) return null
+
+  // 若有武器防具或配件可以裝備並且那個部位還沒有裝備就裝備
+  const equipCandidate = findEquipCandidate(player)
+  if (equipCandidate) {
+    const candidate: AiAction = {
+      type: 'equip',
+      actor: { id: player.id, kind: 'player' },
+      instanceId: equipCandidate.instanceId,
+      reason: `裝備 ${equipCandidate.instanceId}`,
+    }
+    if (passesValidation(state, candidate, '裝備', out)) return candidate
+  }
+
+  // 若有內功功法可以切換並且那個內功的目前傷害值比目前裝備的內功傷害值高就切換
+  const betterInnerSkill = findBetterInnerSkill(player)
+  if (betterInnerSkill) {
+    const candidate: AiAction = {
+      type: 'equip-inner-skill',
+      actor: { id: player.id, kind: 'player' },
+      skillId: betterInnerSkill.skillId,
+      reason: `切換內功 ${betterInnerSkill.skillId}（傷害 ${betterInnerSkill.currentDamage} → ${betterInnerSkill.damage}）`,
+    }
+    if (passesValidation(state, candidate, '切換內功', out)) return candidate
+  }
+
+  // 若有外功功法可以裝備並且剩餘的悟性足夠就裝備
+  const learnableExternal = findLearnableExternalSkill(state, player)
+  if (learnableExternal) {
+    const candidate: AiAction = {
+      type: 'learn-skill',
+      actor: { id: player.id, kind: 'player' },
+      baseId: learnableExternal.baseId,
+      skillType: 'external',
+      skillId: learnableExternal.skillId,
+      reason: `學習外功 ${learnableExternal.skillId}`,
+    }
+    if (passesValidation(state, candidate, '學習外功', out)) return candidate
+  }
+
 
   // 需要回血 → 使用回血道具
   // 取得回血道具的量的陣列的排序, 由小到大[{itemId, healAmount}]

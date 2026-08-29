@@ -4,6 +4,9 @@ import type { HostileActor } from '../perception/targetDiscovery'
 import { listHostileActors } from '../perception/targetDiscovery'
 import { getPlayerVisibleCellIds, getFoggedCellIds } from '../../rules/visibilityRules'
 import { itemCatalog } from '../../catalogs/itemCatalog'
+import { getEquipmentLoadout, getEquipmentInventory, getEquipment, getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
+import { getInnerSkill, getPlayerTotalInsightCost } from '../../rules/skillRules'
+import { getMartialHallSkills } from '../../catalogs/martialHallSkillCatalog'
 
 // ─── 保命條件 ──────────────────────────────────────
 
@@ -161,6 +164,62 @@ export function findUnexploredNearby(state: GameState, player: PlayerState): Pos
     }
   }
   return best
+}
+
+// ─── 裝備條件 ──────────────────────────────────────
+
+/** 尚有空格子的可裝備部位：武器→防具→配件依序，回傳第一個符合（該部位有、耐久>0）的 instance。 */
+export function findEquipCandidate(player: PlayerState): { instanceId: string } | null {
+  const loadout = getEquipmentLoadout(player)
+  const inventory = getEquipmentInventory(player)
+  const slots = [
+    { slot: 'weapon', key: 'weaponInstanceId' },
+    { slot: 'armor', key: 'armorInstanceId' },
+    { slot: 'accessory', key: 'accessoryInstanceId' },
+  ]
+  for (const { slot, key } of slots) {
+    if ((loadout as Record<string, string | null>)[key]) continue
+    const candidate = inventory.find((entry) => {
+      const def = getEquipment(entry.equipmentId)
+      return !!def && def.slot === slot && entry.durability > 0
+    })
+    if (candidate) return { instanceId: candidate.instanceId }
+  }
+  return null
+}
+
+/** 傷害比目前裝備內功更高的已學會內功（且悟性足夠）。 */
+export function findBetterInnerSkill(player: PlayerState): { skillId: string; damage: number; currentDamage: number } | null {
+  const attrs = getEffectiveAttributesForPlayer(player)
+  const currentDamage = getInnerSkill(player.innerSkillId).calculateDamage(attrs)
+  let best: { skillId: string; damage: number } | null = null
+  for (const skillId of player.innerSkillIds) {
+    if (skillId === player.innerSkillId) continue
+    const skill = getInnerSkill(skillId)
+    if (attrs.insight < skill.insightRequirement) continue
+    const damage = skill.calculateDamage(attrs)
+    if (damage > currentDamage && (!best || damage > best.damage)) {
+      best = { skillId, damage }
+    }
+  }
+  return best ? { skillId: best.skillId, damage: best.damage, currentDamage } : null
+}
+
+/** 玩家可見據點中，武館可教授、且尚未學會、剩餘悟性足夠的外功。 */
+export function findLearnableExternalSkill(state: GameState, player: PlayerState): { skillId: string; baseId: string } | null {
+  const base = getVisibleOwnedBase(state, player.id)
+  if (!base) return null
+  const hall = base.buildings.find((b) => b.type.startsWith('martial-hall'))
+  if (!hall) return null
+  const skills = getMartialHallSkills(base.martialSchoolId)
+  const attrs = getEffectiveAttributesForPlayer(player)
+  const usedCapacity = getPlayerTotalInsightCost(player)
+  for (const skill of skills.external) {
+    if (player.externalSkillIds.includes(skill.id)) continue
+    if (usedCapacity + skill.insightCost > attrs.insight) continue
+    return { skillId: skill.id, baseId: base.id }
+  }
+  return null
 }
 
 // ─── 距離工具 ──────────────────────────────────────
