@@ -1,11 +1,14 @@
 import type { GameState } from '../../types'
 import type { AiAction } from '../aiAction'
 import { validateAiAction } from '../validation/validateAiAction'
+import { buildingCatalog, BUILDING_TYPES } from '../../catalogs/buildingCatalog'
 import {
   isHealthCritical,
   findHealingItemToUse,
   findAdjacentCreature,
   findAdjacentItem,
+  findAdjacentBase,
+  needsBaseHeal,
   findUnexploredNearby,
 } from './conditions'
 import {
@@ -81,11 +84,47 @@ export function decideNextAction(
     if (passesValidation(state, candidate, '使用回血道具', out)) return candidate
   }
 
+  // ═══════════════════════════════════════════════════
+  // 據點醫療（回血／蓋醫院）
+  // ═══════════════════════════════════════════════════
+  // 條件：在據點旁邊，且血量或內力沒有滿
+  //   若據點沒有醫院又有足夠材料 → 蓋醫院
+  //   若醫院已存在 → 使用醫院
+
+  const healBase = findAdjacentBase(state, player)
+  if (healBase && needsBaseHeal(player)) {
+    const infirmaryTemplate = buildingCatalog.find((b) => b.type === BUILDING_TYPES.INFIRMARY)
+    const hasInfirmary = healBase.buildings.some((b) => b.type === BUILDING_TYPES.INFIRMARY)
+    if (!hasInfirmary && infirmaryTemplate && healBase.buildingMaterials >= infirmaryTemplate.constructionCost) {
+      const candidate: AiAction = {
+        type: 'build',
+        actor: { id: player.id, kind: 'player' },
+        baseId: healBase.id,
+        buildingType: infirmaryTemplate.id,
+        reason: `蓋醫院（材料 ${healBase.buildingMaterials}/${infirmaryTemplate.constructionCost}）`,
+      }
+      if (passesValidation(state, candidate, '蓋醫院', out)) return candidate
+    } else if (hasInfirmary) {
+      const candidate: AiAction = {
+        type: 'use-facility',
+        actor: { id: player.id, kind: 'player' },
+        baseId: healBase.id,
+        facilityType: 'heal',
+        reason: `使用醫院回血（血量 ${player.health}/${player.maxHealth}，內力 ${player.innerPower}/${player.maxInnerPower}）`,
+      }
+      if (passesValidation(state, candidate, '使用醫院', out)) return candidate
+    }
+  }
+
   // 1.1 血量極低 → 逃命
   if (isHealthCritical(player)) {
     const candidate = buildRetreatAction(state, player)
     if (passesValidation(state, candidate, '撤退（血量極低）', out)) return candidate
   }
+
+  // 條件: 如果在據點旁邊, 血量或內力沒有滿
+  // 若據點沒有醫院又有足夠材料就蓋醫院
+  // 若有醫院就使用醫院
 
   // 1.2 體力耗盡 → 回據點
   // if (isExhausted(player)) {
@@ -135,6 +174,8 @@ export function decideNextAction(
     const candidate = buildCollectItemAction(state, player, adjacentItem.id, adjacentItem.position)
     if (passesValidation(state, candidate, '撿道具', out)) return candidate
   }
+
+  
 
   // ═══════════════════════════════════════════════════
   // 中樹 4：建造 / 採集

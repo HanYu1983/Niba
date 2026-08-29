@@ -1,5 +1,5 @@
 import type { GameState, PlayerState, Position } from '../../types'
-import { isAdjacent, isSamePosition } from '../../types'
+import { isAdjacent, isSamePosition, isSameOrAdjacent } from '../../types'
 import type { HostileActor } from '../perception/targetDiscovery'
 import { listHostileActors } from '../perception/targetDiscovery'
 import { getPlayerVisibleCellIds, getFoggedCellIds } from '../../rules/visibilityRules'
@@ -8,11 +8,11 @@ import { itemCatalog } from '../../catalogs/itemCatalog'
 // ─── 保命條件 ──────────────────────────────────────
 
 export function isHealthCritical(player: PlayerState): boolean {
-  return player.health <= player.maxHealth * 0.2
+  return player.health <= player.maxHealth * 0.3
 }
 
 export function isHealthLow(player: PlayerState): boolean {
-  return player.health <= player.maxHealth * 0.4
+  return player.health <= player.maxHealth * 0.6
 }
 
 /** 玩家背包中所有回血道具（effect === 'health'），依回血量由小到大排序回 [{itemId, healAmount}]。 */
@@ -45,6 +45,16 @@ export function findHealingItemToUse(player: PlayerState): { itemId: string; hea
 
 export function isExhausted(player: PlayerState): boolean {
   return player.stamina <= 2
+}
+
+/** 玩家目前「相鄰或同格」的存活據點（回血/蓋醫院用）。 */
+export function findAdjacentBase(state: GameState, player: PlayerState) {
+  return state.bases.find((b) => b.active !== false && b.health > 0 && isSameOrAdjacent(player.position, b.position)) ?? null
+}
+
+/** 血量或內力未滿 → 需要在據點醫療。 */
+export function needsBaseHeal(player: PlayerState): boolean {
+  return player.health < player.maxHealth || player.innerPower < player.maxInnerPower
 }
 
 export function getVisibleCreatures(state: GameState, playerId: string): HostileActor[] {
