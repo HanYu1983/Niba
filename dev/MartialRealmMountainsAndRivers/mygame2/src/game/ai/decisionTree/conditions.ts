@@ -1,9 +1,11 @@
-import type { GameState, PlayerState, Position, UpgradeableAttribute } from '../../types'
+import type { GameState, PlayerState, Position, UpgradeableAttribute, BaseState } from '../../types'
 import { isAdjacent, isSamePosition, isSameOrAdjacent } from '../../types'
 import type { HostileActor } from '../perception/targetDiscovery'
 import { listHostileActors } from '../perception/targetDiscovery'
 import { getPlayerVisibleCellIds, getFoggedCellIds } from '../../rules/visibilityRules'
 import { itemCatalog } from '../../catalogs/itemCatalog'
+import { BUILDING_TYPES } from '../../catalogs/buildingCatalog'
+import { getShopLevel } from '../../rules/shopRules'
 import { getEquipmentLoadout, getEquipmentInventory, getEquipment, getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
 import { getInnerSkill, getPlayerTotalInsightCost } from '../../rules/skillRules'
 import { getMartialHallSkills } from '../../catalogs/martialHallSkillCatalog'
@@ -243,6 +245,39 @@ export function pickAttributeToAllocate(player: PlayerState): UpgradeableAttribu
     roll -= weight
   }
   return ATTRIBUTE_ALLOCATION_WEIGHTS[ATTRIBUTE_ALLOCATION_WEIGHTS.length - 1].attribute
+}
+
+// ─── 任務／商店條件 ──────────────────────────────────
+
+/** 應執行任務：據點旁且有告示牌，且（任務未執行 或 金錢 < 50）。 */
+export function shouldRunMission(adjacentBase: BaseState, player: PlayerState): boolean {
+  if (!adjacentBase.buildings.some((b) => b.type === BUILDING_TYPES.BOARD)) return false
+  return !adjacentBase.discovered || (player.money ?? 0) < 50
+}
+
+/** 身上擁有的回血道具數量（inventory 中 effect === 'health' 的總數）。 */
+export function countHealingItems(player: PlayerState): number {
+  return (player.inventory ?? []).reduce((sum, entry) => {
+    const item = itemCatalog.find((i) => i.id === entry.itemId)
+    return item && item.effect === 'health' ? sum + entry.quantity : sum
+  }, 0)
+}
+
+/** 道具商店存在時，回傳最便宜且可負擔（商店等級、金錢、當回合未用過）的回血道具。 */
+export function findBuyableHealItem(adjacentBase: BaseState, player: PlayerState) {
+  if (!adjacentBase.buildings.some((b) => b.type === BUILDING_TYPES.ITEM_SHOP)) return null
+  const shopLevel = getShopLevel(adjacentBase, 'item-shop')
+  const usedEffects = new Set(player.itemEffectsUsedThisTurn ?? [])
+  const best = itemCatalog
+    .filter((i) => (
+      i.effect === 'health'
+      && i.buyPrice > 0
+      && i.requiredShopLevel <= shopLevel
+      && !usedEffects.has(i.effect)
+      && i.buyPrice <= (player.money ?? 0)
+    ))
+    .sort((a, b) => a.buyPrice - b.buyPrice)[0]
+  return best ? { itemId: best.id, price: best.buyPrice } : null
 }
 
 // ─── 距離工具 ──────────────────────────────────────

@@ -13,6 +13,9 @@ import {
   findAdjacentItem,
   findAdjacentBase,
   needsBaseHeal,
+  shouldRunMission,
+  countHealingItems,
+  findBuyableHealItem,
   findUnexploredNearby,
 } from './conditions'
 import {
@@ -164,6 +167,48 @@ export function decideNextAction(
         reason: `使用醫院回血（血量 ${player.health}/${player.maxHealth}，內力 ${player.innerPower}/${player.maxInnerPower}）`,
       }
       if (passesValidation(state, candidate, '使用醫院', out)) return candidate
+    }
+  }
+  // 若在據點旁且任務未執行(執行後才會開永久視野) → 執行任務
+  // 若金錢小於50, -> 執行任務
+  if (healBase && shouldRunMission(healBase, player)) {
+    const candidate: AiAction = {
+      type: 'use-facility',
+      actor: { id: player.id, kind: 'player' },
+      baseId: healBase.id,
+      facilityType: 'mission',
+      reason: `執行任務（discovered=${healBase.discovered ?? false}，金錢 ${player.money ?? 0}，體力 ${Math.floor(player.stamina)}）`,
+    }
+    if (passesValidation(state, candidate, '執行任務', out)) return candidate
+  }
+
+  // 若在據點旁且回血道具小於3個
+  // 若據點沒有道具商店又有足夠材料 → 蓋道具商店
+  // 若道具商店已存在且有足夠的資金 → 使用道具商店買回血道具
+  if (healBase && countHealingItems(player) < 3) {
+    const shopTemplate = buildingCatalog.find((b) => b.type === BUILDING_TYPES.ITEM_SHOP)
+    const hasItemShop = healBase.buildings.some((b) => b.type === BUILDING_TYPES.ITEM_SHOP)
+    if (!hasItemShop && shopTemplate && healBase.buildingMaterials >= shopTemplate.constructionCost) {
+      const candidate: AiAction = {
+        type: 'build',
+        actor: { id: player.id, kind: 'player' },
+        baseId: healBase.id,
+        buildingType: shopTemplate.id,
+        reason: `蓋道具商店（材料 ${healBase.buildingMaterials}/${shopTemplate.constructionCost}，回血道具 ${countHealingItems(player)}）`,
+      }
+      if (passesValidation(state, candidate, '蓋道具商店', out)) return candidate
+    } else if (hasItemShop) {
+      const healToBuy = findBuyableHealItem(healBase, player)
+      if (healToBuy) {
+        const candidate: AiAction = {
+          type: 'buy-item',
+          actor: { id: player.id, kind: 'player' },
+          baseId: healBase.id,
+          itemId: healToBuy.itemId,
+          reason: `購買回血道具 ${healToBuy.itemId}（價格 ${healToBuy.price}，金錢 ${player.money ?? 0}，回血道具 ${countHealingItems(player)}）`,
+        }
+        if (passesValidation(state, candidate, '購買回血道具', out)) return candidate
+      }
     }
   }
 
