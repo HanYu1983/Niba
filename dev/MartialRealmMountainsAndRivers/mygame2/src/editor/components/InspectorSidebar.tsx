@@ -298,15 +298,31 @@ function PlayerInspector({ entity, onUpdate }: { entity: ScenarioEntityPlacement
   const innerSkillId = (data.innerSkillId as string | undefined) ?? 'tuna-gong'
   const externalSkillIds = (data.externalSkillIds as string[] | undefined) ?? []
 
+  /**
+   * 設定內功：同步維護 `innerSkillId`（裝備中）與 `innerSkillIds`（已知清單）。
+   * 編譯器以 `innerSkillIds` 為功法頁顯示來源，若只寫 `innerSkillId` 而清單未含，
+   * 遊戲內功法頁會看不到該內功。
+   */
+  const handleSetInnerSkill = (value: string) => {
+    const knownIds = (data.innerSkillIds as string[] | undefined) ?? ['tuna-gong']
+    const next = knownIds.includes(value) ? knownIds : [...knownIds, value]
+    onUpdate({ innerSkillId: value, innerSkillIds: next })
+  }
+
+  /** 同步外功：`externalSkillIds`（已知清單）與 `equippedExternalSkillIds`（裝備中）保持一致。 */
+  const syncExternalSkills = (next: string[]) => {
+    const cleaned = next.filter(Boolean)
+    onUpdate({ externalSkillIds: next, equippedExternalSkillIds: cleaned })
+  }
+
   const handleAddExternalSkill = () => {
-    onUpdate({ externalSkillIds: [...externalSkillIds, ''] })
+    syncExternalSkills([...externalSkillIds, ''])
   }
   const handleRemoveExternalSkill = (index: number) => {
-    onUpdate({ externalSkillIds: externalSkillIds.filter((_, i) => i !== index) })
+    syncExternalSkills(externalSkillIds.filter((_, i) => i !== index))
   }
   const handleUpdateExternalSkill = (index: number, value: string) => {
-    const next = externalSkillIds.map((id, i) => i === index ? value : id)
-    onUpdate({ externalSkillIds: next })
+    syncExternalSkills(externalSkillIds.map((id, i) => i === index ? value : id))
   }
 
   return (
@@ -343,7 +359,7 @@ function PlayerInspector({ entity, onUpdate }: { entity: ScenarioEntityPlacement
           size="small"
           style={{ width: '100%' }}
           options={INNER_SKILL_OPTIONS}
-          onChange={(value) => onUpdate({ innerSkillId: value })}
+          onChange={handleSetInnerSkill}
         />
       </Field>
       <Field label="外功清單">

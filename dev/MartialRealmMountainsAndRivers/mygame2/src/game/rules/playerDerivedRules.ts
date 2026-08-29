@@ -1,6 +1,6 @@
 import { buffCatalog, type BuffDefinition } from '../catalogs/buffCatalog'
 import { equipmentCatalog, type EquipmentDefinition } from '../catalogs/equipmentCatalog'
-import { innerSkillCatalog } from '../catalogs/innerSkillCatalog'
+import { allInnerSkillCatalog } from '../catalogs/martialHallSkillCatalog'
 import { allExternalSkillCatalog } from '../catalogs/martialHallSkillCatalog'
 import { getFunctionalSkillBuffOverrides } from './functionalSkillScaling'
 import { elementHomeTurfBuffs } from '../catalogs/martialSchoolCatalog'
@@ -141,7 +141,9 @@ export function getActiveBuffDefinitionsForCreature(creature: CreatureState, ter
 }
 
 function getInnerSkillBuffs(player: PlayerState): BuffInstance[] | undefined {
-  const innerSkill = innerSkillCatalog.find((skill) => skill.id === player.innerSkillId)
+  // 用完整內功目錄查找（含官方角色專屬內功等），基礎 innerSkillCatalog 不含它們，
+  // 會導致專屬內功的常駐 Buff（如山河歸藏的悟性加成）不生效。
+  const innerSkill = allInnerSkillCatalog.find((skill) => skill.id === player.innerSkillId)
 
   return innerSkill?.buffIds?.map((definitionId) => ({
     id: `inner-skill:${player.innerSkillId}:${definitionId}`,

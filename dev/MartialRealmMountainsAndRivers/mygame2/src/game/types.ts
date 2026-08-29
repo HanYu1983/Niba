@@ -627,6 +627,10 @@ export type CampaignState = {
   chapterKey?: string
   /** 已觸發過的對話 stepId 集合（避免重複觸發）。 */
   triggeredDialogueIds: string[]
+  /** 已執行過的觸發器 id 集合（狀態型條件只執行一次；舊存檔可能缺此欄位）。 */
+  triggeredTriggerIds?: string[]
+  /** 已解決的探索事件 id 集合（供 on-events-resolved 觸發器比對；舊存檔可能缺此欄位）。 */
+  resolvedEventIds?: string[]
   /** 待顯示的對話佇列（FIFO；一次可能有多句排隊）。 */
   dialogueQueue: DialogueQueueEntry[]
   /** 本章節的對話定義（由 scenarioCompiler 從 ScenarioDefinition 注入）。 */
@@ -707,6 +711,16 @@ export type BlockingModal =
   | { type: 'action-result'; result: ActionResult; continuation: ActionContinuation }
   | { type: 'story-dialogue'; entry: DialogueQueueEntry; remaining: number }
   | null
+
+/** 挑戰關卡的全局共享狀態（所有角色共用，localStorage 持久化）。 */
+export type ChallengeState = {
+  /** 當前闖關等級（從 1 開始）。 */
+  level: number
+  /** 歷史最高到達等級。 */
+  highestLevel: number
+  /** 總通關次數。 */
+  totalClears: number
+}
 
 export type InsightCapacityBreakdown = {
   total: number

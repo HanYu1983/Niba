@@ -31,6 +31,16 @@ function GameSaveModal({ open, slots, onSave, onLoad, onDelete, onClose }: GameS
             title={
               <Flex align="center" gap={8}>
                 <span>{entry.slot === 0 ? '自動存檔' : `存檔欄位 ${entry.slot}`}</span>
+                {entry.savedAt && entry.mode === 'challenge' && (
+                  <Tooltip title="此存檔為挑戰關卡模式：勝利時闖關等級 +1。">
+                    <Tag color="purple" style={{ marginInlineEnd: 0 }}>挑戰關卡</Tag>
+                  </Tooltip>
+                )}
+                {entry.savedAt && entry.mode === 'scenario' && (
+                  <Tooltip title={`此存檔為劇本關卡模式（${entry.scenarioId ?? '未知關卡'}）。`}>
+                    <Tag color="blue" style={{ marginInlineEnd: 0 }}>劇本關卡</Tag>
+                  </Tooltip>
+                )}
                 {entry.savedAt && entry.rewardStatus === 'settled' && (
                   <Tooltip title="此局武學殘卷已結算入名册；讀取後不會重複計算。">
                     <Tag icon={<FileDoneOutlined />} color="gold" style={{ marginInlineEnd: 0 }}></Tag>

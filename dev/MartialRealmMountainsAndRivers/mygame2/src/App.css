@@ -200,6 +200,115 @@
   color: #a08a63;
 }
 
+/* ===== 五行構築小抄（地圖下方） ===== */
+.world-status__five-elements {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 16px 12px;
+  border-radius: 12px;
+  background: rgba(255, 251, 244, 0.94);
+  border: 1px solid #eee3cc;
+  box-shadow: 0 6px 16px rgba(69, 41, 10, 0.05);
+}
+.world-status__divider {
+  margin: 2px 0 6px !important;
+}
+.world-status__divider .ant-divider-inner-text {
+  font-size: 13px;
+  color: #8a6d3b;
+  letter-spacing: 0.08em;
+}
+.world-status__divider-label {
+  color: #8a6d3b;
+}
+
+.world-status__row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 14px;
+  padding: 3px 0;
+}
+.world-status__row-title {
+  font-size: 13px;
+  font-weight: 700;
+  flex: 0 0 auto;
+  min-width: 36px;
+  text-align: right;
+}
+.world-status__row--generation .world-status__row-title { color: #166534; }
+.world-status__row--counters .world-status__row-title { color: #991b1b; }
+
+.world-status__gen-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.world-status__gen-arrow {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* 元素徽章：色圓 + 圖示 + 名稱 */
+.world-status__badge {
+  --element-color: #d1d5db;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px 1px 4px;
+  border-radius: 999px;
+  border: 1px solid var(--element-color);
+  background: linear-gradient(160deg, #ffffff, #fdfcf9);
+  line-height: 1.4;
+  cursor: default;
+}
+.world-status__badge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 11px;
+  background: color-mix(in srgb, var(--element-color) 22%, white);
+  color: color-mix(in srgb, var(--element-color) 45%, #4b3a22);
+}
+.world-status__badge-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #4b3a22;
+}
+
+/* 構築啟示文字 */
+.world-status__hint {
+  margin-top: 6px;
+  text-align: center;
+}
+.world-status__hint-text {
+  font-size: 13px;
+  color: #8a6d3b;
+}
+.world-status__hint-strong {
+  font-weight: 700;
+  color: #4b3a22;
+}
+.world-status__hint-arrow {
+  margin: 0 4px;
+  color: #c8a05e;
+}
+.world-status__hint-sep {
+  display: inline-block;
+  width: 1px;
+  height: 12px;
+  background: #e5d8c0;
+  margin: 0 10px;
+  vertical-align: middle;
+}
+
 .quest-tracker-panel {
   width: 300px;
   border-radius: 14px;
