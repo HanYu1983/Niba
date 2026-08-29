@@ -65,11 +65,7 @@ export function decideNextAction(
   const player = state.players.find((p) => p.id === playerId)
   if (!player) return null
 
-  // ═══════════════════════════════════════════════════
-  // 小樹 1：保命
-  // ═══════════════════════════════════════════════════
-
-  // 1.0 需要回血 → 使用回血道具
+  // 需要回血 → 使用回血道具
   // 取得回血道具的量的陣列的排序, 由小到大[{itemId, healAmount}]
   // 若現有血量和滿血的差距大於等於最小的回血道具量, 則使用回血道具
   // 現有血量小於15也使用回血道具
@@ -116,27 +112,13 @@ export function decideNextAction(
     }
   }
 
-  // 1.1 血量極低 → 逃命
+  // 血量極低 → 逃命
   if (isHealthCritical(player)) {
     const candidate = buildRetreatAction(state, player)
     if (passesValidation(state, candidate, '撤退（血量極低）', out)) return candidate
   }
 
-  // 條件: 如果在據點旁邊, 血量或內力沒有滿
-  // 若據點沒有醫院又有足夠材料就蓋醫院
-  // 若有醫院就使用醫院
-
-  // 1.2 體力耗盡 → 回據點
-  // if (isExhausted(player)) {
-  //   const candidate = buildMoveToBaseAction(state, player)
-  //   if (passesValidation(state, candidate, '回據點（體力耗盡）', out)) return candidate
-  // }
-
-  // ═══════════════════════════════════════════════════
-  // 小樹 2：即時戰鬥
-  // ═══════════════════════════════════════════════════
-
-  // 2.1 旁邊有怪 → 打
+  // 旁邊有怪 → 打
   const adjacentCreature = findAdjacentCreature(state, player)
   if (adjacentCreature && player.stamina >= 5) {
     const candidate = buildAttackAction(state, player, adjacentCreature)
@@ -175,7 +157,6 @@ export function decideNextAction(
     if (passesValidation(state, candidate, '撿道具', out)) return candidate
   }
 
-  
 
   // ═══════════════════════════════════════════════════
   // 中樹 4：建造 / 採集
