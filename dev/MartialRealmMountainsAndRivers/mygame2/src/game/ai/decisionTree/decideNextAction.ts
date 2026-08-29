@@ -10,6 +10,7 @@ import {
   findBetterInnerSkill,
   findLearnableExternalSkill,
   findAdjacentCreature,
+  findNearestHostile,
   findAdjacentItem,
   findAdjacentBase,
   needsBaseHeal,
@@ -23,6 +24,7 @@ import {
   buildAttackAction,
   buildCollectItemAction,
   buildExploreAction,
+  findClosestReachablePositionByShortestPath,
 } from './actionBuilders'
 
 /**
@@ -225,28 +227,6 @@ export function decideNextAction(
     if (passesValidation(state, candidate, '攻擊鄰近怪', out)) return candidate
   }
 
-  // 2.2 近距離有怪（2格內）+ 體力足 → 走過去
-  // if (player.stamina >= 5) {
-  //   const visible = getVisibleCreatures(state, player.id)
-  //   const nearby = visible
-  //     .filter((a) => {
-  //       const pos = a.sourceType === 'creature' ? a.creature.position : a.nest.position
-  //       const dist = Math.abs(pos.row - player.position.row) + Math.abs(pos.column - player.position.column)
-  //       return dist <= 2
-  //     })
-  //     .sort((a, b) => {
-  //       const posA = a.sourceType === 'creature' ? a.creature.position : a.nest.position
-  //       const posB = b.sourceType === 'creature' ? b.creature.position : b.nest.position
-  //       const dA = Math.abs(posA.row - player.position.row) + Math.abs(posA.column - player.position.column)
-  //       const dB = Math.abs(posB.row - player.position.row) + Math.abs(posB.column - player.position.column)
-  //       return dA - dB
-  //     })[0]
-  //   if (nearby) {
-  //     const candidate = buildAttackAction(state, player, nearby)
-  //     if (passesValidation(state, candidate, '攻擊近距離怪', out)) return candidate
-  //   }
-  // }
-
   // ═══════════════════════════════════════════════════
   // 中樹 3：撿道具
   // ═══════════════════════════════════════════════════
@@ -337,6 +317,22 @@ export function decideNextAction(
   if (unexplored) {
     const candidate = buildExploreAction(state, player, unexplored)
     if (passesValidation(state, candidate, '探索', out)) return candidate
+  }
+
+  // 找出最近怪物或巢穴的最短路徑後，走向最近的相鄰交疊格
+  const nearestHostile = findNearestHostile(state, player)
+  if (nearestHostile) {
+    const targetPos = nearestHostile.sourceType === 'creature' ? nearestHostile.creature.position : nearestHostile.nest.position
+    const dest = findClosestReachablePositionByShortestPath(state, player, targetPos)
+    if (!(dest.row === player.position.row && dest.column === player.position.column)) {
+      const candidate: AiAction = {
+        type: 'move',
+        actor: { id: player.id, kind: 'player' },
+        destination: dest,
+        reason: `走向怪物/巢穴（目標 (${targetPos.row}, ${targetPos.column})，第一步 (${dest.row}, ${dest.column})）`,
+      }
+      if (passesValidation(state, candidate, '走向怪/巢', out)) return candidate
+    }
   }
 
   // ═══════════════════════════════════════════════════

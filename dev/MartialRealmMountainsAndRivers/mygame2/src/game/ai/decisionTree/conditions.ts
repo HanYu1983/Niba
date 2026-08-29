@@ -78,6 +78,23 @@ export function findAdjacentCreature(state: GameState, player: PlayerState): Hos
   }) ?? null
 }
 
+/** 可見怪物/巢穴中，曼哈頓距離最近、且非相鄰（相鄰格已由攻擊段落處理）者。 */
+export function findNearestHostile(state: GameState, player: PlayerState): HostileActor | null {
+  const visible = getVisibleCreatures(state, player.id)
+  let nearest: HostileActor | null = null
+  let bestDist = Infinity
+  for (const a of visible) {
+    const pos = a.sourceType === 'creature' ? a.creature.position : a.nest.position
+    const d = manhattan(player.position, pos)
+    if (d <= 1) continue
+    if (d < bestDist) {
+      bestDist = d
+      nearest = a
+    }
+  }
+  return nearest
+}
+
 // ─── 道具條件 ──────────────────────────────────────
 
 /** 道具只可「同格」拾取，因此以是否站在道具所在格判斷。 */
