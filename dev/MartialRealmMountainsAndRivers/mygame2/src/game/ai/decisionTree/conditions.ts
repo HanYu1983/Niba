@@ -1,4 +1,4 @@
-import type { GameState, PlayerState, Position } from '../../types'
+import type { GameState, PlayerState, Position, UpgradeableAttribute } from '../../types'
 import { isAdjacent, isSamePosition, isSameOrAdjacent } from '../../types'
 import type { HostileActor } from '../perception/targetDiscovery'
 import { listHostileActors } from '../perception/targetDiscovery'
@@ -220,6 +220,29 @@ export function findLearnableExternalSkill(state: GameState, player: PlayerState
     return { skillId: skill.id, baseId: base.id }
   }
   return null
+}
+
+// ─── 屬性分配條件 ──────────────────────────────────
+
+// 依「根骨、身法、臂力、內息、悟性」的機率權重分配（前面的優先）。
+const ATTRIBUTE_ALLOCATION_WEIGHTS: Array<{ attribute: UpgradeableAttribute; weight: number }> = [
+  { attribute: 'constitution', weight: 0.3 },
+  { attribute: 'agility', weight: 0.25 },
+  { attribute: 'armStrength', weight: 0.2 },
+  { attribute: 'innerEnergy', weight: 0.15 },
+  { attribute: 'insight', weight: 0.1 },
+]
+
+/** 有可分配屬性點時，依權重隨機回傳要分配的屬性；無點數回傳 null。 */
+export function pickAttributeToAllocate(player: PlayerState): UpgradeableAttribute | null {
+  const points = player.availableAttributePoints ?? 0
+  if (points <= 0) return null
+  let roll = Math.random()
+  for (const { attribute, weight } of ATTRIBUTE_ALLOCATION_WEIGHTS) {
+    if (roll < weight) return attribute
+    roll -= weight
+  }
+  return ATTRIBUTE_ALLOCATION_WEIGHTS[ATTRIBUTE_ALLOCATION_WEIGHTS.length - 1].attribute
 }
 
 // ─── 距離工具 ──────────────────────────────────────
