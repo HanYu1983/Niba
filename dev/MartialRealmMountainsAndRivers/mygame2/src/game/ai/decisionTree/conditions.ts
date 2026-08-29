@@ -1,18 +1,23 @@
-import type { GameState, PlayerState, Position } from '../../types'
-import { isAdjacent, isSamePosition } from '../../types'
+import type { GameState, PlayerState, Position, UpgradeableAttribute, BaseState } from '../../types'
+import { isAdjacent, isSamePosition, isSameOrAdjacent } from '../../types'
 import type { HostileActor } from '../perception/targetDiscovery'
 import { listHostileActors } from '../perception/targetDiscovery'
 import { getPlayerVisibleCellIds, getFoggedCellIds } from '../../rules/visibilityRules'
 import { itemCatalog } from '../../catalogs/itemCatalog'
+import { BUILDING_TYPES } from '../../catalogs/buildingCatalog'
+import { getShopLevel } from '../../rules/shopRules'
+import { getEquipmentLoadout, getEquipmentInventory, getEquipment, getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
+import { getInnerSkill, getPlayerTotalInsightCost } from '../../rules/skillRules'
+import { getMartialHallSkills } from '../../catalogs/martialHallSkillCatalog'
 
 // ─── 保命條件 ──────────────────────────────────────
 
 export function isHealthCritical(player: PlayerState): boolean {
-  return player.health <= player.maxHealth * 0.2
+  return player.health <= player.maxHealth * 0.3
 }
 
 export function isHealthLow(player: PlayerState): boolean {
-  return player.health <= player.maxHealth * 0.4
+  return player.health <= player.maxHealth * 0.6
 }
 
 /** 玩家背包中所有回血道具（effect === 'health'），依回血量由小到大排序回 [{itemId, healAmount}]。 */
@@ -47,6 +52,16 @@ export function isExhausted(player: PlayerState): boolean {
   return player.stamina <= 2
 }
 
+/** 玩家目前「相鄰或同格」的存活據點（回血/蓋醫院用）。 */
+export function findAdjacentBase(state: GameState, player: PlayerState) {
+  return state.bases.find((b) => b.active !== false && b.health > 0 && isSameOrAdjacent(player.position, b.position)) ?? null
+}
+
+/** 血量或內力未滿 → 需要在據點醫療。 */
+export function needsBaseHeal(player: PlayerState): boolean {
+  return player.health < player.maxHealth || player.innerPower < player.maxInnerPower
+}
+
 export function getVisibleCreatures(state: GameState, playerId: string): HostileActor[] {
   const visibleCellIds = getPlayerVisibleCellIds(state, playerId)
   return listHostileActors(state).filter((a) => {
@@ -61,6 +76,23 @@ export function findAdjacentCreature(state: GameState, player: PlayerState): Hos
     const pos = a.sourceType === 'creature' ? a.creature.position : a.nest.position
     return isAdjacent(player.position, pos)
   }) ?? null
+}
+
+/** 可見怪物/巢穴中，曼哈頓距離最近、且非相鄰（相鄰格已由攻擊段落處理）者。 */
+export function findNearestHostile(state: GameState, player: PlayerState): HostileActor | null {
+  const visible = getVisibleCreatures(state, player.id)
+  let nearest: HostileActor | null = null
+  let bestDist = Infinity
+  for (const a of visible) {
+    const pos = a.sourceType === 'creature' ? a.creature.position : a.nest.position
+    const d = manhattan(player.position, pos)
+    if (d <= 1) continue
+    if (d < bestDist) {
+      bestDist = d
+      nearest = a
+    }
+  }
+  return nearest
 }
 
 // ─── 道具條件 ──────────────────────────────────────
@@ -151,6 +183,118 @@ export function findUnexploredNearby(state: GameState, player: PlayerState): Pos
     }
   }
   return best
+}
+
+// ─── 裝備條件 ──────────────────────────────────────
+
+/** 尚有空格子的可裝備部位：武器→防具→配件依序，回傳第一個符合（該部位有、耐久>0）的 instance。 */
+export function findEquipCandidate(player: PlayerState): { instanceId: string } | null {
+  const loadout = getEquipmentLoadout(player)
+  const inventory = getEquipmentInventory(player)
+  const slots = [
+    { slot: 'weapon', key: 'weaponInstanceId' },
+    { slot: 'armor', key: 'armorInstanceId' },
+    { slot: 'accessory', key: 'accessoryInstanceId' },
+  ]
+  for (const { slot, key } of slots) {
+    if ((loadout as Record<string, string | null>)[key]) continue
+    const candidate = inventory.find((entry) => {
+      const def = getEquipment(entry.equipmentId)
+      return !!def && def.slot === slot && entry.durability > 0
+    })
+    if (candidate) return { instanceId: candidate.instanceId }
+  }
+  return null
+}
+
+/** 傷害比目前裝備內功更高的已學會內功（且悟性足夠）。 */
+export function findBetterInnerSkill(player: PlayerState): { skillId: string; damage: number; currentDamage: number } | null {
+  const attrs = getEffectiveAttributesForPlayer(player)
+  const currentDamage = getInnerSkill(player.innerSkillId).calculateDamage(attrs)
+  let best: { skillId: string; damage: number } | null = null
+  for (const skillId of player.innerSkillIds) {
+    if (skillId === player.innerSkillId) continue
+    const skill = getInnerSkill(skillId)
+    if (attrs.insight < skill.insightRequirement) continue
+    const damage = skill.calculateDamage(attrs)
+    if (damage > currentDamage && (!best || damage > best.damage)) {
+      best = { skillId, damage }
+    }
+  }
+  return best ? { skillId: best.skillId, damage: best.damage, currentDamage } : null
+}
+
+/** 玩家可見據點中，武館可教授、且尚未學會、剩餘悟性足夠的外功。 */
+export function findLearnableExternalSkill(state: GameState, player: PlayerState): { skillId: string; baseId: string } | null {
+  const base = getVisibleOwnedBase(state, player.id)
+  if (!base) return null
+  const hall = base.buildings.find((b) => b.type.startsWith('martial-hall'))
+  if (!hall) return null
+  const skills = getMartialHallSkills(base.martialSchoolId)
+  const attrs = getEffectiveAttributesForPlayer(player)
+  const usedCapacity = getPlayerTotalInsightCost(player)
+  for (const skill of skills.external) {
+    if (player.externalSkillIds.includes(skill.id)) continue
+    if (usedCapacity + skill.insightCost > attrs.insight) continue
+    return { skillId: skill.id, baseId: base.id }
+  }
+  return null
+}
+
+// ─── 屬性分配條件 ──────────────────────────────────
+
+// 依「根骨、身法、臂力、內息、悟性」的機率權重分配（前面的優先）。
+const ATTRIBUTE_ALLOCATION_WEIGHTS: Array<{ attribute: UpgradeableAttribute; weight: number }> = [
+  { attribute: 'constitution', weight: 0.3 },
+  { attribute: 'agility', weight: 0.25 },
+  { attribute: 'armStrength', weight: 0.2 },
+  { attribute: 'innerEnergy', weight: 0.15 },
+  { attribute: 'insight', weight: 0.1 },
+]
+
+/** 有可分配屬性點時，依權重隨機回傳要分配的屬性；無點數回傳 null。 */
+export function pickAttributeToAllocate(player: PlayerState): UpgradeableAttribute | null {
+  const points = player.availableAttributePoints ?? 0
+  if (points <= 0) return null
+  let roll = Math.random()
+  for (const { attribute, weight } of ATTRIBUTE_ALLOCATION_WEIGHTS) {
+    if (roll < weight) return attribute
+    roll -= weight
+  }
+  return ATTRIBUTE_ALLOCATION_WEIGHTS[ATTRIBUTE_ALLOCATION_WEIGHTS.length - 1].attribute
+}
+
+// ─── 任務／商店條件 ──────────────────────────────────
+
+/** 應執行任務：據點旁且有告示牌，且（任務未執行 或 金錢 < 50）。 */
+export function shouldRunMission(adjacentBase: BaseState, player: PlayerState): boolean {
+  if (!adjacentBase.buildings.some((b) => b.type === BUILDING_TYPES.BOARD)) return false
+  return !adjacentBase.discovered || (player.money ?? 0) < 50
+}
+
+/** 身上擁有的回血道具數量（inventory 中 effect === 'health' 的總數）。 */
+export function countHealingItems(player: PlayerState): number {
+  return (player.inventory ?? []).reduce((sum, entry) => {
+    const item = itemCatalog.find((i) => i.id === entry.itemId)
+    return item && item.effect === 'health' ? sum + entry.quantity : sum
+  }, 0)
+}
+
+/** 道具商店存在時，回傳最便宜且可負擔（商店等級、金錢、當回合未用過）的回血道具。 */
+export function findBuyableHealItem(adjacentBase: BaseState, player: PlayerState) {
+  if (!adjacentBase.buildings.some((b) => b.type === BUILDING_TYPES.ITEM_SHOP)) return null
+  const shopLevel = getShopLevel(adjacentBase, 'item-shop')
+  const usedEffects = new Set(player.itemEffectsUsedThisTurn ?? [])
+  const best = itemCatalog
+    .filter((i) => (
+      i.effect === 'health'
+      && i.buyPrice > 0
+      && i.requiredShopLevel <= shopLevel
+      && !usedEffects.has(i.effect)
+      && i.buyPrice <= (player.money ?? 0)
+    ))
+    .sort((a, b) => a.buyPrice - b.buyPrice)[0]
+  return best ? { itemId: best.id, price: best.buyPrice } : null
 }
 
 // ─── 距離工具 ──────────────────────────────────────

@@ -69,6 +69,96 @@ export function findClosestReachablePosition(
   return best.position
 }
 
+// ─── 最短路徑版（含 parent，可重構路徑）────────────
+
+function buildCostMapFromWithParents(
+  state: GameState,
+  start: Position,
+  player: PlayerState,
+): { costs: Map<string, number>; parents: Map<string, string> } {
+  const cellsByPosition = new Map(state.map.cells.map((c) => [`${c.row}-${c.column}`, c]))
+  const blockedKeys = new Set(getBlockedPositions(state, player.id).map((p) => `${p.row}-${p.column}`))
+  const costs = new Map<string, number>()
+  const parents = new Map<string, string>()
+  const startKey = `${start.row}-${start.column}`
+  const queue: Array<{ cellId: string; cost: number }> = [{ cellId: startKey, cost: 0 }]
+  let head = 0
+  costs.set(startKey, 0)
+
+  while (head < queue.length) {
+    const cur = queue[head++]
+    const curPos = cellsByPosition.get(cur.cellId)
+    if (!curPos) continue
+    for (const adj of getAdjacentPositions(curPos)) {
+      const cell = cellsByPosition.get(`${adj.row}-${adj.column}`)
+      if (!cell || !canTraverseTerrain(cell.terrain, player) || blockedKeys.has(cell.id)) continue
+      const nextCost = cur.cost + getTerrainStaminaCost(cell.terrain, player)
+      const prev = costs.get(cell.id)
+      if (prev !== undefined && prev <= nextCost) continue
+      costs.set(cell.id, nextCost)
+      parents.set(cell.id, cur.cellId)
+      queue.push({ cellId: cell.id, cost: nextCost })
+    }
+  }
+  return { costs, parents }
+}
+
+function reconstructPath(parents: Map<string, string>, targetCellId: string, startCellId: string): string[] {
+  const reversed: string[] = []
+  let cur: string | undefined = targetCellId
+  const seen = new Set<string>()
+  while (cur !== undefined && cur !== startCellId && !seen.has(cur)) {
+    seen.add(cur)
+    reversed.push(cur)
+    cur = parents.get(cur)
+  }
+  if (cur === startCellId) reversed.push(startCellId)
+  return reversed.reverse()
+}
+
+function getMovableNeighborKeys(state: GameState, player: PlayerState): Set<string> {
+  const cellsByPosition = new Map(state.map.cells.map((c) => [`${c.row}-${c.column}`, c]))
+  const blockedKeys = new Set(getBlockedPositions(state, player.id).map((p) => `${p.row}-${p.column}`))
+  const keys = new Set<string>()
+  for (const adj of getAdjacentPositions(player.position)) {
+    const cell = cellsByPosition.get(`${adj.row}-${adj.column}`)
+    if (cell && canTraverseTerrain(cell.terrain, player) && !blockedKeys.has(cell.id)) {
+      keys.add(cell.id)
+    }
+  }
+  return keys
+}
+
+/**
+ * 另一版本：用含 parent 的 Dijkstra 算出 player → targetPosition 的最短路徑，
+ * 取「最短路徑 ∩ player 的四個可移動鄰格」中離 player 最近（路徑上第一步）的格子回傳。
+ * 目標不可達時回傳 player.position（產生物件時由呼叫端判斷為不移動）。
+ */
+export function findClosestReachablePositionByShortestPath(
+  state: GameState,
+  player: PlayerState,
+  targetPosition: Position,
+): Position {
+  if (player.position.row === targetPosition.row && player.position.column === targetPosition.column) {
+    return player.position
+  }
+  const { costs, parents } = buildCostMapFromWithParents(state, player.position, player)
+  const startKey = `${player.position.row}-${player.position.column}`
+  const targetKey = `${targetPosition.row}-${targetPosition.column}`
+  if (!costs.has(targetKey)) return player.position
+
+  const path = reconstructPath(parents, targetKey, startKey)
+  const movable = getMovableNeighborKeys(state, player)
+  for (const cellId of path) {
+    if (cellId === startKey) continue
+    if (movable.has(cellId)) {
+      const [row, column] = cellId.split('-').map(Number)
+      return { row, column }
+    }
+  }
+  return player.position
+}
+
 // ─── 動作構建器 ──────────────────────────────────
 
 export function buildRetreatAction(
@@ -219,7 +309,7 @@ export function buildExploreAction(
   targetPos: Position,
 ): AiAction | null {
   const actor: AiActorRef = { id: player.id, kind: 'player' }
-  const dest = findClosestReachablePosition(state, player, targetPos)
+  const dest = findClosestReachablePositionByShortestPath(state, player, targetPos)
   if (dest.row === player.position.row && dest.column === player.position.column) return null
   return {
     type: 'move',
