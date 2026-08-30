@@ -1,4 +1,5 @@
 import { buffCatalog, type BuffDefinition } from '../catalogs/buffCatalog'
+import { BuffEffectsKeys } from '../core/buffEffects'
 import { equipmentCatalog, type EquipmentDefinition } from '../catalogs/equipmentCatalog'
 import { allInnerSkillCatalog } from '../catalogs/martialHallSkillCatalog'
 import { allExternalSkillCatalog } from '../catalogs/martialHallSkillCatalog'
@@ -77,15 +78,9 @@ function getEffectiveBuffDefinition(instance: BuffInstance): BuffDefinition | un
   const definition = getBuff(instance.definitionId)
   if (!definition) return undefined
   const overrides: Partial<BuffDefinition> = {}
-  for (const key of [
-    'attributeMultiplier', 'attributeModifiers', 'maxHealthDamagePercent', 'criticalRateMultiplier', 'criticalRateBonus', 'terrainCostOverride', 'reflectionPercent',
-    'lifestealPercent', 'innerPowerLeechPercent', 'damageReductionPercent', 'healthRegenPercent',
-    'innerPowerHealthRegenPercent', 'innerPowerRegenPercent', 'damageDealtPercent', 'externalSkillDamagePercent', 'evasionRateBonus',
-    'staminaToInnerPowerRatio', 'externalSkillInnerCostReduction', 'insightTrueDamageMultiplier',
-    'visionRadiusBonus', 'maxStaminaBonus', 'maxHealthMultiplier', 'maxStaminaMultiplier', 'maxInnerPowerMultiplier', 'gatherStaminaCostReduction', 'gatherDoubleYieldChance',
-    'buildingMaterialCostReduction', 'buildingReputationBonus', 'shopBuyPriceDiscount',
-    'shopSellPriceBonus', 'questRewardBonus', 'skillExpGainPercent', 'confused', 'damageTakenFromAlliesBonus', 'basicAttackStaminaCostReduction', 'conditional',
-  ] as const) {
+  // 型別驅動：以 BuffEffects 的效果欄位鍵為準，取代手工白名單，
+  // 新增效果欄位時自動納入覆寫，不會漏列。
+  for (const key of BuffEffectsKeys) {
     const value = instance[key]
     if (value !== undefined) overrides[key] = value as never
   }
