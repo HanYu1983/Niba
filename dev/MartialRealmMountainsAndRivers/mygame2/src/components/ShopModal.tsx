@@ -93,12 +93,13 @@ function ShopModal({ base, player, gameState, onBuyItem, onSellItem, onBuyEquipm
                       const price = getItemBuyPrice(base, item.id, gameState)
                       const qty = buyQty[item.id] ?? 1
                       const canAfford = (player?.money ?? 0) >= price * qty
+                      const ownedQty = (player?.inventory ?? []).find((entry) => entry.itemId === item.id)?.quantity ?? 0
                       return (
                         <ShopRow
                           key={item.id}
                           name={`${item.icon} ${item.name}`}
                           description={item.effectLabel}
-                          tags={<><Tag color="blue">商店 Lv.{item.requiredShopLevel}</Tag><Tag color="gold">{price} 金錢</Tag></>}
+                          tags={<><Tag color="blue">商店 Lv.{item.requiredShopLevel}</Tag><Tag color="gold">{price} 金錢</Tag>{ownedQty > 0 && <Tag color="cyan">持有 {ownedQty}</Tag>}</>}
                           actions={
                             <>
                               <InputNumber
