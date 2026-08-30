@@ -6,6 +6,34 @@
 
 ---
 
+## 執行進度
+
+> 最後更新：2026-08-31
+
+| 階段 | 狀態 | 備註 |
+|---|---|---|
+| 0 前置準備 | ⬜ 未開始 | |
+| 1 立即修 | ✅ **已完成** | 含 1 個 bug 修正（見下） |
+| 2 性能熱點 | ✅ **已完成** | 5 個步驟全數完成 |
+| 3 雙寫與散彈修改 | ⬜ 未開始 | |
+| 4 AI 與存檔 | ⬜ 未開始 | |
+| 5 分層與測試收斂 | ⬜ 未開始 | |
+| 6 結構拆分 | ⬜ 未開始 | |
+
+### 階段 1 額外發現的 bug（已修正）
+
+**`turnActions.ts` 的 `resourcePoints` 三元方向寫反**：生物採集資源點後，回合完整結束時資源點狀態被還原為原始值，生物採集的資源點不會反映到地圖上。已修正為與 `itemPoints` 對稱的邏輯。
+
+### 階段 2 完成摘要
+
+- **2.1** `getCellVisibility` 提到 `useMemo`：一次算出 `visibleCellIds` Set，per-cell 只做 `Set.has`，消除約 4900 萬次比較/render。
+- **2.2** `getCellVisibility` 優化：`revealed` 檢查提前（便宜短路）。
+- **2.3** `getActiveBuffDefinitions` 加 WeakMap 快取；`allExternalSkillCatalog` / `allInnerSkillCatalog` 改 Map 索引。
+- **2.4** `CreatureTurnContext` 加 `cellsByPosition` Map 與 `occupiedKeys` Set，`isCellTraversable` / `getCellMoveCost` / `isOccupiedExcludingDefenses` 改 O(1) 查詢。
+- **2.5** `MapGrid` 加 `memo` + `cellObjects` 物件索引，取代 per-cell 的 11 次 filter。
+
+---
+
 ## 執行守則
 
 1. **每完成一步就跑一次完整測試**：`npx tsc -b; npm run test`
@@ -31,7 +59,7 @@
 
 這些是「明顯錯誤」而非「重構」，先清掉避免後續干擾。
 
-### 步驟 1.1 — 移除殘留 debug log
+### 步驟 1.1 — 移除殘留 debug log ✅
 
 **檔案**：`src/game/actions/turnActions.ts:116`
 
@@ -42,7 +70,7 @@ console.log('DEBUG endPlayerTurn early return', { ... })
 
 **驗證**：`npm run test`；grep 確認 `src/game/` 下無其他非測試 `console.log`。
 
-### 步驟 1.2 — ⚠️ 釐清 `resourcePoints` / `itemPoints` 三元方向相反
+### 步驟 1.2 — ⚠️ 釐清 `resourcePoints` / `itemPoints` 三元方向相反 ✅（確認為 bug 並修正）
 
 **檔案**：`src/game/actions/turnActions.ts:236-237`
 
@@ -59,7 +87,7 @@ itemPoints:     isRoundComplete ? scheduledCreatureTurn?.itemPoints ?? state.ite
 
 **驗證**：新增/調整對應測試。
 
-### 步驟 1.3 — 修正使用者可見文案
+### 步驟 1.3 — 修正使用者可見文案 ✅
 
 **檔案**：
 - `src/components/GameOverModal.tsx:35, 37` — 「所有 **Creature** 巢穴」→「所有**怪物**巢穴」；「**Creature** 已消滅」→「**怪物**已消滅」
@@ -68,7 +96,7 @@ itemPoints:     isRoundComplete ? scheduledCreatureTurn?.itemPoints ?? state.ite
 
 **驗證**：測試通過；目視確認 UI 文案。
 
-### 步驟 1.4 — 修正命名與實作矛盾
+### 步驟 1.4 — 修正命名與實作矛盾 ✅
 
 **檔案**：`src/game/rules/visibilityRules.ts:26`
 
@@ -80,7 +108,7 @@ itemPoints:     isRoundComplete ? scheduledCreatureTurn?.itemPoints ?? state.ite
 
 ## 階段 2：解除性能熱點（高優先、投報率最高）
 
-### 步驟 2.1 — `getCellVisibility` 提到 `useMemo`（最高優先）
+### 步驟 2.1 — `getCellVisibility` 提到 `useMemo`（最高優先）✅
 
 **問題**：`MapGrid.tsx:282` 每格呼叫 `getCellVisibility`，觸發全圖重算（約 4900 萬次比較/render）。
 
@@ -99,7 +127,7 @@ itemPoints:     isRoundComplete ? scheduledCreatureTurn?.itemPoints ?? state.ite
 
 **驗證**：測試通過；手動跑一局確認迷霧顯示不變。
 
-### 步驟 2.2 — `exploredCellIds` / `revealedCreatureCellIds` 改用 `Set`
+### 步驟 2.2 — `exploredCellIds` / `revealedCreatureCellIds` 改用 `Set` ✅
 
 **檔案**：`src/game/rules/visibilityRules.ts:86-87`
 
@@ -109,7 +137,7 @@ itemPoints:     isRoundComplete ? scheduledCreatureTurn?.itemPoints ?? state.ite
 
 **驗證**：測試通過。
 
-### 步驟 2.3 — `getActiveBuffDefinitions` 加快取
+### 步驟 2.3 — `getActiveBuffDefinitions` 加快取 ✅
 
 **問題**：BFS 每格都間接呼叫它，內部含 2 次目錄線性掃描。
 
@@ -125,7 +153,7 @@ itemPoints:     isRoundComplete ? scheduledCreatureTurn?.itemPoints ?? state.ite
 
 **驗證**：測試通過；手動跑一局確認 Buff 效果正確。
 
-### 步驟 2.4 — `CreatureTurnContext` 加索引
+### 步驟 2.4 — `CreatureTurnContext` 加索引 ✅
 
 **檔案**：`src/game/actions/creatureTurnPipeline.ts`
 
@@ -136,7 +164,7 @@ itemPoints:     isRoundComplete ? scheduledCreatureTurn?.itemPoints ?? state.ite
 
 **驗證**：測試通過；手動跑一局確認怪物移動正常。
 
-### 步驟 2.5 — MapGrid 加 `memo` + 建物件索引
+### 步驟 2.5 — MapGrid 加 `memo` + 建物件索引 ✅
 
 **檔案**：`src/components/MapGrid.tsx`
 

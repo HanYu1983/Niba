@@ -26,6 +26,8 @@ import {
 /** 以 ID 快取目錄查詢，避免重複線性掃描；目錄在模組載入時固定。 */
 const buffById = new Map(buffCatalog.map((buff) => [buff.id, buff] as const))
 const equipmentById = new Map(equipmentCatalog.map((equipment) => [equipment.id, equipment] as const))
+const externalSkillById = new Map(allExternalSkillCatalog.map((skill) => [skill.id, skill] as const))
+const innerSkillById = new Map(allInnerSkillCatalog.map((skill) => [skill.id, skill] as const))
 
 export function getEquipment(equipmentId: string): EquipmentDefinition | undefined {
   return equipmentById.get(equipmentId)
@@ -64,6 +66,12 @@ export function createEquipmentInstance(equipmentId: string, instanceId: string)
 export function getBuff(buffId: string): BuffDefinition | undefined {
   return buffById.get(buffId)
 }
+
+/**
+ * 有效 Buff 定義快取：player 為 immutable（每次變更換新物件），
+ * 故以 WeakMap 依物件身分快取，避免熱路徑（BFS 每格）重複計算。
+ */
+const activeBuffDefinitionsCache = new WeakMap<PlayerState, BuffDefinition[]>()
 
 function getEffectiveBuffDefinition(instance: BuffInstance): BuffDefinition | undefined {
   const definition = getBuff(instance.definitionId)
@@ -172,9 +180,13 @@ function buildScaledBuffDescription(definition: BuffDefinition): string | undefi
 
 /** 取得玩家目前生效 Buff 的定義（過濾掉不存在或已過期的 Buff）。 */
 export function getActiveBuffDefinitions(player: PlayerState): BuffDefinition[] {
-  return getActiveBuffsForPlayer(player)
+  const cached = activeBuffDefinitionsCache.get(player)
+  if (cached) return cached
+  const definitions = getActiveBuffsForPlayer(player)
     .map(getEffectiveBuffDefinition)
     .filter((definition): definition is BuffDefinition => Boolean(definition))
+  activeBuffDefinitionsCache.set(player, definitions)
+  return definitions
 }
 
 export function getActiveBuffsForPlayer(player: PlayerState): BuffInstance[] {
@@ -192,7 +204,7 @@ export function getActiveBuffsForPlayer(player: PlayerState): BuffInstance[] {
 /** 將已裝備的靈氣型外功轉成常駐 Buff；強化型外功（主動施放）刻意排除。 */
 function getEquippedExternalSkillBuffs(player: PlayerState): BuffInstance[] {
   return player.equippedExternalSkillIds.flatMap((skillId) => {
-    const skill = allExternalSkillCatalog.find((candidate) => candidate.id === skillId)
+    const skill = externalSkillById.get(skillId)
     if (!skill || skill.category !== 'aura' || !skill.passiveBuffIds?.length) return []
     const level = Math.max(1, Math.floor(player.skillProgression?.[skillId]?.level ?? 1))
     return skill.passiveBuffIds.map((definitionId) => {
@@ -231,7 +243,7 @@ export function getActiveBuffDefinitionsForCreature(creature: CreatureState, ter
 function getInnerSkillBuffs(player: PlayerState): BuffInstance[] | undefined {
   // 用完整內功目錄查找（含官方角色專屬內功等），基礎 innerSkillCatalog 不含它們，
   // 會導致專屬內功的常駐 Buff（如山河歸藏的悟性加成）不生效。
-  const innerSkill = allInnerSkillCatalog.find((skill) => skill.id === player.innerSkillId)
+  const innerSkill = innerSkillById.get(player.innerSkillId)
 
   return innerSkill?.buffIds?.map((definitionId) => ({
     id: `inner-skill:${player.innerSkillId}:${definitionId}`,

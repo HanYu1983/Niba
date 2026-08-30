@@ -79,11 +79,12 @@ export function getFoggedCellIds(state: GameState): Set<string> {
 export function getCellVisibility(state: GameState, playerId: string, cell: MapCell): VisibilityState {
   const visibility = state.visibility ?? { exploredCellIds: [], mode: 'fog' as const }
   if (visibility.mode === 'revealed') return 'visible'
-  const visibleIds = getPlayerVisibleCellIds(state, playerId)
-  if (visibleIds.size === 0) return 'unexplored'
-  if (visibleIds.has(cell.id)) return 'visible'
   // 鳴鑼符（reveal-creatures）：暫時揭示怪物所在格，下回合恢復迷霧。
   if (state.revealedCreatureCellIds?.includes(cell.id)) return 'visible'
+  const visibleIds = getPlayerVisibleCellIds(state, playerId)
+  if (visibleIds.size === 0) return 'unexplored'
+  // 視野內優先於已探索（同格同時可見與已探索時回傳 visible）。
+  if (visibleIds.has(cell.id)) return 'visible'
   return visibility.exploredCellIds.includes(cell.id) ? 'explored' : 'unexplored'
 }
 

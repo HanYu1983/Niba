@@ -8,6 +8,7 @@ import type {
   ExplorationEventState,
   GameState,
   ItemPointState,
+  MapCell,
   MapState,
   PlayerState,
   Position,
@@ -73,6 +74,8 @@ export type CreatureTurnStep = {
 /** 六段管線共用的回合情境（重構文件 §12 Phase 2）：靜態世界快照＋可變累加器。 */
 export type CreatureTurnContext = {
   map: MapState
+  /** 依「row-column」索引的地圖格，供 O(1) 查詢取代 map.cells.find 線性掃描。 */
+  cellsByPosition: Map<string, MapCell>
   globalBuffs: GameState['globalBuffs']
   players: PlayerState[]
   bases: BaseState[]
@@ -89,6 +92,8 @@ export type CreatureTurnContext = {
   occupiedByRuins: Position[]
   occupiedBySectGates: Position[]
   occupiedByCreatures: Map<string, Position>
+  /** 所有佔位格的「row-column」鍵集合，供 O(1) 佔位查詢。 */
+  occupiedKeys: Set<string>
   reflectedDamageByCreatureId: Map<string, number>
   logs: CreatureActionLog[]
   steps: CreatureTurnStep[]
@@ -116,6 +121,7 @@ export function createCreatureTurnContext(inputs: {
  }): CreatureTurnContext {
   return {
     map: inputs.map,
+    cellsByPosition: new Map(inputs.map.cells.map((cell) => [`${cell.row}-${cell.column}`, cell] as const)),
     globalBuffs: inputs.globalBuffs,
     players: inputs.players.map((player) => ({ ...player })),
     bases: inputs.bases.map((base) => ({ ...base })),
@@ -132,6 +138,13 @@ export function createCreatureTurnContext(inputs: {
     occupiedByRuins: inputs.ruins.filter((ruin) => ruin.status === 'intact').map((ruin) => ruin.position),
     occupiedBySectGates: inputs.sectGates.map((gate) => gate.position),
     occupiedByCreatures: new Map(inputs.survivingCreatures.map((creature) => [creature.id, creature.position])),
+    occupiedKeys: new Set([
+      ...inputs.players.map((player) => `${player.position.row}-${player.position.column}`),
+      ...inputs.bases.map((base) => `${base.position.row}-${base.position.column}`),
+      ...inputs.nests.map((nest) => `${nest.position.row}-${nest.position.column}`),
+      ...inputs.ruins.filter((ruin) => ruin.status === 'intact').map((ruin) => `${ruin.position.row}-${ruin.position.column}`),
+      ...inputs.sectGates.map((gate) => `${gate.position.row}-${gate.position.column}`),
+    ]),
     reflectedDamageByCreatureId: new Map(),
     logs: [],
     steps: [],
@@ -146,24 +159,21 @@ const CREATURE_DIRECTIONS = [{ row: -1, column: 0 }, { row: 1, column: 0 }, { ro
 const stepDistance = manhattanDistance
 
 function isCellTraversable(context: CreatureTurnContext, creature: CreatureState, position: Position): boolean {
-  const cell = context.map.cells.find((candidate) => candidate.row === position.row && candidate.column === position.column)
+  const cell = context.cellsByPosition.get(`${position.row}-${position.column}`)
   return Boolean(cell) && canTraverseTerrain(cell!.terrain, creature)
 }
 
 function getCellMoveCost(context: CreatureTurnContext, creature: CreatureState, position: Position): number {
-  const cell = context.map.cells.find((current) => current.row === position.row && current.column === position.column)
+  const cell = context.cellsByPosition.get(`${position.row}-${position.column}`)
   return cell ? getCreatureTerrainStaminaCost(creature, cell.terrain) : Infinity
 }
 
 /** 除防禦設施外的佔位：玩家、據點、巢穴、道具點、事件點、廢墟、門派據點。 */
 function isOccupiedExcludingDefenses(context: CreatureTurnContext, position: Position): boolean {
-  return context.players.some((player) => isSamePosition(player.position, position))
-    || context.occupiedByBases.some((occupied) => isSamePosition(occupied, position))
-    || context.occupiedByCreatureNests.some((occupied) => isSamePosition(occupied, position))
+  const key = `${position.row}-${position.column}`
+  return context.occupiedKeys.has(key)
     || context.occupiedByItemPoints.some((occupied) => isSamePosition(occupied, position))
     || context.occupiedByExplorationEvents.some((occupied) => isSamePosition(occupied, position))
-    || context.occupiedByRuins.some((occupied) => isSamePosition(occupied, position))
-    || context.occupiedBySectGates.some((occupied) => isSamePosition(occupied, position))
 }
 
 function isDefenseOccupied(context: CreatureTurnContext, position: Position): boolean {
