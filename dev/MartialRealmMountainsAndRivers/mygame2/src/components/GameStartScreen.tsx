@@ -1,5 +1,5 @@
 import { Button, Card, Divider, Flex, Input, InputNumber, Modal, Select, Space, Tabs, Typography, message } from 'antd'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { GameSettings, TerrainWeights } from '../game/types'
 import {
   BUILTIN_TEMPLATES,
@@ -18,6 +18,12 @@ import CharacterLibraryScreen from './CharacterLibraryScreen'
 import type { ScenarioDefinition } from '../editor/editorTypes'
 import { clearStoredScenarios } from '../game/scenarioStorage'
 import { getCharacters, type PersistentCharacter } from '../game/characterRoster'
+import {
+  createGameBackup,
+  getBackupFileName,
+  parseGameBackup,
+  restoreGameBackup,
+} from '../game/gameBackup'
 
 /** 記住玩家上次選擇的俠客 id（localStorage key）。 */
 const SELECTED_CHARACTER_KEY = 'mygame2.selected-character-id'
@@ -42,6 +48,40 @@ function GameStartScreen({ onStart, onStartChallenge, onDebug, onOpenSkillTest, 
     return savedId && getCharacters().some((character) => character.id === savedId) ? [savedId] : []
   })
   const [activeTab, setActiveTab] = useState('sandbox')
+  const backupFileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleExportBackup = () => {
+    const backup = createGameBackup()
+    if (!backup) {
+      message.warning('目前沒有任何遊戲資料可匯出。')
+      return
+    }
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = getBackupFileName()
+    anchor.click()
+    URL.revokeObjectURL(url)
+    message.success(`已匯出 ${Object.keys(backup.entries).length} 項遊戲資料，請妥善保存備份檔。`)
+  }
+
+  const handleImportBackupFile = (file: File) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const raw = typeof reader.result === 'string' ? reader.result : ''
+      const parsed = parseGameBackup(raw)
+      if (!parsed.ok) {
+        message.error(parsed.reason)
+        return
+      }
+      const restored = restoreGameBackup(parsed.payload)
+      message.success(`已匯入 ${restored} 項遊戲資料，建議重新載入頁面以套用全部變更。`)
+      setRosterCharacters(getCharacters())
+    }
+    reader.onerror = () => message.error('讀取備份檔失敗。')
+    reader.readAsText(file)
+  }
 
   // 記住/清除玩家選擇的俠客；角色被刪除時由 handleCharactersChanged 清除快照。
   const persistSelectedCharacter = (id: string | undefined) => {
@@ -332,6 +372,27 @@ function GameStartScreen({ onStart, onStartChallenge, onDebug, onOpenSkillTest, 
                     >
                       🗑️ 清除劇本存檔
                     </Button>
+                  </Space>
+                  <Divider style={{ margin: '8px 0' }}>備份與還原</Divider>
+                  <Typography.Paragraph type="secondary">
+                    將整個遊戲狀態（存檔、俠客名冊、通關進度、設定等）匯出為檔案自行保存，
+                    避免瀏覽器資料被清空造成進度損失。匯入後建議重新載入頁面。
+                  </Typography.Paragraph>
+                  <Space wrap>
+                    <Button size="large" onClick={handleExportBackup}>📤 匯出備份</Button>
+                    <Button size="large" onClick={() => backupFileInputRef.current?.click()}>📥 匯入備份</Button>
+                    <input
+                      ref={backupFileInputRef}
+                      type="file"
+                      accept="application/json,.json"
+                      style={{ display: 'none' }}
+                      onChange={(event) => {
+                        const file = event.target.files?.[0]
+                        if (file) handleImportBackupFile(file)
+                        // 允許連續選擇同一檔案。
+                        event.target.value = ''
+                      }}
+                    />
                   </Space>
                 </Space>
               ),
