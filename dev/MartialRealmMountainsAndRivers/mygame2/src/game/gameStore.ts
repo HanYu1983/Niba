@@ -137,7 +137,7 @@ import { animateCreatureTurn as animateCreatureTurnAction } from './creatureAnim
 import { learnSkillAtMartialHall as learnSkillAtMartialHallAction } from './actions/martialHallActions'
 import { learnSkillAtSectGate as learnSectGateSkillAction, practiceSkillAtSectGate as practiceSectGateSkillAction } from './actions/sectGateActions'
 import { clearRuin as clearRuinAction, reconstructRuin as reconstructRuinAction } from './actions/ruinActions'
-import { AUTO_SAVE_SLOT, getGameSaveSlots, loadGameState, loadGameStateFromSlot, saveGameState, saveGameStateToSlot, deleteGameStateFromSlot } from './gameSave'
+import { getGameSaveSlots, loadGameState, loadGameStateFromSlot, saveGameState, saveGameStateToSlot, deleteGameStateFromSlot, scheduleAutoSave } from './gameSave'
 import { isRunSettled, markRunSettled } from './settledRuns'
 import { recordScenarioClearance } from './campaignClearance'
 import { createGameState as createWorldGameState, createDebugGameState as createWorldDebugGameState } from './worldSetup'
@@ -441,7 +441,7 @@ export const gameStore = {
       // 因此要把包含局末旗標與同一 runId 的最新狀態寫回自動存檔，
       // 讓存檔摘要能顯示「已領取殘卷」，讀檔也能正確讀取防重登記。
       // activeCharacterIds 已隨 GameState 序列化，故不需再以參數傳入。
-      saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode, currentScenarioId)
+      scheduleAutoSave(gameState, null, isChallengeMode, currentScenarioId)
     }
     return results
   },
@@ -1307,7 +1307,7 @@ export const gameStore = {
     })
     animateCreatureTurn({ ...scheduled, players: currentPlayers })
     // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
-    if (!gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode, currentScenarioId)
+    if (!gameState.gameOver && !gameState.gameWon) scheduleAutoSave(gameState, null, isChallengeMode, currentScenarioId)
   },
 
   movePlayer: (playerId: string, rowDelta: number, columnDelta: number) => {
@@ -2316,7 +2316,7 @@ export const gameStore = {
     }
     // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
     // 觸發探索事件時，敵人行動尚未執行，改由 flushPendingCreatureTurn 結算後保存。
-    if (!triggeredEvent && !gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode, currentScenarioId)
+    if (!triggeredEvent && !gameState.gameOver && !gameState.gameWon) scheduleAutoSave(gameState, null, isChallengeMode, currentScenarioId)
   },
 
   startPlayerTurn: (playerId: string) => {
