@@ -4,12 +4,10 @@ import { allExternalSkillCatalog, allInnerSkillCatalog } from './catalogs/martia
 import { jianghuExternalSkills } from './catalogs/jianghuExternalSkillCatalog'
 import {
   type LearnedSkillResult,
-  type LootDefinition,
   type LootResult,
   type PlayerState,
-  itemPointLootCatalog,
-  lootCatalog,
 } from './types'
+import { itemPointLootCatalog, lootCatalog, type LootDefinition } from './catalogs/lootCatalog'
 import { createEquipmentInstance, getEquipment, getEquipmentInventory } from './rules/playerDerivedRules'
 import { addInventoryItem } from './actions/shopActions'
 import { terrainItemPointLootCatalog } from './catalogs/terrainLootCatalog'

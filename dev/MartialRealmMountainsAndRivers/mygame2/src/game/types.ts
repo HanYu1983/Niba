@@ -9,8 +9,6 @@ import type { MartialSchoolId } from './catalogs/martialSchoolCatalog'
 import type { EventEffect, EventRequirement } from './events/eventCatalog'
 import type { AiActionEvent } from './ai/aiActionEvent'
 import type { BuffEffects } from './core/buffEffects'
-import { itemCatalog } from './catalogs/itemCatalog'
-import { equipmentCatalog } from './catalogs/equipmentCatalog'
 
 export type Position = {
   row: number
@@ -313,26 +311,6 @@ export type LearnedSkillResult =
   | { type: 'inner'; skill: InnerSkill }
   | { type: 'external'; skill: ExternalSkill }
 
-export type LootDefinition =
-  | { kind: 'item'; itemId: string; weight: number }
-  | { kind: 'equipment'; equipmentId: string; weight: number }
-  | { kind: 'skill'; skillId: string; skillType: 'inner' | 'external'; weight: number }
-
-export const lootCatalog: LootDefinition[] = [
-  // 暫時清空可掉落的功法清單；有待重新設計江湖功法後再填入。
-]
-
-/** 道具點專用掉落池：包含所有道具與裝備，不包含功法。 */
-export const itemPointLootCatalog: LootDefinition[] = [
-  // 道具點只會掉落 1~2 級道具。
-  ...itemCatalog
-    .filter((item) => (item.requiredShopLevel ?? 1) <= 2)
-    .map((item) => ({ kind: 'item' as const, itemId: item.id, weight: 20 })),
-  // 道具點只會掉落 1~2 級裝備。
-  ...equipmentCatalog
-    .filter((equipment) => !equipment.schoolId && equipment.requiredShopLevel <= 2)
-    .map((equipment) => ({ kind: 'equipment' as const, equipmentId: equipment.id, weight: 10 })),
-]
 
 export type BaseState = {
   id: string

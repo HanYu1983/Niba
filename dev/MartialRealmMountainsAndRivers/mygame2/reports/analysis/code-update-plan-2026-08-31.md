@@ -17,7 +17,7 @@
 | 2 性能熱點 | ✅ **已完成** | 5 個步驟全數完成 |
 | 3 雙寫與散彈修改 | ✅ **已完成** | 3.1 ✅ useItem 委派；3.2 ✅ occupancyRules 收斂；3.3 ✅ BuffEffects |
 | 4 AI 與存檔 | ✅ **已完成** | 4.1/4.2 ⏭️ 依指示跳過（AI 重構）；4.3 ✅ 存檔 schema 驗證；4.4 ✅ 自動存檔 debounce |
-| 5 分層與測試收斂 | 🔄 **進行中** | 5.1 ⏸️ lint 基線有 34 個既有 error；5.2 部分完成：距離依賴、對話規則、defense adapter 已分離；5.3 ⬜ |
+| 5 分層與測試收斂 | 🔄 **進行中** | 5.1 ⏸️ lint 基線有 34 個既有 error；5.2 部分完成：距離依賴、對話規則、defense adapter、掉落目錄已分離；5.3 ⏸️ fixture 命名整理暫緩 |
 | 6 結構拆分 | ⬜ 未開始 | |
 
 ### 階段 1 額外發現的 bug（已修正）
@@ -305,7 +305,11 @@ itemPoints:     isRoundComplete ? scheduledCreatureTurn?.itemPoints ?? state.ite
 
 **驗證**：測試通過；確認無循環依賴。
 
-### 步驟 5.3 — 升級測試 fixtures
+### 步驟 5.3 — 升級測試 fixtures ⏸️ 命名整理暫緩
+
+> 本步驟中的 fixture 命名整理（例如 `makePlayer` 等）目前不影響執行功能，
+> 僅屬可讀性與命名規範改善，因此先暫緩，不為此承擔大範圍引用修改風險。
+> 後續若需統一命名，應使用語意重新命名並逐批驗證。
 
 **檔案**：`src/game/testHelpers/aiTestFixtures.ts` → `src/game/testHelpers/gameFixtures.ts`
 

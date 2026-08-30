@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { equipmentCatalog } from './catalogs/equipmentCatalog'
 import { itemCatalog } from './catalogs/itemCatalog'
-import { itemPointLootCatalog, lootCatalog } from './types'
+import { itemPointLootCatalog, lootCatalog } from './catalogs/lootCatalog'
 import { createItemPointLootForPlayer, createLootForPlayer, getLearnableSkill, getTierWeight } from './lootFactory'
 import { allExternalSkillCatalog, allInnerSkillCatalog } from './catalogs/martialHallSkillCatalog'
 import { jianghuExternalSkills } from './catalogs/jianghuExternalSkillCatalog'

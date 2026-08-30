@@ -1,4 +1,5 @@
-import type { TerrainType, LootDefinition } from '../types'
+import type { TerrainType } from '../types'
+import type { LootDefinition } from './lootCatalog'
 import { itemCatalog } from './itemCatalog'
 import { equipmentCatalog } from './equipmentCatalog'
 
