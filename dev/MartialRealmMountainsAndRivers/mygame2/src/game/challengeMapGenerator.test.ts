@@ -3,7 +3,6 @@ import {
   CHALLENGE_MAX_SIZE,
   CHALLENGE_MIN_SIZE,
   generateChallengeMapConfig,
-  getChallengeBaseCount,
   getChallengeMapSize,
   getChallengeTerrainWeights,
 } from './challengeMapGenerator'

@@ -9,7 +9,7 @@ type SystemCommandModalProps = {
   onClose: () => void
 }
 
-function SystemCommandModal({ open, onOpenSave, onBackToMapSettings, onOpenGameIntroduction, onOpenStrategicCommand, onClose }: SystemCommandModalProps) {
+function SystemCommandModal({ open, onOpenSave, onBackToMapSettings, onOpenGameIntroduction, onClose }: SystemCommandModalProps) {
   return (
     <Modal
       title="系統指令"
