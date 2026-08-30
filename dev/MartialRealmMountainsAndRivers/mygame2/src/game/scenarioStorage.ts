@@ -1,4 +1,4 @@
-import type { ScenarioDefinition } from '../editor/editorTypes'
+import type { ScenarioDefinition } from './contracts/scenario'
 
 /**
  * 關卡儲存層（Scenario Storage）。

@@ -1,5 +1,5 @@
 import type { GameState } from '../types'
-import type { ScenarioTrigger } from '../../editor/editorTypes'
+import type { ScenarioTrigger } from '../contracts/scenario'
 import type { ScenarioDialogueStep } from '../catalogs/storyDialogueCatalog'
 import { enqueueDialogue } from './dialogueRules'
 

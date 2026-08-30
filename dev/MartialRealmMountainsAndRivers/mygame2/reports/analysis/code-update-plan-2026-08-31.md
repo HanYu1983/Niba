@@ -17,7 +17,7 @@
 | 2 性能熱點 | ✅ **已完成** | 5 個步驟全數完成 |
 | 3 雙寫與散彈修改 | ✅ **已完成** | 3.1 ✅ useItem 委派；3.2 ✅ occupancyRules 收斂；3.3 ✅ BuffEffects |
 | 4 AI 與存檔 | ✅ **已完成** | 4.1/4.2 ⏭️ 依指示跳過（AI 重構）；4.3 ✅ 存檔 schema 驗證；4.4 ✅ 自動存檔 debounce |
-| 5 分層與測試收斂 | 🔄 **進行中** | 5.1 ⏸️ lint 基線清理後仍有 23 errors/7 warnings（主要為 React Compiler/Effects 與測試 any）；5.2 部分完成：距離依賴、對話規則、defense adapter、掉落目錄已分離；5.3 ⏸️ fixture 命名整理暫緩 |
+| 5 分層與測試收斂 | 🔄 **進行中** | 5.1 ⏸️ lint 基線清理後仍有 23 errors/7 warnings（主要為 React Compiler/Effects 與測試 any）；5.2 部分完成：距離依賴、對話規則、defense adapter、掉落目錄、ScenarioDefinition 已分離；5.3 ⏸️ fixture 命名整理暫緩 |
 | 6 結構拆分 | ⬜ 未開始 | |
 
 ### 階段 1 額外發現的 bug（已修正）
