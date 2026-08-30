@@ -141,6 +141,8 @@ export function animateCreatureTurn(
           experience: fromState?.experience ?? player.experience,
           level: fromState?.level ?? player.level,
           availableAttributePoints: fromState?.availableAttributePoints ?? player.availableAttributePoints,
+          skillProgression: fromState?.skillProgression ?? player.skillProgression,
+          equippedExternalSkillIds: fromState?.equippedExternalSkillIds ?? player.equippedExternalSkillIds,
           ...(revivedHealthById.has(player.id) ? { health: revivedHealthById.get(player.id) } : {}),
           externalSkillsUsedThisTurn: [],
           itemEffectsUsedThisTurn: [],
