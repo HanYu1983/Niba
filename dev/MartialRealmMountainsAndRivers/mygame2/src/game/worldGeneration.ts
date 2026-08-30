@@ -18,7 +18,7 @@ import {
   isSamePosition,
 } from './types'
 import { buildingCatalog } from './catalogs/buildingCatalog'
-import { BASE_RESOURCE_POINT_INCOME } from './rules/baseRules'
+import { BASE_INFLUENCE_RANGE, BASE_RESOURCE_POINT_INCOME } from './rules/baseRules'
 import { getTalentBuffs } from './catalogs/talentCatalog'
 import { martialSchoolCatalog, type MartialSchoolId } from './catalogs/martialSchoolCatalog'
 import { cityNames, playerNames, resourceNames, villageNames } from './catalogs/placeNameCatalog'
@@ -469,9 +469,11 @@ export function createResourcePoints(
 
   bases.forEach((base, baseIndex) => {
     const baseCount = pointsPerBase + (baseIndex < remainder ? 1 : 0)
-    const candidates = Array.from({ length: 13 * 13 }, (_, index) => {
-      const rowOffset = Math.floor(index / 13) - 6
-      const columnOffset = (index % 13) - 6
+    // 資源點生成範圍：所屬據點周圍 5 格（曼哈頓距離，與據點影響範圍一致）。
+    const spawnRange = BASE_INFLUENCE_RANGE
+    const candidates = Array.from({ length: (spawnRange * 2 + 1) ** 2 }, (_, index) => {
+      const rowOffset = Math.floor(index / (spawnRange * 2 + 1)) - spawnRange
+      const columnOffset = (index % (spawnRange * 2 + 1)) - spawnRange
       const position = {
         row: base.position.row + rowOffset,
         column: base.position.column + columnOffset,
