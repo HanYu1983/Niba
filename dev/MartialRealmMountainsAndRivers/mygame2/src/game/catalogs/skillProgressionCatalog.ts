@@ -276,7 +276,6 @@ export const progressionInnerSkills: InnerSkill[] = martialSchoolCatalog.flatMap
 export const martialHallInnerSkills: InnerSkill[] = progressionInnerSkills.filter((skill) => skill.school === martialHallSchool.name)
 
 export const progressionExternalSkills: ExternalSkill[] = martialSchoolCatalog.flatMap((school) => {
-  const inner = school.inner[0]
   const damageSkills = school.damage.map((entry, index) => createDamageExternalSkill({
     id: index === 0 ? `${school.id}-external-damage` : `${school.id}-external-damage-${index + 1}`,
     name: entry.name,
