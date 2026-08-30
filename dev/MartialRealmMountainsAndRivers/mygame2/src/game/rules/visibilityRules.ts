@@ -24,9 +24,9 @@ export function getScoutCellIds(map: MapState, position: Position, range: number
   return [...getVisionCellIds(map, position, range)]
 }
 
-export function getPlayerVisionRange(_state: GameState, _playerId: string): number {
+export function getPlayerVisionRange(state: GameState, playerId: string): number {
   // 讀取玩家已生效 Buff 提供的視野加成（如天眼望氣），疊加在基礎視野上。
-  const player = _state.players.find((candidate) => candidate.id === _playerId)
+  const player = state.players.find((candidate) => candidate.id === playerId)
   let bonus = 0
   if (player) {
     for (const buff of getActiveBuffDefinitions(player)) {

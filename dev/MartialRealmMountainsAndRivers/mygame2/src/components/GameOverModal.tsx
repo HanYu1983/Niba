@@ -32,9 +32,9 @@ function GameOverModal({ open, won = false, reason, record, scrollReward, onRest
       destroyOnHidden
     >
       <Flex vertical gap={16}>
-        <Typography.Title level={4} style={{ margin: 0 }}>{won ? '所有 Creature 巢穴已被摧毀' : anyBaseDestroyed ? '據點已被摧毀' : '所有玩家都已死亡'}</Typography.Title>
+        <Typography.Title level={4} style={{ margin: 0 }}>{won ? '所有怪物巢穴已被摧毀' : anyBaseDestroyed ? '據點已被摧毀' : '所有玩家都已死亡'}</Typography.Title>
         <Typography.Paragraph style={{ margin: 0 }}>
-          {won ? '玩家成功清除地圖上的所有威脅，本局冒險勝利！' : anyBaseDestroyed ? '有一個據點被摧毀，本局冒險結束。' : 'Creature 已消滅所有玩家，本局冒險結束。'}
+          {won ? '玩家成功清除地圖上的所有威脅，本局冒險勝利！' : anyBaseDestroyed ? '有一個據點被摧毀，本局冒險結束。' : '怪物已消滅所有玩家，本局冒險結束。'}
         </Typography.Paragraph>
 
         {scrollReward === 'skipped' && (
