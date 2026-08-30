@@ -492,7 +492,8 @@ export function createResourcePoints(
     })
       .filter(({ position, distance }) => {
         const cell = cellsByPosition.get(`${position.row}-${position.column}`)
-        return Boolean(cell) && cell?.terrain !== 'wall' && distance > 0
+        // 限縮在 spawnRange 格內（曼哈頓距離）：候選為正方形範圍，角落格距離可達 spawnRange × 2，需明確過濾。
+        return Boolean(cell) && cell?.terrain !== 'wall' && distance > 0 && distance <= spawnRange
       })
       .sort((first, second) => second.score - first.score)
 

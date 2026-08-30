@@ -1902,6 +1902,14 @@
   font-size: 10px;
 }
 
+/* 資源點 icon 放大為 2 倍（26px / 20px），提升辨識度。 */
+.resource-point-marker {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  font-size: 20px;
+}
+
 /* 道具點使用較大的地形 icon，方便辨識與點擊。 */
 .item-point-marker {
   width: 20px;
