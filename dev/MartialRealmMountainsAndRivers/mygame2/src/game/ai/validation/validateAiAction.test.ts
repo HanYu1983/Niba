@@ -9,7 +9,7 @@ import {
   makeTestPlayer,
 } from '../../testHelpers/aiTestFixtures'
 import { chooseDefenseAction } from '../../aiDefenseRules'
-import { defenseActionToAiAction } from '../aiAction'
+import { defenseActionToAiAction } from '../defenseActionAdapter'
 import { validateAiAction, validateAiDefenseDecision } from './validateAiAction'
 
 function makeMapWithWalls(walls: Array<{ row: number; column: number }>): MapState {

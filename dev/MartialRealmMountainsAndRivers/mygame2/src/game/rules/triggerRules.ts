@@ -1,7 +1,7 @@
 import type { GameState } from '../types'
 import type { ScenarioTrigger } from '../../editor/editorTypes'
 import type { ScenarioDialogueStep } from '../catalogs/storyDialogueCatalog'
-import { enqueueDialogue } from '../actions/dialogueActions'
+import { enqueueDialogue } from './dialogueRules'
 
 /**
  * 事件觸發器執行器。

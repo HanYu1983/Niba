@@ -1,6 +1,6 @@
 import type { GameState, DialogueTriggerCondition } from '../types'
 import { storyDialogueCatalog, type ScenarioDialogueStep } from '../catalogs/storyDialogueCatalog'
-import { getTriggeredDialogueIds } from '../actions/dialogueActions'
+import { getTriggeredDialogueIds } from './dialogueRules'
 
 /** 一個觸發事件：由遊戲動作（掛鉤點）產出，供比對對話觸發條件。 */
 export type DialogueTrigger = {
