@@ -11,6 +11,7 @@ import type {
   SectGateState,
 } from './types'
 import { buildingCatalog } from './catalogs/buildingCatalog'
+import { BASE_RESOURCE_POINT_INCOME } from './rules/baseRules'
 import { allInnerSkillCatalog, allExternalSkillCatalog } from './catalogs/martialHallSkillCatalog'
 import { getCreatureInnerSkillId } from './rules/creatureBehaviorRules'
 import { getPlayerVisibleCellIds } from './rules/visibilityRules'
@@ -240,11 +241,11 @@ export function createDebugGameState(): GameState {
   }
   const debugResourcePoint: ResourcePointState = {
     id: 'debug-resource-point', name: 'Debug 資源點', position: { row: 10, column: 11 }, ownerBaseId: debugBase.id,
-    materialIncome: 15, lastCollectedRound: null, health: 30, maxHealth: 30,
+    materialIncome: BASE_RESOURCE_POINT_INCOME, lastCollectedRound: null, health: 30, maxHealth: 30,
   }
   const debugResourcePoint2: ResourcePointState = {
     id: 'debug-resource-point-2', name: 'Debug 資源點 2', position: { row: 11, column: 14 }, ownerBaseId: debugBase2.id,
-    materialIncome: 15, lastCollectedRound: null, health: 30, maxHealth: 30,
+    materialIncome: BASE_RESOURCE_POINT_INCOME, lastCollectedRound: null, health: 30, maxHealth: 30,
   }
   const debugItemPoint: ItemPointState = {
     id: 'debug-item-point', itemId: null, position: { row: 9, column: 9 },

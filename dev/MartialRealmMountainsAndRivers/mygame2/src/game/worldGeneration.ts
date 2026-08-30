@@ -18,6 +18,7 @@ import {
   isSamePosition,
 } from './types'
 import { buildingCatalog } from './catalogs/buildingCatalog'
+import { BASE_RESOURCE_POINT_INCOME } from './rules/baseRules'
 import { getTalentBuffs } from './catalogs/talentCatalog'
 import { martialSchoolCatalog, type MartialSchoolId } from './catalogs/martialSchoolCatalog'
 import { cityNames, playerNames, resourceNames, villageNames } from './catalogs/placeNameCatalog'
@@ -510,7 +511,7 @@ export function createResourcePoints(
         name: resourceNames[cell?.terrain ?? 'default'] ?? resourceNames.default ?? `資源點 ${resourcePoints.length + 1}`,
         position: candidate.position,
         ownerBaseId: base.id,
-        materialIncome: 15,
+        materialIncome: BASE_RESOURCE_POINT_INCOME,
         lastCollectedRound: null,
         health: 30,
         maxHealth: 30,

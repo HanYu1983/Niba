@@ -1,7 +1,7 @@
 import { buildingCatalog } from '../catalogs/buildingCatalog'
 import { defenseStructureCatalog, type DefenseStructureType } from '../catalogs/defenseStructureCatalog'
 import type { ActionOutcome, BaseState, DefenseStructureState, GameState, Position, ResourcePointState } from '../types'
-import { applyBaseHealthBonuses, getBaseMaxBuildingMaterials, getBaseMaxHealth, isBaseActive } from '../rules/baseRules'
+import { applyBaseHealthBonuses, BASE_RESOURCE_POINT_INCOME, getBaseMaxBuildingMaterials, getBaseMaxHealth, isBaseActive } from '../rules/baseRules'
 import { getBaseBuilding, getBuildingUpgradeResult, upgradeBuildingInBase, canPlayerBuildBuildingType } from '../rules/buildingProgressionRules'
 import { validateDefenseBuild } from '../rules/defenseRules'
 import { restoreTowerHealthForBastion } from '../rules/defenseBastionRules'
@@ -210,7 +210,7 @@ export function constructDefenseStructure(
         name: definition.name,
         position,
         ownerBaseId: baseId,
-        materialIncome: 15 * definition.resourceIncomeMultiplier,
+        materialIncome: BASE_RESOURCE_POINT_INCOME * definition.resourceIncomeMultiplier,
         lastCollectedRound: null,
         health: 100,
         maxHealth: 100,

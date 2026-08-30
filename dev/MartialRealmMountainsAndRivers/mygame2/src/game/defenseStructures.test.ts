@@ -129,7 +129,7 @@ describe('輜重庫 supply-depot', () => {
     const state = gameStore.getState()
     expect(state.resourcePoints).toHaveLength(1)
     // 一般資源點 base 採集量 15，輜重庫 ×3 = 45。
-    expect(state.resourcePoints[0].materialIncome).toBe(45)
+    expect(state.resourcePoints[0].materialIncome).toBe(30)
     expect(state.resourcePoints[0].ownerBaseId).toBe('base-1')
     expect(state.resourcePoints[0].position).toEqual({ row: 4, column: 5 })
     // 輜重庫不新增實體防禦設施，避免與大型資源點形成雙 icon 疊加。

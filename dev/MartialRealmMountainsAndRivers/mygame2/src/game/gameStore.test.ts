@@ -1810,7 +1810,7 @@ describe('collectResourcePoint', () => {
       name: '資源點 1',
       position: { row: 5, column: 6 },
       ownerBaseId: 'base-1',
-      materialIncome: 15,
+      materialIncome: 10,
       lastCollectedRound: null,
       health: 30,
       maxHealth: 30,
