@@ -36,9 +36,11 @@ export function getPlayerVisionRange(_state: GameState, _playerId: string): numb
   return DEFAULT_VISION_RANGE + bonus
 }
 
-export function getPlayerVisibleCellIds(state: GameState, playerId: string): Set<string> {
+export function getPlayerVisibleCellIds(state: GameState, _playerId?: string): Set<string> {
   const players = state.players.filter((candidate) => candidate.health > 0)
-  if (!players.some((player) => player.id === playerId)) return new Set()
+  // 視野由所有存活玩家共享；即使查詢的玩家已死亡（activePlayerId 指向死亡玩家），
+  // 只要還有其他存活玩家就應顯示其視野，避免地圖全黑。僅在完全沒有存活玩家時回傳空集合。
+  if (players.length === 0) return new Set()
 
   const visibleIds = new Set<string>()
   for (const player of players) {

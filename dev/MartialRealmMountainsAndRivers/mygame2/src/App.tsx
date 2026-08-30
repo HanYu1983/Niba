@@ -447,7 +447,6 @@ function App() {
               player={activePlayer}
               externalSkills={allExternalSkillCatalog}
               inventoryCount={activeInventoryCount}
-              movementEnabled={movementEnabled}
               creatureTurnInProgress={gameState.creatureTurnInProgress}
               onOpenInventory={() => setInventoryPlayerId(gameState.activePlayerId)}
               onOpenEquipment={() => setEquipmentPlayerId(gameState.activePlayerId)}
@@ -462,7 +461,6 @@ function App() {
                 setSelectedCreatureId(null)
                 gameStore.beginExternalSkillTargeting(skillId)
               }}
-              onToggleMovement={() => gameStore.setOperation({ type: movementEnabled ? 'idle' : 'moving', movementUsed: false })}
               onBuildRoad={() => {
                 const result = gameStore.buildRoad(gameState.activePlayerId)
                 if (result.ok) {
