@@ -11,7 +11,7 @@ import AiDebugPanel from './AiDebugPanel'
 import { type PlayerState, type UpgradeableAttribute, getExperienceRequired } from '../game/types'
 import { getInnerSkill, getPlayerInsightCapacityBreakdown, getSkillDamage, getSkillExperienceRequired, getSkillInnerPowerCost, getSkillProgression } from '../game/rules/skillRules'
 import { allExternalSkillCatalog } from '../game/catalogs/martialHallSkillCatalog'
-import { getActiveBuffsForPlayer, getBuff, getCriticalRateForPlayer, getEffectiveAttributesForPlayer, getEvasionRate, getExternalSkillCritRateForPlayer, getRootReductionRate } from '../game/rules/playerDerivedRules'
+import { getActiveBuffDefinitions, getActiveBuffsForPlayer, getBuff, getCriticalRateForPlayer, getEffectiveAttributesForPlayer, getEvasionRate, getExternalSkillCritRateForPlayer, getRootReductionRate } from '../game/rules/playerDerivedRules'
 import { getGovernanceRankName, getGovernanceRankNumber } from '../game/rules/governanceRules'
 import { getActiveGlobalBuffs, getGlobalBuffDisplayEntries } from '../game/rules/globalBuffRules'
 import { getAuraDisplayEntries } from '../game/rules/auraRules'
@@ -46,6 +46,10 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
   const effectiveAttributes = getEffectiveAttributesForPlayer(player)
   const insightCapacity = getPlayerInsightCapacityBreakdown(player)
   const activeBuffs = getActiveBuffsForPlayer(player)
+  // 有效 Buff 定義（含功法等級縮放後的數值），供 tooltip 顯示升級後效果。
+  const activeBuffDefinitions = new Map(
+    getActiveBuffDefinitions(player).map((definition) => [definition.id, definition]),
+  )
   // 全局靈氣（貿易市場）與區域靈氣（巢穴/防衛營）統一整合在此區塊。
   const globalBuffEntries = getGlobalBuffDisplayEntries(getActiveGlobalBuffs(gameState))
   const auraEntries = getAuraDisplayEntries(gameState, player.position, 'player')
@@ -151,6 +155,12 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
                 {equippedExternalSkills.map((skill) => {
                   const progression = getSkillProgression(player, skill.id)
                   const innerPowerCost = getSkillInnerPowerCost(skill.innerPowerCost, progression.level)
+                  // 靈氣型外功：依功法等級縮放後的效果描述（取第一個有效 Buff 的縮放後描述）。
+                  const scaledDescription = skill.category === 'aura' && skill.passiveBuffIds?.length
+                    ? skill.passiveBuffIds
+                        .map((buffId) => activeBuffDefinitions.get(buffId)?.description)
+                        .find((description): description is string => Boolean(description))
+                    : undefined
                   return (
                     <SkillCard
                       key={skill.id}
@@ -159,7 +169,7 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
                       compact
                       element={skill.element}
                       name={skill.name}
-                      description={skill.description}
+                      description={scaledDescription ?? skill.description}
                       meta={`功法等級 Lv.${progression.level}｜經驗 ${progression.experience} / ${getSkillExperienceRequired(progression.level)}｜內力 -${innerPowerCost}`}
                     />
                   )
@@ -172,7 +182,7 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
               extra: <Typography.Text type="secondary">目前生效效果</Typography.Text>,
               children: <Flex vertical gap={8}>
                 {activeBuffs.length > 0 && <Flex wrap="wrap" gap={8}>{activeBuffs.map((buff) => {
-                  const definition = getBuff(buff.definitionId)
+                  const definition = activeBuffDefinitions.get(buff.definitionId) ?? getBuff(buff.definitionId)
                   return definition ? (
                     <BuffTag
                       key={buff.id}

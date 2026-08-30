@@ -2,7 +2,7 @@ import { buffCatalog, type BuffDefinition } from '../catalogs/buffCatalog'
 import { equipmentCatalog, type EquipmentDefinition } from '../catalogs/equipmentCatalog'
 import { allInnerSkillCatalog } from '../catalogs/martialHallSkillCatalog'
 import { allExternalSkillCatalog } from '../catalogs/martialHallSkillCatalog'
-import { getFunctionalSkillBuffOverrides } from './functionalSkillScaling'
+import { getAuraSkillLevelOverrides, getFunctionalSkillBuffOverrides } from './functionalSkillScaling'
 import { elementHomeTurfBuffs } from '../catalogs/martialSchoolCatalog'
 import type {
   ActionOutcome,
@@ -70,7 +70,7 @@ function getEffectiveBuffDefinition(instance: BuffInstance): BuffDefinition | un
   if (!definition) return undefined
   const overrides: Partial<BuffDefinition> = {}
   for (const key of [
-    'attributeMultiplier', 'maxHealthDamagePercent', 'criticalRateMultiplier', 'criticalRateBonus', 'terrainCostOverride', 'reflectionPercent',
+    'attributeMultiplier', 'attributeModifiers', 'maxHealthDamagePercent', 'criticalRateMultiplier', 'criticalRateBonus', 'terrainCostOverride', 'reflectionPercent',
     'lifestealPercent', 'innerPowerLeechPercent', 'damageReductionPercent', 'healthRegenPercent',
     'innerPowerHealthRegenPercent', 'innerPowerRegenPercent', 'damageDealtPercent', 'externalSkillDamagePercent', 'evasionRateBonus',
     'staminaToInnerPowerRatio', 'externalSkillInnerCostReduction', 'insightTrueDamageMultiplier',
@@ -81,7 +81,93 @@ function getEffectiveBuffDefinition(instance: BuffInstance): BuffDefinition | un
     const value = instance[key]
     if (value !== undefined) overrides[key] = value as never
   }
-  return { ...definition, ...overrides }
+  const effective = { ...definition, ...overrides }
+  // 有等級縮放覆寫時，動態更新描述以反映縮放後數值（功法升級後 UI 同步顯示）。
+  if (Object.keys(overrides).length > 0) {
+    const scaledDescription = buildScaledBuffDescription(effective)
+    if (scaledDescription) effective.description = scaledDescription
+  }
+  return effective
+}
+
+/**
+ * 依縮放後的有效數值動態生成 Buff 描述。
+ * 僅處理會隨功法等級縮放的靈氣 Buff；其餘回傳 undefined（維持原始描述）。
+ */
+function buildScaledBuffDescription(definition: BuffDefinition): string | undefined {
+  const pct = (value: number | undefined) => value === undefined ? undefined : `${Math.round(value * 100)}%`
+  switch (definition.id) {
+    case 'golden-body-critical-boost':
+      return definition.criticalRateBonus !== undefined ? `暴擊率 +${definition.criticalRateBonus}%。` : undefined
+    case 'earth-mountain-reflection':
+      return definition.reflectionPercent !== undefined ? `受到傷害時反彈 ${pct(definition.reflectionPercent)} 傷害。` : undefined
+    case 'bloodthirst':
+      return definition.lifestealPercent !== undefined ? `造成傷害時，回復 ${pct(definition.lifestealPercent)} 傷害值的血量。` : undefined
+    case 'iron-wall-art':
+    case 'misty-rain-rain-curtain':
+      return definition.damageReductionPercent !== undefined ? `受到傷害時，最終傷害 -${pct(definition.damageReductionPercent)}。` : undefined
+    case 'qi-transformation-art':
+      return definition.innerPowerHealthRegenPercent !== undefined ? `每回合回復「最大內力 ×${pct(definition.innerPowerHealthRegenPercent)}」的氣血。` : undefined
+    case 'inner-power-drain':
+      return definition.innerPowerLeechPercent !== undefined ? `造成傷害時，回復 ${pct(definition.innerPowerLeechPercent)} 傷害值的內力。` : undefined
+    case 'break-army-art':
+    case 'sharp-edge-keen-edge':
+      return definition.damageDealtPercent !== undefined ? `普通攻擊造成的最終傷害 +${pct(definition.damageDealtPercent)}。` : undefined
+    case 'vigor-art':
+      return definition.externalSkillDamagePercent !== undefined ? `外功造成的最終傷害 +${pct(definition.externalSkillDamagePercent)}。` : undefined
+    case 'spring-return-art':
+      return definition.healthRegenPercent !== undefined ? `每回合回復最大血量 ${pct(definition.healthRegenPercent)} 的氣血。` : undefined
+    case 'phantom-step':
+    case 'ghost-shadow-shadow-veil':
+      return definition.evasionRateBonus !== undefined ? `回避率 +${definition.evasionRateBonus}%。` : undefined
+    case 'return-light':
+      return definition.reviveHealthPercent !== undefined ? `瀕死時攔截死亡，復活至 ${pct(definition.reviveHealthPercent)} 血並清除所有 debuff（只保一次）。` : undefined
+    case 'back-to-water':
+      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${definition.conditional.multiplier}。` : undefined
+    case 'nurture-qi':
+      return definition.conditional ? `血量高於 ${pct(definition.conditional.threshold)} 時，五維 ×${definition.conditional.multiplier}。` : undefined
+    case 'all-in':
+      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${definition.conditional.multiplier}。` : undefined
+    case 'ghost-shadow-lone-resolve':
+      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${definition.conditional.multiplier}，持續 3 回合。` : undefined
+    case 'sky-eye-vision':
+    case 'sharp-edge-sword-heart':
+      return definition.visionRadiusBonus !== undefined ? `自身地圖視野半徑 +${definition.visionRadiusBonus}。` : undefined
+    case 'four-ounces-thousand-pounds':
+      return definition.externalSkillInnerCostReduction !== undefined ? `所有外功內力消耗 -${definition.externalSkillInnerCostReduction}（最低 1）。` : undefined
+    case 'merchant-way':
+      return definition.shopBuyPriceDiscount !== undefined && definition.shopSellPriceBonus !== undefined
+        ? `買入價格 -${pct(definition.shopBuyPriceDiscount)}，賣出價格 +${pct(definition.shopSellPriceBonus)}。`
+        : undefined
+    case 'heavenly-craftsman':
+      return definition.buildingMaterialCostReduction !== undefined && definition.buildingReputationBonus !== undefined
+        ? `建築材料消耗 -${pct(definition.buildingMaterialCostReduction)}，建造聲望 +${pct(definition.buildingReputationBonus)}。`
+        : undefined
+    case 'spirit-herb-hundred-grass':
+      return definition.gatherStaminaCostReduction !== undefined && definition.gatherDoubleYieldChance !== undefined
+        ? `採集體力消耗 -${definition.gatherStaminaCostReduction}，採集 ${pct(definition.gatherDoubleYieldChance)} 機率雙倍產出。`
+        : undefined
+    case 'divine-movement-eight-trigrams':
+      return definition.maxStaminaBonus !== undefined ? `最大體力 +${definition.maxStaminaBonus}。` : undefined
+    case 'taixu-qi-conversion':
+      return definition.staminaToInnerPowerRatio !== undefined ? `回合結束時，剩餘體力轉化為內力（1 體力 → ${definition.staminaToInnerPowerRatio} 內力）。` : undefined
+    case 'void-spirit-return-qi':
+      return definition.skillExpGainPercent !== undefined ? `功法經驗獲得 +${pct(definition.skillExpGainPercent)}。` : undefined
+    case 'misty-rain-drizzle-nourish':
+      return definition.innerPowerRegenPercent !== undefined ? `每回合回復最大內力 ${pct(definition.innerPowerRegenPercent)} 的內力。` : undefined
+    case 'blazing-sun-fervor':
+      return definition.attributeModifiers
+        ? `臂力與根骨 +${definition.attributeModifiers.armStrength ?? 0}。`
+        : undefined
+    case 'blazing-sun-blazing-gaze':
+      return definition.criticalRateMultiplier !== undefined ? `暴擊率 ×${definition.criticalRateMultiplier}。` : undefined
+    case 'yellow-earth-rammed-earth':
+      return definition.buildingMaterialCostReduction !== undefined ? `建築材料消耗 -${pct(definition.buildingMaterialCostReduction)}。` : undefined
+    case 'yellow-earth-pack-march':
+      return definition.maxStaminaBonus !== undefined ? `最大體力 +${definition.maxStaminaBonus}。` : undefined
+    default:
+      return undefined
+  }
 }
 
 /** 取得玩家目前生效 Buff 的定義（過濾掉不存在或已過期的 Buff）。 */
@@ -113,7 +199,9 @@ function getEquippedExternalSkillBuffs(player: PlayerState): BuffInstance[] {
       const definition = getBuff(definitionId)
       const overrides = definition && skill.functionalEffect
         ? getFunctionalSkillBuffOverrides(skill.functionalEffect, level, definition)
-        : {}
+        : definition
+          ? getAuraSkillLevelOverrides(skillId, level, definition)
+          : {}
       return {
         id: `external-skill:${skillId}:${definitionId}`,
         definitionId,

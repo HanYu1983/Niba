@@ -87,6 +87,8 @@ export type BuffInstance = {
   sourceId: string
   remainingRounds: number | null
   attributeMultiplier?: number
+  /** 五維屬性加成（覆寫定義基礎值，供等級縮放）。 */
+  attributeModifiers?: Partial<PlayerAttributes>
   maxHealthDamagePercent?: number
   criticalRateMultiplier?: number
   criticalRateBonus?: number

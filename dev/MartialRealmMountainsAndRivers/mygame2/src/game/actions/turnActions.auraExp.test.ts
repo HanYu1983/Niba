@@ -135,4 +135,55 @@ describe('靈氣型外功每回合經驗（endPlayerTurn）', () => {
     expect(progressed?.skillProgression?.[aura1]?.experience).toBe(AURA_SKILL_EXPERIENCE_PER_ROUND)
     expect(progressed?.skillProgression?.[aura2]?.experience).toBe(AURA_SKILL_EXPERIENCE_PER_ROUND)
   })
+
+  it('迴氣悟道（功法經驗 +20%）作用於靈氣型外功經驗', () => {
+    const auraSkillId = 'golden-body-external-functional'
+    const state = makeSmallState({
+      players: [makePlayer({
+        externalSkillIds: [auraSkillId, 'void-spirit-external-functional'],
+        equippedExternalSkillIds: [auraSkillId, 'void-spirit-external-functional'],
+        skillProgression: { [auraSkillId]: { experience: 0, level: 1 } },
+      })],
+    })
+
+    const result = endPlayerTurn(state, 'player-1', emptyDeps)
+
+    const progressed = result.state.players.find((p) => p.id === 'player-1')
+    // 5 × (1 + 0.2) = 6
+    expect(progressed?.skillProgression?.[auraSkillId]?.experience).toBe(6)
+  })
+
+  it('悟性天成（全域功法經驗 +20%）作用於靈氣型外功經驗', () => {
+    const auraSkillId = 'golden-body-external-functional'
+    const state = makeSmallState({
+      bases: [{
+        id: 'base-1',
+        name: '據點',
+        position: { row: 1, column: 1 },
+        buildings: [],
+        buildingMaterials: 0,
+        maxBuildingMaterials: 100,
+        health: 100,
+        maxHealth: 100,
+        active: true,
+      }],
+      globalBuffs: [{
+        id: 'global-buff-test',
+        kind: 'skill-experience-bonus',
+        magnitude: 20,
+        sourceBaseId: 'base-1',
+      }],
+      players: [makePlayer({
+        externalSkillIds: [auraSkillId],
+        equippedExternalSkillIds: [auraSkillId],
+        skillProgression: { [auraSkillId]: { experience: 0, level: 1 } },
+      })],
+    })
+
+    const result = endPlayerTurn(state, 'player-1', emptyDeps)
+
+    const progressed = result.state.players.find((p) => p.id === 'player-1')
+    // 5 × (1 + 0.2) = 6
+    expect(progressed?.skillProgression?.[auraSkillId]?.experience).toBe(6)
+  })
 })
