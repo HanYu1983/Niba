@@ -6,6 +6,7 @@ import type {
 } from '../types'
 import { isAdjacent, isSamePosition } from '../types'
 import { getGovernanceRank } from './governanceRules'
+import { getOccupiedPositions, SPAWN_LAYERS } from './occupancyRules'
 
 /** 防禦設施建造範圍：據點曼哈頓距離內可建造。 */
 export const DEFENSE_BUILD_RANGE = 5
@@ -26,15 +27,7 @@ export function validateDefenseBuild(
   const base = state.bases.find((candidate) => candidate.id === baseId)
   const definition = defenseStructureCatalog.find((candidate) => candidate.type === structureType)
   const cell = state.map.cells.find((candidate) => isSamePosition(candidate, position))
-  const occupied = [
-    ...state.players.map((candidate) => candidate.position),
-    ...state.creatures.map((candidate) => candidate.position),
-    ...state.bases.map((candidate) => candidate.position),
-    ...state.creatureNests.map((candidate) => candidate.position),
-    ...state.resourcePoints.map((candidate) => candidate.position),
-    ...state.itemPoints.map((candidate) => candidate.position),
-    ...(state.defenseStructures ?? []).map((candidate) => candidate.position),
-  ]
+  const occupied = getOccupiedPositions(state, { layers: SPAWN_LAYERS })
 
   if (!player || playerId !== state.activePlayerId) return '目前無法建造防禦設施。'
   if (!base || !definition) return '據點或設施不存在。'

@@ -617,41 +617,13 @@ export function evaluateEquipInnerSkill(inputs: FuzzyInputs): GoalResult {
 // ─── useInnerSkillAttack ───────────────────────────────────────
 
 export function evaluateUseInnerSkillAttack(
-  inputs: FuzzyInputs,
-  state?: GameState,
-  player?: PlayerState,
-  dependencies?: ExecuteAiActionDependencies,
+  _inputs: FuzzyInputs,
+  _state?: GameState,
+  _player?: PlayerState,
+  _dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   // 先關閉
   return { score: 0 }
-
-  // eslint-disable-next-line unreachable-code
-  if (!state || !player || !dependencies) return { score: 0 }
-  const { hasDamageInnerSkill, innerPowerRatio, distToNearestThreat, visibleCreatureIds } = inputs
-
-  if (!hasDamageInnerSkill || visibleCreatureIds.length === 0) return { score: 0 }
-
-  const f_hasSkill = .6
-  const f_hasPower = trapezoid(innerPowerRatio, 0.15, 0.25, 1, 1)
-  const f_threatClose = distToNearestThreat <= 1
-    ? 1
-    : trapezoid(distToNearestThreat, 1, 2, 5, 8)
-
-  const score = fuzzyAnd(f_hasSkill, fuzzyAnd(f_hasPower, f_threatClose))
-
-  const result: GoalResult = {
-    score,
-    target: { kind: 'use-inner-skill-attack', targetId: '', targetType: 'creature', position: { row: -1, column: -1 } },
-    context: { innerPowerRatio, distToNearestThreat },
-  }
-
-  if (score > 0) {
-    const actions = buildValidatedActionSequence('useInnerSkillAttack', result, state!, player!, dependencies!)
-    if (actions.length === 0) return { score: 0 }
-    result.actions = actions
-  }
-
-  return result
 }
 
 // ─── learnMartialSkill ─────────────────────────────────────────

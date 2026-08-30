@@ -59,8 +59,13 @@ export function restoreGameBackup(payload: GameBackupPayload): number {
   for (const [key, value] of Object.entries(payload.entries)) {
     // 安全防護：僅還原本遊戲前綴的 key。
     if (!key.startsWith(BACKUP_KEY_PREFIX)) continue
-    localStorage.setItem(key, value)
-    restored += 1
+    try {
+      localStorage.setItem(key, value)
+      restored += 1
+    } catch {
+      // 單一 key 寫入失敗（如 QuotaExceededError）不中斷其餘還原。
+      continue
+    }
   }
   return restored
 }

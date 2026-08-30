@@ -1,7 +1,7 @@
-import { Button, Card, Descriptions, Divider, Space, Typography, message } from 'antd'
+import { Button, Card, Descriptions, Divider, Space, Typography } from 'antd'
 import { useMemo, useState } from 'react'
 import type { GameSettings } from '../game/types'
-import { getChallengeState, recordChallengeVictory, resetChallengeState } from '../game/challengeState'
+import { getChallengeState } from '../game/challengeState'
 import { generateChallengeMapConfig } from '../game/challengeMapGenerator'
 import { getCharacters, type PersistentCharacter } from '../game/characterRoster'
 
@@ -12,7 +12,7 @@ type ChallengeTabProps = {
 
 /** 挑戰關卡 Tab：顯示闖關等級與地圖設置換算結果，選角色後開始挑戰。 */
 function ChallengeTab({ onStartChallenge }: ChallengeTabProps) {
-  const [state, setState] = useState(() => getChallengeState())
+  const [state] = useState(() => getChallengeState())
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>(undefined)
   const rosterCharacters = useMemo(() => getCharacters(), [])
 
@@ -23,11 +23,6 @@ function ChallengeTab({ onStartChallenge }: ChallengeTabProps) {
       ? rosterCharacters.find((c) => c.id === selectedCharacterId)
       : undefined
     onStartChallenge(config, character)
-  }
-
-  const handleVictory = () => {
-    setState(recordChallengeVictory())
-    message.success('已記錄通關，闖關等級 +1！')
   }
 
   return (
@@ -75,22 +70,6 @@ function ChallengeTab({ onStartChallenge }: ChallengeTabProps) {
         <Button type="primary" size="large" onClick={handleStart}>
           開始挑戰
         </Button>
-        {/* 除錯用：模擬通關（暫不顯示，待正式通關結算接入後移除註解） */}
-        {false && (
-          <Button size="large" onClick={handleVictory}>
-            ✅ 模擬通關（等級 +1）
-          </Button>
-        )}
-        {/* 除錯用：重置挑戰狀態（暫不顯示） */}
-        {false && (
-          <Button
-            size="large"
-            danger
-            onClick={() => { setState(resetChallengeState()); message.info('已重置挑戰狀態。') }}
-          >
-            🗑️ 重置挑戰狀態
-          </Button>
-        )}
       </Space>
     </Space>
   )

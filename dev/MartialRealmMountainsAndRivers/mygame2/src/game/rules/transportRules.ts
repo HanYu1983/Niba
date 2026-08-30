@@ -2,7 +2,7 @@ import type { BaseState, DefenseStructureState, GameState, Position } from '../t
 import { getAdjacentPositions } from '../types'
 import { BUILDING_TYPES } from '../catalogs/buildingCatalog'
 import { assertPlayerTurn } from './actionCostRules'
-import { getBlockedPositions } from './movementRules'
+import { getOccupiedPositions, SPAWN_LAYERS } from './occupancyRules'
 import { canTraverseTerrain } from './playerDerivedRules'
 import { isBaseActive } from './baseRules'
 
@@ -108,14 +108,7 @@ export function getTransportLandingPosition(
   const player = state.players.find((candidate) => candidate.id === playerId)
   if (!player) return null
 
-  const blocked = [
-    ...getBlockedPositions(state, playerId),
-    ...(state.creatureNests ?? []).map((nest) => nest.position),
-    ...(state.resourcePoints ?? []).map((point) => point.position),
-    ...(state.itemPoints ?? []).map((point) => point.position),
-    ...(state.explorationEvents ?? []).map((event) => event.position),
-    ...(state.defenseStructures ?? []).map((structure) => structure.position),
-  ]
+  const blocked = getOccupiedPositions(state, { excludePlayerId: playerId, layers: SPAWN_LAYERS })
   const isBlocked = (position: Position) => blocked.some(
     (occupied) => occupied.row === position.row && occupied.column === position.column,
   )

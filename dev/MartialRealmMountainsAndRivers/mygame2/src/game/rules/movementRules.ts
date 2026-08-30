@@ -1,6 +1,7 @@
 import type { GameState, MapState, PlayerState, Position } from '../types'
 import { getAdjacentPositions } from '../types'
 import { canTraverseTerrain, getTerrainStaminaCost } from './playerDerivedRules'
+import { getOccupiedPositions, MOVEMENT_LAYERS, SPAWN_LAYERS } from './occupancyRules'
 
 /**
  * 統一取得「會擋住移動」的格子位置，供玩家移動、AI 決策共用。
@@ -15,24 +16,10 @@ export type BlockedPositionOptions = {
 }
 
 export function getBlockedPositions(state: GameState, playerId: string, options: BlockedPositionOptions = {}): Position[] {
-  const positions = [
-    ...state.players.filter((player) => player.id !== playerId).map((player) => player.position),
-    ...state.creatures.map((creature) => creature.position),
-    ...state.bases.map((base) => base.position),
-    ...state.creatureNests.map((nest) => nest.position),
-    ...(state.ruins ?? []).filter((ruin) => ruin.status === 'intact').map((ruin) => ruin.position),
-    ...(state.sectGates ?? []).map((gate) => gate.position),
-    ...(state.defenseStructures ?? []).map((structure) => structure.position),
-    ...(options.includeInteractionPoints ? [
-      ...state.resourcePoints.map((point) => point.position),
-      ...state.itemPoints.map((point) => point.position),
-      ...(state.explorationEvents ?? []).map((event) => event.position),
-      ...(state.traps ?? []).map((trap) => trap.position),
-    ] : []),
-  ]
-  return positions.filter((position): position is Position => Boolean(
-    position && Number.isFinite(position.row) && Number.isFinite(position.column),
-  ))
+  return getOccupiedPositions(state, {
+    excludePlayerId: playerId,
+    layers: options.includeInteractionPoints ? SPAWN_LAYERS : MOVEMENT_LAYERS,
+  })
 }
 
 export function buildMovementCostMap(

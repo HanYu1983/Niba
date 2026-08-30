@@ -1,4 +1,4 @@
-import type { ScenarioDefinition } from '../editor/editorTypes'
+import type { ScenarioDefinition } from './contracts/scenario'
 
 /**
  * 關卡儲存層（Scenario Storage）。
@@ -100,11 +100,11 @@ export function clearStoredScenarios(): void {
 /** 產生一個不與既有 id 衝突的自訂關卡 id（`custom-` 前綴 + 時間戳）。 */
 export function generateCustomScenarioId(): string {
   const existing = getStoredScenarios()
-  let id = ''
+  let candidate: string
   do {
-    id = `custom-${Date.now()}-${Math.floor(Math.random() * 1000)}`
-  } while (existing[id])
-  return id
+    candidate = `custom-${Date.now()}-${Math.floor(Math.random() * 1000)}`
+  } while (existing[candidate])
+  return candidate
 }
 
 /**

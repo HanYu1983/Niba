@@ -24,8 +24,6 @@ import {
   type CreatureActionLog,
   type LootResult,
   type EquipmentLoadout,
-  type BuffInstance,
-  type TrapState,
   type ExplorationEventChoice,
   type UpgradeableAttribute,
   type AiOrder,
@@ -35,21 +33,16 @@ import {
   type RunStats,
   isAdjacent,
   isSameOrAdjacent,
-  isSamePosition,
-  getAdjacentPositions,
 } from './types'
 import type { AiAction } from './ai/aiAction'
 import type { AiActionEvent } from './ai/aiActionEvent'
 import { createAiActionEvent } from './ai/aiActionEvent'
 import {
-  getBuff,
   getEquipment,
   getEquipmentLoadout,
   getEffectiveAttributesForPlayer,
   getEquipmentInventory,
-  canTraverseTerrain,
   getBuildingReputationBonus,
-  getPlayerResourceLimit,
 } from './rules/playerDerivedRules'
 import { getExternalSkill, getPlayerTotalInsightCost, getElementDamageMultiplier, equipInnerSkillAction } from './rules/skillRules'
 import {
@@ -66,7 +59,6 @@ import {
 } from './rules/transportRules'
 import {
   updatePlayerVisibility,
-  getScoutCellIds,
 } from './rules/visibilityRules'
 import {
   applyEquipmentLoadout,
@@ -130,7 +122,7 @@ import {
   withdrawItem as withdrawItemAction,
 } from './actions/storageActions'
 import { movePlayer as movePlayerAction } from './actions/movementActions'
-import { collectItemPointAction } from './actions/itemActions'
+import { collectItemPointAction, useItemAction as executeUseItemAction } from './actions/itemActions'
 import {
   endPlayerTurn as endPlayerTurnAction,
   startPlayerTurn as startPlayerTurnAction,
@@ -145,7 +137,7 @@ import { animateCreatureTurn as animateCreatureTurnAction } from './creatureAnim
 import { learnSkillAtMartialHall as learnSkillAtMartialHallAction } from './actions/martialHallActions'
 import { learnSkillAtSectGate as learnSectGateSkillAction, practiceSkillAtSectGate as practiceSectGateSkillAction } from './actions/sectGateActions'
 import { clearRuin as clearRuinAction, reconstructRuin as reconstructRuinAction } from './actions/ruinActions'
-import { AUTO_SAVE_SLOT, getGameSaveSlots, loadGameState, loadGameStateFromSlot, saveGameState, saveGameStateToSlot, deleteGameStateFromSlot } from './gameSave'
+import { getGameSaveSlots, loadGameState, loadGameStateFromSlot, saveGameState, saveGameStateToSlot, deleteGameStateFromSlot, scheduleAutoSave } from './gameSave'
 import { isRunSettled, markRunSettled } from './settledRuns'
 import { recordScenarioClearance } from './campaignClearance'
 import { createGameState as createWorldGameState, createDebugGameState as createWorldDebugGameState } from './worldSetup'
@@ -172,11 +164,11 @@ import { executeTriggers } from './rules/triggerRules'
 import { storyDialogueCatalog } from './catalogs/storyDialogueCatalog'
 import { buildGameStateFromScenario } from '../editor/rules/scenarioCompiler'
 import { validateScenario } from '../editor/rules/scenarioValidator'
-import type { ScenarioDefinition } from '../editor/editorTypes'
+import type { ScenarioDefinition } from './contracts/scenario'
 import { chooseDefenseAction } from './aiDefenseRules'
 import { chooseSupportAction } from './aiSupportRules'
 import { chooseSelfPreservationAction } from './aiSelfPreservationRules'
-import { defenseActionToAiAction } from './ai/aiAction'
+import { defenseActionToAiAction } from './ai/defenseActionAdapter'
 import { validateAiAction } from './ai/validation/validateAiAction'
 import { getPlayerAiEmergency } from './ai/policy/aiPolicyRegistry'
 import { executeAiAction as executeAiActionDomain } from './ai/execution/executeAiAction'
@@ -449,7 +441,7 @@ export const gameStore = {
       // 因此要把包含局末旗標與同一 runId 的最新狀態寫回自動存檔，
       // 讓存檔摘要能顯示「已領取殘卷」，讀檔也能正確讀取防重登記。
       // activeCharacterIds 已隨 GameState 序列化，故不需再以參數傳入。
-      saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode, currentScenarioId)
+      scheduleAutoSave(gameState, null, isChallengeMode, currentScenarioId)
     }
     return results
   },
@@ -1122,327 +1114,7 @@ export const gameStore = {
   },
 
   useItem: (playerId: string, itemId: string): ActionOutcome => {
-    let result: ActionOutcome = { ok: false, reason: '無法使用此道具。' }
-
-    updateGameState((state) => {
-      const player = getActionablePlayer(state, playerId)
-      const item = itemCatalog.find((currentItem) => currentItem.id === itemId)
-      const inventoryEntry = player?.inventory.find((entry) => entry.itemId === itemId)
-
-      if (
-        !player ||
-        !item ||
-        !inventoryEntry ||
-        inventoryEntry.quantity <= 0 ||
-        state.activePlayerId !== playerId ||
-        player.turnEnded
-      ) {
-        result = { ok: false, reason: '道具不存在、數量不足，或目前無法行動。' }
-        return state
-      }
-
-      if (player.itemEffectsUsedThisTurn?.includes(item.effect)) {
-        result = { ok: false, reason: '本回合已使用過此類道具。' }
-        return state
-      }
-
-      // 消耗道具的通用輔助：扣除庫存數量。
-      const consumeItem = (currentPlayer: PlayerState): PlayerState => ({
-        ...currentPlayer,
-        health: Math.max(0, currentPlayer.health - (item.cost?.health ?? 0)),
-        stamina: currentPlayer.stamina - (item.cost?.stamina ?? 0),
-        innerPower: currentPlayer.innerPower - (item.cost?.innerPower ?? 0),
-        inventory: currentPlayer.inventory
-          .map((entry) =>
-            entry.itemId === itemId
-              ? { ...entry, quantity: entry.quantity - 1 }
-              : entry,
-          )
-          .filter((entry) => entry.quantity > 0),
-      })
-
-      // ===== 屬性提升類（attribute-up）：永久 +1 單一屬性，無上限 =====
-      if (item.effect === 'attribute-up') {
-        if (!item.attribute) {
-          result = { ok: false, reason: '此道具未指定提升屬性。' }
-          return state
-        }
-        result = { ok: true }
-        return {
-          ...state,
-          players: state.players.map((currentPlayer) => {
-            if (currentPlayer.id !== playerId) return currentPlayer
-            const consumed = consumeItem(currentPlayer)
-            const baseAttributes = consumed.baseAttributes ?? consumed.attributes
-            const nextAttributes = {
-              ...baseAttributes,
-              [item.attribute!]: Math.max(1, baseAttributes[item.attribute!] + (item.effectValue ?? 1)),
-            }
-            return restoreAfterAttributeChange(
-              { ...consumed, baseAttributes: nextAttributes, itemEffectsUsedThisTurn: [...(consumed.itemEffectsUsedThisTurn ?? []), 'attribute-up'] },
-              getEffectiveAttributesForPlayer({ ...consumed, baseAttributes: nextAttributes }),
-            )
-          }),
-        }
-      }
-
-      // ===== 陷阱類（trap）：在當前格放置陷阱 =====
-      if (item.effect === 'trap') {
-        if (!item.trapType) {
-          result = { ok: false, reason: '此陷阱未指定種類。' }
-          return state
-        }
-        const existingTrap = (state.traps ?? []).find((trap) =>
-          isSamePosition(trap.position, player.position),
-        )
-        if (existingTrap) {
-          result = { ok: false, reason: '當前格已有陷阱。' }
-          return state
-        }
-        result = { ok: true }
-        const trap: TrapState = {
-          id: `trap:${itemId}:${Date.now()}`,
-          position: player.position,
-          type: item.trapType,
-          ownerPlayerId: playerId,
-          // 絆馬索傷害由道具 effectValue 定義；定身索無傷害。
-          damage: item.trapType === 'snare' ? (item.effectValue ?? 15) : undefined,
-        }
-        return {
-          ...state,
-          traps: [...(state.traps ?? []), trap],
-          players: state.players.map((currentPlayer) =>
-            currentPlayer.id === playerId
-              ? { ...consumeItem(currentPlayer), itemEffectsUsedThisTurn: [...(currentPlayer.itemEffectsUsedThisTurn ?? []), 'trap'] }
-              : currentPlayer,
-          ),
-        }
-      }
-
-      // ===== 探地符（scout）：揭示半徑 effectValue 格，寫入 exploredCellIds，並暫時揭示範圍內怪物 =====
-      if (item.effect === 'scout') {
-        const scoutRange = item.effectValue ?? 6
-        const scoutCellIds = getScoutCellIds(state.map, player.position, scoutRange)
-        const visibility = state.visibility ?? { exploredCellIds: [], mode: 'fog' as const }
-        // 範圍內活著怪物的所在格，暫時揭示（同鳴鑼符機制），使怪物可被看見。
-        const revealedCellIds = state.creatures
-          .filter((creature) => creature.health > 0)
-          .filter((creature) =>
-            Math.abs(creature.position.row - player.position.row) +
-              Math.abs(creature.position.column - player.position.column) <= scoutRange,
-          )
-          .map((creature) => {
-            const cell = state.map.cells.find((candidate) =>
-              candidate.row === creature.position.row && candidate.column === creature.position.column,
-            )
-            return cell?.id
-          })
-          .filter((cellId): cellId is string => Boolean(cellId))
-        result = { ok: true }
-        return {
-          ...state,
-          visibility: {
-            ...visibility,
-            exploredCellIds: [...new Set([...visibility.exploredCellIds, ...scoutCellIds])],
-          },
-          revealedCreatureCellIds: [...new Set([...(state.revealedCreatureCellIds ?? []), ...revealedCellIds])],
-          revealedCreatureUntilRound: state.round + 1,
-          players: state.players.map((currentPlayer) =>
-            currentPlayer.id === playerId
-              ? { ...consumeItem(currentPlayer), itemEffectsUsedThisTurn: [...(currentPlayer.itemEffectsUsedThisTurn ?? []), 'scout'] }
-              : currentPlayer,
-          ),
-        }
-      }
-
-      // ===== 鳴鑼符（reveal-creatures）：暫時揭示全圖怪物位置 =====
-      if (item.effect === 'reveal-creatures') {
-        const revealedCellIds = state.creatures
-          .filter((creature) => creature.health > 0)
-          .map((creature) => {
-            const cell = state.map.cells.find((candidate) =>
-              candidate.row === creature.position.row && candidate.column === creature.position.column,
-            )
-            return cell?.id
-          })
-          .filter((cellId): cellId is string => Boolean(cellId))
-        result = { ok: true }
-        return {
-          ...state,
-          revealedCreatureCellIds: revealedCellIds,
-          revealedCreatureUntilRound: state.round + 1,
-          players: state.players.map((currentPlayer) =>
-            currentPlayer.id === playerId
-              ? { ...consumeItem(currentPlayer), itemEffectsUsedThisTurn: [...(currentPlayer.itemEffectsUsedThisTurn ?? []), 'reveal-creatures'] }
-              : currentPlayer,
-          ),
-        }
-      }
-
-      // ===== 回營符（recall-base）：撤退到最近據點，不耗體力 =====
-      if (item.effect === 'recall-base') {
-        const activeBases = state.bases.filter((base) => base.active !== false)
-        if (activeBases.length === 0) {
-          result = { ok: false, reason: '目前沒有可用的據點。' }
-          return state
-        }
-        const manhattan = (a: Position, b: Position) =>
-          Math.abs(a.row - b.row) + Math.abs(a.column - b.column)
-        let nearestBase = activeBases[0]
-        let minDistance = manhattan(player.position, nearestBase.position)
-        for (const base of activeBases) {
-          const distance = manhattan(player.position, base.position)
-          if (distance < minDistance) {
-            nearestBase = base
-            minDistance = distance
-          }
-        }
-        const isPositionFree = (position: Position) => {
-          const cell = state.map.cells.find((candidate) =>
-            candidate.row === position.row && candidate.column === position.column,
-          )
-          if (!cell || !canTraverseTerrain(cell.terrain, player)) return false
-          const occupied = [
-            ...state.players.filter((candidate) => candidate.id !== playerId).map((candidate) => candidate.position),
-            ...state.creatures.map((creature) => creature.position),
-            // 目標據點本身不視為佔用，玩家可站上據點格。
-            ...state.bases.filter((base) => base.id !== nearestBase.id).map((base) => base.position),
-            ...state.creatureNests.map((nest) => nest.position),
-            ...(state.defenseStructures ?? []).map((structure) => structure.position),
-          ]
-          return !occupied.some((occupiedPosition) => isSamePosition(occupiedPosition, position))
-        }
-        // 回營傳送應抵達據點周遭一格（仿驛站/小型驛站的降落邏輯），
-        // 不應直接站上據點格。僅當據點周遭完全沒有空格時才退回站上據點格。
-        const targetPosition =
-          getAdjacentPositions(nearestBase.position).find((position) => isPositionFree(position))
-          ?? (isPositionFree(nearestBase.position) ? nearestBase.position : undefined)
-        if (!targetPosition) {
-          result = { ok: false, reason: '最近據點周圍沒有可落腳的空格。' }
-          return state
-        }
-        result = { ok: true }
-        return {
-          ...state,
-          players: state.players.map((currentPlayer) =>
-            currentPlayer.id === playerId
-              ? { ...consumeItem(currentPlayer), position: targetPosition, itemEffectsUsedThisTurn: [...(currentPlayer.itemEffectsUsedThisTurn ?? []), 'recall-base'] }
-              : currentPlayer,
-          ),
-          visibility: updatePlayerVisibility({ ...state, players: state.players.map((currentPlayer) =>
-            currentPlayer.id === playerId ? { ...currentPlayer, position: targetPosition } : currentPlayer,
-          ) }, playerId),
-        }
-      }
-
-      // ===== 元素爆發類（element-burst）：需選格，傷害套用五行相剋 =====
-      if (item.effect === 'element-burst') {
-        // 元素爆發需先進入選格模式，由 MapGrid 點擊目標後再執行。
-        result = { ok: true }
-        return {
-          ...state,
-          operation: { type: 'targeting-item', itemId },
-        }
-      }
-
-      const nextValue = item.effect === 'health'
-        ? Math.min(player.maxHealth, player.health + (item.effectValue ?? 0))
-        : item.effect === 'stamina'
-          ? Math.min(player.maxStamina, player.stamina + (item.effectValue ?? 0))
-          : item.effect === 'inner-power'
-            ? Math.min(player.maxInnerPower, player.innerPower + (item.effectValue ?? 0))
-            : player.health
-
-      if (item.effect === 'buff') {
-        // Buff 型道具：附加臨時 Buff，不需要檢查恢復上限。
-        if (!item.buffDefinitionId) {
-          result = { ok: false, reason: '此 Buff 定義不存在。' }
-          return state
-        }
-        result = { ok: true }
-        const buffInstance: BuffInstance = {
-          id: `item:${itemId}:${Date.now()}`,
-          definitionId: item.buffDefinitionId,
-          sourceId: itemId,
-          remainingRounds: getBuff(item.buffDefinitionId)?.duration === 'rounds'
-            ? getBuff(item.buffDefinitionId)?.durationRounds ?? null
-            : null,
-        }
-        return {
-          ...state,
-          players: state.players.map((currentPlayer) => {
-            if (currentPlayer.id !== playerId) return currentPlayer
-            const withBuff = { ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] }
-            return {
-              ...withBuff,
-              maxHealth: getPlayerResourceLimit(withBuff, 'health'),
-              maxStamina: getPlayerResourceLimit(withBuff, 'stamina'),
-              maxInnerPower: getPlayerResourceLimit(withBuff, 'innerPower'),
-              inventory: currentPlayer.inventory
-                .map((entry) =>
-                  entry.itemId === itemId
-                    ? { ...entry, quantity: entry.quantity - 1 }
-                    : entry,
-                )
-                .filter((entry) => entry.quantity > 0),
-              itemEffectsUsedThisTurn: item.effect === 'buff'
-                ? [...(currentPlayer.itemEffectsUsedThisTurn ?? []), item.effect]
-                : currentPlayer.itemEffectsUsedThisTurn,
-              turnEnded: currentPlayer.turnEnded,
-            }
-          }),
-        }
-      }
-
-      const fullValue = item.effect === 'health'
-        ? player.health
-        : item.effect === 'stamina'
-          ? player.stamina
-          : item.effect === 'inner-power'
-            ? player.innerPower
-            : player.health
-
-      if (nextValue === fullValue) {
-        result = { ok: false, reason: '目前已達該道具效果的恢復上限。' }
-        return state
-      }
-
-      result = { ok: true }
-
-      const nextPlayerResource = {
-        health: item.effect === 'health' ? nextValue : Math.max(0, player.health - (item.cost?.health ?? 0)),
-        stamina: item.effect === 'stamina' ? nextValue : player.stamina - (item.cost?.stamina ?? 0),
-        innerPower: item.effect === 'inner-power' ? nextValue : player.innerPower - (item.cost?.innerPower ?? 0),
-      }
-
-      return {
-        ...state,
-        players: state.players.map((currentPlayer) =>
-          currentPlayer.id === playerId
-            ? {
-              ...currentPlayer,
-              health: nextPlayerResource.health,
-              stamina: nextPlayerResource.stamina,
-              innerPower: nextPlayerResource.innerPower,
-              itemEffectsUsedThisTurn: [...(currentPlayer.itemEffectsUsedThisTurn ?? []), item.effect],
-              inventory: currentPlayer.inventory
-                .map((entry) =>
-                  entry.itemId === itemId
-                    ? { ...entry, quantity: entry.quantity - 1 }
-                    : entry,
-                )
-                .filter((entry) => entry.quantity > 0),
-              turnEnded: currentPlayer.turnEnded,
-            }
-            : currentPlayer,
-        ),
-      }
-    })
-
-    // 使用道具不算一個回合
-    // gameStore.autoEndPlayerTurn(playerId)
-
-    return result
+    return runActionOutcome(updateGameState, (state) => executeUseItemAction(state, playerId, itemId), '無法使用此道具。')
   },
 
   buyItem: (playerId: string, itemId: string, quantity: number): ActionOutcome => {
@@ -1635,7 +1307,7 @@ export const gameStore = {
     })
     animateCreatureTurn({ ...scheduled, players: currentPlayers })
     // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
-    if (!gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode, currentScenarioId)
+    if (!gameState.gameOver && !gameState.gameWon) scheduleAutoSave(gameState, null, isChallengeMode, currentScenarioId)
   },
 
   movePlayer: (playerId: string, rowDelta: number, columnDelta: number) => {
@@ -2644,7 +2316,7 @@ export const gameStore = {
     }
     // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
     // 觸發探索事件時，敵人行動尚未執行，改由 flushPendingCreatureTurn 結算後保存。
-    if (!triggeredEvent && !gameState.gameOver && !gameState.gameWon) saveGameStateToSlot(gameState, AUTO_SAVE_SLOT, null, isChallengeMode, currentScenarioId)
+    if (!triggeredEvent && !gameState.gameOver && !gameState.gameWon) scheduleAutoSave(gameState, null, isChallengeMode, currentScenarioId)
   },
 
   startPlayerTurn: (playerId: string) => {

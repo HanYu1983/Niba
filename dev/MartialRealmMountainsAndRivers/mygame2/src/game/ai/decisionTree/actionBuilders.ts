@@ -36,7 +36,7 @@ function buildCostMapFrom(
   return costs
 }
 
-// ─── 找最近可达相鄰格 ──────────────────────────
+// ─── 找最近可達相鄰格 ──────────────────────────
 
 export function findClosestReachablePosition(
   state: GameState,

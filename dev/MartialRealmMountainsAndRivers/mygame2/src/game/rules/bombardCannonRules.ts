@@ -37,7 +37,7 @@ export function fireBombardCannons(
 
   const logs: string[] = []
   let result = defenseStructures
-  let damagedCreatures = creatures.map((creature) => ({ ...creature, attributes: { ...creature.attributes } }))
+  const damagedCreatures = creatures.map((creature) => ({ ...creature, attributes: { ...creature.attributes } }))
 
   for (const cannon of cannons) {
     const targets = damagedCreatures.filter(

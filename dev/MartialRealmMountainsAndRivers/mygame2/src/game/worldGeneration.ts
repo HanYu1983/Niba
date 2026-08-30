@@ -35,6 +35,7 @@ import { NEST_SPAWN_BASE_CHANCE, getNestMaxHealth } from './actions/creatureActi
 import { createExplorationEventsFromCatalog } from './events/eventSpawner'
 import { createCharacterState } from './characterFactory'
 import { getSchoolElement, martialSchoolCatalog as progressionMartialSchoolCatalog, type SchoolElement } from './catalogs/skillProgressionCatalog'
+import { getOccupiedPositions, SPAWN_LAYERS } from './rules/occupancyRules'
 
 /**
  * 世界生成純函式集合。
@@ -90,11 +91,14 @@ export const DEFAULT_TERRAIN_WEIGHTS: TerrainWeights = {
 function terrainFromNoise(noise: number, weights: TerrainWeights): TerrainType {
   const total = weights.plain + weights.forest + weights.water + weights.mountain + weights.desert
   const scaled = noise * total
-  let acc = 0
-  if (scaled < (acc += weights.water)) return 'water'
-  if (scaled < (acc += weights.forest)) return 'forest'
-  if (scaled < (acc += weights.plain)) return 'plain'
-  if (scaled < (acc += weights.mountain)) return 'mountain'
+  const waterBoundary = weights.water
+  const forestBoundary = waterBoundary + weights.forest
+  const plainBoundary = forestBoundary + weights.plain
+  const mountainBoundary = plainBoundary + weights.mountain
+  if (scaled < waterBoundary) return 'water'
+  if (scaled < forestBoundary) return 'forest'
+  if (scaled < plainBoundary) return 'plain'
+  if (scaled < mountainBoundary) return 'mountain'
   return 'desert'
 }
 
@@ -376,18 +380,7 @@ export function createSectGates(
 }
 
 export function getRandomFreeInteractionPosition(state: GameState, seed: number): Position | null {
-  const occupied = [
-    ...state.bases.map((base) => base.position),
-    ...(state.sectGates ?? []).map((gate) => gate.position),
-    ...(state.ruins ?? []).filter((ruin) => ruin.status === 'intact').map((ruin) => ruin.position),
-    ...state.resourcePoints.map((point) => point.position),
-    ...state.players.map((player) => player.position),
-    ...state.creatures.map((creature) => creature.position),
-    ...state.creatureNests.map((nest) => nest.position),
-    ...state.itemPoints.map((point) => point.position),
-    ...(state.explorationEvents ?? []).map((event) => event.position),
-    ...(state.defenseStructures ?? []).map((structure) => structure.position),
-  ]
+  const occupied = getOccupiedPositions(state, { layers: SPAWN_LAYERS })
   const candidates = state.map.cells
     .filter((cell) => cell.terrain !== 'wall' && !occupied.some((position) => isSamePosition(position, cell)))
     .sort((first, second) => Math.sin((second.row + 1) * 127.1 + (second.column + 1) * 311.7 + seed * 74.7) - Math.sin((first.row + 1) * 127.1 + (first.column + 1) * 311.7 + seed * 74.7))
@@ -405,18 +398,7 @@ export function replenishInteractionPoint(state: GameState, removedItemPoint: bo
   if (removedEvent) {
     const replacements = createExplorationEventsFromCatalog(
       state.map,
-      [
-        ...state.bases.map((base) => base.position),
-        ...(state.sectGates ?? []).map((gate) => gate.position),
-        ...(state.ruins ?? []).filter((ruin) => ruin.status === 'intact').map((ruin) => ruin.position),
-        ...state.resourcePoints.map((point) => point.position),
-        ...state.players.map((player) => player.position),
-        ...state.creatures.map((creature) => creature.position),
-        ...state.creatureNests.map((nest) => nest.position),
-        ...state.itemPoints.map((point) => point.position),
-        ...(state.explorationEvents ?? []).map((event) => event.position),
-        ...(state.defenseStructures ?? []).map((structure) => structure.position),
-      ],
+      getOccupiedPositions(state, { layers: SPAWN_LAYERS }),
       state.round + (state.explorationEvents?.length ?? 0) + 901,
       1,
     )

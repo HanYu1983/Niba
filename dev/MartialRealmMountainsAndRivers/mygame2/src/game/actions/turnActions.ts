@@ -113,7 +113,6 @@ export function endPlayerTurn(
 ): EndPlayerTurnResult {
   const player = state.players.find((candidate) => candidate.id === playerId)
   if (!player || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver) {
-    console.log('DEBUG endPlayerTurn early return', { player: !!player, activePlayerId: state.activePlayerId, playerId, creatureTurnInProgress: state.creatureTurnInProgress, gameOver: state.gameOver })
     return { state, creatureTurn: null }
   }
 
@@ -242,7 +241,7 @@ export function endPlayerTurn(
       bases: nextBases,
       defenseStructures: state.defenseStructures ?? [],
       creatureNests: isRoundComplete ? nestSpawn?.nests ?? state.creatureNests : state.creatureNests,
-      resourcePoints: isRoundComplete ? state.resourcePoints : scheduledCreatureTurn?.resourcePoints ?? state.resourcePoints,
+      resourcePoints: isRoundComplete ? scheduledCreatureTurn?.resourcePoints ?? state.resourcePoints : state.resourcePoints,
       itemPoints: isRoundComplete ? scheduledCreatureTurn?.itemPoints ?? state.itemPoints : state.itemPoints,
       explorationEvents: isRoundComplete ? scheduledCreatureTurn?.explorationEvents ?? state.explorationEvents : state.explorationEvents,
       creatureActionLogs: isRoundComplete ? nestSpawn?.logs ?? [] : state.creatureActionLogs,

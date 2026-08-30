@@ -2,7 +2,7 @@ import type { BaseState, DefenseStructureState, GameState, ItemPointState, Playe
 import type { MartialSchoolId } from '../catalogs/martialSchoolCatalog'
 import { defaultRandomSource, rollWeighted } from './randomRules'
 import { getCreatureAiParameters } from '../ai/policy/aiPolicyRegistry'
-import { manhattanDistance as distance } from '../ai/perception/distance'
+import { getManhattanDistance as distance } from './mapCellStateRules'
 
 export type CreatureBehaviorType = 'scavenger' | 'hunter' | 'sieger' | 'wanderer' | 'roamer'
 export type CreatureTargetType = 'player' | 'resource' | 'item' | 'base' | 'defense'
