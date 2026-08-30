@@ -2,6 +2,8 @@ import { Button, Modal } from 'antd'
 import { type CreatureNestState, type PlayerState, isAdjacent } from '../game/types'
 import { getCreatureBehaviorName, getCreatureSchoolId } from '../game/rules/creatureBehaviorRules'
 import { martialSchoolCatalog } from '../game/catalogs/martialSchoolCatalog'
+import { getSchoolElement } from '../game/catalogs/skillProgressionCatalog'
+import { getElementName } from '../game/rules/skillRules'
 import LocationDetailsCard from './LocationDetailsCard'
 import StatValue from './StatValue'
 
@@ -16,6 +18,7 @@ function CreatureNestDetailsModal({ nest, currentPlayer, onAttack, onClose }: Cr
   const behaviorName = nest ? getCreatureBehaviorName(nest) : null
   const schoolId = nest ? getCreatureSchoolId(nest) : 'frost-water'
   const schoolName = martialSchoolCatalog.find((school) => school.id === schoolId)?.name ?? schoolId
+  const elementName = getElementName(getSchoolElement(schoolId))
   const canAttack = Boolean(
     nest &&
     currentPlayer &&
@@ -48,6 +51,7 @@ function CreatureNestDetailsModal({ nest, currentPlayer, onAttack, onClose }: Cr
           <StatValue label="每回合回復">最大生命 2%</StatValue>
           <StatValue label="生成行為">{behaviorName}</StatValue>
           <StatValue label="功法流派">{schoolName}</StatValue>
+          <StatValue label="五行屬性">{elementName}</StatValue>
           <Button
             type="primary"
             danger

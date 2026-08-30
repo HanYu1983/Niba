@@ -140,3 +140,22 @@ export const resourceNames: Record<string, string> = {
   wall: '資源地',
   default: '資源地',
 }
+
+/** 資源點圖示：依所在地形顯示對應 icon（樹木、礦山等）。 */
+export const resourceIcons: Record<string, string> = {
+  forest: '🌳',
+  water: '💧',
+  mountain: '⛰️',
+  desert: '⛏️',
+  plain: '🌾',
+  stone: '⛰️',
+  iron: '⛏️',
+  wall: '💠',
+  default: '💠',
+}
+
+/** 取得資源點在地圖上的顯示圖示；輜重庫維持專屬圖示。 */
+export function getResourcePointIcon(name: string, terrain: string | undefined): string {
+  if (name === '輜重庫') return '🏮'
+  return resourceIcons[terrain ?? ''] ?? resourceIcons.default ?? '💠'
+}

@@ -214,6 +214,10 @@ export function endPlayerTurn(
       creatureTurnInProgress: isRoundComplete,
       activeCreatureId: null,
       operation: { type: 'idle' },
+      // 「單回合最高傷害」：一輪完整結束（所有玩家行動完、進入下一回合）時歸零累積。
+      // 原本歸零寫在 startPlayerTurn，但該入口從未被呼叫，導致傷害跨回合無限累加、
+      // 戰績顯示為整場總傷害而非單回合峰值。
+      damageDealtThisRound: isRoundComplete ? 0 : state.damageDealtThisRound,
       // 鳴鑼符（reveal-creatures）：回合遞增超過到期回合時清空暫時揭示。
       revealedCreatureCellIds: isRoundComplete
         ? beaconReveal?.revealedCreatureCellIds

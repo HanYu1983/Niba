@@ -4,6 +4,11 @@ import { getMaxHealth } from './playerStatsRules'
 
 export const BASE_INFLUENCE_RANGE = 5
 
+/** 基本資源點的基礎採集量（每次採集獲得的建料）。 */
+export const BASE_RESOURCE_POINT_INCOME = 10
+/** 輜重庫等設施生成的大型資源點採集量倍率。 */
+export const LARGE_RESOURCE_POINT_INCOME_MULTIPLIER = 3
+
 /** 舊存檔沒有 active 欄位時視為仍在運作；新狀態會明確寫入 false。 */
 export function isBaseActive(base: BaseState): boolean {
   return base.active !== false && base.health > 0

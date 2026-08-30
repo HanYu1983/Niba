@@ -44,6 +44,8 @@ function App() {
   const [editorScenario, setEditorScenario] = useState<ScenarioDefinition>(() => createEmptyScenario(15, 15))
   const [saveModalOpen, setSaveModalOpen] = useState(false)
   const [systemCommandModalOpen, setSystemCommandModalOpen] = useState(false)
+  // 局末結算彈窗是否已被玩家關閉（關閉後可由指令欄按鈕重新開啟）。
+  const [gameOverModalDismissed, setGameOverModalDismissed] = useState(false)
   const [strategicCommandModalOpen, setStrategicCommandModalOpen] = useState(false)
   const [actionLogOpen, setActionLogOpen] = useState(false)
   const [saveSlots, setSaveSlots] = useState(() => gameStore.getSaveSlots())
@@ -462,6 +464,8 @@ function App() {
                 }
               }}
               onOpenOptions={() => setSystemCommandModalOpen(true)}
+              gameOverEnded={Boolean(gameState.gameOver || gameState.gameWon)}
+              onOpenGameOverModal={() => setGameOverModalDismissed(false)}
               onEndTurn={() => {
                 if (gameState.creatureTurnInProgress) {
                   return
@@ -565,6 +569,8 @@ function App() {
             setPlaytestMode(false)
             setScreen('start')
           }}
+          gameOverModalDismissed={gameOverModalDismissed}
+          onDismissGameOverModal={() => setGameOverModalDismissed(true)}
           activePlayer={activePlayer}
           selectedCreature={selectedCreature}
           buildingBase={buildingBase}

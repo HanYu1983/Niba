@@ -13,6 +13,10 @@ type GameOverlaysProps = {
   gameState: GameState
   /** 「重新開始」時回到地圖設置頁面（可選）。 */
   onRestartToMap?: () => void
+  /** 玩家是否已關閉局末結算彈窗（可由指令欄按鈕重新開啟）。 */
+  gameOverModalDismissed?: boolean
+  /** 關閉局末結算彈窗。 */
+  onDismissGameOverModal?: () => void
   activePlayer: PlayerState | null
   selectedCreature: CreatureState | null
   buildingBase: GameState['bases'][number] | null
@@ -92,6 +96,8 @@ type GameOverlaysProps = {
 function GameOverlays({
   gameState,
   onRestartToMap,
+  gameOverModalDismissed,
+  onDismissGameOverModal,
   activePlayer,
   selectedCreature,
   buildingBase,
@@ -158,7 +164,12 @@ function GameOverlays({
 }: GameOverlaysProps) {
   return (
     <>
-      <SystemOverlays gameState={gameState} onRestartToMap={onRestartToMap} />
+      <SystemOverlays
+        gameState={gameState}
+        onRestartToMap={onRestartToMap}
+        gameOverModalDismissed={gameOverModalDismissed}
+        onDismissGameOverModal={onDismissGameOverModal}
+      />
       <CombatOverlays
         gameState={gameState}
         selectedCreature={selectedCreature}

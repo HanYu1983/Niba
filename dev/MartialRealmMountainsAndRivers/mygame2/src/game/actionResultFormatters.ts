@@ -84,8 +84,10 @@ export function formatExternalSkillResult(result: ExternalDamageExecutionResult)
         ...(result.criticalHit ? ['暴擊！造成 1.5 倍傷害。'] : []),
         ...(result.criticalRate !== undefined && result.criticalRate > 0 ? [`外功暴擊率 ${result.criticalRate}%`] : []),
         ...(result.appliedBuffs ?? []).map((buff) => `施加 Buff：${buff.name}（${buff.description}，持續 ${buff.remainingRounds === null ? '持續生效' : `${buff.remainingRounds} 回合`}）`),
-        !isArea && result.defeated
-          ? result.targetType === 'nest' ? '巢穴已摧毀' : '目標已被擊敗'
+        !isArea
+          ? result.defeated
+            ? result.targetType === 'nest' ? '巢穴已摧毀' : '目標已被擊敗'
+            : `目標剩餘血量 ${result.nextHealth} / ${result.maxHealth}`
           : undefined,
         ...(result.experienceReward ? [`玩家經驗 +${result.experienceReward}`] : []),
         ...(result.loot ? [`掉落：${formatLootLabel(result.loot)}`] : []),

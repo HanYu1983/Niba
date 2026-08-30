@@ -30,6 +30,7 @@ type ExternalSkillEntry = {
   shape?: TargetingShape
   /** 選取模式（targeting 框架）；未設定時預設 single。 */
   selectionMode?: SelectionMode
+  insightCost?: number
 }
 
 type MartialSchoolDefinition = {
@@ -78,7 +79,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
     }],
     damage: [{ name: '追風腿', description: '以身法帶動腿勁，朝 2 格內單一敵人造成傷害。', innerPowerCost: 6, range: 2 }],
     aura: [
-      { name: '疾行', description: '地形消耗一律視為草地。', passiveBuffIds: ['swift-wind-movement'] },
+      { name: '疾行', description: '地形消耗一律視為草地。', passiveBuffIds: ['swift-wind-movement'], insightCost: 4 },
       { name: '林間步', description: '進入森林時，移動消耗降為 2。', passiveBuffIds: ['forest-step'] },
     ],
     enhancement: [],
@@ -279,7 +280,7 @@ export const progressionExternalSkills: ExternalSkill[] = martialSchoolCatalog.f
   const damageSkills = school.damage.map((entry, index) => createDamageExternalSkill({
     id: index === 0 ? `${school.id}-external-damage` : `${school.id}-external-damage-${index + 1}`,
     name: entry.name,
-    description: `${inner.theme}${entry.description}`,
+    description: `${entry.description}`,
     formulaDescription: entry.description,
     insightCost: 2,
     requiredHallLevel: index === 0 ? 2 : 3,
@@ -298,9 +299,9 @@ export const progressionExternalSkills: ExternalSkill[] = martialSchoolCatalog.f
   const auraSkills = school.aura.map((entry, index) => createAuraExternalSkill({
     id: `${school.id}-external-functional${index === 0 ? '' : `-${index + 1}`}`,
     name: entry.name,
-    description: `${inner.theme}${entry.description}`,
+    description: `${entry.description}`,
     formulaDescription: entry.description,
-    insightCost: 2,
+    insightCost: entry.insightCost ?? 2,
     requiredHallLevel: 3,
     school: school.name,
     schoolId: school.id,

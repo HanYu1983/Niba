@@ -1,5 +1,5 @@
 import { Button, Checkbox, Divider, Flex, Space, Typography, message } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   getCharacter,
   getTalentUnlockCost,
@@ -23,6 +23,10 @@ type CharacterTalentPanelProps = {
  */
 function CharacterTalentPanel({ character, onChanged }: CharacterTalentPanelProps) {
   const [current, setCurrent] = useState<PersistentCharacter>(character)
+  // 父層 editing 更新（如培養 tab 扣卷後）時同步本面板快照，避免殘卷數顯示不一致。
+  useEffect(() => {
+    setCurrent(character)
+  }, [character])
   const available = getAvailableTalents()
   const unlocked = current.unlockedTalentIds ?? []
   const nextUnlockCost = getTalentUnlockCost(unlocked.length)

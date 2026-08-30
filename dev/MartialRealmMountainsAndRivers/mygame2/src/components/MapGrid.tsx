@@ -68,6 +68,7 @@ type MapGridProps = {
 }
 
 import { TERRAIN_STYLES } from '../editor/terrainStyles'
+import { getResourcePointIcon } from '../game/catalogs/placeNameCatalog'
 
 function hasValidPosition(value: { position?: Position } | null | undefined): value is { position: Position } {
   const position = value?.position
@@ -585,7 +586,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                         }
                       }}
                     >
-                      {resourcePoint.active === false ? '❗' : resourcePoint.name === '輜重庫' ? '🏮' : '💎'}
+                      {getResourcePointIcon(resourcePoint.name, cell.terrain)}
                     </div>
                   ))}
                   {itemPointsHere.map((itemPoint) => (

@@ -14,6 +14,10 @@ type SystemOverlaysProps = {
   gameState: GameState
   /** 「重新開始」時回到地圖設置頁面（預設僅重設目前局）。 */
   onRestartToMap?: () => void
+  /** 玩家是否已關閉局末結算彈窗（可由指令欄按鈕重新開啟）。 */
+  gameOverModalDismissed?: boolean
+  /** 關閉局末結算彈窗（玩家可回到地圖觀察局末狀態）。 */
+  onDismissGameOverModal?: () => void
 }
 
 /**
@@ -22,7 +26,7 @@ type SystemOverlaysProps = {
  * - 行動結果彈窗
  * - 劇情對話彈窗
  */
-function SystemOverlays({ gameState, onRestartToMap }: SystemOverlaysProps) {
+function SystemOverlays({ gameState, onRestartToMap, gameOverModalDismissed = false, onDismissGameOverModal }: SystemOverlaysProps) {
   const dialogue = gameState.blockingModal?.type === 'story-dialogue'
     ? gameState.blockingModal
     : null
@@ -90,11 +94,12 @@ function SystemOverlays({ gameState, onRestartToMap }: SystemOverlaysProps) {
   return (
     <>
       <GameOverModal
-        open={gameEnded}
+        open={gameEnded && !gameOverModalDismissed}
         won={Boolean(gameState.gameWon)}
         reason={gameState.gameOverReason}
         record={computeBattleRecord(gameState)}
         scrollReward={scrollReward}
+        onClose={onDismissGameOverModal}
         onRestart={() => {
           if (onRestartToMap) {
             gameStore.restartGame()
