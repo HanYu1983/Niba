@@ -91,11 +91,14 @@ export const DEFAULT_TERRAIN_WEIGHTS: TerrainWeights = {
 function terrainFromNoise(noise: number, weights: TerrainWeights): TerrainType {
   const total = weights.plain + weights.forest + weights.water + weights.mountain + weights.desert
   const scaled = noise * total
-  let acc = 0
-  if (scaled < (acc += weights.water)) return 'water'
-  if (scaled < (acc += weights.forest)) return 'forest'
-  if (scaled < (acc += weights.plain)) return 'plain'
-  if (scaled < (acc += weights.mountain)) return 'mountain'
+  const waterBoundary = weights.water
+  const forestBoundary = waterBoundary + weights.forest
+  const plainBoundary = forestBoundary + weights.plain
+  const mountainBoundary = plainBoundary + weights.mountain
+  if (scaled < waterBoundary) return 'water'
+  if (scaled < forestBoundary) return 'forest'
+  if (scaled < plainBoundary) return 'plain'
+  if (scaled < mountainBoundary) return 'mountain'
   return 'desert'
 }
 

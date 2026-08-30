@@ -99,6 +99,7 @@ export function getAiActionStaminaCost(state: GameState, action: AiAction): numb
         case 'mission':  return ACTION_STAMINA_COSTS.mission
         case 'repair':   return ACTION_STAMINA_COSTS.repair
       }
+      return 0
     case 'hold':               return 0
     case 'end-turn':           return 0
     case 'allocate-attribute': return 0

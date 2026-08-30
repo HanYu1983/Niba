@@ -122,7 +122,7 @@ import {
   withdrawItem as withdrawItemAction,
 } from './actions/storageActions'
 import { movePlayer as movePlayerAction } from './actions/movementActions'
-import { collectItemPointAction, useItemAction } from './actions/itemActions'
+import { collectItemPointAction, useItemAction as executeUseItemAction } from './actions/itemActions'
 import {
   endPlayerTurn as endPlayerTurnAction,
   startPlayerTurn as startPlayerTurnAction,
@@ -1114,7 +1114,7 @@ export const gameStore = {
   },
 
   useItem: (playerId: string, itemId: string): ActionOutcome => {
-    return runActionOutcome(updateGameState, (state) => useItemAction(state, playerId, itemId), '無法使用此道具。')
+    return runActionOutcome(updateGameState, (state) => executeUseItemAction(state, playerId, itemId), '無法使用此道具。')
   },
 
   buyItem: (playerId: string, itemId: string, quantity: number): ActionOutcome => {

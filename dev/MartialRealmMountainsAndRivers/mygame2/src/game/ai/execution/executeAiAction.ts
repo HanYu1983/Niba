@@ -6,13 +6,13 @@ import { constructBuilding, constructDefenseStructure } from '../../actions/buil
 import type { TurnActionDependencies } from '../../actions/turnActions'
 import { executeAiAttack } from './executeAiAttack'
 import { collectItemPointAction } from '../../actions/itemActions'
-import { useItemAction } from '../../actions/itemActions'
+import { useItemAction as executeItemAction } from '../../actions/itemActions'
 import { allocateAttributePointAction } from '../../rules/playerDerivedRules'
 import { equipEquipmentAction } from '../../rules/equipmentRules'
 import { equipInnerSkillAction } from '../../rules/skillRules'
 import { learnSkillAtMartialHall } from '../../actions/martialHallActions'
 import { learnSkillAtSectGate, practiceSkillAtSectGate } from '../../actions/sectGateActions'
-import { useInfirmary, executeMission } from '../../actions/explorationActions'
+import { useInfirmary as executeInfirmary, executeMission } from '../../actions/explorationActions'
 import { clearRuin } from '../../actions/ruinActions'
 import { buyItem } from '../../actions/shopActions'
 import type { CombatActionDependencies } from '../../actions/combatActions'
@@ -59,7 +59,7 @@ export function executeAiAction(
     case 'allocate-attribute':
       return allocateAttributePointAction(state, action.actor.id, action.attribute)
     case 'use-item':
-      return useItemAction(state, action.actor.id, action.itemId)
+      return executeItemAction(state, action.actor.id, action.itemId)
     case 'equip':
       return equipEquipmentAction(state, action.actor.id, action.instanceId)
     case 'equip-inner-skill':
@@ -81,7 +81,7 @@ export function executeAiAction(
     }
     case 'use-facility': {
       if (action.facilityType === 'heal') {
-        const result = useInfirmary(state, action.actor.id, action.baseId)
+        const result = executeInfirmary(state, action.actor.id, action.baseId)
         return { state: result.state, result: result.result }
       }
       if (action.facilityType === 'mission') {
