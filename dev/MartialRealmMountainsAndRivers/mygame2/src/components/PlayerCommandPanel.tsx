@@ -59,9 +59,9 @@ function PlayerCommandPanel({
           {player && <Tag color={canAct ? 'green' : 'orange'}>{canAct ? '你的回合' : '回合已結束'}</Tag>}
         </div>
         <Flex gap={8} wrap>
-          <Tooltip title="快捷鍵 A">
+          <Tooltip title="快捷鍵 Q">
             <Button danger disabled={!canSpend(ACTION_STAMINA_COSTS.attack)} onClick={onAttack}>
-              ⚔️ 攻擊{ACTION_STAMINA_COSTS.attack > 0 ? ` ✦${ACTION_STAMINA_COSTS.attack}` : ''}（A）
+              ⚔️ 攻擊{ACTION_STAMINA_COSTS.attack > 0 ? ` ✦${ACTION_STAMINA_COSTS.attack}` : ''}（Q）
             </Button>
           </Tooltip>
           {commandPanelSkills.map((skill, index) => {
@@ -78,7 +78,7 @@ function PlayerCommandPanel({
               </Tooltip>
             )
           })}
-          <Tooltip title="快捷鍵 W">
+          {/* <Tooltip title="快捷鍵 W">
             <Button
               type={movementEnabled ? 'primary' : 'default'}
               disabled={!canAct || !player || player.stamina <= 0}
@@ -86,7 +86,7 @@ function PlayerCommandPanel({
             >
               🧭 {movementEnabled ? '取消移動' : '移動'} ✦地形（W）
             </Button>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip title={`快捷鍵 R｜修路：將所在格改為道路，消耗 ${ACTION_STAMINA_COSTS.buildRoad} 點體力`}>
             <Button disabled={!canSpend(ACTION_STAMINA_COSTS.buildRoad)} onClick={onBuildRoad}>
               🛤️ 修路 ✦{ACTION_STAMINA_COSTS.buildRoad}（R）
@@ -105,9 +105,9 @@ function PlayerCommandPanel({
           <Tooltip title="快捷鍵 E">
             <Button disabled={!canAct} onClick={onOpenEquipment}>🛡️ 裝備（E）</Button>
           </Tooltip>
-          <Tooltip title="快捷鍵 S">
+          <Tooltip title="快捷鍵 X">
             <Button disabled={!canAct} onClick={onOpenSkills}>
-              ☯ 功法（S）
+              ☯ 功法（X）
             </Button>
           </Tooltip>
           <Tooltip title="快捷鍵 Z">

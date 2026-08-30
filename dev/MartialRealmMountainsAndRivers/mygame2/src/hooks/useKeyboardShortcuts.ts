@@ -80,6 +80,12 @@ function useKeyboardShortcuts({
         onOpenInventory()
       }
 
+      // 普通攻擊：進入攻擊目標選取模式。
+      if (key === 'q') {
+        event.preventDefault()
+        onBeginAttackTargeting()
+      }
+
       if (key === 'e') {
         event.preventDefault()
         onOpenEquipment()
