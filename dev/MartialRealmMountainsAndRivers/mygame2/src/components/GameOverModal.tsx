@@ -25,6 +25,7 @@ function GameOverModal({ open, won = false, reason, record, scrollReward, onRest
       title={won ? '勝利' : '遊戲結束'}
       open={open}
       closable={Boolean(onClose)}
+      onCancel={onClose}
       maskClosable={false}
       keyboard={false}
       footer={null}
