@@ -537,6 +537,7 @@ export type GameOperation =
   | { type: 'idle' }
   | { type: 'moving'; movementUsed: boolean }
   | { type: 'targeting-attack' }
+  | { type: 'targeting-first-aid' }
   | { type: 'targeting-external-skill'; skillId: string }
   | { type: 'targeting-item'; itemId: string }
   | { type: 'previewing-attack' }
@@ -545,7 +546,7 @@ export type GameOperation =
   | { type: 'building-defense'; baseId: string; structureType: DefenseStructureType; position: Position | null }
 
 /** 目標選取來源種類（用於高亮樣式與 preview 分派）。 */
-export type TargetingSource = 'attack' | 'external-skill' | 'item-burst'
+export type TargetingSource = 'attack' | 'external-skill' | 'item-burst' | 'first-aid'
 
 /** 範圍形狀：決定「哪些格子是合法目標」。 */
 export type TargetingShape =
@@ -741,7 +742,7 @@ export type CreatureActionLog = {
   message: string
 }
 
-export type AttackTargetType = 'creature' | 'nest'
+export type AttackTargetType = 'creature' | 'nest' | 'player'
 
 export type AttackPreview = {
   playerId: string

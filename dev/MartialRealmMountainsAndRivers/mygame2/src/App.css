@@ -1363,6 +1363,13 @@
   animation: item-target-pulse 1s ease-in-out infinite alternate;
 }
 
+.map-grid__overlay--first-aid-range {
+  z-index: 2;
+  border: 2px solid #1de127;
+  border-radius: 3px;
+  background: rgba(34, 197, 94, 0.12);
+}
+
 .map-grid__overlay--defense-range {
   z-index: 2;
   border: 1px dashed rgba(234, 179, 8, 0.9);

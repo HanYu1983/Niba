@@ -18,6 +18,7 @@ type PlayerCommandPanelProps = {
   onUseExternalSkill: (skillId: string) => void
   onToggleMovement: () => void
   onBuildRoad: () => void
+  onFirstAid: () => void
   onEndTurn: () => void
   onOpenOptions: () => void
   /** 遊戲是否已結束（勝利或失敗）；為 true 時顯示局末結算按鈕。 */
@@ -39,6 +40,7 @@ function PlayerCommandPanel({
   onUseExternalSkill,
   onToggleMovement,
   onBuildRoad,
+  onFirstAid,
   onEndTurn,
   onOpenOptions,
   gameOverEnded = false,
@@ -88,6 +90,11 @@ function PlayerCommandPanel({
           <Tooltip title={`快捷鍵 R｜修路：將所在格改為道路，消耗 ${ACTION_STAMINA_COSTS.buildRoad} 點體力`}>
             <Button disabled={!canSpend(ACTION_STAMINA_COSTS.buildRoad)} onClick={onBuildRoad}>
               🛤️ 修路 ✦{ACTION_STAMINA_COSTS.buildRoad}（R）
+            </Button>
+          </Tooltip>
+          <Tooltip title={`急救：復活周圍一格內倒下的玩家，血量恢復至 5，消耗 ${ACTION_STAMINA_COSTS.firstAid} 點體力`}>
+            <Button disabled={!canSpend(ACTION_STAMINA_COSTS.firstAid)} onClick={onFirstAid}>
+              ⛑️ 急救 ✦{ACTION_STAMINA_COSTS.firstAid}
             </Button>
           </Tooltip>
           <Tooltip title={`快捷鍵 B｜使用道具消耗 ${ACTION_STAMINA_COSTS.useItem} 點體力`}>

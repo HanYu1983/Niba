@@ -50,12 +50,14 @@ type MapGridProps = {
   onPlayerMoved?: () => void
   onMovePlayerTo?: (playerId: string, row: number, column: number) => void
   onCreatureSelect?: (creatureId: string, markerRect: DOMRect) => void
+  onPlayerTarget?: (playerId: string) => void
   onExplorationEventDetails?: (eventId: string) => void
   onSectGateDetails?: (sectGateId: string) => void
   defenseBuildMode?: { basePosition: Position; structureType: string; selectedPosition: Position | null }
   onDefensePositionSelect?: (position: Position) => void
   externalSkillTargeting?: boolean
   attackTargeting?: boolean
+  firstAidTargeting?: boolean
   itemTargeting?: boolean
   /** 目標選取規格（新框架）；提供時由 spec 決定高亮範圍，取代外部透傳的 targeting 旗標。 */
   targetingSpec?: TargetingSpec | null
@@ -75,7 +77,7 @@ function hasValidPosition(value: { position?: Position } | null | undefined): va
   return Boolean(position && Number.isFinite(position.row) && Number.isFinite(position.column))
 }
 
-function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], defenseStructures = [], itemPoints = [], explorationEvents = [], ruins = [], traps = [], sectGates = [], selectedBaseId = null, onClearSelectedBase, players = [], creatures = [], activePlayerId, movementEnabled = false, creatureTurnInProgress = false, gameOver = false, blockingModal = false, activeCreatureId = null, onPlayerMoved, onMovePlayerTo, onBaseSelect, onBaseDetails, onCreatureNestSelect, onCreatureNestDetails, onResourcePointDetails, onItemPointDetails, onDefenseStructureDetails, onRuinDetails, onCreatureSelect, externalSkillTargeting = false, attackTargeting = false, itemTargeting = false, targetingSpec = null, defenseBuildMode, onDefensePositionSelect, onExplorationEventDetails, onSectGateDetails, visibility, visibilityPlayerId, revealedCreatureCellIds, revealedCreatureUntilRound, creatureShake }: MapGridProps) {
+function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], defenseStructures = [], itemPoints = [], explorationEvents = [], ruins = [], traps = [], sectGates = [], selectedBaseId = null, onClearSelectedBase, players = [], creatures = [], activePlayerId, movementEnabled = false, creatureTurnInProgress = false, gameOver = false, blockingModal = false, activeCreatureId = null, onPlayerMoved, onMovePlayerTo, onBaseSelect, onBaseDetails, onCreatureNestSelect, onCreatureNestDetails, onResourcePointDetails, onItemPointDetails, onDefenseStructureDetails, onRuinDetails, onCreatureSelect, onPlayerTarget, externalSkillTargeting = false, attackTargeting = false, firstAidTargeting = false, itemTargeting = false, targetingSpec = null, defenseBuildMode, onDefensePositionSelect, onExplorationEventDetails, onSectGateDetails, visibility, visibilityPlayerId, revealedCreatureCellIds, revealedCreatureUntilRound, creatureShake }: MapGridProps) {
   const [isDraggingMap, setIsDraggingMap] = useState(false)
   const mapScrollRef = useRef<HTMLDivElement>(null)
   const dragStateRef = useRef({ active: false, dragged: false, pointerId: -1, startX: 0, startY: 0, scrollLeft: 0, scrollTop: 0 })
@@ -143,6 +145,8 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
   const skillTargetCellIds = targetingSpec && targetingSpec.source === 'external-skill' ? targetCellIds : new Set<string>()
   const attackTargetCellIds = targetingSpec && targetingSpec.source === 'attack' ? targetCellIds : new Set<string>()
   const itemTargetCellIds = targetingSpec && targetingSpec.source === 'item-burst' ? targetCellIds : new Set<string>()
+  // 急救：高亮整個選取範圍（周圍一格），實際可點擊目標由 cellAction 判定。
+  const firstAidRangeCellIds = targetingSpec && targetingSpec.source === 'first-aid' ? targetCellIds : new Set<string>()
   const interactionHandlers: MapInteractionHandlers = {
     move: (playerId, position) => onMovePlayerTo?.(playerId, position.row, position.column),
     playerMoved: () => onPlayerMoved?.(),
@@ -150,6 +154,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
     inspectCreature: (creatureId, markerRect) => onCreatureSelect?.(creatureId, markerRect),
     targetNest: (nestId) => onCreatureNestSelect?.(nestId),
     inspectNest: (nestId) => onCreatureNestDetails?.(nestId),
+    targetPlayer: (playerId) => onPlayerTarget?.(playerId),
     buildDefense: (position) => onDefensePositionSelect?.(position),
     inspectBase: (baseId) => { onBaseSelect?.(baseId); onBaseDetails?.(baseId) },
     inspectDefense: (structureId) => onDefenseStructureDetails?.(structureId),
@@ -284,9 +289,13 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
               const isSkillTarget = skillTargetCellIds.has(cell.id)
               const isAttackTarget = attackTargetCellIds.has(cell.id)
               const isItemTarget = itemTargetCellIds.has(cell.id)
+              const isFirstAidRange = firstAidRangeCellIds.has(cell.id)
               const playersHere = isVisible ? players.filter(
                 (player) => hasValidPosition(player) && player.position.row === cell.row && player.position.column === cell.column,
               ) : []
+              const isFirstAidTarget = firstAidTargeting && playersHere.some(
+                (player) => player.health <= 0 && player.id !== activePlayer?.id,
+              )
               const creaturesHere = isVisible ? creatures.filter(
                 (creature) => hasValidPosition(creature) && creature.position.row === cell.row && creature.position.column === cell.column,
               ) : []
@@ -339,11 +348,13 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
               )
               const creatureTarget = creaturesHere.find((creature) => creature.health > 0)
               const nestTarget = nestsHere.find((nest) => nest.health > 0)
+              const playerTarget = playersHere.find((player) => player.health <= 0 && player.id !== activePlayer?.id)
               const cellAction = resolveMapCellAction({
                 position: { row: cell.row, column: cell.column },
                 visibility: cellVisibility,
                 movementEnabled,
                 attackTargeting,
+                firstAidTargeting,
                 externalSkillTargeting,
                 itemTargeting,
                 defenseBuildMode: Boolean(defenseBuildMode),
@@ -352,15 +363,17 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                 canSelectDefensePosition,
                 creatureTargetId: creatureTarget?.id,
                 nestTargetId: nestTarget?.id,
+                playerTargetId: playerTarget?.id,
                 gameOver,
                 blockingModal,
                 creatureTurnInProgress,
               })
-              const resolveMarkerAction = (type: 'creature' | 'nest' | 'base' | 'defense' | 'event' | 'ruin' | 'resource' | 'item' | 'sect-gate', id: string) => resolveMapCellAction({
+              const resolveMarkerAction = (type: 'creature' | 'nest' | 'player' | 'base' | 'defense' | 'event' | 'ruin' | 'resource' | 'item' | 'sect-gate', id: string) => resolveMapCellAction({
                 position: { row: cell.row, column: cell.column },
                 visibility: cellVisibility,
                 movementEnabled,
                 attackTargeting,
+                firstAidTargeting,
                 externalSkillTargeting,
                 itemTargeting,
                 defenseBuildMode: Boolean(defenseBuildMode),
@@ -369,6 +382,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                 canSelectDefensePosition,
                 creatureTargetId: creatureTarget?.id,
                 nestTargetId: nestTarget?.id,
+                playerTargetId: playerTarget?.id,
                 marker: { type, id },
                 gameOver,
                 blockingModal,
@@ -394,6 +408,8 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                     {isSkillTarget && <span className="map-grid__overlay map-grid__overlay--skill-target" />}
                     {isAttackTarget && <span className="map-grid__overlay map-grid__overlay--attack-target" />}
                     {isItemTarget && <span className="map-grid__overlay map-grid__overlay--item-target" />}
+                    {isFirstAidRange && <span className="map-grid__overlay map-grid__overlay--first-aid-range" />}
+                    {isFirstAidTarget && <span className="map-grid__overlay map-grid__overlay--attack-target" />}
                     {isDefenseBuildRange && <span className="map-grid__overlay map-grid__overlay--defense-range" />}
                     {canSelectDefensePosition && <span className="map-grid__overlay map-grid__overlay--defense-buildable" />}
                   </span>
@@ -478,7 +494,16 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                       name={player.name}
                       stamina={player.stamina}
                       maxStamina={player.maxStamina}
-                      className={player.id === activePlayerId && !creatureTurnInProgress ? 'player--current' : undefined}
+                      className={[
+                        player.id === activePlayerId && !creatureTurnInProgress ? 'player--current' : '',
+                        firstAidTargeting && player.health <= 0 && player.id !== activePlayer?.id ? 'player--first-aid-target' : '',
+                      ].filter(Boolean).join(' ') || undefined}
+                      onClick={firstAidTargeting && player.health <= 0 && player.id !== activePlayer?.id
+                        ? (event) => {
+                          event.stopPropagation()
+                          executeMapCellAction(resolveMarkerAction('player', player.id), event.currentTarget.getBoundingClientRect())
+                        }
+                        : undefined}
                     />
                   ))}
                   {creaturesHere.map((creature) => (

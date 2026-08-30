@@ -94,6 +94,7 @@ import {
   constructDefenseStructure as constructDefenseStructureAction,
   upgradeBuilding as upgradeBuildingAction,
 } from './actions/buildingActions'
+import { performFirstAid } from './actions/firstAidActions'
 import {
   pickNextBuildCandidate,
   pickUpgradeCandidate,
@@ -905,6 +906,29 @@ export const gameStore = {
       ...state,
       operation: { type: 'targeting-attack' },
     }))
+  },
+
+  /** 進入急救目標選取模式（點選周圍一格內倒下的玩家）。 */
+  beginFirstAidTargeting: () => {
+    updateGameState((state) => ({
+      ...state,
+      operation: { type: 'targeting-first-aid' },
+    }))
+  },
+
+  /** 執行急救：復活周圍一格內倒下的玩家，血量恢復至 5。 */
+  executeFirstAid: (targetPlayerId: string): ActionOutcome => {
+    let outcome: ActionOutcome = { ok: false, reason: '急救失敗。' }
+    updateGameState((state) => {
+      const action = performFirstAid(state, state.activePlayerId, targetPlayerId)
+      if (!action.result.ok) {
+        outcome = { ok: false, reason: action.result.reason ?? '急救失敗。' }
+        return state
+      }
+      outcome = { ok: true }
+      return action.state
+    })
+    return outcome
   },
 
   subscribe: (listener: () => void) => {

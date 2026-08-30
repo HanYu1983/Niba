@@ -21,6 +21,8 @@ export const ACTION_STAMINA_COSTS = {
   roadBuild: 1,
   /** 公用指令欄「修路」：將玩家所在格改為道路。 */
   buildRoad: 2,
+  /** 公用指令欄「急救」：復活周圍一格內的死亡玩家，血量恢復至 5。 */
+  firstAid: 8,
   exploration: 0,
 } as const
 
