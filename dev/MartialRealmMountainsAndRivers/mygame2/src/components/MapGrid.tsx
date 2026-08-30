@@ -4,6 +4,7 @@ import { getReachableCellIds } from '../game/rules/movementRules'
 import Player from './Player'
 import { type MapCell, type BaseState, type CreatureNestState, type ResourcePointState, type DefenseStructureState, type ItemPointState, type ExplorationEventState, type PlayerState, type CreatureState, type Position, type GameState, type RuinState, type TrapState, type SectGateState, getAdjacentPositions } from '../game/types'
 import { getPlayerVisibleCellIds } from '../game/rules/visibilityRules'
+import { getOccupiedPositions, MOVEMENT_LAYERS } from '../game/rules/occupancyRules'
 import { getCreatureIcon } from '../game/rules/creatureBehaviorRules'
 import { getActiveBuffsForPlayer, getBuff } from '../game/rules/playerDerivedRules'
 import { getBastionMultipliers } from '../game/rules/defenseBastionRules'
@@ -85,19 +86,15 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
     ? getDefenseBuildRange(getGovernanceRank(activePlayer.prestige).rank)
     : 0
   const blockedPositions = useMemo(() => activePlayer
-    ? [
-      ...players
-        .filter((player) => player.id !== activePlayer.id)
-        .map((player) => player.position),
-      ...creatures.map((creature) => creature.position),
-      ...bases.map((base) => base.position),
-      ...creatureNests.map((nest) => nest.position),
-      ...defenseStructures.map((structure) => structure.position),
-      ...ruins.filter((ruin) => ruin.status === 'intact').map((ruin) => ruin.position),
-      ...sectGates.map((gate) => gate.position),
-    ].filter((position): position is Position => Boolean(
-      position && Number.isFinite(position.row) && Number.isFinite(position.column),
-    ))
+    ? getOccupiedPositions({
+      players,
+      creatures,
+      bases,
+      creatureNests,
+      defenseStructures,
+      ruins,
+      sectGates,
+    }, { excludePlayerId: activePlayer.id, layers: MOVEMENT_LAYERS })
     : [], [activePlayer, players, creatures, bases, creatureNests, defenseStructures, ruins, sectGates])
   const reachableCellIds = useMemo(() =>
     activePlayer && (movementEnabled || (activePlayer.id === activePlayerId && !activePlayer.turnEnded)) && activePlayer.stamina > 0 && !activePlayer.turnEnded
