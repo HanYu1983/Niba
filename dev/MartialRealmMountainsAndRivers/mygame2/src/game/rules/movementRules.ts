@@ -19,6 +19,7 @@ export function getBlockedPositions(state: GameState, playerId: string, options:
     ...state.players.filter((player) => player.id !== playerId).map((player) => player.position),
     ...state.creatures.map((creature) => creature.position),
     ...state.bases.map((base) => base.position),
+    ...state.creatureNests.map((nest) => nest.position),
     ...(state.ruins ?? []).filter((ruin) => ruin.status === 'intact').map((ruin) => ruin.position),
     ...(state.sectGates ?? []).map((gate) => gate.position),
     ...(state.defenseStructures ?? []).map((structure) => structure.position),
