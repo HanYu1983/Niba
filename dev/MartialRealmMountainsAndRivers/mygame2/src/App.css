@@ -1450,7 +1450,7 @@
 
 .player {
   position: relative;
-  z-index: 1;
+  z-index: 6;
   display: grid;
   place-items: center;
   width: 26px;

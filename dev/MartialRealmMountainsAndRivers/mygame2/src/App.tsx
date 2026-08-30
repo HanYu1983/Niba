@@ -235,7 +235,13 @@ function App() {
     creatureTurnInProgress: gameState.creatureTurnInProgress,
     movementUsed,
     externalSkills: allExternalSkillCatalog,
-    onToggleMovement: () => gameStore.setOperation({ type: movementEnabled ? 'idle' : 'moving', movementUsed: false }),
+    onMove: (rowDelta, columnDelta) => {
+      if (gameState.activePlayerId) {
+        gameStore.movePlayer(gameState.activePlayerId, rowDelta, columnDelta)
+        // 維持移動模式：讓 MapGrid 持續計算並更新移動高亮範圍。
+        gameStore.setOperation({ type: 'moving', movementUsed: false })
+      }
+    },
     onBeginAttackTargeting: () => {
       setSelectedCreatureId(null)
       gameStore.beginAttackTargeting()

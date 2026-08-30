@@ -105,9 +105,9 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
     ))
     : [], [activePlayer, players, creatures, bases, creatureNests, defenseStructures, ruins, sectGates])
   const reachableCellIds = useMemo(() =>
-    activePlayer && movementEnabled && activePlayer.stamina > 0 && !activePlayer.turnEnded
+    activePlayer && (movementEnabled || (activePlayer.id === activePlayerId && !activePlayer.turnEnded)) && activePlayer.stamina > 0 && !activePlayer.turnEnded
       ? getReachableCellIds(map, activePlayer, blockedPositions)
-      : new Set<string>(), [activePlayer, movementEnabled, map, blockedPositions])
+      : new Set<string>(), [activePlayer, activePlayerId, movementEnabled, map, blockedPositions])
   // 新框架：提供 targetingSpec 時，高亮整個形狀範圍的格（純視覺提示可選範圍）。
   // 實際「可點擊目標」由 resolveMapCellAction 依 targeting flag 與格子上是否有目標判定。
   const specRangeCellIds = useMemo(() => {
