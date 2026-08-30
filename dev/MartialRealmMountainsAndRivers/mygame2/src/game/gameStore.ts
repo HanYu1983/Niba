@@ -335,6 +335,17 @@ function updateGameState(updater: (state: GameState) => GameState) {
   // 統一記錄人類玩家的最高等級與該等級五維快照（涵蓋所有升級來源）。
   nextGameState = recordHumanMaxLevel(nextGameState)
 
+  // 遊戲結束（勝利或失敗）時清除戰爭迷霧：切換為全圖揭示，讓玩家可觀察局末狀態。
+  if ((nextGameState.gameOver || nextGameState.gameWon) && nextGameState.visibility?.mode !== 'revealed') {
+    nextGameState = {
+      ...nextGameState,
+      visibility: {
+        exploredCellIds: nextGameState.map.cells.map((cell) => cell.id),
+        mode: 'revealed',
+      },
+    }
+  }
+
   // 統一顯示劇情對話：佇列非空且目前沒有阻塞彈窗時，自動顯示佇列首項。
   // 這讓任何掛鉤點（如擊殺 Boss 觸發 on-victory）填充佇列後，對話會立即彈出。
   const queue = nextGameState.campaignState?.dialogueQueue

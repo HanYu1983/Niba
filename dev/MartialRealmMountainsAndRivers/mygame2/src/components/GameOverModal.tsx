@@ -12,9 +12,11 @@ type GameOverModalProps = {
   /** 本局結算獲得的武學殘卷（null 表示未選用名册角色；'skipped' 表示此局已領取過）。 */
   scrollReward?: number | 'skipped' | null
   onRestart: () => void
+  /** 關閉結算彈窗（玩家可回到地圖觀察局末狀態）。 */
+  onClose?: () => void
 }
 
-function GameOverModal({ open, won = false, reason, record, scrollReward, onRestart }: GameOverModalProps) {
+function GameOverModal({ open, won = false, reason, record, scrollReward, onRestart, onClose }: GameOverModalProps) {
   const anyBaseDestroyed = reason === 'any-base-destroyed'
   const stats = record?.stats
   const attributes = stats?.attributesAtMaxLevel
@@ -22,7 +24,7 @@ function GameOverModal({ open, won = false, reason, record, scrollReward, onRest
     <Modal
       title={won ? '勝利' : '遊戲結束'}
       open={open}
-      closable={false}
+      closable={Boolean(onClose)}
       maskClosable={false}
       keyboard={false}
       footer={null}
@@ -110,6 +112,11 @@ function GameOverModal({ open, won = false, reason, record, scrollReward, onRest
           </Flex>
         )}
 
+        {onClose && (
+          <Button block onClick={onClose}>
+            關閉（觀察局末狀態）
+          </Button>
+        )}
         <Button type="primary" block onClick={onRestart}>
           重新開始
         </Button>

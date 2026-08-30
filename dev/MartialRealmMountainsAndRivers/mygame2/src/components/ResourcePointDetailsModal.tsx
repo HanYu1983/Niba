@@ -4,6 +4,7 @@ import LocationDetailsCard from './LocationDetailsCard'
 import StatValue from './StatValue'
 import { getResourceCollectionMaterialGain } from '../game/rules/baseRules'
 import { getEffectiveMaterialGain } from '../game/rules/policyRules'
+import { getResourcePointIcon } from '../game/catalogs/placeNameCatalog'
 
 type ResourcePointDetailsModalProps = {
   resourcePoint: ResourcePointState | null
@@ -50,7 +51,9 @@ function ResourcePointDetailsModal({
     >
       {resourcePoint && (
         <LocationDetailsCard
-          icon="💎"
+          icon={getResourcePointIcon(resourcePoint.name, gameState.map.cells.find(
+            (cell) => cell.row === resourcePoint.position.row && cell.column === resourcePoint.position.column,
+          )?.terrain)}
           name={resourcePoint.name}
           position={`位置 (${resourcePoint.position.row}, ${resourcePoint.position.column})`}
           statusLabel={resourcePoint.active === false ? '已失活' : alreadyCollected ? '本回合已採集' : '可採集'}

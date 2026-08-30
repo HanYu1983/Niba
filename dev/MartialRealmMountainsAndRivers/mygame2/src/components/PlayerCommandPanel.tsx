@@ -20,6 +20,10 @@ type PlayerCommandPanelProps = {
   onBuildRoad: () => void
   onEndTurn: () => void
   onOpenOptions: () => void
+  /** 遊戲是否已結束（勝利或失敗）；為 true 時顯示局末結算按鈕。 */
+  gameOverEnded?: boolean
+  /** 重新開啟局末結算彈窗。 */
+  onOpenGameOverModal?: () => void
 }
 
 function PlayerCommandPanel({
@@ -37,6 +41,8 @@ function PlayerCommandPanel({
   onBuildRoad,
   onEndTurn,
   onOpenOptions,
+  gameOverEnded = false,
+  onOpenGameOverModal,
 }: PlayerCommandPanelProps) {
   const canAct = Boolean(player && player.health > 0 && !player.turnEnded && !creatureTurnInProgress)
   const canSpend = (cost: number) => canAct && Boolean(player && player.stamina >= cost)
@@ -103,6 +109,13 @@ function PlayerCommandPanel({
             </Button>
           </Tooltip>
           <Button onClick={onOpenOptions}>選項</Button>
+          {gameOverEnded && onOpenGameOverModal && (
+            <Tooltip title="重新開啟局末結算彈窗，查看本局戰績">
+              <Button type="primary" onClick={onOpenGameOverModal}>
+                📊 局末結算
+              </Button>
+            </Tooltip>
+          )}
         </Flex>
       </Flex>
     </Card>
