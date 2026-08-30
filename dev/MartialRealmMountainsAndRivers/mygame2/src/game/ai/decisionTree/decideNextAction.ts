@@ -1,11 +1,22 @@
 import type { GameState } from '../../types'
 import type { AiAction } from '../aiAction'
 import { validateAiAction } from '../validation/validateAiAction'
+import { buildingCatalog, BUILDING_TYPES } from '../../catalogs/buildingCatalog'
 import {
   isHealthCritical,
   findHealingItemToUse,
+  pickAttributeToAllocate,
+  findEquipCandidate,
+  findBetterInnerSkill,
+  findLearnableExternalSkill,
   findAdjacentCreature,
+  findNearestHostile,
   findAdjacentItem,
+  findAdjacentBase,
+  needsBaseHeal,
+  shouldRunMission,
+  countHealingItems,
+  findBuyableHealItem,
   findUnexploredNearby,
 } from './conditions'
 import {
@@ -13,6 +24,7 @@ import {
   buildAttackAction,
   buildCollectItemAction,
   buildExploreAction,
+  findClosestReachablePositionByShortestPath,
 } from './actionBuilders'
 
 /**
@@ -62,11 +74,58 @@ export function decideNextAction(
   const player = state.players.find((p) => p.id === playerId)
   if (!player) return null
 
-  // ═══════════════════════════════════════════════════
-  // 小樹 1：保命
-  // ═══════════════════════════════════════════════════
+  // 若有可分配屬性點就分配
+  // 優先根骨,身法,臂力,內息,悟性的機率來分配
+  const attributeToAllocate = pickAttributeToAllocate(player)
+  if (attributeToAllocate) {
+    const candidate: AiAction = {
+      type: 'allocate-attribute',
+      actor: { id: player.id, kind: 'player' },
+      attribute: attributeToAllocate,
+      reason: `屬性分配：提升 ${attributeToAllocate}`,
+    }
+    if (passesValidation(state, candidate, '屬性分配', out)) return candidate
+  }
 
-  // 1.0 需要回血 → 使用回血道具
+  // 若有武器防具或配件可以裝備並且那個部位還沒有裝備就裝備
+  const equipCandidate = findEquipCandidate(player)
+  if (equipCandidate) {
+    const candidate: AiAction = {
+      type: 'equip',
+      actor: { id: player.id, kind: 'player' },
+      instanceId: equipCandidate.instanceId,
+      reason: `裝備 ${equipCandidate.instanceId}`,
+    }
+    if (passesValidation(state, candidate, '裝備', out)) return candidate
+  }
+
+  // 若有內功功法可以切換並且那個內功的目前傷害值比目前裝備的內功傷害值高就切換
+  const betterInnerSkill = findBetterInnerSkill(player)
+  if (betterInnerSkill) {
+    const candidate: AiAction = {
+      type: 'equip-inner-skill',
+      actor: { id: player.id, kind: 'player' },
+      skillId: betterInnerSkill.skillId,
+      reason: `切換內功 ${betterInnerSkill.skillId}（傷害 ${betterInnerSkill.currentDamage} → ${betterInnerSkill.damage}）`,
+    }
+    if (passesValidation(state, candidate, '切換內功', out)) return candidate
+  }
+
+  // 若有外功功法可以裝備並且剩餘的悟性足夠就裝備
+  const learnableExternal = findLearnableExternalSkill(state, player)
+  if (learnableExternal) {
+    const candidate: AiAction = {
+      type: 'learn-skill',
+      actor: { id: player.id, kind: 'player' },
+      baseId: learnableExternal.baseId,
+      skillType: 'external',
+      skillId: learnableExternal.skillId,
+      reason: `學習外功 ${learnableExternal.skillId}`,
+    }
+    if (passesValidation(state, candidate, '學習外功', out)) return candidate
+  }
+
+  // 需要回血 → 使用回血道具
   // 取得回血道具的量的陣列的排序, 由小到大[{itemId, healAmount}]
   // 若現有血量和滿血的差距大於等於最小的回血道具量, 則使用回血道具
   // 現有血量小於15也使用回血道具
@@ -81,50 +140,92 @@ export function decideNextAction(
     if (passesValidation(state, candidate, '使用回血道具', out)) return candidate
   }
 
-  // 1.1 血量極低 → 逃命
+  // ═══════════════════════════════════════════════════
+  // 據點醫療（回血／蓋醫院）
+  // ═══════════════════════════════════════════════════
+  // 條件：在據點旁邊，且血量或內力沒有滿
+  //   若據點沒有醫院又有足夠材料 → 蓋醫院
+  //   若醫院已存在 → 使用醫院
+
+  const healBase = findAdjacentBase(state, player)
+  if (healBase && needsBaseHeal(player)) {
+    const infirmaryTemplate = buildingCatalog.find((b) => b.type === BUILDING_TYPES.INFIRMARY)
+    const hasInfirmary = healBase.buildings.some((b) => b.type === BUILDING_TYPES.INFIRMARY)
+    if (!hasInfirmary && infirmaryTemplate && healBase.buildingMaterials >= infirmaryTemplate.constructionCost) {
+      const candidate: AiAction = {
+        type: 'build',
+        actor: { id: player.id, kind: 'player' },
+        baseId: healBase.id,
+        buildingType: infirmaryTemplate.id,
+        reason: `蓋醫院（材料 ${healBase.buildingMaterials}/${infirmaryTemplate.constructionCost}）`,
+      }
+      if (passesValidation(state, candidate, '蓋醫院', out)) return candidate
+    } else if (hasInfirmary) {
+      const candidate: AiAction = {
+        type: 'use-facility',
+        actor: { id: player.id, kind: 'player' },
+        baseId: healBase.id,
+        facilityType: 'heal',
+        reason: `使用醫院回血（血量 ${player.health}/${player.maxHealth}，內力 ${player.innerPower}/${player.maxInnerPower}）`,
+      }
+      if (passesValidation(state, candidate, '使用醫院', out)) return candidate
+    }
+  }
+  // 若在據點旁且任務未執行(執行後才會開永久視野) → 執行任務
+  // 若金錢小於50, -> 執行任務
+  if (healBase && shouldRunMission(healBase, player)) {
+    const candidate: AiAction = {
+      type: 'use-facility',
+      actor: { id: player.id, kind: 'player' },
+      baseId: healBase.id,
+      facilityType: 'mission',
+      reason: `執行任務（discovered=${healBase.discovered ?? false}，金錢 ${player.money ?? 0}，體力 ${Math.floor(player.stamina)}）`,
+    }
+    if (passesValidation(state, candidate, '執行任務', out)) return candidate
+  }
+
+  // 若在據點旁且回血道具小於3個
+  // 若據點沒有道具商店又有足夠材料 → 蓋道具商店
+  // 若道具商店已存在且有足夠的資金 → 使用道具商店買回血道具
+  if (healBase && countHealingItems(player) < 3) {
+    const shopTemplate = buildingCatalog.find((b) => b.type === BUILDING_TYPES.ITEM_SHOP)
+    const hasItemShop = healBase.buildings.some((b) => b.type === BUILDING_TYPES.ITEM_SHOP)
+    if (!hasItemShop && shopTemplate && healBase.buildingMaterials >= shopTemplate.constructionCost) {
+      const candidate: AiAction = {
+        type: 'build',
+        actor: { id: player.id, kind: 'player' },
+        baseId: healBase.id,
+        buildingType: shopTemplate.id,
+        reason: `蓋道具商店（材料 ${healBase.buildingMaterials}/${shopTemplate.constructionCost}，回血道具 ${countHealingItems(player)}）`,
+      }
+      if (passesValidation(state, candidate, '蓋道具商店', out)) return candidate
+    } else if (hasItemShop) {
+      const healToBuy = findBuyableHealItem(healBase, player)
+      if (healToBuy) {
+        const candidate: AiAction = {
+          type: 'buy-item',
+          actor: { id: player.id, kind: 'player' },
+          baseId: healBase.id,
+          itemId: healToBuy.itemId,
+          reason: `購買回血道具 ${healToBuy.itemId}（價格 ${healToBuy.price}，金錢 ${player.money ?? 0}，回血道具 ${countHealingItems(player)}）`,
+        }
+        if (passesValidation(state, candidate, '購買回血道具', out)) return candidate
+      }
+    }
+  }
+
+  // 血量極低 → 逃命
   if (isHealthCritical(player)) {
     const candidate = buildRetreatAction(state, player)
     if (passesValidation(state, candidate, '撤退（血量極低）', out)) return candidate
   }
 
-  // 1.2 體力耗盡 → 回據點
-  // if (isExhausted(player)) {
-  //   const candidate = buildMoveToBaseAction(state, player)
-  //   if (passesValidation(state, candidate, '回據點（體力耗盡）', out)) return candidate
-  // }
-
-  // ═══════════════════════════════════════════════════
-  // 小樹 2：即時戰鬥
-  // ═══════════════════════════════════════════════════
-
-  // 2.1 旁邊有怪 → 打
+  // 旁邊有怪 → 打
   const adjacentCreature = findAdjacentCreature(state, player)
   if (adjacentCreature && player.stamina >= 5) {
     const candidate = buildAttackAction(state, player, adjacentCreature)
     if (passesValidation(state, candidate, '攻擊鄰近怪', out)) return candidate
   }
-
-  // 2.2 近距離有怪（2格內）+ 體力足 → 走過去
-  // if (player.stamina >= 5) {
-  //   const visible = getVisibleCreatures(state, player.id)
-  //   const nearby = visible
-  //     .filter((a) => {
-  //       const pos = a.sourceType === 'creature' ? a.creature.position : a.nest.position
-  //       const dist = Math.abs(pos.row - player.position.row) + Math.abs(pos.column - player.position.column)
-  //       return dist <= 2
-  //     })
-  //     .sort((a, b) => {
-  //       const posA = a.sourceType === 'creature' ? a.creature.position : a.nest.position
-  //       const posB = b.sourceType === 'creature' ? b.creature.position : b.nest.position
-  //       const dA = Math.abs(posA.row - player.position.row) + Math.abs(posA.column - player.position.column)
-  //       const dB = Math.abs(posB.row - player.position.row) + Math.abs(posB.column - player.position.column)
-  //       return dA - dB
-  //     })[0]
-  //   if (nearby) {
-  //     const candidate = buildAttackAction(state, player, nearby)
-  //     if (passesValidation(state, candidate, '攻擊近距離怪', out)) return candidate
-  //   }
-  // }
 
   // ═══════════════════════════════════════════════════
   // 中樹 3：撿道具
@@ -135,6 +236,7 @@ export function decideNextAction(
     const candidate = buildCollectItemAction(state, player, adjacentItem.id, adjacentItem.position)
     if (passesValidation(state, candidate, '撿道具', out)) return candidate
   }
+
 
   // ═══════════════════════════════════════════════════
   // 中樹 4：建造 / 採集
@@ -215,6 +317,22 @@ export function decideNextAction(
   if (unexplored) {
     const candidate = buildExploreAction(state, player, unexplored)
     if (passesValidation(state, candidate, '探索', out)) return candidate
+  }
+
+  // 找出最近怪物或巢穴的最短路徑後，走向最近的相鄰交疊格
+  const nearestHostile = findNearestHostile(state, player)
+  if (nearestHostile) {
+    const targetPos = nearestHostile.sourceType === 'creature' ? nearestHostile.creature.position : nearestHostile.nest.position
+    const dest = findClosestReachablePositionByShortestPath(state, player, targetPos)
+    if (!(dest.row === player.position.row && dest.column === player.position.column)) {
+      const candidate: AiAction = {
+        type: 'move',
+        actor: { id: player.id, kind: 'player' },
+        destination: dest,
+        reason: `走向怪物/巢穴（目標 (${targetPos.row}, ${targetPos.column})，第一步 (${dest.row}, ${dest.column})）`,
+      }
+      if (passesValidation(state, candidate, '走向怪/巢', out)) return candidate
+    }
   }
 
   // ═══════════════════════════════════════════════════
