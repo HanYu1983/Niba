@@ -1,5 +1,6 @@
 import type { GameState } from '../../types'
 import type { AiAction } from '../aiAction'
+import type { AiNodeImpl } from './AiNodeImpl'
 
 export interface AiNode {
   state: GameState
@@ -11,7 +12,7 @@ export interface AiNode {
 }
 
 export interface AiEdge {
-  node: AiNode
+  node: AiNodeImpl
   action: AiAction
   score: number
   cost: number
