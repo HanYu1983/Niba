@@ -103,9 +103,6 @@ function PlayerCommandPanel({
             </Button>
           </Tooltip>
           <Button onClick={onOpenOptions}>選項</Button>
-          <Tooltip title="快捷鍵 W/A/S/D：移動上／左／下／右一格（消耗 1 點體力）">
-            <Typography.Text type="secondary">移動：W↑ A← S↓ D→</Typography.Text>
-          </Tooltip>
           {gameOverEnded && onOpenGameOverModal && (
             <Tooltip title="重新開啟局末結算彈窗，查看本局戰績">
               <Button type="primary" onClick={onOpenGameOverModal}>
@@ -113,6 +110,9 @@ function PlayerCommandPanel({
               </Button>
             </Tooltip>
           )}
+          <Tooltip title="快捷鍵 W/A/S/D：移動上／左／下／右一格（消耗 1 點體力）">
+            <Typography.Text type="secondary">移動：W↑ A← S↓ D→</Typography.Text>
+          </Tooltip>
         </Flex>
       </Flex>
     </Card>
