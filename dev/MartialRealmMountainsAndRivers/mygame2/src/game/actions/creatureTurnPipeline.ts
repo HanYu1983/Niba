@@ -25,6 +25,7 @@ import {
   getActiveBuffsForPlayer,
   getBuff,
   canTraverseTerrain,
+  getCreatureCriticalRate,
   getCreatureDamageDealtPercent,
   getDamageReductionPercent,
   getEffectiveAttributesForCreature,
@@ -37,6 +38,7 @@ import { selectCreatureTarget } from '../rules/creatureBehaviorRules'
 import { getInnerSkill, getSkillDamage, getSkillEffectMultiplier, getSkillProgression } from '../rules/skillRules'
 import { getGlobalBaseDefenseMultiplier } from '../rules/globalBuffRules'
 import { hasActivePolicy, MILITARY_DEFENSE_REDUCTION } from '../rules/policyRules'
+import { ACTION_STAMINA_COSTS } from '../rules/actionCostRules'
 import { defaultRandomSource, rollChance, type RandomSource } from '../rules/randomRules'
 import { createAiActionEvent, type AiActionEvent } from '../ai/aiActionEvent'
 import type { AiTargetKind } from '../ai/aiAction'
@@ -434,7 +436,19 @@ export function executeCreatureAction(
     context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: health <= 0 ? `${creature.name} 摧毀了${adjacentResource.name}。` : `${creature.name} 攻擊${adjacentResource.name}，造成 ${damage} 點傷害。` })
     return { type: 'attack', targetId: adjacentResource.id, targetKind: 'resource', targetPosition: adjacentResource.position, targetName: adjacentResource.name }
   } else if (adjacentPlayer) {
-    resolveAttackAgainstPlayer(context, creature, adjacentPlayer, randomSource)
+    // 多次攻擊：只要體力足夠（每次攻擊消耗 ACTION_STAMINA_COSTS.attack）且目標仍存活，就連續攻擊。
+    let attackCount = 0
+    let currentTarget = adjacentPlayer
+    while (plan.remainingStamina >= ACTION_STAMINA_COSTS.attack && currentTarget.health > 0) {
+      resolveAttackAgainstPlayer(context, creature, currentTarget, randomSource)
+      plan.remainingStamina -= ACTION_STAMINA_COSTS.attack
+      attackCount += 1
+      // resolveAttackAgainstPlayer 會重建 context.players，需重新取得最新目標血量。
+      currentTarget = context.players.find((player) => player.id === adjacentPlayer.id) ?? currentTarget
+    }
+    if (attackCount > 1) {
+      context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: `${creature.name} 連續攻擊 ${adjacentPlayer.name} ${attackCount} 次。` })
+    }
     return { type: 'attack', targetId: adjacentPlayer.id, targetKind: 'player', targetPosition: adjacentPlayer.position, targetName: adjacentPlayer.name }
   } else if (adjacentDefense) {
     // 軍壘強化：3 格內塔類 HP×2，等同減半承受傷害（動態查詢，軍壘失活自動失效）。
@@ -476,9 +490,12 @@ function resolveAttackAgainstPlayer(
   const baseDamage = Math.max(1, Math.floor(
     getSkillDamage(creatureAttributes, innerSkill, innerSkillLevel) * getSkillEffectMultiplier(creature),
   ))
+  // 對稱暴擊：怪物攻擊玩家時依其臂力暴擊率判定暴擊（1.5 倍）。
+  const criticalHit = rollChance(Math.min(1, getCreatureCriticalRate(creature, creatureTerrain) / 100), randomSource)
+  const critDamage = criticalHit ? Math.floor(baseDamage * 1.5) : baseDamage
   const avoided = rollChance(Math.min(1, getEvasionRate(adjacentPlayer) / 100), randomSource)
   const halved = !avoided && rollChance(Math.min(1, adjacentPlayer.attributes.constitution * 2 / 100), randomSource)
-  const rawDamage = avoided ? 0 : halved ? Math.max(1, Math.floor(baseDamage / 2)) : baseDamage
+  const rawDamage = avoided ? 0 : halved ? Math.max(1, Math.floor(critDamage / 2)) : critDamage
   // 破軍訣：普通攻擊造成的最終傷害 +%（怪物攻擊玩家屬普攻）
   const damage = avoided
     ? 0
@@ -500,7 +517,7 @@ function resolveAttackAgainstPlayer(
     context.reflectedDamageByCreatureId.set(creature.id, reflectedDamage)
     context.logs.push({ creatureId: adjacentPlayer.id, creatureName: adjacentPlayer.name, message: `${adjacentPlayer.name} 的反震對 ${creature.name} 造成 ${reflectedDamage} 點傷害。` })
   }
-  context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: `${creature.name} 攻擊 ${adjacentPlayer.name}，${avoided ? '被閃避。' : halved ? `造成 ${damage} 點傷害（根骨減傷）。` : `造成 ${damage} 點傷害。`}` })
+  context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: `${creature.name} 攻擊 ${adjacentPlayer.name}，${avoided ? '被閃避。' : halved ? `造成 ${damage} 點傷害（根骨減傷${criticalHit ? '，暴擊' : ''}）。` : `造成 ${damage} 點傷害${criticalHit ? '（暴擊）' : ''}。`}` })
 }
 
 /**

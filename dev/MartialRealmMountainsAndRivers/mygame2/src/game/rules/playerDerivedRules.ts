@@ -465,6 +465,30 @@ export function getCreatureDamageReductionPercent(creature: CreatureState, terra
   )
 }
 
+/** 怪物回避率（百分比）：依有效身法（含主場 Buff）決定，並加上回避率加成 Buff。 */
+export function getCreatureEvasionRate(creature: CreatureState, terrain?: TerrainType): number {
+  const baseRate = getEffectiveAttributesForCreature(creature, terrain).agility
+  const bonus = getActiveBuffDefinitionsForCreature(creature, terrain).reduce(
+    (total, definition) => total + (definition.evasionRateBonus ?? 0),
+    0,
+  )
+  return Math.min(100, baseRate + bonus)
+}
+
+/** 怪物根骨減傷率（百分比）：依有效根骨（含主場 Buff）決定，每個根骨提供 2% 機率使傷害減半。 */
+export function getCreatureRootReductionRate(creature: CreatureState, terrain?: TerrainType): number {
+  return Math.min(100, getEffectiveAttributesForCreature(creature, terrain).constitution * 2)
+}
+
+/** 怪物普通攻擊暴擊率（百分比）：依有效臂力（含主場 Buff）決定，並套用暴擊 Buff 加成。 */
+export function getCreatureCriticalRate(creature: CreatureState, terrain?: TerrainType): number {
+  const baseRate = getEffectiveAttributesForCreature(creature, terrain).armStrength * 2
+  const definitions = getActiveBuffDefinitionsForCreature(creature, terrain)
+  const multiplier = definitions.reduce((rate, definition) => rate * (definition.criticalRateMultiplier ?? 1), 1)
+  const bonus = definitions.reduce((total, definition) => total + (definition.criticalRateBonus ?? 0), 0)
+  return baseRate * multiplier + bonus
+}
+
 /** 外功造成的最終傷害加成比例（罡氣訣）。 */
 export function getExternalSkillDamagePercent(player: PlayerState): number {
   return sumBuffPercent(player, 'externalSkillDamagePercent')

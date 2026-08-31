@@ -34,6 +34,12 @@ function ExternalSkillPreviewModal({ preview, onConfirm, onCancel }: Props) {
             ...(preview.targetMode !== 'self' && preview.criticalRate !== undefined
               ? [{ label: '外功暴擊率', value: `${preview.criticalRate}%` }]
               : []),
+            ...(preview.targetMode !== 'self' && preview.targetReduction !== undefined && preview.targetReduction > 0
+              ? [{ label: '敵方減傷率', value: `${preview.targetReduction}%` }]
+              : []),
+            ...(preview.targetMode !== 'self' && preview.targetEvasion !== undefined && preview.targetEvasion > 0
+              ? [{ label: '敵方回避率', value: `${preview.targetEvasion}%` }]
+              : []),
             ...(preview.terrainResonance ? [{ label: '天地共鳴', value: preview.terrainResonance }] : []),
             { label: '內力消耗', value: preview.innerPowerCost },
             ...(preview.elementInteraction ? [{ label: '五行相剋', value: preview.elementInteraction }] : []),

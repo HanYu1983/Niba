@@ -16,6 +16,10 @@ export type AttackPreview = {
   targetMaxHealth: number
   elementInteraction?: string
   terrainResonance?: string
+  /** 敵方目標的減傷率（百分比；僅生物有）。 */
+  targetReduction?: number
+  /** 敵方目標的回避率（百分比；僅生物有）。 */
+  targetEvasion?: number
 }
 
 /** 元素爆發道具（element-burst）的預期結果預覽。 */
@@ -186,6 +190,10 @@ export type ExternalSkillPreview = {
   effectSummary?: string
   elementInteraction?: string
   terrainResonance?: string
+  /** 敵方目標的減傷率（百分比；僅生物有）。 */
+  targetReduction?: number
+  /** 敵方目標的回避率（百分比；僅生物有）。 */
+  targetEvasion?: number
 }
 
 /** 普通攻擊的暴擊率：臂力每 1 點提供 2%，最高 50%。 */

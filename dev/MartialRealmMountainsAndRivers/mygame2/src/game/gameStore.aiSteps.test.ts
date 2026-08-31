@@ -63,7 +63,12 @@ describe('runAiDefenseStep／runAiSupportStep 整合', () => {
 
   it('防守：相鄰威脅時攻擊成功並扣血', () => {
     load({
-      creatures: [makeTestCreature({ health: 20, maxHealth: 20 })],
+      creatures: [makeTestCreature({
+        health: 20,
+        maxHealth: 20,
+        // 低身法與根骨，避免回避／根骨減傷影響扣血判定。
+        attributes: { armStrength: 8, constitution: 1, agility: 1, innerEnergy: 5, insight: 7 },
+      })],
       aiOrders: [makeProtectBaseOrder()],
     })
 

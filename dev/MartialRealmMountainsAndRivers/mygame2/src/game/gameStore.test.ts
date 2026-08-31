@@ -1460,6 +1460,8 @@ describe('executeAttack', () => {
   it('擊殺生物時可掉落裝備並加入裝備背包', () => {
     vi.spyOn(Math, 'random')
       .mockReturnValueOnce(0.7)
+      .mockReturnValueOnce(0.99)
+      .mockReturnValueOnce(0.99)
       .mockReturnValueOnce(0.1)
       .mockReturnValueOnce(0.99)
     const player = makeTestCreature({ position: { row: 5, column: 5 } })
@@ -1469,6 +1471,8 @@ describe('executeAttack', () => {
       position: { row: 5, column: 6 },
       health: 1,
       maxHealth: 1,
+      // 低身法與根骨，避免回避／根骨減傷影響擊殺判定。
+      attributes: { armStrength: 8, constitution: 1, agility: 1, innerEnergy: 5, insight: 7 },
     })
     gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
     gameStore.previewAttack('player-1', 'creature-1')
