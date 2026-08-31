@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createGameState } from './gameStore'
+import { createGameState } from './worldSetup'
 import { createSectGates } from './worldGeneration'
 import { martialSchoolCatalog } from './catalogs/martialSchoolCatalog'
 

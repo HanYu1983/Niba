@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { moveCreatures, spawnCreaturesFromNests } from './gameStore'
+import { moveCreatures, spawnCreaturesFromNests } from './actions/creatureActions'
+import { createCharacterState } from './characterFactory'
 import type {
   BaseState,
   CreatureNestState,
@@ -140,6 +141,11 @@ function makeBlockedMap(): MapState {
   return map
 }
 
+/** spawnCreaturesFromNests 的依賴：以 createCharacterState 建立生物。 */
+const spawnDeps = {
+  createCreatureState: (input: Parameters<typeof createCharacterState>[0]) => createCharacterState(input),
+}
+
 describe('spawnCreaturesFromNests', () => {
 
   // 生成機率測試：固定 Math.random 回傳 0，確保必定生成（rollChance 判定 random() < chance）。
@@ -159,6 +165,7 @@ describe('spawnCreaturesFromNests', () => {
       [makePlayer()],
       [],
       2,
+      spawnDeps,
     )
 
     expect(result.creatures).toHaveLength(0)
@@ -178,6 +185,7 @@ describe('spawnCreaturesFromNests', () => {
       [makePlayer()],
       [],
       10,
+      spawnDeps,
     )
 
     expect(result.creatures).toHaveLength(1)
@@ -195,6 +203,7 @@ describe('spawnCreaturesFromNests', () => {
       [makePlayer()],
       [],
       10,
+      spawnDeps,
     )
 
     expect(result.nests[0].cooldownRounds).toBe(3)
@@ -210,6 +219,7 @@ describe('spawnCreaturesFromNests', () => {
       [makePlayer()],
       [],
       10,
+      spawnDeps,
     )
 
     // 升級到 Lv.2：maxHealth = 120 * 1.1 = 132；先回血 1%（120×1%=1 → 101），升級到不因升級回滿
@@ -228,6 +238,7 @@ describe('spawnCreaturesFromNests', () => {
       [makePlayer()],
       [],
       10,
+      spawnDeps,
     )
 
     // 回復 120 * 1% = 1.2 → floor 1 → health 101
@@ -243,6 +254,7 @@ describe('spawnCreaturesFromNests', () => {
       [makePlayer()],
       [],
       10,
+      spawnDeps,
     )
 
     expect(result.nests[0].health).toBe(120)
@@ -257,6 +269,7 @@ describe('spawnCreaturesFromNests', () => {
       [makePlayer()],
       [],
       10,
+      spawnDeps,
     )
 
     // 生成前機率 +0.5% → 0.205，生成後 -5% → 0.155
@@ -272,6 +285,7 @@ describe('spawnCreaturesFromNests', () => {
       [makePlayer()],
       [],
       10,
+      spawnDeps,
     )
 
     // 生成前 0.105，生成後 -5% → 0.055，但下限 10%
@@ -288,6 +302,7 @@ describe('spawnCreaturesFromNests', () => {
       [makePlayer()],
       [],
       10,
+      spawnDeps,
     )
 
     // 已達上限 30%，不再增加
@@ -303,6 +318,7 @@ describe('spawnCreaturesFromNests', () => {
       [makePlayer()],
       [],
       10,
+      spawnDeps,
     )
 
     const creature = result.creatures[0] as CreatureState
@@ -333,6 +349,7 @@ describe('spawnCreaturesFromNests', () => {
       players,
       [],
       10,
+      spawnDeps,
     )
 
     expect(result.creatures).toHaveLength(0)
@@ -349,6 +366,7 @@ describe('spawnCreaturesFromNests', () => {
       [makePlayer()],
       [],
       10,
+      spawnDeps,
     )
 
     expect(result.creatures).toHaveLength(2)
@@ -508,7 +526,7 @@ describe('moveCreatures 與防禦設施互動', () => {
 
   it('Creature 不會生成在巢穴所在格', () => {
     const nest = makeNest({ spawnChance: 1, cooldownRounds: 0 })
-    const result = spawnCreaturesFromNests([nest], [], makeMap(), [makePlayer()], [], 1)
+    const result = spawnCreaturesFromNests([nest], [], makeMap(), [makePlayer()], [], 1, spawnDeps)
 
     expect(result.creatures[0]?.position).not.toEqual(nest.position)
   })

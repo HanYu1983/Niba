@@ -51,7 +51,6 @@ import { getExternalSkill, getPlayerTotalInsightCost, getElementDamageMultiplier
 import {
   applyBaseHealthBonuses,
 } from './rules/baseRules'
-import { validateDefenseBuild } from './rules/defenseRules'
 import { getRepairSummary, getWorkshopLevel, repairEquipmentInventory } from './rules/buildingRules'
 import { applyMaterialPrestige } from './rules/governanceRules'
 import {
@@ -142,7 +141,7 @@ import { clearRuin as clearRuinAction, reconstructRuin as reconstructRuinAction 
 import { getGameSaveSlots, loadGameState, loadGameStateFromSlot, saveGameState, saveGameStateToSlot, deleteGameStateFromSlot, scheduleAutoSave } from './gameSave'
 import { isRunSettled, markRunSettled } from './settledRuns'
 import { recordScenarioClearance } from './campaignClearance'
-import { createGameState as createWorldGameState, createDebugGameState as createWorldDebugGameState } from './worldSetup'
+import { createGameState, createDebugGameState } from './worldSetup'
 import {
   canExecuteRepair,
   createAttackPreview,
@@ -203,14 +202,6 @@ function hasAvailablePlayerAction(state: GameState, playerId: string): boolean {
   if (!player) return false
   return player.stamina > 0 || state.creatures.some((creature) => isAdjacent(player.position, creature.position)) || state.resourcePoints.some((point) => point.lastCollectedRound !== state.round && isSameOrAdjacent(player.position, point.position))
 }
-
-export function getDefenseBuildValidation(state: GameState, playerId: string, baseId: string, structureType: DefenseStructureType, position: Position): string | null {
-  return validateDefenseBuild(state, getActionablePlayer(state, playerId), playerId, baseId, structureType, position)
-}
-
-export { moveCreatures }
-export const createGameState = createWorldGameState
-export const createDebugGameState = createWorldDebugGameState
 
 // ── Store 核心與 Session 狀態 ──────────────────────────────────────────────
 const initialGameState = createGameState()
