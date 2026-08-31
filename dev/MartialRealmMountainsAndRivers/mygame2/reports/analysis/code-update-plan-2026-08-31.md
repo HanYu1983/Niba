@@ -18,7 +18,7 @@
 | 3 雙寫與散彈修改 | ✅ **已完成** | 3.1 ✅ useItem 委派；3.2 ✅ occupancyRules 收斂；3.3 ✅ BuffEffects |
 | 4 AI 與存檔 | ✅ **已完成** | 4.1 ✅ `ai/aiStepRunner.ts`（6 個 step + `buildAiDependencies` + `runAiStepLoop` 高階函式）；4.2 ✅ graph-search 移除 `structuredClone`（domain actions 已 immutable）、修正 `searchStrategies` 型別；4.3 ✅ 存檔 schema 驗證；4.4 ✅ 自動存檔 debounce |
 | 5 分層與測試收斂 | 🔄 **進行中** | 5.1 ⏸️ lint 基線清理後仍有 23 errors/7 warnings（主要為 React Compiler/Effects 與測試 any）；5.2 部分完成：距離依賴、對話規則、defense adapter、掉落目錄、ScenarioDefinition 已分離；5.3 ⏸️ fixture 命名整理暫緩 |
-| 6 結構拆分 | 🔄 **進行中** | 6.1 部分完成：`store/createStore.ts`、`session/sessionController.ts`、`effects/animationBus.ts`、`ai/aiStepRunner.ts`、`actions/itemBurstActions.ts` 已抽出；純規則轉出口已移出 store；`gameStore.ts` 由 2359 行降至 1519 行；6.2 部分完成：`types.ts` 已拆分至 `game/types/{geometry,entities,map,combat,campaign,ai,runStats,gameState}.ts`，`types.ts` 改為 backward-compatible barrel（既有 import 不需改動）；GameState 三分 ⬜ 未開始 |
+| 6 結構拆分 | 🔄 **進行中** | 6.1 部分完成：`store/createStore.ts`、`session/sessionController.ts`、`effects/animationBus.ts`、`ai/aiStepRunner.ts`、`actions/itemBurstActions.ts` 已抽出；純規則轉出口已移出 store；`gameStore.ts` 由 2359 行降至 1519 行；6.2 部分完成：`types.ts` 已拆分至 `game/types/{geometry,entities,map,combat,campaign,ai,runStats,gameState}.ts`（backward-compatible barrel）；GameState 三分 ✅ 已完成（`WorldState`/`UiState`/`SessionState` 以 intersection 組合，欄位形狀不變、零破壞） |
 
 ### 階段 1 額外發現的 bug（已修正）
 
