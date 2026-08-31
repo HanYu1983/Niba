@@ -148,12 +148,14 @@ export function spawnCreaturesFromNests(
     const level = nest.spawnLevel
     const finalSchoolId = getCreatureSchoolId(nest)
     const finalBehavior = nest.behaviorType ?? 'scavenger'
+    // 基礎五維採 6 起（與開局游蕩妖物一致）：確保 Lv.1 怪物的最大體力（0.5×身法 + 0.5×臂力 = 6）
+    // 不低於單次攻擊消耗（5），使怪物相鄰目標時能正常攻擊，而非體力不足造成空揮。
     const attributes = getCreatureAttributes({
-      armStrength: 4,
-      constitution: 4,
-      agility: 4,
-      innerEnergy: 4,
-      insight: 4,
+      armStrength: 6,
+      constitution: 6,
+      agility: 6,
+      innerEnergy: 6,
+      insight: 6,
     }, { schoolId: finalSchoolId, behaviorType: finalBehavior }, level)
     const innerSkillId = getCreatureInnerSkillId({ schoolId: finalSchoolId }, level)
     // 等級 3 以上怪物依悟性容量裝備所屬門派靈氣型外功。

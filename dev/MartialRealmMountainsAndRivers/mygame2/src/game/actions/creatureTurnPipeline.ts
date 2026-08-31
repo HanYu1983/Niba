@@ -449,6 +449,10 @@ export function executeCreatureAction(
     if (attackCount > 1) {
       context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: `${creature.name} 連續攻擊 ${adjacentPlayer.name} ${attackCount} 次。` })
     }
+    // 體力不足以進行任何攻擊且目標存活時，不能回報「攻擊」但空揮；改為原地待命。
+    if (attackCount === 0) {
+      return { type: 'idle' }
+    }
     return { type: 'attack', targetId: adjacentPlayer.id, targetKind: 'player', targetPosition: adjacentPlayer.position, targetName: adjacentPlayer.name }
   } else if (adjacentDefense) {
     // 軍壘強化：3 格內塔類 HP×2，等同減半承受傷害（動態查詢，軍壘失活自動失效）。

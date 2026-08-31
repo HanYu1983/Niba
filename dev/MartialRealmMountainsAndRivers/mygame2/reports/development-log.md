@@ -1,5 +1,33 @@
 # 開發日誌
 
+## 2026-09-01｜生物對稱防禦、等級 3+ 裝備外功與成長公式調整
+
+### 本次完成
+
+- **生物對稱防禦機制**：生物作為被攻擊方時套用與玩家一致的回避（依身法）、根骨減傷（依根骨，機率使傷害減半）、暴擊判定；生物攻擊玩家時可暴擊（1.5 倍）並支援多次攻擊（依體力）。新增 `getCreatureEvasionRate`、`getCreatureRootReductionRate`、`getCreatureCriticalRate` 純函式。
+- **攻擊預覽顯示敵方減傷／回避**：攻擊目標為生物時，`createAttackPreview`／`createExternalSkillPreview` 的 `targetReduction` 改以根骨 ×2%（`getCreatureRootReductionRate`）計算，`targetEvasion` 依身法；`AttackPreviewModal`／`ExternalSkillPreviewModal` 顯示「敵方減傷率／敵方回避率」。
+- **攻擊結果彈窗說明被減傷／被回避**：新增 `targetDefense: 'evaded' | 'reduced'` 欄位至 `AttackExecutionResult`、`ExternalDamageExecutionResult`（含 `areaTargets` 各目標）；`executeAttack`／`executeExternalDamage` 記錄判定結果；`formatAttackResult`／`formatExternalSkillResult` 顯示「敵人回避了本次攻擊，傷害為 0！」或「敵人根骨強健，傷害減半。」。
+- **等級 3+ 生物裝備門派靈氣外功**：新增 `getCreatureEquippedExternalSkillIds`，依悟性容量（扣除內功需求後依序填裝）自動裝備所屬門派靈氣型外功（有常駐被動 Buff 者）；`createRoamerCreatures` 與 `spawnCreaturesFromNests` 皆套用，`createCreatureState` input 型別補上 `externalSkillIds`／`equippedExternalSkillIds`。
+- **生物五維成長公式調整**：`getCreatureAttributes` 改為「基礎值 + 門派修正 × 等級 + 每級成長（2）× 等級」，修正值隨等級放大；`CREATURE_LEVEL_GROWTH` 提升至 2；Lv.1（等級加成 0）不套用門派修正，身法底限 2、悟性底限 5。
+
+### 影響檔案
+
+- 修改：`src/game/rules/creatureBehaviorRules.ts`（成長公式、`getCreatureEquippedExternalSkillIds`）
+- 修改：`src/game/rules/playerDerivedRules.ts`（生物回避／減傷／暴擊函式）
+- 修改：`src/game/worldGeneration.ts`、`src/game/actions/creatureActions.ts`（生成時裝備外功）
+- 修改：`src/game/previewOrchestration.ts`、`src/components/AttackPreviewModal.tsx`、`src/components/ExternalSkillPreviewModal.tsx`（預覽顯示減傷／回避）
+- 修改：`src/game/actions/combatActions.ts`、`src/game/types/combat.ts`、`src/game/actionResultFormatters.ts`（結果彈窗說明減傷／回避）
+- 修改：`src/game/actions/creatureTurnPipeline.ts`（生物暴擊、多次攻擊）
+
+### 驗證結果
+
+- TypeScript：通過。vitest：**104 檔／1143 項全數通過**（含新增的護甲外功裝備、回避／減傷提示測試）。
+
+### 下一步
+
+- 確認攻擊預覽彈窗與結果彈窗在實際遊戲中正確顯示減傷／回避資訊。
+- 確認等級 3+ 生物於巢穴與開局生成時正確裝備門派靈氣外功。
+
 ## 2026-08-27｜名冊角色功法帶入、殘卷結算與戰績修正
 
 ### 本次完成

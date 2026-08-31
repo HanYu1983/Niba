@@ -73,7 +73,7 @@ export function animateCreatureTurn(
     return [{
       creatureId: before.id,
       creatureName: before.name,
-      message: `${damagingBuff?.name ?? 'Buff'} 對 ${before.name} 造成 ${damage} 點傷害。`,
+      message: `${damagingBuff?.name ?? 'Buff'} 對 ${before.name} 造成 ${Math.round(damage)} 點傷害。`,
     }]
   })
   const creaturesAfterBuffs = creaturesAfterPeriodicDamage
@@ -92,7 +92,7 @@ export function animateCreatureTurn(
     return [{
       creatureId: before.id,
       creatureName: before.name,
-      message: `${damagingBuff?.name ?? 'Buff'} 對 ${before.name} 造成 ${damage} 點傷害。`,
+      message: `${damagingBuff?.name ?? 'Buff'} 對 ${before.name} 造成 ${Math.round(damage)} 點傷害。`,
     }]
   })
 
