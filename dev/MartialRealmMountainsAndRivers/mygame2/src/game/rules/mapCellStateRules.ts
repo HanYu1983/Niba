@@ -38,6 +38,7 @@ export type MapCellInteractionContext = {
   visibility: 'visible' | 'explored' | 'unexplored'
   movementEnabled: boolean
   attackTargeting: boolean
+  firstAidTargeting: boolean
   externalSkillTargeting: boolean
   itemTargeting: boolean
   defenseBuildMode: boolean
@@ -46,6 +47,7 @@ export type MapCellInteractionContext = {
   canSelectDefensePosition: boolean
   creatureTargetId?: string
   nestTargetId?: string
+  playerTargetId?: string
   marker?: { type: MapMarkerType; id: string }
   gameOver?: boolean
   blockingModal?: boolean
@@ -57,6 +59,7 @@ export type MapCellInteractionAction =
   | { type: 'move'; playerId: string; position: Position }
   | { type: 'target-creature'; creatureId: string }
   | { type: 'target-nest'; nestId: string }
+  | { type: 'target-player'; playerId: string }
   | { type: 'build-defense'; position: Position }
   | { type: 'inspect-creature'; creatureId: string }
   | { type: 'inspect-nest'; nestId: string }
@@ -71,13 +74,16 @@ export type MapCellInteractionAction =
 function getMarkerAction(context: MapCellInteractionContext): MapCellInteractionAction | null {
   const marker = context.marker
   if (!marker) return null
-  const targeting = context.attackTargeting || context.externalSkillTargeting || context.itemTargeting
+  const targeting = context.attackTargeting || context.firstAidTargeting || context.externalSkillTargeting || context.itemTargeting
   if (marker.type === 'creature') return context.creatureTargetId === marker.id && targeting
     ? { type: 'target-creature', creatureId: marker.id }
     : targeting ? { type: 'none' } : { type: 'inspect-creature', creatureId: marker.id }
   if (marker.type === 'nest') return context.nestTargetId === marker.id && targeting
     ? { type: 'target-nest', nestId: marker.id }
     : targeting ? { type: 'none' } : { type: 'inspect-nest', nestId: marker.id }
+  if (marker.type === 'player') return context.firstAidTargeting && context.playerTargetId === marker.id
+    ? { type: 'target-player', playerId: marker.id }
+    : context.firstAidTargeting ? { type: 'none' } : null
   if (marker.type === 'base') return targeting ? { type: 'none' } : { type: 'inspect-base', baseId: marker.id }
   if (marker.type === 'defense') return targeting || context.defenseBuildMode ? { type: 'none' } : { type: 'inspect-defense', structureId: marker.id }
   if (marker.type === 'ruin') return targeting ? { type: 'none' } : { type: 'inspect-ruin', ruinId: marker.id }
@@ -105,15 +111,16 @@ export function resolveMapCellAction(context: MapCellInteractionContext): MapCel
   }
   const markerAction = getMarkerAction(context)
   if (markerAction) return markerAction
-  const targeting = context.attackTargeting || context.externalSkillTargeting || context.itemTargeting
+  const targeting = context.attackTargeting || context.firstAidTargeting || context.externalSkillTargeting || context.itemTargeting
   if (targeting && context.creatureTargetId) return { type: 'target-creature', creatureId: context.creatureTargetId }
   if (targeting && context.nestTargetId) return { type: 'target-nest', nestId: context.nestTargetId }
+  if (context.firstAidTargeting && context.playerTargetId) return { type: 'target-player', playerId: context.playerTargetId }
   if (context.canSelectDefensePosition) return { type: 'build-defense', position: context.position }
   if (context.isReachable && context.activePlayerId) return { type: 'move', playerId: context.activePlayerId, position: context.position }
   return { type: 'none' }
 }
 
-export type MapMarkerType = 'creature' | 'nest' | 'base' | 'defense' | 'event' | 'ruin' | 'resource' | 'item' | 'sect-gate'
+export type MapMarkerType = 'creature' | 'nest' | 'player' | 'base' | 'defense' | 'event' | 'ruin' | 'resource' | 'item' | 'sect-gate'
 
 export function getMapCellRangeState(
   cell: Position,

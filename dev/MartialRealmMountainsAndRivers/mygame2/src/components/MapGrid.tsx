@@ -1,9 +1,10 @@
 import { Card } from 'antd'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { getReachableCellIds } from '../game/rules/movementRules'
 import Player from './Player'
 import { type MapCell, type BaseState, type CreatureNestState, type ResourcePointState, type DefenseStructureState, type ItemPointState, type ExplorationEventState, type PlayerState, type CreatureState, type Position, type GameState, type RuinState, type TrapState, type SectGateState, getAdjacentPositions } from '../game/types'
-import { getCellVisibility } from '../game/rules/visibilityRules'
+import { getPlayerVisibleCellIds } from '../game/rules/visibilityRules'
+import { getOccupiedPositions, MOVEMENT_LAYERS } from '../game/rules/occupancyRules'
 import { getCreatureIcon } from '../game/rules/creatureBehaviorRules'
 import { getActiveBuffsForPlayer, getBuff } from '../game/rules/playerDerivedRules'
 import { getBastionMultipliers } from '../game/rules/defenseBastionRules'
@@ -50,12 +51,14 @@ type MapGridProps = {
   onPlayerMoved?: () => void
   onMovePlayerTo?: (playerId: string, row: number, column: number) => void
   onCreatureSelect?: (creatureId: string, markerRect: DOMRect) => void
+  onPlayerTarget?: (playerId: string) => void
   onExplorationEventDetails?: (eventId: string) => void
   onSectGateDetails?: (sectGateId: string) => void
   defenseBuildMode?: { basePosition: Position; structureType: string; selectedPosition: Position | null }
   onDefensePositionSelect?: (position: Position) => void
   externalSkillTargeting?: boolean
   attackTargeting?: boolean
+  firstAidTargeting?: boolean
   itemTargeting?: boolean
   /** 目標選取規格（新框架）；提供時由 spec 決定高亮範圍，取代外部透傳的 targeting 旗標。 */
   targetingSpec?: TargetingSpec | null
@@ -70,12 +73,7 @@ type MapGridProps = {
 import { TERRAIN_STYLES } from '../editor/terrainStyles'
 import { getResourcePointIcon } from '../game/catalogs/placeNameCatalog'
 
-function hasValidPosition(value: { position?: Position } | null | undefined): value is { position: Position } {
-  const position = value?.position
-  return Boolean(position && Number.isFinite(position.row) && Number.isFinite(position.column))
-}
-
-function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], defenseStructures = [], itemPoints = [], explorationEvents = [], ruins = [], traps = [], sectGates = [], selectedBaseId = null, onClearSelectedBase, players = [], creatures = [], activePlayerId, movementEnabled = false, creatureTurnInProgress = false, gameOver = false, blockingModal = false, activeCreatureId = null, onPlayerMoved, onMovePlayerTo, onBaseSelect, onBaseDetails, onCreatureNestSelect, onCreatureNestDetails, onResourcePointDetails, onItemPointDetails, onDefenseStructureDetails, onRuinDetails, onCreatureSelect, externalSkillTargeting = false, attackTargeting = false, itemTargeting = false, targetingSpec = null, defenseBuildMode, onDefensePositionSelect, onExplorationEventDetails, onSectGateDetails, visibility, visibilityPlayerId, revealedCreatureCellIds, revealedCreatureUntilRound, creatureShake }: MapGridProps) {
+function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], defenseStructures = [], itemPoints = [], explorationEvents = [], ruins = [], traps = [], sectGates = [], selectedBaseId = null, onClearSelectedBase, players = [], creatures = [], activePlayerId, movementEnabled = false, creatureTurnInProgress = false, gameOver = false, blockingModal = false, activeCreatureId = null, onPlayerMoved, onMovePlayerTo, onBaseSelect, onBaseDetails, onCreatureNestSelect, onCreatureNestDetails, onResourcePointDetails, onItemPointDetails, onDefenseStructureDetails, onRuinDetails, onCreatureSelect, onPlayerTarget, externalSkillTargeting = false, attackTargeting = false, firstAidTargeting = false, itemTargeting = false, targetingSpec = null, defenseBuildMode, onDefensePositionSelect, onExplorationEventDetails, onSectGateDetails, visibility, visibilityPlayerId, revealedCreatureCellIds, revealedCreatureUntilRound, creatureShake }: MapGridProps) {
   const [isDraggingMap, setIsDraggingMap] = useState(false)
   const mapScrollRef = useRef<HTMLDivElement>(null)
   const dragStateRef = useRef({ active: false, dragged: false, pointerId: -1, startX: 0, startY: 0, scrollLeft: 0, scrollTop: 0 })
@@ -88,24 +86,68 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
     ? getDefenseBuildRange(getGovernanceRank(activePlayer.prestige).rank)
     : 0
   const blockedPositions = useMemo(() => activePlayer
-    ? [
-      ...players
-        .filter((player) => player.id !== activePlayer.id)
-        .map((player) => player.position),
-      ...creatures.map((creature) => creature.position),
-      ...bases.map((base) => base.position),
-      ...creatureNests.map((nest) => nest.position),
-      ...defenseStructures.map((structure) => structure.position),
-      ...ruins.filter((ruin) => ruin.status === 'intact').map((ruin) => ruin.position),
-      ...sectGates.map((gate) => gate.position),
-    ].filter((position): position is Position => Boolean(
-      position && Number.isFinite(position.row) && Number.isFinite(position.column),
-    ))
+    ? getOccupiedPositions({
+      players,
+      creatures,
+      bases,
+      creatureNests,
+      defenseStructures,
+      ruins,
+      sectGates,
+    }, { excludePlayerId: activePlayer.id, layers: MOVEMENT_LAYERS })
     : [], [activePlayer, players, creatures, bases, creatureNests, defenseStructures, ruins, sectGates])
   const reachableCellIds = useMemo(() =>
-    activePlayer && movementEnabled && activePlayer.stamina > 0 && !activePlayer.turnEnded
+    activePlayer && (movementEnabled || (activePlayer.id === activePlayerId && !activePlayer.turnEnded)) && activePlayer.stamina > 0 && !activePlayer.turnEnded
       ? getReachableCellIds(map, activePlayer, blockedPositions)
-      : new Set<string>(), [activePlayer, movementEnabled, map, blockedPositions])
+      : new Set<string>(), [activePlayer, activePlayerId, movementEnabled, map, blockedPositions])
+  // 視野計算：一次算出所有存活玩家共享的可見格 Set，per-cell 只做 Set.has，
+  // 取代原先每格呼叫 getCellVisibility（內部會重跑全圖視野計算，O(cells²)）。
+  const visibilityState = useMemo(() => {
+    if (!visibility || !visibilityPlayerId) return null
+    const visibleCellIds = getPlayerVisibleCellIds({
+      map, visibility, bases, defenseStructures, players, creatures, creatureNests,
+      resourcePoints, itemPoints, explorationEvents, revealedCreatureCellIds,
+      revealedCreatureUntilRound, activePlayerId: activePlayerId ?? '', round: 0,
+      creatureActionLogs: [], attackPreview: null, externalSkillPreview: null,
+      creatureTurnInProgress: false, activeCreatureId: null, operation: { type: 'idle' }, blockingModal: null,
+    }, visibilityPlayerId)
+    return {
+      visibleCellIds,
+      exploredSet: new Set(visibility.exploredCellIds),
+      revealedSet: new Set(revealedCreatureCellIds ?? []),
+      revealed: visibility.mode === 'revealed',
+    }
+  }, [visibility, visibilityPlayerId, map, bases, defenseStructures, players, creatures, creatureNests, resourcePoints, itemPoints, explorationEvents, revealedCreatureCellIds, revealedCreatureUntilRound, activePlayerId])
+  // 物件索引：一次把各類實體依所在格分組，取代 per-cell 對全陣列的 11 次 filter。
+  const cellObjects = useMemo(() => {
+    const index = new Map<string, {
+      players: PlayerState[]; creatures: CreatureState[]; bases: BaseState[]; nests: CreatureNestState[];
+      resourcePoints: ResourcePointState[]; itemPoints: ItemPointState[]; defenseStructures: DefenseStructureState[];
+      explorationEvents: ExplorationEventState[]; sectGates: SectGateState[]; ruins: RuinState[]; traps: TrapState[];
+    }>()
+    const get = (position: Position | undefined) => {
+      if (!position || !Number.isFinite(position.row) || !Number.isFinite(position.column)) return null
+      const key = `${position.row}-${position.column}`
+      let entry = index.get(key)
+      if (!entry) {
+        entry = { players: [], creatures: [], bases: [], nests: [], resourcePoints: [], itemPoints: [], defenseStructures: [], explorationEvents: [], sectGates: [], ruins: [], traps: [] }
+        index.set(key, entry)
+      }
+      return entry
+    }
+    for (const player of players) get(player.position)?.players.push(player)
+    for (const creature of creatures) get(creature.position)?.creatures.push(creature)
+    for (const base of bases) get(base.position)?.bases.push(base)
+    for (const nest of creatureNests) get(nest.position)?.nests.push(nest)
+    for (const point of resourcePoints) get(point.position)?.resourcePoints.push(point)
+    for (const point of itemPoints) get(point.position)?.itemPoints.push(point)
+    for (const structure of defenseStructures) get(structure.position)?.defenseStructures.push(structure)
+    for (const event of explorationEvents) get(event.position)?.explorationEvents.push(event)
+    for (const gate of sectGates) get(gate.position)?.sectGates.push(gate)
+    for (const ruin of ruins) get(ruin.position)?.ruins.push(ruin)
+    for (const trap of traps) get(trap.position)?.traps.push(trap)
+    return index
+  }, [players, creatures, bases, creatureNests, resourcePoints, itemPoints, defenseStructures, explorationEvents, sectGates, ruins, traps])
   // 新框架：提供 targetingSpec 時，高亮整個形狀範圍的格（純視覺提示可選範圍）。
   // 實際「可點擊目標」由 resolveMapCellAction 依 targeting flag 與格子上是否有目標判定。
   const specRangeCellIds = useMemo(() => {
@@ -143,6 +185,8 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
   const skillTargetCellIds = targetingSpec && targetingSpec.source === 'external-skill' ? targetCellIds : new Set<string>()
   const attackTargetCellIds = targetingSpec && targetingSpec.source === 'attack' ? targetCellIds : new Set<string>()
   const itemTargetCellIds = targetingSpec && targetingSpec.source === 'item-burst' ? targetCellIds : new Set<string>()
+  // 急救：高亮整個選取範圍（周圍一格），實際可點擊目標由 cellAction 判定。
+  const firstAidRangeCellIds = targetingSpec && targetingSpec.source === 'first-aid' ? targetCellIds : new Set<string>()
   const interactionHandlers: MapInteractionHandlers = {
     move: (playerId, position) => onMovePlayerTo?.(playerId, position.row, position.column),
     playerMoved: () => onPlayerMoved?.(),
@@ -150,6 +194,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
     inspectCreature: (creatureId, markerRect) => onCreatureSelect?.(creatureId, markerRect),
     targetNest: (nestId) => onCreatureNestSelect?.(nestId),
     inspectNest: (nestId) => onCreatureNestDetails?.(nestId),
+    targetPlayer: (playerId) => onPlayerTarget?.(playerId),
     buildDefense: (position) => onDefensePositionSelect?.(position),
     inspectBase: (baseId) => { onBaseSelect?.(baseId); onBaseDetails?.(baseId) },
     inspectDefense: (structureId) => onDefenseStructureDetails?.(structureId),
@@ -273,8 +318,16 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
           >
             {cells.map((cell) => {
               const terrain = TERRAIN_STYLES[cell.terrain]
-              const cellVisibility = visibility && visibilityPlayerId
-                ? getCellVisibility({ map, visibility, bases, defenseStructures, players, creatures, creatureNests, resourcePoints, itemPoints, explorationEvents, revealedCreatureCellIds, revealedCreatureUntilRound, activePlayerId: activePlayerId ?? '', round: 0, creatureActionLogs: [], attackPreview: null, externalSkillPreview: null, creatureTurnInProgress: false, activeCreatureId: null, operation: { type: 'idle' }, blockingModal: null }, visibilityPlayerId, cell)
+              const cellVisibility = visibilityState
+                ? visibilityState.revealed
+                  ? 'visible'
+                  : visibilityState.visibleCellIds.has(cell.id)
+                    ? 'visible'
+                    : visibilityState.revealedSet.has(cell.id)
+                      ? 'visible'
+                      : visibilityState.exploredSet.has(cell.id)
+                        ? 'explored'
+                        : 'unexplored'
                 : 'visible'
               const isUnexplored = cellVisibility === 'unexplored'
               const isVisible = cellVisibility === 'visible'
@@ -284,43 +337,26 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
               const isSkillTarget = skillTargetCellIds.has(cell.id)
               const isAttackTarget = attackTargetCellIds.has(cell.id)
               const isItemTarget = itemTargetCellIds.has(cell.id)
-              const playersHere = isVisible ? players.filter(
-                (player) => hasValidPosition(player) && player.position.row === cell.row && player.position.column === cell.column,
-              ) : []
-              const creaturesHere = isVisible ? creatures.filter(
-                (creature) => hasValidPosition(creature) && creature.position.row === cell.row && creature.position.column === cell.column,
-              ) : []
-              const basesHere = isVisible ? bases.filter(
-                (base) => hasValidPosition(base) && base.position.row === cell.row && base.position.column === cell.column,
-              ) : []
-              const nestsHere = isKnownLocation ? creatureNests.filter(
-                (nest) => hasValidPosition(nest) && nest.position.row === cell.row && nest.position.column === cell.column,
-              ) : []
-              const resourcePointsHere = isKnownLocation ? resourcePoints.filter(
-                (resourcePoint) =>
-                  hasValidPosition(resourcePoint) && resourcePoint.position.row === cell.row &&
-                  resourcePoint.position.column === cell.column,
-              ) : []
-              const itemPointsHere = isVisible ? itemPoints.filter(
-                (itemPoint) =>
-                  hasValidPosition(itemPoint) && itemPoint.position.row === cell.row &&
-                  itemPoint.position.column === cell.column,
-              ) : []
-              const defenseStructuresHere = isKnownLocation ? defenseStructures.filter((structure) =>
-                hasValidPosition(structure) && structure.position.row === cell.row && structure.position.column === cell.column,
-              ) : []
-              const explorationEventsHere = isVisible ? explorationEvents.filter((event) =>
-                event.status === 'available' && hasValidPosition(event) && event.position.row === cell.row && event.position.column === cell.column,
-              ) : []
-              const sectGatesHere = isKnownLocation ? sectGates.filter((gate) =>
-                hasValidPosition(gate) && gate.position.row === cell.row && gate.position.column === cell.column,
-              ) : []
-              const ruinsHere = isVisible ? ruins.filter((ruin) =>
-                ruin.status === 'intact' && hasValidPosition(ruin) && ruin.position.row === cell.row && ruin.position.column === cell.column,
-              ) : []
-              const trapsHere = isVisible ? traps.filter((trap) =>
-                hasValidPosition(trap) && trap.position.row === cell.row && trap.position.column === cell.column,
-              ) : []
+              const isFirstAidRange = firstAidRangeCellIds.has(cell.id)
+              const cellEntry = cellObjects.get(cell.id)
+              const playersHere = isVisible ? (cellEntry?.players ?? []) : []
+              const isFirstAidTarget = firstAidTargeting && playersHere.some(
+                (player) => player.health <= 0 && player.id !== activePlayer?.id,
+              )
+              const creaturesHere = isVisible ? (cellEntry?.creatures ?? []) : []
+              const basesHere = isVisible ? (cellEntry?.bases ?? []) : []
+              const nestsHere = isKnownLocation ? (cellEntry?.nests ?? []) : []
+              const resourcePointsHere = isKnownLocation ? (cellEntry?.resourcePoints ?? []) : []
+              const itemPointsHere = isVisible ? (cellEntry?.itemPoints ?? []) : []
+              const defenseStructuresHere = isKnownLocation ? (cellEntry?.defenseStructures ?? []) : []
+              const explorationEventsHere = isVisible
+                ? (cellEntry?.explorationEvents ?? []).filter((event) => event.status === 'available')
+                : []
+              const sectGatesHere = isKnownLocation ? (cellEntry?.sectGates ?? []) : []
+              const ruinsHere = isVisible
+                ? (cellEntry?.ruins ?? []).filter((ruin) => ruin.status === 'intact')
+                : []
+              const trapsHere = isVisible ? (cellEntry?.traps ?? []) : []
               const defenseDistance = defenseBuildMode
                 ? Math.abs(defenseBuildMode.basePosition.row - cell.row) + Math.abs(defenseBuildMode.basePosition.column - cell.column)
                 : Infinity
@@ -339,11 +375,13 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
               )
               const creatureTarget = creaturesHere.find((creature) => creature.health > 0)
               const nestTarget = nestsHere.find((nest) => nest.health > 0)
+              const playerTarget = playersHere.find((player) => player.health <= 0 && player.id !== activePlayer?.id)
               const cellAction = resolveMapCellAction({
                 position: { row: cell.row, column: cell.column },
                 visibility: cellVisibility,
                 movementEnabled,
                 attackTargeting,
+                firstAidTargeting,
                 externalSkillTargeting,
                 itemTargeting,
                 defenseBuildMode: Boolean(defenseBuildMode),
@@ -352,15 +390,17 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                 canSelectDefensePosition,
                 creatureTargetId: creatureTarget?.id,
                 nestTargetId: nestTarget?.id,
+                playerTargetId: playerTarget?.id,
                 gameOver,
                 blockingModal,
                 creatureTurnInProgress,
               })
-              const resolveMarkerAction = (type: 'creature' | 'nest' | 'base' | 'defense' | 'event' | 'ruin' | 'resource' | 'item' | 'sect-gate', id: string) => resolveMapCellAction({
+              const resolveMarkerAction = (type: 'creature' | 'nest' | 'player' | 'base' | 'defense' | 'event' | 'ruin' | 'resource' | 'item' | 'sect-gate', id: string) => resolveMapCellAction({
                 position: { row: cell.row, column: cell.column },
                 visibility: cellVisibility,
                 movementEnabled,
                 attackTargeting,
+                firstAidTargeting,
                 externalSkillTargeting,
                 itemTargeting,
                 defenseBuildMode: Boolean(defenseBuildMode),
@@ -369,6 +409,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                 canSelectDefensePosition,
                 creatureTargetId: creatureTarget?.id,
                 nestTargetId: nestTarget?.id,
+                playerTargetId: playerTarget?.id,
                 marker: { type, id },
                 gameOver,
                 blockingModal,
@@ -394,6 +435,8 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                     {isSkillTarget && <span className="map-grid__overlay map-grid__overlay--skill-target" />}
                     {isAttackTarget && <span className="map-grid__overlay map-grid__overlay--attack-target" />}
                     {isItemTarget && <span className="map-grid__overlay map-grid__overlay--item-target" />}
+                    {isFirstAidRange && <span className="map-grid__overlay map-grid__overlay--first-aid-range" />}
+                    {isFirstAidTarget && <span className="map-grid__overlay map-grid__overlay--attack-target" />}
                     {isDefenseBuildRange && <span className="map-grid__overlay map-grid__overlay--defense-range" />}
                     {canSelectDefensePosition && <span className="map-grid__overlay map-grid__overlay--defense-buildable" />}
                   </span>
@@ -478,7 +521,16 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                       name={player.name}
                       stamina={player.stamina}
                       maxStamina={player.maxStamina}
-                      className={player.id === activePlayerId && !creatureTurnInProgress ? 'player--current' : undefined}
+                      className={[
+                        player.id === activePlayerId && !creatureTurnInProgress ? 'player--current' : '',
+                        firstAidTargeting && player.health <= 0 && player.id !== activePlayer?.id ? 'player--first-aid-target' : '',
+                      ].filter(Boolean).join(' ') || undefined}
+                      onClick={firstAidTargeting && player.health <= 0 && player.id !== activePlayer?.id
+                        ? (event) => {
+                          event.stopPropagation()
+                          executeMapCellAction(resolveMarkerAction('player', player.id), event.currentTarget.getBoundingClientRect())
+                        }
+                        : undefined}
                     />
                   ))}
                   {creaturesHere.map((creature) => (
@@ -653,4 +705,4 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
   )
 }
 
-export default MapGrid
+export default memo(MapGrid)

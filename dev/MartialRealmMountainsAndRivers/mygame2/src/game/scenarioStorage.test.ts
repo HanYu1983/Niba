@@ -10,7 +10,7 @@ import {
   syncOfficialScenarios,
   type StoredScenario,
 } from './scenarioStorage'
-import type { ScenarioDefinition } from '../editor/editorTypes'
+import type { ScenarioDefinition } from './contracts/scenario'
 
 function makeScenario(overrides: Partial<ScenarioDefinition> = {}): ScenarioDefinition {
   return {

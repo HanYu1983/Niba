@@ -9,6 +9,7 @@ import { canTraverseTerrain, getEffectiveAttributesForPlayer, getBuff, getPlayer
 import { getActionablePlayer } from '../rules/actionCostRules'
 import { restoreAfterAttributeChange } from '../characterFactory'
 import { getScoutCellIds, updatePlayerVisibility } from '../rules/visibilityRules'
+import { getOccupiedPositions, MOVEMENT_LAYERS } from '../rules/occupancyRules'
 
 export type CollectItemPointResult = {
   state: GameState
@@ -256,13 +257,11 @@ export function useItemAction(
         candidate.row === position.row && candidate.column === position.column,
       )
       if (!cell || !canTraverseTerrain(cell.terrain, player)) return false
-      const occupied = [
-        ...state.players.filter((candidate) => candidate.id !== playerId).map((candidate) => candidate.position),
-        ...state.creatures.map((creature) => creature.position),
-        ...state.bases.filter((base) => base.id !== nearestBase.id).map((base) => base.position),
-        ...state.creatureNests.map((nest) => nest.position),
-        ...(state.defenseStructures ?? []).map((structure) => structure.position),
-      ]
+      const occupied = getOccupiedPositions(state, {
+        excludePlayerId: playerId,
+        excludeBaseId: nearestBase.id,
+        layers: MOVEMENT_LAYERS,
+      })
       return !occupied.some((occupiedPosition) => isSamePosition(occupiedPosition, position))
     }
     const targetPosition =

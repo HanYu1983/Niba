@@ -73,6 +73,7 @@ export function resolveTargetableCellIds(
   creatureNests: Array<{ position: Position; health: number; id: string }>,
   spec: TargetingSpec,
   origin: Position,
+  players: Array<{ position: Position; health: number; id: string }> = [],
 ): Set<string> {
   const shapeCells = resolveTargetShapeCells(spec.shape, origin, map)
   const occupied = [
@@ -82,6 +83,9 @@ export function resolveTargetableCellIds(
     ...creatureNests
       .filter((n) => n.health > 0 && spec.targetTypes.includes('nest'))
       .map((n) => `${n.position.row}-${n.position.column}`),
+    ...players
+      .filter((p) => p.health <= 0 && spec.targetTypes.includes('player'))
+      .map((p) => `${p.position.row}-${p.position.column}`),
   ]
   const result = new Set<string>()
   for (const cellId of occupied) {
@@ -103,6 +107,14 @@ export function resolveTargetingSpec(
         targetTypes: ['creature', 'nest'],
         hint: '請點選相鄰的生物或巢穴作為攻擊目標',
         source: 'attack',
+      }
+    case 'targeting-first-aid':
+      return {
+        shape: { kind: 'radius', range: 1 },
+        mode: { kind: 'single' },
+        targetTypes: ['player'],
+        hint: '請點選相鄰一格內倒下的玩家進行急救',
+        source: 'first-aid',
       }
     case 'targeting-item':
       return {

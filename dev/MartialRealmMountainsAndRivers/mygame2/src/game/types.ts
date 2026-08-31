@@ -8,8 +8,7 @@ import type { InnerSkill } from "./catalogs/innerSkillCatalog"
 import type { MartialSchoolId } from './catalogs/martialSchoolCatalog'
 import type { EventEffect, EventRequirement } from './events/eventCatalog'
 import type { AiActionEvent } from './ai/aiActionEvent'
-import { itemCatalog } from './catalogs/itemCatalog'
-import { equipmentCatalog } from './catalogs/equipmentCatalog'
+import type { BuffEffects } from './core/buffEffects'
 
 export type Position = {
   row: number
@@ -81,57 +80,11 @@ export type EquipmentLoadout = {
   accessoryInstanceId: string | null
 }
 
-export type BuffInstance = {
+export type BuffInstance = Partial<BuffEffects> & {
   id: string
   definitionId: string
   sourceId: string
   remainingRounds: number | null
-  attributeMultiplier?: number
-  maxHealthDamagePercent?: number
-  criticalRateMultiplier?: number
-  criticalRateBonus?: number
-  terrainCostOverride?: number
-  reflectionPercent?: number
-  lifestealPercent?: number
-  innerPowerLeechPercent?: number
-  damageReductionPercent?: number
-  healthRegenPercent?: number
-  innerPowerHealthRegenPercent?: number
-  /** 每回合回復「最大內力 × 比例」的內力。 */
-  innerPowerRegenPercent?: number
-  damageDealtPercent?: number
-  externalSkillDamagePercent?: number
-  evasionRateBonus?: number
-  basicAttackStaminaCostReduction?: number
-  staminaToInnerPowerRatio?: number
-  externalSkillInnerCostReduction?: number
-  insightTrueDamageMultiplier?: number
-  visionRadiusBonus?: number
-  maxStaminaBonus?: number
-  maxHealthMultiplier?: number
-  maxStaminaMultiplier?: number
-  maxInnerPowerMultiplier?: number
-  gatherStaminaCostReduction?: number
-  gatherDoubleYieldChance?: number
-  buildingMaterialCostReduction?: number
-  buildingReputationBonus?: number
-  shopBuyPriceDiscount?: number
-  shopSellPriceBonus?: number
-  questRewardBonus?: number
-  /** 功法經驗獲得加成比例（技能經驗乘算）。 */
-  skillExpGainPercent?: number
-  confused?: boolean
-  /** 震懾：三重共振觸發時施加，目標完全跳過下一個回合。 */
-  stunned?: boolean
-  damageTakenFromAlliesBonus?: number
-  /** 復活時恢復的血量比例（覆寫定義基礎值，供等級縮放；reviveOnDeath 仍由定義旗標決定）。 */
-  reviveHealthPercent?: number
-  /** 條件觸發型：依血量區間觸發的四維乘算（覆寫定義基礎值，供等級縮放）。 */
-  conditional?: {
-    when: 'health-below' | 'health-above'
-    threshold: number
-    multiplier: number
-  }
 }
 
 export type MapCell = {
@@ -358,26 +311,6 @@ export type LearnedSkillResult =
   | { type: 'inner'; skill: InnerSkill }
   | { type: 'external'; skill: ExternalSkill }
 
-export type LootDefinition =
-  | { kind: 'item'; itemId: string; weight: number }
-  | { kind: 'equipment'; equipmentId: string; weight: number }
-  | { kind: 'skill'; skillId: string; skillType: 'inner' | 'external'; weight: number }
-
-export const lootCatalog: LootDefinition[] = [
-  // 暫時清空可掉落的功法清單；有待重新設計江湖功法後再填入。
-]
-
-/** 道具點專用掉落池：包含所有道具與裝備，不包含功法。 */
-export const itemPointLootCatalog: LootDefinition[] = [
-  // 道具點只會掉落 1~2 級道具。
-  ...itemCatalog
-    .filter((item) => (item.requiredShopLevel ?? 1) <= 2)
-    .map((item) => ({ kind: 'item' as const, itemId: item.id, weight: 20 })),
-  // 道具點只會掉落 1~2 級裝備。
-  ...equipmentCatalog
-    .filter((equipment) => !equipment.schoolId && equipment.requiredShopLevel <= 2)
-    .map((equipment) => ({ kind: 'equipment' as const, equipmentId: equipment.id, weight: 10 })),
-]
 
 export type BaseState = {
   id: string
@@ -537,6 +470,7 @@ export type GameOperation =
   | { type: 'idle' }
   | { type: 'moving'; movementUsed: boolean }
   | { type: 'targeting-attack' }
+  | { type: 'targeting-first-aid' }
   | { type: 'targeting-external-skill'; skillId: string }
   | { type: 'targeting-item'; itemId: string }
   | { type: 'previewing-attack' }
@@ -545,7 +479,7 @@ export type GameOperation =
   | { type: 'building-defense'; baseId: string; structureType: DefenseStructureType; position: Position | null }
 
 /** 目標選取來源種類（用於高亮樣式與 preview 分派）。 */
-export type TargetingSource = 'attack' | 'external-skill' | 'item-burst'
+export type TargetingSource = 'attack' | 'external-skill' | 'item-burst' | 'first-aid'
 
 /** 範圍形狀：決定「哪些格子是合法目標」。 */
 export type TargetingShape =
@@ -741,7 +675,7 @@ export type CreatureActionLog = {
   message: string
 }
 
-export type AttackTargetType = 'creature' | 'nest'
+export type AttackTargetType = 'creature' | 'nest' | 'player'
 
 export type AttackPreview = {
   playerId: string

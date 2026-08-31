@@ -10,7 +10,7 @@ type UseKeyboardShortcutsParams = {
   modalOpen: boolean
   movementUsed: boolean
   externalSkills: ExternalSkill[]
-  onToggleMovement: () => void
+  onMove: (rowDelta: number, columnDelta: number) => void
   onBeginAttackTargeting: () => void
   onOpenInventory: () => void
   onOpenEquipment: () => void
@@ -27,7 +27,7 @@ function useKeyboardShortcuts({
   modalOpen,
   movementUsed,
   externalSkills,
-  onToggleMovement,
+  onMove,
   onBeginAttackTargeting,
   onOpenInventory,
   onOpenEquipment,
@@ -60,16 +60,19 @@ function useKeyboardShortcuts({
         return
       }
 
-      if (key === 'w') {
+      // WASD：移動上／左／下／右一格。
+      const moveDirections: Record<string, [number, number]> = {
+        w: [-1, 0],
+        a: [0, -1],
+        s: [1, 0],
+        d: [0, 1],
+      }
+      if (key in moveDirections) {
         if (activePlayer.stamina > 0) {
           event.preventDefault()
-          onToggleMovement()
+          const [rowDelta, columnDelta] = moveDirections[key]
+          onMove(rowDelta, columnDelta)
         }
-      }
-
-      if (key === 'a') {
-        event.preventDefault()
-        onBeginAttackTargeting()
       }
 
       if (key === 'b') {
@@ -77,14 +80,15 @@ function useKeyboardShortcuts({
         onOpenInventory()
       }
 
+      // 普通攻擊：進入攻擊目標選取模式。
+      if (key === 'q') {
+        event.preventDefault()
+        onBeginAttackTargeting()
+      }
+
       if (key === 'e') {
         event.preventDefault()
         onOpenEquipment()
-      }
-
-      if (key === 's') {
-        event.preventDefault()
-        onOpenSkills()
       }
 
       if (key === 'x') {
@@ -132,10 +136,10 @@ function useKeyboardShortcuts({
     externalSkills,
     onBeginAttackTargeting,
     onEndTurn,
+    onMove,
     onOpenInventory,
     onOpenEquipment,
     onOpenSkills,
-    onToggleMovement,
     onUseExternalSkill,
     onBuildRoad,
   ])

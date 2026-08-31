@@ -8,6 +8,7 @@ export type MapInteractionHandlers = {
   inspectCreature: (creatureId: string, markerRect: DOMRect) => void
   targetNest: (nestId: string) => void
   inspectNest: (nestId: string) => void
+  targetPlayer: (playerId: string) => void
   buildDefense: (position: Position) => void
   inspectBase: (baseId: string) => void
   inspectDefense: (structureId: string) => void
@@ -39,6 +40,9 @@ export function executeMapCellAction(
       break
     case 'inspect-nest':
       handlers.inspectNest(action.nestId)
+      break
+    case 'target-player':
+      handlers.targetPlayer(action.playerId)
       break
     case 'build-defense':
       handlers.buildDefense(action.position)

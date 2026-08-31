@@ -177,7 +177,9 @@ function GameStartScreen({ onStart, onStartChallenge, onDebug, onOpenSkillTest, 
   const handleSaveTemplate = () => {
     const name = templateName.trim()
     if (!name || isTemplateNameTaken(name)) return
-    const { seed: _seed, ...settingsWithoutSeed } = settings
+    const settingsWithoutSeed = Object.fromEntries(
+      Object.entries(settings).filter(([key]) => key !== 'seed'),
+    ) as Omit<GameSettings, 'seed'>
     const template: MapTemplate = {
       id: `custom-${Date.now()}`,
       name,

@@ -86,6 +86,86 @@ export function getFunctionalSkillBuffOverrides(
   return Object.fromEntries(Object.entries(overrides).filter(([, value]) => value !== undefined))
 }
 
+/**
+ * 依「功法 id」為沒有 functionalEffect 的門派／專屬靈氣功法縮放 Buff 數值。
+ *
+ * 這些功法原本只透過 passiveBuffIds 掛載固定值 Buff，不隨功法等級成長。
+ * 為讓升級有實質回饋，這裡依功法 id 直接縮放對應 Buff 欄位。
+ * 有 functionalEffect 的功法（江湖／悟性輔助）走 getFunctionalSkillBuffOverrides，不在此處理。
+ */
+export function getAuraSkillLevelOverrides(
+  skillId: string,
+  level: number,
+  definition: BuffDefinition,
+): Partial<BuffInstance> {
+  const levelDelta = Math.max(1, Math.floor(level)) - 1
+  const overrides: Partial<BuffInstance> = {}
+
+  switch (skillId) {
+    // 太虛流·迴氣（悟道）：功法經驗 +20% → 每級 +2%
+    case 'void-spirit-external-functional':
+      if (definition.skillExpGainPercent !== undefined) overrides.skillExpGainPercent = 0.2 + levelDelta * 0.02
+      break
+    // 銳鋒流·劍心明鑑：視野 +2 → 每級 +1
+    case 'sharp-edge-external-functional':
+      if (definition.visionRadiusBonus !== undefined) overrides.visionRadiusBonus = definition.visionRadiusBonus + levelDelta
+      break
+    // 銳鋒流·凌厲劍勢：普攻傷害 +10% → 每級 +2%
+    case 'sharp-edge-external-functional-2':
+      if (definition.damageDealtPercent !== undefined) overrides.damageDealtPercent = 0.1 + levelDelta * 0.02
+      break
+    // 煙雨流·雨潤回春：每回合回內力 10% → 每級 +5%
+    case 'misty-rain-external-functional':
+      if (definition.innerPowerRegenPercent !== undefined) overrides.innerPowerRegenPercent = 0.1 + levelDelta * 0.05
+      break
+    // 煙雨流·雨幕遮身：受到傷害 -10% → 每級 +2%
+    case 'misty-rain-external-functional-2':
+      if (definition.damageReductionPercent !== undefined) overrides.damageReductionPercent = 0.1 + levelDelta * 0.02
+      break
+    // 烈陽流·烈陽戰意：臂力根骨 +3 → 每級 +1
+    case 'blazing-sun-external-functional':
+      if (definition.attributeModifiers) {
+        overrides.attributeModifiers = {
+          armStrength: (definition.attributeModifiers.armStrength ?? 0) + levelDelta,
+          constitution: (definition.attributeModifiers.constitution ?? 0) + levelDelta,
+        }
+      }
+      break
+    // 烈陽流·烈目凝芒：暴擊率 ×1.25 → 每級 +0.05
+    case 'blazing-sun-external-functional-2':
+      if (definition.criticalRateMultiplier !== undefined) overrides.criticalRateMultiplier = 1.25 + levelDelta * 0.05
+      break
+    // 黃土流·夯土工事：建材消耗 -15% → 每級 +3%
+    case 'yellow-earth-external-functional':
+      if (definition.buildingMaterialCostReduction !== undefined) overrides.buildingMaterialCostReduction = 0.15 + levelDelta * 0.03
+      break
+    // 黃土流·負重健行：最大體力 +4 → 每級 +1
+    case 'yellow-earth-external-functional-2':
+      if (definition.maxStaminaBonus !== undefined) overrides.maxStaminaBonus = definition.maxStaminaBonus + levelDelta
+      break
+    // 幽影流·幽影蔽身：回避率 +10% → 每級 +2%
+    case 'ghost-shadow-external-functional':
+      if (definition.evasionRateBonus !== undefined) overrides.evasionRateBonus = definition.evasionRateBonus + levelDelta * 2
+      break
+    // 幽影流·孤影決絕：血<25% 五維 ×1.6 → 每級 +0.05
+    case 'ghost-shadow-external-functional-2':
+      if (definition.conditional) {
+        overrides.conditional = {
+          when: definition.conditional.when,
+          threshold: definition.conditional.threshold,
+          multiplier: 1.6 + levelDelta * 0.05,
+        }
+      }
+      break
+    // 凌淵·江河長養：每回合回血 10% → 每級 +2%
+    case 'lingyuan-rivers-sustain':
+      if (definition.healthRegenPercent !== undefined) overrides.healthRegenPercent = 0.1 + levelDelta * 0.02
+      break
+  }
+
+  return Object.fromEntries(Object.entries(overrides).filter(([, value]) => value !== undefined))
+}
+
 type JiāngHuPercentField =
   | 'lifestealPercent'
   | 'damageReductionPercent'

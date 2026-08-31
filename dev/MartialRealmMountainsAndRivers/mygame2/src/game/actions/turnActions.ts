@@ -4,10 +4,13 @@ import { isAdjacent } from '../types'
 import { applyBaseHealthBonuses, getBaseMaxBuildingMaterials } from '../rules/baseRules'
 import { resolveRoundEndAuraEffects } from '../rules/auraRules'
 import { getEffectivePassiveMaterialIncome } from '../rules/policyRules'
-import { getGlobalRoundEndRecoveryPercent } from '../rules/globalBuffRules'
+import { getGlobalRoundEndRecoveryPercent, getGlobalSkillExperienceMultiplier } from '../rules/globalBuffRules'
 import { evaluateWarningBeaconReveal } from '../rules/warningBeaconRules'
 import { recoverFivePercent, recoverLivingPlayers, uniqueCreaturesById } from '../rules/playerRules'
 import { applyExperienceAndLevelUp } from '../characterFactory'
+import { addSkillExperience } from '../rules/skillRules'
+import { getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
+import { allExternalSkillCatalog } from '../catalogs/martialHallSkillCatalog'
 import { explorationEventCatalog } from '../events/eventCatalog'
 import { COMMON_EXPLORATION_EVENT_TYPES, getTerrainExplorationEventTypes } from '../events/eventSpawner'
 
@@ -57,6 +60,32 @@ function applyStaminaExperienceBonus(player: PlayerState): PlayerState {
   const remainingStamina = player.stamina ?? 0
   if (remainingStamina <= 0) return player
   return applyExperienceAndLevelUp(player, remainingStamina * STAMINA_EXPERIENCE_MULTIPLIER)
+}
+
+/** 每回合為已裝備的靈氣型外功（aura）累積功法經驗的常數。 */
+export const AURA_SKILL_EXPERIENCE_PER_ROUND = 5
+
+/**
+ * 為玩家所有已裝備的靈氣型外功（category === 'aura'）各累積功法經驗。
+ * 靈氣型外功為常駐開關、不參與攻擊，無法像傷害型外功在使用時獲得經驗，
+ * 故改為「裝備期間每回合 +AURA_SKILL_EXPERIENCE_PER_ROUND」讓其能隨回合升級。
+ * 經驗值套用全域靈氣（悟性天成）與玩家功法經驗加成（迴氣悟道）。
+ */
+function applyAuraSkillExperience(state: GameState, player: PlayerState): PlayerState {
+  const auraSkillIds = player.equippedExternalSkillIds.filter((skillId) => {
+    const skill = allExternalSkillCatalog.find((candidate) => candidate.id === skillId)
+    return skill?.category === 'aura'
+  })
+  if (auraSkillIds.length === 0) return player
+  const experience = Math.round(
+    AURA_SKILL_EXPERIENCE_PER_ROUND
+      * getGlobalSkillExperienceMultiplier(state)
+      * (1 + getPlayerSkillExpGainPercent(player)),
+  )
+  return auraSkillIds.reduce(
+    (acc, skillId) => addSkillExperience(acc, skillId, experience),
+    player,
+  )
 }
 
 export type { CreatureTurnResult } from './creatureActions'
@@ -135,8 +164,17 @@ export function endPlayerTurn(
       // 全局靈氣：每回合結束額外回復一定比例氣血與內力（隨疊加而增加）。
       const bonusHealth = Math.floor(candidate.maxHealth * roundEndRecoveryPercent / 100)
       const bonusInnerPower = Math.floor(candidate.maxInnerPower * roundEndRecoveryPercent / 100)
-      return {
+      // 靈氣型外功：裝備期間每回合累積功法經驗。
+      // 以 state.players 的最新裝備資料為準；Creature 回合只應更新戰鬥狀態，
+      // 避免更換靈氣功法後使用到過期玩家快照而漏算經驗。
+      const currentPlayer = state.players.find((player) => player.id === candidate.id)
+      const withAuraExp = applyAuraSkillExperience(state, {
         ...candidate,
+        equippedExternalSkillIds: currentPlayer?.equippedExternalSkillIds ?? candidate.equippedExternalSkillIds,
+        skillProgression: currentPlayer?.skillProgression ?? candidate.skillProgression,
+      })
+      return {
+        ...withAuraExp,
         health: Math.min(candidate.maxHealth, candidate.health + bonusHealth),
         innerPower: Math.min(candidate.maxInnerPower, candidate.innerPower + bonusInnerPower),
       }
@@ -195,7 +233,7 @@ export function endPlayerTurn(
           itemEffectsUsedThisTurn: [],
         }))
         : state.players.map((candidate) => candidate.id === playerId
-          ? { ...applyStaminaExperienceBonus(candidate), turnEnded: true, externalSkillsUsedThisTurn: [], itemEffectsUsedThisTurn: [] }
+          ? { ...applyAuraSkillExperience(state, applyStaminaExperienceBonus(candidate)), turnEnded: true, externalSkillsUsedThisTurn: [], itemEffectsUsedThisTurn: [] }
           : candidate.id === nextPlayer?.id
             ? { ...candidate, externalSkillsUsedThisTurn: [], itemEffectsUsedThisTurn: [] }
             : candidate),
@@ -203,7 +241,7 @@ export function endPlayerTurn(
       bases: nextBases,
       defenseStructures: state.defenseStructures ?? [],
       creatureNests: isRoundComplete ? nestSpawn?.nests ?? state.creatureNests : state.creatureNests,
-      resourcePoints: isRoundComplete ? state.resourcePoints : scheduledCreatureTurn?.resourcePoints ?? state.resourcePoints,
+      resourcePoints: isRoundComplete ? scheduledCreatureTurn?.resourcePoints ?? state.resourcePoints : state.resourcePoints,
       itemPoints: isRoundComplete ? scheduledCreatureTurn?.itemPoints ?? state.itemPoints : state.itemPoints,
       explorationEvents: isRoundComplete ? scheduledCreatureTurn?.explorationEvents ?? state.explorationEvents : state.explorationEvents,
       creatureActionLogs: isRoundComplete ? nestSpawn?.logs ?? [] : state.creatureActionLogs,

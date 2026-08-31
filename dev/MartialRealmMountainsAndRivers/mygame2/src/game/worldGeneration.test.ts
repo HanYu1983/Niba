@@ -237,6 +237,21 @@ describe('createResourcePoints', () => {
       expect(bases.some((base) => base.id === point.ownerBaseId)).toBe(true)
     }
   })
+
+  it('資源點生成在所屬據點 5 格範圍內', () => {
+    const map = createMap(40, 40)
+    const bases = createRandomBases(map, 3, SEED)
+    const points = createResourcePoints(map, bases, 9, SEED)
+    expect(points.length).toBeGreaterThan(0)
+    for (const point of points) {
+      const owner = bases.find((base) => base.id === point.ownerBaseId)
+      expect(owner).toBeDefined()
+      const distance = Math.abs(point.position.row - owner!.position.row) +
+        Math.abs(point.position.column - owner!.position.column)
+      expect(distance).toBeLessThanOrEqual(5)
+      expect(distance).toBeGreaterThan(0)
+    }
+  })
 })
 
 describe('createRoamerCreatures', () => {

@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { executeTriggers } from './triggerRules'
 import { checkVictory, progressObjectives } from './campaignRules'
 import { buildGameStateFromScenario } from '../../editor/rules/scenarioCompiler'
-import { createEmptyScenario } from '../../editor/editorTypes'
-import type { ScenarioDefinition } from '../../editor/editorTypes'
+import { createEmptyScenario } from '../contracts/scenario'
+import type { ScenarioDefinition } from '../contracts/scenario'
 
 /** 建立含對話組與觸發器的測試劇本。 */
 function makeScenario(): ScenarioDefinition {

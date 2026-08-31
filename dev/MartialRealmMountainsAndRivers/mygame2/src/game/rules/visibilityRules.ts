@@ -24,9 +24,9 @@ export function getScoutCellIds(map: MapState, position: Position, range: number
   return [...getVisionCellIds(map, position, range)]
 }
 
-export function getPlayerVisionRange(_state: GameState, _playerId: string): number {
+export function getPlayerVisionRange(state: GameState, playerId: string): number {
   // 讀取玩家已生效 Buff 提供的視野加成（如天眼望氣），疊加在基礎視野上。
-  const player = _state.players.find((candidate) => candidate.id === _playerId)
+  const player = state.players.find((candidate) => candidate.id === playerId)
   let bonus = 0
   if (player) {
     for (const buff of getActiveBuffDefinitions(player)) {
@@ -36,9 +36,11 @@ export function getPlayerVisionRange(_state: GameState, _playerId: string): numb
   return DEFAULT_VISION_RANGE + bonus
 }
 
-export function getPlayerVisibleCellIds(state: GameState, playerId: string): Set<string> {
+export function getPlayerVisibleCellIds(state: GameState, _playerId?: string): Set<string> {
   const players = state.players.filter((candidate) => candidate.health > 0)
-  if (!players.some((player) => player.id === playerId)) return new Set()
+  // 視野由所有存活玩家共享；即使查詢的玩家已死亡（activePlayerId 指向死亡玩家），
+  // 只要還有其他存活玩家就應顯示其視野，避免地圖全黑。僅在完全沒有存活玩家時回傳空集合。
+  if (players.length === 0) return new Set()
 
   const visibleIds = new Set<string>()
   for (const player of players) {
@@ -77,11 +79,12 @@ export function getFoggedCellIds(state: GameState): Set<string> {
 export function getCellVisibility(state: GameState, playerId: string, cell: MapCell): VisibilityState {
   const visibility = state.visibility ?? { exploredCellIds: [], mode: 'fog' as const }
   if (visibility.mode === 'revealed') return 'visible'
-  const visibleIds = getPlayerVisibleCellIds(state, playerId)
-  if (visibleIds.size === 0) return 'unexplored'
-  if (visibleIds.has(cell.id)) return 'visible'
   // 鳴鑼符（reveal-creatures）：暫時揭示怪物所在格，下回合恢復迷霧。
   if (state.revealedCreatureCellIds?.includes(cell.id)) return 'visible'
+  const visibleIds = getPlayerVisibleCellIds(state, playerId)
+  if (visibleIds.size === 0) return 'unexplored'
+  // 視野內優先於已探索（同格同時可見與已探索時回傳 visible）。
+  if (visibleIds.has(cell.id)) return 'visible'
   return visibility.exploredCellIds.includes(cell.id) ? 'explored' : 'unexplored'
 }
 

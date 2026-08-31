@@ -6,6 +6,7 @@ import BasePanel from './components/BasePanel'
 import { gameStore, useGameState } from './game/gameStore'
 import { getActiveGlobalBuffs } from './game/rules/globalBuffRules'
 import { resolveTargetingSpec } from './game/rules/targetingRules'
+import { ACTION_STAMINA_COSTS } from './game/rules/actionCostRules'
 import './App.css'
 import PlayerCommandPanel from './components/PlayerCommandPanel'
 import GameOverlays from './components/GameOverlays'
@@ -105,6 +106,7 @@ function App() {
     ? gameState.operation.skillId
     : null
   const attackTargeting = gameState.operation.type === 'targeting-attack'
+  const firstAidTargeting = gameState.operation.type === 'targeting-first-aid'
   const itemTargeting = gameState.operation.type === 'targeting-item'
   // 目標選取規格（新框架）：依 operation 計算形狀×模式，供 MapGrid 高亮。
   const targetingSpec = resolveTargetingSpec(gameState.operation, externalSkillTargetingId ?? undefined)
@@ -233,7 +235,13 @@ function App() {
     creatureTurnInProgress: gameState.creatureTurnInProgress,
     movementUsed,
     externalSkills: allExternalSkillCatalog,
-    onToggleMovement: () => gameStore.setOperation({ type: movementEnabled ? 'idle' : 'moving', movementUsed: false }),
+    onMove: (rowDelta, columnDelta) => {
+      if (gameState.activePlayerId) {
+        gameStore.movePlayer(gameState.activePlayerId, rowDelta, columnDelta)
+        // 維持移動模式：讓 MapGrid 持續計算並更新移動高亮範圍。
+        gameStore.setOperation({ type: 'moving', movementUsed: false })
+      }
+    },
     onBeginAttackTargeting: () => {
       setSelectedCreatureId(null)
       gameStore.beginAttackTargeting()
@@ -439,7 +447,6 @@ function App() {
               player={activePlayer}
               externalSkills={allExternalSkillCatalog}
               inventoryCount={activeInventoryCount}
-              movementEnabled={movementEnabled}
               creatureTurnInProgress={gameState.creatureTurnInProgress}
               onOpenInventory={() => setInventoryPlayerId(gameState.activePlayerId)}
               onOpenEquipment={() => setEquipmentPlayerId(gameState.activePlayerId)}
@@ -454,7 +461,6 @@ function App() {
                 setSelectedCreatureId(null)
                 gameStore.beginExternalSkillTargeting(skillId)
               }}
-              onToggleMovement={() => gameStore.setOperation({ type: movementEnabled ? 'idle' : 'moving', movementUsed: false })}
               onBuildRoad={() => {
                 const result = gameStore.buildRoad(gameState.activePlayerId)
                 if (result.ok) {
@@ -462,6 +468,11 @@ function App() {
                 } else {
                   gameStore.showActionResult({ title: '修路失敗', message: result.reason, rewards: [] })
                 }
+              }}
+              onFirstAid={() => {
+                setSelectedCreatureId(null)
+                gameStore.setOperation({ type: 'idle' })
+                gameStore.beginFirstAidTargeting()
               }}
               onOpenOptions={() => setSystemCommandModalOpen(true)}
               gameOverEnded={Boolean(gameState.gameOver || gameState.gameWon)}
@@ -513,6 +524,22 @@ function App() {
                   gameStore.previewItemBurst('nest', nestId)
                 }
               }}
+              onPlayerTarget={(playerId) => {
+                if (firstAidTargeting) {
+                  const result = gameStore.executeFirstAid(playerId)
+                  if (result.ok) {
+                    gameStore.setOperation({ type: 'idle' })
+                    const target = gameState.players.find((player) => player.id === playerId)
+                    gameStore.showActionResult({
+                      title: '急救成功',
+                      message: `已復活 ${target?.name ?? '玩家'}，血量恢復至 5。`,
+                      rewards: [`體力 -${ACTION_STAMINA_COSTS.firstAid}`],
+                    })
+                  } else {
+                    gameStore.showActionResult({ title: '急救失敗', message: result.reason, rewards: [] })
+                  }
+                }
+              }}
               onResourcePointDetails={setDetailsResourcePointId}
               onItemPointDetails={setDetailsItemPointId}
               onDefenseStructureDetails={setDetailsDefenseStructureId}
@@ -543,6 +570,7 @@ function App() {
               }}
               externalSkillTargeting={externalSkillTargetingId !== null}
               attackTargeting={attackTargeting}
+              firstAidTargeting={firstAidTargeting}
               itemTargeting={itemTargeting}
               targetingSpec={targetingSpec}
               creatureShake={gameState.creatureShake}

@@ -306,6 +306,7 @@ export const progressionExternalSkills: ExternalSkill[] = martialSchoolCatalog.f
     schoolId: school.id,
     element: school.element,
     level: 1,
+    functionalEffect: entry.effect,
     passiveBuffIds: entry.passiveBuffIds,
   }))
 

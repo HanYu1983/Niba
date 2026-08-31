@@ -1363,6 +1363,13 @@
   animation: item-target-pulse 1s ease-in-out infinite alternate;
 }
 
+.map-grid__overlay--first-aid-range {
+  z-index: 2;
+  border: 2px solid #1de127;
+  border-radius: 3px;
+  background: rgba(34, 197, 94, 0.12);
+}
+
 .map-grid__overlay--defense-range {
   z-index: 2;
   border: 1px dashed rgba(234, 179, 8, 0.9);
@@ -1443,7 +1450,7 @@
 
 .player {
   position: relative;
-  z-index: 1;
+  z-index: 6;
   display: grid;
   place-items: center;
   width: 26px;
@@ -1893,6 +1900,14 @@
   height: 13px;
   border-radius: 4px;
   font-size: 10px;
+}
+
+/* 資源點 icon 放大為 2 倍（26px / 20px），提升辨識度。 */
+.resource-point-marker {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  font-size: 20px;
 }
 
 /* 道具點使用較大的地形 icon，方便辨識與點擊。 */

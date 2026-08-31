@@ -1,5 +1,6 @@
 import type { GameState } from './types'
 import { isRunSettled } from './settledRuns'
+import { validateGameState } from './gameSaveValidation'
 
 export const GAME_SAVE_STORAGE_KEY = 'mygame2.game-save'
 export const GAME_SAVE_SLOT_COUNT = 10
@@ -109,6 +110,8 @@ export function loadGameStateFromSlot(slot: number): { ok: true; state: GameStat
     if (!raw) return { ok: false, reason: `存檔欄位 ${slot} 目前是空的。` }
     const payload = JSON.parse(raw) as Partial<GameSaveData>
     if (payload.version !== GAME_SAVE_VERSION || !payload.state || typeof payload.state !== 'object') return { ok: false, reason: '存檔版本不相容或資料損壞。' }
+    const validation = validateGameState(payload.state)
+    if (!validation.valid) return { ok: false, reason: validation.reason ?? '存檔資料損壞，無法讀取。' }
     return {
       ok: true,
       state: payload.state,
@@ -123,6 +126,45 @@ export function loadGameStateFromSlot(slot: number): { ok: true; state: GameStat
 
 export function deleteGameStateFromSlot(slot: number): void {
   if (isValidSlot(slot) && typeof localStorage !== 'undefined') localStorage.removeItem(getSlotKey(slot))
+}
+
+/** 自動存檔 debounce 延遲（毫秒）。 */
+export const AUTO_SAVE_DEBOUNCE_MS = 500
+
+/** 待寫入的自動存檔快照（debounce 期間累積最新一份）。 */
+let pendingAutoSave: { state: GameState; activeCharacterId: string | null; isChallengeMode: boolean; scenarioId: string | null } | null = null
+let autoSaveTimer: ReturnType<typeof setTimeout> | null = null
+
+/**
+ * 自動存檔（debounce 版）。
+ *
+ * 自動存檔在每回合結束等熱路徑頻繁觸發，直接同步寫入 localStorage 會造成
+ * 不必要的序列化成本。此函式將寫入延後 AUTO_SAVE_DEBOUNCE_MS，期間內多次呼叫
+ * 只保留最新一份快照，最後一次寫入。
+ *
+ * 手動存檔（saveGameStateToSlot 的 slot 1–10）維持即時寫入，不受影響。
+ */
+export function scheduleAutoSave(state: GameState, activeCharacterId: string | null = null, isChallengeMode = false, scenarioId: string | null = null): void {
+  if (typeof localStorage === 'undefined') return
+  pendingAutoSave = { state, activeCharacterId, isChallengeMode, scenarioId }
+  if (autoSaveTimer !== null) clearTimeout(autoSaveTimer)
+  autoSaveTimer = setTimeout(() => {
+    autoSaveTimer = null
+    const snapshot = pendingAutoSave
+    pendingAutoSave = null
+    if (snapshot) saveGameStateToSlot(snapshot.state, AUTO_SAVE_SLOT, snapshot.activeCharacterId, snapshot.isChallengeMode, snapshot.scenarioId)
+  }, AUTO_SAVE_DEBOUNCE_MS)
+}
+
+/** 立即寫入尚未觸發的 debounce 自動存檔（供測試與頁面卸載前 flush）。 */
+export function flushAutoSave(): void {
+  if (autoSaveTimer !== null) {
+    clearTimeout(autoSaveTimer)
+    autoSaveTimer = null
+  }
+  const snapshot = pendingAutoSave
+  pendingAutoSave = null
+  if (snapshot) saveGameStateToSlot(snapshot.state, AUTO_SAVE_SLOT, snapshot.activeCharacterId, snapshot.isChallengeMode, snapshot.scenarioId)
 }
 
 export function saveGameState(state: GameState, activeCharacterId: string | null = null, isChallengeMode = false, scenarioId: string | null = null): { ok: boolean; reason?: string } {
@@ -148,6 +190,8 @@ export function loadGameState(): { ok: true; state: GameState; activeCharacterId
     if (payload.version !== GAME_SAVE_VERSION || !payload.state || typeof payload.state !== 'object') {
       return { ok: false, reason: '存檔版本不相容或資料損壞。' }
     }
+    const validation = validateGameState(payload.state)
+    if (!validation.valid) return { ok: false, reason: validation.reason ?? '存檔資料損壞，無法讀取。' }
     return {
       ok: true,
       state: payload.state,

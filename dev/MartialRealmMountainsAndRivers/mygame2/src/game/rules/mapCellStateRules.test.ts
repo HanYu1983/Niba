@@ -23,7 +23,7 @@ describe('mapCellStateRules', () => {
   })
 
   it('可同時保留據點範圍與移動狀態，移動仍可互動', () => {
-    expect(resolveMapCellAction({ position: { row: 1, column: 1 }, visibility: 'visible', movementEnabled: true, attackTargeting: false, externalSkillTargeting: false, itemTargeting: false, defenseBuildMode: false, activePlayerId: 'player-1', isReachable: true, canSelectDefensePosition: false })).toEqual({ type: 'move', playerId: 'player-1', position: { row: 1, column: 1 } })
+    expect(resolveMapCellAction({ position: { row: 1, column: 1 }, visibility: 'visible', movementEnabled: true, attackTargeting: false, firstAidTargeting: false, externalSkillTargeting: false, itemTargeting: false, defenseBuildMode: false, activePlayerId: 'player-1', isReachable: true, canSelectDefensePosition: false })).toEqual({ type: 'move', playerId: 'player-1', position: { row: 1, column: 1 } })
   })
 
   it('Cell 與 Marker 使用同一套互動結果', () => {
@@ -31,8 +31,7 @@ describe('mapCellStateRules', () => {
       position: { row: 5, column: 6 },
       visibility: 'visible' as const,
       movementEnabled: false,
-      attackTargeting: true,
-      externalSkillTargeting: false,
+      attackTargeting: true,      firstAidTargeting: false,      externalSkillTargeting: false,
       itemTargeting: false,
       defenseBuildMode: false,
       activePlayerId: 'player-1',
@@ -51,6 +50,7 @@ describe('mapCellStateRules', () => {
       visibility: 'unexplored',
       movementEnabled: true,
       attackTargeting: false,
+      firstAidTargeting: false,
       externalSkillTargeting: false,
       itemTargeting: false,
       defenseBuildMode: false,
@@ -65,6 +65,7 @@ describe('mapCellStateRules', () => {
       visibility: 'unexplored',
       movementEnabled: true,
       attackTargeting: false,
+      firstAidTargeting: false,
       externalSkillTargeting: false,
       itemTargeting: false,
       defenseBuildMode: false,
@@ -79,6 +80,7 @@ describe('mapCellStateRules', () => {
       visibility: 'unexplored',
       movementEnabled: true,
       attackTargeting: true,
+      firstAidTargeting: false,
       externalSkillTargeting: true,
       itemTargeting: false,
       defenseBuildMode: true,
@@ -91,7 +93,7 @@ describe('mapCellStateRules', () => {
   })
 
   it('遊戲結束、阻塞彈窗或 Creature 回合中不可互動', () => {
-    const context = { position: { row: 1, column: 1 }, visibility: 'visible' as const, movementEnabled: true, attackTargeting: false, externalSkillTargeting: false, itemTargeting: false, defenseBuildMode: false, activePlayerId: 'player-1', isReachable: true, canSelectDefensePosition: true }
+    const context = { position: { row: 1, column: 1 }, visibility: 'visible' as const, movementEnabled: true, attackTargeting: false, firstAidTargeting: false, externalSkillTargeting: false, itemTargeting: false, defenseBuildMode: false, activePlayerId: 'player-1', isReachable: true, canSelectDefensePosition: true }
     expect(resolveMapCellAction({ ...context, gameOver: true })).toEqual({ type: 'none' })
     expect(resolveMapCellAction({ ...context, blockingModal: true })).toEqual({ type: 'none' })
     expect(resolveMapCellAction({ ...context, creatureTurnInProgress: true })).toEqual({ type: 'none' })

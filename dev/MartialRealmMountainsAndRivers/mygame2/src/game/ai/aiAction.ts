@@ -1,5 +1,4 @@
-import type { GameState, Position, UpgradeableAttribute } from '../types'
-import type { AiDefenseAction } from '../aiDefenseRules'
+import type { Position, UpgradeableAttribute } from '../types'
 
 /** 通用 Actor 參照：player 對應 PlayerState、creature 對應 CreatureState，兩種 State 不合併（重構文件 §4.1）。 */
 export type AiActorKind = 'player' | 'creature'
@@ -122,33 +121,3 @@ export type AiAction =
       reason: string
     }
 
-const MISSING_POSITION: Position = { row: -1, column: -1 }
-
-/**
- * 舊 `AiDefenseAction` → 通用 `AiAction` 的轉換（重構文件 §12 Phase 1「Adapter 轉換」步驟）。
- *
- * 舊形狀的 attack 只帶 targetId/targetType，位置需查表補上；
- * 查不到時用 (-1,-1) 佔位——目標是否仍有效由 Validator 依 id 判定。
- */
-export function defenseActionToAiAction(state: GameState, actorId: string, action: AiDefenseAction): AiAction {
-  const actor: AiActorRef = { id: actorId, kind: 'player' }
-  switch (action.type) {
-    case 'move':
-      return { type: 'move', actor, destination: action.position, reason: action.reason }
-    case 'attack': {
-      const creature = state.creatures.find((candidate) => candidate.id === action.targetId)
-      const nest = state.creatureNests.find((candidate) => candidate.id === action.targetId)
-      const position = creature?.position ?? nest?.position ?? MISSING_POSITION
-      return {
-        type: 'attack',
-        actor,
-        target: { id: action.targetId, kind: action.targetType, position },
-        reason: '',
-      }
-    }
-    case 'hold-position':
-      return { type: 'hold', actor, reason: action.reason }
-    case 'end-turn':
-      return { type: 'end-turn', actor, reason: action.reason }
-  }
-}

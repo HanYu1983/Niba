@@ -120,7 +120,7 @@ function generateKillThisTurn(node: AiNode, dependencies: ExecuteAiActionDepende
       type: 'attack',
       actor: makeActorRef(playerId),
       target: targetRef,
-      reason: `本回合击殺 ${enemy.name}`,
+      reason: `本回合擊殺 ${enemy.name}`,
     }
     const cost = getAiActionStaminaCost(node.state, action)
     if (cost > node.remainingStamina) continue

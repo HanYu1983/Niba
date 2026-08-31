@@ -1,4 +1,4 @@
-import type { PlayerAttributes, TerrainType } from "../types"
+import type { BuffEffects } from "../core/buffEffects"
 
 export type BuffDuration = 'persistent' | 'rounds'
 
@@ -12,7 +12,8 @@ export type BuffConditional = {
   multiplier: number
 }
 
-export type BuffDefinition = {
+/** Buff 的元資料欄位（非效果欄位）。 */
+export type BuffMetadata = {
   id: string
   name: string
   description: string
@@ -20,80 +21,14 @@ export type BuffDefinition = {
   /** duration 為 rounds 時的持續回合數。 */
   durationRounds?: number
   category?: BuffCategory
-  attributeModifiers?: Partial<PlayerAttributes>
-  terrainStaminaCostMultipliers?: Partial<Record<TerrainType, number>>
-  criticalRateMultiplier?: number
-  /** 暴擊率加成（百分比，直接加在臂力決定的暴擊率上）。 */
-  criticalRateBonus?: number
-  terrainCostOverride?: number
-  /** 逐地形消耗覆寫：指定地形直接回傳此值（優先於基礎消耗與乘算，可讓 wall 變可通行）。 */
-  terrainCostOverrides?: Partial<Record<TerrainType, number>>
-  maxHealthDamagePercent?: number
-  reflectionPercent?: number
-  attributeMultiplier?: number
-  /** 定身：持有此 Buff 的怪物本回合跳過移動。 */
-  immobilized?: boolean
-  /** 震懾：三重共振觸發時施加，目標完全跳過下一個回合。 */
-  stunned?: boolean
   /** 是否在地圖生物 icon 上顯示顏色標記（需搭配 CSS `.creature--buff-*` 樣式）。 */
   mapMarker?: boolean
   /** 地圖標記的 CSS class 後綴；未指定時由 `id` 推導。 */
   mapMarkerClass?: string
-  /** 條件觸發型：血量歸零時復活。 */
-  reviveOnDeath?: boolean
-  /** 復活時恢復的血量比例（0–1）。 */
-  reviveHealthPercent?: number
-  /** 復活時是否清除所有 debuff。 */
-  clearDebuffsOnRevive?: boolean
-  // 類別 1：資源轉換
-  /** 造成傷害時回復傷害值比例的血量。 */
-  lifestealPercent?: number
-  /** 造成傷害時回復傷害值比例的內力。 */
-  innerPowerLeechPercent?: number
-  /** 受到傷害時，最終傷害減免比例。 */
-  damageReductionPercent?: number
-  // 類別 1：週期回復
-  /** 每回合回復最大血量比例。 */
-  healthRegenPercent?: number
-  /** 每回合回復「最大內力 × 比例」的血量。 */
-  innerPowerHealthRegenPercent?: number
-  /** 每回合回復「最大內力 × 比例」的內力。 */
-  innerPowerRegenPercent?: number
-  // 類別 1：傷害增益
-  /** 普通攻擊造成的最終傷害加成比例。 */
-  damageDealtPercent?: number
-  /** 外功造成的最終傷害加成比例。 */
-  externalSkillDamagePercent?: number
-  /** 回避率加成（百分比，直接加在身法決定的回避率上）。 */
-  evasionRateBonus?: number
-  /** 普通攻擊的體力消耗減免。 */
-  basicAttackStaminaCostReduction?: number
-  staminaToInnerPowerRatio?: number
-  externalSkillInnerCostReduction?: number
-  insightTrueDamageMultiplier?: number
-  visionRadiusBonus?: number
-  maxStaminaBonus?: number
-  /** 最大生命值上限倍率（resource-limit 原語；預設 1，可 <1 或 >1）。 */
-  maxHealthMultiplier?: number
-  /** 最大體力上限倍率（resource-limit 原語；預設 1）。 */
-  maxStaminaMultiplier?: number
-  /** 最大內力上限倍率（resource-limit 原語；預設 1）。 */
-  maxInnerPowerMultiplier?: number
-  gatherStaminaCostReduction?: number
-  gatherDoubleYieldChance?: number
-  buildingMaterialCostReduction?: number
-  buildingReputationBonus?: number
-  shopBuyPriceDiscount?: number
-  shopSellPriceBonus?: number
-  questRewardBonus?: number
-  /** 功法經驗獲取比例加成。 */
-  skillExpGainPercent?: number
-  confused?: boolean
-  damageTakenFromAlliesBonus?: number
-  // 類別 4：條件型
-  /** 依血量區間觸發的五維乘算。 */
-  conditional?: BuffConditional
 }
+
+/** Buff 定義 = 效果欄位 + 元資料欄位。 */
+export type BuffDefinition = BuffEffects & BuffMetadata
 
 export const buffCatalog: BuffDefinition[] = [
   {
