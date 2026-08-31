@@ -26,6 +26,7 @@ import {
   type CreatureBehaviorType,
   CREATURE_BEHAVIOR_BY_INDEX,
   getCreatureAttributes,
+  getCreatureEquippedExternalSkillIds,
   getCreatureInnerSkillId,
   rollRoamerLevel,
 } from './rules/creatureBehaviorRules'
@@ -529,16 +530,25 @@ export function createRoamerCreatures(
     // 開局游蕩妖物維持既有 roamer + void-spirit 設定。
     const schoolId = 'void-spirit' as const
     const level = rollRoamerLevel()
+    const attributes = getCreatureAttributes(
+      { armStrength: 6, constitution: 6, agility: 6, innerEnergy: 6, insight: 6 },
+      { behaviorType, schoolId },
+      level,
+    )
+    const innerSkillId = getCreatureInnerSkillId({ behaviorType, schoolId }, level)
+    // 等級 3 以上怪物依悟性容量裝備所屬門派靈氣型外功。
+    const equippedExternalSkillIds = getCreatureEquippedExternalSkillIds(
+      { schoolId, attributes, innerSkillId },
+      level,
+    )
     return createCharacterState({
       id: `roamer-creature-${index + 1}`,
       name: '游蕩妖物',
-      innerSkillId: getCreatureInnerSkillId({ behaviorType, schoolId }, level),
+      innerSkillId,
+      externalSkillIds: equippedExternalSkillIds,
+      equippedExternalSkillIds,
       position,
-      attributes: getCreatureAttributes(
-        { armStrength: 6, constitution: 6, agility: 6, innerEnergy: 6, insight: 6 },
-        { behaviorType, schoolId },
-        level,
-      ),
+      attributes,
       prestige: 0,
       money: 0,
       experience: 0,

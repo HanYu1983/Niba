@@ -323,8 +323,8 @@ describe('spawnCreaturesFromNests', () => {
 
     const creature = result.creatures[0] as CreatureState
     // 攻城化已移除；巢穴未指定流派時使用中性流派計算屬性成長。
-    // 疊加太虛內功五維靈氣（臂力/根骨/悟性各 +1）。
-    expect(creature.attributes).toEqual({ armStrength: 11, constitution: 11, agility: 10, innerEnergy: 10, insight: 11 })
+    // 疊加太虛內功五維靈氣（臂力/根骨/悟性各 +1）。每級成長 2。
+    expect(creature.attributes).toEqual({ armStrength: 9, constitution: 9, agility: 8, innerEnergy: 8, insight: 9 })
     expect(creature.name).toContain('Lv.3')
   })
 

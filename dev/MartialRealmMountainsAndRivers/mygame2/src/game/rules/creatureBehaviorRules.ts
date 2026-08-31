@@ -3,6 +3,8 @@ import type { MartialSchoolId } from '../catalogs/martialSchoolCatalog'
 import { defaultRandomSource, rollWeighted } from './randomRules'
 import { getCreatureAiParameters } from '../ai/policy/aiPolicyRegistry'
 import { getManhattanDistance as distance } from './mapCellStateRules'
+import { getMartialHallSkills } from '../catalogs/martialHallSkillCatalog'
+import { getInnerSkill } from './skillRules'
 
 export type CreatureBehaviorType = 'scavenger' | 'hunter' | 'sieger' | 'wanderer' | 'roamer'
 export type CreatureTargetType = 'player' | 'resource' | 'item' | 'base' | 'defense'
@@ -78,11 +80,11 @@ export const CREATURE_SCHOOL_ATTRIBUTE_MODIFIERS: Record<MartialSchoolId, Partia
 }
 
 const CREATURE_LEVEL_GROWTH: PlayerAttributes = {
-  armStrength: 3,
-  constitution: 3,
-  agility: 3,
-  innerEnergy: 3,
-  insight: 3,
+  armStrength: 2,
+  constitution: 2,
+  agility: 2,
+  innerEnergy: 2,
+  insight: 2,
 }
 
 export function getCreatureBehaviorType(creature: Pick<CreatureState, 'behaviorType'>): CreatureBehaviorType {
@@ -111,12 +113,12 @@ export function getCreatureAttributes(
   const modifier = CREATURE_SCHOOL_ATTRIBUTE_MODIFIERS[schoolId]
   const levelBonus = Math.max(0, level - 1)
   return {
-    armStrength: Math.max(1, baseAttributes.armStrength + (modifier.armStrength ?? 0) + levelBonus * CREATURE_LEVEL_GROWTH.armStrength),
-    constitution: Math.max(1, baseAttributes.constitution + (modifier.constitution ?? 0) + levelBonus * CREATURE_LEVEL_GROWTH.constitution),
-    agility: Math.max(2, baseAttributes.agility + (modifier.agility ?? 0) + levelBonus * CREATURE_LEVEL_GROWTH.agility),
-    innerEnergy: Math.max(1,baseAttributes.innerEnergy + (modifier.innerEnergy ?? 0) + levelBonus * CREATURE_LEVEL_GROWTH.innerEnergy),
+    armStrength: Math.max(1, baseAttributes.armStrength + (modifier.armStrength ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.armStrength),
+    constitution: Math.max(1, baseAttributes.constitution + (modifier.constitution ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.constitution),
+    agility: Math.max(2, baseAttributes.agility + (modifier.agility ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.agility),
+    innerEnergy: Math.max(1,baseAttributes.innerEnergy + (modifier.innerEnergy ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.innerEnergy),
     // 怪物生成時最低保有 5 點悟性，避免內功效果因悟性容量不足而固定衰減。
-    insight: Math.max(5, baseAttributes.insight + (modifier.insight ?? 0) + levelBonus * CREATURE_LEVEL_GROWTH.insight),
+    insight: Math.max(5, baseAttributes.insight + (modifier.insight ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.insight),
   }
 }
 
@@ -125,6 +127,33 @@ export function getCreatureInnerSkillId(creature: Pick<CreatureState, 'schoolId'
   void level
   const schoolId = creature.schoolId ?? 'void-spirit'
   return `${schoolId}-inner`
+}
+
+/** 等級 3 以上怪物依悟性容量裝備所屬門派的靈氣型外功（被動靈氣自動生效）。 */
+export function getCreatureEquippedExternalSkillIds(
+  creature: Pick<CreatureState, 'schoolId' | 'attributes' | 'innerSkillId'>,
+  level = 1,
+): string[] {
+  // 僅等級 3 以上怪物裝備門派外功。
+  if (level < 3) return []
+  const schoolId = getCreatureSchoolId(creature)
+  const { external } = getMartialHallSkills(schoolId)
+  // 只裝備靈氣型外功（有常駐被動 Buff），傷害型外功留待方案 B（主動施放）。
+  const auraSkills = external.filter((skill) => skill.category === 'aura' && (skill.passiveBuffIds?.length ?? 0) > 0)
+  if (auraSkills.length === 0) return []
+
+  // 依悟性容量決定能裝備幾個：內功需求 + 已裝備外功的悟性消耗 ≤ 有效悟性。
+  // 怪物生成時尚未建立完整狀態，直接以傳入的 attributes.insight 計算（含門派內功 Buff 加成）。
+  const effectiveInsight = creature.attributes.insight
+  const innerCost = getInnerSkill(creature.innerSkillId).insightRequirement
+  let used = innerCost
+  const equipped: string[] = []
+  for (const skill of auraSkills) {
+    if (used + skill.insightCost > effectiveInsight) break
+    equipped.push(skill.id)
+    used += skill.insightCost
+  }
+  return equipped
 }
 
 export type CreatureTarget = {

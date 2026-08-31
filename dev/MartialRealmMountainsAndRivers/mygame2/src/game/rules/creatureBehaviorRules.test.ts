@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getCreatureAttributes, getCreatureIcon, getCreatureInnerSkillId, selectCreatureTarget } from './creatureBehaviorRules'
+import { getCreatureAttributes, getCreatureEquippedExternalSkillIds, getCreatureIcon, getCreatureInnerSkillId, selectCreatureTarget } from './creatureBehaviorRules'
 import type { BaseState, CreatureState, GameState } from '../types'
 
 const creature = (behaviorType: CreatureState['behaviorType'], schoolId: CreatureState['schoolId'] = 'frost-water'): CreatureState => ({ id: 'c1', name: 'Creature', position: { row: 2, column: 2 }, behaviorType, schoolId, attributes: { armStrength: 4, constitution: 4, agility: 4, innerEnergy: 4, insight: 4 }, innerSkillIds: ['tuna-gong'], innerSkillId: 'tuna-gong', externalSkillIds: [], equippedExternalSkillIds: [], health: 10, maxHealth: 10, stamina: 10, maxStamina: 10, innerPower: 10, maxInnerPower: 10, prestige: 0, money: 0, experience: 0, inventory: [], turnEnded: false })
@@ -7,8 +7,10 @@ const state = (currentCreature: CreatureState, bases: BaseState[] = []): GameSta
 
 describe('creatureBehaviorRules', () => {
   it('依流派套用五維屬性修正與等級成長', () => {
-    expect(getCreatureAttributes({ armStrength: 4, constitution: 6, agility: 3, innerEnergy: 2, insight: 1 }, { schoolId: 'frost-water' }, 1)).toEqual({ armStrength: 4, constitution: 8, agility: 2, innerEnergy: 4, insight: 5 })
-    expect(getCreatureAttributes({ armStrength: 4, constitution: 6, agility: 3, innerEnergy: 2, insight: 1 }, { schoolId: 'swift-wind' }, 2)).toEqual({ armStrength: 7, constitution: 8, agility: 8, innerEnergy: 5, insight: 6 })
+    // Lv1（等級加成 0）：門派修正不作用，僅套用底限（身法 ≥2、悟性 ≥5）。
+    expect(getCreatureAttributes({ armStrength: 4, constitution: 6, agility: 3, innerEnergy: 2, insight: 1 }, { schoolId: 'frost-water' }, 1)).toEqual({ armStrength: 4, constitution: 6, agility: 3, innerEnergy: 2, insight: 5 })
+    // Lv2（等級加成 1）：修正 × 1 + 成長 × 1。
+    expect(getCreatureAttributes({ armStrength: 4, constitution: 6, agility: 3, innerEnergy: 2, insight: 1 }, { schoolId: 'swift-wind' }, 2)).toEqual({ armStrength: 6, constitution: 7, agility: 7, innerEnergy: 4, insight: 5 })
     expect(getCreatureAttributes({ armStrength: 1, constitution: 1, agility: 1, innerEnergy: 1, insight: 1 }, { schoolId: 'earth-mountain' }, 1).agility).toBe(2)
   })
   it('明確流派決定 Creature 內功', () => expect(getCreatureInnerSkillId({ schoolId: 'frost-water', behaviorType: 'hunter' })).toBe('frost-water-inner'))
@@ -177,5 +179,43 @@ describe('creatureBehaviorRules', () => {
     const target = selectCreatureTarget(withTowers, current)
     expect(target?.type).toBe('defense')
     expect(target?.defenseStructure?.id).toBe('tower-a')
+  })
+
+  it('等級 3 以上怪物依悟性容量裝備所屬門派靈氣型外功', () => {
+    // scarlet-flame 內功需求 5 悟性；靈氣外功 insightCost 皆為 3。
+    // 等級 3：insight = max(5, 4 + 0 + 2*2) = 8 → 內功 5 + 一門外功 3 = 8 ≤ 8 → 裝 1 門。
+    const attributes = { armStrength: 4, constitution: 4, agility: 4, innerEnergy: 4, insight: 4 }
+    const level3 = getCreatureAttributes(attributes, { schoolId: 'scarlet-flame', behaviorType: 'hunter' }, 3)
+    expect(level3.insight).toBe(8)
+    const equipped = getCreatureEquippedExternalSkillIds(
+      { schoolId: 'scarlet-flame', attributes: level3, innerSkillId: 'scarlet-flame-inner' },
+      3,
+    )
+    expect(equipped).toContain('scarlet-flame-external-functional')
+  })
+  it('悟性容量不足時不會裝備超過容量的外功（依序挑選）', () => {
+    // misty-rain：內功需求 5；靈氣外功兩門各 3。等級 4 insight = max(5, 4 + 1 + 3*3) = 14。
+    // 內功 5 + 第一門 3 = 8 ≤ 14；再加第二門 3 → 11 ≤ 14；再加第三門 3 → 14 ≤ 14 → 恰可裝滿兩門。
+    const level4 = getCreatureAttributes(
+      { armStrength: 4, constitution: 4, agility: 4, innerEnergy: 4, insight: 4 },
+      { schoolId: 'misty-rain', behaviorType: 'hunter' },
+      4,
+    )
+    const equipped = getCreatureEquippedExternalSkillIds(
+      { schoolId: 'misty-rain', attributes: level4, innerSkillId: 'misty-rain-inner' },
+      4,
+    )
+    expect(equipped.length).toBeGreaterThan(0)
+    // 每個回傳的 ID 都必須是該門派既有的靈氣型外功。
+    for (const id of equipped) {
+      expect(id).toMatch(/^misty-rain-external-functional/)
+    }
+  })
+  it('等級 1-2 怪物不裝備外功', () => {
+    const attributes = { armStrength: 4, constitution: 4, agility: 4, innerEnergy: 4, insight: 4 }
+    for (const level of [1, 2]) {
+      const attrs = getCreatureAttributes(attributes, { schoolId: 'blazing-sun', behaviorType: 'hunter' }, level)
+      expect(getCreatureEquippedExternalSkillIds({ schoolId: 'blazing-sun', attributes: attrs, innerSkillId: 'blazing-sun-inner' }, level)).toEqual([])
+    }
   })
 })

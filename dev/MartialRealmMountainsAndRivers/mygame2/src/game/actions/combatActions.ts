@@ -431,10 +431,12 @@ export function executeExternalDamage(
   const criticalHit = criticalRate > 0 && rollChance(criticalRate / 100, random)
   let damage = criticalHit ? Math.floor(damageBeforeCrit * 1.5) : damageBeforeCrit
   // 對稱防禦：生物作為被攻擊方時套用回避／根骨減傷（與玩家被生物攻擊時一致）。
+  let targetDefense: 'evaded' | 'reduced' | undefined
   if (targetType === 'creature') {
     const creature = target.target as CreatureState
     const avoided = rollChance(Math.min(1, getCreatureEvasionRate(creature, creatureTargetTerrain) / 100), random)
     const halved = !avoided && rollChance(Math.min(1, getCreatureRootReductionRate(creature, creatureTargetTerrain) / 100), random)
+    targetDefense = avoided ? 'evaded' : halved ? 'reduced' : undefined
     damage = avoided ? 0 : halved ? Math.max(1, Math.floor(damage / 2)) : damage
   }
   const nextHealth = Math.max(0, target.target.health - damage)
@@ -491,6 +493,7 @@ export function executeExternalDamage(
     innerPowerCost: targetInnerPowerCost,
     criticalRate: criticalRate > 0 ? criticalRate : undefined,
     criticalHit: criticalHit || undefined,
+    targetDefense,
     synergy: synergy || undefined,
     tripleResonance: tripleResonance || undefined,
     targetMode: skill.target,
@@ -620,6 +623,7 @@ function executeAreaExternalDamage(
       nextHealth: data.nextHealth,
       maxHealth: data.maxHealth,
       defeated: data.defeated,
+      targetDefense: data.targetDefense,
     })
   }
   if (!primaryResult) return { state: currentState, result: { ok: false, reason: '範圍攻擊未命中任何目標。' } }
@@ -642,12 +646,14 @@ export function executeAttack(
   const criticalHit = rollChance(preview.criticalRate / 100, random)
   let damage = criticalHit ? Math.floor(preview.expectedDamage * 1.5) : preview.expectedDamage
   // 對稱防禦：生物作為被攻擊方時套用回避／根骨減傷／減傷比例（與玩家被生物攻擊時一致）。
+  let targetDefense: 'evaded' | 'reduced' | undefined
   if (preview.targetType === 'creature') {
     const creature = target.target as CreatureState
     const creatureTerrain = getTerrainAtPosition(state.map.cells, creature.position)
     const avoided = rollChance(Math.min(1, getCreatureEvasionRate(creature, creatureTerrain) / 100), random)
     const halved = !avoided && rollChance(Math.min(1, getCreatureRootReductionRate(creature, creatureTerrain) / 100), random)
     const reduction = getCreatureDamageReductionPercent(creature, creatureTerrain)
+    targetDefense = avoided ? 'evaded' : halved ? 'reduced' : undefined
     damage = avoided
       ? 0
       : halved
@@ -666,7 +672,7 @@ export function executeAttack(
   )
   const result: AttackExecutionResult = {
     playerId: target.player.id, playerName: target.player.name, targetType: preview.targetType, targetId: target.target.id, targetName: target.target.name,
-    damage, nextHealth, maxHealth: target.target.maxHealth, criticalRate: preview.criticalRate, criticalHit, terrainResonance: preview.terrainResonance, defeated: nextHealth === 0, experienceReward: experienceGain || undefined, moneyReward: moneyReward || undefined, loot, learnedSkill,
+    damage, nextHealth, maxHealth: target.target.maxHealth, criticalRate: preview.criticalRate, criticalHit, terrainResonance: preview.terrainResonance, targetDefense, defeated: nextHealth === 0, experienceReward: experienceGain || undefined, moneyReward: moneyReward || undefined, loot, learnedSkill,
     levelsGained: (progressedPlayer.level ?? 1) - (target.player.level ?? 1), newLevel: progressedPlayer.level,
     attributePointsGained: (progressedPlayer.availableAttributePoints ?? 0) - (target.player.availableAttributePoints ?? 0),
     equipmentDurabilityChanges: getDurabilityChanges(target.player, playerAfterDurability, [

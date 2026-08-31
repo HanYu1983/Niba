@@ -73,9 +73,9 @@ describe('buildGameStateFromScenario', () => {
     const high = state.creatures.find((c) => c.id === 'high')!
     expect(low.level).toBe(1)
     expect(high.level).toBe(6)
-    // 等級 6 的五維應明顯高於等級 1（每級 +3 成長 × 5 級 = +15）
-    expect(high.attributes.armStrength).toBe(low.attributes.armStrength + 15)
-    expect(high.attributes.constitution).toBe(low.attributes.constitution + 15)
+    // 等級 6 的五維應明顯高於等級 1（每級 +2 成長 × 5 級 = +10）
+    expect(high.attributes.armStrength).toBe(low.attributes.armStrength + 10)
+    expect(high.attributes.constitution).toBe(low.attributes.constitution + 10)
     // 血量上限也應隨等級成長
     expect(high.maxHealth).toBeGreaterThan(low.maxHealth)
   })

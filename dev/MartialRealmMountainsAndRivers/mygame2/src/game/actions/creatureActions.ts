@@ -17,7 +17,7 @@ import type {
 } from '../types'
 import { isSamePosition } from '../types'
 import { uniqueCreaturesById } from '../rules/playerRules'
-import { getCreatureAttributes, getCreatureInnerSkillId, getCreatureSchoolId } from '../rules/creatureBehaviorRules'
+import { getCreatureAttributes, getCreatureEquippedExternalSkillIds, getCreatureInnerSkillId, getCreatureSchoolId } from '../rules/creatureBehaviorRules'
 import { defaultRandomSource, rollChance, type RandomSource } from '../rules/randomRules'
 import { runCreatureTurn, type CreatureTurnResult } from './creatureTurnPipeline'
 
@@ -28,6 +28,8 @@ export type CreatureActionDependencies = {
     id: string
     name: string
     innerSkillId: string
+    externalSkillIds?: string[]
+    equippedExternalSkillIds?: string[]
     level?: number
     position: { row: number; column: number }
     attributes: CreatureState['attributes']
@@ -146,18 +148,27 @@ export function spawnCreaturesFromNests(
     const level = nest.spawnLevel
     const finalSchoolId = getCreatureSchoolId(nest)
     const finalBehavior = nest.behaviorType ?? 'scavenger'
+    const attributes = getCreatureAttributes({
+      armStrength: 4,
+      constitution: 4,
+      agility: 4,
+      innerEnergy: 4,
+      insight: 4,
+    }, { schoolId: finalSchoolId, behaviorType: finalBehavior }, level)
+    const innerSkillId = getCreatureInnerSkillId({ schoolId: finalSchoolId }, level)
+    // 等級 3 以上怪物依悟性容量裝備所屬門派靈氣型外功。
+    const equippedExternalSkillIds = getCreatureEquippedExternalSkillIds(
+      { schoolId: finalSchoolId, attributes, innerSkillId },
+      level,
+    )
     nextCreatures.push(dependencies.createCreatureState({
       id: getNextCreatureId(),
       name: `${nest.name}的怪物 Lv.${level}`,
-      innerSkillId: getCreatureInnerSkillId({ schoolId: finalSchoolId }, level),
+      innerSkillId,
+      externalSkillIds: equippedExternalSkillIds,
+      equippedExternalSkillIds,
       position: spawnPosition,
-      attributes: getCreatureAttributes({
-        armStrength: 4,
-        constitution: 4,
-        agility: 4,
-        innerEnergy: 4,
-        insight: 4,
-      }, { schoolId: finalSchoolId, behaviorType: finalBehavior }, level),
+      attributes,
       prestige: 0,
       money: 0,
       experience: 0,

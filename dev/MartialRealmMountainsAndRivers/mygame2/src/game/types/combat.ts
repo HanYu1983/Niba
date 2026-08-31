@@ -49,6 +49,8 @@ export type AttackExecutionResult = {
   maxHealth: number
   criticalRate: number
   criticalHit: boolean
+  /** 目標生物的防禦判定結果：`evaded`＝被回避（傷害為 0），`reduced`＝根骨減傷（傷害減半）。 */
+  targetDefense?: 'evaded' | 'reduced'
   terrainResonance?: string
   defeated: boolean
   experienceReward?: number
@@ -83,6 +85,8 @@ export type ExternalDamageExecutionResult = {
   nextHealth: number
   maxHealth: number
   innerPowerCost: number
+  /** 目標生物的防禦判定結果：`evaded`＝被回避（傷害為 0），`reduced`＝根骨減傷（傷害減半）。 */
+  targetDefense?: 'evaded' | 'reduced'
   /** 範圍攻擊（selectionMode = all）：各目標的傷害結果；單體攻擊時為 undefined。 */
   areaTargets?: Array<{
     targetType: AttackTargetType
@@ -93,6 +97,8 @@ export type ExternalDamageExecutionResult = {
     nextHealth: number
     maxHealth: number
     defeated: boolean
+    /** 單一目標的防禦判定結果。 */
+    targetDefense?: 'evaded' | 'reduced'
   }>
   /** 傷害型外功的暴擊率（內息每 1 點提供 2%）。 */
   criticalRate?: number

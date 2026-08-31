@@ -1374,6 +1374,8 @@ describe('executeAttack', () => {
       health: 1,
       maxHealth: 1,
       level: 1,
+      // 低身法與根骨，避免回避／根骨減傷影響擊殺判定。
+      attributes: { armStrength: 8, constitution: 1, agility: 1, innerEnergy: 5, insight: 7 },
     })
     gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
 

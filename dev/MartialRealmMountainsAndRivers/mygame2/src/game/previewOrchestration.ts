@@ -11,7 +11,7 @@ import type {
 import { getRepairSummary, getWorkshopLevel, hasBuilding, requiresAdjacentActivePlayer } from './rules/buildingRules'
 import { getElementDamageMultiplier, getElementInteractionText, getExternalSkill, getGenerationSynergyMultiplier, getInnerSkill, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, isElementGenerating } from './rules/skillRules'
 import { getTerrainAtPosition, getTerrainResonanceCriticalRateBonus, getTerrainResonanceDamageMultiplier, getTerrainResonanceInnerPowerDiscount, getTerrainResonanceLabel, isTerrainResonant, isTripleResonance } from './rules/terrainCombatRules'
-import { getCriticalRateForPlayer, getCreatureDamageReductionPercent, getCreatureEvasionRate, getDamageDealtPercent, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillInnerCostReduction } from './rules/playerDerivedRules'
+import { getCriticalRateForPlayer, getCreatureEvasionRate, getCreatureRootReductionRate, getDamageDealtPercent, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillInnerCostReduction } from './rules/playerDerivedRules'
 import { calculateDamage } from './rules/playerRules'
 import { getAttackTarget } from './rules/targetRules'
 import { isAdjacent } from './types'
@@ -54,7 +54,8 @@ export function createAttackPreview(
     targetMaxHealth: target.target.maxHealth,
     elementInteraction: getElementInteractionText(innerSkill.element, defenderElement),
     terrainResonance: getTerrainResonanceLabel(innerSkill.element, standingTerrain),
-    targetReduction: creatureTarget ? getCreatureDamageReductionPercent(creatureTarget, creatureTerrain) : undefined,
+    // 敵方生物減傷率 = 根骨減傷率（根骨 × 2%，對應實戰中的根骨減傷判定）。
+    targetReduction: creatureTarget ? getCreatureRootReductionRate(creatureTarget, creatureTerrain) : undefined,
     targetEvasion: creatureTarget ? getCreatureEvasionRate(creatureTarget, creatureTerrain) : undefined,
   }
 }
@@ -159,8 +160,9 @@ export function createExternalSkillPreview(
     effectSummary: skill.functionalEffect ? skill.description : undefined,
     elementInteraction: getElementInteractionText(skill.element, getSchoolElement(target.target.schoolId)),
     terrainResonance: getTerrainResonanceLabel(skill.element, targetTerrain),
+    // 敵方生物減傷率 = 根骨減傷率（根骨 × 2%，對應實戰中的根骨減傷判定）。
     targetReduction: targetType === 'creature'
-      ? getCreatureDamageReductionPercent(target.target as CreatureState, targetTerrain)
+      ? getCreatureRootReductionRate(target.target as CreatureState, targetTerrain)
       : undefined,
     targetEvasion: targetType === 'creature'
       ? getCreatureEvasionRate(target.target as CreatureState, targetTerrain)
