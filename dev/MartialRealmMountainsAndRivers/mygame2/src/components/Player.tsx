@@ -72,13 +72,13 @@ function Player({
     >
       <span className="player__icon">{icon ?? (appearance === 'creature' ? '🐺' : '🧙')}</span>
       {stamina !== undefined && maxStamina !== undefined && (
-        <span className="player__stamina" aria-label={`體力 ${Math.floor(stamina)} / ${Math.floor(maxStamina)}`}>
-          ⚡{Math.floor(stamina)}/{Math.floor(maxStamina)}
+        <span className="player__stamina" aria-label={`體力 ${Math.round(stamina)} / ${Math.round(maxStamina)}`}>
+          ⚡{Math.round(stamina)}/{Math.round(maxStamina)}
         </span>
       )}
       {appearance === 'creature' && health !== undefined && maxHealth !== undefined && (
-        <span className="player__health" aria-label={`血量 ${Math.floor(health)} / ${Math.floor(maxHealth)}`}>
-          ♥{Math.floor(health)}/{Math.floor(maxHealth)}
+        <span className="player__health" aria-label={`血量 ${Math.round(health)} / ${Math.round(maxHealth)}`}>
+          ♥{Math.round(health)}/{Math.round(maxHealth)}
         </span>
       )}
       <span className="player__marker" />

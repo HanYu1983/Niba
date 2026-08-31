@@ -222,10 +222,10 @@ describe('spawnCreaturesFromNests', () => {
       spawnDeps,
     )
 
-    // 升級到 Lv.2：maxHealth = 120 * 1.1 = 132；先回血 1%（120×1%=1 → 101），升級到不因升級回滿
+    // 升級到 Lv.2：maxHealth = 120 * 1.1 = 132；先回血 1%（120×1%=1.2 → 101.2），升級到不因升級回滿
     expect(result.nests[0].spawnLevel).toBe(2)
     expect(result.nests[0].maxHealth).toBe(132)
-    expect(result.nests[0].health).toBe(101)
+    expect(result.nests[0].health).toBe(101.2)
   })
 
   it('每回合回復 1% 最大生命', () => {
@@ -241,8 +241,8 @@ describe('spawnCreaturesFromNests', () => {
       spawnDeps,
     )
 
-    // 回復 120 * 1% = 1.2 → floor 1 → health 101
-    expect(result.nests[0].health).toBe(101)
+    // 回復 120 * 1% = 1.2 → health 101.2
+    expect(result.nests[0].health).toBe(101.2)
   })
 
   it('每回合回復不會超過最大生命', () => {

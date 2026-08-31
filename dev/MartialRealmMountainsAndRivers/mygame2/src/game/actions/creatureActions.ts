@@ -106,7 +106,7 @@ export function spawnCreaturesFromNests(
 
   const nextNests = nests.map((nest) => {
     // 每回合回復 healthRegenPercent 比例的最大生命（上限為最大生命）。
-    const regenHealth = Math.min(nest.maxHealth, nest.health + Math.floor(nest.maxHealth * healthRegenPercent))
+    const regenHealth = Math.min(nest.maxHealth, nest.health + nest.maxHealth * healthRegenPercent)
 
     // 規則 2：生成後有 3 回合冷卻，冷卻期間不生成。
     if (nest.cooldownRounds > 0) {

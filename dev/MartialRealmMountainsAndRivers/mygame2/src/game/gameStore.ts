@@ -794,7 +794,7 @@ export const gameStore = {
       }
 
       const maxInnerPower = getMaxInnerPower(getEffectiveAttributesForPlayer(player))
-      const innerPowerCost = Math.max(1, Math.floor(maxInnerPower * 0.01))
+      const innerPowerCost = Math.max(1, maxInnerPower * 0.01)
 
       return applyBaseHealthBonuses({
         ...state,

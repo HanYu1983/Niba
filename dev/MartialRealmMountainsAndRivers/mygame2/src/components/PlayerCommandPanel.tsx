@@ -50,7 +50,7 @@ function PlayerCommandPanel({
     <Card className="player-command-panel" variant="borderless">
       <Flex align="center" justify="space-between" gap={16} wrap>
         <div className="player-command-panel__identity">
-          <Typography.Text strong>{creatureTurnInProgress ? 'Creature 行動中' : `體力 ${Math.floor(player?.stamina ?? 0)} / ${Math.floor(player?.maxStamina ?? 0)}`}</Typography.Text>
+          <Typography.Text strong>{creatureTurnInProgress ? 'Creature 行動中' : `體力 ${Math.round(player?.stamina ?? 0)} / ${Math.round(player?.maxStamina ?? 0)}`}</Typography.Text>
           <Typography.Text>{player?.name ?? '無'}</Typography.Text>
           {player && <Tag color={canAct ? 'green' : 'orange'}>{canAct ? '你的回合' : '回合已結束'}</Tag>}
         </div>

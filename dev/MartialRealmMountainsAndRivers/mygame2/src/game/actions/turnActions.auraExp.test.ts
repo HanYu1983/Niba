@@ -69,7 +69,7 @@ const emptyDeps = {
 }
 
 describe('靈氣型外功每回合經驗（endPlayerTurn）', () => {
-  it('已裝備的靈氣型外功在結束回合時累積 +5 功法經驗', () => {
+  it('已裝備的靈氣型外功在結束回合時累積 +3 功法經驗', () => {
     const auraSkillId = 'golden-body-external-functional'
     const state = makeSmallState({
       players: [makePlayer({
@@ -149,8 +149,8 @@ describe('靈氣型外功每回合經驗（endPlayerTurn）', () => {
     const result = endPlayerTurn(state, 'player-1', emptyDeps)
 
     const progressed = result.state.players.find((p) => p.id === 'player-1')
-    // 5 × (1 + 0.2) = 6
-    expect(progressed?.skillProgression?.[auraSkillId]?.experience).toBe(6)
+    // 3 × (1 + 0.2) = 3.6 → 四捨五入 = 4
+    expect(progressed?.skillProgression?.[auraSkillId]?.experience).toBe(4)
   })
 
   it('悟性天成（全域功法經驗 +20%）作用於靈氣型外功經驗', () => {
@@ -183,7 +183,7 @@ describe('靈氣型外功每回合經驗（endPlayerTurn）', () => {
     const result = endPlayerTurn(state, 'player-1', emptyDeps)
 
     const progressed = result.state.players.find((p) => p.id === 'player-1')
-    // 5 × (1 + 0.2) = 6
-    expect(progressed?.skillProgression?.[auraSkillId]?.experience).toBe(6)
+    // 3 × (1 + 0.2) = 3.6 → 四捨五入 = 4
+    expect(progressed?.skillProgression?.[auraSkillId]?.experience).toBe(4)
   })
 })

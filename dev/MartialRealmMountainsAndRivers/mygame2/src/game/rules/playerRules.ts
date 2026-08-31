@@ -1,8 +1,17 @@
 import type { CreatureState, PlayerState } from '../types'
-import { getActiveBuffDefinitions, getPlayerResourceLimit, getStaminaToInnerPowerRatio } from './playerDerivedRules'
+import { getActiveBuffDefinitions, getEffectiveAttributesForPlayer, getPlayerResourceLimit, getStaminaToInnerPowerRatio } from './playerDerivedRules'
 
 export function recoverFivePercent(currentValue: number, maxValue: number): number {
-  return Math.min(maxValue, currentValue + Math.max(1, Math.floor(maxValue * 0.05)))
+  return Math.min(maxValue, currentValue + Math.max(1, maxValue * 0.05))
+}
+
+/** 每 1 點悟性提升的內力回復比例（0.5%）。 */
+export const INSIGHT_INNER_POWER_RECOVERY_PER_POINT = 0.005
+
+/** 依悟性計算內力回復比例：基礎 5% + 每點悟性 0.5%。 */
+export function getInnerPowerRecoveryRate(player: PlayerState): number {
+  const insight = getEffectiveAttributesForPlayer(player).insight
+  return 0.05 + insight * INSIGHT_INNER_POWER_RECOVERY_PER_POINT
 }
 
 /** 回合結束時，減少有限回合 Buff 的剩餘回合數，過期的 Buff 會被移除。 */
@@ -36,15 +45,16 @@ export function recoverLivingPlayers(players: PlayerState[]): PlayerState[] {
     // 太虛引氣：將回合結束時剩餘體力依比例轉化為內力（1 體力 → N 內力）。
     const staminaToInnerPowerRatio = getStaminaToInnerPowerRatio(updatedPlayer)
     const innerPowerFromStamina = staminaToInnerPowerRatio > 0
-      ? Math.floor(updatedPlayer.stamina * staminaToInnerPowerRatio)
+      ? updatedPlayer.stamina * staminaToInnerPowerRatio
       : 0
+    const innerPowerRecoveryRate = getInnerPowerRecoveryRate(updatedPlayer)
     return {
       ...updatedPlayer,
       stamina: updatedPlayer.maxStamina,
       health: recoverFivePercent(updatedPlayer.health, updatedPlayer.maxHealth),
       innerPower: Math.min(
         updatedPlayer.maxInnerPower,
-        recoverFivePercent(updatedPlayer.innerPower, updatedPlayer.maxInnerPower) + innerPowerFromStamina,
+        updatedPlayer.innerPower + Math.max(1, updatedPlayer.maxInnerPower * innerPowerRecoveryRate) + innerPowerFromStamina,
       ),
       turnEnded: false,
     }
@@ -62,13 +72,13 @@ export function applyPeriodicBuffEffects(players: PlayerState[]): PlayerState[] 
     let innerPowerRegen = 0
     for (const definition of getActiveBuffDefinitions(player)) {
       const healthDamage = definition.maxHealthDamagePercent ?? 0
-      if (healthDamage > 0) damage += Math.floor(effectiveMaxHealth * healthDamage)
+      if (healthDamage > 0) damage += effectiveMaxHealth * healthDamage
       const healthRegenPercent = definition.healthRegenPercent ?? 0
       const innerPowerToHealthRegen = definition.innerPowerHealthRegenPercent ?? 0
       const innerPowerRegenPercent = definition.innerPowerRegenPercent ?? 0
-      if (healthRegenPercent > 0) healthRegen += Math.floor(effectiveMaxHealth * healthRegenPercent)
-      if (innerPowerToHealthRegen > 0) healthRegen += Math.floor(effectiveMaxInnerPower * innerPowerToHealthRegen)
-      if (innerPowerRegenPercent > 0) innerPowerRegen += Math.floor(effectiveMaxInnerPower * innerPowerRegenPercent)
+      if (healthRegenPercent > 0) healthRegen += effectiveMaxHealth * healthRegenPercent
+      if (innerPowerToHealthRegen > 0) healthRegen += effectiveMaxInnerPower * innerPowerToHealthRegen
+      if (innerPowerRegenPercent > 0) innerPowerRegen += effectiveMaxInnerPower * innerPowerRegenPercent
     }
 
     const health = Math.min(effectiveMaxHealth, Math.max(0, player.health - damage + healthRegen))

@@ -42,7 +42,7 @@ function CreatureCommandPanel({ creature, terrain, open, onClose }: CreatureComm
       {creature && innerSkill && effectiveAttributes && (
         <div className="creature-command-panel__body">
           <Typography.Text type="secondary">
-            血量 {creature.health} / {creature.maxHealth}
+            血量 {Math.round(creature.health)} / {Math.round(creature.maxHealth)}
           </Typography.Text>
           <Typography.Text type="secondary">行為：{behaviorName}</Typography.Text>
           <Typography.Text type="secondary">流派：{schoolName}</Typography.Text>

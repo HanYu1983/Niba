@@ -307,8 +307,8 @@ function applyCombatHitState(
   const attackerEffective = getEffectiveAttributesForPlayer(attacker)
   const attackerMaxHealth = getMaxHealth(attackerEffective)
   const attackerMaxInnerPower = getMaxInnerPower(attackerEffective)
-  const lifestealHeal = Math.floor(damage * getLifestealPercent(attacker))
-  const innerPowerLeech = Math.floor(damage * getInnerPowerLeechPercent(attacker))
+  const lifestealHeal = damage * getLifestealPercent(attacker)
+  const innerPowerLeech = damage * getInnerPowerLeechPercent(attacker)
 
   const nextState: GameState = {
     ...state,
@@ -378,7 +378,7 @@ export function executeExternalDamage(
     }, player)
     // 定向強化型外功：直接施放、立即完成（無冷卻、不消耗體力）。目前支援回復自身最大生命百分比。
     const activatedPlayer = skill.activationEffect?.kind === 'heal-self-percent'
-      ? { ...withBuff, health: Math.min(withBuff.maxHealth, withBuff.health + Math.floor(withBuff.maxHealth * skill.activationEffect.percent)) }
+      ? { ...withBuff, health: Math.min(withBuff.maxHealth, withBuff.health + withBuff.maxHealth * skill.activationEffect.percent) }
       : withBuff
     const rewards: CombatRewards = { experienceGain: 0, moneyReward: 0, progressedPlayer: activatedPlayer }
     const nextPlayer = applyCombatPlayerState(state, activatedPlayer, rewards, dependencies, { innerPowerCost, externalSkillId: skillId, skipSkillExperience: true })

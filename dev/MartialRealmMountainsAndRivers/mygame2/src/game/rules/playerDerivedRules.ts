@@ -126,13 +126,13 @@ function buildScaledBuffDescription(definition: BuffDefinition): string | undefi
     case 'return-light':
       return definition.reviveHealthPercent !== undefined ? `瀕死時攔截死亡，復活至 ${pct(definition.reviveHealthPercent)} 血並清除所有 debuff（只保一次）。` : undefined
     case 'back-to-water':
-      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${definition.conditional.multiplier}。` : undefined
+      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${pct(definition.conditional.multiplier)}。` : undefined
     case 'nurture-qi':
-      return definition.conditional ? `血量高於 ${pct(definition.conditional.threshold)} 時，五維 ×${definition.conditional.multiplier}。` : undefined
+      return definition.conditional ? `血量高於 ${pct(definition.conditional.threshold)} 時，五維 ×${pct(definition.conditional.multiplier)}。` : undefined
     case 'all-in':
-      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${definition.conditional.multiplier}。` : undefined
+      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${pct(definition.conditional.multiplier)}。` : undefined
     case 'ghost-shadow-lone-resolve':
-      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${definition.conditional.multiplier}，持續 3 回合。` : undefined
+      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${pct(definition.conditional.multiplier)}，持續 3 回合。` : undefined
     case 'sky-eye-vision':
     case 'sharp-edge-sword-heart':
       return definition.visionRadiusBonus !== undefined ? `自身地圖視野半徑 +${definition.visionRadiusBonus}。` : undefined

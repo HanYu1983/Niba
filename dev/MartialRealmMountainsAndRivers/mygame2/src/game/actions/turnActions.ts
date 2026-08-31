@@ -63,7 +63,7 @@ function applyStaminaExperienceBonus(player: PlayerState): PlayerState {
 }
 
 /** 每回合為已裝備的靈氣型外功（aura）累積功法經驗的常數。 */
-export const AURA_SKILL_EXPERIENCE_PER_ROUND = 5
+export const AURA_SKILL_EXPERIENCE_PER_ROUND = 3
 
 /**
  * 為玩家所有已裝備的靈氣型外功（category === 'aura'）各累積功法經驗。
@@ -162,8 +162,8 @@ export function endPlayerTurn(
   const recoveredPlayers = isRoundComplete
     ? auraRecoveredPlayers.map((candidate) => {
       // 全局靈氣：每回合結束額外回復一定比例氣血與內力（隨疊加而增加）。
-      const bonusHealth = Math.floor(candidate.maxHealth * roundEndRecoveryPercent / 100)
-      const bonusInnerPower = Math.floor(candidate.maxInnerPower * roundEndRecoveryPercent / 100)
+      const bonusHealth = candidate.maxHealth * roundEndRecoveryPercent / 100
+      const bonusInnerPower = candidate.maxInnerPower * roundEndRecoveryPercent / 100
       // 靈氣型外功：裝備期間每回合累積功法經驗。
       // 以 state.players 的最新裝備資料為準；Creature 回合只應更新戰鬥狀態，
       // 避免更換靈氣功法後使用到過期玩家快照而漏算經驗。

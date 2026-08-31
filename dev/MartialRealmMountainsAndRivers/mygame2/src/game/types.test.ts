@@ -163,7 +163,7 @@ describe('類別 1：資源轉換 Buff', () => {
       buffs: [{ id: 'b1', definitionId: 'spring-return-art', sourceId: 'test', remainingRounds: null }],
     })
     const [after] = applyPeriodicBuffEffects([player])
-    expect(after.health).toBe(22)
+    expect(after.health).toBe(22.4)
   })
 
   it('化氣訣：每回合回復最大內力 ×10% 的血量', () => {
@@ -172,8 +172,8 @@ describe('類別 1：資源轉換 Buff', () => {
       buffs: [{ id: 'b1', definitionId: 'qi-transformation-art', sourceId: 'test', remainingRounds: null }],
     })
     const [after] = applyPeriodicBuffEffects([player])
-    // 最大內力 = innerEnergy(5) × 2 = 10，10% = 1
-    expect(after.health).toBe(21)
+    // 最大內力 = innerEnergy(5) × 3 = 15，10% = 1.5
+    expect(after.health).toBe(21.5)
   })
 })
 

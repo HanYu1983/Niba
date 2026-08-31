@@ -117,8 +117,9 @@ describe('animateCreatureTurn', () => {
 
     const state = gameStore.getState()
     expect(state.players[0].stamina).toBe(state.players[0].maxStamina)
-    expect(state.players[0].health).toBe(11)
-    expect(state.players[0].innerPower).toBe(1)
+    expect(state.players[0].health).toBe(11.2)
+    // 回復率 = 5% + 有效悟性(7+吐納功5=12)×0.5% = 11% → 15×11% = 1.65
+    expect(state.players[0].innerPower).toBe(1.65)
     expect(state.players[0].turnEnded).toBe(false)
   })
 
@@ -459,9 +460,9 @@ describe('animateCreatureTurn', () => {
     })
 
     const state = gameStore.getState()
-    // 復活至 30% 血（maxHealth 24 * 0.3 = 7.2 → 7）
+    // 復活至 30% 血（maxHealth 24 * 0.3 = 7.2）
     expect(state.players[0].health).toBeGreaterThan(0)
-    expect(state.players[0].health).toBe(Math.floor(24 * 0.3))
+    expect(state.players[0].health).toBe(24 * 0.3)
     // 清除所有 debuff（含回光 Buff 本身）
     expect(state.players[0].buffs ?? []).toHaveLength(0)
     // 不觸發遊戲結束
