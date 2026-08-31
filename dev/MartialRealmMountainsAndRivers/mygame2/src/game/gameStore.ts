@@ -1,4 +1,7 @@
 import { useSyncExternalStore } from 'react'
+import { createGameStoreCore } from './store/createStore'
+import { createSessionContext, clearPendingCreatureTurn, resolveActiveCharacterIds } from './session/sessionController'
+import { animateCreatureTurn as animateCreatureTurnBus } from './effects/animationBus'
 import { itemCatalog, type ItemEffectType } from './catalogs/itemCatalog'
 import {
   type Position,
@@ -132,8 +135,7 @@ import {
   moveCreatures,
   spawnCreaturesFromNests as spawnCreaturesFromNestsAction,
 } from './actions/creatureActions'
-import { DEFAULT_GAME_SETTINGS, getSavedGameSettings } from './gameSettings'
-import { animateCreatureTurn as animateCreatureTurnAction } from './creatureAnimation'
+import { DEFAULT_GAME_SETTINGS } from './gameSettings'
 import { learnSkillAtMartialHall as learnSkillAtMartialHallAction } from './actions/martialHallActions'
 import { learnSkillAtSectGate as learnSectGateSkillAction, practiceSkillAtSectGate as practiceSectGateSkillAction } from './actions/sectGateActions'
 import { clearRuin as clearRuinAction, reconstructRuin as reconstructRuinAction } from './actions/ruinActions'
@@ -154,7 +156,7 @@ import {
   getLearnableSkill,
 } from './lootFactory'
 import { runActionExecution, runActionOutcome } from './storeAdapters'
-import { recordMaxLevel, recordDamageDealt } from './runStats'
+import { recordDamageDealt } from './runStats'
 import { applyEndGameRewards, applyStoryUnlocks } from './characterRoster'
 import { recordChallengeVictory } from './challengeState'
 import { enqueueDialogue, skipAllDialogue } from './actions/dialogueActions'
@@ -196,17 +198,6 @@ export function spawnCreaturesFromNests(
   }, blockedPositions, healthRegenPercent)
 }
 
-/** 掃描人類玩家，記錄最高等級與該等級五維快照。 */
-function recordHumanMaxLevel(state: GameState): GameState {
-  let next = state
-  for (const player of state.players) {
-    if (player.isAI) continue
-    const level = player.level ?? 1
-    next = recordMaxLevel(next, level, player.attributes)
-  }
-  return next
-}
-
 function hasAvailablePlayerAction(state: GameState, playerId: string): boolean {
   const player = getActionablePlayer(state, playerId)
   if (!player) return false
@@ -220,49 +211,13 @@ export function getDefenseBuildValidation(state: GameState, playerId: string, ba
 export { moveCreatures }
 export const createGameState = createWorldGameState
 export const createDebugGameState = createWorldDebugGameState
+
+// ── Store 核心與 Session 狀態 ──────────────────────────────────────────────
 const initialGameState = createGameState()
+const storeCore = createGameStoreCore(initialGameState)
+const session = createSessionContext()
 
-let gameState = initialGameState
-let lastGameSettings = getSavedGameSettings()
-const listeners = new Set<() => void>()
-/** 目前載入的劇本關卡 id（記錄通關進度用）；非劇本模式為 null。 */
-let currentScenarioId: string | null = null
-/** 目前對局是否為挑戰關卡模式（勝利時記錄闖關等級 +1）。 */
-let isChallengeMode = false
-/** 目前對局各人類玩家選用的名册角色 id（依人類玩家順序；未選用為 null）。 */
-let activeCharacterIds: (string | null)[] = []
-/**
- * 本局殘卷獎勵是否已結算（防重旗標）。
- *
- * 為何需要它：SystemOverlays 的結算 useEffect 只防「同一 mount 內」重複，
- * 讀檔會讓元件重新 mount 並再次呼叫 settleActiveCharacterRewards；
- * 若存檔恰為局末狀態（gameWon/gameOver = true），殘卷會被重複累加。
- *
- * 生命週期：startGame / restartGame 重置為 false；settle 成功後設為 true；
- * 載入局末存檔時視為已結算（true），避免讀檔即重算。
- */
-let rewardSettled = false
-
-/**
- * 暫存的敵人行動結果（回合結束觸發探索事件時延後執行）。
- *
- * 為何需要它：
- * `endPlayerTurn` 一次完成兩件事——「回合結束隨機觸發探索事件」與「計算並執行敵人行動」。
- * 原本兩者同步進行，導致事件彈窗與敵人行動彈窗同時出現。
- * 為讓「事件彈窗（含結果）先出現、玩家確認後才執行敵人行動」，
- * 我們把敵人行動的執行延後到事件處理完之後。
- *
- * 為何用模組級變數而非 state 欄位：
- * 若把整個 CreatureTurnResult 存入 GameState，types.ts 就得 import
- * ./actions/creatureActions 的型別，但 creatureActions 又依賴 types，
- * 會造成循環依賴。用模組級變數（reactive store 外的純暫存）可避開這問題，
- * 且它只在「結束回合 → 事件處理完」的短暫窗口內存在，不需持久化或重渲染。
- *
- * 生命週期：endPlayerTurn 寫入 → 事件選擇（flushPendingCreatureTurn）或
- * 關閉（dismissPendingExplorationEvent）時讀取並清除。
- */
-let pendingCreatureTurn: CreatureTurnResult | null = null
-let pendingCreatureTurnBasePlayers: PlayerState[] | null = null
+const { getState, setState, updateGameState, subscribe } = storeCore
 
 /** 全域行動日誌上限：只保留最新 N 筆，避免長局面資料無限成長（重構文件 §4.5）。 */
 const MAX_ACTION_EVENTS = 200
@@ -318,47 +273,12 @@ function updateConstructionPlanItem(
   }))
 }
 
-function updateGameState(updater: (state: GameState) => GameState) {
-  let nextGameState = updater(gameState)
-
-  if (nextGameState === gameState) {
-    return
-  }
-
-  // 統一記錄人類玩家的最高等級與該等級五維快照（涵蓋所有升級來源）。
-  nextGameState = recordHumanMaxLevel(nextGameState)
-
-  // 遊戲結束（勝利或失敗）時清除戰爭迷霧：切換為全圖揭示，讓玩家可觀察局末狀態。
-  if ((nextGameState.gameOver || nextGameState.gameWon) && nextGameState.visibility?.mode !== 'revealed') {
-    nextGameState = {
-      ...nextGameState,
-      visibility: {
-        exploredCellIds: nextGameState.map.cells.map((cell) => cell.id),
-        mode: 'revealed',
-      },
-    }
-  }
-
-  // 統一顯示劇情對話：佇列非空且目前沒有阻塞彈窗時，自動顯示佇列首項。
-  // 這讓任何掛鉤點（如擊殺 Boss 觸發 on-victory）填充佇列後，對話會立即彈出。
-  const queue = nextGameState.campaignState?.dialogueQueue
-  if (queue && queue.length > 0 && nextGameState.blockingModal === null) {
-    nextGameState = {
-      ...nextGameState,
-      blockingModal: { type: 'story-dialogue', entry: queue[0], remaining: queue.length - 1 },
-    }
-  }
-
-  gameState = nextGameState
-  listeners.forEach((listener) => listener())
-}
-
 export function animateCreatureTurn(result: CreatureTurnResult) {
-  animateCreatureTurnAction(result, updateGameState)
+  animateCreatureTurnBus(result, updateGameState)
 }
 
 export const gameStore = {
-  getState: () => gameState,
+  getState: () => getState(),
 
   allocateAttributePoint: (playerId: string, attribute: UpgradeableAttribute): boolean => {
     let allocated = false
@@ -396,19 +316,17 @@ export const gameStore = {
     initialExternalSkillIds?: string[]
     talentIds?: string[]
   } | null)[]) => {
-    isChallengeMode = false
-    lastGameSettings = { ...settings }
-    pendingCreatureTurn = null
-    pendingCreatureTurnBasePlayers = null
+    session.isChallengeMode = false
+    session.lastGameSettings = { ...settings }
+    clearPendingCreatureTurn(session)
     const humanCount = Math.min(4, Math.max(1, Math.round(settings.playerCount ?? 1)))
-    activeCharacterIds = Array.from({ length: humanCount }, (_, i) => selectedCharacters?.[i]?.id ?? null)
-    rewardSettled = false
-    gameState = { ...createGameState(lastGameSettings, selectedCharacters), activeCharacterIds }
-    listeners.forEach((listener) => listener())
+    session.activeCharacterIds = Array.from({ length: humanCount }, (_, i) => selectedCharacters?.[i]?.id ?? null)
+    session.rewardSettled = false
+    setState({ ...createGameState(session.lastGameSettings, selectedCharacters), activeCharacterIds: session.activeCharacterIds })
   },
 
   /** 取得目前對局各人類玩家選用的名册角色 id（依人類玩家順序；未選用為 null）。 */
-  getActiveCharacterIds: () => activeCharacterIds,
+  getActiveCharacterIds: () => session.activeCharacterIds,
 
   /**
    * 局末回寫：將本局表現結算為卷並併入功法庫。同一局只結算一次（冪等）。
@@ -420,28 +338,28 @@ export const gameStore = {
    * 4. 通過 → 依人類玩家逐一結算 + markRunSettled 落盤
    */
   settleActiveCharacterRewards: (stats: RunStats, won: boolean, learnedSkillIdsByPlayer: string[][]) => {
-    const selectedIds = activeCharacterIds.filter((id): id is string => Boolean(id))
+    const selectedIds = session.activeCharacterIds.filter((id): id is string => Boolean(id))
     if (selectedIds.length === 0) return null
-    if (rewardSettled) return null
-    const runId = gameState.runId
+    if (session.rewardSettled) return null
+    const runId = getState().runId
     if (runId && isRunSettled(runId)) {
-      rewardSettled = true
+      session.rewardSettled = true
       return null
     }
     // 依人類玩家順序，將各自的功法清單回寫到對應的名册角色。
-    const results = activeCharacterIds.map((characterId, index) => {
+    const results = session.activeCharacterIds.map((characterId, index) => {
       if (!characterId) return undefined
       return applyEndGameRewards(characterId, stats, won, learnedSkillIdsByPlayer[index] ?? [])
     })
     const anySettled = results.some((result) => Boolean(result))
     if (anySettled) {
-      rewardSettled = true
+      session.rewardSettled = true
       if (runId) markRunSettled(runId)
       // 結算發生在 GameOverModal 顯示後；此時原本的自動存檔仍是局末前狀態，
       // 因此要把包含局末旗標與同一 runId 的最新狀態寫回自動存檔，
       // 讓存檔摘要能顯示「已領取殘卷」，讀檔也能正確讀取防重登記。
       // activeCharacterIds 已隨 GameState 序列化，故不需再以參數傳入。
-      scheduleAutoSave(gameState, null, isChallengeMode, currentScenarioId)
+      scheduleAutoSave(getState(), null, session.isChallengeMode, session.currentScenarioId)
     }
     return results
   },
@@ -526,42 +444,39 @@ export const gameStore = {
   },
 
   saveGame: (): ActionOutcome => {
-    const result = saveGameState(gameState, activeCharacterIds[0] ?? null, isChallengeMode, currentScenarioId)
+    const result = saveGameState(getState(), session.activeCharacterIds[0] ?? null, session.isChallengeMode, session.currentScenarioId)
     return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '儲存失敗。' }
   },
 
   getSaveSlots: () => getGameSaveSlots(),
 
   saveGameToSlot: (slot: number): ActionOutcome => {
-    const result = saveGameStateToSlot(gameState, slot, activeCharacterIds[0] ?? null, isChallengeMode, currentScenarioId)
+    const result = saveGameStateToSlot(getState(), slot, session.activeCharacterIds[0] ?? null, session.isChallengeMode, session.currentScenarioId)
     return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '儲存失敗。' }
   },
 
   loadGameFromSlot: (slot: number): ActionOutcome => {
-    pendingCreatureTurn = null
-    pendingCreatureTurnBasePlayers = null
+    clearPendingCreatureTurn(session)
     const result = loadGameStateFromSlot(slot)
     if (!result.ok) return result
     // 還原挑戰關卡模式旗標與劇本 id（舊存檔缺漏視為 false/null）。
-    isChallengeMode = result.isChallengeMode
-    currentScenarioId = result.scenarioId
-    gameState = {
+    session.isChallengeMode = result.isChallengeMode
+    session.currentScenarioId = result.scenarioId
+    const loadedState: GameState = {
       ...result.state,
       aiOrders: result.state.aiOrders ?? [],
       aiConstructionPlans: result.state.aiConstructionPlans ?? [],
     }
+    setState(loadedState)
     // 還原名册角色 id 陣列：優先取 GameState.activeCharacterIds（隨存檔序列化），
     // 舊存檔缺漏時由單一 activeCharacterId 或 payload 的 activeCharacterId 轉換（向下相容）。
-    activeCharacterIds = gameState.activeCharacterIds
-      ?? (gameState.activeCharacterId !== undefined ? [gameState.activeCharacterId] : undefined)
-      ?? (result.activeCharacterId !== undefined ? [result.activeCharacterId] : [])
+    session.activeCharacterIds = resolveActiveCharacterIds(loadedState, result.activeCharacterId)
     // 以 runId 登記表判斷是否已結算；局末但尚未登記的存檔需允許補發殘卷。
     // 舊存檔沒有 runId 時，沿用舊規則視為局末已結算，避免重複發放。
-    rewardSettled = Boolean(
-      (gameState.runId && isRunSettled(gameState.runId))
-      || (!gameState.runId && (gameState.gameWon || gameState.gameOver)),
+    session.rewardSettled = Boolean(
+      (loadedState.runId && isRunSettled(loadedState.runId))
+      || (!loadedState.runId && (loadedState.gameWon || loadedState.gameOver)),
     )
-    listeners.forEach((listener) => listener())
     return { ok: true }
   },
 
@@ -574,32 +489,30 @@ export const gameStore = {
     const result = loadGameState()
     if (!result.ok) return result
     // 還原挑戰關卡模式旗標與劇本 id（舊存檔缺漏視為 false/null）。
-    isChallengeMode = result.isChallengeMode
-    currentScenarioId = result.scenarioId
-    gameState = {
+    session.isChallengeMode = result.isChallengeMode
+    session.currentScenarioId = result.scenarioId
+    const loadedState: GameState = {
       ...result.state,
       aiOrders: result.state.aiOrders ?? [],
       aiConstructionPlans: result.state.aiConstructionPlans ?? [],
     }
+    setState(loadedState)
     // 還原名册角色 id 陣列：優先取 GameState.activeCharacterIds（隨存檔序列化），
     // 舊存檔缺漏時由單 activeCharacterId / payload 的 activeCharacterId 轉換（向下相容）。
-    activeCharacterIds = gameState.activeCharacterIds
-      ?? (gameState.activeCharacterId !== undefined ? [gameState.activeCharacterId] : undefined)
-      ?? (result.activeCharacterId !== undefined ? [result.activeCharacterId] : [])
+    session.activeCharacterIds = resolveActiveCharacterIds(loadedState, result.activeCharacterId)
     // 以 runId 登記表判斷是否已結算；局末但未 runId 的存檔需允許補發殘卷。
     // 舊存檔沒有 runId 時，回退舊規則視為局末已結算，避免重複發放。
-    rewardSettled = Boolean(
-      (gameState.runId && isRunSettled(gameState.runId))
-      || (!gameState.runId && (gameState.gameWon || gameState.gameOver)),
+    session.rewardSettled = Boolean(
+      (loadedState.runId && isRunSettled(loadedState.runId))
+      || (!loadedState.runId && (loadedState.gameWon || loadedState.gameOver)),
     )
-    listeners.forEach((listener) => listener())
     return { ok: true }
   },
 
   setAiOrder: (order: AiOrder): ActionOutcome => {
-    const aiPlayer = gameState.players.find((player) => player.id === order.aiPlayerId && player.isAI === true)
+    const aiPlayer = getState().players.find((player) => player.id === order.aiPlayerId && player.isAI === true)
     if (!aiPlayer) return { ok: false, reason: '指定的玩家不是 AI 玩家。' }
-    const existingOrder = gameState.aiOrders?.find((current) => current.id === order.id)
+    const existingOrder = getState().aiOrders?.find((current) => current.id === order.id)
     if (existingOrder && existingOrder.aiPlayerId !== order.aiPlayerId) return { ok: false, reason: 'AI 命令不屬於指定的玩家。' }
 
     let saved = false
@@ -649,7 +562,7 @@ export const gameStore = {
   },
 
   setAiConstructionPlan: (plan: AiConstructionPlan): ActionOutcome => {
-    const aiPlayer = gameState.players.find((player) => player.id === plan.aiPlayerId && player.isAI === true)
+    const aiPlayer = getState().players.find((player) => player.id === plan.aiPlayerId && player.isAI === true)
     if (!aiPlayer) return { ok: false, reason: '指定的玩家不是 AI 玩家。' }
     updateGameState((state) => ({
       ...state,
@@ -675,10 +588,9 @@ export const gameStore = {
 
   loadDebugMap: () => {
     // Debug 地圖不綁定名册角色，清除並同步 state。
-    activeCharacterIds = []
-    isChallengeMode = false
-    gameState = { ...createDebugGameState(), activeCharacterIds: [] }
-    listeners.forEach((listener) => listener())
+    session.activeCharacterIds = []
+    session.isChallengeMode = false
+    setState({ ...createDebugGameState(), activeCharacterIds: [] })
   },
 
   /** 以挑戰關卡模式開局：勝利流程比照沙盒，僅多記錄闖關等級。 */
@@ -695,26 +607,24 @@ export const gameStore = {
     // 注意：startGame 內部會重置 isChallengeMode = false，
     // 因此必須「先呼叫 startGame、再設旗標」，否則旗標會被覆蓋回 sandbox。
     gameStore.startGame(settings, selectedCharacters)
-    isChallengeMode = true
+    session.isChallengeMode = true
   },
 
   /** 目前對局是否為挑戰關卡模式。 */
-  isChallengeModeActive: () => isChallengeMode,
+  isChallengeModeActive: () => session.isChallengeMode,
 
   /** 載入測試用劇情模式（Debug 地圖 + 序章對話）。 */
   startTestCampaign: () => {
-    pendingCreatureTurn = null
-    pendingCreatureTurnBasePlayers = null
-    isChallengeMode = false
-    currentScenarioId = null
+    clearPendingCreatureTurn(session)
+    session.isChallengeMode = false
+    session.currentScenarioId = null
     // 測試劇情不綁定名册角色，清除並同步 state。
-    activeCharacterIds = []
+    session.activeCharacterIds = []
     // 觸發開局（on-start）對話：收集符合的步驟並填入佇列（updateGameState 會自動顯示）。
     updateGameState((state) => {
       const steps = collectTriggeredDialogues(state, { type: 'on-start' })
       return enqueueDialogue(state, steps)
     })
-    listeners.forEach((listener) => listener())
   },
 
   /**
@@ -735,46 +645,42 @@ export const gameStore = {
         .map((issue) => issue.message)
       return { ok: false, reason: errorMessages.join('；') || '關卡驗證失敗。' }
     }
-    pendingCreatureTurn = null
-    pendingCreatureTurnBasePlayers = null
+    clearPendingCreatureTurn(session)
     // 劇本模式不綁定名册角色，清除並同步 state。
-    isChallengeMode = false
-    activeCharacterIds = []
-    gameState = { ...buildGameStateFromScenario(scenario), activeCharacterIds: [] }
-    currentScenarioId = scenario.id
+    session.isChallengeMode = false
+    session.activeCharacterIds = []
+    setState({ ...buildGameStateFromScenario(scenario), activeCharacterIds: [] })
+    session.currentScenarioId = scenario.id
     // 觸發開局（on-start）對話與觸發器。
     updateGameState((state) => {
       const steps = collectTriggeredDialogues(state, { type: 'on-start' })
       const withDialogue = enqueueDialogue(state, steps)
       return executeTriggers(withDialogue, { type: 'on-start' })
     })
-    listeners.forEach((listener) => listener())
     return { ok: true }
   },
 
   restartGame: () => {
-    pendingCreatureTurn = null
-    pendingCreatureTurnBasePlayers = null
-    currentScenarioId = null
-    isChallengeMode = false
-    rewardSettled = false
+    clearPendingCreatureTurn(session)
+    session.currentScenarioId = null
+    session.isChallengeMode = false
+    session.rewardSettled = false
     // 刻意沿用目前選用的名册角色（bug.md 記錄的設計），並同步寫入新 state。
-    gameState = { ...createGameState(lastGameSettings), activeCharacterIds }
-    listeners.forEach((listener) => listener())
+    setState({ ...createGameState(session.lastGameSettings), activeCharacterIds: session.activeCharacterIds })
   },
 
   /** 記錄目前劇本的通關狀態（true = 闖關成功；false = 失敗）。
    *  通關成功時，同步將該章節的 storyUnlocks 併入所有官方角色（功法＋天賦）。 */
   recordCurrentScenarioClearance: (cleared: boolean) => {
     // 挑戰關卡模式：勝利時記錄闖關等級 +1（殘卷結算已由 settleActiveCharacterRewards 比照沙盒處理）。
-    if (isChallengeMode && cleared) {
+    if (session.isChallengeMode && cleared) {
       recordChallengeVictory()
     }
-    if (!currentScenarioId) return
-    recordScenarioClearance(currentScenarioId, cleared)
+    if (!session.currentScenarioId) return
+    recordScenarioClearance(session.currentScenarioId, cleared)
     // 劇本通關解鎖：官方角色（如凌淵）作為故事主角，通關即解鎖對應功法／天賦。
     // 冪等（Set 去重），重複通關不會產生重複項目。
-    applyStoryUnlocks(currentScenarioId, cleared)
+    applyStoryUnlocks(session.currentScenarioId, cleared)
   },
 
   showActionResult: (
@@ -812,7 +718,7 @@ export const gameStore = {
   },
 
   executeRepair: (): ActionExecutionResult<RepairPreview> => {
-    const preview = gameState.repairPreview
+    const preview = getState().repairPreview
     if (!preview) return { ok: false, reason: '沒有待確認的修理預覽。' }
     let result: ActionExecutionResult<RepairPreview> = { ok: false, reason: '修理失敗。' }
 
@@ -863,8 +769,9 @@ export const gameStore = {
    * 執行敵人行動。確保彈窗順序是「事件結果 → 敵人行動」而非同時出現。
    */
   confirmBlockingModal: () => {
-    const continuation = gameState.blockingModal?.type === 'action-result'
-      ? gameState.blockingModal.continuation
+    const current = getState()
+    const continuation = current.blockingModal?.type === 'action-result'
+      ? current.blockingModal.continuation
       : null
 
     updateGameState((state) => ({ ...state, blockingModal: null }))
@@ -924,8 +831,7 @@ export const gameStore = {
   },
 
   subscribe: (listener: () => void) => {
-    listeners.add(listener)
-    return () => listeners.delete(listener)
+    return subscribe(listener)
   },
 
   equipInnerSkill: (playerId: string, skillId: string) => {
@@ -1052,7 +958,7 @@ export const gameStore = {
   },
 
   executeExternalDamageTarget: (playerId: string, targetType: AttackTargetType, targetId: string, skillId: string): ActionExecutionResult<ExternalDamageExecutionResult> => {
-    const action = executeExternalDamageAction(gameState, playerId, targetType, targetId, skillId, {
+    const action = executeExternalDamageAction(getState(), playerId, targetType, targetId, skillId, {
       getActionablePlayer,
       createLootForPlayer,
       getLearnableSkill,
@@ -1093,7 +999,7 @@ export const gameStore = {
   },
 
   executeExternalDamagePreview: (): ActionExecutionResult<ExternalDamageExecutionResult> => {
-    const preview = gameState.externalSkillPreview
+    const preview = getState().externalSkillPreview
 
     if (!preview) {
       return { ok: false, reason: '沒有待確認的外功預覽。' }
@@ -1288,13 +1194,13 @@ export const gameStore = {
    * 2. confirmBlockingModal 的 flush-creature-turn continuation（事件結果彈窗關閉後）→ 執行
    */
   flushPendingCreatureTurn: () => {
-    const scheduled = pendingCreatureTurn
+    const scheduled = session.pendingCreatureTurn
     if (!scheduled) return
-    pendingCreatureTurn = null
-    const basePlayers = pendingCreatureTurnBasePlayers ?? gameState.players
-    pendingCreatureTurnBasePlayers = null
+    session.pendingCreatureTurn = null
+    const basePlayers = session.pendingCreatureTurnBasePlayers ?? getState().players
+    session.pendingCreatureTurnBasePlayers = null
     // 保留事件對玩家的效果，同時合併敵人行動快照中實際造成的血量與耐久度變化。
-    const currentPlayers = gameState.players.map((currentPlayer) => {
+    const currentPlayers = getState().players.map((currentPlayer) => {
       const beforeTurn = basePlayers.find((player) => player.id === currentPlayer.id)
       const afterCreatureTurn = scheduled.players.find((player) => player.id === currentPlayer.id)
       if (!beforeTurn || !afterCreatureTurn) return currentPlayer
@@ -1307,7 +1213,7 @@ export const gameStore = {
     })
     animateCreatureTurn({ ...scheduled, players: currentPlayers })
     // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
-    if (!gameState.gameOver && !gameState.gameWon) scheduleAutoSave(gameState, null, isChallengeMode, currentScenarioId)
+    if (!getState().gameOver && !getState().gameWon) scheduleAutoSave(getState(), null, session.isChallengeMode, session.currentScenarioId)
   },
 
   movePlayer: (playerId: string, rowDelta: number, columnDelta: number) => {
@@ -1442,7 +1348,7 @@ export const gameStore = {
   },
 
   executeAttackTarget: (): ActionExecutionResult<AttackExecutionResult> => {
-    const action = executeAttackAction(gameState, gameState.attackPreview, {
+    const action = executeAttackAction(getState(), getState().attackPreview, {
       getActionablePlayer,
       createLootForPlayer,
       getLearnableSkill,
@@ -1690,7 +1596,7 @@ export const gameStore = {
   },
 
   autoEndPlayerTurn: (playerId: string) => {
-    if (!playerId || hasAvailablePlayerAction(gameState, playerId)) {
+    if (!playerId || hasAvailablePlayerAction(getState(), playerId)) {
       return
     }
 
@@ -1698,7 +1604,7 @@ export const gameStore = {
   },
 
   runAiDefenseStep: (playerId: string): ActionOutcome => {
-    const state = gameState
+    const state = getState()
     const player = state.players.find((candidate) => candidate.id === playerId)
     const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'protect-base' && candidate.status === 'active')
     if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order || order.type !== 'protect-base') {
@@ -1774,7 +1680,7 @@ export const gameStore = {
    * - 建造／升級成功：寫入全域日誌＋完成提醒彈窗（玩家確認後 AI 再繼續）。
    */
   runAiConstructionStep: (playerId: string): ActionOutcome => {
-    const state = gameState
+    const state = getState()
     const player = state.players.find((candidate) => candidate.id === playerId)
     const plan = state.aiConstructionPlans?.find((candidate) => candidate.aiPlayerId === playerId)
     if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !plan) {
@@ -1810,7 +1716,7 @@ export const gameStore = {
     }
 
     // 體力護欄：體力不足以建造時直接結束回合；這是暫時性狀態，不可標記為 blocked。
-    if (!canPlayerPerformAction(gameState, playerId, ACTION_STAMINA_COSTS.build).ok) {
+    if (!canPlayerPerformAction(getState(), playerId, ACTION_STAMINA_COSTS.build).ok) {
       gameStore.endPlayerTurn(playerId)
       recordAiStepEvent(
         state.round,
@@ -1825,21 +1731,21 @@ export const gameStore = {
     // 依效用評分逐一套用候選；失敗者標記 blocked（含原因）後換下一個。
     const excluded = new Set<number>()
     while (true) {
-      const candidate = pickNextBuildCandidate(gameState, plan, excluded)
+      const candidate = pickNextBuildCandidate(getState(), plan, excluded)
       if (!candidate) break
       const buildAction: AiAction = { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: candidate.buildingId, reason: `建設計畫：${candidate.buildingName}（優先度 ${candidate.item.priority}）。` }
-      const rejection = validateAiStepAction(gameState, buildAction)
+      const rejection = validateAiStepAction(getState(), buildAction)
       if (rejection) {
         updateConstructionPlanItem(playerId, candidate.itemIndex, { status: 'blocked', blockedReason: rejection })
         excluded.add(candidate.itemIndex)
         continue
       }
-      const outcome = constructBuildingAction(gameState, plan.baseId, candidate.buildingId, playerId)
+      const outcome = constructBuildingAction(getState(), plan.baseId, candidate.buildingId, playerId)
       if (outcome.result.ok) {
         updateGameState(() => outcome.state)
         updateConstructionPlanItem(playerId, candidate.itemIndex, { status: 'completed', blockedReason: undefined })
         recordAiStepEvent(
-          gameState.round,
+          getState().round,
           playerId,
           player.name,
           buildAction,
@@ -1857,13 +1763,13 @@ export const gameStore = {
     }
 
     // 佇列全部受阻 → 升級 fallback（若允許）。
-    const upgradeCandidate = pickUpgradeCandidate(gameState, plan)
+    const upgradeCandidate = pickUpgradeCandidate(getState(), plan)
     if (upgradeCandidate) {
-      const outcome = upgradeBuildingAction(gameState, playerId, plan.baseId, upgradeCandidate.buildingId)
+      const outcome = upgradeBuildingAction(getState(), playerId, plan.baseId, upgradeCandidate.buildingId)
       if (outcome.result.ok) {
         updateGameState(() => outcome.state)
         recordAiStepEvent(
-          gameState.round,
+          getState().round,
           playerId,
           player.name,
           { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: upgradeCandidate.buildingName, reason: '佇列已無可建項目，升級既有建築。' },
@@ -1879,7 +1785,7 @@ export const gameStore = {
       // 升級失敗不阻塞 queue：記錄待命原因即可。
       gameStore.endPlayerTurn(playerId)
       recordAiStepEvent(
-        gameState.round,
+        getState().round,
         playerId,
         player.name,
         { type: 'hold', actor: { id: playerId, kind: 'player' }, reason: outcome.result.reason ?? '目前無法升級建築。' },
@@ -1890,7 +1796,7 @@ export const gameStore = {
 
     gameStore.endPlayerTurn(playerId)
     recordAiStepEvent(
-      gameState.round,
+      getState().round,
       playerId,
       player.name,
       { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: '沒有可執行的建設項目，結束回合。' },
@@ -1900,7 +1806,7 @@ export const gameStore = {
   },
 
   runAiSupportStep: (playerId: string): ActionOutcome => {
-    const state = gameState
+    const state = getState()
     const player = state.players.find((candidate) => candidate.id === playerId)
     const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'support-player' && candidate.status === 'active')
     if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order || order.type !== 'support-player') {
@@ -1983,7 +1889,7 @@ export const gameStore = {
   },
 
   runFuzzyStep: (playerId: string): ActionOutcome => {
-    const state = gameState
+    const state = getState()
     const player = state.players.find((candidate) => candidate.id === playerId)
     const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'fuzzy' && candidate.status === 'active')
     if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order) {
@@ -2037,15 +1943,15 @@ export const gameStore = {
 
     // 模糊邏輯迴圈：每步 perceive → evaluate → select → execute
     // 所有 break 只設定 exitReason，迴圈結束後統一走 endPlayerTurn 出口。
-    while (!exitReason && gameState.players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
+    while (!exitReason && getState().players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
       loopCount++
-      const currentPlayer = gameState.players.find((p) => p.id === playerId)!
+      const currentPlayer = getState().players.find((p) => p.id === playerId)!
 
       // 1. Perceive
-      const inputs = computeFuzzyInputs(gameState, currentPlayer)
+      const inputs = computeFuzzyInputs(getState(), currentPlayer)
 
       // 2. Evaluate（evaluateAllGoals 內部已做 validate + apply）
-      const goalResults = evaluateAllGoals(inputs, gameState, currentPlayer, aiDeps)
+      const goalResults = evaluateAllGoals(inputs, getState(), currentPlayer, aiDeps)
 
       // 3. Override：selfPreservation > 0.6 時不攻擊（V1 暫無 combat，此處記錄）
       // （V2 加入 engageCombat 時生效）
@@ -2074,18 +1980,18 @@ export const gameStore = {
 
       // 6. Execute（保底 validate：正常必定通過，不通過 = 代碼 bug）
       for (const action of actions) {
-        const cp = gameState.players.find((p) => p.id === playerId)
+        const cp = getState().players.find((p) => p.id === playerId)
         if (!cp || cp.stamina <= 0) {
           exitReason = `體力耗盡（剩餘 ${cp?.stamina ?? 0}）`
           break
         }
-        const validation = validateAiAction(gameState, action)
+        const validation = validateAiAction(getState(), action)
         if (!validation.valid) {
           exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
           break
         }
         const actionResult = gameStore.executeAiAction(action)
-        recordAiStepEvent(gameState.round, playerId, currentPlayer.name, action, actionResult)
+        recordAiStepEvent(getState().round, playerId, currentPlayer.name, action, actionResult)
         if (!actionResult.ok) {
           exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
           break
@@ -2106,7 +2012,7 @@ export const gameStore = {
   },
 
   runDecisionTreeStep: (playerId: string): ActionOutcome => {
-    const state = gameState
+    const state = getState()
     const player = state.players.find((candidate) => candidate.id === playerId)
     const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'decision-tree' && candidate.status === 'active')
     if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order) {
@@ -2118,12 +2024,12 @@ export const gameStore = {
     const MAX_LOOPS = 50
     let exitReason = ''
 
-    while (!exitReason && gameState.players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
+    while (!exitReason && getState().players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
       loopCount++
-      const currentPlayer = gameState.players.find((p) => p.id === playerId)!
+      const currentPlayer = getState().players.find((p) => p.id === playerId)!
 
       const diagnostics: import('./ai/decisionTree/decideNextAction').DecisionTreeDiagnostics = { reasons: [] }
-      const action = decideNextAction(gameState, playerId, diagnostics)
+      const action = decideNextAction(getState(), playerId, diagnostics)
 
       if (!action) {
         exitReason = diagnostics.reasons.length > 0
@@ -2133,7 +2039,7 @@ export const gameStore = {
       }
 
       const actionResult = gameStore.executeAiAction(action)
-      recordAiStepEvent(gameState.round, playerId, currentPlayer.name, action, actionResult)
+      recordAiStepEvent(getState().round, playerId, currentPlayer.name, action, actionResult)
       if (!actionResult.ok) {
         exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
         continue
@@ -2150,7 +2056,7 @@ export const gameStore = {
   },
 
   runGraphSearchStep: (playerId: string): ActionOutcome => {
-    const state = gameState
+    const state = getState()
     const player = state.players.find((candidate) => candidate.id === playerId)
     const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'graph-search' && candidate.status === 'active')
     if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order) {
@@ -2201,11 +2107,11 @@ export const gameStore = {
       },
     }
 
-    while (!exitReason && gameState.players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
+    while (!exitReason && getState().players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
       loopCount++
-      const currentPlayer = gameState.players.find((p) => p.id === playerId)!
+      const currentPlayer = getState().players.find((p) => p.id === playerId)!
 
-      const { actions, exitReason: searchExit } = runGraphSearchStep(gameState, playerId, aiDeps)
+      const { actions, exitReason: searchExit } = runGraphSearchStep(getState(), playerId, aiDeps)
 
       if (actions.length === 0) {
         exitReason = searchExit ?? '圖搜索無結果'
@@ -2213,18 +2119,18 @@ export const gameStore = {
       }
 
       for (const action of actions) {
-        const cp = gameState.players.find((p) => p.id === playerId)
+        const cp = getState().players.find((p) => p.id === playerId)
         if (!cp || cp.stamina <= 0) {
           exitReason = `體力耗盡（剩餘 ${cp?.stamina ?? 0}）`
           break
         }
-        const validation = validateAiAction(gameState, action)
+        const validation = validateAiAction(getState(), action)
         if (!validation.valid) {
           exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
           break
         }
         const actionResult = gameStore.executeAiAction(action)
-        recordAiStepEvent(gameState.round, playerId, currentPlayer.name, action, actionResult)
+        recordAiStepEvent(getState().round, playerId, currentPlayer.name, action, actionResult)
         if (!actionResult.ok) {
           exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
           break
@@ -2300,15 +2206,15 @@ export const gameStore = {
     if (scheduledCreatureTurn) {
       // 若回合結束時有探索事件，或劇情對話佇列尚有未顯示內容（如勝利對話），
       // 先延後敵人行動，改由對應彈窗流程關閉後執行（flush）。
-      const dialoguePending = (gameState.campaignState?.dialogueQueue?.length ?? 0) > 0
+      const dialoguePending = (getState().campaignState?.dialogueQueue?.length ?? 0) > 0
       if (triggeredEvent || dialoguePending) {
         // ── 探索事件 / 對話已觸發：先延後敵人行動 ─────────────────
         // 這裡不立即 animateCreatureTurn，而是把計算好的敵人行動結果暫存起來。
         // 後續流程：事件彈窗（PendingExplorationEventModal）先出現，玩家選擇後
         // 顯示事件結果彈窗，關閉結果彈窗才執行此暫存的敵人行動（flush）。
         // 如此確保彈窗順序為「事件 → 事件結果 → 敵人行動」而非同時出現。
-        pendingCreatureTurn = scheduledCreatureTurn
-        pendingCreatureTurnBasePlayers = creatureTurnBasePlayers
+        session.pendingCreatureTurn = scheduledCreatureTurn
+        session.pendingCreatureTurnBasePlayers = creatureTurnBasePlayers
       } else {
         // 沒有觸發事件：維持原本流程，立即執行敵人行動。
         animateCreatureTurn(scheduledCreatureTurn)
@@ -2316,7 +2222,7 @@ export const gameStore = {
     }
     // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
     // 觸發探索事件時，敵人行動尚未執行，改由 flushPendingCreatureTurn 結算後保存。
-    if (!triggeredEvent && !gameState.gameOver && !gameState.gameWon) scheduleAutoSave(gameState, null, isChallengeMode, currentScenarioId)
+    if (!triggeredEvent && !getState().gameOver && !getState().gameWon) scheduleAutoSave(getState(), null, session.isChallengeMode, session.currentScenarioId)
   },
 
   startPlayerTurn: (playerId: string) => {
@@ -2337,20 +2243,17 @@ export const gameStore = {
 
   /** 僅供測試使用：將狀態重置回初始狀態。 */
   resetForTest: () => {
-    gameState = initialGameState
-    lastGameSettings = { ...DEFAULT_GAME_SETTINGS }
-    activeCharacterIds = []
-    rewardSettled = false
-    listeners.forEach((listener) => listener())
+    setState(initialGameState)
+    session.lastGameSettings = { ...DEFAULT_GAME_SETTINGS }
+    session.activeCharacterIds = []
+    session.rewardSettled = false
   },
 
   /** 僅供測試使用：直接覆寫目前狀態。 */
   setStateForTest: (nextState: GameState) => {
-    gameState = nextState
+    setState(nextState)
     // 同步還原名册角色 id 陣列（若測試 state 有帶）。
-    activeCharacterIds = nextState.activeCharacterIds
-      ?? (nextState.activeCharacterId !== undefined ? [nextState.activeCharacterId] : [])
-    listeners.forEach((listener) => listener())
+    session.activeCharacterIds = resolveActiveCharacterIds(nextState)
   },
 }
 
