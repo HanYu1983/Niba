@@ -1910,6 +1910,19 @@
   font-size: 20px;
 }
 
+/* 資源點與玩家重疊時：縮小並偏移到 cell 角落，避免 icon 被擠開，同時保留玩家主體與資源點可辨識度。 */
+.resource-point-marker--overlapping {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 13px;
+  height: 13px;
+  border-radius: 4px;
+  font-size: 10px;
+  z-index: 7;
+  background: rgba(15, 23, 42, 0.35);
+}
+
 /* 道具點使用較大的地形 icon，方便辨識與點擊。 */
 .item-point-marker {
   width: 20px;
