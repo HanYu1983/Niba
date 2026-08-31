@@ -31,7 +31,7 @@ import type {
 } from './combat'
 import type { CampaignState } from './campaign'
 import type { AiOrder, AiConstructionPlan } from './ai'
-import type { RunStats } from './runStats'
+import type { RunStats } from '../types'
 
 export type GameOperation =
   | { type: 'idle' }
