@@ -10,7 +10,7 @@ import {
   makeTestCreature,
   makeTestHuman,
   makeTestPlayer,
-} from './testHelpers/aiTestFixtures'
+} from './testHelpers/gameFixtures'
 
 /**
  * 切片 F：Player AI 行動事件化——runAiDefenseStep／runAiSupportStep 的每一步

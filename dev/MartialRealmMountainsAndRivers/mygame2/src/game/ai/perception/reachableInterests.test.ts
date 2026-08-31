@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { ItemPointState, PlayerState } from '../../types'
-import { makeAiTestState, makeTestPlayer, makeTestResourcePoint } from '../../testHelpers/aiTestFixtures'
+import { makeAiTestState, makeTestPlayer, makeTestResourcePoint } from '../../testHelpers/gameFixtures'
 import { collectReachableInterests } from './reachableInterests'
 
 function makeItemPoint(overrides: Partial<ItemPointState> = {}): ItemPointState {

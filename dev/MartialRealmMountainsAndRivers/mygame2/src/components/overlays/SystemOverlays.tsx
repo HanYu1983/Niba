@@ -35,7 +35,9 @@ function SystemOverlays({ gameState, onRestartToMap, gameOverModalDismissed = fa
   const gameEnded = Boolean(gameState.gameOver || gameState.gameWon) && dialogueQueueEmpty
   // 本局結算獲得的武學殘卷（局末回寫後計算，供結算畫面醒目顯示）。
   // 'skipped' 表示此局已領取過（runId 已登記），顯示提示而非 0 卷。
-  const [scrollReward, setScrollReward] = useState<number | 'skipped' | null>(null)
+  const [scrollRewardState, setScrollReward] = useState<number | 'skipped' | null>(null)
+  // 非局末渲染一律視為 null（取代 effect 內同步 setScrollReward(null)，避免級聯渲染）。
+  const scrollReward = gameEnded ? scrollRewardState : null
   // 僅在 GameOverModal 實際顯示時記錄一次通關狀態（避免重複觸發）。
   const recordedRef = useRef(false)
   useEffect(() => {
@@ -60,7 +62,7 @@ function SystemOverlays({ gameState, onRestartToMap, gameOverModalDismissed = fa
         )
         if (settled === null && activeCharacterIds.some(Boolean)) {
           // 已選角色但未結算：此局已領取過（runId 已登記或 session 旗標）。
-          setScrollReward('skipped')
+          queueMicrotask(() => setScrollReward('skipped'))
         } else {
           // 計算各角色本局「新增功法」帶來的卷獎勵，加總供結算畫面顯示。
           const totalReward = activeCharacterIds.reduce((total, id, index) => {
@@ -69,7 +71,7 @@ function SystemOverlays({ gameState, onRestartToMap, gameOverModalDismissed = fa
             const newSkillCount = Math.max(0, afterCount - beforeCounts[index])
             return total + computeScrollReward(gameState.runStats ?? createEmptyRunStats(), Boolean(gameState.gameWon), newSkillCount)
           }, 0)
-          setScrollReward(settled ? totalReward : 0)
+          queueMicrotask(() => setScrollReward(settled ? totalReward : 0))
         }
         const record = computeBattleRecord(gameState)
         trackGameEnd(record.won, {
@@ -87,9 +89,11 @@ function SystemOverlays({ gameState, onRestartToMap, gameOverModalDismissed = fa
         })
       }
     } else {
+      // 非局末：重置記錄旗標（scrollReward 由渲染期間的 gameEnded 派生為 null）。
       recordedRef.current = false
-      setScrollReward(null)
     }
+    // 刻意只依賴 gameEnded / gameWon：結算是一次性副作用（recordedRef 防重），
+    // 不應隨 gameState 其他欄位（runStats / players）變動而重跑。
   }, [gameEnded, gameState.gameWon])
   return (
     <>

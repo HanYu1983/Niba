@@ -13,7 +13,7 @@ import { formatItemBurstResult } from './actionResultFormatters'
 import { createEmptyRunStats } from './runStats'
 import { createCharacter } from './characterRoster'
 
-function makePlayer(overrides: Partial<CreatureState> = {}): CreatureState {
+function makeTestCreature(overrides: Partial<CreatureState> = {}): CreatureState {
   const attributes = { armStrength: 8, constitution: 8, agility: 7, innerEnergy: 5, insight: 7 }
   return {
     id: 'player-1',
@@ -68,7 +68,7 @@ function makeBaseState(): BaseState {
 }
 
 function makeGameState(overrides: Partial<GameState> = {}): GameState {
-  const player = makePlayer()
+  const player = makeTestCreature()
   return {
     map: {
       rows: 40,
@@ -220,8 +220,8 @@ describe('AI 戰略命令與建設計畫', () => {
   })
 
   it('同一 AI 只能有一個 active 命令，完全相同命令會被阻擋', () => {
-    const human = makePlayer()
-    const ai = makePlayer({ id: 'ai-1', name: 'AI 玩家', isAI: true })
+    const human = makeTestCreature()
+    const ai = makeTestCreature({ id: 'ai-1', name: 'AI 玩家', isAI: true })
     gameStore.setStateForTest(makeGameState({ players: [human, ai] }))
 
     const protectOrder = {
@@ -255,8 +255,8 @@ describe('AI 戰略命令與建設計畫', () => {
   })
 
   it('同一 AI 的建設計畫會被新計畫替換', () => {
-    const ai = makePlayer({ id: 'ai-1', name: 'AI 玩家', isAI: true })
-    gameStore.setStateForTest(makeGameState({ players: [makePlayer(), ai] }))
+    const ai = makeTestCreature({ id: 'ai-1', name: 'AI 玩家', isAI: true })
+    gameStore.setStateForTest(makeGameState({ players: [makeTestCreature(), ai] }))
 
     const plan = {
       aiPlayerId: 'ai-1',
@@ -271,9 +271,9 @@ describe('AI 戰略命令與建設計畫', () => {
   })
 
   it('編輯支援命令時可以切換目標玩家', () => {
-    const human = makePlayer()
-    const secondHuman = makePlayer({ id: 'player-2', name: '玩家 2' })
-    const ai = makePlayer({ id: 'ai-1', name: 'AI 玩家', isAI: true })
+    const human = makeTestCreature()
+    const secondHuman = makeTestCreature({ id: 'player-2', name: '玩家 2' })
+    const ai = makeTestCreature({ id: 'ai-1', name: 'AI 玩家', isAI: true })
     gameStore.setStateForTest(makeGameState({ players: [human, secondHuman, ai] }))
 
     const order = {
@@ -292,8 +292,8 @@ describe('AI 戰略命令與建設計畫', () => {
   })
 
   it('建設計畫可以保存建設佇列與優先級', () => {
-    const ai = makePlayer({ id: 'ai-1', name: 'AI 玩家', isAI: true })
-    gameStore.setStateForTest(makeGameState({ players: [makePlayer(), ai] }))
+    const ai = makeTestCreature({ id: 'ai-1', name: 'AI 玩家', isAI: true })
+    gameStore.setStateForTest(makeGameState({ players: [makeTestCreature(), ai] }))
 
     const plan = {
       aiPlayerId: 'ai-1',
@@ -312,7 +312,7 @@ describe('AI 戰略命令與建設計畫', () => {
 
 describe('useItem', () => {
   it('使用療傷藥會恢復生命並消耗道具', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       health: 10,
       inventory: [{ itemId: 'heal-wound-medicine', quantity: 1 }],
     })
@@ -330,7 +330,7 @@ describe('useItem', () => {
   })
 
   it('沒有道具時使用失敗', () => {
-    const player = makePlayer({ inventory: [] })
+    const player = makeTestCreature({ inventory: [] })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
 
     const used = gameStore.useItem('player-1', 'heal-wound-medicine')
@@ -339,7 +339,7 @@ describe('useItem', () => {
   })
 
   it('非目前玩家無法使用道具', () => {
-    const player = makePlayer()
+    const player = makeTestCreature()
     gameStore.setStateForTest(makeGameState({ players: [player], activePlayerId: 'other' }))
 
     const used = gameStore.useItem('player-1', 'heal-wound-medicine')
@@ -348,7 +348,7 @@ describe('useItem', () => {
   })
 
   it('滿血時使用療傷藥失敗且不消耗道具', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'heal-wound-medicine', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
@@ -362,7 +362,7 @@ describe('useItem', () => {
   })
 
   it('使用聚氣丹恢復內力', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       innerPower: 3,
       inventory: [{ itemId: 'gather-qi-pill', quantity: 1 }],
     })
@@ -377,7 +377,7 @@ describe('useItem', () => {
   })
 
   it('使用回光玉掛載回光 Buff 並消耗道具', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'return-light-jade', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
@@ -393,7 +393,7 @@ describe('useItem', () => {
   })
 
   it('同一回合不能再次使用其他增益類道具', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [
         { itemId: 'return-light-jade', quantity: 2 },
       ],
@@ -411,7 +411,7 @@ describe('useItem', () => {
   })
 
   it('每種道具類型一回合一次：探地符再次使用被拒絕', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       position: { row: 5, column: 5 },
       inventory: [{ itemId: 'scout-talisman', quantity: 2 }],
     })
@@ -430,7 +430,7 @@ describe('useItem', () => {
 
   it('回營符一回合一次', () => {
     const base = makeBaseState()
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'recall-base-talisman', quantity: 2 }],
     })
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
@@ -446,7 +446,7 @@ describe('useItem', () => {
 
 describe('新道具系統', () => {
   it('屬性提升道具永久 +1 屬性並消耗道具', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'great-strength-pill', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
@@ -459,7 +459,7 @@ describe('新道具系統', () => {
   })
 
   it('續命丹提升根骨並反映到 maxHealth（衍生數值同步）', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'extend-life-pill', quantity: 1 }],
     })
     const maxHealthBefore = player.maxHealth
@@ -474,7 +474,7 @@ describe('新道具系統', () => {
   })
 
   it('絆馬索在當前格放置 snare 陷阱並消耗道具', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       position: { row: 5, column: 5 },
       inventory: [{ itemId: 'hobble-rope', quantity: 1 }],
     })
@@ -489,7 +489,7 @@ describe('新道具系統', () => {
   })
 
   it('定身索放置 immobilize 陷阱', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'immobilize-rope', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
@@ -499,7 +499,7 @@ describe('新道具系統', () => {
   })
 
   it('同一格不能重複放置陷阱', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'hobble-rope', quantity: 2 }],
     })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
@@ -509,7 +509,7 @@ describe('新道具系統', () => {
   })
 
   it('探地符揭示半徑 6 格並寫入 exploredCellIds', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       position: { row: 5, column: 5 },
       inventory: [{ itemId: 'scout-talisman', quantity: 1 }],
     })
@@ -525,17 +525,17 @@ describe('新道具系統', () => {
   })
 
   it('探地符暫時揭示範圍內怪物位置', () => {
-    const inRangeCreature = makePlayer({
+    const inRangeCreature = makeTestCreature({
       id: 'creature-in',
       position: { row: 8, column: 5 },
       health: 50,
     })
-    const outOfRangeCreature = makePlayer({
+    const outOfRangeCreature = makeTestCreature({
       id: 'creature-out',
       position: { row: 20, column: 20 },
       health: 50,
     })
-    const player = makePlayer({
+    const player = makeTestCreature({
       position: { row: 5, column: 5 },
       inventory: [{ itemId: 'scout-talisman', quantity: 1 }],
     })
@@ -552,12 +552,12 @@ describe('新道具系統', () => {
   })
 
   it('鳴鑼符暫時揭示全圖怪物位置', () => {
-    const creature = makePlayer({
+    const creature = makeTestCreature({
       id: 'creature-1',
       position: { row: 10, column: 10 },
       health: 50,
     })
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'warn-gong-talisman', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
@@ -569,7 +569,7 @@ describe('新道具系統', () => {
   })
 
   it('回營符撤退到最近據點周遭一格（不站上據點格）', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       position: { row: 20, column: 20 },
       inventory: [{ itemId: 'recall-base-talisman', quantity: 1 }],
     })
@@ -584,7 +584,7 @@ describe('新道具系統', () => {
   })
 
   it('無據點時回營符使用失敗', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'recall-base-talisman', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [] }))
@@ -593,7 +593,7 @@ describe('新道具系統', () => {
   })
 
   it('元素爆發道具進入選格模式', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'fire-thunder-talisman', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
@@ -603,14 +603,14 @@ describe('新道具系統', () => {
   })
 
   it('元素爆發對目標造成傷害並消耗道具', () => {
-    const creature = makePlayer({
+    const creature = makeTestCreature({
       id: 'creature-1',
       position: { row: 5, column: 6 },
       health: 50,
       maxHealth: 50,
       schoolId: 'swift-wind',
     })
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'gold-glint-talisman', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({
@@ -646,7 +646,7 @@ describe('新道具系統', () => {
       cooldownRounds: 0,
       spawnLevel: 1,
     }
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'fire-thunder-talisman', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({
@@ -663,14 +663,14 @@ describe('新道具系統', () => {
   })
 
   it('元素爆發使怪物血量歸零時移除怪物（統一死亡流程）', () => {
-    const creature = makePlayer({
+    const creature = makeTestCreature({
       id: 'creature-1',
       position: { row: 5, column: 6 },
       health: 18,
       maxHealth: 18,
       schoolId: 'swift-wind',
     })
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'gold-glint-talisman', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({
@@ -688,7 +688,7 @@ describe('新道具系統', () => {
   })
 
   it('元素爆發擊殺怪物時獲得經驗值（與一般攻擊一致）', () => {
-    const creature = makePlayer({
+    const creature = makeTestCreature({
       id: 'creature-1',
       position: { row: 5, column: 6 },
       health: 18,
@@ -696,7 +696,7 @@ describe('新道具系統', () => {
       level: 2,
       schoolId: 'swift-wind',
     })
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'gold-glint-talisman', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({
@@ -744,7 +744,7 @@ describe('新道具系統', () => {
       cooldownRounds: 0,
       spawnLevel: 1,
     }
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'fire-thunder-talisman', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({
@@ -762,14 +762,14 @@ describe('新道具系統', () => {
   })
 
   it('元素爆發不能攻擊玩家周遭一格以外的目標', () => {
-    const creature = makePlayer({
+    const creature = makeTestCreature({
       id: 'creature-1',
       position: { row: 8, column: 8 },
       health: 50,
       maxHealth: 50,
       schoolId: 'swift-wind',
     })
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'gold-glint-talisman', quantity: 1 }],
     })
     gameStore.setStateForTest(makeGameState({
@@ -797,7 +797,7 @@ describe('商店買賣', () => {
   }
 
   it('購買道具扣除金錢並加入背包', () => {
-    const player = makePlayer({ money: 100 })
+    const player = makeTestCreature({ money: 100 })
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [makeShopBase()] }))
 
     expect(gameStore.buyItem('player-1', 'heal-wound-medicine', 1).ok).toBe(true)
@@ -807,14 +807,14 @@ describe('商店買賣', () => {
   })
 
   it('金錢不足時無法購買', () => {
-    const player = makePlayer({ money: 5 })
+    const player = makeTestCreature({ money: 5 })
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [makeShopBase()] }))
 
     expect(gameStore.buyItem('player-1', 'heal-wound-medicine', 1).ok).toBe(false)
   })
 
   it('賣出道具獲得金錢並移除道具', () => {
-    const player = makePlayer({ money: 0, inventory: [{ itemId: 'heal-wound-medicine', quantity: 2 }] })
+    const player = makeTestCreature({ money: 0, inventory: [{ itemId: 'heal-wound-medicine', quantity: 2 }] })
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [makeShopBase()] }))
 
     expect(gameStore.sellItem('player-1', 'heal-wound-medicine', 1).ok).toBe(true)
@@ -824,7 +824,7 @@ describe('商店買賣', () => {
   })
 
   it('賣出裝備獲得金錢並移除裝備', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       money: 0,
       equipmentInventory: [
         { instanceId: 'sword-1', equipmentId: 'iron-sword', durability: 20, maxDurability: 20 },
@@ -839,7 +839,7 @@ describe('商店買賣', () => {
   })
 
   it('已裝備的裝備不可賣出', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       money: 0,
       equipmentInventory: [
         { instanceId: 'sword-1', equipmentId: 'iron-sword', durability: 20, maxDurability: 20 },
@@ -852,7 +852,7 @@ describe('商店買賣', () => {
   })
 
   it('購買裝備扣除金錢並加入裝備清單', () => {
-    const player = makePlayer({ money: 200 })
+    const player = makeTestCreature({ money: 200 })
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [makeShopBase()] }))
 
     expect(gameStore.buyEquipment('player-1', 'iron-sword').ok).toBe(true)
@@ -862,14 +862,14 @@ describe('商店買賣', () => {
   })
 
   it('金錢不足時無法購買裝備', () => {
-    const player = makePlayer({ money: 10 })
+    const player = makeTestCreature({ money: 10 })
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [makeShopBase()] }))
 
     expect(gameStore.buyEquipment('player-1', 'iron-sword').ok).toBe(false)
   })
 
   it('商店等級不足時無法購買高階商品', () => {
-    const player = makePlayer({ money: 500 })
+    const player = makeTestCreature({ money: 500 })
     // 商店等級 1，聚靈杖需要 Lv.2
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [makeShopBase()] }))
 
@@ -878,7 +878,7 @@ describe('商店買賣', () => {
   })
 
   it('商店升級後可購買高階商品', () => {
-    const player = makePlayer({ money: 500 })
+    const player = makeTestCreature({ money: 500 })
     const base = makeShopBase()
     base.buildings = base.buildings.map((building) =>
       building.type === 'equipment-shop' ? { ...building, level: 2 } : building,
@@ -891,7 +891,7 @@ describe('商店買賣', () => {
 
 describe('useInfirmary', () => {
   it('相鄰且擁有醫館時恢復少量氣血與內力', () => {
-    const player = makePlayer({ health: 10, innerPower: 3 })
+    const player = makeTestCreature({ health: 10, innerPower: 3 })
     const base = makeBaseState()
     base.buildings.push({
       id: 'building-1-infirmary',
@@ -912,7 +912,7 @@ describe('useInfirmary', () => {
   })
 
   it('醫療室等級越高，回復量的隨機範圍越高', () => {
-    const player = makePlayer({ health: 1, innerPower: 1 })
+    const player = makeTestCreature({ health: 1, innerPower: 1 })
     const base = makeBaseState()
     base.buildings.push({
       id: 'building-1-infirmary',
@@ -933,7 +933,7 @@ describe('useInfirmary', () => {
   })
 
   it('沒有醫館、距離不足或已滿時不能就醫', () => {
-    const player = makePlayer({ health: 10, innerPower: 3 })
+    const player = makeTestCreature({ health: 10, innerPower: 3 })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
     expect(gameStore.useInfirmary('player-1', 'base-1').ok).toBe(false)
 
@@ -946,7 +946,7 @@ describe('useInfirmary', () => {
       constructionCost: 50,
     })
     gameStore.setStateForTest(makeGameState({
-      players: [makePlayer({ position: { row: 1, column: 1 }, health: 10, innerPower: 3 })],
+      players: [makeTestCreature({ position: { row: 1, column: 1 }, health: 10, innerPower: 3 })],
       bases: [base],
     }))
     expect(gameStore.useInfirmary('player-1', 'base-1').ok).toBe(false)
@@ -956,7 +956,7 @@ describe('useInfirmary', () => {
   })
 
   it('體力不足時不能就醫', () => {
-    const player = makePlayer({ health: 10, innerPower: 3, stamina: 1 })
+    const player = makeTestCreature({ health: 10, innerPower: 3, stamina: 1 })
     const base = makeBaseState()
     base.buildings.push({
       id: 'building-1-infirmary',
@@ -991,7 +991,7 @@ describe('repair preview', () => {
   }
 
   it('預覽修理會計算損耗耐久與成本', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       money: 10,
       equipmentInventory: [
         { instanceId: 'sword-1', equipmentId: 'iron-sword', durability: 18, maxDurability: 20 },
@@ -1023,7 +1023,7 @@ describe('repair preview', () => {
   })
 
   it('工坊等級不足時無法修理高級裝備', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       money: 100,
       equipmentInventory: [
         { instanceId: 'sword-1', equipmentId: 'iron-sword', durability: 18, maxDurability: 20 },
@@ -1051,7 +1051,7 @@ describe('repair preview', () => {
   })
 
   it('工坊升級後可修理高級裝備', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       money: 100,
       equipmentInventory: [
         { instanceId: 'robe-1', equipmentId: 'cloth-robe', durability: 10, maxDurability: 16 },
@@ -1070,7 +1070,7 @@ describe('repair preview', () => {
   })
 
   it('修理確認時消耗體力且不收取金錢', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       stamina: 7,
       equipmentInventory: [
         { instanceId: 'sword-1', equipmentId: 'iron-sword', durability: 18, maxDurability: 20 },
@@ -1095,7 +1095,7 @@ describe('repair preview', () => {
   })
 
   it('修理確認時玩家離開據點會失敗且清除預覽', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       money: 10,
       equipmentInventory: [
         { instanceId: 'sword-1', equipmentId: 'iron-sword', durability: 18, maxDurability: 20 },
@@ -1121,8 +1121,8 @@ describe('repair preview', () => {
 
 describe('combat preview boundaries', () => {
   it('攻擊預覽建立後目標消失時，執行會失敗並清除預覽', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
-    const creature = makePlayer({
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
+    const creature = makeTestCreature({
       id: 'creature-1',
       name: '測試生物',
       position: { row: 5, column: 6 },
@@ -1145,7 +1145,7 @@ describe('combat preview boundaries', () => {
   })
 
   it('外功預覽建立後內力不足時，執行會失敗並清除預覽', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       position: { row: 5, column: 5 },
       equippedExternalSkillIds: ['sky-breaking-palm'],
       innerPower: 10,
@@ -1178,7 +1178,7 @@ describe('combat preview boundaries', () => {
 
 describe('equipment', () => {
   it('裝備武器會增加臂力並替換相關衍生上限', () => {
-    const player = makePlayer({ health: 20, stamina: 6, innerPower: 10 })
+    const player = makeTestCreature({ health: 20, stamina: 6, innerPower: 10 })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
 
     const equipped = gameStore.equipEquipment('player-1', 'sword-1')
@@ -1191,7 +1191,7 @@ describe('equipment', () => {
   })
 
   it('裝備防具會提高根骨與身法上限', () => {
-    const player = makePlayer({ health: 24, stamina: 7 })
+    const player = makeTestCreature({ health: 24, stamina: 7 })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
 
     gameStore.equipEquipment('player-1', 'robe-1')
@@ -1205,7 +1205,7 @@ describe('equipment', () => {
   })
 
   it('卸下裝備會還原有效屬性', () => {
-    const player = makePlayer()
+    const player = makeTestCreature()
     gameStore.setStateForTest(makeGameState({ players: [player] }))
     gameStore.equipEquipment('player-1', 'sword-1')
 
@@ -1218,7 +1218,7 @@ describe('equipment', () => {
   })
 
   it('死亡玩家不能變更裝備', () => {
-    const player = makePlayer({ health: 0 })
+    const player = makeTestCreature({ health: 0 })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
 
     expect(gameStore.equipEquipment('player-1', 'sword-1').ok).toBe(false)
@@ -1228,8 +1228,8 @@ describe('equipment', () => {
 
 describe('executeAttack', () => {
   it('攻擊必定命中並扣除預期傷害', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
-    const creature = makePlayer({
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
+    const creature = makeTestCreature({
       id: 'creature-1',
       name: '測試生物',
       position: { row: 5, column: 6 },
@@ -1251,13 +1251,13 @@ describe('executeAttack', () => {
   })
 
   it('普通攻擊也會觸發嗜血回血', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       position: { row: 5, column: 5 },
       health: 30,
       maxHealth: 40,
       buffs: [{ id: 'b1', definitionId: 'bloodthirst', sourceId: 'test', remainingRounds: null }],
     })
-    const creature = makePlayer({
+    const creature = makeTestCreature({
       id: 'creature-1',
       name: '測試生物',
       position: { row: 5, column: 6 },
@@ -1277,7 +1277,7 @@ describe('executeAttack', () => {
   })
 
   it('普通攻擊可以攻擊相鄰巢穴', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
     const nest = {
       id: 'nest-1',
       name: '測試巢穴',
@@ -1302,7 +1302,7 @@ describe('executeAttack', () => {
   })
 
   it('巢穴被普通攻擊摧毀時從地圖移除並授予尚未學會的江湖功法', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       position: { row: 5, column: 5 },
       innerSkillIds: ['tuna-gong'],
     })
@@ -1329,7 +1329,7 @@ describe('executeAttack', () => {
   })
 
   it('外功可以攻擊相鄰巢穴並消耗內力', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       position: { row: 5, column: 5 },
       equippedExternalSkillIds: ['sky-breaking-palm'],
     })
@@ -1358,7 +1358,7 @@ describe('executeAttack', () => {
   })
 
   it('殘內力玩家用外功擊殺生物升級後不再回滿內力', () => {
-    const base = makePlayer()
+    const base = makeTestCreature()
     const required = getExperienceRequired(1)
     const player = {
       ...base,
@@ -1367,7 +1367,7 @@ describe('executeAttack', () => {
       experience: required - 10, // 擊殺後剛好升級
       innerPower: 3, // 殘內力
     }
-    const creature = makePlayer({
+    const creature = makeTestCreature({
       id: 'creature-1',
       name: '測試生物',
       position: { row: 5, column: 6 },
@@ -1389,14 +1389,14 @@ describe('executeAttack', () => {
   })
 
   it('未升級時外功仍會正常扣除內力消耗', () => {
-    const base = makePlayer()
+    const base = makeTestCreature()
     const player = {
       ...base,
       position: { row: 5, column: 5 },
       equippedExternalSkillIds: ['sky-breaking-palm'],
       innerPower: 10,
     }
-    const creature = makePlayer({
+    const creature = makeTestCreature({
       id: 'creature-1',
       name: '測試生物',
       position: { row: 5, column: 6 },
@@ -1416,8 +1416,8 @@ describe('executeAttack', () => {
   })
 
   it('普通攻擊會消耗武器 1 點與配件 0.5 點耐久', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
-    const creature = makePlayer({
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
+    const creature = makeTestCreature({
       id: 'creature-1',
       name: '測試生物',
       position: { row: 5, column: 6 },
@@ -1437,8 +1437,8 @@ describe('executeAttack', () => {
   })
 
   it('未擊殺生物時仍獲得少量經驗值', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 }, experience: 0 })
-    const creature = makePlayer({
+    const player = makeTestCreature({ position: { row: 5, column: 5 }, experience: 0 })
+    const creature = makeTestCreature({
       id: 'creature-1',
       name: '測試生物',
       position: { row: 5, column: 6 },
@@ -1462,8 +1462,8 @@ describe('executeAttack', () => {
       .mockReturnValueOnce(0.7)
       .mockReturnValueOnce(0.1)
       .mockReturnValueOnce(0.99)
-    const player = makePlayer({ position: { row: 5, column: 5 } })
-    const creature = makePlayer({
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
+    const creature = makeTestCreature({
       id: 'creature-1',
       name: '測試生物',
       position: { row: 5, column: 6 },
@@ -1483,7 +1483,7 @@ describe('executeAttack', () => {
   })
 
   it('殘血玩家擊殺生物升級後不回復氣血與內力', () => {
-    const base = makePlayer()
+    const base = makeTestCreature()
     const required = getExperienceRequired(1)
     const player = {
       ...base,
@@ -1491,7 +1491,7 @@ describe('executeAttack', () => {
       health: 5,
       innerPower: 3,
     }
-    const creature = makePlayer({
+    const creature = makeTestCreature({
       id: 'creature-1',
       name: '測試生物',
       position: { row: 5, column: 6 },
@@ -1520,7 +1520,7 @@ describe('防衛營', () => {
       const base = makeBaseState()
       base.buildingMaterials = 50
       base.health = 300
-      gameStore.setStateForTest(makeGameState({ bases: [base], players: [makePlayer({ prestige: 240, governanceRank: 3, unlockedPolicyIds: ['basic', 'economic', 'military'] })] }))
+      gameStore.setStateForTest(makeGameState({ bases: [base], players: [makeTestCreature({ prestige: 240, governanceRank: 3, unlockedPolicyIds: ['basic', 'economic', 'military'] })] }))
 
       expect(getBaseMaxHealth(base)).toBe(450)
       expect(gameStore.constructBuilding('base-1', 'building-type-wall', 'player-1').ok).toBe(true)
@@ -1552,7 +1552,7 @@ describe('防衛營', () => {
       level: 5,
       healthBonus: 30,
     })
-    const player = makePlayer({ health: 10, position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ health: 10, position: { row: 5, column: 5 } })
     const state = makeGameState({ players: [player], bases: [base] })
 
     expect(getPlayerMaxHealth(state, player)).toBe(24)
@@ -1570,14 +1570,14 @@ describe('防衛營', () => {
       level: 5,
       healthBonus: 30,
     })
-    const player = makePlayer({ position: { row: 20, column: 20 } })
+    const player = makeTestCreature({ position: { row: 20, column: 20 } })
     expect(getPlayerMaxHealth(makeGameState({ players: [player], bases: [base] }), player)).toBe(24)
   })
 })
 
 describe('executeMission', () => {
   it('玩家在告示牌旁且未結束回合時可完成任務', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
     const base = makeBaseState() // base at (5,6), adjacent to player
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
 
@@ -1602,7 +1602,7 @@ describe('executeMission', () => {
   })
 
   it('告示牌等級越高，任務獎勵越多', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
     const base = {
       ...makeBaseState(),
       buildings: [{ ...makeBaseState().buildings[0], level: 3 }],
@@ -1618,7 +1618,7 @@ describe('executeMission', () => {
   })
 
   it('玩家不在告示牌旁時任務失敗', () => {
-    const player = makePlayer({ position: { row: 10, column: 10 } })
+    const player = makeTestCreature({ position: { row: 10, column: 10 } })
     const base = makeBaseState() // base at (5,6), far from player
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
 
@@ -1629,7 +1629,7 @@ describe('executeMission', () => {
   })
 
   it('據點沒有告示牌時任務失敗', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
     const base = { ...makeBaseState(), buildings: [] }
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
 
@@ -1639,7 +1639,7 @@ describe('executeMission', () => {
   })
 
   it('體力不足時任務失敗且不扣資源', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 }, stamina: 1 })
+    const player = makeTestCreature({ position: { row: 5, column: 5 }, stamina: 1 })
     const base = makeBaseState()
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
 
@@ -1656,7 +1656,7 @@ describe('executeMission', () => {
 
 describe('collectResourcePoint', () => {
   it('玩家在資源點旁且本回合未採集過時可採集', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
     const base = makeBaseState()
     const resourcePoint = {
       id: 'resource-point-1',
@@ -1693,7 +1693,7 @@ describe('collectResourcePoint', () => {
   })
 
   it('同一回合可再次採集資源點', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
     const base = makeBaseState()
     const resourcePoint = {
       id: 'resource-point-1',
@@ -1715,7 +1715,7 @@ describe('collectResourcePoint', () => {
   })
 
   it('建料倉庫提高建料上限與主動採集量', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
     const base = makeBaseState()
     base.buildings.push({
       id: 'building-1-warehouse',
@@ -1747,7 +1747,7 @@ describe('collectResourcePoint', () => {
   })
 
   it('民生政策提高主動採集量', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
     const base: BaseState = { ...makeBaseState(), activePolicyId: 'civilian' }
     const resourcePoint = {
       id: 'resource-point-1',
@@ -1769,7 +1769,7 @@ describe('collectResourcePoint', () => {
   })
 
   it('建料倉庫上限允許主動採集超過基礎上限', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
     const base = makeBaseState()
     base.buildingMaterials = 98
     base.buildings.push({
@@ -1802,7 +1802,7 @@ describe('collectResourcePoint', () => {
   })
 
   it('據點建料已滿時採集失敗且不消耗玩家資源', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 }, stamina: 7, prestige: 12 })
+    const player = makeTestCreature({ position: { row: 5, column: 5 }, stamina: 7, prestige: 12 })
     const base = makeBaseState()
     base.buildingMaterials = base.maxBuildingMaterials
     const resourcePoint = {
@@ -1830,7 +1830,7 @@ describe('collectResourcePoint', () => {
 
 describe('回合切換', () => {
   it('回合完成時據點獲得所屬資源點收入總和的 25%', () => {
-    const player = makePlayer({ stamina: 0, health: 10 })
+    const player = makeTestCreature({ stamina: 0, health: 10 })
     const base = makeBaseState()
     const resourcePoints = [
       {
@@ -1850,7 +1850,7 @@ describe('回合切換', () => {
   })
 
   it('民生政策提高回合被動建料收入', () => {
-    const player = makePlayer({ stamina: 0, health: 10 })
+    const player = makeTestCreature({ stamina: 0, health: 10 })
     const base: BaseState = { ...makeBaseState(), activePolicyId: 'civilian' }
     const resourcePoints = [
       {
@@ -1867,7 +1867,7 @@ describe('回合切換', () => {
   })
 
   it('建料倉庫上限允許被動收入超過基礎上限', () => {
-    const player = makePlayer({ stamina: 0, health: 10 })
+    const player = makeTestCreature({ stamina: 0, health: 10 })
     const base = makeBaseState()
     base.buildingMaterials = 99
     base.buildings.push({
@@ -1893,7 +1893,7 @@ describe('回合切換', () => {
   })
 
   it('單一玩家結束回合後，回合數增加', () => {
-    const player = makePlayer({ stamina: 0, health: 10 })
+    const player = makeTestCreature({ stamina: 0, health: 10 })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
 
     gameStore.endPlayerTurn('player-1')
@@ -1905,8 +1905,8 @@ describe('回合切換', () => {
 
   it('某玩家死亡時，回合切換跳過死亡玩家，避免 activePlayerId 指向死亡玩家', () => {
     // 玩家 2 開場（activePlayerId = player-2），玩家 1 存活。
-    const firstPlayer = makePlayer({ id: 'player-1', stamina: 0, health: 10 })
-    const deadSecondPlayer = makePlayer({ id: 'player-2', name: '玩家 2', stamina: 0, health: 0 })
+    const firstPlayer = makeTestCreature({ id: 'player-1', stamina: 0, health: 10 })
+    const deadSecondPlayer = makeTestCreature({ id: 'player-2', name: '玩家 2', stamina: 0, health: 0 })
     gameStore.setStateForTest(
       makeGameState({ players: [firstPlayer, deadSecondPlayer], activePlayerId: 'player-1' }),
     )
@@ -1921,9 +1921,9 @@ describe('回合切換', () => {
   })
 
   it('中間玩家死亡時，回合切換跳到下一位存活玩家', () => {
-    const firstPlayer = makePlayer({ id: 'player-1', stamina: 0, health: 10 })
-    const deadSecondPlayer = makePlayer({ id: 'player-2', name: '玩家 2', stamina: 0, health: 0 })
-    const thirdPlayer = makePlayer({ id: 'player-3', name: '玩家 3', stamina: 0, health: 10 })
+    const firstPlayer = makeTestCreature({ id: 'player-1', stamina: 0, health: 10 })
+    const deadSecondPlayer = makeTestCreature({ id: 'player-2', name: '玩家 2', stamina: 0, health: 0 })
+    const thirdPlayer = makeTestCreature({ id: 'player-3', name: '玩家 3', stamina: 0, health: 10 })
     gameStore.setStateForTest(
       makeGameState({ players: [firstPlayer, deadSecondPlayer, thirdPlayer], activePlayerId: 'player-3' }),
     )
@@ -1935,7 +1935,7 @@ describe('回合切換', () => {
   })
 
   it('回合完成後清空已使用的道具類型列表', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       inventory: [{ itemId: 'scout-talisman', quantity: 2 }],
       itemEffectsUsedThisTurn: ['scout'],
     })
@@ -1949,7 +1949,7 @@ describe('回合切換', () => {
   })
 
   it('非目前玩家無法結束回合', () => {
-    const player = makePlayer()
+    const player = makeTestCreature()
     gameStore.setStateForTest(makeGameState({ players: [player], activePlayerId: 'other' }))
 
     gameStore.endPlayerTurn('player-1')
@@ -1960,7 +1960,7 @@ describe('回合切換', () => {
 
 describe('upgradeBuilding', () => {
   it('官階不足時無法升級建築', () => {
-    const player = makePlayer({ prestige: 0 })
+    const player = makeTestCreature({ prestige: 0 })
     const base = makeBaseState()
     base.buildingMaterials = 100
     base.buildings.push({
@@ -1978,7 +1978,7 @@ describe('upgradeBuilding', () => {
   })
 
   it('村寨掌事可升級建築並獲得聲望', () => {
-    const player = makePlayer({ prestige: 80, governanceRank: 2, unlockedPolicyIds: ['basic', 'economic'] })
+    const player = makeTestCreature({ prestige: 80, governanceRank: 2, unlockedPolicyIds: ['basic', 'economic'] })
     const base = makeBaseState()
     base.buildingMaterials = 100
     base.buildings.push({
@@ -2001,7 +2001,7 @@ describe('upgradeBuilding', () => {
 
 describe('貿易市場全局靈氣', () => {
   it('建成貿易市場賦予一項全局靈氣 buff', () => {
-    const player = makePlayer()
+    const player = makeTestCreature()
     const base = makeBaseState()
     base.buildingMaterials = 100
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
@@ -2017,7 +2017,7 @@ describe('貿易市場全局靈氣', () => {
   })
 
   it('升級貿易市場會增強已有靈氣的 magnitude', () => {
-    const player = makePlayer({ prestige: 80, governanceRank: 2, unlockedPolicyIds: ['basic', 'economic'] })
+    const player = makeTestCreature({ prestige: 80, governanceRank: 2, unlockedPolicyIds: ['basic', 'economic'] })
     const base = makeBaseState()
     base.buildingMaterials = 200
     base.buildings.push({
@@ -2045,7 +2045,7 @@ describe('貿易市場全局靈氣', () => {
 
 describe('建設聲望', () => {
   it('成功建造防禦設施時獲得聲望', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 }, stamina: 10, maxStamina: 10 })
+    const player = makeTestCreature({ position: { row: 5, column: 5 }, stamina: 10, maxStamina: 10 })
     const base = makeBaseState()
     base.buildingMaterials = 100
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
@@ -2058,7 +2058,7 @@ describe('建設聲望', () => {
 
 describe('switchBasePolicy', () => {
   it('未解鎖政策時無法切換', () => {
-    const player = makePlayer({ prestige: 0, unlockedPolicyIds: ['basic'] })
+    const player = makeTestCreature({ prestige: 0, unlockedPolicyIds: ['basic'] })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
 
     expect(gameStore.switchBasePolicy('player-1', 'base-1', 'economic').ok).toBe(false)
@@ -2066,7 +2066,7 @@ describe('switchBasePolicy', () => {
   })
 
   it('已解鎖政策時可切換（不增加聲望）', () => {
-    const player = makePlayer({ prestige: 80, governanceRank: 2, unlockedPolicyIds: ['basic', 'civilian'] })
+    const player = makeTestCreature({ prestige: 80, governanceRank: 2, unlockedPolicyIds: ['basic', 'civilian'] })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
 
     expect(gameStore.switchBasePolicy('player-1', 'base-1', 'civilian').ok).toBe(true)
@@ -2076,7 +2076,7 @@ describe('switchBasePolicy', () => {
   })
 
   it('切換政策後進入冷卻，需等待 3 回合才能再次切換', () => {
-    const player = makePlayer({ prestige: 240, governanceRank: 3, unlockedPolicyIds: ['basic', 'civilian', 'military'] })
+    const player = makeTestCreature({ prestige: 240, governanceRank: 3, unlockedPolicyIds: ['basic', 'civilian', 'military'] })
     gameStore.setStateForTest(makeGameState({ players: [player], round: 5 }))
 
     expect(gameStore.switchBasePolicy('player-1', 'base-1', 'civilian').ok).toBe(true)
@@ -2095,7 +2095,7 @@ describe('switchBasePolicy', () => {
   })
 
   it('遠端切換政策同樣受到冷卻限制', () => {
-    const player = makePlayer({ prestige: 240, governanceRank: 3, unlockedPolicyIds: ['basic', 'civilian', 'military'] })
+    const player = makeTestCreature({ prestige: 240, governanceRank: 3, unlockedPolicyIds: ['basic', 'civilian', 'military'] })
     const base1 = makeBaseState()
     const base2: BaseState = {
       ...makeBaseState(),
@@ -2115,7 +2115,7 @@ describe('switchBasePolicy', () => {
 
 describe('transportPlayer', () => {
   it('從有驛站的據點傳送到其他據點', () => {
-    const player = makePlayer({ money: 100, position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ money: 100, position: { row: 5, column: 5 } })
     const base1 = {
       ...makeBaseState(),
       id: 'base-1',
@@ -2146,7 +2146,7 @@ describe('transportPlayer', () => {
   })
 
   it('金錢不足時無法傳送', () => {
-    const player = makePlayer({ money: 3, position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ money: 3, position: { row: 5, column: 5 } })
     const base1 = {
       ...makeBaseState(),
       id: 'base-1',
@@ -2170,7 +2170,7 @@ describe('transportPlayer', () => {
 
 describe('公共倉庫', () => {
   it('從有交易所的據點存入與取出物品', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       position: { row: 5, column: 5 },
       inventory: [{ itemId: 'heal-wound-medicine', quantity: 3 }],
     })
@@ -2200,7 +2200,7 @@ describe('公共倉庫', () => {
   })
 
   it('持有數量不足時無法存入', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       position: { row: 5, column: 5 },
       inventory: [{ itemId: 'heal-wound-medicine', quantity: 1 }],
     })
@@ -2214,7 +2214,7 @@ describe('公共倉庫', () => {
   })
 
   it('從有交易所的據點存入與取出裝備', () => {
-    const player = makePlayer({
+    const player = makeTestCreature({
       position: { row: 5, column: 5 },
       equipmentInventory: [{
         instanceId: 'eq-1',
@@ -2242,7 +2242,7 @@ describe('公共倉庫', () => {
   })
 
   it('未持有裝備時無法存入裝備', () => {
-    const player = makePlayer({ position: { row: 5, column: 5 } })
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
     const base = {
       ...makeBaseState(),
       buildings: [{ id: 'base-1-ex', type: 'exchange', name: '交易所', description: '', constructionCost: 30 }],
@@ -2268,7 +2268,7 @@ describe('總管府治理', () => {
   }
 
   it('可遠端切換其他據點政策', () => {
-    const player = makePlayer({ prestige: 80, governanceRank: 2, unlockedPolicyIds: ['basic', 'civilian'] })
+    const player = makeTestCreature({ prestige: 80, governanceRank: 2, unlockedPolicyIds: ['basic', 'civilian'] })
     const base1 = {
       ...makeBaseState(),
       buildings: [
@@ -2283,7 +2283,7 @@ describe('總管府治理', () => {
   })
 
   it('未解鎖政策時無法遠端切換', () => {
-    const player = makePlayer({ prestige: 80, governanceRank: 2, unlockedPolicyIds: ['basic', 'civilian'] })
+    const player = makeTestCreature({ prestige: 80, governanceRank: 2, unlockedPolicyIds: ['basic', 'civilian'] })
     const base1 = {
       ...makeBaseState(),
       buildings: [
@@ -2297,7 +2297,7 @@ describe('總管府治理', () => {
   })
 
   it('可調度建料並套用損耗', () => {
-    const player = makePlayer({ prestige: 80, governanceRank: 2 })
+    const player = makeTestCreature({ prestige: 80, governanceRank: 2 })
     const base1 = {
       ...makeBaseState(),
       buildingMaterials: 100,

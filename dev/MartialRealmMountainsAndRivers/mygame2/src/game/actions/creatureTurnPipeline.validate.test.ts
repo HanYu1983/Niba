@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { CreatureState } from '../types'
-import { makeTestCreature } from '../testHelpers/aiTestFixtures'
+import { makeTestCreature } from '../testHelpers/gameFixtures'
 import { validateCreatureTurnEligibility } from './creatureTurnPipeline'
 
 describe('validateCreatureTurnEligibility（切片 I：§9.2 creature kind 回合資格）', () => {

@@ -29,6 +29,12 @@ export type {
 }
 export { createEmptyScenario }
 
+// 劇本編譯器與驗證器已下沉至 game/scenario/（解除 game → editor 反向依賴），
+// 此處 re-export 供編輯器既有引用相容。
+export { buildGameStateFromScenario } from '../game/scenario/scenarioCompiler'
+export { validateScenario } from '../game/scenario/scenarioValidator'
+export type { ScenarioValidationIssue, ScenarioValidationResult } from '../game/scenario/scenarioValidator'
+
 /** 自定義探索事件的選項。 */
 export type CustomEventChoice = {
   id: string

@@ -12,16 +12,17 @@ import type {
   DefenseStructureState,
   ExplorationEventState,
   CampaignState,
-} from '../../game/types'
-import { buildingCatalog } from '../../game/catalogs/buildingCatalog'
-import { defenseStructureCatalog } from '../../game/catalogs/defenseStructureCatalog'
-import { getCreatureInnerSkillId, getCreatureAttributes } from '../../game/rules/creatureBehaviorRules'
-import { getPlayerVisibleCellIds } from '../../game/rules/visibilityRules'
-import { createCharacterState } from '../../game/characterFactory'
-import { createEmptyRunStats } from '../../game/runStats'
-import { generateRunId } from '../../game/settledRuns'
-import { getExplorationEventDefinition } from '../../game/events/eventCatalog'
-import type { ScenarioDefinition, ScenarioEntityPlacement, CustomEventChoice } from '../editorTypes'
+} from '../types'
+import { buildingCatalog } from '../catalogs/buildingCatalog'
+import { defenseStructureCatalog } from '../catalogs/defenseStructureCatalog'
+import { getCreatureInnerSkillId, getCreatureAttributes } from '../rules/creatureBehaviorRules'
+import { getPlayerVisibleCellIds } from '../rules/visibilityRules'
+import { createCharacterState } from '../characterFactory'
+import { createEmptyRunStats } from '../runStats'
+import { generateRunId } from '../settledRuns'
+import { getExplorationEventDefinition } from '../events/eventCatalog'
+import type { ScenarioDefinition, ScenarioEntityPlacement } from '../contracts/scenario'
+import type { CustomEventChoice } from '../types/entities'
 
 /**
  * 劇本編譯器：將編輯器產出的 ScenarioDefinition 轉化為標準 GameState。

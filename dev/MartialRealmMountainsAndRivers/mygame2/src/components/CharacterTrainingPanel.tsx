@@ -1,5 +1,5 @@
 import { Button, Divider, Flex, Space, Tag, Typography, message } from 'antd'
-import { useEffect, useState, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import {
   getCharacter,
   getAttributeUpgradeCost,
@@ -94,10 +94,13 @@ type CharacterTrainingPanelProps = {
 /** 培養面板：花卷提升五維、設定初始功法。由角色 Modal 的「培養」Tab 使用。 */
 function CharacterTrainingPanel({ character, onChanged }: CharacterTrainingPanelProps) {
   const [current, setCurrent] = useState<PersistentCharacter>(character)
+  const [lastCharacter, setLastCharacter] = useState<PersistentCharacter>(character)
   // 父層 editing 更新（如天賦 tab 扣卷後）時同步本面板快照，避免殘卷數顯示不一致。
-  useEffect(() => {
+  // 「渲染期間調整 state」模式：prop 變更時直接重置 state，取代 setState-in-effect（避免級聯渲染）。
+  if (lastCharacter !== character) {
+    setLastCharacter(character)
     setCurrent(character)
-  }, [character])
+  }
   /** 外功篩選：類別＋五行。 */
   const [externalCategory, setExternalCategory] = useState<ExternalSkillCategory | null>(null)
   const [externalElement, setExternalElement] = useState<ElementKey | null>(null)

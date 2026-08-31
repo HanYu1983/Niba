@@ -6,7 +6,7 @@ import {
   makeProtectBaseOrder,
   makeTestCreature,
   makeTestPlayer,
-} from './testHelpers/aiTestFixtures'
+} from './testHelpers/gameFixtures'
 
 function makePlayer(overrides: Partial<PlayerState> = {}): PlayerState {
   return makeTestPlayer({ name: 'AI 守城者', stamina: 10, maxStamina: 10, ...overrides })

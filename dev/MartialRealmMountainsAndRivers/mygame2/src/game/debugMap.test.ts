@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createDebugGameState, createGameState } from './gameStore'
+import { createDebugGameState, createGameState } from './worldSetup'
 import { isAdjacent } from './types'
 
 describe('createDebugGameState', () => {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { buildGameStateFromScenario } from './scenarioCompiler'
-import { createEmptyScenario } from '../editorTypes'
-import type { ScenarioDefinition } from '../editorTypes'
+import { createEmptyScenario } from '../contracts/scenario'
+import type { ScenarioDefinition } from '../contracts/scenario'
 
 /** 建立一個含玩家、據點、Boss、巢穴的完整測試劇本。 */
 function makeScenario(): ScenarioDefinition {

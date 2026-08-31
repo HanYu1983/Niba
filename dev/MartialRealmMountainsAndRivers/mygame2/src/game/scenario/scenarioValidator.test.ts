@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { validateScenario } from './scenarioValidator'
-import { createEmptyScenario } from '../editorTypes'
-import type { ScenarioDefinition } from '../editorTypes'
+import { createEmptyScenario } from '../contracts/scenario'
+import type { ScenarioDefinition } from '../contracts/scenario'
 
 function makeScenario(): ScenarioDefinition {
   const scenario = createEmptyScenario(10, 10)
