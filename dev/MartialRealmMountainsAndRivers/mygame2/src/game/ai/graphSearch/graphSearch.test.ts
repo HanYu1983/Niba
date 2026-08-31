@@ -4,7 +4,9 @@ import { runGraphSearchStep } from './runGraphSearchStep'
 import { AiNodeImpl } from './AiNodeImpl'
 import { getTierScore, canKillThisTurn } from './scoring'
 import { executePure } from './executePure'
-import type { GameState } from '../../types'
+import type { GameState, PlayerState, CreatureState } from '../../types'
+import type { AiAction } from '../aiAction'
+import type { ExecuteAiActionDependencies } from '../execution/executeAiAction'
 
 function makePlayerState(id: string, health: number, row: number, column: number, stamina: number) {
   return {
@@ -44,7 +46,7 @@ function makeState(overrides: Partial<GameState> = {}): GameState {
       }),
     },
     players: [
-      makePlayerState('ai-1', 100, 2, 2, 50) as any,
+      makePlayerState('ai-1', 100, 2, 2, 50) as PlayerState,
     ],
     creatures: [],
     creatureNests: [],
@@ -67,24 +69,24 @@ function makeState(overrides: Partial<GameState> = {}): GameState {
   return base
 }
 
-const deps: any = {
+const deps: ExecuteAiActionDependencies = {
   combat: {
-    getActionablePlayer: (state: GameState, playerId: string) => state.players.find((p) => p.id === playerId)!,
-    createLootForPlayer: () => ({ ok: true } as any),
-    getLearnableSkill: () => null,
-    applyExperienceAndLevelUp: () => ({}),
-    addLootToPlayer: (s: any) => s,
+    getActionablePlayer: (state: GameState, playerId: string) => state.players.find((p) => p.id === playerId) ?? null,
+    createLootForPlayer: () => undefined,
+    getLearnableSkill: () => undefined,
+    applyExperienceAndLevelUp: (player) => player,
+    addLootToPlayer: (player) => player,
   },
   turn: {
-    moveCreatures: (s: GameState) => ({ creatures: s.creatures }),
-    spawnCreaturesFromNests: (s: GameState) => s,
+    moveCreatures: (s: GameState) => ({ creatures: s.creatures, players: s.players, resourcePoints: s.resourcePoints, logs: [] }),
+    spawnCreaturesFromNests: (s: GameState) => ({ nests: s.creatureNests, creatures: s.creatures, logs: [] }),
   },
 }
 
 describe('AiNodeImpl', () => {
   it('累計成本由 parent 累加', () => {
     const root = makeRoot(makeState(), 'ai-1')
-    const child = new AiNodeImpl(root.state, { type: 'end-turn', actor: { id: 'ai-1', kind: 'player' }, reason: 'test' } as any, root, 2, 1, 48)
+    const child = new AiNodeImpl(root.state, { type: 'end-turn', actor: { id: 'ai-1', kind: 'player' }, reason: 'test' } as AiAction, root, 2, 1, 48)
     expect(child.cumulativeCost).toBe(2)
   })
 
@@ -98,8 +100,8 @@ describe('AiNodeImpl', () => {
 describe('extractPath', () => {
   it('回溯 parent 收集行動序列', () => {
     const root = makeRoot(makeState(), 'ai-1')
-    const a1 = { type: 'end-turn', actor: { id: 'ai-1', kind: 'player' }, reason: 'a' } as any
-    const a2 = { type: 'end-turn', actor: { id: 'ai-1', kind: 'player' }, reason: 'b' } as any
+    const a1 = { type: 'end-turn', actor: { id: 'ai-1', kind: 'player' }, reason: 'a' } as AiAction
+    const a2 = { type: 'end-turn', actor: { id: 'ai-1', kind: 'player' }, reason: 'b' } as AiAction
     const n1 = new AiNodeImpl(root.state, a1, root, 0, 1, 50)
     const n2 = new AiNodeImpl(root.state, a2, n1, 0, 2, 50)
     expect(extractPath(n2)).toEqual([a1, a2])
@@ -150,7 +152,7 @@ describe('runGraphSearchStep', () => {
       position: { row: 2, column: 3 },
       attributes: { armStrength: 1, constitution: 1, agility: 1, innerEnergy: 1, insight: 1 },
       innerSkillIds: [],
-      innerSkillId: null,
+      innerSkillId: 'tuna-gong',
       externalSkillIds: [],
       equippedExternalSkillIds: [],
       stamina: 10,
@@ -162,7 +164,7 @@ describe('runGraphSearchStep', () => {
       experience: 0,
       inventory: [],
       turnEnded: false,
-    } as any]
+    } as CreatureState]
     const result = runGraphSearchStep(state, 'ai-1', deps)
     expect(result.actions.length).toBeGreaterThan(0)
   })
@@ -171,7 +173,7 @@ describe('runGraphSearchStep', () => {
 describe('executePure', () => {
   it('不回傳 mutate 原始 state（深拷貝執行）', () => {
     const state = makeState()
-    const action = { type: 'move', actor: { id: 'ai-1', kind: 'player' }, destination: { row: 2, column: 3 }, reason: 'test' } as any
+    const action = { type: 'move', actor: { id: 'ai-1', kind: 'player' }, destination: { row: 2, column: 3 }, reason: 'test' } as AiAction
     const next = executePure(state, action, deps)
     expect(next).toBeDefined()
     expect(state.players[0].id).toBe('ai-1')

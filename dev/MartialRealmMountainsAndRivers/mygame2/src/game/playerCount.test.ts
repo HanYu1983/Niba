@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createGameState } from './gameStore'
+import { createGameState } from './worldSetup'
 
 describe('玩家數目設定', () => {
   it('playerCount=2 時建立兩名玩家', () => {

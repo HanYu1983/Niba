@@ -119,33 +119,33 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
     }
   }, [visibility, visibilityPlayerId, map, bases, defenseStructures, players, creatures, creatureNests, resourcePoints, itemPoints, explorationEvents, revealedCreatureCellIds, revealedCreatureUntilRound, activePlayerId])
   // 物件索引：一次把各類實體依所在格分組，取代 per-cell 對全陣列的 11 次 filter。
+  // 以不可變方式建構（spread 建立新陣列，不 push 變異）——讓 React Compiler 能證明
+  // props 元素不會被變異，恢復整個元件的自動 memoization（否則整個元件 Compilation Skipped）。
   const cellObjects = useMemo(() => {
-    const index = new Map<string, {
+    type Entry = {
       players: PlayerState[]; creatures: CreatureState[]; bases: BaseState[]; nests: CreatureNestState[];
       resourcePoints: ResourcePointState[]; itemPoints: ItemPointState[]; defenseStructures: DefenseStructureState[];
       explorationEvents: ExplorationEventState[]; sectGates: SectGateState[]; ruins: RuinState[]; traps: TrapState[];
-    }>()
-    const get = (position: Position | undefined) => {
-      if (!position || !Number.isFinite(position.row) || !Number.isFinite(position.column)) return null
-      const key = `${position.row}-${position.column}`
-      let entry = index.get(key)
-      if (!entry) {
-        entry = { players: [], creatures: [], bases: [], nests: [], resourcePoints: [], itemPoints: [], defenseStructures: [], explorationEvents: [], sectGates: [], ruins: [], traps: [] }
-        index.set(key, entry)
-      }
-      return entry
     }
-    for (const player of players) get(player.position)?.players.push(player)
-    for (const creature of creatures) get(creature.position)?.creatures.push(creature)
-    for (const base of bases) get(base.position)?.bases.push(base)
-    for (const nest of creatureNests) get(nest.position)?.nests.push(nest)
-    for (const point of resourcePoints) get(point.position)?.resourcePoints.push(point)
-    for (const point of itemPoints) get(point.position)?.itemPoints.push(point)
-    for (const structure of defenseStructures) get(structure.position)?.defenseStructures.push(structure)
-    for (const event of explorationEvents) get(event.position)?.explorationEvents.push(event)
-    for (const gate of sectGates) get(gate.position)?.sectGates.push(gate)
-    for (const ruin of ruins) get(ruin.position)?.ruins.push(ruin)
-    for (const trap of traps) get(trap.position)?.traps.push(trap)
+    const emptyEntry: Entry = { players: [], creatures: [], bases: [], nests: [], resourcePoints: [], itemPoints: [], defenseStructures: [], explorationEvents: [], sectGates: [], ruins: [], traps: [] }
+    const index = new Map<string, Entry>()
+    const add = <K extends keyof Entry>(position: Position | undefined, key: K, item: Entry[K][number]) => {
+      if (!position || !Number.isFinite(position.row) || !Number.isFinite(position.column)) return
+      const cellKey = `${position.row}-${position.column}`
+      const entry = index.get(cellKey) ?? emptyEntry
+      index.set(cellKey, { ...entry, [key]: [...entry[key], item] })
+    }
+    for (const player of players) add(player.position, 'players', player)
+    for (const creature of creatures) add(creature.position, 'creatures', creature)
+    for (const base of bases) add(base.position, 'bases', base)
+    for (const nest of creatureNests) add(nest.position, 'nests', nest)
+    for (const point of resourcePoints) add(point.position, 'resourcePoints', point)
+    for (const point of itemPoints) add(point.position, 'itemPoints', point)
+    for (const structure of defenseStructures) add(structure.position, 'defenseStructures', structure)
+    for (const event of explorationEvents) add(event.position, 'explorationEvents', event)
+    for (const gate of sectGates) add(gate.position, 'sectGates', gate)
+    for (const ruin of ruins) add(ruin.position, 'ruins', ruin)
+    for (const trap of traps) add(trap.position, 'traps', trap)
     return index
   }, [players, creatures, bases, creatureNests, resourcePoints, itemPoints, defenseStructures, explorationEvents, sectGates, ruins, traps])
   // 新框架：提供 targetingSpec 時，高亮整個形狀範圍的格（純視覺提示可選範圍）。
@@ -622,7 +622,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                   {resourcePointsHere.map((resourcePoint) => (
                     <div
                       key={resourcePoint.id}
-                      className={`resource-point-marker${isExplored ? ' resource-point-marker--explored' : ''}`}
+                      className={`resource-point-marker${isExplored ? ' resource-point-marker--explored' : ''}${playersHere.length > 0 ? ' resource-point-marker--overlapping' : ''}`}
                       title={`${resourcePoint.name} · ${resourcePoint.active === false ? '已失活，請修復' : '可採集'} · 所屬：${bases.find((base) => base.id === resourcePoint.ownerBaseId)?.name ?? '未分配'}${isExplored ? ' · 已探索位置' : ''}`}
                       aria-label={`${resourcePoint.name}${resourcePoint.active === false ? '（已失活）' : ''}`}
                       role="button"

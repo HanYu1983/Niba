@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { executeTriggers } from './triggerRules'
 import { checkVictory, progressObjectives } from './campaignRules'
-import { buildGameStateFromScenario } from '../../editor/rules/scenarioCompiler'
+import { buildGameStateFromScenario } from '../scenario/scenarioCompiler'
 import { createEmptyScenario } from '../contracts/scenario'
 import type { ScenarioDefinition } from '../contracts/scenario'
 

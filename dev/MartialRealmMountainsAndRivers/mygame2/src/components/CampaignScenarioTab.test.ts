@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest'
-import { groupScenariosByChapter, buildChapterProgressView } from './CampaignScenarioTab'
+import { groupScenariosByChapter, buildChapterProgressView } from './campaignScenarioView'
 import type { StoredScenario } from '../game/scenarioStorage'
 import type { ScenarioDefinition } from '../editor/editorTypes'
 import { lingyuan } from '../game/catalogs/officialCharacterCatalog'

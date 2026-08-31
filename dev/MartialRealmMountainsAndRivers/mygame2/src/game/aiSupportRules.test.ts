@@ -8,7 +8,7 @@ import {
   makeTestCreature,
   makeTestHuman,
   makeTestPlayer,
-} from './testHelpers/aiTestFixtures'
+} from './testHelpers/gameFixtures'
 
 function player(id: string, position: Position, overrides: Partial<PlayerState> = {}): PlayerState {
   return makeTestPlayer({ id, name: id, isAI: id.startsWith('ai'), position, ...overrides })

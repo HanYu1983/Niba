@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createGameState } from './gameStore'
+import { createGameState } from './worldSetup'
 import { rollRoamerLevel } from './rules/creatureBehaviorRules'
 
 describe('初始生物生成規則', () => {

@@ -7,7 +7,7 @@ import {
   makeTestCreature,
   makeTestHuman,
   makeTestPlayer,
-} from '../../testHelpers/aiTestFixtures'
+} from '../../testHelpers/gameFixtures'
 import { chooseDefenseAction } from '../../aiDefenseRules'
 import { defenseActionToAiAction } from '../defenseActionAdapter'
 import { validateAiAction, validateAiDefenseDecision } from './validateAiAction'
@@ -187,7 +187,8 @@ describe('validateAiDefenseDecision（切片 I：store step 執行前的單一�
   const order = makeProtectBaseOrder()
 
   it('合法決策（攻擊相鄰威脅／移動到可達格）通過', () => {
-    const state = makeAiTestState({ players: [makeTestPlayer()], creatures: [makeTestCreature()] })
+    // stamina 明確給足（fixture 預設走 playerStatsRules 公式 = 7.5，不足以移動 4 格）。
+    const state = makeAiTestState({ players: [makeTestPlayer({ stamina: 20, maxStamina: 20 })], creatures: [makeTestCreature()] })
     expect(validateAiDefenseDecision(state, 'ai-1', { type: 'attack', targetId: 'creature-1', targetType: 'creature' })).toEqual({ valid: true })
     expect(validateAiDefenseDecision(state, 'ai-1', { type: 'move', position: { row: 9, column: 5 }, reason: 'return-to-defense-radius' })).toEqual({ valid: true })
   })

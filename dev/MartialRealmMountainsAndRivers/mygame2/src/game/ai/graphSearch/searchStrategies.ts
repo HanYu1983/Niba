@@ -1,19 +1,24 @@
-import type { AiNode } from './types'
+import type { AiNode, AiEdge } from './types'
 import type { ExecuteAiActionDependencies } from '../execution/executeAiAction'
+
+/** 具備展開子節點能力的節點（AiNodeImpl 實作）。 */
+type ExpandableNode = AiNode & {
+  getEdges(dependencies: ExecuteAiActionDependencies): AiEdge[]
+}
 
 /**
  * 貪婪最長路徑搜索（V3 Phase 1）。
  * DFS + 分支剪枝，回傳累計分數最高的葉節點。
  */
 export function greedyLongestPath(
-  root: AiNode,
+  root: ExpandableNode,
   maxDepth: number,
   dependencies: ExecuteAiActionDependencies,
 ): AiNode | null {
   let bestLeaf: AiNode | null = null
   let bestScore = -Infinity
 
-  function dfs(current: AiNode): void {
+  function dfs(current: ExpandableNode): void {
     if (current.depth >= maxDepth) {
       if (current.cumulativeCost > bestScore) {
         bestScore = current.cumulativeCost
@@ -22,9 +27,7 @@ export function greedyLongestPath(
       return
     }
 
-    const edges = current instanceof Object && 'getEdges' in current
-      ? (current as any).getEdges(dependencies)
-      : []
+    const edges = current.getEdges(dependencies)
 
     // 已在 getAdjacentNodes 內剪枝，此處直接展開
     for (const edge of edges) {

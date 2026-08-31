@@ -6,7 +6,7 @@ import {
   makeTestHuman,
   makeTestNest,
   makeTestPlayer,
-} from '../../testHelpers/aiTestFixtures'
+} from '../../testHelpers/gameFixtures'
 import { manhattanDistance } from './distance'
 import { collectReachableCells } from './reachablePositions'
 import {
