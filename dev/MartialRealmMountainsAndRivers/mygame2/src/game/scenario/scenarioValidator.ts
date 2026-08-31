@@ -1,4 +1,4 @@
-import type { ScenarioDefinition, ScenarioEntityPlacement } from '../editorTypes'
+import type { ScenarioDefinition, ScenarioEntityPlacement } from '../contracts/scenario'
 
 /** 驗證結果：單一問題。 */
 export type ScenarioValidationIssue = {

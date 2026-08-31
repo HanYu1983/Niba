@@ -350,17 +350,20 @@ export type ExplorationEventState = {
   /** 自定義事件定義（type === 'custom' 時存在）。 */
   customEvent?: {
     icon: string
-    choices: Array<{
-      id: string
-      label: string
-      description: string
-      endsPlayerTurn: boolean
-      requirements: EventRequirement[]
-      effects: EventEffect[]
-      /** 自訂結果彈窗訊息（可選；未填時自動由效果生成）。 */
-      resultMessage?: string
-    }>
+    choices: CustomEventChoice[]
   }
+}
+
+/** 自定義探索事件的單一選項（編輯器產出、scenarioCompiler 消費）。 */
+export type CustomEventChoice = {
+  id: string
+  label: string
+  description: string
+  endsPlayerTurn: boolean
+  requirements: EventRequirement[]
+  effects: EventEffect[]
+  /** 自訂結果彈窗訊息（可選；未填時自動由效果生成）。 */
+  resultMessage?: string
 }
 
 export type ExplorationEventChoice = {
