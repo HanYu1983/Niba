@@ -1,6 +1,6 @@
 import { Button, Empty, List, Modal, Space, Typography, message } from 'antd'
 import { PlusOutlined, SaveOutlined, DeleteOutlined } from '@ant-design/icons'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { ScenarioDefinition } from '../editorTypes'
 import {
   deleteStoredScenario,
@@ -34,11 +34,15 @@ function ScenarioManagerModal({
   const [scenarios, setScenarios] = useState<Record<string, StoredScenario>>({})
 
   // 每次開啟時重新讀取 localStorage，確保列表是最新的。
-  useEffect(() => {
-    if (open) {
-      setScenarios(getStoredScenarios())
-    }
-  }, [open])
+  // 「渲染期間調整 state」模式：open 轉為 true 時同步重置，取代 setState-in-effect。
+  const [lastOpen, setLastOpen] = useState(open)
+  if (open && !lastOpen) {
+    setLastOpen(true)
+    setScenarios(getStoredScenarios())
+  }
+  if (!open && lastOpen) {
+    setLastOpen(false)
+  }
 
   const entries = Object.values(scenarios)
 
