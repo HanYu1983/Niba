@@ -1,7 +1,8 @@
-import type { GameState, InventoryEntry, PlayerState, EquipmentInstance } from '../types'
+import type { GameState, InventoryEntry, PlayerState, EquipmentInstance, SharedSkillEntry } from '../types'
 import { BUILDING_TYPES } from '../catalogs/buildingCatalog'
 import { assertPlayerTurn } from './actionCostRules'
 import { isBaseActive } from './baseRules'
+import { allInnerSkillCatalog, allExternalSkillCatalog } from '../catalogs/martialHallSkillCatalog'
 
 /** 判斷玩家是否位於任一擁有交易所的據點附近。 */
 export function getExchangeBaseId(state: GameState, playerId: string): string | null {
@@ -220,4 +221,122 @@ export function addEquipmentToWarehouse(
   instance: EquipmentInstance,
 ): EquipmentInstance[] {
   return [...warehouse, instance]
+}
+
+// ── 功法倉庫（功法有經驗值，與道具/裝備分開存放）──
+
+export function getSharedSkillWarehouse(state: GameState): SharedSkillEntry[] {
+  return state.sharedSkillWarehouse ?? []
+}
+
+/** 判斷玩家是否已學會指定功法。 */
+export function playerHasSkill(player: PlayerState, skillId: string): boolean {
+  return (player.innerSkillIds ?? []).includes(skillId) || (player.externalSkillIds ?? []).includes(skillId)
+}
+
+/** 判斷功法是內功或外功。 */
+export function getSkillType(skillId: string): 'inner' | 'external' | null {
+  if (allInnerSkillCatalog.some((skill) => skill.id === skillId)) return 'inner'
+  if (allExternalSkillCatalog.some((skill) => skill.id === skillId)) return 'external'
+  return null
+}
+
+export function canDepositSkill(
+  state: GameState,
+  playerId: string,
+  skillId: string,
+): { ok: boolean; reason?: string } {
+  const access = canAccessSharedWarehouse(state, playerId)
+  if (!access.ok) return access
+
+  const player = state.players.find((candidate) => candidate.id === playerId)
+  if (!player) {
+    return { ok: false, reason: '玩家不存在。' }
+  }
+
+  if (!playerHasSkill(player, skillId)) {
+    return { ok: false, reason: '玩家尚未學會此功法。' }
+  }
+
+  // 已裝備的內功不可存入（避免玩家失去當前內功）。
+  if (player.innerSkillId === skillId) {
+    return { ok: false, reason: '目前裝備的內功不可存入，請先切換其他內功。' }
+  }
+
+  return { ok: true }
+}
+
+export function canWithdrawSkill(
+  state: GameState,
+  playerId: string,
+  skillId: string,
+): { ok: boolean; reason?: string } {
+  const access = canAccessSharedWarehouse(state, playerId)
+  if (!access.ok) return access
+
+  const available = getSharedSkillWarehouse(state).some((entry) => entry.skillId === skillId)
+  if (!available) {
+    return { ok: false, reason: '公共倉庫沒有此功法。' }
+  }
+
+  return { ok: true }
+}
+
+/** 從玩家身上移除指定功法（含其經驗值）。 */
+export function removeSkillFromPlayer(player: PlayerState, skillId: string): PlayerState {
+  const progression = player.skillProgression?.[skillId]
+  const isInner = (player.innerSkillIds ?? []).includes(skillId)
+  return {
+    ...player,
+    innerSkillIds: isInner
+      ? (player.innerSkillIds ?? []).filter((id) => id !== skillId)
+      : player.innerSkillIds,
+    externalSkillIds: !isInner
+      ? (player.externalSkillIds ?? []).filter((id) => id !== skillId)
+      : player.externalSkillIds,
+    equippedExternalSkillIds: (player.equippedExternalSkillIds ?? []).filter((id) => id !== skillId),
+    skillProgression: progression
+      ? Object.fromEntries(
+          Object.entries(player.skillProgression ?? {}).filter(([id]) => id !== skillId),
+        )
+      : player.skillProgression,
+  }
+}
+
+/** 將功法加入玩家（含經驗值繼承）。 */
+export function addSkillToPlayer(
+  player: PlayerState,
+  entry: SharedSkillEntry,
+): PlayerState {
+  const isInner = entry.skillType === 'inner'
+  const alreadyHas = playerHasSkill(player, entry.skillId)
+  return {
+    ...player,
+    innerSkillIds: isInner && !alreadyHas
+      ? [...(player.innerSkillIds ?? []), entry.skillId]
+      : player.innerSkillIds,
+    externalSkillIds: !isInner && !alreadyHas
+      ? [...(player.externalSkillIds ?? []), entry.skillId]
+      : player.externalSkillIds,
+    skillProgression: {
+      ...(player.skillProgression ?? {}),
+      [entry.skillId]: { experience: entry.experience, level: entry.level },
+    },
+  }
+}
+
+/** 從公共功法倉庫移出指定功法。 */
+export function removeSkillFromWarehouse(
+  warehouse: SharedSkillEntry[],
+  skillId: string,
+): SharedSkillEntry[] {
+  return warehouse.filter((entry) => entry.skillId !== skillId)
+}
+
+/** 將功法加入公共功法倉庫。 */
+export function addSkillToWarehouse(
+  warehouse: SharedSkillEntry[],
+  entry: SharedSkillEntry,
+): SharedSkillEntry[] {
+  return [...warehouse, entry]
 }

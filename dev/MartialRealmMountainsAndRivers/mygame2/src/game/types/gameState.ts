@@ -21,6 +21,7 @@ import type {
   TrapState,
   InventoryEntry,
   EquipmentInstance,
+  SharedSkillEntry,
 } from './entities'
 import type {
   AttackPreview,
@@ -178,6 +179,8 @@ export type WorldState = {
   sharedWarehouse?: InventoryEntry[]
   /** 跨據點共享的裝備倉庫（裝備有耐久度，與道具分開存放）。 */
   sharedEquipmentWarehouse?: EquipmentInstance[]
+  /** 跨據點共享的功法倉庫（含經驗值繼承）。 */
+  sharedSkillWarehouse?: SharedSkillEntry[]
   aiOrders?: AiOrder[]
   aiConstructionPlans?: AiConstructionPlan[]
   /** 全域行動日誌（重構文件 §4.5 AiActionEvent）；只保留最新 MAX_ACTION_EVENTS 筆，隨存檔序列化。 */

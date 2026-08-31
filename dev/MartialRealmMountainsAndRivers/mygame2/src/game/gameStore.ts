@@ -109,8 +109,10 @@ import { executeAiAttack as executeAiAttackAction } from './ai/execution/execute
 import {
   depositEquipment as depositEquipmentAction,
   depositItem as depositItemAction,
+  depositSkill as depositSkillAction,
   withdrawEquipment as withdrawEquipmentAction,
   withdrawItem as withdrawItemAction,
+  withdrawSkill as withdrawSkillAction,
 } from './actions/storageActions'
 import { movePlayer as movePlayerAction } from './actions/movementActions'
 import { collectItemPointAction, useItemAction as executeUseItemAction } from './actions/itemActions'
@@ -1234,6 +1236,14 @@ export const gameStore = {
 
   withdrawEquipmentFromSharedWarehouse: (playerId: string, instanceId: string): ActionOutcome => {
     return runActionOutcome(updateGameState, (state) => withdrawEquipmentAction(state, playerId, instanceId), '取出裝備失敗。')
+  },
+
+  depositSkillToSharedWarehouse: (playerId: string, skillId: string): ActionOutcome => {
+    return runActionOutcome(updateGameState, (state) => depositSkillAction(state, playerId, skillId), '存入功法失敗。')
+  },
+
+  withdrawSkillFromSharedWarehouse: (playerId: string, skillId: string): ActionOutcome => {
+    return runActionOutcome(updateGameState, (state) => withdrawSkillAction(state, playerId, skillId), '取出功法失敗。')
   },
 
   switchRemoteBasePolicy: (playerId: string, targetBaseId: string, policyId: GovernancePolicyId): ActionOutcome => {

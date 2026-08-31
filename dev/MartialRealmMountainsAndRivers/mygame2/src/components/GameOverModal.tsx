@@ -129,7 +129,7 @@ function GameOverModal({ open, won = false, reason, record, scrollReward, onRest
         {players.length > 0 && (
           <Flex vertical gap={16}>
             <Divider style={{ margin: 0 }}>玩家結算</Divider>
-            {players.map((player, index) => (
+            {players.map((player) => (
               <PlayerRecordSection key={player.id} player={player} />
             ))}
           </Flex>

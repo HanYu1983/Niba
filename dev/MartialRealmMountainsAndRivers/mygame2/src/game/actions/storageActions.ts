@@ -4,16 +4,25 @@ import {
   addEquipmentToWarehouse,
   addItemToPlayer,
   addItemToWarehouse,
+  addSkillToPlayer,
+  addSkillToWarehouse,
   canDepositEquipment,
   canDepositItem,
+  canDepositSkill,
   canWithdrawEquipment,
   canWithdrawItem,
+  canWithdrawSkill,
   getSharedEquipmentWarehouse,
+  getSharedSkillWarehouse,
+  getSkillType,
   removeEquipmentFromPlayer,
   removeEquipmentFromWarehouse,
   removeItemFromPlayer,
   removeItemFromWarehouse,
+  removeSkillFromPlayer,
+  removeSkillFromWarehouse,
 } from '../rules/storageRules'
+import { getSkillProgression } from '../rules/skillRules'
 
 export type StorageActionResult = {
   state: GameState
@@ -95,6 +104,52 @@ export function withdrawEquipment(state: GameState, playerId: string, instanceId
         ? addEquipmentToPlayer(currentPlayer, instance)
         : currentPlayer),
       sharedEquipmentWarehouse: removeEquipmentFromWarehouse(getSharedEquipmentWarehouse(state), instanceId),
+    },
+    result: { ok: true },
+  }
+}
+
+export function depositSkill(state: GameState, playerId: string, skillId: string): StorageActionResult {
+  const validation = canDepositSkill(state, playerId, skillId)
+  if (!validation.ok) return { state, result: { ok: false, reason: validation.reason ?? '存入功法失敗。' } }
+
+  const player = state.players.find((candidate) => candidate.id === playerId)
+  if (!player) return { state, result: { ok: false, reason: '玩家不存在。' } }
+
+  const skillType = getSkillType(skillId)
+  if (!skillType) return { state, result: { ok: false, reason: '功法不存在。' } }
+
+  const progression = getSkillProgression(player, skillId)
+  const entry = { skillId, skillType, experience: progression.experience, level: progression.level }
+
+  return {
+    state: {
+      ...state,
+      players: state.players.map((currentPlayer) => currentPlayer.id === playerId
+        ? removeSkillFromPlayer(currentPlayer, skillId)
+        : currentPlayer),
+      sharedSkillWarehouse: addSkillToWarehouse(getSharedSkillWarehouse(state), entry),
+    },
+    result: { ok: true },
+  }
+}
+
+export function withdrawSkill(state: GameState, playerId: string, skillId: string): StorageActionResult {
+  const validation = canWithdrawSkill(state, playerId, skillId)
+  if (!validation.ok) return { state, result: { ok: false, reason: validation.reason ?? '取出功法失敗。' } }
+
+  const player = state.players.find((candidate) => candidate.id === playerId)
+  const entry = getSharedSkillWarehouse(state).find((candidate) => candidate.skillId === skillId)
+  if (!player) return { state, result: { ok: false, reason: '玩家不存在。' } }
+  if (!entry) return { state, result: { ok: false, reason: '功法不存在。' } }
+
+  return {
+    state: {
+      ...state,
+      players: state.players.map((currentPlayer) => currentPlayer.id === playerId
+        ? addSkillToPlayer(currentPlayer, entry)
+        : currentPlayer),
+      sharedSkillWarehouse: removeSkillFromWarehouse(getSharedSkillWarehouse(state), skillId),
     },
     result: { ok: true },
   }

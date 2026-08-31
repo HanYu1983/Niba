@@ -38,12 +38,6 @@ export type BattleRecord = {
   innerSkillLevel: number
 }
 
-/** 取得人類玩家（非 AI）；缺省取第一個非 AI 玩家。 */
-function getHumanPlayer(state: GameState) {
-  const active = state.players.find((player) => player.id === state.activePlayerId && !player.isAI)
-  return active ?? state.players.find((player) => !player.isAI) ?? state.players[0]
-}
-
 /** 由單一玩家建立其結局戰績。 */
 function toPlayerRecord(player: GameState['players'][number]): PlayerBattleRecord {
   const innerSkillId = player?.innerSkillId ?? 'tuna-gong'

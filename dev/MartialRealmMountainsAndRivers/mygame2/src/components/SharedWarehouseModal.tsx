@@ -3,7 +3,8 @@ import { Button, Flex, InputNumber, List, Modal, Space, Tabs, Tag, Typography } 
 import { itemCatalog } from '../game/catalogs/itemCatalog'
 import { getEquipment } from '../game/rules/playerDerivedRules'
 import type { GameState, PlayerState, EquipmentInstance } from '../game/types'
-import { getSharedEquipmentWarehouse, getSharedWarehouse } from '../game/rules/storageRules'
+import { getSharedEquipmentWarehouse, getSharedSkillWarehouse, getSharedWarehouse } from '../game/rules/storageRules'
+import { allInnerSkillCatalog, allExternalSkillCatalog } from '../game/catalogs/martialHallSkillCatalog'
 
 type SharedWarehouseModalProps = {
   gameState: GameState
@@ -13,6 +14,8 @@ type SharedWarehouseModalProps = {
   onWithdraw: (itemId: string, quantity: number) => void
   onDepositEquipment: (instanceId: string) => void
   onWithdrawEquipment: (instanceId: string) => void
+  onDepositSkill: (skillId: string) => void
+  onWithdrawSkill: (skillId: string) => void
   onClose: () => void
 }
 
@@ -63,12 +66,15 @@ function SharedWarehouseModal({
   onWithdraw,
   onDepositEquipment,
   onWithdrawEquipment,
+  onDepositSkill,
+  onWithdrawSkill,
   onClose,
 }: SharedWarehouseModalProps) {
   const [depositQty, setDepositQty] = useState<Record<string, number>>({})
   const [withdrawQty, setWithdrawQty] = useState<Record<string, number>>({})
   const warehouse = getSharedWarehouse(gameState)
   const equipmentWarehouse = getSharedEquipmentWarehouse(gameState)
+  const skillWarehouse = getSharedSkillWarehouse(gameState)
   const playerEquipment = player?.equipmentInventory ?? []
   const playerEquipmentIds = new Set(playerEquipment.map((instance) => instance.instanceId))
   const warehouseEquipmentIds = new Set(equipmentWarehouse.map((instance) => instance.instanceId))
@@ -82,6 +88,20 @@ function SharedWarehouseModal({
   const relevantItems = itemCatalog.filter(
     (item) => playerOwnedIds.has(item.id) || warehouseItemIds.has(item.id),
   )
+
+  // 功法：玩家已學會（且非當前內功）＋倉庫中的功法。
+  const playerSkillIds = new Set([
+    ...(player?.innerSkillIds ?? []),
+    ...(player?.externalSkillIds ?? []),
+  ])
+  const warehouseSkillIds = new Set(skillWarehouse.map((e) => e.skillId))
+  const allSkillIds = [...playerSkillIds, ...warehouseSkillIds].filter(
+    (id, index, array) => array.indexOf(id) === index,
+  )
+  const skillById = new Map<string, { name: string; icon: string; type: 'inner' | 'external' }>([
+    ...allInnerSkillCatalog.map((s) => [s.id, { name: s.name, icon: '☯', type: 'inner' as const }] as const),
+    ...allExternalSkillCatalog.map((s) => [s.id, { name: s.name, icon: '⚡', type: 'external' as const }] as const),
+  ])
 
   const itemTab = (
     <List
@@ -138,6 +158,46 @@ function SharedWarehouseModal({
     />
   )
 
+  const skillTab = (
+    <List
+      dataSource={allSkillIds}
+      renderItem={(skillId) => {
+        const info = skillById.get(skillId)
+        if (!info) return null
+        const owned = playerSkillIds.has(skillId)
+        const stored = warehouseSkillIds.has(skillId)
+        const storedEntry = skillWarehouse.find((e) => e.skillId === skillId)
+        const isCurrentInner = player?.innerSkillId === skillId
+        return (
+          <List.Item>
+            <List.Item.Meta
+              title={<Typography.Text>{info.icon} {info.name}</Typography.Text>}
+              description={
+                <Space size={8}>
+                  <Tag>{info.type === 'inner' ? '內功' : '外功'}</Tag>
+                  {storedEntry && (
+                    <Typography.Text type="secondary">
+                      倉庫 Lv.{storedEntry.level}｜經驗 {storedEntry.experience}
+                    </Typography.Text>
+                  )}
+                  {isCurrentInner && <Tag color="orange">目前裝備</Tag>}
+                </Space>
+              }
+            />
+            <Space>
+              <Button disabled={!owned || isCurrentInner} onClick={() => onDepositSkill(skillId)}>
+                存入
+              </Button>
+              <Button disabled={!stored} onClick={() => onWithdrawSkill(skillId)}>
+                取出
+              </Button>
+            </Space>
+          </List.Item>
+        )
+      }}
+    />
+  )
+
   return (
     <Modal
       title="跨據點公共倉庫"
@@ -148,12 +208,13 @@ function SharedWarehouseModal({
     >
       <Flex vertical gap={12}>
         <Typography.Text type="secondary">
-          公共倉庫跨據點共享，不消耗行動、不增加聲望、無容量限制。
+          公共倉庫跨據點共享，不消耗行動、不增加聲望、無容量限制。功法存入後保留經驗值，供其他玩家取出繼承。
         </Typography.Text>
         <Tabs
           items={[
             { key: 'items', label: '道具', children: itemTab },
             { key: 'equipment', label: '裝備', children: equipmentTab },
+            { key: 'skills', label: '功法', children: skillTab },
           ]}
         />
       </Flex>

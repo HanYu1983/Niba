@@ -2251,6 +2251,47 @@ describe('公共倉庫', () => {
 
     expect(gameStore.depositEquipmentToSharedWarehouse('player-1', 'eq-1').ok).toBe(false)
   })
+
+  it('從有交易所的據點存入與取出功法（經驗值繼承）', () => {
+    const player = makeTestCreature({
+      position: { row: 5, column: 5 },
+      innerSkillIds: ['tuna-gong', 'golden-body-inner'],
+      innerSkillId: 'tuna-gong',
+      skillProgression: { 'golden-body-inner': { experience: 30, level: 2 } },
+    })
+    const base = {
+      ...makeBaseState(),
+      buildings: [{ id: 'base-1-ex', type: 'exchange', name: '交易所', description: '', constructionCost: 30 }],
+    }
+    gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
+
+    expect(gameStore.depositSkillToSharedWarehouse('player-1', 'golden-body-inner').ok).toBe(true)
+    let state = gameStore.getState()
+    expect(state.players[0].innerSkillIds).not.toContain('golden-body-inner')
+    expect(state.sharedSkillWarehouse).toHaveLength(1)
+    expect(state.sharedSkillWarehouse?.[0]).toMatchObject({ skillId: 'golden-body-inner', experience: 30, level: 2 })
+
+    expect(gameStore.withdrawSkillFromSharedWarehouse('player-1', 'golden-body-inner').ok).toBe(true)
+    state = gameStore.getState()
+    expect(state.players[0].innerSkillIds).toContain('golden-body-inner')
+    expect(state.players[0].skillProgression?.['golden-body-inner']).toEqual({ experience: 30, level: 2 })
+    expect(state.sharedSkillWarehouse).toHaveLength(0)
+  })
+
+  it('目前裝備的內功無法存入功法', () => {
+    const player = makeTestCreature({
+      position: { row: 5, column: 5 },
+      innerSkillIds: ['tuna-gong'],
+      innerSkillId: 'tuna-gong',
+    })
+    const base = {
+      ...makeBaseState(),
+      buildings: [{ id: 'base-1-ex', type: 'exchange', name: '交易所', description: '', constructionCost: 30 }],
+    }
+    gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
+
+    expect(gameStore.depositSkillToSharedWarehouse('player-1', 'tuna-gong').ok).toBe(false)
+  })
 })
 
 describe('總管府治理', () => {
