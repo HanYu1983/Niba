@@ -120,6 +120,7 @@ import { executeItemBurstAction } from './actions/itemBurstActions'
 import {
   endPlayerTurn as endPlayerTurnAction,
   startPlayerTurn as startPlayerTurnAction,
+  triggerTurnStartExplorationEvent,
   type CreatureTurnResult,
 } from './actions/turnActions'
 import {
@@ -1104,9 +1105,9 @@ export const gameStore = {
   },
 
   /**
-   * 關閉並清除回合結束隨機觸發的探索事件（不套用任何效果）。
-   * 此為「玩家直接關閉事件彈窗、不選擇任何選項」的路徑；
-   * 因為沒有事件結果彈窗，所以立即執行暫存的敵人行動。
+   * 關閉並清除「輪到該玩家」的回合開始隨機觸發的探索事件（不套用任何效果）。
+   * 此為「玩家直接關閉事件彈窗、不選擇任何選項」的路徑。
+   * 敵人行動已在回合結束執行結束，此處僅清除事件、不需延後。
    */
   dismissPendingExplorationEvent: () => {
     updateGameState((state) => ({
@@ -1114,7 +1115,6 @@ export const gameStore = {
       pendingExplorationEvent: null,
       pendingExplorationEventPlayerId: null,
     }))
-    gameStore.flushPendingCreatureTurn()
   },
 
   /**
@@ -1422,7 +1422,6 @@ export const gameStore = {
     let scheduledCreatureTurn: CreatureTurnResult | null = null
     let creatureTurnBasePlayers: PlayerState[] | null = null
 
-    let triggeredEvent = false
     updateGameState((state) => {
       const action = endPlayerTurnAction(state, playerId, {
         moveCreatures: (currentState) => moveCreatures(
@@ -1457,8 +1456,6 @@ export const gameStore = {
         scheduledCreatureTurn = action.creatureTurn
         creatureTurnBasePlayers = state.players
       }
-      // 偵測是否觸發了探索事件（此回合結束隨機觸發）。
-      triggeredEvent = Boolean(action.state.pendingExplorationEvent)
       // 劇情模式下，回合結束時檢查條件式目標（survive-rounds / reach-prestige）與勝利。
       const withVictoryCheck = action.state.campaignState
         ? checkVictory(action.state)
@@ -1471,25 +1468,29 @@ export const gameStore = {
     })
 
     if (scheduledCreatureTurn) {
-      // 若回合結束時有探索事件，或劇情對話佇列尚有未顯示內容（如勝利對話），
-      // 先延後敵人行動，改由對應彈窗流程關閉後執行（flush）。
+      // 若回合結束時劇情對話佇列尚有未顯示內容（如勝利對話），先延後敵人行動，
+      // 改由對應彈窗流程關閉後執行（flush）。隨機探索事件已移至「輪到該玩家」的回合開始觸發，
+      // 與敵人行動不再同時出現，故不需要為了事件延後敵方行動。
       const dialoguePending = (getState().campaignState?.dialogueQueue?.length ?? 0) > 0
-      if (triggeredEvent || dialoguePending) {
-        // ── 探索事件 / 對話已觸發：先延後敵人行動 ─────────────────
-        // 這裡不立即 animateCreatureTurn，而是把計算好的敵人行動結果暫存起來。
-        // 後續流程：事件彈窗（PendingExplorationEventModal）先出現，玩家選擇後
-        // 顯示事件結果彈窗，關閉結果彈窗才執行此暫存的敵人行動（flush）。
-        // 如此確保彈窗順序為「事件 → 事件結果 → 敵人行動」而非同時出現。
+      if (dialoguePending) {
+        // ── 對話已觸發：先延後敵人行動 ─────────────────
+        // 這裡不立即 animateCreatureTurn，而是把計算好的敵人行動結果暫存起來，
+        // 待對話佇列清空後由 flushPendingCreatureTurn 執行。
         session.pendingCreatureTurn = scheduledCreatureTurn
         session.pendingCreatureTurnBasePlayers = creatureTurnBasePlayers
       } else {
-        // 沒有觸發事件：維持原本流程，立即執行敵人行動。
+        // 沒有延後需求：維持原本流程，立即執行敵人行動。
         animateCreatureTurn(scheduledCreatureTurn)
       }
     }
+    // 回合結束後切換到「下一位玩家」的回合開始：以可設定機率隨機觸發探索事件。
+    // 事件在目標玩家的回合開始出現，讓回合結束只負責敵方行動，不需延後機制。
+    const newActiveId = getState().activePlayerId
+    if (newActiveId) {
+      updateGameState((state) => triggerTurnStartExplorationEvent(state, newActiveId))
+    }
     // 遊戲結束（勝利或失敗）的回合不自動保存，避免自動存檔直接停在結算畫面。
-    // 觸發探索事件時，敵人行動尚未執行，改由 flushPendingCreatureTurn 結算後保存。
-    if (!triggeredEvent && !getState().gameOver && !getState().gameWon) scheduleAutoSave(getState(), null, session.isChallengeMode, session.currentScenarioId)
+    if (!getState().gameOver && !getState().gameWon) scheduleAutoSave(getState(), null, session.isChallengeMode, session.currentScenarioId)
   },
 
   startPlayerTurn: (playerId: string) => {

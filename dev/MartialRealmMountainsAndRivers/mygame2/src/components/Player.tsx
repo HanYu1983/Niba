@@ -72,8 +72,8 @@ function Player({
     >
       <span className="player__icon">{icon ?? (appearance === 'creature' ? '🐺' : '🧙')}</span>
       {stamina !== undefined && maxStamina !== undefined && (
-        <span className="player__stamina" aria-label={`體力 ${Math.round(stamina)} / ${Math.round(maxStamina)}`}>
-          ⚡{Math.round(stamina)}/{Math.round(maxStamina)}
+        <span className="player__stamina" aria-label={`體力 ${Math.floor(stamina)} / ${Math.floor(maxStamina)}`}>
+          ⚡{Math.floor(stamina)}/{Math.floor(maxStamina)}
         </span>
       )}
       {appearance === 'creature' && health !== undefined && maxHealth !== undefined && (

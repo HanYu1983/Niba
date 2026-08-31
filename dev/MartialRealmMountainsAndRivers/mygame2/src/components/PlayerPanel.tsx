@@ -97,7 +97,7 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
                 <StatValue label="金錢" tone="gold">🪙 {player.money}</StatValue>
                 <StatBar label="血量" current={player.health} max={player.maxHealth} status="exception" />
                 <StatBar label="內力" current={player.innerPower} max={player.maxInnerPower} />
-                <StatValue label="體力">{Math.round(player.stamina)} / {Math.round(player.maxStamina)}</StatValue>
+                <StatValue label="體力">{Math.floor(player.stamina)} / {Math.floor(player.maxStamina)}</StatValue>
                 <StatValue label="減傷率">
                   <Tooltip title="由根骨決定：每個根骨提供 2% 機率使受到的傷害減半。">
                     {renderRateWithIcons(getRootReductionRate(player), '🛡️')}

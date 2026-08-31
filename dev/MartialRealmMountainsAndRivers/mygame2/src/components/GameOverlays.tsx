@@ -260,8 +260,8 @@ function GameOverlays({
           const playerBefore = gameState.players.find((player) => player.id === targetPlayerId)
           const result = gameStore.resolvePendingExplorationEvent(targetPlayerId, pending.id, choiceId)
           if (!result.ok) {
-            // 事件處理失敗：不顯示結果彈窗，直接執行暫存的敵人行動。
-            gameStore.showActionResult({ title: '事件處理失敗', message: `原因：${result.reason}`, rewards: [] }, { type: 'flush-creature-turn' })
+            // 事件處理失敗：僅顯示失敗彈窗。敵人行動已在回合結束時執行完畢，無需延後。
+            gameStore.showActionResult({ title: '事件處理失敗', message: `原因：${result.reason}`, rewards: [] })
             return
           }
           const playerAfter = gameStore.getState().players.find((player) => player.id === targetPlayerId)
@@ -271,10 +271,9 @@ function GameOverlays({
           const learnedExternalSkillName = learnedExternalSkillId
             ? allExternalSkillCatalog.find((skill) => skill.id === learnedExternalSkillId)?.name
             : undefined
-          // 顯示事件結果彈窗；玩家關閉後才執行暫存的敵人行動。
+          // 顯示事件結果彈窗。敵人行動已於回合結束執行，此處不需延後。
           gameStore.showActionResult(
             formatExplorationEventResult(pending.name, choiceId, learnedExternalSkillName),
-            { type: 'flush-creature-turn' },
           )
         }}
         onClose={() => gameStore.dismissPendingExplorationEvent()}

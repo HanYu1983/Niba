@@ -17,7 +17,7 @@ import { COMMON_EXPLORATION_EVENT_TYPES, getTerrainExplorationEventTypes } from 
 /** 結束回合時，依剩餘體力給予經驗值（體力 × 此倍率）。 */
 export const STAMINA_EXPERIENCE_MULTIPLIER = 2
 
-/** 回合結束隨機觸發探索事件的預設機率（20%），當 state.explorationTriggerChance 未設定時使用。 */
+/** 「輪到該玩家」的回合開始隨機觸發探索事件的預設機率（20%），當 state.explorationTriggerChance 未設定時使用。 */
 export const EXPLORATION_TRIGGER_CHANCE = 0.2
 
 /**
@@ -35,7 +35,7 @@ function getRandomExplorationEventType(terrain?: GameState['map']['cells'][numbe
 }
 
 /**
- * 產生一個「回合結束隨機觸發」的暫時探索事件。
+ * 產生一個「回合開始隨機觸發」的暫時探索事件。
  * 不佔用地圖格子，position 使用玩家當前位置作為參考值（僅供 Modal 顯示用，不實際標記在地圖上）。
  */
 function createPendingExplorationEvent(player: PlayerState, round: number, terrain?: GameState['map']['cells'][number]['terrain']): ExplorationEventState | null {
@@ -199,23 +199,10 @@ export function endPlayerTurn(
   const endingPlayer = state.players.find((candidate) => candidate.id === playerId)
   const staminaBonusPlayer = endingPlayer ? applyStaminaExperienceBonus(endingPlayer) : undefined
 
-  // 回合結束時，以可設定的機率隨機觸發一個探索事件（不佔用地圖格子）。
-  // 觸發的事件存入 pendingExplorationEvent，由前端開啟 Modal 供該玩家選擇。
-  // 僅人類玩家（非 AI）會觸發，因為 AI 玩家無法在 UI 上選擇事件選項。
-  const triggerChance = state.explorationTriggerChance ?? EXPLORATION_TRIGGER_CHANCE
-  const standingTerrain = endingPlayer
-    ? state.map.cells.find((cell) => cell.row === endingPlayer.position.row && cell.column === endingPlayer.position.column)?.terrain
-    : undefined
-  const pendingExplorationEvent = endingPlayer && !endingPlayer.isAI && Math.random() < triggerChance
-    ? createPendingExplorationEvent(endingPlayer, state.round, standingTerrain)
-    : null
-
   return {
     creatureTurn: scheduledCreatureTurn,
     state: {
       ...state,
-      pendingExplorationEvent,
-      pendingExplorationEventPlayerId: pendingExplorationEvent ? playerId : null,
       activePlayerId: nextPlayer?.id ?? playerId,
       round: isRoundComplete ? state.round + 1 : state.round,
       players: isRoundComplete
@@ -290,4 +277,32 @@ export function startPlayerTurn(state: GameState, playerId: string): GameState {
       }
       : player),
   })
+}
+
+/**
+ * 「輪到該玩家」的回合開始時，以可設定的機率隨機觸發一個探索事件。
+ *
+ * 事件改在此觸發（而非回合結束），使回合結束只處理敵方行動、不再與事件彈窗同時出現，
+ * 因此可移除「回合結束延後敵方行動」的機制。僅人類玩家（非 AI）會觸發，
+ * 因為 AI 玩家無法在 UI 上選擇事件選項。
+ */
+export function triggerTurnStartExplorationEvent(state: GameState, playerId: string): GameState {
+  if (state.activePlayerId !== playerId) {
+    return { ...state, pendingExplorationEvent: null, pendingExplorationEventPlayerId: null }
+  }
+  const player = state.players.find((candidate) => candidate.id === playerId)
+  if (!player || player.isAI) {
+    return { ...state, pendingExplorationEvent: null, pendingExplorationEventPlayerId: null }
+  }
+  const triggerChance = state.explorationTriggerChance ?? EXPLORATION_TRIGGER_CHANCE
+  if (!(Math.random() < triggerChance)) {
+    return { ...state, pendingExplorationEvent: null, pendingExplorationEventPlayerId: null }
+  }
+  const standingTerrain = state.map.cells.find((cell) => cell.row === player.position.row && cell.column === player.position.column)?.terrain
+  const pendingExplorationEvent = createPendingExplorationEvent(player, state.round, standingTerrain)
+  return {
+    ...state,
+    pendingExplorationEvent,
+    pendingExplorationEventPlayerId: pendingExplorationEvent ? playerId : null,
+  }
 }

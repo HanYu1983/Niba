@@ -14,7 +14,7 @@ import type {
   Position,
 } from '../types'
 import { addSkillExperience, getElementDamageMultiplier, getExternalSkill, getGenerationSynergyMultiplier, getInnerSkill, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, isElementGenerating, SKILL_EXPERIENCE_PER_USE } from '../rules/skillRules'
-import { getBuff, getCreatureDamageReductionPercent, getCreatureEvasionRate, getCreatureRootReductionRate, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
+import { getActiveBuffsForPlayer, getBuff, getCreatureDamageReductionPercent, getCreatureEvasionRate, getCreatureRootReductionRate, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from '../rules/playerStatsRules'
 import { getAttackTarget } from '../rules/targetRules'
 import { resolveTargetShapeCells } from '../rules/targetingRules'
@@ -309,6 +309,13 @@ function applyCombatHitState(
   const attackerMaxInnerPower = getMaxInnerPower(attackerEffective)
   const lifestealHeal = damage * getLifestealPercent(attacker)
   const innerPowerLeech = damage * getInnerPowerLeechPercent(attacker)
+  // 生物反震：被攻擊的生物若有反震 Buff（厚土流），將實際傷害的一定比例反彈回攻擊者。
+  const reflectedDamage = targetType === 'creature'
+    ? getActiveBuffsForPlayer(resolvedTarget as CreatureState).reduce(
+        (total, buff) => total + (getBuff(buff.definitionId)?.reflectionPercent ?? 0),
+        0,
+      ) * damage
+    : 0
 
   const nextState: GameState = {
     ...state,
@@ -323,7 +330,8 @@ function applyCombatHitState(
         const appliedPlayer = applyCombatPlayerState(state, attacker, rewards, dependencies, options)
         return {
           ...appliedPlayer,
-          health: Math.min(attackerMaxHealth, appliedPlayer.health + lifestealHeal),
+          // 反震傷害回彈到攻擊者（最小為 0），採「先回復後扣反震」。
+          health: Math.max(0, Math.min(attackerMaxHealth, appliedPlayer.health + lifestealHeal) - reflectedDamage),
           innerPower: Math.min(attackerMaxInnerPower, appliedPlayer.innerPower + innerPowerLeech),
         }
       })()
