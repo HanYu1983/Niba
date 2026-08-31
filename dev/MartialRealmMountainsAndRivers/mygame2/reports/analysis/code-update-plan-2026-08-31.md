@@ -18,7 +18,7 @@
 | 3 雙寫與散彈修改 | ✅ **已完成** | 3.1 ✅ useItem 委派；3.2 ✅ occupancyRules 收斂；3.3 ✅ BuffEffects |
 | 4 AI 與存檔 | ✅ **已完成** | 4.1 ✅ `ai/aiStepRunner.ts`（6 個 step + `buildAiDependencies` + `runAiStepLoop` 高階函式）；4.2 ✅ graph-search 移除 `structuredClone`（domain actions 已 immutable）、修正 `searchStrategies` 型別；4.3 ✅ 存檔 schema 驗證；4.4 ✅ 自動存檔 debounce |
 | 5 分層與測試收斂 | ✅ **已完成** | 5.1 ✅ lint 達 **0 errors**（10 warnings：6 為 exhaustive-deps 刻意取捨、4 為 MapGrid React Compiler 誤報已降級 warn 並在 eslint.config.js 記錄根因——`getActiveBuffDefinitions` 的模組級 WeakMap 快取與 compiler 變異分析衝突，權衡後保留性能快取）；5.2 ✅ 雙向依賴已分離；5.3 ⏸️ fixture 命名整理暫緩（不影響功能） |
-| 6 結構拆分 | 🔄 **進行中** | 6.1 部分完成：`store/createStore.ts`、`session/sessionController.ts`、`effects/animationBus.ts`、`ai/aiStepRunner.ts`、`actions/itemBurstActions.ts` 已抽出；純規則轉出口已移出 store；`gameStore.ts` 由 2359 行降至 1519 行；6.2 部分完成：`types.ts` 已拆分至 `game/types/{geometry,entities,map,combat,campaign,ai,runStats,gameState}.ts`（backward-compatible barrel）；GameState 三分 ✅ 已完成（`WorldState`/`UiState`/`SessionState` 以 intersection 組合，欄位形狀不變、零破壞） |
+| 6 結構拆分 | ✅ **主體完成** | 6.1 ✅ 核心基礎設施、session、動畫、AI、元素爆發與純規則出口已抽出；`gameStore.ts` 由 2359 行降至 1519 行；6.2 ✅ `types.ts` 已拆分至 `game/types/*`，GameState 已三分為 `WorldState`/`UiState`/`SessionState`；`scenarioCompiler`/`scenarioValidator` 已下沉至 `game/scenario/`，`game → editor` 反向依賴為 0 |
 
 ### 階段 1 額外發現的 bug（已修正）
 
@@ -66,9 +66,9 @@
 
 | 項目 | 現況 | 說明 |
 |---|---|---|
-| **5.3 測試 fixtures 統一** | ❌ 未做 | 實測仍有 **38 個測試檔**重複定義 `makePlayer` / `makeState`；`gameStore.test.ts:16` 誤命名的 `makePlayer`（實際回傳 `CreatureState`）仍在。計劃已標記「暫緩」——`PlayerState` 新增必填欄位時需同步修改 38 處 |
-| **5.1 ESLint `no-restricted-imports` 分層規則** | ❌ 未做 | `eslint.config.js` 目前**沒有**分層邊界規則。報告 §6.2 方向三明確指出：`gameStore.ts` 從 1519 行膨脹到 2687 行、3 條雙向依賴邊的累積，都是在無人察覺下發生的——**缺少此機械化防護，本次重構成果可能被時間侵蝕** |
-| **`game → editor` 反向依賴** | 🟡 部分 | `ScenarioDefinition` 已下沉至 `contracts/scenario.ts` ✅；但 `gameStore.ts:155-156` 仍 import `../editor/rules/scenarioCompiler` 與 `scenarioValidator`（最後一條反向邊） |
+| **5.3 測試 fixtures 統一** | 🟡 部分完成 | 已建立 `gameFixtures.ts`、遷移 11 個既有使用者，並修正 `gameStore.test.ts` 的 `makePlayer` → `makeTestCreature`；實測仍有 30 個測試檔保留本地 fixture，全面遷移暫緩 |
+| **5.1 ESLint `no-restricted-imports` 分層規則** | ✅ 已完成 | 已加入 `eslint.config.js`，實際 lint 為 0 errors；type-only import 使用 `allowTypeImports` 豁免，避免誤擋安全的型別依賴 |
+| **`game → editor` 反向依賴** | ✅ 已完成 | `scenarioCompiler`/`scenarioValidator` 已移至 `game/scenario/`；實測 `src/game/` 非測試程式碼對 `editor` 的 import 為 0 筆 |
 | **6.1 目標 400~600 行** | 🟡 未達 | 1519 行，超出目標約 2.5 倍。剩餘主體為 session 生命週期方法與約 28 個薄委派方法（`runActionOutcome(...)` 單行） |
 | **6.2 optional 欄位必填化** | ❌ 未做 | `state.defenseStructures?` 等仍為 optional，數十處 `?? []` 未清除（原計劃列為 6.2 第 3 點） |
 | **低優先項（報告 §5.4 #16~20）** | ❌ 未做 | Modal shell 元件 ×3、schoolId→emoji 常數表、`blocked`/`occupied`/`excluded` 術語統一、MapGrid props 拆分、舊報告加 superseded 標記 |
@@ -79,9 +79,9 @@
 
 **尚未收尾的三件事**（按投報率排序）：
 
-1. **ESLint `no-restricted-imports` 分層規則**（報告方向三的核心）——防止 `gameStore.ts` 再次膨脹、雙向依賴再次累積的機械化防護，成本約半小時
-2. **5.3 fixtures 統一**（38 檔重複）——降低未來型別變更的修改面
-3. **`game → editor` 最後一條反向邊**——`scenarioCompiler` / `scenarioValidator` 下沉
+1. **5.3 fixtures 全面統一**（剩餘 30 個測試檔）——降低未來型別變更的修改面；目前不影響功能，維持低優先
+2. **6.1 `gameStore` 進一步拆分**——目前 1519 行，尚未達原訂 400~600 行目標；可再拆 session lifecycle、dialogue 與 action facade
+3. **低優先 UI / 命名整理**——Modal shell、schoolId→emoji 常數表、術語統一、MapGrid props 分組與舊報告 superseded 標記
 
 ---
 
