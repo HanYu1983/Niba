@@ -14,6 +14,7 @@ type InnerSkillEntry = {
   name: string
   theme: string
   formula: string
+  buffIds?: string[]
   calculate: (attributes: PlayerAttributes, level: number) => number
 }
 
@@ -58,6 +59,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       name: '金剛築基',
       theme: '強化臂力與根骨，擅長正面壓制與承受傷害。',
       formula: '臂力 × 0.6 + 根骨 × 0.4',
+      buffIds: ['golden-body-foundation'],
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.armStrength * 0.6 + attributes.constitution * 0.4) * level),
     }],
     damage: [{ name: '金剛拳', description: '凝聚臂力與根骨之力，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
@@ -75,6 +77,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       name: '追風吐納',
       theme: '強化身法與悟性，擅長機動與連續出手。',
       formula: '身法 × 0.6 + 悟性 × 0.4',
+      buffIds: ['swift-wind-foundation'],
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.agility * 0.6 + attributes.insight * 0.4) * level),
     }],
     damage: [{ name: '追風腿', description: '以身法帶動腿勁，朝 2 格內單一敵人造成傷害。', innerPowerCost: 6, range: 2 }],
@@ -92,6 +95,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       name: '赤炎引氣',
       theme: '強化臂力與內息，追求高爆發傷害。',
       formula: '臂力 × 0.5 + 內息 × 0.5',
+      buffIds: ['scarlet-flame-foundation'],
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.armStrength * 0.5 + attributes.innerEnergy * 0.5) * level),
     }],
     damage: [
@@ -109,6 +113,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       name: '寒水養氣',
       theme: '強化內息與根骨，擅長穩定輸出與持久作戰。',
       formula: '內息 × 0.6 + 根骨 × 0.4',
+      buffIds: ['frost-water-foundation'],
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.innerEnergy * 0.6 + attributes.constitution * 0.4) * level),
     }],
     damage: [
@@ -126,6 +131,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       name: '厚土納元',
       theme: '強化根骨與內息，擅長防守反擊與重擊。',
       formula: '根骨 × 0.6 + 內息 × 0.4',
+      buffIds: ['earth-mountain-foundation'],
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.constitution * 0.6 + attributes.innerEnergy * 0.4) * level),
     }],
     damage: [{ name: '裂地拳', description: '以大地之力震擊，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
@@ -143,6 +149,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       name: '太虛養神',
       theme: '均衡五項屬性，擅長靈活應對各種戰局。',
       formula: '五項基本屬性總和 ÷ 5',
+      buffIds: ['void-spirit-foundation'],
       calculate: (attributes, level) => Math.max(1, Math.floor((attributes.armStrength + attributes.constitution + attributes.agility + attributes.innerEnergy + attributes.insight) / 5) * level),
     }],
     damage: [{ name: '靈犀指', description: '以靈犀一指點出，朝 2 格內單一敵人造成傷害。', innerPowerCost: 6, range: 2 }],
@@ -160,6 +167,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       name: '百毒納氣',
       theme: '南疆小派，以毒入武；擅長陰柔纏鬥與官道奔行，名不經傳卻不容人小覷。',
       formula: '臂力 × 0.5 + 身法 × 0.5',
+      buffIds: ['hundred-poison-foundation'],
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.armStrength * 0.5 + attributes.agility * 0.5) * level),
     }],
     damage: [
@@ -177,6 +185,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       name: '銳鋒淬芒',
       theme: '新興鑄劍世家的快劍之道，強化臂力與身法，講究搶攻奪勢、一擊制敵。',
       formula: '臂力 × 0.7 + 身法 × 0.3',
+      buffIds: ['sharp-edge-foundation'],
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.armStrength * 0.7 + attributes.agility * 0.3) * level),
     }],
     damage: [{ name: '銳鋒斬', description: '快劍疾斬而出，朝 2 格內單一敵人造成傷害。', innerPowerCost: 6, range: 2 }],
@@ -194,6 +203,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       name: '煙雨養元',
       theme: '江南煙雨樓的養生綿掌，強化內息與悟性，擅長以柔克剛與回復續戰。',
       formula: '內息 × 0.5 + 悟性 × 0.5',
+      buffIds: ['misty-rain-foundation'],
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.innerEnergy * 0.5 + attributes.insight * 0.5) * level),
     }],
     damage: [{ name: '煙雨掌', description: '掌如細雨連綿，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
@@ -211,6 +221,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       name: '烈陽戰體',
       theme: '西域烈陽教遺部的血性武學，強化根骨與臂力，越戰越勇、剛猛無儔。',
       formula: '根骨 × 0.6 + 臂力 × 0.4',
+      buffIds: ['blazing-sun-foundation'],
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.constitution * 0.6 + attributes.armStrength * 0.4) * level),
     }],
     damage: [{ name: '烈陽轟', description: '陽罡之氣轟然擊出，對周圍 1 格內所有敵人造成傷害。', innerPowerCost: 8, shape: { kind: 'radius', range: 1 }, selectionMode: { kind: 'all' } }],
@@ -228,6 +239,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       name: '黃土紮根',
       theme: '黃土溝壑間獵戶自衛武團的野路子，強化根骨與身法，擅長持久游擊與修築工事。',
       formula: '根骨 × 0.5 + 身法 × 0.5',
+      buffIds: ['yellow-earth-foundation'],
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.constitution * 0.5 + attributes.agility * 0.5) * level),
     }],
     damage: [{ name: '裂石棍', description: '鐵棍劈裂山石，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
@@ -245,6 +257,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       name: '幽影藏形',
       theme: '隱世幽影流的暗襲之術，強化身法與悟性，來去無蹤、隱匿於暗。',
       formula: '身法 × 0.5 + 悟性 × 0.5',
+      buffIds: ['ghost-shadow-foundation'],
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.agility * 0.5 + attributes.insight * 0.5) * level),
     }],
     damage: [{ name: '影襲', description: '自暗處無聲刺出，朝 2 格內單一敵人造成傷害。', innerPowerCost: 6, range: 2 }],
@@ -270,6 +283,7 @@ export const progressionInnerSkills: InnerSkill[] = martialSchoolCatalog.flatMap
   schoolId: school.id,
   element: school.element,
   level: 1,
+  buffIds: inner.buffIds,
   calculateDamage: (attributes) => inner.calculate(attributes, 1),
 })))
 

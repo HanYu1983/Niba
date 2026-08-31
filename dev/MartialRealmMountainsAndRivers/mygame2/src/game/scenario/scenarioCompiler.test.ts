@@ -88,8 +88,9 @@ describe('buildGameStateFromScenario', () => {
     ]
     const state = buildGameStateFromScenario(scenario)
     const custom = state.creatures.find((c) => c.id === 'custom')!
-    expect(custom.attributes.armStrength).toBe(10)
-    expect(custom.attributes.constitution).toBe(10)
+    // void-spirit 內功五維靈氣：臂力/根骨/悟性各 +1
+    expect(custom.attributes.armStrength).toBe(11)
+    expect(custom.attributes.constitution).toBe(11)
   })
 
   it('attributes 為空物件時視為未指定，仍依等級成長', () => {
