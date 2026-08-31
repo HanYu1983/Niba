@@ -7,7 +7,7 @@ import {
   makeAiTestState,
   makeTestCreature,
   makeTestPlayer,
-} from '../../testHelpers/aiTestFixtures'
+} from '../../testHelpers/gameFixtures'
 
 const dependencies: CombatActionDependencies = {
   getActionablePlayer,

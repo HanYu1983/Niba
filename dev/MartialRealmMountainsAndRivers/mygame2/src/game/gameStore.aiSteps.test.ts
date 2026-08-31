@@ -10,7 +10,7 @@ import {
   makeTestHuman,
   makeTestPlayer,
   manhattanDistance,
-} from './testHelpers/aiTestFixtures'
+} from './testHelpers/gameFixtures'
 
 /**
  * 切片 A0：runAiDefenseStep／runAiSupportStep 的行為釘住網。

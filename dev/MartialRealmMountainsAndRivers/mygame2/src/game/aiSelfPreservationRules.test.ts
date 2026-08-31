@@ -5,7 +5,7 @@ import {
   makeAiTestState,
   makeTestCreature,
   makeTestPlayer,
-} from './testHelpers/aiTestFixtures'
+} from './testHelpers/gameFixtures'
 
 function player(overrides: Partial<PlayerState> = {}): PlayerState {
   return makeTestPlayer({ name: 'AI', ...overrides })

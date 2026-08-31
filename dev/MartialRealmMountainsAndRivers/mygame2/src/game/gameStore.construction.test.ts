@@ -11,7 +11,7 @@ import {
   makeTestHuman,
   makeTestPlayer,
   makeTestResourcePoint,
-} from './testHelpers/aiTestFixtures'
+} from './testHelpers/gameFixtures'
 
 /**
  * 切片 G：建設 AI——runAiConstructionStep 的 queue 狀態機（§14.6）：
