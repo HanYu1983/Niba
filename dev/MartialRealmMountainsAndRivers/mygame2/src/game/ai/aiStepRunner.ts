@@ -28,6 +28,15 @@ const MAX_ACTION_EVENTS = 200
 /** AI step 迴圈上限：避免異常狀態下無限迴圈。 */
 const MAX_LOOPS = 50
 
+/** 圖搜索／模糊策略評估用的 stub combat deps（不實際結算掉落/升級）。 */
+const STUB_COMBAT_DEPS: ExecuteAiActionDependencies['combat'] = {
+  getActionablePlayer: (s, playerId) => s.players.find((p) => p.id === playerId) ?? null,
+  createLootForPlayer: () => undefined,
+  getLearnableSkill: () => undefined,
+  applyExperienceAndLevelUp: (player) => player,
+  addLootToPlayer: (player) => player,
+}
+
 export interface AiStepRunnerDeps {
   getState: () => GameState
   updateGameState: (updater: (state: GameState) => GameState) => void
@@ -504,7 +513,7 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
     return { ok: false, reason: '目前無法執行模糊策略回合。' }
   }
 
-  const aiDeps = buildAiDependencies({ getActionablePlayer: (s, playerId) => s.players.find((p) => p.id === playerId) ?? null, createLootForPlayer: () => undefined, getLearnableSkill: () => undefined, applyExperienceAndLevelUp: (player) => player, addLootToPlayer: (player) => player })
+  const aiDeps = buildAiDependencies(STUB_COMBAT_DEPS)
 
   return runAiStepLoop(deps, playerId, player.name, '模糊策略', () => {
     const currentPlayer = deps.getState().players.find((p) => p.id === playerId)!
@@ -572,7 +581,7 @@ export function runGraphSearchStep(deps: AiStepRunnerDeps, playerId: string): Ac
     return { ok: false, reason: '目前無法執行圖搜索回合。' }
   }
 
-  const aiDeps = buildAiDependencies({ getActionablePlayer: (s, playerId) => s.players.find((p) => p.id === playerId) ?? null, createLootForPlayer: () => undefined, getLearnableSkill: () => undefined, applyExperienceAndLevelUp: (player) => player, addLootToPlayer: (player) => player })
+  const aiDeps = buildAiDependencies(STUB_COMBAT_DEPS)
 
   return runAiStepLoop(deps, playerId, player.name, '圖搜索', () => {
     const { actions, exitReason: searchExit } = runGraphSearchStepDomain(deps.getState(), playerId, aiDeps)
