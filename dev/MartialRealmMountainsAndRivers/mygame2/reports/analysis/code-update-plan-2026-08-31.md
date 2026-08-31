@@ -34,6 +34,57 @@
 
 ---
 
+## 完成度驗證報告（2026-08-31）
+
+> 對照 `code-health-review-2026-08-31.md` 的建議清單，以程式碼實證（非僅文件宣稱）逐項驗證。
+> 驗證基準：`npx tsc -b` ✅ 通過、`npm run test` ✅ **1119/1119 通過**、`npx eslint .` ✅ **0 errors**（10 warnings）。
+
+### ✅ 已完成（經程式碼實證）
+
+| 報告建議 | 計劃步驟 | 實證 |
+|---|---|---|
+| 移除殘留 debug log | 1.1 | `turnActions.ts` 已無 `console.log`（grep 實測 0 筆） |
+| `resourcePoints` 三元方向 bug | 1.2 | 確認為 bug 並修正為對稱邏輯 |
+| 使用者可見文案 / 簡體字 / 命名矛盾 | 1.3 / 1.4 | 已修正 |
+| P-1 視野 O(cells²) 全圖重算 | 2.1 / 2.2 | `visibleCellIds` 提至 `useMemo`，per-cell 改 `Set.has` |
+| P-4 `getActiveBuffDefinitions` 放大器 | 2.3 | WeakMap 快取（`playerDerivedRules.ts:75`）+ 目錄 Map 索引 |
+| P-5 pipeline 迴圈內線性掃描 | 2.4 | `CreatureTurnContext` 加 `cellsByPosition` Map 與 `occupiedKeys` Set |
+| P-3 MapGrid per-cell filter | 2.5 | `memo` + `cellObjects` 物件索引（後續再重寫為不可變分組） |
+| **useItem 完整雙寫（324 行）** | 3.1 | ✅ store 版已改委派 `executeUseItemAction`（`gameStore.ts:958-960`，3 行） |
+| 佔位計算 10 處散彈式拼湊 | 3.2 | ✅ `rules/occupancyRules.ts` 存在，`MOVEMENT_LAYERS` / `SPAWN_LAYERS` / `BUILD_LAYERS` preset |
+| BuffDefinition/BuffInstance 4 處手動同步 | 3.3 | ✅ `core/buffEffects.ts` 存在，白名單改型別驅動 |
+| AI step 樣板複製 5 份（約 550 行） | 4.1 | ✅ `ai/aiStepRunner.ts`：6 個 step + `buildAiDependencies` + `runAiStepLoop` 高階函式 |
+| P-6 graph-search `structuredClone` | 4.2 | ✅ 已移除（domain actions 皆 immutable，深拷貝多餘）；`searchStrategies` 型別修正 |
+| 存檔匯入無 schema 驗證 | 4.3 | ✅ `gameSaveValidation.ts` 存在，惡意存檔不白屏 |
+| P-8 自動存檔同步阻塞 | 4.4 | ✅ debounce 已加入 |
+| lint 分層 / 3 條雙向依賴邊 | 5.1 / 5.2 | ✅ lint 0 errors；`catalogs/lootCatalog.ts`、`rules/dialogueRules.ts`、`contracts/scenario.ts` 均存在 |
+| `types.ts` 混合檔（1014 行） | 6.2 | ✅ 拆分至 `game/types/{geometry,entities,map,combat,campaign,ai,runStats,gameState}.ts`，`types.ts` 僅剩 **14 行** backward-compatible barrel |
+| `GameState` 73 欄位混合 | 6.2 | ✅ 三分為 `WorldState` / `UiState` / `SessionState`（intersection 組合，欄位形狀不變、零破壞） |
+| `gameStore.ts` God Object（2687 行） | 6.1 | 🟡 降至 **1519 行（-43%）**：`store/createStore.ts`、`session/sessionController.ts`、`effects/animationBus.ts`、`ai/aiStepRunner.ts`、`actions/itemBurstActions.ts` 已抽出；純規則轉出口已移出 |
+
+### ⚠️ 未完成 / 部分完成
+
+| 項目 | 現況 | 說明 |
+|---|---|---|
+| **5.3 測試 fixtures 統一** | ❌ 未做 | 實測仍有 **38 個測試檔**重複定義 `makePlayer` / `makeState`；`gameStore.test.ts:16` 誤命名的 `makePlayer`（實際回傳 `CreatureState`）仍在。計劃已標記「暫緩」——`PlayerState` 新增必填欄位時需同步修改 38 處 |
+| **5.1 ESLint `no-restricted-imports` 分層規則** | ❌ 未做 | `eslint.config.js` 目前**沒有**分層邊界規則。報告 §6.2 方向三明確指出：`gameStore.ts` 從 1519 行膨脹到 2687 行、3 條雙向依賴邊的累積，都是在無人察覺下發生的——**缺少此機械化防護，本次重構成果可能被時間侵蝕** |
+| **`game → editor` 反向依賴** | 🟡 部分 | `ScenarioDefinition` 已下沉至 `contracts/scenario.ts` ✅；但 `gameStore.ts:155-156` 仍 import `../editor/rules/scenarioCompiler` 與 `scenarioValidator`（最後一條反向邊） |
+| **6.1 目標 400~600 行** | 🟡 未達 | 1519 行，超出目標約 2.5 倍。剩餘主體為 session 生命週期方法與約 28 個薄委派方法（`runActionOutcome(...)` 單行） |
+| **6.2 optional 欄位必填化** | ❌ 未做 | `state.defenseStructures?` 等仍為 optional，數十處 `?? []` 未清除（原計劃列為 6.2 第 3 點） |
+| **低優先項（報告 §5.4 #16~20）** | ❌ 未做 | Modal shell 元件 ×3、schoolId→emoji 常數表、`blocked`/`occupied`/`excluded` 術語統一、MapGrid props 拆分、舊報告加 superseded 標記 |
+
+### 結論
+
+**核心重構已全部完成**：報告 §6.2 的「方向一（解除 P-1+P-2 性能組合）」與「方向二（消滅新舊並存雙寫）」兩大目標完全落地；階段 1~4 全數完成，5.2 與 6.1/6.2 主體完成。
+
+**尚未收尾的三件事**（按投報率排序）：
+
+1. **ESLint `no-restricted-imports` 分層規則**（報告方向三的核心）——防止 `gameStore.ts` 再次膨脹、雙向依賴再次累積的機械化防護，成本約半小時
+2. **5.3 fixtures 統一**（38 檔重複）——降低未來型別變更的修改面
+3. **`game → editor` 最後一條反向邊**——`scenarioCompiler` / `scenarioValidator` 下沉
+
+---
+
 ## 執行守則
 
 1. **每完成一步就跑一次完整測試**：`npx tsc -b; npm run test`
