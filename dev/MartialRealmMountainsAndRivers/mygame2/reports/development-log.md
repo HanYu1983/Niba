@@ -1,5 +1,34 @@
 # 開發日誌
 
+## 2026-09-01｜生物行動修正、隨機事件移至回合開始與反震平衡
+
+### 本次完成
+
+- **修正巢穴生成生物體力不足無法攻擊**：巢穴生成生物基礎五維由 `{4,4,4,4,4}` 提升至 `{6,6,6,6,6}`（與開局游蕩妖物一致）。原先 Lv.1 怪物最大體力 = 0.5×身法 + 0.5×臂力 = 4，低於單次攻擊消耗 5，導致「相鄰卻不攻擊」；改後 Lv.1 生物最大體力 6，可正常攻擊。並修正體力不足時仍回報 `'attack'` 但空揮的事件，改回報原地待命（`'idle'`）。
+- **燃燒等週期性傷害結果彈窗取整**：`creatureAnimation.ts` 的 `animateCreatureTurn` 在產生「燃燒 對 XX 造成 N 點傷害」訊息時，將 `damage` 以 `Math.round` 取整後顯示，避免浮點長小數（如 6.600000000000001）；實際狀態仍保留精確值。
+- **隨機探索事件移至回合開始**：在 `turnActions.ts` 新增 `triggerTurnStartExplorationEvent`，於「輪到該玩家」的回合開始以機率觸發事件；`endPlayerTurn` 移除事件觸發。`gameStore.endPlayerTurn` 在敵方行動與回合推進後呼叫新觸發函式。因為事件不再與敵方行動同時出現，移除了先前為了事件而延後敵方行動的 `triggeredEvent` 分支（僅保留劇情對話的 `dialoguePending` 延後）；`dismissPendingExplorationEvent` 也不再 flush 敵方行動。另修正 `SessionContext.dpendingCreatureTurn` 的拼字錯誤。
+- **玩家 UI 體力顯示取值**：`PlayerPanel.tsx`、`PlayerCommandPanel.tsx`、`Player.tsx`（地圖標記）的體力數值改以 `Math.floor` 顯示。
+- **生物反震於玩家攻擊時生效**：`combatActions.ts` 的 `applyCombatHitState` 在目標為帶有反震 Buff 的生物時，將 `damage × reflectionPercent` 回彈到攻擊者（玩家），普通攻擊與外功共用此函式皆生效。
+- **反震平衡調整**：`earth-mountain-reflection` 的 `reflectionPercent` 由 `0.25` 下修至 `0.15`（基礎 15%），等級縮放公式不變（每級 ×(1+0.15×levelDelta)）；同步更新功法目錄描述與相關測試。
+
+### 影響檔案
+
+- 修改：`src/game/actions/creatureActions.ts`、`src/game/actions/creatureTurnPipeline.ts`（生物基礎五維、空揮修正）
+- 修改：`src/game/creatureAnimation.ts`（週期性傷害取整）
+- 修改：`src/game/actions/turnActions.ts`、`src/game/gameStore.ts`、`src/game/session/sessionController.ts`、`src/game/actions/explorationActions.ts`、`src/game/types/gameState.ts`、`src/components/GameOverlays.tsx`、`src/components/PendingExplorationEventModal.tsx`（事件移至回合開始、移除事件延後）
+- 修改：`src/components/PlayerPanel.tsx`、`src/components/PlayerCommandPanel.tsx`、`src/components/Player.tsx`（體力 `Math.floor`）
+- 修改：`src/game/actions/combatActions.ts`（生物反震回彈）
+- 修改：`src/game/catalogs/buffCatalog.ts`、`src/game/catalogs/skillProgressionCatalog.ts`（反震 15%）
+
+### 驗證結果
+
+- TypeScript：通過。vitest：**105 檔／1149 項全數通過**（含新增反震、回合開始事件測試；並修正既有生物回避／根骨減傷造成的 flaky 測試）。
+
+### 下一步
+
+- 確認隨機事件在多人／單人模式下於正確的回合開始出現。
+- 確認帶反震的厚土流生物（等級 3+）被攻擊時正確回彈 15% 傷害至玩家。
+
 ## 2026-09-01｜生物對稱防禦、等級 3+ 裝備外功與成長公式調整
 
 ### 本次完成

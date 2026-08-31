@@ -136,7 +136,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
     }],
     damage: [{ name: '裂地拳', description: '以大地之力震擊，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
     aura: [
-      { name: '反震', description: '開啟後受到傷害時，反彈 25% 傷害（常駐）。', effect: 'reflection', passiveBuffIds: ['earth-mountain-reflection'] },
+      { name: '反震', description: '開啟後受到傷害時，反彈 15% 傷害（常駐）。', effect: 'reflection', passiveBuffIds: ['earth-mountain-reflection'] },
       { name: '登山功', description: '進入山嶽時，移動消耗降為 2。', passiveBuffIds: ['mountain-step'] },
     ],
     enhancement: [],

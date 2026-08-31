@@ -1469,7 +1469,7 @@ describe('executeAttack', () => {
     expect(gameStore.getState().players[0].experience).toBe(3)
   })
 
-  it('攻擊帶有反震 Buff 的生物時，反彈 25% 傷害至玩家', () => {
+  it('攻擊帶有反震 Buff 的生物時，反彈 15% 傷害至玩家', () => {
     // 依序遮斷：暴擊(0.99→否)、回避(0.99→否)、根骨減傷(0.99→否) → 完整命中。
     vi.spyOn(Math, 'random').mockReturnValueOnce(0.99).mockReturnValueOnce(0.99).mockReturnValueOnce(0.99)
     const player = makeTestCreature({ position: { row: 5, column: 5 } })
@@ -1494,9 +1494,9 @@ describe('executeAttack', () => {
     if (!result.ok) return
     const damage = result.data.damage
     const nextPlayer = gameStore.getState().players[0]
-    // 玩家受到 25% 反震傷害：health = 起始血 - floor(damage * 0.25)。
+    // 玩家受到 15% 反震傷害：health = 起始血 - damage * 0.15（與既有反震一致保留小數）。
     expect(damage).toBeGreaterThan(0)
-    expect(nextPlayer.health).toBe(playerHealthBefore - Math.floor(damage * 0.25))
+    expect(nextPlayer.health).toBe(playerHealthBefore - damage * 0.15)
   })
 
   it('攻擊帶有反震 Buff 的生物被回避時，不反彈傷害', () => {
