@@ -134,6 +134,80 @@ function getAiPlayer(state: GameState, playerId: string) {
   return player
 }
 
+/** 單一步驟的決策結果：要執行的行動序列，或直接結束迴圈的 exitReason。 */
+type AiLoopDecision =
+  | { actions: AiAction[] }
+  | { exitReason: string }
+
+/**
+ * AI step 迴圈骨架（重構文件 §11 Turn Scheduler 共用框架）。
+ *
+ * 封裝 fuzzy / decision-tree / graph-search 三種 step 共用的迴圈邏輯：
+ * - 每步呼叫 `decide` 取得要執行的行動（或直接結束）。
+ * - 執行前保底 validate（正常必定通過，不通過 = 代碼 bug）。
+ * - 體力耗盡／迴圈上限／行動失敗時設定 exitReason 結束。
+ * - 正常結束（無 exitReason）→ endPlayerTurn + ok:true；
+ *   異常結束 → ok:false（由 scheduler 負責結束回合）。
+ *
+ * @param deps        store 依賴
+ * @param playerId    AI 玩家 id
+ * @param playerName  玩家名稱（日誌用）
+ * @param loopLabel   迴圈名稱（日誌 reason 用）
+ * @param decide      每步決策：回傳要執行的行動，或直接結束迴圈
+ */
+function runAiStepLoop(
+  deps: AiStepRunnerDeps,
+  playerId: string,
+  playerName: string,
+  loopLabel: string,
+  decide: () => AiLoopDecision,
+): ActionOutcome {
+  const actor = { id: playerId, kind: 'player' as const }
+  let loopCount = 0
+  let exitReason = ''
+
+  while (!exitReason && deps.getState().players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
+    loopCount++
+    const currentPlayer = deps.getState().players.find((p) => p.id === playerId)!
+
+    const decision = decide()
+    if ('exitReason' in decision) {
+      exitReason = decision.exitReason
+      continue
+    }
+
+    for (const action of decision.actions) {
+      const cp = deps.getState().players.find((p) => p.id === playerId)
+      if (!cp || cp.stamina <= 0) {
+        exitReason = `體力耗盡（剩餘 ${cp?.stamina ?? 0}）`
+        break
+      }
+      const validation = validateAiAction(deps.getState(), action)
+      if (!validation.valid) {
+        exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
+        break
+      }
+      const actionResult = deps.executeAiAction(action)
+      recordAiStepEvent(deps.updateGameState, deps.getState().round, playerId, currentPlayer.name, action, actionResult)
+      if (!actionResult.ok) {
+        exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
+        break
+      }
+    }
+  }
+
+  // ── 出口邏輯 ──────────────────────────────────────────────
+  if (!exitReason) {
+    // 正常結束：呼叫 endPlayerTurn，回傳 ok:true（scheduler 不會重複呼叫 endTurn）
+    const endAction = { type: 'end-turn' as const, actor, reason: `${loopLabel}迴圈結束（${loopCount} 步）` }
+    deps.endPlayerTurn(playerId)
+    recordAiStepEvent(deps.updateGameState, deps.getState().round, playerId, playerName, endAction, { ok: true })
+    return { ok: true }
+  }
+  // 異常退出：不呼叫 endPlayerTurn，回傳 ok:false（scheduler 會負責結束回合）
+  return { ok: false, reason: exitReason }
+}
+
 /** 執行防守（protect-base）step。 */
 export function runAiDefenseStep(deps: AiStepRunnerDeps, playerId: string): ActionOutcome {
   const state = deps.getState()
@@ -430,15 +504,9 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
     return { ok: false, reason: '目前無法執行模糊策略回合。' }
   }
 
-  const actor = { id: playerId, kind: 'player' as const }
-  let loopCount = 0
-  let exitReason = ''
-
   const aiDeps = buildAiDependencies({ getActionablePlayer: (s, playerId) => s.players.find((p) => p.id === playerId) ?? null, createLootForPlayer: () => undefined, getLearnableSkill: () => undefined, applyExperienceAndLevelUp: (player) => player, addLootToPlayer: (player) => player })
 
-  // 模糊邏輯迴圈：每步 perceive → evaluate → select → execute
-  while (!exitReason && deps.getState().players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
-    loopCount++
+  return runAiStepLoop(deps, playerId, player.name, '模糊策略', () => {
     const currentPlayer = deps.getState().players.find((p) => p.id === playerId)!
 
     // 1. Perceive
@@ -465,41 +533,10 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
     }
 
     if (!goalFound) {
-      exitReason = `所有目標分數過低或無法產生有效行動（最高 ${rankedGoals[0]?.goal} = ${rankedGoals[0]?.result.score.toFixed(2)}）`
-      continue
+      return { exitReason: `所有目標分數過低或無法產生有效行動（最高 ${rankedGoals[0]?.goal} = ${rankedGoals[0]?.result.score.toFixed(2)}）` }
     }
-
-    // 6. Execute（保底 validate：正常必定通過，不通過 = 代碼 bug）
-    for (const action of actions) {
-      const cp = deps.getState().players.find((p) => p.id === playerId)
-      if (!cp || cp.stamina <= 0) {
-        exitReason = `體力耗盡（剩餘 ${cp?.stamina ?? 0}）`
-        break
-      }
-      const validation = validateAiAction(deps.getState(), action)
-      if (!validation.valid) {
-        exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
-        break
-      }
-      const actionResult = deps.executeAiAction(action)
-      recordAiStepEvent(deps.updateGameState, deps.getState().round, playerId, currentPlayer.name, action, actionResult)
-      if (!actionResult.ok) {
-        exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
-        break
-      }
-    }
-  }
-
-  // ── 出口邏輯 ──────────────────────────────────────────────
-  if (!exitReason) {
-    // 正常結束：呼叫 endPlayerTurn，回傳 ok:true（scheduler 不會重複呼叫 endTurn）
-    const endAction = { type: 'end-turn' as const, actor, reason: `迴圈正常結束（${loopCount} 步）` }
-    deps.endPlayerTurn(playerId)
-    recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, endAction, { ok: true })
-    return { ok: true }
-  }
-  // 異常退出：不呼叫 endPlayerTurn，回傳 ok:false（scheduler 會負責結束回合）
-  return { ok: false, reason: exitReason }
+    return { actions }
+  })
 }
 
 /** 執行決策樹（decision-tree）step。 */
@@ -511,39 +548,19 @@ export function runDecisionTreeStep(deps: AiStepRunnerDeps, playerId: string): A
     return { ok: false, reason: '目前無法執行決策樹回合。' }
   }
 
-  const actor = { id: playerId, kind: 'player' as const }
-  let loopCount = 0
-  let exitReason = ''
-
-  while (!exitReason && deps.getState().players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
-    loopCount++
-    const currentPlayer = deps.getState().players.find((p) => p.id === playerId)!
-
+  return runAiStepLoop(deps, playerId, player.name, '決策樹', () => {
     const diagnostics: import('./decisionTree/decideNextAction').DecisionTreeDiagnostics = { reasons: [] }
     const action = decideNextAction(deps.getState(), playerId, diagnostics)
 
     if (!action) {
-      exitReason = diagnostics.reasons.length > 0
-        ? `決策樹無可執行行動（${diagnostics.reasons.join('；')}）`
-        : '決策樹無可執行行動'
-      continue
+      return {
+        exitReason: diagnostics.reasons.length > 0
+          ? `決策樹無可執行行動（${diagnostics.reasons.join('；')}）`
+          : '決策樹無可執行行動',
+      }
     }
-
-    const actionResult = deps.executeAiAction(action)
-    recordAiStepEvent(deps.updateGameState, deps.getState().round, playerId, currentPlayer.name, action, actionResult)
-    if (!actionResult.ok) {
-      exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
-      continue
-    }
-  }
-
-  if (!exitReason) {
-    const endAction = { type: 'end-turn' as const, actor, reason: `決策樹迴圈結束（${loopCount} 步）` }
-    deps.endPlayerTurn(playerId)
-    recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, endAction, { ok: true })
-    return { ok: true }
-  }
-  return { ok: false, reason: exitReason }
+    return { actions: [action] }
+  })
 }
 
 /** 執行圖搜索（graph-search）step。 */
@@ -555,49 +572,13 @@ export function runGraphSearchStep(deps: AiStepRunnerDeps, playerId: string): Ac
     return { ok: false, reason: '目前無法執行圖搜索回合。' }
   }
 
-  const actor = { id: playerId, kind: 'player' as const }
-  let loopCount = 0
-  let exitReason = ''
-
   const aiDeps = buildAiDependencies({ getActionablePlayer: (s, playerId) => s.players.find((p) => p.id === playerId) ?? null, createLootForPlayer: () => undefined, getLearnableSkill: () => undefined, applyExperienceAndLevelUp: (player) => player, addLootToPlayer: (player) => player })
 
-  while (!exitReason && deps.getState().players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
-    loopCount++
-    const currentPlayer = deps.getState().players.find((p) => p.id === playerId)!
-
+  return runAiStepLoop(deps, playerId, player.name, '圖搜索', () => {
     const { actions, exitReason: searchExit } = runGraphSearchStepDomain(deps.getState(), playerId, aiDeps)
-
     if (actions.length === 0) {
-      exitReason = searchExit ?? '圖搜索無結果'
-      continue
+      return { exitReason: searchExit ?? '圖搜索無結果' }
     }
-
-    for (const action of actions) {
-      const cp = deps.getState().players.find((p) => p.id === playerId)
-      if (!cp || cp.stamina <= 0) {
-        exitReason = `體力耗盡（剩餘 ${cp?.stamina ?? 0}）`
-        break
-      }
-      const validation = validateAiAction(deps.getState(), action)
-      if (!validation.valid) {
-        exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
-        break
-      }
-      const actionResult = deps.executeAiAction(action)
-      recordAiStepEvent(deps.updateGameState, deps.getState().round, playerId, currentPlayer.name, action, actionResult)
-      if (!actionResult.ok) {
-        exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
-        break
-      }
-    }
-  }
-
-  // ── 出口邏輯 ──────────────────────────────────────────────
-  if (!exitReason) {
-    const endAction = { type: 'end-turn' as const, actor, reason: `圖搜索迴圈結束（${loopCount} 步）` }
-    deps.endPlayerTurn(playerId)
-    recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, endAction, { ok: true })
-    return { ok: true }
-  }
-  return { ok: false, reason: exitReason }
+    return { actions }
+  })
 }
