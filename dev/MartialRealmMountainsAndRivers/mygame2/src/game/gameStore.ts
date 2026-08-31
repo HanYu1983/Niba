@@ -31,15 +31,11 @@ import {
   type UpgradeableAttribute,
   type AiOrder,
   type AiConstructionPlan,
-  type AiConstructionPlanItem,
   type CampaignState,
   type RunStats,
   isAdjacent,
   isSameOrAdjacent,
 } from './types'
-import type { AiAction } from './ai/aiAction'
-import type { AiActionEvent } from './ai/aiActionEvent'
-import { createAiActionEvent } from './ai/aiActionEvent'
 import {
   getEquipment,
   getEquipmentLoadout,
@@ -89,10 +85,6 @@ import {
   upgradeBuilding as upgradeBuildingAction,
 } from './actions/buildingActions'
 import { performFirstAid } from './actions/firstAidActions'
-import {
-  pickNextBuildCandidate,
-  pickUpgradeCandidate,
-} from './ai/construction/constructionAi'
 import {
   switchBasePolicy as switchBasePolicyAction,
   switchRemoteBasePolicy as switchRemoteBasePolicyAction,
@@ -166,21 +158,20 @@ import { storyDialogueCatalog } from './catalogs/storyDialogueCatalog'
 import { buildGameStateFromScenario } from '../editor/rules/scenarioCompiler'
 import { validateScenario } from '../editor/rules/scenarioValidator'
 import type { ScenarioDefinition } from './contracts/scenario'
-import { chooseDefenseAction } from './aiDefenseRules'
-import { chooseSupportAction } from './aiSupportRules'
-import { chooseSelfPreservationAction } from './aiSelfPreservationRules'
-import { defenseActionToAiAction } from './ai/defenseActionAdapter'
-import { validateAiAction } from './ai/validation/validateAiAction'
-import { getPlayerAiEmergency } from './ai/policy/aiPolicyRegistry'
 import { executeAiAction as executeAiActionDomain } from './ai/execution/executeAiAction'
-import { computeFuzzyInputs } from './ai/fuzzy/fuzzyInputs'
-import { evaluateAllGoals } from './ai/fuzzy/goals'
-import { MIN_THRESHOLD, rankGoals } from './ai/fuzzy/decision'
-import { decideNextAction } from './ai/decisionTree/decideNextAction'
-import { runGraphSearchStep } from './ai/graphSearch/runGraphSearchStep'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
 import { getSchoolElement } from './catalogs/skillProgressionCatalog'
+import {
+  runAiDefenseStep as runAiDefenseStepDomain,
+  runAiSupportStep as runAiSupportStepDomain,
+  runAiConstructionStep as runAiConstructionStepDomain,
+  runFuzzyStep as runFuzzyStepDomain,
+  runDecisionTreeStep as runDecisionTreeStepDomain,
+  runGraphSearchStep as runGraphSearchStepDomain,
+  buildAiDependencies,
+  type AiStepRunnerDeps,
+} from './ai/aiStepRunner'
 
 export function spawnCreaturesFromNests(
   nests: CreatureNestState[],
@@ -210,58 +201,16 @@ const session = createSessionContext()
 
 const { getState, setState, updateGameState, subscribe } = storeCore
 
-/** 全域行動日誌上限：只保留最新 N 筆，避免長局面資料無限成長（重構文件 §4.5）。 */
-const MAX_ACTION_EVENTS = 200
-
-function appendActionEvents(events: AiActionEvent[]): void {
-  if (events.length === 0) return
-  updateGameState((current) => ({
-    ...current,
-    actionEvents: [...(current.actionEvents ?? []), ...events].slice(-MAX_ACTION_EVENTS),
-  }))
-}
-
-/**
- * 把一次 Player AI step 的決策與結果寫入全域行動日誌（重構文件 §4.5／§15 Phase 5）。
- * reason 優先取決策自帶理由；舊 attack 決策沒有理由欄位，退回執行結果的訊息。
- */
-function recordAiStepEvent(
-  round: number,
-  playerId: string,
-  playerName: string,
-  action: AiAction,
-  outcome: { ok: boolean; reason?: string },
-): void {
-  appendActionEvents([createAiActionEvent({
-    round,
-    actor: { id: playerId, kind: 'player', name: playerName },
-    action,
-    result: outcome.ok ? 'succeeded' : 'failed',
-    reason: action.reason || outcome.reason,
-  })])
-}
-
-/**
- * 切片 I：AI step 執行前的單一驗證關卡（重構文件 §9.2）。
- * 回傳 null 代表可執行；否則回傳拒絕原因（呼叫端負責記錄 failed 事件）。
- */
-function validateAiStepAction(state: GameState, action: AiAction): string | null {
-  const validation = validateAiAction(state, action)
-  return validation.valid ? null : validation.reason
-}
-
-/** 更新建設計畫中單一 queue item 的狀態（重構文件 §14.6 狀態機）。 */
-function updateConstructionPlanItem(
-  aiPlayerId: string,
-  itemIndex: number,
-  patch: Partial<Pick<AiConstructionPlanItem, 'status' | 'blockedReason'>>,
-): void {
-  updateGameState((current) => ({
-    ...current,
-    aiConstructionPlans: (current.aiConstructionPlans ?? []).map((plan) => plan.aiPlayerId === aiPlayerId
-      ? { ...plan, queue: plan.queue.map((item, index) => index === itemIndex ? { ...item, ...patch } : item) }
-      : plan),
-  }))
+/** AI step 執行所需的依賴（供 aiStepRunner 使用）。 */
+const aiStepDeps: AiStepRunnerDeps = {
+  getState,
+  updateGameState,
+  executeAiAction: (action) => gameStore.executeAiAction(action),
+  endPlayerTurn: (playerId) => gameStore.endPlayerTurn(playerId),
+  movePlayerTo: (playerId, row, column) => gameStore.movePlayerTo(playerId, row, column),
+  executeAiAttack: (playerId, targetType, targetId) => gameStore.executeAiAttack(playerId, targetType as AttackTargetType, targetId),
+  collectResourcePoint: (playerId, resourcePointId) => gameStore.collectResourcePoint(playerId, resourcePointId),
+  showActionResult: (result) => gameStore.showActionResult(result),
 }
 
 export function animateCreatureTurn(result: CreatureTurnResult) {
@@ -1363,44 +1312,13 @@ export const gameStore = {
 
   /** 通用 AI 行動執行器：所有 AI 行動經此單一入口執行。 */
   executeAiAction: (action: import('./ai/aiAction').AiAction): ActionOutcome => {
-    return runActionOutcome(updateGameState, (state) => executeAiActionDomain(state, action, {
-      combat: {
-        getActionablePlayer,
-        createLootForPlayer,
-        getLearnableSkill,
-        applyExperienceAndLevelUp,
-        addLootToPlayer,
-      },
-      turn: {
-        moveCreatures: (currentState) => moveCreatures(
-          currentState.creatures,
-          currentState.map,
-          currentState.players,
-          currentState.bases,
-          currentState.resourcePoints,
-          currentState.defenseStructures ?? [],
-          currentState.itemPoints ?? [],
-          currentState.explorationEvents ?? [],
-          currentState.creatureNests,
-          currentState.ruins ?? [],
-          currentState.traps ?? [],
-          currentState.sectGates ?? [],
-          currentState.globalBuffs ?? [],
-          defaultRandomSource,
-          currentState.round,
-        ),
-        spawnCreaturesFromNests: (currentState, creatures, players) => spawnCreaturesFromNests(
-          currentState.creatureNests,
-          creatures,
-          currentState.map,
-          players,
-          currentState.bases,
-          currentState.round + 1,
-          undefined,
-          currentState.nestHealthRegenPercent,
-        ),
-      },
-    }), 'AI 行動失敗。')
+    return runActionOutcome(updateGameState, (state) => executeAiActionDomain(state, action, buildAiDependencies({
+      getActionablePlayer,
+      createLootForPlayer,
+      getLearnableSkill,
+      applyExperienceAndLevelUp,
+      addLootToPlayer,
+    })), 'AI 行動失敗。')
   },
 
   /** 選取元素爆發道具（element-burst）的目標並建立預覽。 */
@@ -1595,553 +1513,28 @@ export const gameStore = {
   },
 
   runAiDefenseStep: (playerId: string): ActionOutcome => {
-    const state = getState()
-    const player = state.players.find((candidate) => candidate.id === playerId)
-    const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'protect-base' && candidate.status === 'active')
-    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order || order.type !== 'protect-base') {
-      return { ok: false, reason: '目前無法執行 AI 防守回合。' }
-    }
-
-    const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent, getPlayerAiEmergency())
-    if (selfPreservation?.type === 'move') {
-      const action = defenseActionToAiAction(state, playerId, selfPreservation)
-      const rejection = validateAiStepAction(state, action)
-      if (rejection) {
-        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
-        return { ok: false, reason: rejection }
-      }
-      const result = gameStore.movePlayerTo(playerId, selfPreservation.position.row, selfPreservation.position.column)
-      recordAiStepEvent(state.round, playerId, player.name, action, result)
-      return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 自保移動失敗。' }
-    }
-    if (selfPreservation) {
-      const action = defenseActionToAiAction(state, playerId, selfPreservation)
-      const rejection = validateAiStepAction(state, action)
-      if (rejection) {
-        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
-        return { ok: false, reason: rejection }
-      }
-      gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(state.round, playerId, player.name, action, { ok: true })
-      return { ok: true }
-    }
-
-    const decision = chooseDefenseAction(state, playerId, order)
-    if (decision.type === 'attack') {
-      const action = defenseActionToAiAction(state, playerId, decision)
-      const rejection = validateAiStepAction(state, action)
-      if (rejection) {
-        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
-        return { ok: false, reason: rejection }
-      }
-      const result = gameStore.executeAiAttack(playerId, decision.targetType, decision.targetId)
-      recordAiStepEvent(state.round, playerId, player.name, action, result.ok ? { ok: true } : { ok: false, reason: result.reason })
-      return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 攻擊失敗。' }
-    }
-    if (decision.type === 'move') {
-      const action = defenseActionToAiAction(state, playerId, decision)
-      const rejection = validateAiStepAction(state, action)
-      if (rejection) {
-        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
-        return { ok: false, reason: rejection }
-      }
-      const result = gameStore.movePlayerTo(playerId, decision.position.row, decision.position.column)
-      recordAiStepEvent(state.round, playerId, player.name, action, result)
-      return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 移動失敗。' }
-    }
-    {
-      const action = defenseActionToAiAction(state, playerId, decision)
-      const rejection = validateAiStepAction(state, action)
-      if (rejection) {
-        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
-        return { ok: false, reason: rejection }
-      }
-      gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(state.round, playerId, player.name, action, { ok: true })
-      return { ok: true }
-    }
+    return runAiDefenseStepDomain(aiStepDeps, playerId)
   },
 
-  /**
-   * 建設 AI 步驟（重構文件 §12 Phase 4／§15 Phase 6）：
-   * - `paused` 方針不建造，僅嘗試採集相鄰資源點，否則待命。
-   * - 一般方針：依效用評分逐一套用 queue 候選；失敗者標記 `blocked`（含原因）並嘗試下一個；
-   *   建料不足的 blocked 在材料累積後會自動重試。
-   * - 佇列無候選且允許升級時，升級等級最低的建築。
-   * - 建造／升級成功：寫入全域日誌＋完成提醒彈窗（玩家確認後 AI 再繼續）。
-   */
   runAiConstructionStep: (playerId: string): ActionOutcome => {
-    const state = getState()
-    const player = state.players.find((candidate) => candidate.id === playerId)
-    const plan = state.aiConstructionPlans?.find((candidate) => candidate.aiPlayerId === playerId)
-    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !plan) {
-      return { ok: false, reason: '目前無法執行 AI 建設回合。' }
-    }
-    if (!state.bases.some((candidate) => candidate.id === plan.baseId)) {
-      return { ok: false, reason: '建設計畫的據點不存在。' }
-    }
-
-    // paused 方針：不主動建造，但可執行採集（§14.6）。
-    if (plan.policy === 'paused') {
-      const adjacentPoint = (state.resourcePoints ?? []).find((point) => isSameOrAdjacent(player.position, point.position))
-      if (adjacentPoint) {
-        const collectAction: AiAction = { type: 'collect', actor: { id: playerId, kind: 'player' }, target: { id: adjacentPoint.id, kind: 'resource', position: adjacentPoint.position }, reason: '暫停建造，採集建料。' }
-        const rejection = validateAiStepAction(state, collectAction)
-        if (rejection) {
-          recordAiStepEvent(state.round, playerId, player.name, collectAction, { ok: false, reason: rejection })
-          return { ok: false, reason: rejection }
-        }
-        const result = gameStore.collectResourcePoint(playerId, adjacentPoint.id)
-        recordAiStepEvent(state.round, playerId, player.name, collectAction, result.ok ? { ok: true } : { ok: false, reason: result.reason })
-        return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '採集失敗。' }
-      }
-      gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(
-        state.round,
-        playerId,
-        player.name,
-        { type: 'hold', actor: { id: playerId, kind: 'player' }, reason: '暫停建造：附近無可採集的資源點。' },
-        { ok: true },
-      )
-      return { ok: true }
-    }
-
-    // 體力護欄：體力不足以建造時直接結束回合；這是暫時性狀態，不可標記為 blocked。
-    if (!canPlayerPerformAction(getState(), playerId, ACTION_STAMINA_COSTS.build).ok) {
-      gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(
-        state.round,
-        playerId,
-        player.name,
-        { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: '體力不足，結束建設回合。' },
-        { ok: true },
-      )
-      return { ok: true }
-    }
-
-    // 依效用評分逐一套用候選；失敗者標記 blocked（含原因）後換下一個。
-    const excluded = new Set<number>()
-    while (true) {
-      const candidate = pickNextBuildCandidate(getState(), plan, excluded)
-      if (!candidate) break
-      const buildAction: AiAction = { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: candidate.buildingId, reason: `建設計畫：${candidate.buildingName}（優先度 ${candidate.item.priority}）。` }
-      const rejection = validateAiStepAction(getState(), buildAction)
-      if (rejection) {
-        updateConstructionPlanItem(playerId, candidate.itemIndex, { status: 'blocked', blockedReason: rejection })
-        excluded.add(candidate.itemIndex)
-        continue
-      }
-      const outcome = constructBuildingAction(getState(), plan.baseId, candidate.buildingId, playerId)
-      if (outcome.result.ok) {
-        updateGameState(() => outcome.state)
-        updateConstructionPlanItem(playerId, candidate.itemIndex, { status: 'completed', blockedReason: undefined })
-        recordAiStepEvent(
-          getState().round,
-          playerId,
-          player.name,
-          buildAction,
-          { ok: true },
-        )
-        gameStore.showActionResult({
-          title: '🏗️ 建設完成',
-          message: `${player.name} 已在據點完成「${candidate.buildingName}」。`,
-          rewards: [],
-        })
-        return { ok: true }
-      }
-      updateConstructionPlanItem(playerId, candidate.itemIndex, { status: 'blocked', blockedReason: outcome.result.reason })
-      excluded.add(candidate.itemIndex)
-    }
-
-    // 佇列全部受阻 → 升級 fallback（若允許）。
-    const upgradeCandidate = pickUpgradeCandidate(getState(), plan)
-    if (upgradeCandidate) {
-      const outcome = upgradeBuildingAction(getState(), playerId, plan.baseId, upgradeCandidate.buildingId)
-      if (outcome.result.ok) {
-        updateGameState(() => outcome.state)
-        recordAiStepEvent(
-          getState().round,
-          playerId,
-          player.name,
-          { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: upgradeCandidate.buildingName, reason: '佇列已無可建項目，升級既有建築。' },
-          { ok: true },
-        )
-        gameStore.showActionResult({
-          title: '⬆️ 建築升級',
-          message: `${player.name} 已將「${upgradeCandidate.buildingName}」升級。`,
-          rewards: [],
-        })
-        return { ok: true }
-      }
-      // 升級失敗不阻塞 queue：記錄待命原因即可。
-      gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(
-        getState().round,
-        playerId,
-        player.name,
-        { type: 'hold', actor: { id: playerId, kind: 'player' }, reason: outcome.result.reason ?? '目前無法升級建築。' },
-        { ok: true },
-      )
-      return { ok: true }
-    }
-
-    gameStore.endPlayerTurn(playerId)
-    recordAiStepEvent(
-      getState().round,
-      playerId,
-      player.name,
-      { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: '沒有可執行的建設項目，結束回合。' },
-      { ok: true },
-    )
-    return { ok: true }
+    return runAiConstructionStepDomain(aiStepDeps, playerId)
   },
 
   runAiSupportStep: (playerId: string): ActionOutcome => {
-    const state = getState()
-    const player = state.players.find((candidate) => candidate.id === playerId)
-    const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'support-player' && candidate.status === 'active')
-    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order || order.type !== 'support-player') {
-      return { ok: false, reason: '目前無法執行 AI 支援回合。' }
-    }
-    const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent, getPlayerAiEmergency())
-    if (selfPreservation?.type === 'move') {
-      const action = defenseActionToAiAction(state, playerId, selfPreservation)
-      const rejection = validateAiStepAction(state, action)
-      if (rejection) {
-        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
-        return { ok: false, reason: rejection }
-      }
-      const result = gameStore.movePlayerTo(playerId, selfPreservation.position.row, selfPreservation.position.column)
-      recordAiStepEvent(state.round, playerId, player.name, action, result)
-      return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 自保移動失敗。' }
-    }
-    if (selfPreservation) {
-      const action = defenseActionToAiAction(state, playerId, selfPreservation)
-      const rejection = validateAiStepAction(state, action)
-      if (rejection) {
-        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
-        return { ok: false, reason: rejection }
-      }
-      gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(state.round, playerId, player.name, action, { ok: true })
-      return { ok: true }
-    }
-    const target = state.players.find((candidate) => candidate.id === order.playerId)
-    if (!target || target.health <= 0) {
-      updateGameState((current) => ({
-        ...current,
-        aiOrders: (current.aiOrders ?? []).map((currentOrder) => currentOrder.id === order.id ? { ...currentOrder, status: 'paused' as const } : currentOrder),
-      }))
-      gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(
-        state.round,
-        playerId,
-        player.name,
-        { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: '支援目標不存在，暫停支援命令。' },
-        { ok: true },
-      )
-      return { ok: true }
-    }
-
-    const decision = chooseSupportAction(state, playerId, order)
-    if (decision.type === 'attack') {
-      const action = defenseActionToAiAction(state, playerId, decision)
-      const rejection = validateAiStepAction(state, action)
-      if (rejection) {
-        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
-        return { ok: false, reason: rejection }
-      }
-      const result = gameStore.executeAiAttack(playerId, decision.targetType, decision.targetId)
-      recordAiStepEvent(state.round, playerId, player.name, action, result.ok ? { ok: true } : { ok: false, reason: result.reason })
-      return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 支援攻擊失敗。' }
-    }
-    if (decision.type === 'move') {
-      const action = defenseActionToAiAction(state, playerId, decision)
-      const rejection = validateAiStepAction(state, action)
-      if (rejection) {
-        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
-        return { ok: false, reason: rejection }
-      }
-      const result = gameStore.movePlayerTo(playerId, decision.position.row, decision.position.column)
-      recordAiStepEvent(state.round, playerId, player.name, action, result)
-      return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 支援移動失敗。' }
-    }
-    {
-      const action = defenseActionToAiAction(state, playerId, decision)
-      const rejection = validateAiStepAction(state, action)
-      if (rejection) {
-        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
-        return { ok: false, reason: rejection }
-      }
-      gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(state.round, playerId, player.name, action, { ok: true })
-      return { ok: true }
-    }
+    return runAiSupportStepDomain(aiStepDeps, playerId)
   },
 
   runFuzzyStep: (playerId: string): ActionOutcome => {
-    const state = getState()
-    const player = state.players.find((candidate) => candidate.id === playerId)
-    const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'fuzzy' && candidate.status === 'active')
-    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order) {
-      return { ok: false, reason: '目前無法執行模糊策略回合。' }
-    }
-
-    const actor = { id: playerId, kind: 'player' as const }
-    let loopCount = 0
-    const MAX_LOOPS = 50
-    let exitReason = ''
-
-    // evaluateAllGoals 需要的 dependencies（與 executeAiAction 共用）
-    const aiDeps: import('./ai/execution/executeAiAction').ExecuteAiActionDependencies = {
-      combat: {
-        getActionablePlayer,
-        createLootForPlayer,
-        getLearnableSkill,
-        applyExperienceAndLevelUp,
-        addLootToPlayer,
-      },
-      turn: {
-        moveCreatures: (currentState) => moveCreatures(
-          currentState.creatures,
-          currentState.map,
-          currentState.players,
-          currentState.bases,
-          currentState.resourcePoints,
-          currentState.defenseStructures ?? [],
-          currentState.itemPoints ?? [],
-          currentState.explorationEvents ?? [],
-          currentState.creatureNests,
-          currentState.ruins ?? [],
-          currentState.traps ?? [],
-          currentState.sectGates ?? [],
-          currentState.globalBuffs ?? [],
-          defaultRandomSource,
-          currentState.round,
-        ),
-        spawnCreaturesFromNests: (currentState, creatures, players) => spawnCreaturesFromNests(
-          currentState.creatureNests,
-          creatures,
-          currentState.map,
-          players,
-          currentState.bases,
-          currentState.round + 1,
-          undefined,
-          currentState.nestHealthRegenPercent,
-        ),
-      },
-    }
-
-    // 模糊邏輯迴圈：每步 perceive → evaluate → select → execute
-    // 所有 break 只設定 exitReason，迴圈結束後統一走 endPlayerTurn 出口。
-    while (!exitReason && getState().players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
-      loopCount++
-      const currentPlayer = getState().players.find((p) => p.id === playerId)!
-
-      // 1. Perceive
-      const inputs = computeFuzzyInputs(getState(), currentPlayer)
-
-      // 2. Evaluate（evaluateAllGoals 內部已做 validate + apply）
-      const goalResults = evaluateAllGoals(inputs, getState(), currentPlayer, aiDeps)
-
-      // 3. Override：selfPreservation > 0.6 時不攻擊（V1 暫無 combat，此處記錄）
-      // （V2 加入 engageCombat 時生效）
-
-      // 4. Select（result.actions 已由 evaluate 保證合法）
-      const rankedGoals = rankGoals(goalResults)
-      let actions: import('./ai/aiAction').AiAction[] = []
-      let goalFound = false
-
-      for (const candidate of rankedGoals) {
-        if (candidate.result.score < MIN_THRESHOLD) break
-
-        const candidateActions = candidate.result.actions
-        if (!candidateActions || candidateActions.length === 0) continue
-        if (candidateActions.every((a) => a.type === 'hold')) continue
-
-        actions = candidateActions
-        goalFound = true
-        break
-      }
-
-      if (!goalFound) {
-        exitReason = `所有目標分數過低或無法產生有效行動（最高 ${rankedGoals[0]?.goal} = ${rankedGoals[0]?.result.score.toFixed(2)}）`
-        continue
-      }
-
-      // 6. Execute（保底 validate：正常必定通過，不通過 = 代碼 bug）
-      for (const action of actions) {
-        const cp = getState().players.find((p) => p.id === playerId)
-        if (!cp || cp.stamina <= 0) {
-          exitReason = `體力耗盡（剩餘 ${cp?.stamina ?? 0}）`
-          break
-        }
-        const validation = validateAiAction(getState(), action)
-        if (!validation.valid) {
-          exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
-          break
-        }
-        const actionResult = gameStore.executeAiAction(action)
-        recordAiStepEvent(getState().round, playerId, currentPlayer.name, action, actionResult)
-        if (!actionResult.ok) {
-          exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
-          break
-        }
-      }
-    }
-
-    // ── 出口邏輯 ──────────────────────────────────────────────
-    if (!exitReason) {
-      // 正常結束：呼叫 endPlayerTurn，回傳 ok:true（scheduler 不會重複呼叫 endTurn）
-      const endAction = { type: 'end-turn' as const, actor, reason: `迴圈正常結束（${loopCount} 步）` }
-      gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(state.round, playerId, player.name, endAction, { ok: true })
-      return { ok: true }
-    }
-    // 異常退出：不呼叫 endPlayerTurn，回傳 ok:false（scheduler 會負責結束回合）
-    return { ok: false, reason: exitReason }
+    return runFuzzyStepDomain(aiStepDeps, playerId)
   },
 
   runDecisionTreeStep: (playerId: string): ActionOutcome => {
-    const state = getState()
-    const player = state.players.find((candidate) => candidate.id === playerId)
-    const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'decision-tree' && candidate.status === 'active')
-    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order) {
-      return { ok: false, reason: '目前無法執行決策樹回合。' }
-    }
-
-    const actor = { id: playerId, kind: 'player' as const }
-    let loopCount = 0
-    const MAX_LOOPS = 50
-    let exitReason = ''
-
-    while (!exitReason && getState().players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
-      loopCount++
-      const currentPlayer = getState().players.find((p) => p.id === playerId)!
-
-      const diagnostics: import('./ai/decisionTree/decideNextAction').DecisionTreeDiagnostics = { reasons: [] }
-      const action = decideNextAction(getState(), playerId, diagnostics)
-
-      if (!action) {
-        exitReason = diagnostics.reasons.length > 0
-          ? `決策樹無可執行行動（${diagnostics.reasons.join('；')}）`
-          : '決策樹無可執行行動'
-        continue
-      }
-
-      const actionResult = gameStore.executeAiAction(action)
-      recordAiStepEvent(getState().round, playerId, currentPlayer.name, action, actionResult)
-      if (!actionResult.ok) {
-        exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
-        continue
-      }
-    }
-
-    if (!exitReason) {
-      const endAction = { type: 'end-turn' as const, actor, reason: `決策樹迴圈結束（${loopCount} 步）` }
-      gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(state.round, playerId, player.name, endAction, { ok: true })
-      return { ok: true }
-    }
-    return { ok: false, reason: exitReason }
+    return runDecisionTreeStepDomain(aiStepDeps, playerId)
   },
 
   runGraphSearchStep: (playerId: string): ActionOutcome => {
-    const state = getState()
-    const player = state.players.find((candidate) => candidate.id === playerId)
-    const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'graph-search' && candidate.status === 'active')
-    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order) {
-      return { ok: false, reason: '目前無法執行圖搜索回合。' }
-    }
-
-    const actor = { id: playerId, kind: 'player' as const }
-    let loopCount = 0
-    const MAX_LOOPS = 50
-    let exitReason = ''
-
-    const aiDeps: import('./ai/execution/executeAiAction').ExecuteAiActionDependencies = {
-      combat: {
-        getActionablePlayer,
-        createLootForPlayer,
-        getLearnableSkill,
-        applyExperienceAndLevelUp,
-        addLootToPlayer,
-      },
-      turn: {
-        moveCreatures: (currentState) => moveCreatures(
-          currentState.creatures,
-          currentState.map,
-          currentState.players,
-          currentState.bases,
-          currentState.resourcePoints,
-          currentState.defenseStructures ?? [],
-          currentState.itemPoints ?? [],
-          currentState.explorationEvents ?? [],
-          currentState.creatureNests,
-          currentState.ruins ?? [],
-          currentState.traps ?? [],
-          currentState.sectGates ?? [],
-          currentState.globalBuffs ?? [],
-          defaultRandomSource,
-          currentState.round,
-        ),
-        spawnCreaturesFromNests: (currentState, creatures, players) => spawnCreaturesFromNests(
-          currentState.creatureNests,
-          creatures,
-          currentState.map,
-          players,
-          currentState.bases,
-          currentState.round + 1,
-          undefined,
-          currentState.nestHealthRegenPercent,
-        ),
-      },
-    }
-
-    while (!exitReason && getState().players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
-      loopCount++
-      const currentPlayer = getState().players.find((p) => p.id === playerId)!
-
-      const { actions, exitReason: searchExit } = runGraphSearchStep(getState(), playerId, aiDeps)
-
-      if (actions.length === 0) {
-        exitReason = searchExit ?? '圖搜索無結果'
-        continue
-      }
-
-      for (const action of actions) {
-        const cp = getState().players.find((p) => p.id === playerId)
-        if (!cp || cp.stamina <= 0) {
-          exitReason = `體力耗盡（剩餘 ${cp?.stamina ?? 0}）`
-          break
-        }
-        const validation = validateAiAction(getState(), action)
-        if (!validation.valid) {
-          exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
-          break
-        }
-        const actionResult = gameStore.executeAiAction(action)
-        recordAiStepEvent(getState().round, playerId, currentPlayer.name, action, actionResult)
-        if (!actionResult.ok) {
-          exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
-          break
-        }
-      }
-    }
-
-    // ── 出口邏輯 ──────────────────────────────────────────────
-    // 圖搜索不再把 end-turn 當行動執行。迴圈結束後只走兩個出口：
-    // - 無 exitReason（體力耗盡／迴圈上限）：此處 endPlayerTurn，ok:true（scheduler 不重複結束）
-    // - 有 exitReason（無可行動／驗證失敗等）：ok:false，由 scheduler.endTurn 結束回合
-    if (!exitReason) {
-      const endAction = { type: 'end-turn' as const, actor, reason: `圖搜索迴圈結束（${loopCount} 步）` }
-      gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(state.round, playerId, player.name, endAction, { ok: true })
-      return { ok: true }
-    }
-    return { ok: false, reason: exitReason }
+    return runGraphSearchStepDomain(aiStepDeps, playerId)
   },
-
   endPlayerTurn: (playerId: string) => {
     let scheduledCreatureTurn: CreatureTurnResult | null = null
     let creatureTurnBasePlayers: PlayerState[] | null = null
