@@ -119,7 +119,11 @@ export type ItemPointPickupResult = {
   itemIcon: string
 }
 
-export type GameState = {
+/**
+ * 權威模擬狀態：地圖、世界物件、玩家／生物、回合推進與劇情進度。
+ * 這些欄位構成遊戲規則的「事實」，由 domain actions 產生與消費。
+ */
+export type WorldState = {
   map: MapState
   visibility?: VisibilityStateData
   bases: BaseState[]
@@ -160,25 +164,11 @@ export type GameState = {
   activePlayerId: string
   round: number
   creatureActionLogs: CreatureActionLog[]
-  attackPreview: AttackPreview | null
-  externalSkillPreview: ExternalSkillPreview | null
-  itemBurstPreview?: ItemBurstPreview | null
-  repairPreview?: RepairPreview | null
   creatureTurnInProgress: boolean
   activeCreatureId: string | null
-  operation: GameOperation
-  blockingModal: BlockingModal
-  /** 三重共振震動動畫：記錄被命中生物的位置與觸發訊號；供該位置呈現 shake 動畫（即使生物已被移除）。 */
-  creatureShake?: { signal: number; targetId: string; position: Position; icon: string } | null
   gameOver?: boolean
   gameOverReason?: 'all-players-defeated' | 'any-base-destroyed'
   gameWon?: boolean
-  /** 本局唯一識別（startGame/restartGame/loadScenario 時產生），隨存檔序列化；供殘卷結算跨 session 去重。 */
-  runId?: string
-  /** 本局各人類玩家選用的名册角色 id（依人類玩家順序；未選用為 null）。隨存檔序列化，讀檔後還原，避免局末結算回寫到錯誤角色。 */
-  activeCharacterIds?: (string | null)[]
-  /** 舊版單一角色欄位（向下相容，讀取舊存檔時轉換為 activeCharacterIds）。 */
-  activeCharacterId?: string | null
   /** 人類玩家本回合已造成的傷害累積（供「單回合最高傷害」戰績計算）；回合開始時歸零。 */
   damageDealtThisRound?: number
   /** 本局累積戰績；由各行動模組累加，供結局彈窗結算顯示。 */
@@ -193,5 +183,41 @@ export type GameState = {
   /** 全域行動日誌（重構文件 §4.5 AiActionEvent）；只保留最新 MAX_ACTION_EVENTS 筆，隨存檔序列化。 */
   actionEvents?: AiActionEvent[]
 }
+
+/**
+ * UI 過渡狀態：預覽、目標選取、阻塞彈窗與一次性視覺訊號。
+ * 這些欄位是「玩家正在做什麼」的暫存，不影響規則模擬本身。
+ */
+export type UiState = {
+  attackPreview: AttackPreview | null
+  externalSkillPreview: ExternalSkillPreview | null
+  itemBurstPreview?: ItemBurstPreview | null
+  repairPreview?: RepairPreview | null
+  operation: GameOperation
+  blockingModal: BlockingModal
+  /** 三重共振震動動畫：記錄被命中生物的位置與觸發訊號；供該位置呈現 shake 動畫（即使生物已被移除）。 */
+  creatureShake?: { signal: number; targetId: string; position: Position; icon: string } | null
+}
+
+/**
+ * Session 識別狀態：本局唯一識別與名册角色綁定。
+ * 隨存檔序列化，供殘卷結算跨 session 去重。
+ */
+export type SessionState = {
+  /** 本局唯一識別（startGame/restartGame/loadScenario 時產生），隨存檔序列化；供殘卷結算跨 session 去重。 */
+  runId?: string
+  /** 本局各人類玩家選用的名册角色 id（依人類玩家順序；未選用為 null）。隨存檔序列化，讀檔後還原，避免局末結算回寫到錯誤角色。 */
+  activeCharacterIds?: (string | null)[]
+  /** 舊版單一角色欄位（向下相容，讀取舊存檔時轉換為 activeCharacterIds）。 */
+  activeCharacterId?: string | null
+}
+
+/**
+ * 完整遊戲狀態 = WorldState（權威模擬）+ UiState（UI 過渡）+ SessionState（本局識別）。
+ *
+ * 以 intersection 組合，欄位形狀與拆分前完全一致——既有建構與讀取程式碼不需改動。
+ * 後續可逐步讓 domain actions 只依賴 WorldState、UI 元件只讀取 UiState。
+ */
+export type GameState = WorldState & UiState & SessionState
 
 export type { PlayerAttributes }
