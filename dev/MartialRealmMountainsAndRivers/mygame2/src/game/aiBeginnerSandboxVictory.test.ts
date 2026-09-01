@@ -414,7 +414,7 @@ describe('AI 玩家：入門沙盒地圖通關能力', () => {
       ...template.settings,
       rows: 15,
       columns: 15,
-      seed: 20260907,
+      seed: 20260910,
       nestCount: 1,
       creatureCount: 0,
       nestHealthRegenPercent: 0,

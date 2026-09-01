@@ -10,6 +10,7 @@ import { getPlayerAiEmergency } from './policy/aiPolicyRegistry'
 import { pickNextBuildCandidate, pickUpgradeCandidate } from './construction/constructionAi'
 import { computeFuzzyInputs } from './fuzzy/fuzzyInputs'
 import { evaluateAllGoals, type GoalName } from './fuzzy/goals'
+import { applyMidTermGoalInputs, overrideScoreForMidTermGoal, abortMidTermGoal } from './fuzzy/midTermGoal'
 import { MIN_THRESHOLD, rankGoals } from './fuzzy/decision'
 import { getAiGoalConstraints } from './fuzzy/personality'
 import { ACTION_STAMINA_COSTS, canPlayerPerformAction } from '../rules/actionCostRules'
@@ -62,7 +63,14 @@ export interface AiStepRunnerDeps {
 }
 
 function getGoalTargetKey(result: { target?: unknown }): string {
-  return result.target ? JSON.stringify(result.target) : ''
+  if (!result.target) return ''
+  const target = result.target as { kind?: string; targetId?: string; targetType?: string; position?: unknown }
+  // 攻擊目標以 targetId 為穩定鍵：怪物在 step 間可能移動（position 變化），
+  // 若含 position，承諾會因怪物移動而失配、無法集火同一個目標。
+  if (target.kind === 'attack' && target.targetId) {
+    return `attack:${target.targetType}:${target.targetId}`
+  }
+  return JSON.stringify(result.target)
 }
 
 function isMovementAction(action: AiAction): boolean {
@@ -90,29 +98,40 @@ function selectFuzzyCandidateWithMomentum(
   if (!commitment || commitment.orderId !== orderId) return normalCandidate
   if (isHighThreat(goalResults)) {
     movementCommitments.delete(playerId)
+    abortMidTermGoal(playerId)
     return normalCandidate
   }
 
+  // 尋找「承諾目標」：移動承諾匹配有 move 的候選；攻擊承諾匹配同樣「打同一個目標」的 engageCombat。
   const committed = eligible.find((candidate) =>
     candidate.goal === commitment.goal && getGoalTargetKey(candidate.result) === commitment.targetKey,
+  ) ?? rankedGoals.find((candidate) =>
+    candidate.result.actions?.some((action) => action.type === 'attack')
+      && getGoalTargetKey(candidate.result) === commitment.targetKey,
   )
   if (!committed) {
     movementCommitments.delete(playerId)
     return normalCandidate
   }
-  if (!normalCandidate || normalCandidate.goal === committed.goal && getGoalTargetKey(normalCandidate.result) === commitment.targetKey) return committed
+  if (!normalCandidate || normalCandidate.goal === committed.goal && getGoalTargetKey(normalCandidate.result) === commitment.targetKey) {
+    const c = committed
+    movementCommitments.set(playerId, { ...commitment, score: c.result.score })
+    return c
+  }
 
-  // 新目標必須顯著更好，否則沿用原路線，避免一步向左、一步向右。
+  // 新目標必須顯著更好，否則沿用原路線/原攻擊目標，避免一步向左、一步向右。
   if (normalCandidate.result.score >= committed.result.score + AI_MOVEMENT_MOMENTUM_MARGIN) {
     movementCommitments.delete(playerId)
     return normalCandidate
   }
+  movementCommitments.set(playerId, { ...commitment, score: committed.result.score })
   return committed
 }
 
 function rememberMovementCommitment(playerId: string, orderId: string, candidate: { goal: string; result: { score: number; target?: unknown; actions?: AiAction[] } }): void {
   const action = candidate.result.actions?.[0]
-  if (!action || !isMovementAction(action)) return
+  // 承諾「移動到目標」或「攻擊既有目標」，讓玩家會持續推進/持續打同一目標，而不是打一下就轉移。
+  if (!action || (action.type !== 'move' && action.type !== 'transport' && action.type !== 'attack')) return
   movementCommitments.set(playerId, {
     orderId,
     goal: candidate.goal,
@@ -742,6 +761,18 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
       aiDeps,
       guardianConstraints,
     )
+
+    // 2.5 中期目標：決定是否鎖定「存錢打工」，並對目標分數覆寫（優先執行）。
+    applyMidTermGoalInputs(
+      currentPlayer.id,
+      currentPlayer.money ?? 0,
+      inputs.staminaRatio,
+      inputs.hasMissionBoard,
+      inputs.feasibility.missionBaseId,
+    )
+    for (const goalName of Object.keys(goalResults) as GoalName[]) {
+      goalResults[goalName] = overrideScoreForMidTermGoal(currentPlayer.id, goalName, goalResults[goalName])
+    }
 
     // 4. Select（result.actions 已由 evaluate 保證合法）
     const rankedGoals = rankGoals(goalResults)
