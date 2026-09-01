@@ -1,6 +1,7 @@
 import type { GameState, Position } from '../../types'
 import { isAdjacent } from '../../types'
 import { canPlayerPerformAction, getAiActionStaminaCost } from '../../rules/actionCostRules'
+import { canTransportPlayer } from '../../rules/transportRules'
 import { collectReachableCells, type CellUnreachableReason } from '../perception/reachablePositions'
 import { type AiAction, type AiTargetRef } from '../aiAction'
 import { defenseActionToAiAction } from '../defenseActionAdapter'
@@ -67,6 +68,10 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
   }
 
   switch (action.type) {
+    case 'transport': {
+      const transport = canTransportPlayer(state, action.actor.id, action.targetId)
+      return transport.ok ? { valid: true } : { valid: false, reason: transport.reason ?? '無法使用驛站。' }
+    }
     case 'move': {
       const reasons: CellUnreachableReason[] = []
       const reachableSet = collectReachableCells(state, actor, reasons)

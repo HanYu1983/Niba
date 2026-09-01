@@ -48,6 +48,7 @@ export function createAiActionEvent(input: CreateAiActionEventInput): AiActionEv
 
 const ACTION_TYPE_LABELS: Record<AiAction['type'], string> = {
   move: '移動',
+  transport: '驛站傳送',
   attack: '攻擊',
   collect: '採集',
   build: '建設',

@@ -12,6 +12,7 @@ export type ConstructionValueContext = {
 }
 
 const BASE_BENEFIT: Record<string, number> = {
+  waystation: 0.88,
   'equipment-shop': 0.9,
   'item-shop': 0.85,
   infirmary: 0.8,

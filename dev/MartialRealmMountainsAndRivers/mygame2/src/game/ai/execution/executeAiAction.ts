@@ -15,6 +15,7 @@ import { learnSkillAtSectGate, practiceSkillAtSectGate } from '../../actions/sec
 import { useInfirmary as executeInfirmary, executeMission } from '../../actions/explorationActions'
 import { clearRuin } from '../../actions/ruinActions'
 import { buyItem } from '../../actions/shopActions'
+import { transportPlayerAction } from '../../actions/transportActions'
 import type { CombatActionDependencies } from '../../actions/combatActions'
 import { resolveExplorationEvent } from '../../actions/explorationActions'
 import { checkEventRequirements, getEventChoices } from '../../events/eventResolver'
@@ -78,6 +79,8 @@ export function executeAiAction(
   dependencies: ExecuteAiActionDependencies,
 ): { state: GameState; result: ActionOutcome } {
   switch (action.type) {
+    case 'transport':
+      return transportPlayerAction(state, action.actor.id, action.targetId)
     case 'move': {
       const result = movePlayer(state, action.actor.id, action.destination.row, action.destination.column)
       if (!result.result.ok) return result

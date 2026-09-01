@@ -30,6 +30,12 @@ export type AiAction =
       reason: string
     }
   | {
+      type: 'transport'
+      actor: AiActorRef
+      targetId: string
+      reason: string
+    }
+  | {
       type: 'attack'
       actor: AiActorRef
       target: AiTargetRef

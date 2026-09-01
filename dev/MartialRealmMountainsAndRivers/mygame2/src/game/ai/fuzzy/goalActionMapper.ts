@@ -9,6 +9,8 @@ import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
 import { externalSkillCatalog } from '../../catalogs/externalSkillCatalog'
 import { validateAiAction } from '../validation/validateAiAction'
 import { executeAiAction, type ExecuteAiActionDependencies } from '../execution/executeAiAction'
+import { canTransportPlayer } from '../../rules/transportRules'
+import { getAiActionStaminaCost } from '../../rules/actionCostRules'
 
 /**
  * 從指定位置出發，用 Dijkstra 計算到所有可达格的最短路徑成本。
@@ -139,7 +141,12 @@ export function buildValidatedActionSequence(
   player: PlayerState,
   dependencies: ExecuteAiActionDependencies,
 ): AiAction[] {
-  const actions = buildActionSequence(goal, result, state, player)
+  const actions = preferWaystationTransport(
+    buildActionSequence(goal, result, state, player),
+    result,
+    state,
+    player,
+  )
   if (actions.length === 0) return []
 
   let current = state
@@ -151,6 +158,33 @@ export function buildValidatedActionSequence(
     current = outcome.state
   }
   return actions
+}
+
+function getBaseTransportTargetId(result: GoalResult): string | undefined {
+  if (result.target?.kind === 'build' || result.target?.kind === 'upgrade' || result.target?.kind === 'use-facility' || result.target?.kind === 'buy-item') {
+    return result.target.baseId
+  }
+  if (result.target?.kind === 'learn-skill' && result.target.baseId) return result.target.baseId
+  return typeof result.context?.baseId === 'string' ? result.context.baseId : undefined
+}
+
+function preferWaystationTransport(
+  actions: AiAction[],
+  result: GoalResult,
+  state: GameState,
+  player: PlayerState,
+): AiAction[] {
+  const first = actions[0]
+  const targetId = getBaseTransportTargetId(result)
+  if (!first || first.type !== 'move' || !targetId) return actions
+
+  const transport = { type: 'transport' as const, actor: first.actor, targetId, reason: `驛站：傳送至據點 ${targetId}（比步行更快）` }
+  const transportCheck = canTransportPlayer(state, player.id, targetId)
+  if (!transportCheck.ok) return actions
+
+  const walkingCost = getAiActionStaminaCost(state, first)
+  const transportCost = getAiActionStaminaCost(state, transport)
+  return walkingCost > transportCost ? [transport, ...actions.slice(1)] : actions
 }
 
 /**

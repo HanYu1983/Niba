@@ -86,6 +86,7 @@ export function getAiActionStaminaCost(state: GameState, action: AiAction): numb
       }
       return dist * AVG_MOVEMENT_COST
     }
+    case 'transport':       return ACTION_STAMINA_COSTS.transport
     case 'attack':        return ACTION_STAMINA_COSTS.attack
     case 'collect':       return action.target.kind === 'item'
                              ? ACTION_STAMINA_COSTS.collectItem
