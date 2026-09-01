@@ -16,10 +16,32 @@ import { useInfirmary as executeInfirmary, executeMission } from '../../actions/
 import { clearRuin } from '../../actions/ruinActions'
 import { buyItem } from '../../actions/shopActions'
 import type { CombatActionDependencies } from '../../actions/combatActions'
+import { resolveExplorationEvent } from '../../actions/explorationActions'
+import { checkEventRequirements, getEventChoices } from '../../events/eventResolver'
 
 export type ExecuteAiActionDependencies = {
   combat: CombatActionDependencies
   turn: TurnActionDependencies
+}
+
+function resolveAiExplorationEvent(state: GameState, playerId: string): GameState {
+  const player = state.players.find((candidate) => candidate.id === playerId)
+  if (!player?.isAI) return state
+
+  const event = (state.explorationEvents ?? []).find((candidate) =>
+    candidate.status === 'available'
+      && candidate.position.row === player.position.row
+      && candidate.position.column === player.position.column,
+  )
+  if (!event) return state
+
+  const choice = getEventChoices(event).find((candidate) =>
+    checkEventRequirements(state, playerId, event, candidate.requirements).allowed,
+  )
+  if (!choice) return state
+
+  const result = resolveExplorationEvent(state, playerId, event.id, choice.id)
+  return result.result.ok ? result.state : state
 }
 
 /**
@@ -34,8 +56,11 @@ export function executeAiAction(
   dependencies: ExecuteAiActionDependencies,
 ): { state: GameState; result: ActionOutcome } {
   switch (action.type) {
-    case 'move':
-      return movePlayer(state, action.actor.id, action.destination.row, action.destination.column)
+    case 'move': {
+      const result = movePlayer(state, action.actor.id, action.destination.row, action.destination.column)
+      if (!result.result.ok) return result
+      return { state: resolveAiExplorationEvent(result.state, action.actor.id), result: result.result }
+    }
     case 'attack': {
       const result = executeAiAttack(state, action.actor.id, action.target.kind as AttackTargetType, action.target.id, dependencies.combat)
       return { state: result.state, result: result.result }
