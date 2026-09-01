@@ -1,5 +1,5 @@
 import type { GameState, Position } from '../../types'
-import { isAdjacent } from '../../types'
+import { isAdjacent, isSameOrAdjacent } from '../../types'
 import { canPlayerPerformAction, getAiActionStaminaCost } from '../../rules/actionCostRules'
 import { canTransportPlayer } from '../../rules/transportRules'
 import { collectReachableCells, type CellUnreachableReason } from '../perception/reachablePositions'
@@ -102,11 +102,13 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
       if (!base) return { valid: false, reason: '建築目標據點不存在。' }
       const template = buildingCatalog.find((b) => b.id === action.buildingType)
       if (!template) return { valid: false, reason: `未知建築：${action.buildingType}` }
+      if (!isSameOrAdjacent(actor.position, base.position)) return { valid: false, reason: '需位於據點旁才能建造。' }
       return { valid: true }
     }
     case 'upgrade': {
       const base = state.bases.find((candidate) => candidate.id === action.baseId)
       if (!base) return { valid: false, reason: '升級目標據點不存在。' }
+      if (!isSameOrAdjacent(actor.position, base.position)) return { valid: false, reason: '需位於據點旁才能升級建築。' }
       if (!base.buildings.some((building) => building.id === action.buildingId)) {
         return { valid: false, reason: '升級目標建築不存在。' }
       }

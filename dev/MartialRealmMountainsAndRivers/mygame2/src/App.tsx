@@ -184,7 +184,7 @@ function App() {
     const itemPoint = gameState.itemPoints.find((point) => samePosition(point.position, activePlayer.position))
     if (itemPoint) {
       const result = gameStore.collectItemPoint(activePlayer.id, itemPoint.id)
-      if (result.ok) {
+      if (result.ok && !activePlayer.isAI) {
         const terrain = gameState.map.cells.find((cell) => cell.row === itemPoint.position.row && cell.column === itemPoint.position.column)?.terrain
         gameStore.showActionResult(formatItemPointPickupResult(result.data, terrain))
       }
