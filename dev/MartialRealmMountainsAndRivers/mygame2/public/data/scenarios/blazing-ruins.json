@@ -4120,8 +4120,36 @@
           "row": 21,
           "column": 3
         },
-        "name": "同行弟子",
-        "isAI": true
+        "name": "雲霓",
+        "isAI": true,
+        "money": 80,
+        "innerSkillId": "tuna-gong",
+        "innerSkillIds": [
+          "tuna-gong"
+        ],
+        "attributes": {
+          "armStrength": 14,
+          "constitution": 15,
+          "agility": 17,
+          "innerEnergy": 15,
+          "insight": 14
+        },
+        "externalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "equippedExternalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "inventory": [
+          {
+            "itemId": "heal-wound-medicine",
+            "quantity": 2
+          },
+          {
+            "itemId": "gather-qi-pill",
+            "quantity": 1
+          }
+        ]
       }
     }
   ],
@@ -4187,6 +4215,48 @@
           "speakerName": "守城將領 韓烈",
           "speakerIcon": "⚔️",
           "content": "你師父？莫非你便是守護者一脈的傳人？難怪你身上有股熟悉的靈氣。若你能深入古城，重整封印，便是救了整個荒漠！"
+        },
+        {
+          "id": "ch4-start-7",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "風沙中，一名身披斗篷的女俠緩步走出，目光銳利地掃過古城與凌淵。"
+        },
+        {
+          "id": "ch4-start-8",
+          "speakerName": "雲霓",
+          "speakerIcon": "🌪️",
+          "content": "這座古城……終於找到了。我兄長當年便是為了這封印之地而來，此後音訊全無。"
+        },
+        {
+          "id": "ch4-start-9",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "姑娘也是為這古城而來？在下凌淵，追尋妖氣源頭至此。"
+        },
+        {
+          "id": "ch4-start-10",
+          "speakerName": "雲霓",
+          "speakerIcon": "🌪️",
+          "content": "雲霓。我兄長是名探險者，多年前受人所託，深入這古城協助重整封印，卻一去不回。我一路追查，發現這古城封印著妖王，而我兄長……恐怕與這封印脫不了干係。"
+        },
+        {
+          "id": "ch4-start-11",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "重整封印……莫非你兄長也是守護者一脈？"
+        },
+        {
+          "id": "ch4-start-12",
+          "speakerName": "雲霓",
+          "speakerIcon": "🌪️",
+          "content": "我不知道。我只知道，無論他身在何處，我都要找到他。既然你我目的相近，不如同行一程。"
+        },
+        {
+          "id": "ch4-start-13",
+          "speakerName": "守城將領 韓烈",
+          "speakerIcon": "⚔️",
+          "content": "兩位少俠，若願深入古城重整封印，便是救了整個荒漠！我軍營地備有補給，隨時可回來。"
         }
       ]
     },
