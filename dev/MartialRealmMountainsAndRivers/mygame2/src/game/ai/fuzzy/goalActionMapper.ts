@@ -1,5 +1,5 @@
 import type { GameState, PlayerState, Position } from '../../types'
-import { getAdjacentPositions } from '../../types'
+import { getAdjacentPositions, isSameOrAdjacent } from '../../types'
 import type { AiAction, AiActorRef } from '../aiAction'
 import type { GoalName, GoalResult } from './goals'
 import { collectReachableCells } from '../perception/reachablePositions'
@@ -279,6 +279,8 @@ export function buildActionSequence(
       return buildEquipActions(actor, result)
     case 'attackNest':
       return buildAttackNestActions(actor, result, state, player)
+    case 'prepareNest':
+      return buildPrepareNestActions(actor, result, state, player)
     case 'equipInnerSkill':
       return buildEquipInnerSkillActions(actor, result)
     case 'useInnerSkillAttack':
@@ -294,6 +296,22 @@ export function buildActionSequence(
     case 'buildDefense':
       return buildDefenseActions(actor, result, state, player)
   }
+}
+
+function buildPrepareNestActions(
+  actor: AiActorRef,
+  result: GoalResult,
+  state: GameState,
+  player: PlayerState,
+): AiAction[] {
+  const target = result.target
+  if (!target || target.kind !== 'buy-item') return [{ type: 'hold', actor, reason: '準備巢穴戰鬥：無購買目標' }]
+  const base = state.bases.find((candidate) => candidate.id === target.baseId)
+  if (!base) return [{ type: 'hold', actor, reason: '準備巢穴戰鬥：據點不存在' }]
+  if (isSameOrAdjacent(player.position, base.position)) {
+    return [{ type: 'buy-item', actor, baseId: base.id, itemId: target.itemId, reason: `準備巢穴戰鬥：購買 ${result.context?.itemName ?? target.itemId}` }]
+  }
+  return [{ type: 'move', actor, destination: findClosestReachablePosition(state, player, base.position), reason: `準備巢穴戰鬥：前往 ${base.name} 購買爆發道具` }]
 }
 
 // ─── selfPreservation ──────────────────────────────────────────────

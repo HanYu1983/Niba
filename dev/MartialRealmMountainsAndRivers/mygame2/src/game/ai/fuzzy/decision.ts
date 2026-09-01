@@ -17,6 +17,7 @@ const PRIORITY_ORDER: GoalName[] = [
   'useInnerSkillAttack',
   'engageCombat',
   'attackNest',
+  'prepareNest',
   'positioning',
   'collectItems',
   'useItem',

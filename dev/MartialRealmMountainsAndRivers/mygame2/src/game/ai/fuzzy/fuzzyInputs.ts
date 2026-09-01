@@ -7,11 +7,11 @@ import { getAdjacentPositions } from '../../types'
 import { buildingCatalog } from '../../catalogs/buildingCatalog'
 import { canPlayerBuildBuildingType } from '../../rules/buildingProgressionRules'
 import { collectReachableCells } from '../perception/reachablePositions'
-import { itemCatalog } from '../../catalogs/itemCatalog'
+import { elementBurstItems, itemCatalog } from '../../catalogs/itemCatalog'
 import { equipmentCatalog } from '../../catalogs/equipmentCatalog'
 import { allInnerSkillCatalog, getMartialHallSkills, martialHallInnerSkillCatalog, martialHallExternalSkillCatalog } from '../../catalogs/martialHallSkillCatalog'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
-import { getSkillDamage, getSkillProgression } from '../../rules/skillRules'
+import { getElementDamageMultiplier, getSchoolElement, getSkillDamage, getSkillProgression } from '../../rules/skillRules'
 import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
 import { getSectGateSkills, getSectGateLearnCost } from '../../rules/sectGateRules'
 import { defenseStructureCatalog } from '../../catalogs/defenseStructureCatalog'
@@ -196,6 +196,8 @@ export interface FuzzyInputs {
   needsLeveling: boolean
   /** 可在商店購買的回血道具（有商店 + 有錢 + 未買過） */
   buyableHealItem: { itemId: string; name: string; price: number } | undefined
+  /** 為最近巢穴準備的可購買元素爆發道具 */
+  buyableNestBurstItem: { itemId: string; name: string; price: number; damage: number } | undefined
   /** 可建造的防禦設施（材料夠 + rank 夠），取最近據點 */
   buildableDefenseStructure: { type: string; name: string } | undefined
   /** 最近據點現有箭塔數量（含進階箭塔） */
@@ -538,6 +540,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
 
   // 商店買道具：附近有道具商店 + 有錢買回血道具
   const buyableHealItem = findBuyableHealItem(player, nearestBase, state)
+  const buyableNestBurstItem = findBuyableNestBurstItem(player, nearestBase, nearestNest, state)
 
   // 防禦建設：找可建造的防禦設施
   const buildableDefenseStructure = findBuildableDefenseStructure(player, nearestBase)
@@ -635,6 +638,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     expectedLevel,
     needsLeveling,
     buyableHealItem,
+    buyableNestBurstItem,
     buildableDefenseStructure,
     defenseTowerCount,
     constructionCandidates,
@@ -849,6 +853,26 @@ function findBuyableHealItem(
   if (affordable.length === 0) return undefined
   const best = affordable[0]
   return { itemId: best.id, name: best.name, price: best.buyPrice }
+}
+
+function findBuyableNestBurstItem(
+  player: PlayerState,
+  base: BaseState | undefined,
+  nest: GameState['creatureNests'][number] | undefined,
+  _state: GameState,
+): { itemId: string; name: string; price: number; damage: number } | undefined {
+  if (!base || !hasBuilding(base, 'item-shop') || !nest) return undefined
+  const defenderElement = getSchoolElement(nest.schoolId)
+  const ownedIds = new Set(player.inventory.filter((entry) => entry.quantity > 0).map((entry) => entry.itemId))
+  const candidates = elementBurstItems
+    .filter((item) => item.buyPrice > 0 && item.buyPrice <= (player.money ?? 0) && !ownedIds.has(item.id))
+    .map((item) => ({
+      item,
+      damage: Math.floor((item.effectValue ?? 0) * getElementDamageMultiplier(item.element, defenderElement)),
+    }))
+    .sort((first, second) => second.damage - first.damage || first.item.buyPrice - second.item.buyPrice)
+  const best = candidates[0]
+  return best ? { itemId: best.item.id, name: best.item.name, price: best.item.buyPrice, damage: best.damage } : undefined
 }
 
 function findBuildableDefenseStructure(

@@ -8,7 +8,7 @@ import type { ExecuteAiActionDependencies } from '../execution/executeAiAction'
 import type { AiGoalConstraints } from './personality'
 import { canTransportPlayer } from '../../rules/transportRules'
 
-export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'equipInnerSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense'
+export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'prepareNest' | 'equipInnerSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense'
 
 export interface GoalResult {
   score: number
@@ -405,6 +405,7 @@ export function evaluateAllGoals(
     useItem: evaluateUseItem(inputs, state, player, dependencies),
     equipEquipment: evaluateEquipEquipment(inputs, state, player, dependencies),
     attackNest: evaluateAttackNest(inputs, state, player, dependencies),
+    prepareNest: evaluatePrepareNest(inputs, state, player, dependencies),
     equipInnerSkill: evaluateEquipInnerSkill(inputs, state, player, dependencies),
     useInnerSkillAttack: evaluateUseInnerSkillAttack(inputs, state, player, dependencies),
     learnMartialSkill: evaluateLearnMartialSkill(inputs, state, player, dependencies),
@@ -466,6 +467,24 @@ export function evaluateAllGoals(
   }
 
   return results
+}
+
+function evaluatePrepareNest(
+  inputs: FuzzyInputs,
+  state?: GameState,
+  player?: PlayerState,
+  dependencies?: ExecuteAiActionDependencies,
+): GoalResult {
+  const { buyableNestBurstItem, nearestBase, isAdjacentToBase } = inputs
+  if (!state || !player || !dependencies || !buyableNestBurstItem || !nearestBase) return { score: 0 }
+  const result: GoalResult = {
+    score: 0.78,
+    target: { kind: 'buy-item', baseId: nearestBase.id, itemId: buyableNestBurstItem.itemId },
+    distanceToTarget: isAdjacentToBase ? 0 : manhattan(player.position, nearestBase.position),
+    context: { baseId: nearestBase.id, itemName: buyableNestBurstItem.name, damage: buyableNestBurstItem.damage },
+  }
+  const actions = buildValidatedActionSequence('prepareNest', result, state, player, dependencies)
+  return actions.length > 0 ? { ...result, actions } : { score: 0 }
 }
 
 // ─── construction ──────────────────────────────────────────────────
