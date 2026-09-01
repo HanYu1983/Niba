@@ -1,5 +1,5 @@
 import type { AiPersonalityId } from '../../types/ai'
-import { clampValue, computeUnifiedValue } from './valueContext'
+import { clampValue, computeUnifiedValue, evaluateUnifiedValue, type ValueEvaluation } from './valueContext'
 
 export type ConstructionValueContext = {
   kind: 'build' | 'upgrade'
@@ -31,7 +31,7 @@ const PERSONALITY_BONUS: Partial<Record<AiPersonalityId, Partial<Record<string, 
 }
 
 /** 計算合法建設候選的相對價值；合法性由呼叫端處理。 */
-export function computeConstructionCandidateValue(context: ConstructionValueContext): number {
+export function evaluateConstructionCandidateValue(context: ConstructionValueContext): ValueEvaluation {
   const benefit = BASE_BENEFIT[context.buildingType] ?? 0.55
   const personalityMultiplier = PERSONALITY_BONUS[context.personality ?? 'balanced']?.[context.buildingType] ?? 1
   const materialNeed = clampValue(context.materialRatio)
@@ -41,7 +41,7 @@ export function computeConstructionCandidateValue(context: ConstructionValueCont
   const costPressure = clampValue(context.cost / 100)
   const upgradeBonus = context.kind === 'upgrade' ? 1.05 : 1
 
-  return computeUnifiedValue({
+  return evaluateUnifiedValue({
     need: 0.4 + materialNeed * 0.6,
     benefit: benefit * upgradeBonus,
     urgency: threatUrgency,
@@ -50,4 +50,8 @@ export function computeConstructionCandidateValue(context: ConstructionValueCont
     distance: context.distanceToBase,
     personalityWeight: personalityMultiplier,
   })
+}
+
+export function computeConstructionCandidateValue(context: ConstructionValueContext): number {
+  return computeUnifiedValue(evaluateConstructionCandidateValue(context).context)
 }

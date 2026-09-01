@@ -1,5 +1,5 @@
 import type { EventEffect } from '../../events/eventCatalog'
-import { clampValue, computeUnifiedValue } from './valueContext'
+import { clampValue, computeUnifiedValue, evaluateUnifiedValue, type ValueEvaluation } from './valueContext'
 
 export type EventValueContext = {
   effects: EventEffect[]
@@ -7,7 +7,7 @@ export type EventValueContext = {
 }
 
 /** 估算事件選項的直接收益；需求合法性仍由事件規則層負責。 */
-export function computeEventChoiceValue(context: EventValueContext): number {
+export function evaluateEventChoiceValue(context: EventValueContext): ValueEvaluation {
   const score = context.effects.reduce((total, effect) => {
     switch (effect.type) {
       case 'money':
@@ -28,7 +28,7 @@ export function computeEventChoiceValue(context: EventValueContext): number {
     }
   }, 0)
 
-  return computeUnifiedValue({
+  return evaluateUnifiedValue({
     need: 1,
     benefit: clampValue(score),
     urgency: 1,
@@ -37,4 +37,8 @@ export function computeEventChoiceValue(context: EventValueContext): number {
     distance: 0,
     personalityWeight: 1,
   })
+}
+
+export function computeEventChoiceValue(context: EventValueContext): number {
+  return computeUnifiedValue(evaluateEventChoiceValue(context).context)
 }

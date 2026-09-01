@@ -332,7 +332,7 @@ while (體力 > 0 && loopCount < 50):
 | 事件選項價值仍是第一階段模型 | `executeAiAction.ts`、`eventValue.ts` | 已在合法選項中排序直接效果；尚未納入完整個性與長期狀態效益 |
 | 裝備/內功候選價值仍是第一階段模型 | `fuzzyInputs.ts`、`equipmentValue.ts` | 已評估屬性提升、耐久、損壞替換、傷害提升與個性；尚未納入完整防禦收益與長期機會成本 |
 | 價值函式仍需深化領域模型 | `valueContext.ts`、各領域 value module | 建設、戰鬥、事件、裝備/內功已接入共用契約；經驗收益、防禦收益與長期機會成本仍可細化 |
-| ValueContext 分解尚未全面寫入 runtime log | `valueContext.ts`、`aiStepRunner.ts` | `ValueEvaluation` 已提供正規化因子；目前日誌已記錄候選 value/context，完整 factors 接線待下一階段 |
+| 事件選項與長期收益仍可深化 | `eventValue.ts`、各領域 value module | ValueContext factors 已寫入候選 runtime log；事件選項仍以直接效果估值，經驗/防禦/長期機會成本可再細化 |
 
 ### 10.2 統一價值函數契約（ValueContext）
 
@@ -440,7 +440,7 @@ value = max(0,
 | 攻擊目標候選化（枚舉視野內生物 → 各自算價值） | ✅ 第一階段 | AI | — | `combatValue.ts` 依距離、傷害比例、目標血量、生存能力、等級與個性排序；後續補領域收益資料 |
 | 事件選項價值判斷 | ✅ 第一階段 | AI | — | `eventValue.ts` 依金錢、聲望、道具、學習與敵對生成效果排序；同分保留原順序 |
 | 裝備/內功換裝效益評估 | ✅ 第一階段 | AI | — | `equipmentValue.ts` 依屬性提升、耐久、損壞替換、傷害提升與修煉型個性排序 |
-| 價值函數元件寫入 `[AI decision]` 日誌 | ✅ 第一階段 | AI | — | 日誌含 goal context、selectedContext，以及建設/戰鬥/裝備/內功候選排名摘要；`ValueEvaluation` 已準備 factors 輸出 |
+| 價值函數元件寫入 `[AI decision]` 日誌 | ✅ | AI | — | 日誌含 goal context、selectedContext、候選排名與每個候選的 ValueEvaluation factors |
 | 候選枚舉抽成獨立純模組 | P3 | AI | — | `fuzzyInputs.ts` 不再內嵌枚舉邏輯 |
 
 ### 12.3 Milestone
@@ -449,7 +449,7 @@ value = max(0,
 |---|---|---|---|
 | M1：候選式決策統一 | 建造/攻擊/事件都走「枚舉 → 算價值 → 選最高」 | 回歸測試 + 行為對照 | 未開始 |
 | M2：個性滲透價值函數 | 不同個性在相同局面選出不同候選 | 個性對照測試 | 未開始 |
-| M3：價值可解釋性 | `[AI decision]` 日誌含 goal context、selectedContext、候選排名，並可接入 ValueEvaluation factors | AI suite + console 檢查 | 第一階段完成；factors 接線待下一階段 |
+| M3：價值可解釋性 | `[AI decision]` 日誌含 goal context、selectedContext、候選排名與 ValueEvaluation factors | AI suite + console 檢查 | 完成 |
 
 ---
 

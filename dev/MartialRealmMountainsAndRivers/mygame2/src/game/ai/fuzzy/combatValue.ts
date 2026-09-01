@@ -1,5 +1,5 @@
 import type { AiPersonalityId } from '../../types/ai'
-import { clampValue, computeUnifiedValue } from './valueContext'
+import { clampValue, computeUnifiedValue, evaluateUnifiedValue, type ValueEvaluation } from './valueContext'
 
 export type CombatValueContext = {
   distance: number
@@ -12,7 +12,7 @@ export type CombatValueContext = {
 }
 
 /** 計算可見生物的相對攻擊價值；目標合法性由 action validation 處理。 */
-export function computeCombatCandidateValue(context: CombatValueContext): number {
+export function evaluateCombatCandidateValue(context: CombatValueContext): ValueEvaluation {
   const killOpportunity = clampValue(context.damageRatio * 1.5)
   const vulnerability = clampValue(1 - context.healthRatio)
   const survival = clampValue(context.hitsSurvivable / 5)
@@ -22,7 +22,7 @@ export function computeCombatCandidateValue(context: CombatValueContext): number
     : context.personality === 'cautious' || context.personality === 'guardian' ? 0.85
       : 1
 
-  return computeUnifiedValue({
+  return evaluateUnifiedValue({
     need: clampValue(0.5 + context.staminaRatio * 0.5),
     benefit: killOpportunity * 0.45 + vulnerability * 0.2 + survival * 0.15 + levelReward * 0.2,
     urgency: killOpportunity,
@@ -31,4 +31,8 @@ export function computeCombatCandidateValue(context: CombatValueContext): number
     distance: context.distance,
     personalityWeight: personalityMultiplier,
   })
+}
+
+export function computeCombatCandidateValue(context: CombatValueContext): number {
+  return computeUnifiedValue(evaluateCombatCandidateValue(context).context)
 }

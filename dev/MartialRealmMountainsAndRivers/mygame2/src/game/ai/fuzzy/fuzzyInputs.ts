@@ -19,9 +19,10 @@ import { getRepairSummary, hasBuilding } from '../../rules/buildingRules'
 import { getMartialHallSkillCost } from '../../actions/martialHallActions'
 import { canUpgradeBuildingType, getBuildingLevel, getBuildingUpgradeResult, getEffectiveBuildingUpgradeCost } from '../../rules/buildingProgressionRules'
 import type { AiPersonalityId } from '../../types/ai'
-import { computeConstructionCandidateValue } from './constructionValue'
-import { computeCombatCandidateValue } from './combatValue'
-import { computeEquipmentCandidateValue, computeInnerSkillCandidateValue } from './equipmentValue'
+import { evaluateConstructionCandidateValue } from './constructionValue'
+import { evaluateCombatCandidateValue } from './combatValue'
+import { evaluateEquipmentCandidateValue, evaluateInnerSkillCandidateValue } from './equipmentValue'
+import type { ValueEvaluation } from './valueContext'
 
 export type ConstructionCandidate = {
   kind: 'build' | 'upgrade'
@@ -33,6 +34,7 @@ export type ConstructionCandidate = {
   currentLevel?: number
   nextLevel?: number
   value: number
+  valueFactors: ValueEvaluation['factors']
 }
 
 export type CombatCandidate = {
@@ -43,6 +45,7 @@ export type CombatCandidate = {
   damageRatio: number
   healthRatio: number
   value: number
+  valueFactors: ValueEvaluation['factors']
 }
 
 export type EquipmentCandidate = {
@@ -52,6 +55,7 @@ export type EquipmentCandidate = {
   name: string
   durability: number
   value: number
+  valueFactors: ValueEvaluation['factors']
 }
 
 export type InnerSkillCandidate = {
@@ -60,6 +64,7 @@ export type InnerSkillCandidate = {
   insightRequirement: number
   damageGainRatio: number
   value: number
+  valueFactors: ValueEvaluation['factors']
 }
 
 /** 各目標的可行性資料：「能不能做」+「走多遠」 */
@@ -315,14 +320,8 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
             if (!canPlayerBuildBuildingType(player, template.type)) return false
             return nearestBase.buildingMaterials >= template.constructionCost
           })
-          .map((template) => ({
-            kind: 'build' as const,
-            baseId: nearestBase.id,
-            buildingId: template.id,
-            buildingType: template.type,
-            buildingName: template.name,
-            cost: template.constructionCost,
-            value: computeConstructionCandidateValue({
+          .map((template) => {
+            const evaluation = evaluateConstructionCandidateValue({
               kind: 'build',
               buildingType: template.type,
               cost: template.constructionCost,
@@ -330,8 +329,18 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
               threatCountNearBase,
               distanceToBase: manhattan(player.position, nearestBase.position),
               personality,
-            }),
-          })),
+            })
+            return {
+            kind: 'build' as const,
+            baseId: nearestBase.id,
+            buildingId: template.id,
+            buildingType: template.type,
+            buildingName: template.name,
+            cost: template.constructionCost,
+              value: evaluation.value,
+              valueFactors: evaluation.factors,
+            }
+          }),
         ...nearestBase.buildings
           .filter((building) => {
             if (!canUpgradeBuildingType(building.type)) return false
@@ -339,25 +348,30 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
             if (allowedEntry?.maxLevel !== undefined && getBuildingLevel(building) >= allowedEntry.maxLevel) return false
             return getBuildingUpgradeResult(nearestBase, building, player).ok
           })
-          .map((building) => ({
+          .map((building) => {
+            const cost = getEffectiveBuildingUpgradeCost(building, player)
+            const evaluation = evaluateConstructionCandidateValue({
+              kind: 'upgrade',
+              buildingType: building.type,
+              cost,
+              materialRatio,
+              threatCountNearBase,
+              distanceToBase: manhattan(player.position, nearestBase.position),
+              personality,
+            })
+            return {
             kind: 'upgrade' as const,
             baseId: nearestBase.id,
             buildingId: building.id,
             buildingType: building.type,
             buildingName: building.name,
-            cost: getEffectiveBuildingUpgradeCost(building, player),
+            cost,
             currentLevel: getBuildingLevel(building),
             nextLevel: getBuildingLevel(building) + 1,
-            value: computeConstructionCandidateValue({
-              kind: 'upgrade',
-              buildingType: building.type,
-              cost: getEffectiveBuildingUpgradeCost(building, player),
-              materialRatio,
-              threatCountNearBase,
-              distanceToBase: manhattan(player.position, nearestBase.position),
-              personality,
-            }),
-          })),
+              value: evaluation.value,
+              valueFactors: evaluation.factors,
+            }
+          }),
       ]
     : []
 
@@ -463,6 +477,15 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
         ) / Math.max(1, creature.maxHealth))
         : 0
       const hitsAgainstCreature = creature.health / Math.max(1, Math.floor(creature.maxHealth * 0.3))
+      const evaluation = evaluateCombatCandidateValue({
+        distance,
+        healthRatio: creature.health / Math.max(1, creature.maxHealth),
+        damageRatio,
+        hitsSurvivable: hitsAgainstCreature > 0 ? player.health / Math.max(1, Math.floor(creature.maxHealth * 0.3)) : 0,
+        staminaRatio: staminaRatioVal,
+        level: creature.level ?? 1,
+        personality,
+      })
       return {
         creatureId: creature.id,
         creatureName: creature.name,
@@ -470,15 +493,8 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
         distance,
         damageRatio,
         healthRatio: creature.health / Math.max(1, creature.maxHealth),
-        value: computeCombatCandidateValue({
-          distance,
-          healthRatio: creature.health / Math.max(1, creature.maxHealth),
-          damageRatio,
-          hitsSurvivable: hitsAgainstCreature > 0 ? player.health / Math.max(1, Math.floor(creature.maxHealth * 0.3)) : 0,
-          staminaRatio: staminaRatioVal,
-          level: creature.level ?? 1,
-          personality,
-        }),
+        value: evaluation.value,
+        valueFactors: evaluation.factors,
       }
     })
     .sort((first, second) => second.value - first.value)
@@ -703,18 +719,20 @@ function findEquipmentCandidates(player: PlayerState, personality?: AiPersonalit
       const attributeGain = Object.entries(def.modifiers).reduce((total, [attribute, amount]) =>
         total + (amount ?? 0) - (currentDef?.modifiers[attribute as keyof typeof def.modifiers] ?? 0), 0)
       if (currentInstance && !replacesBroken && attributeGain <= 0) continue
+      const evaluation = evaluateEquipmentCandidateValue({
+        attributeGain,
+        durabilityRatio: candidate.durability / Math.max(1, def.maxDurability),
+        replacesBroken: !!replacesBroken,
+        personality,
+      })
       candidates.push({
         instanceId: candidate.instanceId,
         equipmentId: candidate.equipmentId,
         slot,
         name: def.name,
         durability: candidate.durability,
-        value: computeEquipmentCandidateValue({
-          attributeGain,
-          durabilityRatio: candidate.durability / Math.max(1, def.maxDurability),
-          replacesBroken: !!replacesBroken,
-          personality,
-        }),
+        value: evaluation.value,
+        valueFactors: evaluation.factors,
       })
       }
   }
@@ -736,16 +754,18 @@ function findInnerSkillCandidates(
     .map((skill) => {
       const damage = skill.calculateDamage(effectiveAttributes)
       const damageGainRatio = (damage - currentDamage) / Math.max(1, currentDamage)
+      const evaluation = evaluateInnerSkillCandidateValue({
+        damageGainRatio,
+        insightRatio: effectiveAttributes.insight > 0 ? skill.insightRequirement / effectiveAttributes.insight : 0,
+        personality,
+      })
       return {
         id: skill.id,
         name: skill.name,
         insightRequirement: skill.insightRequirement,
         damageGainRatio,
-        value: computeInnerSkillCandidateValue({
-          damageGainRatio,
-          insightRatio: effectiveAttributes.insight > 0 ? skill.insightRequirement / effectiveAttributes.insight : 0,
-          personality,
-        }),
+        value: evaluation.value,
+        valueFactors: evaluation.factors,
       }
     })
     .filter((candidate) => candidate.damageGainRatio > 0)
