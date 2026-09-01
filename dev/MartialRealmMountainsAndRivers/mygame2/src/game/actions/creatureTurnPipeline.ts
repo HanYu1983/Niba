@@ -504,20 +504,19 @@ function resolveAttackAgainstPlayer(
   const damage = avoided
     ? 0
     : Math.max(1, Math.floor(rawDamage * (1 + getCreatureDamageDealtPercent(creature, creatureTerrain))))
-  const actualDamage = Math.min(adjacentPlayer.health, damage)
-  // 鐵壁訣：玩家受到傷害時最終傷害 -%（反震仍基於 actualDamage）
+  // 鐵壁訣：玩家受到傷害時最終傷害 -%（溢傷照算，不截斷為當前血量，與玩家攻擊生物一致）。
   const reduction = getDamageReductionPercent(adjacentPlayer)
-  const finalDamage = actualDamage <= 0 ? 0 : Math.max(1, Math.floor(actualDamage * (1 - reduction)))
+  const finalDamage = damage <= 0 ? 0 : Math.max(1, Math.floor(damage * (1 - reduction)))
   context.players = context.players.map((player) => player.id === adjacentPlayer.id ? { ...reduceEquipmentDurability(reduceEquipmentDurability(player, 'armor', 1), 'accessory', 0.5), health: Math.max(0, player.health - finalDamage) } : player)
-  // 嗜血：怪物造成傷害時回復血量
-  const lifestealHeal = Math.floor(actualDamage * getLifestealPercent(creature))
+  // 嗜血：怪物造成傷害時回復血量（以實際造成的傷害為準，不超過目標剩餘血量）
+  const lifestealHeal = Math.floor(Math.min(adjacentPlayer.health, damage) * getLifestealPercent(creature))
   if (lifestealHeal > 0) {
     creature.health = Math.min(creature.maxHealth, creature.health + lifestealHeal)
   }
   const reflectionPercent = getActiveBuffsForPlayer(adjacentPlayer)
     .reduce((total, buff) => total + (getBuff(buff.definitionId)?.reflectionPercent ?? 0), 0)
-  if (reflectionPercent > 0 && actualDamage > 0) {
-    const reflectedDamage = actualDamage * reflectionPercent
+  if (reflectionPercent > 0 && damage > 0) {
+    const reflectedDamage = Math.min(adjacentPlayer.health, damage) * reflectionPercent
     context.reflectedDamageByCreatureId.set(creature.id, reflectedDamage)
     context.logs.push({ creatureId: adjacentPlayer.id, creatureName: adjacentPlayer.name, message: `${adjacentPlayer.name} 的反震對 ${creature.name} 造成 ${reflectedDamage} 點傷害。` })
   }
