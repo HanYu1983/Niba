@@ -7,6 +7,7 @@ import { type AiAction, type AiTargetRef } from '../aiAction'
 import { defenseActionToAiAction } from '../defenseActionAdapter'
 import type { AiDefenseAction } from '../../aiDefenseRules'
 import { buildingCatalog } from '../../catalogs/buildingCatalog'
+import { elementBurstItems } from '../../catalogs/itemCatalog'
 
 export type AiValidationResult = { valid: true } | { valid: false; reason: string }
 
@@ -118,6 +119,19 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
     case 'end-turn':
     case 'allocate-attribute':
     case 'use-item':
+    case 'use-element-burst': {
+      if (action.type === 'use-element-burst') {
+        const player = state.players.find((candidate) => candidate.id === action.actor.id)
+        const item = player?.inventory.find((entry) => entry.itemId === action.itemId)
+        if (!item || item.quantity <= 0) return { valid: false, reason: '元素爆發道具不存在或數量不足。' }
+        if (!elementBurstItems.some((candidate) => candidate.id === action.itemId)) return { valid: false, reason: '指定道具不是元素爆發道具。' }
+        if (player?.itemEffectsUsedThisTurn?.includes('element-burst')) return { valid: false, reason: '本回合已使用過元素爆發道具。' }
+        const target = findTarget(state, action.target)
+        if (!target || target.health <= 0) return { valid: false, reason: '元素爆發目標不存在或已被擊敗。' }
+        if (!isAdjacent(actor.position, target.position)) return { valid: false, reason: '元素爆發目標不在攻擊距離內。' }
+      }
+      return { valid: true }
+    }
     case 'equip':
     case 'equip-inner-skill':
     case 'learn-skill':

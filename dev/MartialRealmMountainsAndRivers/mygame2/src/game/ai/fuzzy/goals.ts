@@ -414,9 +414,9 @@ export function evaluateAllGoals(
     buildDefense: evaluateBuildDefense(inputs, state, player, dependencies),
   }
 
-  // 距離衰減：除探索外，有 distanceToTarget 的目標分數隨距離下降
+  // 距離衰減：探索與巢穴攻略都以移動 action 表達距離成本，不重複扣分。
   for (const goal of Object.keys(results) as GoalName[]) {
-    if (goal === 'exploration') continue
+    if (goal === 'exploration' || goal === 'attackNest') continue
     const r = results[goal]
     if (r.distanceToTarget != null && r.distanceToTarget > 0) {
       // 每格衰減 0.05，到 10 格以上分數歸零
@@ -708,11 +708,23 @@ export function evaluateAttackNest(
 
   if (distToNearestNest === Infinity) return { score: 0 }
 
-  const f_safeHealth = trapezoid(hitsSurvivable, 4, 6, 10, 10)
-  const f_noCreatures = visibleCreatureIds.length === 0 ? 1 : 0
-  const f_nestClose = distToNearestNest <= 1
-    ? 1
-    : trapezoid(distToNearestNest, 1, 2, 5, 8)
+  const f_safeHealth = Math.min(1, Math.max(0, (hitsSurvivable - 4) / 2))
+  const nearestNest = state.creatureNests
+    .filter((nest) => nest.health > 0)
+    .sort((first, second) => {
+      const firstDistance = Math.abs(first.position.row - player.position.row) + Math.abs(first.position.column - player.position.column)
+      const secondDistance = Math.abs(second.position.row - player.position.row) + Math.abs(second.position.column - player.position.column)
+      return firstDistance - secondDistance
+    })[0]
+  const localThreatCount = nearestNest
+    ? state.creatures.filter((creature) => {
+      if (creature.health <= 0 || !visibleCreatureIds.includes(creature.id)) return false
+      return Math.abs(creature.position.row - nearestNest.position.row)
+        + Math.abs(creature.position.column - nearestNest.position.column) <= 2
+    }).length
+    : 0
+  const f_noCreatures = localThreatCount === 0 ? 1 : 0
+  const f_nestClose = 1
 
   const score = fuzzyAnd(f_safeHealth, fuzzyAnd(f_noCreatures, f_nestClose))
 
@@ -720,7 +732,7 @@ export function evaluateAttackNest(
     score,
     target: { kind: 'attack', targetId: '', targetType: 'nest', position: { row: -1, column: -1 } },
     distanceToTarget: distToNearestNest,
-    context: { distToNearestNest, visibleCreatureCount: visibleCreatureIds.length },
+    context: { distToNearestNest, visibleCreatureCount: visibleCreatureIds.length, localThreatCount },
   }
 
   if (score > 0) {

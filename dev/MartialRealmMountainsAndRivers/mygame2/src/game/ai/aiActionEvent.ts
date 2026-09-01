@@ -57,6 +57,7 @@ const ACTION_TYPE_LABELS: Record<AiAction['type'], string> = {
   'end-turn': '結束回合',
   'allocate-attribute': '分配屬性',
   'use-item': '使用道具',
+  'use-element-burst': '使用元素爆發',
   equip: '裝備',
   'equip-inner-skill': '裝備功法',
   'learn-skill': '學習功法',

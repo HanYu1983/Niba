@@ -84,6 +84,13 @@ export type AiAction =
       reason: string
     }
   | {
+      type: 'use-element-burst'
+      actor: AiActorRef
+      itemId: string
+      target: AiTargetRef
+      reason: string
+    }
+  | {
       type: 'equip'
       actor: AiActorRef
       instanceId: string

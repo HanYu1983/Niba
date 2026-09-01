@@ -20,6 +20,8 @@ import type { CombatActionDependencies } from '../../actions/combatActions'
 import { resolveExplorationEvent } from '../../actions/explorationActions'
 import { checkEventRequirements, getEventChoices } from '../../events/eventResolver'
 import { computeEventChoiceValue } from '../fuzzy/eventValue'
+import { createItemBurstPreview } from '../../previewOrchestration'
+import { executeItemBurstAction } from '../../actions/itemBurstActions'
 
 export type ExecuteAiActionDependencies = {
   combat: CombatActionDependencies
@@ -114,6 +116,14 @@ export function executeAiAction(
       return allocateAttributePointAction(state, action.actor.id, action.attribute)
     case 'use-item':
       return executeItemAction(state, action.actor.id, action.itemId)
+    case 'use-element-burst': {
+      const player = state.players.find((candidate) => candidate.id === action.actor.id)
+      const preview = player
+        ? createItemBurstPreview(state, player, action.itemId, action.target.kind as AttackTargetType, action.target.id)
+        : null
+      if (!preview) return { state, result: { ok: false, reason: '元素爆發目標或道具無效。' } }
+      return executeItemBurstAction({ ...state, itemBurstPreview: preview }, dependencies.combat)
+    }
     case 'equip':
       return equipEquipmentAction(state, action.actor.id, action.instanceId)
     case 'equip-inner-skill':

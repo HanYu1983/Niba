@@ -10,6 +10,8 @@ import { externalSkillCatalog } from '../../catalogs/externalSkillCatalog'
 import { validateAiAction } from '../validation/validateAiAction'
 import { executeAiAction, type ExecuteAiActionDependencies } from '../execution/executeAiAction'
 import { canTransportPlayer } from '../../rules/transportRules'
+import { elementBurstItems } from '../../catalogs/itemCatalog'
+import { getSchoolElement, getElementDamageMultiplier } from '../../rules/skillRules'
 import { getAiActionStaminaCost } from '../../rules/actionCostRules'
 
 const previousMovePositions = new Map<string, Position>()
@@ -793,6 +795,26 @@ function buildAttackNestActions(
   const dist = Math.abs(nest.position.row - player.position.row) + Math.abs(nest.position.column - player.position.column)
 
   if (dist <= 1) {
+    const defenderElement = getSchoolElement(nest.schoolId)
+    const burstItem = player.inventory
+      .map((entry) => ({ entry, definition: elementBurstItems.find((item) => item.id === entry.itemId) }))
+      .filter((candidate) => candidate.entry.quantity > 0 && candidate.definition != null)
+      .sort((first, second) => {
+        const firstDamage = (first.definition?.effectValue ?? 0) * getElementDamageMultiplier(first.definition?.element, defenderElement)
+        const secondDamage = (second.definition?.effectValue ?? 0) * getElementDamageMultiplier(second.definition?.element, defenderElement)
+        return secondDamage - firstDamage
+      })[0]
+
+    if (burstItem?.definition) {
+      return [{
+        type: 'use-element-burst',
+        actor,
+        itemId: burstItem.definition.id,
+        target: { id: nest.id, kind: 'nest', position: nest.position },
+        reason: `打巢穴：使用${burstItem.definition.name}攻擊 ${nest.name}`,
+      }]
+    }
+
     return [{
       type: 'attack',
       actor,
@@ -802,20 +824,12 @@ function buildAttackNestActions(
   }
 
   const moveDest = findClosestReachablePosition(state, player, nest.position)
-  return [
-    {
-      type: 'move',
-      actor,
-      destination: moveDest,
-      reason: `打巢穴：移動到 ${nest.name} 附近`,
-    },
-    {
-      type: 'attack',
-      actor,
-      target: { id: nest.id, kind: 'nest', position: nest.position },
-      reason: `打巢穴：攻擊 ${nest.name}`,
-    },
-  ]
+  return [{
+    type: 'move',
+    actor,
+    destination: moveDest,
+    reason: `打巢穴：移動到 ${nest.name} 附近`,
+  }]
 }
 
 // ─── equipInnerSkill ──────────────────────────────────────────
