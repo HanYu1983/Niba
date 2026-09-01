@@ -86,7 +86,7 @@ export function formatExternalSkillResult(result: ExternalDamageExecutionResult)
             const defenseMessage = formatTargetDefense(target.targetDefense)
             return `${target.targetName}：造成傷害 ${target.damage}${defenseMessage ? `｜${defenseMessage}` : ''}${target.defeated
               ? (isNest ? '｜巢穴已摧毀' : '｜目標已被擊敗')
-              : `｜剩餘 ${target.nextHealth} / ${target.maxHealth}`}`
+              : `｜剩餘 ${Math.round(target.nextHealth)} / ${Math.round(target.maxHealth)}`}`
           })
           : [`造成傷害 ${result.damage}`]),
         ...(defenseMessage ? [defenseMessage] : []),
@@ -99,7 +99,7 @@ export function formatExternalSkillResult(result: ExternalDamageExecutionResult)
         !isArea
           ? result.defeated
             ? result.targetType === 'nest' ? '巢穴已摧毀' : '目標已被擊敗'
-            : `目標剩餘血量 ${result.nextHealth} / ${result.maxHealth}`
+            : `目標剩餘血量 ${Math.round(result.nextHealth)} / ${Math.round(result.maxHealth)}`
           : undefined,
         ...(result.experienceReward ? [`玩家經驗 +${result.experienceReward}`] : []),
         ...(result.loot ? [`掉落：${formatLootLabel(result.loot)}`] : []),

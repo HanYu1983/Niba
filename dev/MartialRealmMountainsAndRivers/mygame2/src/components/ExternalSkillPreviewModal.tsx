@@ -44,7 +44,7 @@ function ExternalSkillPreviewModal({ preview, onConfirm, onCancel }: Props) {
             { label: '內力消耗', value: preview.innerPowerCost },
             ...(preview.elementInteraction ? [{ label: '五行相剋', value: preview.elementInteraction }] : []),
             ...(preview.targetMode !== 'self' && preview.targetHealth !== undefined && preview.targetMaxHealth !== undefined
-              ? [{ label: '目標血量', value: `${preview.targetHealth} / ${preview.targetMaxHealth}` }]
+              ? [{ label: '目標血量', value: `${Math.round(preview.targetHealth)} / ${Math.round(preview.targetMaxHealth)}` }]
               : []),
           ]}
         />

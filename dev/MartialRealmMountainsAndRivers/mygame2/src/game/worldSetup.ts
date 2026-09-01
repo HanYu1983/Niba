@@ -89,7 +89,7 @@ export function createGameState(
   ]
   const creatureNests = createCreatureNests(map, settings.nestCount, settings.seed + WORLD_SEED_OFFSETS.nests, [
     ...interactionPointPositions,
-  ])
+  ], bases.map((base) => base.position))
   const players = createInitialPlayers(
     playerPositions,
     settings.seed + WORLD_SEED_OFFSETS.players,
