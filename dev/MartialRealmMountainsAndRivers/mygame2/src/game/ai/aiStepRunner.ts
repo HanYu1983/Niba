@@ -213,24 +213,30 @@ function runAiStepLoop(
       continue
     }
 
-    for (const action of decision.actions) {
-      const cp = deps.getState().players.find((p) => p.id === playerId)
-      if (!cp || cp.stamina <= 0) {
-        exitReason = `體力耗盡（剩餘 ${cp?.stamina ?? 0}）`
-        break
-      }
-      const validation = validateAiAction(deps.getState(), action)
-      if (!validation.valid) {
-        exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
-        break
-      }
-      const actionResult = executeAction(action)
-      recordAiStepEvent(deps.updateGameState, deps.getState().round, playerId, currentPlayer.name, action, actionResult)
-      if (!actionResult.ok) {
-        exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
-        break
-      }
+    const action = decision.actions[0]
+    if (!action) {
+      exitReason = '沒有可執行行動。'
+      continue
     }
+    const cp = deps.getState().players.find((p) => p.id === playerId)
+    if (!cp || cp.stamina <= 0) {
+      exitReason = `體力耗盡（剩餘 ${cp?.stamina ?? 0}）`
+      continue
+    }
+    const validation = validateAiAction(deps.getState(), action)
+    if (!validation.valid) {
+      exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
+      continue
+    }
+    const actionResult = executeAction(action)
+    recordAiStepEvent(deps.updateGameState, deps.getState().round, playerId, currentPlayer.name, action, actionResult)
+    if (!actionResult.ok) {
+      exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
+      continue
+    }
+
+    // 一次只執行一個 action；下一個 action 由 scheduler 的下一個 timer 觸發。
+    return { ok: true }
   }
 
   // ── 出口邏輯 ──────────────────────────────────────────────
