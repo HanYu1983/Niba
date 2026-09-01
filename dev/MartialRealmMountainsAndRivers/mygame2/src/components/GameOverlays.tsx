@@ -11,8 +11,10 @@ import type { GameState, PlayerState, CreatureState, ExplorationEventState, Defe
 
 type GameOverlaysProps = {
   gameState: GameState
-  /** 「重新開始」時回到地圖設置頁面（可選）。 */
+  /** 「本局重啓」時回到地圖設置頁面（可選）。 */
   onRestartToMap?: () => void
+  /** 「回到首頁」時回到遊戲開始畫面。 */
+  onGoHome?: () => void
   /** 玩家是否已關閉局末結算彈窗（可由指令欄按鈕重新開啟）。 */
   gameOverModalDismissed?: boolean
   /** 關閉局末結算彈窗。 */
@@ -96,6 +98,7 @@ type GameOverlaysProps = {
 function GameOverlays({
   gameState,
   onRestartToMap,
+  onGoHome,
   gameOverModalDismissed,
   onDismissGameOverModal,
   activePlayer,
@@ -167,6 +170,7 @@ function GameOverlays({
       <SystemOverlays
         gameState={gameState}
         onRestartToMap={onRestartToMap}
+        onGoHome={onGoHome}
         gameOverModalDismissed={gameOverModalDismissed}
         onDismissGameOverModal={onDismissGameOverModal}
       />
@@ -260,8 +264,8 @@ function GameOverlays({
           const playerBefore = gameState.players.find((player) => player.id === targetPlayerId)
           const result = gameStore.resolvePendingExplorationEvent(targetPlayerId, pending.id, choiceId)
           if (!result.ok) {
-            // 事件處理失敗：不顯示結果彈窗，直接執行暫存的敵人行動。
-            gameStore.showActionResult({ title: '事件處理失敗', message: `原因：${result.reason}`, rewards: [] }, { type: 'flush-creature-turn' })
+            // 事件處理失敗：僅顯示失敗彈窗。敵人行動已在回合結束時執行完畢，無需延後。
+            gameStore.showActionResult({ title: '事件處理失敗', message: `原因：${result.reason}`, rewards: [] })
             return
           }
           const playerAfter = gameStore.getState().players.find((player) => player.id === targetPlayerId)
@@ -271,10 +275,9 @@ function GameOverlays({
           const learnedExternalSkillName = learnedExternalSkillId
             ? allExternalSkillCatalog.find((skill) => skill.id === learnedExternalSkillId)?.name
             : undefined
-          // 顯示事件結果彈窗；玩家關閉後才執行暫存的敵人行動。
+          // 顯示事件結果彈窗。敵人行動已於回合結束執行，此處不需延後。
           gameStore.showActionResult(
             formatExplorationEventResult(pending.name, choiceId, learnedExternalSkillName),
-            { type: 'flush-creature-turn' },
           )
         }}
         onClose={() => gameStore.dismissPendingExplorationEvent()}

@@ -30,18 +30,27 @@ export function formatRepairResult(result: RepairPreview): ActionResult {
   }
 }
 
+/** 依目標生物的防禦判定結果產生說明文字（回避／根骨減傷）。 */
+function formatTargetDefense(targetDefense: string | undefined): string | undefined {
+  if (targetDefense === 'evaded') return '敵人回避了本次攻擊，傷害為 0！'
+  if (targetDefense === 'reduced') return '敵人根骨強健，傷害減半。'
+  return undefined
+}
+
 export function formatAttackResult(result: AttackExecutionResult): ActionResult {
+  const defenseMessage = formatTargetDefense(result.targetDefense)
   return {
     title: '攻擊結果',
     message: `${result.playerName} 攻擊 ${result.targetName}。`,
     rewards: [
       `造成傷害 ${result.damage}`,
+      ...(defenseMessage ? [defenseMessage] : []),
       ...(result.terrainResonance ? [`天地共鳴：${result.terrainResonance}`] : []),
       ...(result.criticalHit ? ['暴擊！造成 1.5 倍傷害。'] : []),
       ...(result.criticalRate > 0 ? [`普通攻擊暴擊率 ${result.criticalRate}%`] : []),
       result.defeated
         ? result.targetType === 'nest' ? '巢穴已摧毀' : '目標已被擊敗'
-        : `目標剩餘血量 ${result.nextHealth} / ${result.maxHealth}`,
+        : `目標剩餘血量 ${Math.round(result.nextHealth)} / ${Math.round(result.maxHealth)}`,
       ...(result.experienceReward ? [`玩家經驗 +${result.experienceReward}`] : []),
       ...(result.moneyReward ? [`獲得金錢 +${result.moneyReward}`] : []),
       ...(result.levelsGained && result.levelsGained > 0
@@ -61,6 +70,7 @@ export function formatAttackResult(result: AttackExecutionResult): ActionResult 
 export function formatExternalSkillResult(result: ExternalDamageExecutionResult): ActionResult {
   const selfCast = result.targetMode === 'self'
   const isArea = Boolean(result.areaTargets && result.areaTargets.length > 0)
+  const defenseMessage = formatTargetDefense(result.targetDefense)
   return {
     title: isArea ? '範圍外功結果' : '外功結果',
     message: selfCast
@@ -73,11 +83,13 @@ export function formatExternalSkillResult(result: ExternalDamageExecutionResult)
         ...(isArea
           ? (result.areaTargets ?? []).map((target) => {
             const isNest = target.targetType === 'nest'
-            return `${target.targetName}：造成傷害 ${target.damage}${target.defeated
+            const defenseMessage = formatTargetDefense(target.targetDefense)
+            return `${target.targetName}：造成傷害 ${target.damage}${defenseMessage ? `｜${defenseMessage}` : ''}${target.defeated
               ? (isNest ? '｜巢穴已摧毀' : '｜目標已被擊敗')
-              : `｜剩餘 ${target.nextHealth} / ${target.maxHealth}`}`
+              : `｜剩餘 ${Math.round(target.nextHealth)} / ${Math.round(target.maxHealth)}`}`
           })
           : [`造成傷害 ${result.damage}`]),
+        ...(defenseMessage ? [defenseMessage] : []),
         ...(result.terrainResonance ? [`天地共鳴：${result.terrainResonance}`] : []),
         ...(result.synergy ? ['五行相生連攜：內功生外功｜傷害 ×1.25'] : []),
         ...(result.tripleResonance ? ['⚡ 三重共振！目標震懾一回合'] : []),
@@ -87,7 +99,7 @@ export function formatExternalSkillResult(result: ExternalDamageExecutionResult)
         !isArea
           ? result.defeated
             ? result.targetType === 'nest' ? '巢穴已摧毀' : '目標已被擊敗'
-            : `目標剩餘血量 ${result.nextHealth} / ${result.maxHealth}`
+            : `目標剩餘血量 ${Math.round(result.nextHealth)} / ${Math.round(result.maxHealth)}`
           : undefined,
         ...(result.experienceReward ? [`玩家經驗 +${result.experienceReward}`] : []),
         ...(result.loot ? [`掉落：${formatLootLabel(result.loot)}`] : []),
@@ -113,11 +125,11 @@ export function formatItemBurstResult(result: ItemBurstExecutionResult): ActionR
     title: '道具攻擊結果',
     message: `${result.playerName} 使用 ${result.itemName} 攻擊 ${result.targetName}。`,
     rewards: [
-      `造成傷害 ${result.damage}`,
+      `造成傷害 ${Math.round(result.damage)}`,
       ...(result.element && result.targetType === 'creature' ? [`屬性：${getElementName(result.element as SchoolElement | undefined)}`] : []),
       result.defeated
         ? result.targetType === 'nest' ? '巢穴已摧毀' : '目標已被擊敗'
-        : `目標剩餘血量 ${result.nextHealth} / ${result.maxHealth}`,
+        : `目標剩餘血量 ${Math.round(result.nextHealth)} / ${Math.round(result.maxHealth)}`,
       ...(result.experienceReward ? [`玩家經驗 +${result.experienceReward}`] : []),
       ...(result.loot ? [`掉落：${formatLootLabel(result.loot)}`] : []),
       ...(result.moneyReward ? [`獲得金錢 +${result.moneyReward}`] : []),

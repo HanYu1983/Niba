@@ -204,7 +204,7 @@ export function resolveRoundEndAuraEffects(
       for (const effect of field.effects) {
         if (effect.target !== 'player' && effect.target !== 'all') continue
         if (effect.kind === 'damage-over-time') {
-          damage += Math.floor(player.maxHealth * effect.magnitude)
+          damage += player.maxHealth * effect.magnitude
         } else if (effect.kind === 'heal-over-time') {
           regen += effect.magnitude
         }

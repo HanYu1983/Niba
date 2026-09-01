@@ -92,7 +92,7 @@ describe('靈氣功法升級後 Buff 描述反映縮放數值', () => {
     expect(buff?.description).toContain('暴擊率 +25%')
   })
 
-  it('反震 Lv.3：反彈描述更新為 33%', () => {
+  it('反震 Lv.3：反彈描述更新為 20%', () => {
     const player = makePlayer({
       externalSkillIds: ['earth-mountain-external-functional'],
       equippedExternalSkillIds: ['earth-mountain-external-functional'],
@@ -100,7 +100,8 @@ describe('靈氣功法升級後 Buff 描述反映縮放數值', () => {
     })
     const definitions = getActiveBuffDefinitions(player)
     const buff = definitions.find((d) => d.id === 'earth-mountain-reflection')
-    expect(buff?.reflectionPercent).toBeCloseTo(0.325)
-    expect(buff?.description).toContain('33%')
+    // Lv.1 基礎 15% → Lv.3 → 15% × 1.3 = 19.5%
+    expect(buff?.reflectionPercent).toBeCloseTo(0.195)
+    expect(buff?.description).toContain('20%')
   })
 })

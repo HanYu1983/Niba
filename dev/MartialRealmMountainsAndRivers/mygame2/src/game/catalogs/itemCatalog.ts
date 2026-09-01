@@ -79,6 +79,7 @@ export const battlefieldControlItems: ItemDefinition[] = [
   { id: 'scout-talisman', name: '探地符', description: '立即揭示周圍半徑 6 格地形。', icon: '🔍', effectLabel: '揭示半徑 6 格', effect: 'scout', effectValue: 6, buyPrice: 20, requiredShopLevel: 1 },
   { id: 'warn-gong-talisman', name: '鳴鑼符', description: '揭示全圖怪物位置，下回合恢復迷霧。', icon: '🥁', effectLabel: '揭示全圖怪物', effect: 'reveal-creatures', buyPrice: 35, requiredShopLevel: 2 },
   { id: 'recall-base-talisman', name: '回營符', description: '撤退到最近據點，不耗體力（類似驛站傳送）。', icon: '🏠', effectLabel: '撤退到最近據點', effect: 'recall-base', buyPrice: 45, requiredShopLevel: 2 },
+  { id: 'concealment-talisman', name: '隱身符', description: '獲得隱身靈氣 3 回合，敵人無法攻擊或追蹤你，可安全逃離或潛行刺殺巢穴。', icon: '🌫️', effectLabel: '隱身 3 回合', effect: 'buff', buffDefinitionId: 'concealment-aura', buyPrice: 60, requiredShopLevel: 2 },
 ]
 
 // 分類 3：元素爆發型（6 元素 × 4 階）

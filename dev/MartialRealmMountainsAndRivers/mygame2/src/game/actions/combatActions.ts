@@ -14,7 +14,7 @@ import type {
   Position,
 } from '../types'
 import { addSkillExperience, getElementDamageMultiplier, getExternalSkill, getGenerationSynergyMultiplier, getInnerSkill, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, isElementGenerating, SKILL_EXPERIENCE_PER_USE } from '../rules/skillRules'
-import { getBuff, getCreatureDamageReductionPercent, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
+import { getActiveBuffsForPlayer, getBuff, getCreatureDamageReductionPercent, getCreatureEvasionRate, getCreatureRootReductionRate, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from '../rules/playerStatsRules'
 import { getAttackTarget } from '../rules/targetRules'
 import { resolveTargetShapeCells } from '../rules/targetingRules'
@@ -307,8 +307,15 @@ function applyCombatHitState(
   const attackerEffective = getEffectiveAttributesForPlayer(attacker)
   const attackerMaxHealth = getMaxHealth(attackerEffective)
   const attackerMaxInnerPower = getMaxInnerPower(attackerEffective)
-  const lifestealHeal = Math.floor(damage * getLifestealPercent(attacker))
-  const innerPowerLeech = Math.floor(damage * getInnerPowerLeechPercent(attacker))
+  const lifestealHeal = damage * getLifestealPercent(attacker)
+  const innerPowerLeech = damage * getInnerPowerLeechPercent(attacker)
+  // 生物反震：被攻擊的生物若有反震 Buff（厚土流），將實際傷害的一定比例反彈回攻擊者。
+  const reflectedDamage = targetType === 'creature'
+    ? getActiveBuffsForPlayer(resolvedTarget as CreatureState).reduce(
+        (total, buff) => total + (getBuff(buff.definitionId)?.reflectionPercent ?? 0),
+        0,
+      ) * damage
+    : 0
 
   const nextState: GameState = {
     ...state,
@@ -323,7 +330,8 @@ function applyCombatHitState(
         const appliedPlayer = applyCombatPlayerState(state, attacker, rewards, dependencies, options)
         return {
           ...appliedPlayer,
-          health: Math.min(attackerMaxHealth, appliedPlayer.health + lifestealHeal),
+          // 反震傷害回彈到攻擊者（最小為 0），採「先回復後扣反震」。
+          health: Math.max(0, Math.min(attackerMaxHealth, appliedPlayer.health + lifestealHeal) - reflectedDamage),
           innerPower: Math.min(attackerMaxInnerPower, appliedPlayer.innerPower + innerPowerLeech),
         }
       })()
@@ -378,7 +386,7 @@ export function executeExternalDamage(
     }, player)
     // 定向強化型外功：直接施放、立即完成（無冷卻、不消耗體力）。目前支援回復自身最大生命百分比。
     const activatedPlayer = skill.activationEffect?.kind === 'heal-self-percent'
-      ? { ...withBuff, health: Math.min(withBuff.maxHealth, withBuff.health + Math.floor(withBuff.maxHealth * skill.activationEffect.percent)) }
+      ? { ...withBuff, health: Math.min(withBuff.maxHealth, withBuff.health + withBuff.maxHealth * skill.activationEffect.percent) }
       : withBuff
     const rewards: CombatRewards = { experienceGain: 0, moneyReward: 0, progressedPlayer: activatedPlayer }
     const nextPlayer = applyCombatPlayerState(state, activatedPlayer, rewards, dependencies, { innerPowerCost, externalSkillId: skillId, skipSkillExperience: true })
@@ -429,7 +437,16 @@ export function executeExternalDamage(
   const random = dependencies.random ?? defaultRandomSource
   const criticalRate = skill.functionalEffect ? 0 : getExternalSkillCritRateForPlayer(target.player)
   const criticalHit = criticalRate > 0 && rollChance(criticalRate / 100, random)
-  const damage = criticalHit ? Math.floor(damageBeforeCrit * 1.5) : damageBeforeCrit
+  let damage = criticalHit ? Math.floor(damageBeforeCrit * 1.5) : damageBeforeCrit
+  // 對稱防禦：生物作為被攻擊方時套用回避／根骨減傷（與玩家被生物攻擊時一致）。
+  let targetDefense: 'evaded' | 'reduced' | undefined
+  if (targetType === 'creature') {
+    const creature = target.target as CreatureState
+    const avoided = rollChance(Math.min(1, getCreatureEvasionRate(creature, creatureTargetTerrain) / 100), random)
+    const halved = !avoided && rollChance(Math.min(1, getCreatureRootReductionRate(creature, creatureTargetTerrain) / 100), random)
+    targetDefense = avoided ? 'evaded' : halved ? 'reduced' : undefined
+    damage = avoided ? 0 : halved ? Math.max(1, Math.floor(damage / 2)) : damage
+  }
   const nextHealth = Math.max(0, target.target.health - damage)
   const rewards = resolveCombatRewards(target, targetType, nextHealth, dependencies, random)
   const { experienceGain, moneyReward, loot, learnedSkill, progressedPlayer } = rewards
@@ -484,6 +501,7 @@ export function executeExternalDamage(
     innerPowerCost: targetInnerPowerCost,
     criticalRate: criticalRate > 0 ? criticalRate : undefined,
     criticalHit: criticalHit || undefined,
+    targetDefense,
     synergy: synergy || undefined,
     tripleResonance: tripleResonance || undefined,
     targetMode: skill.target,
@@ -613,6 +631,7 @@ function executeAreaExternalDamage(
       nextHealth: data.nextHealth,
       maxHealth: data.maxHealth,
       defeated: data.defeated,
+      targetDefense: data.targetDefense,
     })
   }
   if (!primaryResult) return { state: currentState, result: { ok: false, reason: '範圍攻擊未命中任何目標。' } }
@@ -633,7 +652,24 @@ export function executeAttack(
 
   const random = dependencies.random ?? defaultRandomSource
   const criticalHit = rollChance(preview.criticalRate / 100, random)
-  const damage = criticalHit ? Math.floor(preview.expectedDamage * 1.5) : preview.expectedDamage
+  let damage = criticalHit ? Math.floor(preview.expectedDamage * 1.5) : preview.expectedDamage
+  // 對稱防禦：生物作為被攻擊方時套用回避／根骨減傷／減傷比例（與玩家被生物攻擊時一致）。
+  let targetDefense: 'evaded' | 'reduced' | undefined
+  if (preview.targetType === 'creature') {
+    const creature = target.target as CreatureState
+    const creatureTerrain = getTerrainAtPosition(state.map.cells, creature.position)
+    const avoided = rollChance(Math.min(1, getCreatureEvasionRate(creature, creatureTerrain) / 100), random)
+    const halved = !avoided && rollChance(Math.min(1, getCreatureRootReductionRate(creature, creatureTerrain) / 100), random)
+    const reduction = getCreatureDamageReductionPercent(creature, creatureTerrain)
+    targetDefense = avoided ? 'evaded' : halved ? 'reduced' : undefined
+    damage = avoided
+      ? 0
+      : halved
+        ? Math.max(1, Math.floor(damage / 2))
+        : reduction > 0
+          ? Math.max(1, Math.floor(damage * (1 - reduction)))
+          : damage
+  }
   const nextHealth = Math.max(0, target.target.health - damage)
   const rewards = resolveCombatRewards(target, preview.targetType, nextHealth, dependencies, random)
   const { experienceGain, moneyReward, loot, learnedSkill, progressedPlayer } = rewards
@@ -644,7 +680,7 @@ export function executeAttack(
   )
   const result: AttackExecutionResult = {
     playerId: target.player.id, playerName: target.player.name, targetType: preview.targetType, targetId: target.target.id, targetName: target.target.name,
-    damage, nextHealth, maxHealth: target.target.maxHealth, criticalRate: preview.criticalRate, criticalHit, terrainResonance: preview.terrainResonance, defeated: nextHealth === 0, experienceReward: experienceGain || undefined, moneyReward: moneyReward || undefined, loot, learnedSkill,
+    damage, nextHealth, maxHealth: target.target.maxHealth, criticalRate: preview.criticalRate, criticalHit, terrainResonance: preview.terrainResonance, targetDefense, defeated: nextHealth === 0, experienceReward: experienceGain || undefined, moneyReward: moneyReward || undefined, loot, learnedSkill,
     levelsGained: (progressedPlayer.level ?? 1) - (target.player.level ?? 1), newLevel: progressedPlayer.level,
     attributePointsGained: (progressedPlayer.availableAttributePoints ?? 0) - (target.player.availableAttributePoints ?? 0),
     equipmentDurabilityChanges: getDurabilityChanges(target.player, playerAfterDurability, [

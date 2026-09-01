@@ -514,25 +514,33 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                       🏚️
                     </div>
                   ))}
-                  {playersHere.map((player) => (
-                    <Player
-                      key={player.id}
-                      id={player.id}
-                      name={player.name}
-                      stamina={player.stamina}
-                      maxStamina={player.maxStamina}
-                      className={[
-                        player.id === activePlayerId && !creatureTurnInProgress ? 'player--current' : '',
-                        firstAidTargeting && player.health <= 0 && player.id !== activePlayer?.id ? 'player--first-aid-target' : '',
-                      ].filter(Boolean).join(' ') || undefined}
-                      onClick={firstAidTargeting && player.health <= 0 && player.id !== activePlayer?.id
-                        ? (event) => {
-                          event.stopPropagation()
-                          executeMapCellAction(resolveMarkerAction('player', player.id), event.currentTarget.getBoundingClientRect())
-                        }
-                        : undefined}
-                    />
-                  ))}
+                  {playersHere.map((player) => {
+                    const playerBuffClassNames = getActiveBuffsForPlayer(player)
+                      .map((buff) => getBuff(buff.definitionId))
+                      .filter((definition): definition is NonNullable<typeof definition> => Boolean(definition?.mapMarker))
+                      .map((definition) => `creature--buff-${definition.mapMarkerClass ?? definition.id.replace(/-movement|-burning|-poison|-reflection|-boost/g, '')}`)
+                      .join(' ')
+                    return (
+                      <Player
+                        key={player.id}
+                        id={player.id}
+                        name={player.name}
+                        stamina={player.stamina}
+                        maxStamina={player.maxStamina}
+                        className={[
+                          player.id === activePlayerId && !creatureTurnInProgress ? 'player--current' : '',
+                          firstAidTargeting && player.health <= 0 && player.id !== activePlayer?.id ? 'player--first-aid-target' : '',
+                          playerBuffClassNames,
+                        ].filter(Boolean).join(' ') || undefined}
+                        onClick={firstAidTargeting && player.health <= 0 && player.id !== activePlayer?.id
+                          ? (event) => {
+                            event.stopPropagation()
+                            executeMapCellAction(resolveMarkerAction('player', player.id), event.currentTarget.getBoundingClientRect())
+                          }
+                          : undefined}
+                      />
+                    )
+                  })}
                   {creaturesHere.map((creature) => (
                     (() => {
                       const buffClassNames = getActiveBuffsForPlayer(creature)

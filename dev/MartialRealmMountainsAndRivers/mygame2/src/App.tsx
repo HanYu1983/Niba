@@ -318,6 +318,15 @@ function App() {
             onStartChallenge={startChallengeGame}
             onOpenSkillTest={() => setSkillTestPageOpen(true)}
             onOpenEditor={() => setEditorOpen(true)}
+            onLoadSave={(slot) => {
+              const result = gameStore.loadGameFromSlot(slot)
+              if (result.ok) {
+                setScreen('game')
+                trackEvent('Gameplay', 'game_start', 'load_save')
+              } else {
+                window.alert(result.reason ?? '讀取存檔失敗。')
+              }
+            }}
             onStartScenario={(scenario) => {
               const result = gameStore.loadScenario(scenario)
               if (result.ok) {
@@ -597,6 +606,10 @@ function App() {
             setPlaytestMode(false)
             setScreen('start')
           }}
+          onGoHome={() => {
+            setPlaytestMode(false)
+            setScreen('start')
+          }}
           gameOverModalDismissed={gameOverModalDismissed}
           onDismissGameOverModal={() => setGameOverModalDismissed(true)}
           activePlayer={activePlayer}
@@ -675,8 +688,8 @@ function App() {
                 title: '就醫結果',
                 message: `已在醫療室 Lv.${result.data.infirmaryLevel} 接受治療。`,
                 rewards: [
-                  `氣血 +${result.data.healthRecovery}`,
-                  `內力 +${result.data.innerPowerRecovery}`,
+                  `氣血 +${Math.round(result.data.healthRecovery)}`,
+                  `內力 +${Math.round(result.data.innerPowerRecovery)}`,
                   '目前玩家回合結束',
                 ],
               })

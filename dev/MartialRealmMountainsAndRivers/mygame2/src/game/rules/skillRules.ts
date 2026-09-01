@@ -184,7 +184,7 @@ export function equipInnerSkillAction(
   }
 
   const maxInnerPower = getMaxInnerPower(effectiveAttributes)
-  const innerPowerCost = Math.max(1, Math.floor(maxInnerPower * 0.01))
+  const innerPowerCost = Math.max(1, maxInnerPower * 0.01)
 
   const nextPlayer: PlayerState = {
     ...player,

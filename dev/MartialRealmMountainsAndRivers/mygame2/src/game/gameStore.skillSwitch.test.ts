@@ -29,7 +29,7 @@ describe('內功切換', () => {
 
     gameStore.equipInnerSkill(player.id, 'void-spirit-inner')
 
-    expect(gameStore.getState().players[0].innerPower).toBe(beforeInnerPower - Math.max(1, Math.floor(maxInnerPower * 0.01)))
+    expect(gameStore.getState().players[0].innerPower).toBe(beforeInnerPower - Math.max(1, maxInnerPower * 0.01))
   })
 
   it('切換到同一內功不消耗內力', () => {

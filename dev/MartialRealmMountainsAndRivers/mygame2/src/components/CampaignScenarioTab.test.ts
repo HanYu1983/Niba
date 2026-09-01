@@ -177,6 +177,7 @@ describe('buildChapterProgressView', () => {
       'prologue-village',
       'forest-hunt',
       'frost-water-lament',
+      'blazing-ruins',
     ])
     // 沒有 roster → totalUnlocked 只有在「通關解鎖」分支才會填入，初始帶入分支不觸發。
     expect(view.totalUnlocked).toEqual([])
@@ -209,7 +210,7 @@ describe('buildChapterProgressView', () => {
       'frost-water-lament': true,
     }
     const view = buildChapterProgressView(lingyuan, clearances)
-    expect(view.chapters.map((c) => c.cleared)).toEqual([true, true, true])
+    expect(view.chapters.map((c) => c.cleared)).toEqual([true, true, true, undefined])
     // 序章 1 內功 + 第二章 1 外功 + 第三章 1 外功 = 3 功法（五行歸元屬第四章；天賦尚未定案）
     const pendingIds = view.totalPending.map((item) => item.id)
     expect(pendingIds).toContain('lingyuan-shelter-breath')
@@ -248,6 +249,8 @@ describe('buildChapterProgressView', () => {
     expect(byId['forest-hunt'].unlocks.talentIds).toEqual([])
     expect(byId['frost-water-lament'].unlocks.externalSkillIds).toEqual(['lingyuan-rivers-sustain'])
     expect(byId['frost-water-lament'].unlocks.talentIds).toEqual([])
+    expect(byId['blazing-ruins'].unlocks.externalSkillIds).toEqual(['lingyuan-five-elements-mend'])
+    expect(byId['blazing-ruins'].unlocks.talentIds).toEqual([])
   })
 
   it('通關序章但名册未套用 → 山河歸藏進入 totalPending；第二章未通關 → 其解鎖不出現', () => {

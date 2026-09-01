@@ -204,6 +204,22 @@ describe('createCreatureNests', () => {
     expect(first.map((nest) => nest.schoolId)).toEqual(second.map((nest) => nest.schoolId))
     expect(first.map((nest) => nest.behaviorType)).toEqual(second.map((nest) => nest.behaviorType))
   })
+
+  it('巢穴與城市據點保持曼哈頓距離 5 格之外', () => {
+    const map = createMap(40, 40)
+    const bases = createRandomBases(map, 3, SEED)
+    const basePositions = bases.map((base) => base.position)
+    const nests = createCreatureNests(map, 3, SEED, [], basePositions)
+    expect(nests).toHaveLength(3)
+    for (const nest of nests) {
+      for (const base of basePositions) {
+        const distance =
+          Math.abs(nest.position.row - base.row) +
+          Math.abs(nest.position.column - base.column)
+        expect(distance).toBeGreaterThanOrEqual(5)
+      }
+    }
+  })
 })
 
 describe('createItemPoints', () => {

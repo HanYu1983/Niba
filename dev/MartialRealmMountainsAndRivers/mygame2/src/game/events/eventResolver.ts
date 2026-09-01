@@ -98,7 +98,17 @@ function getRandomLearnableSkill(player: PlayerState, skillType: 'inner' | 'exte
 }
 
 /** 將指定類型的一項未學會功法加入玩家已學清單（若無剩餘功法則不改動）。 */
-function learnSkill(player: PlayerState, skillType: 'inner' | 'external'): PlayerState {
+function learnSkill(player: PlayerState, skillType: 'inner' | 'external', skillId?: string): PlayerState {
+  // 指定 skillId 時：直接學習該功法（若尚未學會）。
+  if (skillId) {
+    const alreadyLearned = skillType === 'inner'
+      ? player.innerSkillIds.includes(skillId)
+      : player.externalSkillIds.includes(skillId)
+    if (alreadyLearned) return player
+    return skillType === 'inner'
+      ? { ...player, innerSkillIds: [...player.innerSkillIds, skillId] }
+      : { ...player, externalSkillIds: [...player.externalSkillIds, skillId] }
+  }
   const skill = getRandomLearnableSkill(player, skillType)
   if (!skill) return player
   return skillType === 'inner'
@@ -110,7 +120,7 @@ export function applyEventEffects(player: PlayerState, effects: EventEffect[]): 
   return effects.reduce((currentPlayer, effect) => {
     if (effect.type === 'money') return { ...currentPlayer, money: Math.max(0, currentPlayer.money + effect.amount) }
     if (effect.type === 'prestige') return { ...currentPlayer, prestige: currentPlayer.prestige + effect.amount }
-    if (effect.type === 'learn-skill') return learnSkill(currentPlayer, effect.skillType)
+    if (effect.type === 'learn-skill') return learnSkill(currentPlayer, effect.skillType, effect.skillId)
     if (effect.type === 'item') return addItem(currentPlayer, effect.itemId, effect.quantity)
     // spawn-creature 為狀態層級效果，由 applyEventStateEffects 處理，此處忽略。
     return currentPlayer

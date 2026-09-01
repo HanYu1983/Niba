@@ -1,0 +1,4512 @@
+{
+  "version": "1.3.0",
+  "id": "blazing-ruins",
+  "title": "第四章：赤焰之劫",
+  "description": "主角來到荒漠，發現妖氣源頭是一座被封印的古城。妖物從古城湧出，威脅整個區域。",
+  "chapterIndex": 3,
+  "enableRandomEvents": false,
+  "mapSize": {
+    "rows": 25,
+    "columns": 25
+  },
+  "cells": [
+    {
+      "row": 0,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 12,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 15,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 16,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 17,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 18,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 19,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 20,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 21,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 22,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 23,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 5,
+      "terrain": "desert"
+    },
+    {
+      "row": 1,
+      "column": 6,
+      "terrain": "desert"
+    },
+    {
+      "row": 1,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 1,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 1,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 1,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 1,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 1,
+      "column": 17,
+      "terrain": "desert"
+    },
+    {
+      "row": 1,
+      "column": 18,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 19,
+      "terrain": "desert"
+    },
+    {
+      "row": 1,
+      "column": 20,
+      "terrain": "desert"
+    },
+    {
+      "row": 1,
+      "column": 21,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 22,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 23,
+      "terrain": "desert"
+    },
+    {
+      "row": 1,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 5,
+      "terrain": "desert"
+    },
+    {
+      "row": 2,
+      "column": 6,
+      "terrain": "desert"
+    },
+    {
+      "row": 2,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 2,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 11,
+      "terrain": "road"
+    },
+    {
+      "row": 2,
+      "column": 12,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 13,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 2,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 2,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 2,
+      "column": 17,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 18,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 19,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 20,
+      "terrain": "desert"
+    },
+    {
+      "row": 2,
+      "column": 21,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 22,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 23,
+      "terrain": "desert"
+    },
+    {
+      "row": 2,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 1,
+      "terrain": "desert"
+    },
+    {
+      "row": 3,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 3,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 11,
+      "terrain": "road"
+    },
+    {
+      "row": 3,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 13,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 3,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 3,
+      "column": 16,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 17,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 18,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 19,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 20,
+      "terrain": "desert"
+    },
+    {
+      "row": 3,
+      "column": 21,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 22,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 23,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 1,
+      "terrain": "desert"
+    },
+    {
+      "row": 4,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 4,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 4,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 11,
+      "terrain": "road"
+    },
+    {
+      "row": 4,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 4,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 4,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 4,
+      "column": 15,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 16,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 17,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 18,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 19,
+      "terrain": "desert"
+    },
+    {
+      "row": 4,
+      "column": 20,
+      "terrain": "desert"
+    },
+    {
+      "row": 4,
+      "column": 21,
+      "terrain": "desert"
+    },
+    {
+      "row": 4,
+      "column": 22,
+      "terrain": "desert"
+    },
+    {
+      "row": 4,
+      "column": 23,
+      "terrain": "desert"
+    },
+    {
+      "row": 4,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 1,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 2,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 3,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 4,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 9,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 10,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 11,
+      "terrain": "road"
+    },
+    {
+      "row": 5,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 15,
+      "terrain": "mountain"
+    },
+    {
+      "row": 5,
+      "column": 16,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 17,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 18,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 19,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 20,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 21,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 22,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 23,
+      "terrain": "desert"
+    },
+    {
+      "row": 5,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 1,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 2,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 3,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 9,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 10,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 11,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 17,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 18,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 19,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 20,
+      "terrain": "desert"
+    },
+    {
+      "row": 6,
+      "column": 21,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 22,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 23,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 1,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 2,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 3,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 11,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 17,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 18,
+      "terrain": "desert"
+    },
+    {
+      "row": 7,
+      "column": 19,
+      "terrain": "mountain"
+    },
+    {
+      "row": 7,
+      "column": 20,
+      "terrain": "mountain"
+    },
+    {
+      "row": 7,
+      "column": 21,
+      "terrain": "mountain"
+    },
+    {
+      "row": 7,
+      "column": 22,
+      "terrain": "mountain"
+    },
+    {
+      "row": 7,
+      "column": 23,
+      "terrain": "mountain"
+    },
+    {
+      "row": 7,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 1,
+      "terrain": "desert"
+    },
+    {
+      "row": 8,
+      "column": 2,
+      "terrain": "desert"
+    },
+    {
+      "row": 8,
+      "column": 3,
+      "terrain": "desert"
+    },
+    {
+      "row": 8,
+      "column": 4,
+      "terrain": "desert"
+    },
+    {
+      "row": 8,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 8,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 8,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 8,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 8,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 8,
+      "column": 11,
+      "terrain": "desert"
+    },
+    {
+      "row": 8,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 8,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 15,
+      "terrain": "mountain"
+    },
+    {
+      "row": 8,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 8,
+      "column": 17,
+      "terrain": "desert"
+    },
+    {
+      "row": 8,
+      "column": 18,
+      "terrain": "desert"
+    },
+    {
+      "row": 8,
+      "column": 19,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 20,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 21,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 22,
+      "terrain": "mountain"
+    },
+    {
+      "row": 8,
+      "column": 23,
+      "terrain": "mountain"
+    },
+    {
+      "row": 8,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 1,
+      "terrain": "desert"
+    },
+    {
+      "row": 9,
+      "column": 2,
+      "terrain": "desert"
+    },
+    {
+      "row": 9,
+      "column": 3,
+      "terrain": "desert"
+    },
+    {
+      "row": 9,
+      "column": 4,
+      "terrain": "desert"
+    },
+    {
+      "row": 9,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 9,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 11,
+      "terrain": "desert"
+    },
+    {
+      "row": 9,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 9,
+      "column": 13,
+      "terrain": "mountain"
+    },
+    {
+      "row": 9,
+      "column": 14,
+      "terrain": "mountain"
+    },
+    {
+      "row": 9,
+      "column": 15,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 9,
+      "column": 17,
+      "terrain": "desert"
+    },
+    {
+      "row": 9,
+      "column": 18,
+      "terrain": "desert"
+    },
+    {
+      "row": 9,
+      "column": 19,
+      "terrain": "desert"
+    },
+    {
+      "row": 9,
+      "column": 20,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 21,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 22,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 23,
+      "terrain": "mountain"
+    },
+    {
+      "row": 9,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 3,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 4,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 5,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 10,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 10,
+      "column": 9,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 10,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 17,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 18,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 19,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 20,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 21,
+      "terrain": "desert"
+    },
+    {
+      "row": 10,
+      "column": 22,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 23,
+      "terrain": "mountain"
+    },
+    {
+      "row": 10,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 11,
+      "column": 3,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 4,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 5,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 6,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 9,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 11,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 17,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 18,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 19,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 20,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 21,
+      "terrain": "desert"
+    },
+    {
+      "row": 11,
+      "column": 22,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 23,
+      "terrain": "mountain"
+    },
+    {
+      "row": 11,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 12,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 12,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 12,
+      "column": 4,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 5,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 6,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 9,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 10,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 12,
+      "column": 12,
+      "terrain": "wall"
+    },
+    {
+      "row": 12,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 17,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 18,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 19,
+      "terrain": "desert"
+    },
+    {
+      "row": 12,
+      "column": 20,
+      "terrain": "wall"
+    },
+    {
+      "row": 12,
+      "column": 21,
+      "terrain": "mountain"
+    },
+    {
+      "row": 12,
+      "column": 22,
+      "terrain": "mountain"
+    },
+    {
+      "row": 12,
+      "column": 23,
+      "terrain": "mountain"
+    },
+    {
+      "row": 12,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 1,
+      "terrain": "desert"
+    },
+    {
+      "row": 13,
+      "column": 2,
+      "terrain": "desert"
+    },
+    {
+      "row": 13,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 13,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 13,
+      "column": 9,
+      "terrain": "desert"
+    },
+    {
+      "row": 13,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 13,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 13,
+      "column": 12,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 13,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 13,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 13,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 13,
+      "column": 17,
+      "terrain": "desert"
+    },
+    {
+      "row": 13,
+      "column": 18,
+      "terrain": "desert"
+    },
+    {
+      "row": 13,
+      "column": 19,
+      "terrain": "desert"
+    },
+    {
+      "row": 13,
+      "column": 20,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 21,
+      "terrain": "mountain"
+    },
+    {
+      "row": 13,
+      "column": 22,
+      "terrain": "mountain"
+    },
+    {
+      "row": 13,
+      "column": 23,
+      "terrain": "mountain"
+    },
+    {
+      "row": 13,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 3,
+      "terrain": "mountain"
+    },
+    {
+      "row": 14,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 14,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 14,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 14,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 14,
+      "column": 9,
+      "terrain": "desert"
+    },
+    {
+      "row": 14,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 14,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 14,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 14,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 14,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 14,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 14,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 14,
+      "column": 17,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 18,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 19,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 20,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 21,
+      "terrain": "mountain"
+    },
+    {
+      "row": 14,
+      "column": 22,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 23,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 1,
+      "terrain": "mountain"
+    },
+    {
+      "row": 15,
+      "column": 2,
+      "terrain": "mountain"
+    },
+    {
+      "row": 15,
+      "column": 3,
+      "terrain": "mountain"
+    },
+    {
+      "row": 15,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 15,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 15,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 15,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 9,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 10,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 11,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 17,
+      "terrain": "mountain"
+    },
+    {
+      "row": 15,
+      "column": 18,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 19,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 20,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 21,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 22,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 23,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 16,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 16,
+      "column": 1,
+      "terrain": "mountain"
+    },
+    {
+      "row": 16,
+      "column": 2,
+      "terrain": "mountain"
+    },
+    {
+      "row": 16,
+      "column": 3,
+      "terrain": "mountain"
+    },
+    {
+      "row": 16,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 16,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 16,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 16,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 16,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 16,
+      "column": 9,
+      "terrain": "desert"
+    },
+    {
+      "row": 16,
+      "column": 10,
+      "terrain": "desert"
+    },
+    {
+      "row": 16,
+      "column": 11,
+      "terrain": "desert"
+    },
+    {
+      "row": 16,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 16,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 16,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 16,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 16,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 16,
+      "column": 17,
+      "terrain": "mountain"
+    },
+    {
+      "row": 16,
+      "column": 18,
+      "terrain": "plain"
+    },
+    {
+      "row": 16,
+      "column": 19,
+      "terrain": "plain"
+    },
+    {
+      "row": 16,
+      "column": 20,
+      "terrain": "plain"
+    },
+    {
+      "row": 16,
+      "column": 21,
+      "terrain": "mountain"
+    },
+    {
+      "row": 16,
+      "column": 22,
+      "terrain": "mountain"
+    },
+    {
+      "row": 16,
+      "column": 23,
+      "terrain": "wall"
+    },
+    {
+      "row": 16,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 17,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 17,
+      "column": 1,
+      "terrain": "mountain"
+    },
+    {
+      "row": 17,
+      "column": 2,
+      "terrain": "mountain"
+    },
+    {
+      "row": 17,
+      "column": 3,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 4,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 17,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 17,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 9,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 10,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 11,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 17,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 18,
+      "terrain": "plain"
+    },
+    {
+      "row": 17,
+      "column": 19,
+      "terrain": "plain"
+    },
+    {
+      "row": 17,
+      "column": 20,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 21,
+      "terrain": "desert"
+    },
+    {
+      "row": 17,
+      "column": 22,
+      "terrain": "mountain"
+    },
+    {
+      "row": 17,
+      "column": 23,
+      "terrain": "mountain"
+    },
+    {
+      "row": 17,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 18,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 18,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 18,
+      "column": 2,
+      "terrain": "desert"
+    },
+    {
+      "row": 18,
+      "column": 3,
+      "terrain": "desert"
+    },
+    {
+      "row": 18,
+      "column": 4,
+      "terrain": "desert"
+    },
+    {
+      "row": 18,
+      "column": 5,
+      "terrain": "desert"
+    },
+    {
+      "row": 18,
+      "column": 6,
+      "terrain": "desert"
+    },
+    {
+      "row": 18,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 18,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 18,
+      "column": 9,
+      "terrain": "desert"
+    },
+    {
+      "row": 18,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 18,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 18,
+      "column": 12,
+      "terrain": "mountain"
+    },
+    {
+      "row": 18,
+      "column": 13,
+      "terrain": "road"
+    },
+    {
+      "row": 18,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 18,
+      "column": 15,
+      "terrain": "wall"
+    },
+    {
+      "row": 18,
+      "column": 16,
+      "terrain": "wall"
+    },
+    {
+      "row": 18,
+      "column": 17,
+      "terrain": "plain"
+    },
+    {
+      "row": 18,
+      "column": 18,
+      "terrain": "plain"
+    },
+    {
+      "row": 18,
+      "column": 19,
+      "terrain": "plain"
+    },
+    {
+      "row": 18,
+      "column": 20,
+      "terrain": "plain"
+    },
+    {
+      "row": 18,
+      "column": 21,
+      "terrain": "plain"
+    },
+    {
+      "row": 18,
+      "column": 22,
+      "terrain": "plain"
+    },
+    {
+      "row": 18,
+      "column": 23,
+      "terrain": "desert"
+    },
+    {
+      "row": 18,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 19,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 19,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 19,
+      "column": 2,
+      "terrain": "desert"
+    },
+    {
+      "row": 19,
+      "column": 3,
+      "terrain": "desert"
+    },
+    {
+      "row": 19,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 19,
+      "column": 5,
+      "terrain": "desert"
+    },
+    {
+      "row": 19,
+      "column": 6,
+      "terrain": "desert"
+    },
+    {
+      "row": 19,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 19,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 19,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 19,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 19,
+      "column": 11,
+      "terrain": "mountain"
+    },
+    {
+      "row": 19,
+      "column": 12,
+      "terrain": "mountain"
+    },
+    {
+      "row": 19,
+      "column": 13,
+      "terrain": "road"
+    },
+    {
+      "row": 19,
+      "column": 14,
+      "terrain": "mountain"
+    },
+    {
+      "row": 19,
+      "column": 15,
+      "terrain": "mountain"
+    },
+    {
+      "row": 19,
+      "column": 16,
+      "terrain": "wall"
+    },
+    {
+      "row": 19,
+      "column": 17,
+      "terrain": "forest"
+    },
+    {
+      "row": 19,
+      "column": 18,
+      "terrain": "forest"
+    },
+    {
+      "row": 19,
+      "column": 19,
+      "terrain": "forest"
+    },
+    {
+      "row": 19,
+      "column": 20,
+      "terrain": "plain"
+    },
+    {
+      "row": 19,
+      "column": 21,
+      "terrain": "plain"
+    },
+    {
+      "row": 19,
+      "column": 22,
+      "terrain": "plain"
+    },
+    {
+      "row": 19,
+      "column": 23,
+      "terrain": "desert"
+    },
+    {
+      "row": 19,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 20,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 20,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 20,
+      "column": 2,
+      "terrain": "road"
+    },
+    {
+      "row": 20,
+      "column": 3,
+      "terrain": "road"
+    },
+    {
+      "row": 20,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 20,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 20,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 20,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 20,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 20,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 20,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 20,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 20,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 20,
+      "column": 13,
+      "terrain": "road"
+    },
+    {
+      "row": 20,
+      "column": 14,
+      "terrain": "road"
+    },
+    {
+      "row": 20,
+      "column": 15,
+      "terrain": "mountain"
+    },
+    {
+      "row": 20,
+      "column": 16,
+      "terrain": "mountain"
+    },
+    {
+      "row": 20,
+      "column": 17,
+      "terrain": "forest"
+    },
+    {
+      "row": 20,
+      "column": 18,
+      "terrain": "forest"
+    },
+    {
+      "row": 20,
+      "column": 19,
+      "terrain": "forest"
+    },
+    {
+      "row": 20,
+      "column": 20,
+      "terrain": "forest"
+    },
+    {
+      "row": 20,
+      "column": 21,
+      "terrain": "plain"
+    },
+    {
+      "row": 20,
+      "column": 22,
+      "terrain": "plain"
+    },
+    {
+      "row": 20,
+      "column": 23,
+      "terrain": "desert"
+    },
+    {
+      "row": 20,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 21,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 21,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 21,
+      "column": 2,
+      "terrain": "road"
+    },
+    {
+      "row": 21,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 21,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 21,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 21,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 21,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 21,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 21,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 21,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 21,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 21,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 21,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 21,
+      "column": 14,
+      "terrain": "forest"
+    },
+    {
+      "row": 21,
+      "column": 15,
+      "terrain": "mountain"
+    },
+    {
+      "row": 21,
+      "column": 16,
+      "terrain": "mountain"
+    },
+    {
+      "row": 21,
+      "column": 17,
+      "terrain": "wall"
+    },
+    {
+      "row": 21,
+      "column": 18,
+      "terrain": "wall"
+    },
+    {
+      "row": 21,
+      "column": 19,
+      "terrain": "wall"
+    },
+    {
+      "row": 21,
+      "column": 20,
+      "terrain": "plain"
+    },
+    {
+      "row": 21,
+      "column": 21,
+      "terrain": "plain"
+    },
+    {
+      "row": 21,
+      "column": 22,
+      "terrain": "plain"
+    },
+    {
+      "row": 21,
+      "column": 23,
+      "terrain": "desert"
+    },
+    {
+      "row": 21,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 22,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 22,
+      "column": 1,
+      "terrain": "road"
+    },
+    {
+      "row": 22,
+      "column": 2,
+      "terrain": "road"
+    },
+    {
+      "row": 22,
+      "column": 3,
+      "terrain": "road"
+    },
+    {
+      "row": 22,
+      "column": 4,
+      "terrain": "road"
+    },
+    {
+      "row": 22,
+      "column": 5,
+      "terrain": "road"
+    },
+    {
+      "row": 22,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 22,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 22,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 22,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 22,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 22,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 22,
+      "column": 12,
+      "terrain": "forest"
+    },
+    {
+      "row": 22,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 22,
+      "column": 14,
+      "terrain": "forest"
+    },
+    {
+      "row": 22,
+      "column": 15,
+      "terrain": "plain"
+    },
+    {
+      "row": 22,
+      "column": 16,
+      "terrain": "mountain"
+    },
+    {
+      "row": 22,
+      "column": 17,
+      "terrain": "mountain"
+    },
+    {
+      "row": 22,
+      "column": 18,
+      "terrain": "mountain"
+    },
+    {
+      "row": 22,
+      "column": 19,
+      "terrain": "wall"
+    },
+    {
+      "row": 22,
+      "column": 20,
+      "terrain": "desert"
+    },
+    {
+      "row": 22,
+      "column": 21,
+      "terrain": "forest"
+    },
+    {
+      "row": 22,
+      "column": 22,
+      "terrain": "forest"
+    },
+    {
+      "row": 22,
+      "column": 23,
+      "terrain": "forest"
+    },
+    {
+      "row": 22,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 23,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 23,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 23,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 23,
+      "column": 3,
+      "terrain": "road"
+    },
+    {
+      "row": 23,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 23,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 23,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 23,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 23,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 23,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 23,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 23,
+      "column": 11,
+      "terrain": "desert"
+    },
+    {
+      "row": 23,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 23,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 23,
+      "column": 14,
+      "terrain": "plain"
+    },
+    {
+      "row": 23,
+      "column": 15,
+      "terrain": "plain"
+    },
+    {
+      "row": 23,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 23,
+      "column": 17,
+      "terrain": "desert"
+    },
+    {
+      "row": 23,
+      "column": 18,
+      "terrain": "desert"
+    },
+    {
+      "row": 23,
+      "column": 19,
+      "terrain": "wall"
+    },
+    {
+      "row": 23,
+      "column": 20,
+      "terrain": "mountain"
+    },
+    {
+      "row": 23,
+      "column": 21,
+      "terrain": "desert"
+    },
+    {
+      "row": 23,
+      "column": 22,
+      "terrain": "plain"
+    },
+    {
+      "row": 23,
+      "column": 23,
+      "terrain": "plain"
+    },
+    {
+      "row": 23,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 12,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 15,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 16,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 17,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 18,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 19,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 20,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 21,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 22,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 23,
+      "terrain": "wall"
+    },
+    {
+      "row": 24,
+      "column": 24,
+      "terrain": "wall"
+    }
+  ],
+  "entities": [
+    {
+      "id": "player-1",
+      "kind": "player",
+      "position": {
+        "row": 22,
+        "column": 2
+      },
+      "data": {
+        "name": "凌淵",
+        "money": 100,
+        "innerSkillId": "lingyuan-shelter-breath",
+        "innerSkillIds": [
+          "tuna-gong",
+          "lingyuan-shelter-breath",
+          "golden-body-inner"
+        ],
+        "inventory": [
+          {
+            "itemId": "heal-wound-medicine",
+            "quantity": 2
+          },
+          {
+            "itemId": "gather-qi-pill",
+            "quantity": 1
+          },
+          {
+            "itemId": "great-return-pill",
+            "quantity": 1
+          }
+        ],
+        "attributes": {
+          "armStrength": 16,
+          "constitution": 18,
+          "agility": 14,
+          "innerEnergy": 16,
+          "insight": 13
+        },
+        "externalSkillIds": [
+          "lingyuan-mountain-pulse",
+          "lingyuan-rivers-sustain"
+        ],
+        "equippedExternalSkillIds": [
+          "lingyuan-mountain-pulse",
+          "lingyuan-rivers-sustain"
+        ]
+      }
+    },
+    {
+      "id": "base-garrison",
+      "kind": "base",
+      "position": {
+        "row": 22,
+        "column": 3
+      },
+      "data": {
+        "name": "古城守軍營地",
+        "buildingMaterials": 80,
+        "maxBuildingMaterials": 120,
+        "health": 120,
+        "maxHealth": 120,
+        "discovered": true,
+        "presetBuildings": [
+          {
+            "type": "infirmary",
+            "level": 1
+          },
+          {
+            "type": "board",
+            "level": 1
+          },
+          {
+            "type": "item-shop",
+            "level": 1
+          },
+          {
+            "type": "equipment-shop",
+            "level": 1
+          }
+        ],
+        "allowedBuildings": [
+          {
+            "type": "infirmary",
+            "maxLevel": 2
+          },
+          {
+            "type": "board",
+            "maxLevel": 2
+          },
+          {
+            "type": "item-shop",
+            "maxLevel": 2
+          },
+          {
+            "type": "equipment-shop",
+            "maxLevel": 2
+          }
+        ],
+        "spawnOnLoad": true
+      }
+    },
+    {
+      "id": "nest-1",
+      "kind": "nest",
+      "position": {
+        "row": 9,
+        "column": 19
+      },
+      "data": {
+        "name": "古城妖巢",
+        "health": 90,
+        "maxHealth": 90,
+        "spawnChance": 0.15,
+        "cooldownRounds": 0,
+        "spawnLevel": 3,
+        "behaviorType": "sieger",
+        "schoolId": "scarlet-flame"
+      }
+    },
+    {
+      "id": "nest-2",
+      "kind": "nest",
+      "position": {
+        "row": 12,
+        "column": 10
+      },
+      "data": {
+        "name": "妖火巢穴",
+        "health": 80,
+        "maxHealth": 80,
+        "spawnChance": 0.12,
+        "cooldownRounds": 0,
+        "spawnLevel": 2,
+        "behaviorType": "hunter",
+        "schoolId": "blazing-sun"
+      }
+    },
+    {
+      "id": "boss-ruin-general",
+      "kind": "creature",
+      "position": {
+        "row": 10,
+        "column": 19
+      },
+      "data": {
+        "name": "古城妖將",
+        "isBoss": true,
+        "level": 11,
+        "schoolId": "scarlet-flame",
+        "behaviorType": "hunter",
+        "homeNestId": "nest-1",
+        "attributes": {},
+        "spawnOnLoad": false,
+        "aggroRange": 5
+      }
+    },
+    {
+      "id": "creature-guard-1",
+      "kind": "creature",
+      "position": {
+        "row": 7,
+        "column": 12
+      },
+      "data": {
+        "name": "赤焰妖衛",
+        "isBoss": false,
+        "level": 6,
+        "schoolId": "scarlet-flame",
+        "behaviorType": "hunter",
+        "homeNestId": "nest-1",
+        "attributes": {},
+        "spawnOnLoad": true,
+        "aggroRange": 5
+      }
+    },
+    {
+      "id": "creature-guard-2",
+      "kind": "creature",
+      "position": {
+        "row": 16,
+        "column": 13
+      },
+      "data": {
+        "name": "烈陽妖衛",
+        "isBoss": false,
+        "level": 6,
+        "schoolId": "blazing-sun",
+        "behaviorType": "hunter",
+        "homeNestId": "nest-2",
+        "attributes": {},
+        "spawnOnLoad": true,
+        "aggroRange": 6
+      }
+    },
+    {
+      "id": "creature-roamer-1",
+      "kind": "creature",
+      "position": {
+        "row": 5,
+        "column": 5
+      },
+      "data": {
+        "name": "荒漠遊妖",
+        "isBoss": false,
+        "level": 7,
+        "schoolId": "scarlet-flame",
+        "behaviorType": "roamer",
+        "attributes": {},
+        "spawnOnLoad": true,
+        "aggroRange": 2
+      }
+    },
+    {
+      "id": "creature-roamer-2",
+      "kind": "creature",
+      "position": {
+        "row": 17,
+        "column": 18
+      },
+      "data": {
+        "name": "荒漠遊妖",
+        "isBoss": false,
+        "level": 7,
+        "schoolId": "blazing-sun",
+        "behaviorType": "roamer",
+        "attributes": {},
+        "spawnOnLoad": true,
+        "aggroRange": 2
+      }
+    },
+    {
+      "id": "creature-roamer-3",
+      "kind": "creature",
+      "position": {
+        "row": 19,
+        "column": 5
+      },
+      "data": {
+        "name": "沙暴妖物",
+        "isBoss": false,
+        "level": 6,
+        "schoolId": "yellow-earth",
+        "behaviorType": "hunter",
+        "attributes": {},
+        "spawnOnLoad": true,
+        "aggroRange": 3
+      }
+    },
+    {
+      "id": "event-general-npc",
+      "kind": "event",
+      "position": {
+        "row": 22,
+        "column": 4
+      },
+      "data": {
+        "type": "custom",
+        "name": "守城將領 韓烈",
+        "description": "一位身披重甲、目光如炬的將領，正指揮殘兵在古城外佈防。",
+        "icon": "⚔️",
+        "choices": [
+          {
+            "id": "talk-general",
+            "label": "與將領交談",
+            "description": "向韓烈打聽古城與封印之地的情報。",
+            "endsPlayerTurn": false,
+            "resultMessage": "開始與韓烈將領對談",
+            "requirements": [
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
+            ],
+            "effects": [
+              {
+                "type": "start-dialogue",
+                "dialogueId": "event-general-talk"
+              }
+            ]
+          }
+        ],
+        "spawnOnLoad": true
+      }
+    },
+    {
+      "id": "event-seal-marker",
+      "kind": "event",
+      "position": {
+        "row": 13,
+        "column": 11
+      },
+      "data": {
+        "type": "custom",
+        "name": "封印印記",
+        "description": "古城牆上刻著一道巨大的封印印記，散發著微弱的靈光，與凌淵體內的功法隱隱呼應。",
+        "icon": "🔮",
+        "choices": [
+          {
+            "id": "inspect-seal",
+            "label": "探查封印印記",
+            "description": "靠近印記，感受其中殘留的守護者靈氣。",
+            "endsPlayerTurn": false,
+            "resultMessage": "凌淵觸碰封印印記，一股熟悉的靈氣湧入體內。",
+            "requirements": [
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
+            ],
+            "effects": [
+              {
+                "type": "start-dialogue",
+                "dialogueId": "event-seal-marker-talk"
+              },
+              {
+                "type": "learn-skill",
+                "skillType": "external",
+                "skillId": "lingyuan-five-elements-mend"
+              }
+            ]
+          }
+        ],
+        "spawnOnLoad": true
+      }
+    },
+    {
+      "id": "itemPoint-1",
+      "kind": "itemPoint",
+      "position": {
+        "row": 3,
+        "column": 3
+      },
+      "data": {
+        "position": {
+          "row": 3,
+          "column": 3
+        },
+        "name": "古城遺物",
+        "customDrops": [
+          {
+            "lootId": "inferno-talisman",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "itemPoint-2",
+      "kind": "itemPoint",
+      "position": {
+        "row": 21,
+        "column": 21
+      },
+      "data": {
+        "position": {
+          "row": 21,
+          "column": 21
+        },
+        "name": "軍需補給",
+        "customDrops": [
+          {
+            "lootId": "suppress-mountain-talisman",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "resourcePoint-1",
+      "kind": "resourcePoint",
+      "position": {
+        "row": 20,
+        "column": 2
+      },
+      "data": {
+        "position": {
+          "row": 20,
+          "column": 2
+        },
+        "name": "荒漠礦脈",
+        "ownerBaseId": "base-garrison",
+        "materialIncome": 10
+      }
+    },
+    {
+      "id": "sectGate-1",
+      "kind": "sectGate",
+      "position": {
+        "row": 20,
+        "column": 14
+      },
+      "data": {
+        "position": {
+          "row": 6,
+          "column": 12
+        },
+        "name": "赤炎武館",
+        "schoolId": "earth-mountain"
+      }
+    },
+    {
+      "id": "event-1",
+      "kind": "event",
+      "position": {
+        "row": 8,
+        "column": 4
+      },
+      "data": {
+        "position": {
+          "row": 8,
+          "column": 4
+        },
+        "name": "event",
+        "eventType": "wandering-scholar"
+      }
+    },
+    {
+      "id": "event-2",
+      "kind": "event",
+      "position": {
+        "row": 17,
+        "column": 17
+      },
+      "data": {
+        "position": {
+          "row": 17,
+          "column": 17
+        },
+        "name": "event",
+        "eventType": "resource-cache"
+      }
+    },
+    {
+      "id": "itemPoint-3-22-mtievfuz",
+      "kind": "itemPoint",
+      "position": {
+        "row": 3,
+        "column": 22
+      },
+      "data": {
+        "position": {
+          "row": 3,
+          "column": 22
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "recall-base-talisman",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "itemPoint-10-1-mtievjaa",
+      "kind": "itemPoint",
+      "position": {
+        "row": 10,
+        "column": 1
+      },
+      "data": {
+        "position": {
+          "row": 10,
+          "column": 1
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "concealment-talisman",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "creature-9-2-mtievq8p",
+      "kind": "creature",
+      "position": {
+        "row": 9,
+        "column": 2
+      },
+      "data": {
+        "position": {
+          "row": 9,
+          "column": 2
+        },
+        "name": "creature",
+        "level": 8
+      }
+    },
+    {
+      "id": "creature-21-12-mtievrjs",
+      "kind": "creature",
+      "position": {
+        "row": 21,
+        "column": 12
+      },
+      "data": {
+        "position": {
+          "row": 21,
+          "column": 12
+        },
+        "name": "creature",
+        "level": 8
+      }
+    },
+    {
+      "id": "creature-20-21-mtievt2e",
+      "kind": "creature",
+      "position": {
+        "row": 20,
+        "column": 21
+      },
+      "data": {
+        "position": {
+          "row": 20,
+          "column": 21
+        },
+        "name": "creature",
+        "level": 8,
+        "behaviorType": "roamer",
+        "aggroRange": 4
+      }
+    },
+    {
+      "id": "creature-2-21-mtievuxp",
+      "kind": "creature",
+      "position": {
+        "row": 2,
+        "column": 21
+      },
+      "data": {
+        "position": {
+          "row": 2,
+          "column": 21
+        },
+        "name": "creature",
+        "level": 8
+      }
+    },
+    {
+      "id": "creature-3-13-mtievxj3",
+      "kind": "creature",
+      "position": {
+        "row": 3,
+        "column": 13
+      },
+      "data": {
+        "position": {
+          "row": 3,
+          "column": 13
+        },
+        "name": "creature",
+        "level": 8
+      }
+    },
+    {
+      "id": "creature-11-17-mtievzhl",
+      "kind": "creature",
+      "position": {
+        "row": 11,
+        "column": 14
+      },
+      "data": {
+        "position": {
+          "row": 11,
+          "column": 17
+        },
+        "name": "creature",
+        "level": 7,
+        "behaviorType": "hunter",
+        "aggroRange": 5,
+        "schoolId": "swift-wind"
+      }
+    },
+    {
+      "id": "creature-15-8-mtiew21r",
+      "kind": "creature",
+      "position": {
+        "row": 14,
+        "column": 7
+      },
+      "data": {
+        "position": {
+          "row": 15,
+          "column": 8
+        },
+        "name": "creature",
+        "level": 7,
+        "behaviorType": "hunter",
+        "aggroRange": 4
+      }
+    },
+    {
+      "id": "sectGate-2-11-mtiewzn4",
+      "kind": "sectGate",
+      "position": {
+        "row": 2,
+        "column": 11
+      },
+      "data": {
+        "position": {
+          "row": 2,
+          "column": 11
+        },
+        "name": "sectGate",
+        "schoolId": "frost-water"
+      }
+    },
+    {
+      "id": "ruin-17-5-mtifqqdr",
+      "kind": "ruin",
+      "position": {
+        "row": 16,
+        "column": 4
+      },
+      "data": {
+        "position": {
+          "row": 17,
+          "column": 5
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-17-6-mtifqseh",
+      "kind": "ruin",
+      "position": {
+        "row": 16,
+        "column": 6
+      },
+      "data": {
+        "position": {
+          "row": 17,
+          "column": 6
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-18-14-mtifqv6m",
+      "kind": "ruin",
+      "position": {
+        "row": 18,
+        "column": 14
+      },
+      "data": {
+        "position": {
+          "row": 18,
+          "column": 14
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-13-7-mtifqzxz",
+      "kind": "ruin",
+      "position": {
+        "row": 13,
+        "column": 7
+      },
+      "data": {
+        "position": {
+          "row": 13,
+          "column": 7
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-10-5-mtifr2nq",
+      "kind": "ruin",
+      "position": {
+        "row": 10,
+        "column": 5
+      },
+      "data": {
+        "position": {
+          "row": 10,
+          "column": 5
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-14-12-mtifr5wm",
+      "kind": "ruin",
+      "position": {
+        "row": 14,
+        "column": 12
+      },
+      "data": {
+        "position": {
+          "row": 14,
+          "column": 12
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-16-20-mtifrc5n",
+      "kind": "ruin",
+      "position": {
+        "row": 16,
+        "column": 20
+      },
+      "data": {
+        "position": {
+          "row": 16,
+          "column": 20
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-13-19-mtifrivq",
+      "kind": "ruin",
+      "position": {
+        "row": 13,
+        "column": 19
+      },
+      "data": {
+        "position": {
+          "row": 13,
+          "column": 19
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-11-11-mtifrjpk",
+      "kind": "ruin",
+      "position": {
+        "row": 11,
+        "column": 11
+      },
+      "data": {
+        "position": {
+          "row": 11,
+          "column": 11
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-10-10-mtifrkfl",
+      "kind": "ruin",
+      "position": {
+        "row": 10,
+        "column": 10
+      },
+      "data": {
+        "position": {
+          "row": 10,
+          "column": 10
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-7-8-mtifrmnv",
+      "kind": "ruin",
+      "position": {
+        "row": 7,
+        "column": 8
+      },
+      "data": {
+        "position": {
+          "row": 7,
+          "column": 8
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-3-12-mtifrq2h",
+      "kind": "ruin",
+      "position": {
+        "row": 3,
+        "column": 12
+      },
+      "data": {
+        "position": {
+          "row": 3,
+          "column": 12
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-4-19-mtifrrkw",
+      "kind": "ruin",
+      "position": {
+        "row": 4,
+        "column": 19
+      },
+      "data": {
+        "position": {
+          "row": 4,
+          "column": 19
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-10-15-mtifrtny",
+      "kind": "ruin",
+      "position": {
+        "row": 10,
+        "column": 15
+      },
+      "data": {
+        "position": {
+          "row": 10,
+          "column": 15
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-17-10-mtifrv9z",
+      "kind": "ruin",
+      "position": {
+        "row": 18,
+        "column": 9
+      },
+      "data": {
+        "position": {
+          "row": 17,
+          "column": 10
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-14-16-mtifrw98",
+      "kind": "ruin",
+      "position": {
+        "row": 14,
+        "column": 16
+      },
+      "data": {
+        "position": {
+          "row": 14,
+          "column": 16
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-13-13-mtifrx15",
+      "kind": "ruin",
+      "position": {
+        "row": 13,
+        "column": 13
+      },
+      "data": {
+        "position": {
+          "row": 13,
+          "column": 13
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-8-16-mtifryhf",
+      "kind": "ruin",
+      "position": {
+        "row": 8,
+        "column": 16
+      },
+      "data": {
+        "position": {
+          "row": 8,
+          "column": 16
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-6-3-mtifs2dd",
+      "kind": "ruin",
+      "position": {
+        "row": 6,
+        "column": 3
+      },
+      "data": {
+        "position": {
+          "row": 6,
+          "column": 3
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "defenseStructure-21-5-mtiftwh8",
+      "kind": "defenseStructure",
+      "position": {
+        "row": 21,
+        "column": 5
+      },
+      "data": {
+        "position": {
+          "row": 21,
+          "column": 5
+        },
+        "name": "defenseStructure",
+        "type": "advanced-arrow-tower"
+      }
+    },
+    {
+      "id": "defenseStructure-19-2-mtifu1kf",
+      "kind": "defenseStructure",
+      "position": {
+        "row": 19,
+        "column": 2
+      },
+      "data": {
+        "position": {
+          "row": 19,
+          "column": 2
+        },
+        "name": "defenseStructure",
+        "type": "advanced-arrow-tower"
+      }
+    },
+    {
+      "id": "itemPoint-1-17-mtig0gkr",
+      "kind": "itemPoint",
+      "position": {
+        "row": 1,
+        "column": 17
+      },
+      "data": {
+        "position": {
+          "row": 1,
+          "column": 17
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "frost-doom-needle",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "itemPoint-23-18-mtig0jwj",
+      "kind": "itemPoint",
+      "position": {
+        "row": 23,
+        "column": 18
+      },
+      "data": {
+        "position": {
+          "row": 23,
+          "column": 18
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "great-return-pill",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "player-21-3-mtig1ye1",
+      "kind": "player",
+      "position": {
+        "row": 21,
+        "column": 3
+      },
+      "data": {
+        "position": {
+          "row": 21,
+          "column": 3
+        },
+        "name": "雲霓",
+        "isAI": true,
+        "aiType": "support-player",
+        "money": 80,
+        "innerSkillId": "tuna-gong",
+        "innerSkillIds": [
+          "tuna-gong"
+        ],
+        "attributes": {
+          "armStrength": 14,
+          "constitution": 15,
+          "agility": 17,
+          "innerEnergy": 15,
+          "insight": 14
+        },
+        "externalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "equippedExternalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "inventory": [
+          {
+            "itemId": "heal-wound-medicine",
+            "quantity": 2
+          },
+          {
+            "itemId": "gather-qi-pill",
+            "quantity": 1
+          }
+        ]
+      }
+    }
+  ],
+  "quests": {
+    "victoryObjectives": [
+      {
+        "id": "obj-destroy-nests",
+        "title": "摧毀古城妖巢",
+        "type": "destroy-nest",
+        "targetValue": 1,
+        "targetId": "nest-1"
+      },
+      {
+        "id": "obj-defeat-boss",
+        "title": "擊敗古城妖將",
+        "type": "defeat-creature",
+        "targetValue": 1,
+        "targetId": "boss-ruin-general"
+      }
+    ],
+    "failConditions": {
+      "baseMustSurvive": true,
+      "playerMustSurvive": true,
+      "maxRounds": 30
+    }
+  },
+  "dialogues": {
+    "event-chapter4-start": {
+      "name": "第四章開局",
+      "steps": [
+        {
+          "id": "ch4-start-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵離開湖畔，一路向東，踏入無垠荒漠。烈日當空，黃沙滾滾，遠方一座被黑氣籠罩的古城輪廓若隱若現。"
+        },
+        {
+          "id": "ch4-start-2",
+          "speakerName": "守城將領 韓烈",
+          "speakerIcon": "⚔️",
+          "content": "站住！前方是封印古城，妖物橫行，尋常人不得靠近！"
+        },
+        {
+          "id": "ch4-start-3",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "在下凌淵，追尋妖氣源頭至此。這座古城……為何妖氣如此濃烈？"
+        },
+        {
+          "id": "ch4-start-4",
+          "speakerName": "守城將領 韓烈",
+          "speakerIcon": "⚔️",
+          "content": "這古城本是封印妖王的聖地，多年前一位守護者在此鎮壓妖邪。可如今封印鬆動，妖物從城中源源湧出，我軍已快抵擋不住了！"
+        },
+        {
+          "id": "ch4-start-5",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "守護者……又是守護者。韓將軍，這封印之地，與我師父可有淵源？"
+        },
+        {
+          "id": "ch4-start-6",
+          "speakerName": "守城將領 韓烈",
+          "speakerIcon": "⚔️",
+          "content": "你師父？莫非你便是守護者一脈的傳人？難怪你身上有股熟悉的靈氣。若你能深入古城，重整封印，便是救了整個荒漠！"
+        },
+        {
+          "id": "ch4-start-7",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "風沙中，一名身披斗篷的女俠緩步走出，目光銳利地掃過古城與凌淵。"
+        },
+        {
+          "id": "ch4-start-8",
+          "speakerName": "雲霓",
+          "speakerIcon": "🌪️",
+          "content": "這座古城……終於找到了。我兄長當年便是為了這封印之地而來，此後音訊全無。"
+        },
+        {
+          "id": "ch4-start-9",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "姑娘也是為這古城而來？在下凌淵，追尋妖氣源頭至此。"
+        },
+        {
+          "id": "ch4-start-10",
+          "speakerName": "雲霓",
+          "speakerIcon": "🌪️",
+          "content": "雲霓。我兄長是名探險者，多年前受人所託，深入這古城協助重整封印，卻一去不回。我一路追查，發現這古城封印著妖王，而我兄長……恐怕與這封印脫不了干係。"
+        },
+        {
+          "id": "ch4-start-11",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "重整封印……莫非你兄長也是守護者一脈？"
+        },
+        {
+          "id": "ch4-start-12",
+          "speakerName": "雲霓",
+          "speakerIcon": "🌪️",
+          "content": "我不知道。我只知道，無論他身在何處，我都要找到他。既然你我目的相近，不如同行一程。"
+        },
+        {
+          "id": "ch4-start-13",
+          "speakerName": "守城將領 韓烈",
+          "speakerIcon": "⚔️",
+          "content": "兩位少俠，若願深入古城重整封印，便是救了整個荒漠！我軍營地備有補給，隨時可回來。"
+        }
+      ]
+    },
+    "event-general-talk": {
+      "name": "與將領交談",
+      "steps": [
+        {
+          "id": "general-talk-1",
+          "speakerName": "守城將領 韓烈",
+          "speakerIcon": "⚔️",
+          "content": "少俠，那古城深處有兩座妖巢，日夜生出妖物。巢中還盤踞著一名古城妖將，是妖王麾下的悍將。"
+        },
+        {
+          "id": "general-talk-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "妖將……只要摧毀妖巢、擊敗妖將，封印便能重整嗎？"
+        },
+        {
+          "id": "general-talk-3",
+          "speakerName": "守城將領 韓烈",
+          "speakerIcon": "⚔️",
+          "content": "正是！妖巢是妖氣之源，妖將是守護妖巢的悍將。二者皆除，封印自會重新凝聚。我軍營地備有補給，你若有需要，隨時可回來。"
+        }
+      ]
+    },
+    "event-seal-marker-talk": {
+      "name": "封印印記",
+      "steps": [
+        {
+          "id": "seal-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵觸碰古城牆上的封印印記，一股熟悉的靈氣沿著手臂湧入體內，與體內的守護者功法產生共鳴。"
+        },
+        {
+          "id": "seal-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "這股靈氣……是師父的！他老人家果然曾在這座古城戰鬥過。這封印印記，正是守護者一脈的手筆。"
+        },
+        {
+          "id": "seal-3",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "印記深處，隱約浮現一段模糊的畫面：一名守護者與妖王激戰，最終以自身為引，將妖王封印於古城之下。"
+        },
+        {
+          "id": "seal-4",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "師父……原來你當年在此封印妖王。如今封印鬆動，我定要繼承你的遺志，重整這座古城的封印！"
+        }
+      ]
+    },
+    "event-arrive-nest": {
+      "name": "到達妖巢",
+      "steps": [
+        {
+          "id": "arrive-nest-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "越過殘破的城牆，妖氣愈發濃烈。前方的古城廢墟中，兩座被黑焰籠罩的妖巢赫然聳立，發出陣陣低沉的咆哮。"
+        },
+        {
+          "id": "arrive-nest-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "這就是妖巢……妖氣之源。只要將其摧毀，封印便能重新凝聚。"
+        },
+        {
+          "id": "arrive-nest-3",
+          "speakerName": "古城妖將",
+          "speakerIcon": "🔥",
+          "content": "吼——守護者的傳人？你竟敢踏入妖王的聖地！今日便讓你葬身於此！"
+        },
+        {
+          "id": "arrive-nest-4",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "妖將，你守護的妖巢，今日便是你的葬身之地！"
+        }
+      ]
+    },
+    "event-defeat-boss": {
+      "name": "擊敗妖將",
+      "steps": [
+        {
+          "id": "defeat-boss-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "古城妖將在凌淵的攻勢下轟然倒地，化作一縷黑焰消散於空中。妖巢失去守護，搖搖欲墜。"
+        },
+        {
+          "id": "defeat-boss-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "妖將已除，接下來便只剩這座妖巢了。只要將其摧毀，封印便能重整！"
+        }
+      ]
+    },
+    "event-victory": {
+      "name": "封印重整",
+      "steps": [
+        {
+          "id": "victory-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "最後一座妖巢轟然倒塌，籠罩古城多時的妖氣終於徹底消散。城牆上的封印印記重新亮起，散發出溫和的靈光。"
+        },
+        {
+          "id": "victory-2",
+          "speakerName": "守城將領 韓烈",
+          "speakerIcon": "⚔️",
+          "content": "封印……重新凝聚了！少俠果然了得，竟能重整這座古城的封印！"
+        },
+        {
+          "id": "victory-3",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "韓將軍，這封印印記是我師父留下的。他老人家當年在此封印妖王，如今我總算明白自己的使命了。"
+        },
+        {
+          "id": "victory-4",
+          "speakerName": "守城將領 韓烈",
+          "speakerIcon": "⚔️",
+          "content": "守護者一脈，世代鎮壓妖邪。少俠既承此重任，日後必有大任。古城深處，似乎還藏著妖王的秘密……"
+        },
+        {
+          "id": "victory-5",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "妖王的秘密……莫非這封印之下，還藏著更大的威脅？"
+        },
+        {
+          "id": "victory-6",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "【功法解鎖】守護者武藝精進——凌淵習得外功「五行歸元」，功法已存入俠客名冊，可在培養介面花費武學殘卷修習；沙盒對局即刻生效。"
+        }
+      ]
+    }
+  },
+  "triggers": [
+    {
+      "id": "trigger-start-dialogue",
+      "condition": "on-start",
+      "action": "start-dialogue",
+      "actionParam": "event-chapter4-start"
+    },
+    {
+      "id": "trigger-victory-dialogue",
+      "condition": "on-victory",
+      "action": "start-dialogue",
+      "actionParam": "event-victory"
+    },
+    {
+      "id": "trigger-arrive-nest",
+      "condition": "on-enter-area",
+      "action": "start-dialogue",
+      "actionParam": "event-arrive-nest",
+      "conditionParam": "area-nest"
+    },
+    {
+      "id": "trigger-spawn-boss",
+      "condition": "on-enter-area",
+      "action": "spawn-creature",
+      "actionParam": "boss-ruin-general",
+      "conditionParam": "area-nest"
+    },
+    {
+      "id": "trigger-defeat-boss",
+      "condition": "on-defeat-boss",
+      "action": "start-dialogue",
+      "actionParam": "event-defeat-boss",
+      "conditionParam": "boss-ruin-general"
+    }
+  ],
+  "areas": [
+    {
+      "id": "area-nest",
+      "name": "妖巢周邊",
+      "positions": [
+        {
+          "row": 9,
+          "column": 19
+        },
+        {
+          "row": 9,
+          "column": 18
+        },
+        {
+          "row": 10,
+          "column": 18
+        },
+        {
+          "row": 10,
+          "column": 20
+        },
+        {
+          "row": 10,
+          "column": 19
+        },
+        {
+          "row": 8,
+          "column": 18
+        },
+        {
+          "row": 8,
+          "column": 19
+        },
+        {
+          "row": 8,
+          "column": 20
+        },
+        {
+          "row": 9,
+          "column": 20
+        },
+        {
+          "row": 10,
+          "column": 21
+        },
+        {
+          "row": 11,
+          "column": 21
+        },
+        {
+          "row": 11,
+          "column": 20
+        },
+        {
+          "row": 11,
+          "column": 19
+        },
+        {
+          "row": 11,
+          "column": 18
+        },
+        {
+          "row": 9,
+          "column": 17
+        },
+        {
+          "row": 8,
+          "column": 17
+        }
+      ],
+      "destroyWhenTriggered": true
+    }
+  ]
+}

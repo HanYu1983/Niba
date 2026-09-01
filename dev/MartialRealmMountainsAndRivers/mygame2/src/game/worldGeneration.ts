@@ -26,6 +26,7 @@ import {
   type CreatureBehaviorType,
   CREATURE_BEHAVIOR_BY_INDEX,
   getCreatureAttributes,
+  getCreatureEquippedExternalSkillIds,
   getCreatureInnerSkillId,
   rollRoamerLevel,
 } from './rules/creatureBehaviorRules'
@@ -205,8 +206,10 @@ export function createCreatureNests(
   count: number,
   seed: number,
   excludedPositions: Position[],
+  basePositions: Position[] = [],
 ): CreatureNestState[] {
-  const positions = createRandomPositions(map, count, seed, excludedPositions)
+  // 巢穴需遠離城市據點（曼哈頓距離 5 格之外），避免巢穴過度貼近玩家出生與補給點。
+  const positions = createRandomPositions(map, count, seed, excludedPositions, basePositions, 5)
   const schools: MartialSchoolId[] = martialSchoolCatalog.map((school) => school.id)
   const behaviors: CreatureBehaviorType[] = CREATURE_BEHAVIOR_BY_INDEX
   const random = createSeededRandom(seed + 999)
@@ -256,6 +259,8 @@ export function createRandomPositions(
   count: number,
   seed: number,
   excludedPositions: Position[] = [],
+  minDistanceFrom: Position[] = [],
+  minDistanceFromValue = 5,
 ): Position[] {
   // 先排除已被佔用的格子，確保只在空格上生成（絕不與既有物件重疊）。
   const occupiedKeys = new Set(
@@ -274,6 +279,14 @@ export function createRandomPositions(
   const selectedPositions: Position[] = []
   const minimumDistance = 5
 
+  // 檢查候選格是否與指定位置保持最小曼哈頓距離（例如巢穴需遠離城市據點）。
+  const isFarEnoughFrom = (candidate: Position): boolean =>
+    minDistanceFrom.every(
+      (position) => position &&
+        Math.abs(position.row - candidate.row) +
+        Math.abs(position.column - candidate.column) >= minDistanceFromValue,
+    )
+
   for (const candidate of candidates) {
     const isFarEnough = positions.every(
       (position) => position &&
@@ -281,7 +294,7 @@ export function createRandomPositions(
         Math.abs(position.column - candidate.position.column) >= minimumDistance,
     )
 
-    if (!isFarEnough) {
+    if (!isFarEnough || !isFarEnoughFrom(candidate.position)) {
       continue
     }
 
@@ -298,7 +311,7 @@ export function createRandomPositions(
   if (selectedPositions.length < count) {
     for (const candidate of candidates) {
       const isOccupied = positions.some((position) => isSamePosition(position, candidate.position))
-      if (isOccupied) continue
+      if (isOccupied || !isFarEnoughFrom(candidate.position)) continue
 
       selectedPositions.push(candidate.position)
       positions.push(candidate.position)
@@ -529,16 +542,25 @@ export function createRoamerCreatures(
     // 開局游蕩妖物維持既有 roamer + void-spirit 設定。
     const schoolId = 'void-spirit' as const
     const level = rollRoamerLevel()
+    const attributes = getCreatureAttributes(
+      { armStrength: 6, constitution: 6, agility: 6, innerEnergy: 6, insight: 6 },
+      { behaviorType, schoolId },
+      level,
+    )
+    const innerSkillId = getCreatureInnerSkillId({ behaviorType, schoolId }, level)
+    // 等級 3 以上怪物依悟性容量裝備所屬門派靈氣型外功。
+    const equippedExternalSkillIds = getCreatureEquippedExternalSkillIds(
+      { schoolId, attributes, innerSkillId },
+      level,
+    )
     return createCharacterState({
       id: `roamer-creature-${index + 1}`,
       name: '游蕩妖物',
-      innerSkillId: getCreatureInnerSkillId({ behaviorType, schoolId }, level),
+      innerSkillId,
+      externalSkillIds: equippedExternalSkillIds,
+      equippedExternalSkillIds,
       position,
-      attributes: getCreatureAttributes(
-        { armStrength: 6, constitution: 6, agility: 6, innerEnergy: 6, insight: 6 },
-        { behaviorType, schoolId },
-        level,
-      ),
+      attributes,
       prestige: 0,
       money: 0,
       experience: 0,

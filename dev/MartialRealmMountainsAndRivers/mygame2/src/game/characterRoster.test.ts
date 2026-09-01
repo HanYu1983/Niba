@@ -538,6 +538,14 @@ describe('劇本通關解鎖（applyStoryUnlocks）', () => {
     expect(character.unlockedTalentIds).toEqual([])
   })
 
+  it('通關第四章：凌淵直接學會五行歸元', () => {
+    applyStoryUnlocks('blazing-ruins', true)
+    const character = getCharacter(lingyuan.characterId)!
+    expect(character.unlockedSkillIds).toContain('lingyuan-five-elements-mend')
+    expect(character.learnedSkillIds).toContain('lingyuan-five-elements-mend')
+    expect(character.unlockedTalentIds).toEqual([])
+  })
+
   it('玩家自訂角色：通關後功法僅入可培養清單，需花卷學習', () => {
     const custom = createCharacter({ name: '自訂俠客' })!
     const changed = applyStoryUnlocks('prologue-village', true)

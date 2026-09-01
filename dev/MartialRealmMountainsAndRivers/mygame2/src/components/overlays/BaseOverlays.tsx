@@ -242,6 +242,14 @@ function BaseOverlays({
           const result = gameStore.withdrawEquipmentFromSharedWarehouse(gameState.activePlayerId, instanceId)
           if (!result.ok) gameStore.showActionResult({ title: '取出失敗', message: result.reason, rewards: [] })
         }}
+        onDepositSkill={(skillId) => {
+          const result = gameStore.depositSkillToSharedWarehouse(gameState.activePlayerId, skillId)
+          if (!result.ok) gameStore.showActionResult({ title: '存入失敗', message: result.reason, rewards: [] })
+        }}
+        onWithdrawSkill={(skillId) => {
+          const result = gameStore.withdrawSkillFromSharedWarehouse(gameState.activePlayerId, skillId)
+          if (!result.ok) gameStore.showActionResult({ title: '取出失敗', message: result.reason, rewards: [] })
+        }}
         onClose={onCloseWarehouse}
       />
       <TransportModal

@@ -222,10 +222,10 @@ describe('spawnCreaturesFromNests', () => {
       spawnDeps,
     )
 
-    // 升級到 Lv.2：maxHealth = 120 * 1.1 = 132；先回血 1%（120×1%=1 → 101），升級到不因升級回滿
+    // 升級到 Lv.2：maxHealth = 120 * 1.1 = 132；先回血 1%（120×1%=1.2 → 101.2），升級到不因升級回滿
     expect(result.nests[0].spawnLevel).toBe(2)
     expect(result.nests[0].maxHealth).toBe(132)
-    expect(result.nests[0].health).toBe(101)
+    expect(result.nests[0].health).toBe(101.2)
   })
 
   it('每回合回復 1% 最大生命', () => {
@@ -241,8 +241,8 @@ describe('spawnCreaturesFromNests', () => {
       spawnDeps,
     )
 
-    // 回復 120 * 1% = 1.2 → floor 1 → health 101
-    expect(result.nests[0].health).toBe(101)
+    // 回復 120 * 1% = 1.2 → health 101.2
+    expect(result.nests[0].health).toBe(101.2)
   })
 
   it('每回合回復不會超過最大生命', () => {
@@ -323,7 +323,8 @@ describe('spawnCreaturesFromNests', () => {
 
     const creature = result.creatures[0] as CreatureState
     // 攻城化已移除；巢穴未指定流派時使用中性流派計算屬性成長。
-    expect(creature.attributes).toEqual({ armStrength: 10, constitution: 10, agility: 10, innerEnergy: 10, insight: 10 })
+    // 基礎五維 6 起（與開局游蕩妖物一致），疊加太虛內功五維靈氣（臂力/根骨/悟性各 +1）。每級成長 2。
+    expect(creature.attributes).toEqual({ armStrength: 11, constitution: 11, agility: 10, innerEnergy: 10, insight: 11 })
     expect(creature.name).toContain('Lv.3')
   })
 

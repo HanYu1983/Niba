@@ -9,11 +9,12 @@ describe('初始生物生成規則', () => {
     expect(state.creatures.every((creature) => creature.behaviorType === 'roamer' && creature.schoolId === 'void-spirit')).toBe(true)
     expect(state.creatures.some((creature) => {
       const level = creature.level ?? 1
-      return creature.attributes.armStrength === 6 + (level - 1) * 3
-        && creature.attributes.constitution === 6 + (level - 1) * 3
-        && creature.attributes.agility === 6 + (level - 1) * 3
-        && creature.attributes.innerEnergy === 6 + (level - 1) * 3
-        && creature.attributes.insight === 6 + (level - 1) * 3
+      // void-spirit 內功五維靈氣：臂力/根骨/悟性各 +1；每級成長 2。
+      return creature.attributes.armStrength === 7 + (level - 1) * 2
+        && creature.attributes.constitution === 7 + (level - 1) * 2
+        && creature.attributes.agility === 6 + (level - 1) * 2
+        && creature.attributes.innerEnergy === 6 + (level - 1) * 2
+        && creature.attributes.insight === 7 + (level - 1) * 2
     })).toBe(true)
   })
 

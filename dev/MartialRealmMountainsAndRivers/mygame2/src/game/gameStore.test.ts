@@ -410,6 +410,23 @@ describe('useItem', () => {
     ])
   })
 
+  it('隱身符：使用後獲得 3 回合隱身靈氣 Buff', () => {
+    const player = makeTestCreature({
+      inventory: [{ itemId: 'concealment-talisman', quantity: 1 }],
+    })
+    gameStore.setStateForTest(makeGameState({ players: [player] }))
+
+    const used = gameStore.useItem('player-1', 'concealment-talisman')
+
+    expect(used.ok).toBe(true)
+    const state = gameStore.getState()
+    const buff = state.players[0].buffs?.find((candidate) => candidate.definitionId === 'concealment-aura')
+    expect(buff).toBeDefined()
+    expect(buff?.remainingRounds).toBe(3)
+    expect(state.players[0].inventory).toHaveLength(0)
+    expect(state.players[0].itemEffectsUsedThisTurn).toEqual(['buff'])
+  })
+
   it('每種道具類型一回合一次：探地符再次使用被拒絕', () => {
     const player = makeTestCreature({
       position: { row: 5, column: 5 },
@@ -1235,6 +1252,8 @@ describe('executeAttack', () => {
       position: { row: 5, column: 6 },
       health: 100,
       maxHealth: 100,
+      // 低身法與根骨，避免回避／根骨減傷干擾「必定命中」與傷害結算。
+      attributes: { armStrength: 8, constitution: 1, agility: 1, innerEnergy: 5, insight: 7 },
     })
     gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
     gameStore.previewAttack('player-1', 'creature-1')
@@ -1263,6 +1282,8 @@ describe('executeAttack', () => {
       position: { row: 5, column: 6 },
       health: 100,
       maxHealth: 100,
+      // 低身法與根骨，避免回避／根骨減傷干擾嗜血計算。
+      attributes: { armStrength: 8, constitution: 1, agility: 1, innerEnergy: 5, insight: 7 },
     })
     gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
     gameStore.previewAttack('player-1', 'creature-1')
@@ -1374,6 +1395,8 @@ describe('executeAttack', () => {
       health: 1,
       maxHealth: 1,
       level: 1,
+      // 低身法與根骨，避免回避／根骨減傷影響擊殺判定。
+      attributes: { armStrength: 8, constitution: 1, agility: 1, innerEnergy: 5, insight: 7 },
     })
     gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
 
@@ -1403,6 +1426,8 @@ describe('executeAttack', () => {
       health: 100, // 不會被擊殺，不升級
       maxHealth: 100,
       level: 1,
+      // 低身法與根骨，避免回避／根骨減傷干擾內力結算。
+      attributes: { armStrength: 8, constitution: 1, agility: 1, innerEnergy: 5, insight: 7 },
     })
     gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
 
@@ -1423,6 +1448,8 @@ describe('executeAttack', () => {
       position: { row: 5, column: 6 },
       health: 100,
       maxHealth: 100,
+      // 低身法與根骨，避免回避／根骨減傷干擾耐久消耗判定。
+      attributes: { armStrength: 8, constitution: 1, agility: 1, innerEnergy: 5, insight: 7 },
     })
     gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
     gameStore.equipEquipment('player-1', 'sword-1')
@@ -1444,6 +1471,8 @@ describe('executeAttack', () => {
       position: { row: 5, column: 6 },
       health: 100,
       maxHealth: 100,
+      // 低身法與根骨，避免回避／根骨減傷干擾經驗結算。
+      attributes: { armStrength: 8, constitution: 1, agility: 1, innerEnergy: 5, insight: 7 },
     })
     gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
     gameStore.previewAttack('player-1', 'creature-1')
@@ -1457,9 +1486,68 @@ describe('executeAttack', () => {
     expect(gameStore.getState().players[0].experience).toBe(3)
   })
 
+  it('攻擊帶有反震 Buff 的生物時，反彈 15% 傷害至玩家', () => {
+    // 依序遮斷：暴擊(0.99→否)、回避(0.99→否)、根骨減傷(0.99→否) → 完整命中。
+    vi.spyOn(Math, 'random').mockReturnValueOnce(0.99).mockReturnValueOnce(0.99).mockReturnValueOnce(0.99)
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
+    const playerHealthBefore = player.health
+    const creature = makeTestCreature({
+      id: 'creature-1',
+      name: '測試生物',
+      position: { row: 5, column: 6 },
+      health: 100,
+      maxHealth: 100,
+      // 低身法與根骨，避免回避／根骨減傷干擾。
+      attributes: { armStrength: 8, constitution: 1, agility: 1, innerEnergy: 5, insight: 7 },
+      buffs: [{ id: 'reflect-1', definitionId: 'earth-mountain-reflection', sourceId: 'test', remainingRounds: null }],
+    })
+    gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
+    gameStore.previewAttack('player-1', 'creature-1')
+
+    const result = gameStore.executeAttack()
+    vi.restoreAllMocks()
+
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const damage = result.data.damage
+    const nextPlayer = gameStore.getState().players[0]
+    // 玩家受到 15% 反震傷害：health = 起始血 - damage * 0.15（與既有反震一致保留小數）。
+    expect(damage).toBeGreaterThan(0)
+    expect(nextPlayer.health).toBe(playerHealthBefore - damage * 0.15)
+  })
+
+  it('攻擊帶有反震 Buff 的生物被回避時，不反彈傷害', () => {
+    // 依序遮斷：暴擊(0.99→否)、回避(0.0→命中) → 傷害 0、不反震。
+    vi.spyOn(Math, 'random').mockReturnValueOnce(0.99).mockReturnValueOnce(0)
+    const player = makeTestCreature({ position: { row: 5, column: 5 } })
+    const playerHealthBefore = player.health
+    const creature = makeTestCreature({
+      id: 'creature-1',
+      name: '測試生物',
+      position: { row: 5, column: 6 },
+      health: 100,
+      maxHealth: 100,
+      // 高身法使回避率 >= 1%，random 0.0 命中回避。
+      attributes: { armStrength: 8, constitution: 1, agility: 60, innerEnergy: 5, insight: 7 },
+      buffs: [{ id: 'reflect-1', definitionId: 'earth-mountain-reflection', sourceId: 'test', remainingRounds: null }],
+    })
+    gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
+    gameStore.previewAttack('player-1', 'creature-1')
+
+    const result = gameStore.executeAttack()
+    vi.restoreAllMocks()
+
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.data.damage).toBe(0)
+    expect(gameStore.getState().players[0].health).toBe(playerHealthBefore)
+  })
+
   it('擊殺生物時可掉落裝備並加入裝備背包', () => {
     vi.spyOn(Math, 'random')
       .mockReturnValueOnce(0.7)
+      .mockReturnValueOnce(0.99)
+      .mockReturnValueOnce(0.99)
       .mockReturnValueOnce(0.1)
       .mockReturnValueOnce(0.99)
     const player = makeTestCreature({ position: { row: 5, column: 5 } })
@@ -1469,6 +1557,8 @@ describe('executeAttack', () => {
       position: { row: 5, column: 6 },
       health: 1,
       maxHealth: 1,
+      // 低身法與根骨，避免回避／根骨減傷影響擊殺判定。
+      attributes: { armStrength: 8, constitution: 1, agility: 1, innerEnergy: 5, insight: 7 },
     })
     gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
     gameStore.previewAttack('player-1', 'creature-1')
@@ -1498,6 +1588,8 @@ describe('executeAttack', () => {
       health: 1,
       maxHealth: 1,
       level: 1,
+      // 低身法與根骨，避免回避／根骨減傷影響擊殺判定。
+      attributes: { armStrength: 8, constitution: 1, agility: 1, innerEnergy: 5, insight: 7 },
     })
     gameStore.setStateForTest(makeGameState({ players: [player], creatures: [creature] }))
     gameStore.previewAttack('player-1', 'creature-1')
@@ -2250,6 +2342,47 @@ describe('公共倉庫', () => {
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
 
     expect(gameStore.depositEquipmentToSharedWarehouse('player-1', 'eq-1').ok).toBe(false)
+  })
+
+  it('從有交易所的據點存入與取出功法（經驗值繼承）', () => {
+    const player = makeTestCreature({
+      position: { row: 5, column: 5 },
+      innerSkillIds: ['tuna-gong', 'golden-body-inner'],
+      innerSkillId: 'tuna-gong',
+      skillProgression: { 'golden-body-inner': { experience: 30, level: 2 } },
+    })
+    const base = {
+      ...makeBaseState(),
+      buildings: [{ id: 'base-1-ex', type: 'exchange', name: '交易所', description: '', constructionCost: 30 }],
+    }
+    gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
+
+    expect(gameStore.depositSkillToSharedWarehouse('player-1', 'golden-body-inner').ok).toBe(true)
+    let state = gameStore.getState()
+    expect(state.players[0].innerSkillIds).not.toContain('golden-body-inner')
+    expect(state.sharedSkillWarehouse).toHaveLength(1)
+    expect(state.sharedSkillWarehouse?.[0]).toMatchObject({ skillId: 'golden-body-inner', experience: 30, level: 2 })
+
+    expect(gameStore.withdrawSkillFromSharedWarehouse('player-1', 'golden-body-inner').ok).toBe(true)
+    state = gameStore.getState()
+    expect(state.players[0].innerSkillIds).toContain('golden-body-inner')
+    expect(state.players[0].skillProgression?.['golden-body-inner']).toEqual({ experience: 30, level: 2 })
+    expect(state.sharedSkillWarehouse).toHaveLength(0)
+  })
+
+  it('目前裝備的內功無法存入功法', () => {
+    const player = makeTestCreature({
+      position: { row: 5, column: 5 },
+      innerSkillIds: ['tuna-gong'],
+      innerSkillId: 'tuna-gong',
+    })
+    const base = {
+      ...makeBaseState(),
+      buildings: [{ id: 'base-1-ex', type: 'exchange', name: '交易所', description: '', constructionCost: 30 }],
+    }
+    gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
+
+    expect(gameStore.depositSkillToSharedWarehouse('player-1', 'tuna-gong').ok).toBe(false)
   })
 })
 

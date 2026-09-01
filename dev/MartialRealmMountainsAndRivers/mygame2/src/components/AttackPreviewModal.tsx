@@ -33,9 +33,15 @@ function AttackPreviewModal({ preview, onConfirm, onCancel }: AttackPreviewModal
             items={[
               { label: '預期傷害', value: preview.expectedDamage },
               { label: '普通攻擊暴擊率', value: `${preview.criticalRate}%` },
+              ...(preview.targetReduction !== undefined && preview.targetReduction > 0
+                ? [{ label: '敵方減傷率', value: `${preview.targetReduction}%` }]
+                : []),
+              ...(preview.targetEvasion !== undefined && preview.targetEvasion > 0
+                ? [{ label: '敵方回避率', value: `${preview.targetEvasion}%` }]
+                : []),
               ...(preview.elementInteraction ? [{ label: '五行相剋', value: preview.elementInteraction }] : []),
               ...(preview.terrainResonance ? [{ label: '天地共鳴', value: preview.terrainResonance }] : []),
-              { label: '目標血量', value: `${preview.targetHealth} / ${preview.targetMaxHealth}` },
+              { label: '目標血量', value: `${Math.round(preview.targetHealth)} / ${Math.round(preview.targetMaxHealth)}` },
             ]}
           />
         </Flex>

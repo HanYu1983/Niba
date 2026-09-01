@@ -38,7 +38,7 @@ function SectGateDetailsModal({ gate, player, onLearn, onPractice, onBuyEquipmen
           </Typography.Text>
           <Flex wrap gap={8} align="center">
             <Tag color="gold">金錢 {player.money}</Tag>
-            <Tag color="blue">體力 {Math.floor(player.stamina)}</Tag>
+            <Tag color="blue">體力 {Math.round(player.stamina)}</Tag>
             <Tag color="purple">門派 Lv.{gate.level}</Tag>
             <Tag color="cyan">門派經驗 {gate.experience} / {gate.level >= 3 ? '已滿' : gate.level === 2 ? '250' : '100'}</Tag>
           </Flex>

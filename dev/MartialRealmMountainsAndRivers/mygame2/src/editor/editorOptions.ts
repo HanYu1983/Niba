@@ -89,3 +89,12 @@ export const ATTRIBUTE_FIELDS: Array<{ key: keyof import('../game/types').Player
   { key: 'innerEnergy', label: '內息' },
   { key: 'insight', label: '悟性' },
 ]
+
+/** AI 玩家類型選項（對應 AiOrder.type）。 */
+export const AI_TYPE_OPTIONS: Array<{ value: string; label: string }> = [
+  { value: 'decision-tree', label: '決策樹（自主行動）' },
+  { value: 'support-player', label: '跟隨保護玩家' },
+  { value: 'protect-base', label: '保護據點' },
+  { value: 'fuzzy', label: '模糊策略' },
+  { value: 'graph-search', label: '圖搜索' },
+]

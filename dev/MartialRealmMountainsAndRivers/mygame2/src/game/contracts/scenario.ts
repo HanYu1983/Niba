@@ -1,4 +1,4 @@
-import type { TerrainType, Position } from '../types'
+import type { TerrainType, Position, AiOrder } from '../types'
 
 /**
  * 劇本（Scenario）契約型別。
@@ -128,6 +128,12 @@ export type ScenarioDefinition = {
   dialogues: Record<string, ScenarioDialogueGroup>
   /** 事件觸發器：以「時機 → 行為 → id」統一管理觸發。 */
   triggers?: ScenarioTrigger[]
+  /**
+   * 開局時套用的 AI 玩家指令（可覆寫編譯器自動生成的預設策略）。
+   * `aiPlayerId` / `playerId` / `baseId` 皆為劇本內實體 id。
+   * 未涵蓋的 AI 玩家仍會套用預設 decision-tree 策略。
+   */
+  aiOrders?: AiOrder[]
   customMetadata?: Record<string, unknown>
 }
 

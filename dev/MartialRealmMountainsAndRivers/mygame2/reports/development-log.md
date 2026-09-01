@@ -1,5 +1,62 @@
 # 開發日誌
 
+## 2026-09-01｜生物行動修正、隨機事件移至回合開始與反震平衡
+
+### 本次完成
+
+- **修正巢穴生成生物體力不足無法攻擊**：巢穴生成生物基礎五維由 `{4,4,4,4,4}` 提升至 `{6,6,6,6,6}`（與開局游蕩妖物一致）。原先 Lv.1 怪物最大體力 = 0.5×身法 + 0.5×臂力 = 4，低於單次攻擊消耗 5，導致「相鄰卻不攻擊」；改後 Lv.1 生物最大體力 6，可正常攻擊。並修正體力不足時仍回報 `'attack'` 但空揮的事件，改回報原地待命（`'idle'`）。
+- **燃燒等週期性傷害結果彈窗取整**：`creatureAnimation.ts` 的 `animateCreatureTurn` 在產生「燃燒 對 XX 造成 N 點傷害」訊息時，將 `damage` 以 `Math.round` 取整後顯示，避免浮點長小數（如 6.600000000000001）；實際狀態仍保留精確值。
+- **隨機探索事件移至回合開始**：在 `turnActions.ts` 新增 `triggerTurnStartExplorationEvent`，於「輪到該玩家」的回合開始以機率觸發事件；`endPlayerTurn` 移除事件觸發。`gameStore.endPlayerTurn` 在敵方行動與回合推進後呼叫新觸發函式。因為事件不再與敵方行動同時出現，移除了先前為了事件而延後敵方行動的 `triggeredEvent` 分支（僅保留劇情對話的 `dialoguePending` 延後）；`dismissPendingExplorationEvent` 也不再 flush 敵方行動。另修正 `SessionContext.dpendingCreatureTurn` 的拼字錯誤。
+- **玩家 UI 體力顯示取值**：`PlayerPanel.tsx`、`PlayerCommandPanel.tsx`、`Player.tsx`（地圖標記）的體力數值改以 `Math.floor` 顯示。
+- **生物反震於玩家攻擊時生效**：`combatActions.ts` 的 `applyCombatHitState` 在目標為帶有反震 Buff 的生物時，將 `damage × reflectionPercent` 回彈到攻擊者（玩家），普通攻擊與外功共用此函式皆生效。
+- **反震平衡調整**：`earth-mountain-reflection` 的 `reflectionPercent` 由 `0.25` 下修至 `0.15`（基礎 15%），等級縮放公式不變（每級 ×(1+0.15×levelDelta)）；同步更新功法目錄描述與相關測試。
+
+### 影響檔案
+
+- 修改：`src/game/actions/creatureActions.ts`、`src/game/actions/creatureTurnPipeline.ts`（生物基礎五維、空揮修正）
+- 修改：`src/game/creatureAnimation.ts`（週期性傷害取整）
+- 修改：`src/game/actions/turnActions.ts`、`src/game/gameStore.ts`、`src/game/session/sessionController.ts`、`src/game/actions/explorationActions.ts`、`src/game/types/gameState.ts`、`src/components/GameOverlays.tsx`、`src/components/PendingExplorationEventModal.tsx`（事件移至回合開始、移除事件延後）
+- 修改：`src/components/PlayerPanel.tsx`、`src/components/PlayerCommandPanel.tsx`、`src/components/Player.tsx`（體力 `Math.floor`）
+- 修改：`src/game/actions/combatActions.ts`（生物反震回彈）
+- 修改：`src/game/catalogs/buffCatalog.ts`、`src/game/catalogs/skillProgressionCatalog.ts`（反震 15%）
+
+### 驗證結果
+
+- TypeScript：通過。vitest：**105 檔／1149 項全數通過**（含新增反震、回合開始事件測試；並修正既有生物回避／根骨減傷造成的 flaky 測試）。
+
+### 下一步
+
+- 確認隨機事件在多人／單人模式下於正確的回合開始出現。
+- 確認帶反震的厚土流生物（等級 3+）被攻擊時正確回彈 15% 傷害至玩家。
+
+## 2026-09-01｜生物對稱防禦、等級 3+ 裝備外功與成長公式調整
+
+### 本次完成
+
+- **生物對稱防禦機制**：生物作為被攻擊方時套用與玩家一致的回避（依身法）、根骨減傷（依根骨，機率使傷害減半）、暴擊判定；生物攻擊玩家時可暴擊（1.5 倍）並支援多次攻擊（依體力）。新增 `getCreatureEvasionRate`、`getCreatureRootReductionRate`、`getCreatureCriticalRate` 純函式。
+- **攻擊預覽顯示敵方減傷／回避**：攻擊目標為生物時，`createAttackPreview`／`createExternalSkillPreview` 的 `targetReduction` 改以根骨 ×2%（`getCreatureRootReductionRate`）計算，`targetEvasion` 依身法；`AttackPreviewModal`／`ExternalSkillPreviewModal` 顯示「敵方減傷率／敵方回避率」。
+- **攻擊結果彈窗說明被減傷／被回避**：新增 `targetDefense: 'evaded' | 'reduced'` 欄位至 `AttackExecutionResult`、`ExternalDamageExecutionResult`（含 `areaTargets` 各目標）；`executeAttack`／`executeExternalDamage` 記錄判定結果；`formatAttackResult`／`formatExternalSkillResult` 顯示「敵人回避了本次攻擊，傷害為 0！」或「敵人根骨強健，傷害減半。」。
+- **等級 3+ 生物裝備門派靈氣外功**：新增 `getCreatureEquippedExternalSkillIds`，依悟性容量（扣除內功需求後依序填裝）自動裝備所屬門派靈氣型外功（有常駐被動 Buff 者）；`createRoamerCreatures` 與 `spawnCreaturesFromNests` 皆套用，`createCreatureState` input 型別補上 `externalSkillIds`／`equippedExternalSkillIds`。
+- **生物五維成長公式調整**：`getCreatureAttributes` 改為「基礎值 + 門派修正 × 等級 + 每級成長（2）× 等級」，修正值隨等級放大；`CREATURE_LEVEL_GROWTH` 提升至 2；Lv.1（等級加成 0）不套用門派修正，身法底限 2、悟性底限 5。
+
+### 影響檔案
+
+- 修改：`src/game/rules/creatureBehaviorRules.ts`（成長公式、`getCreatureEquippedExternalSkillIds`）
+- 修改：`src/game/rules/playerDerivedRules.ts`（生物回避／減傷／暴擊函式）
+- 修改：`src/game/worldGeneration.ts`、`src/game/actions/creatureActions.ts`（生成時裝備外功）
+- 修改：`src/game/previewOrchestration.ts`、`src/components/AttackPreviewModal.tsx`、`src/components/ExternalSkillPreviewModal.tsx`（預覽顯示減傷／回避）
+- 修改：`src/game/actions/combatActions.ts`、`src/game/types/combat.ts`、`src/game/actionResultFormatters.ts`（結果彈窗說明減傷／回避）
+- 修改：`src/game/actions/creatureTurnPipeline.ts`（生物暴擊、多次攻擊）
+
+### 驗證結果
+
+- TypeScript：通過。vitest：**104 檔／1143 項全數通過**（含新增的護甲外功裝備、回避／減傷提示測試）。
+
+### 下一步
+
+- 確認攻擊預覽彈窗與結果彈窗在實際遊戲中正確顯示減傷／回避資訊。
+- 確認等級 3+ 生物於巢穴與開局生成時正確裝備門派靈氣外功。
+
 ## 2026-08-27｜名冊角色功法帶入、殘卷結算與戰績修正
 
 ### 本次完成

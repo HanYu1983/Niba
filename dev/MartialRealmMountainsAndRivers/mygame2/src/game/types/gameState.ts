@@ -21,6 +21,7 @@ import type {
   TrapState,
   InventoryEntry,
   EquipmentInstance,
+  SharedSkillEntry,
 } from './entities'
 import type {
   AttackPreview,
@@ -139,11 +140,11 @@ export type WorldState = {
   resourcePoints: ResourcePointState[]
   itemPoints: ItemPointState[]
   explorationEvents?: ExplorationEventState[]
-  /** 回合結束隨機觸發、等待玩家選擇的探索事件（不佔用地圖格子）。 */
+  /** 「輪到該玩家」的回合開始隨機觸發、等待玩家選擇的探索事件（不佔用地圖格子）。 */
   pendingExplorationEvent?: ExplorationEventState | null
-  /** 觸發 pendingExplorationEvent 的目標玩家 id（回合結束時觸發時，activePlayerId 可能已切換）。 */
+  /** 觸發 pendingExplorationEvent 的目標玩家 id。 */
   pendingExplorationEventPlayerId?: string | null
-  /** 回合結束隨機觸發探索事件的機率（開局時從 settings 帶入）。 */
+  /** 回合開始隨機觸發探索事件的機率（開局時從 settings 帶入）。 */
   explorationTriggerChance?: number
   /** 巢穴每回合回復的最大生命比例（開局時從 settings 帶入，預設 0.01）。 */
   nestHealthRegenPercent?: number
@@ -178,6 +179,8 @@ export type WorldState = {
   sharedWarehouse?: InventoryEntry[]
   /** 跨據點共享的裝備倉庫（裝備有耐久度，與道具分開存放）。 */
   sharedEquipmentWarehouse?: EquipmentInstance[]
+  /** 跨據點共享的功法倉庫（含經驗值繼承）。 */
+  sharedSkillWarehouse?: SharedSkillEntry[]
   aiOrders?: AiOrder[]
   aiConstructionPlans?: AiConstructionPlan[]
   /** 全域行動日誌（重構文件 §4.5 AiActionEvent）；只保留最新 MAX_ACTION_EVENTS 筆，隨存檔序列化。 */

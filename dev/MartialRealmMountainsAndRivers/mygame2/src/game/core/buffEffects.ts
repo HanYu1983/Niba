@@ -24,6 +24,8 @@ export type BuffEffects = {
   terrainCostOverride?: number
   /** 逐地形消耗覆寫（多地形版）。 */
   terrainCostOverrides?: Partial<Record<TerrainType, number>>
+  /** 所有地形消耗減免（直接從基礎消耗扣除，最低為 1）。 */
+  terrainCostReduction?: number
   /** 最大血量傷害比例。 */
   maxHealthDamagePercent?: number
   /** 反傷比例。 */
@@ -96,6 +98,8 @@ export type BuffEffects = {
   confused?: boolean
   /** 來自友軍的傷害加成。 */
   damageTakenFromAlliesBonus?: number
+  /** 隱身：持有此 Buff 的目標不會被生物選為攻擊或追蹤目標（用於安全逃離或潛行刺殺巢穴）。 */
+  untargetable?: boolean
   /** 條件觸發型：依血量區間觸發的五維乘算。 */
   conditional?: BuffConditional
 }
@@ -113,6 +117,7 @@ export const BuffEffectsKeys = [
   'criticalRateBonus',
   'terrainCostOverride',
   'terrainCostOverrides',
+  'terrainCostReduction',
   'maxHealthDamagePercent',
   'reflectionPercent',
   'attributeMultiplier',
@@ -149,5 +154,6 @@ export const BuffEffectsKeys = [
   'skillExpGainPercent',
   'confused',
   'damageTakenFromAlliesBonus',
+  'untargetable',
   'conditional',
 ] as const satisfies readonly (keyof BuffEffects)[]

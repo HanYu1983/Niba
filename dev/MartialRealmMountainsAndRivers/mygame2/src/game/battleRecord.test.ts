@@ -108,4 +108,28 @@ describe('computeBattleRecord', () => {
     expect(record.stats.creaturesDefeated).toBe(7)
     expect(record.stats.moneySpent).toBe(50)
   })
+
+  it('每個人類玩家都有獨立的結局戰績', () => {
+    const record = computeBattleRecord(makeState({
+      players: [
+        makePlayer({ id: 'p1', name: '玩家甲', level: 5, prestige: 120, governanceRank: 2, money: 300 }),
+        makePlayer({ id: 'p2', name: '玩家乙', level: 3, prestige: 40, governanceRank: 1, money: 80 }),
+      ],
+    }))
+    expect(record.players).toHaveLength(2)
+    expect(record.players[0]).toMatchObject({ id: 'p1', name: '玩家甲', level: 5, prestige: 120, governanceRank: 2, money: 300 })
+    expect(record.players[1]).toMatchObject({ id: 'p2', name: '玩家乙', level: 3, prestige: 40, governanceRank: 1, money: 80 })
+  })
+
+  it('跳過 AI 玩家，只為人類玩家建立獨立戰績', () => {
+    const record = computeBattleRecord(makeState({
+      players: [
+        makePlayer({ id: 'ai-1', name: 'AI', isAI: true, level: 9 }),
+        makePlayer({ id: 'p1', name: '玩家甲', level: 5 }),
+        makePlayer({ id: 'p2', name: '玩家乙', level: 3 }),
+      ],
+    }))
+    expect(record.players).toHaveLength(2)
+    expect(record.players.map((p) => p.id)).toEqual(['p1', 'p2'])
+  })
 })

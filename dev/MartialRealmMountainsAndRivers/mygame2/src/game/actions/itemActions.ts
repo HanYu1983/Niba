@@ -103,8 +103,8 @@ export function useItemAction(
   const consumeItem = (currentPlayer: PlayerState): PlayerState => ({
     ...currentPlayer,
     health: Math.max(0, currentPlayer.health - (item.cost?.health ?? 0)),
-    stamina: currentPlayer.stamina - (item.cost?.stamina ?? 0),
-    innerPower: currentPlayer.innerPower - (item.cost?.innerPower ?? 0),
+    stamina: Math.max(0, currentPlayer.stamina - (item.cost?.stamina ?? 0)),
+    innerPower: Math.max(0, currentPlayer.innerPower - (item.cost?.innerPower ?? 0)),
     inventory: currentPlayer.inventory
       .map((entry) =>
         entry.itemId === itemId
@@ -360,8 +360,8 @@ export function useItemAction(
 
   const nextPlayerResource = {
     health: item.effect === 'health' ? nextValue : Math.max(0, player.health - (item.cost?.health ?? 0)),
-    stamina: item.effect === 'stamina' ? nextValue : player.stamina - (item.cost?.stamina ?? 0),
-    innerPower: item.effect === 'inner-power' ? nextValue : player.innerPower - (item.cost?.innerPower ?? 0),
+    stamina: item.effect === 'stamina' ? nextValue : Math.max(0, player.stamina - (item.cost?.stamina ?? 0)),
+    innerPower: item.effect === 'inner-power' ? nextValue : Math.max(0, player.innerPower - (item.cost?.innerPower ?? 0)),
   }
 
   return {

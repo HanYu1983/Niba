@@ -1,5 +1,5 @@
-import { Button, Descriptions, Flex, Modal, Typography } from 'antd'
-import type { BattleRecord } from '../game/battleRecord'
+import { Button, Descriptions, Divider, Flex, Modal, Typography } from 'antd'
+import type { BattleRecord, PlayerBattleRecord } from '../game/battleRecord'
 import AttributeSections from './AttributeSections'
 import SkillCard from './SkillCard'
 import { getSkillDamage } from '../game/rules/skillRules'
@@ -11,15 +11,57 @@ type GameOverModalProps = {
   record?: BattleRecord
   /** 本局結算獲得的武學殘卷（null 表示未選用名册角色；'skipped' 表示此局已領取過）。 */
   scrollReward?: number | 'skipped' | null
+  /** 本局重啓（以相同設定重新開始本局）。 */
   onRestart: () => void
+  /** 回到遊戲開始畫面。 */
+  onGoHome: () => void
   /** 關閉結算彈窗（玩家可回到地圖觀察局末狀態）。 */
   onClose?: () => void
 }
 
-function GameOverModal({ open, won = false, reason, record, scrollReward, onRestart, onClose }: GameOverModalProps) {
+/** 單一玩家的結局戰績區塊。 */
+function PlayerRecordSection({ player }: { player: PlayerBattleRecord }) {
+  return (
+    <Flex vertical gap={12}>
+      <Typography.Title level={5} style={{ margin: 0 }}>{player.name}</Typography.Title>
+      <Descriptions
+        column={2}
+        size="small"
+        bordered
+        items={[
+          { key: 'level', label: '等級', children: player.level },
+          { key: 'prestige', label: '聲望', children: player.prestige },
+          { key: 'rank', label: '治理階級', children: player.governanceRank },
+          { key: 'money', label: '金錢結餘', children: player.money },
+        ]}
+      />
+      <Flex gap={16} wrap align="flex-start">
+        <div style={{ flex: 1, minWidth: 220 }}>
+          <Typography.Text strong>局末五維</Typography.Text>
+          <AttributeSections attributes={player.attributes} />
+        </div>
+        <div style={{ flex: 1, minWidth: 220 }}>
+          <Typography.Text strong>內功功法</Typography.Text>
+          <SkillCard
+            icon="☯"
+            label="裝備內功"
+            element={player.innerSkill.element}
+            name={player.innerSkill.name}
+            description={player.innerSkill.description}
+            status="已裝備"
+            highlight={{ label: '目前傷害值', value: getSkillDamage(player.attributes, player.innerSkill, player.innerSkillLevel) }}
+            meta={`功法等級 Lv.${player.innerSkillLevel}`}
+          />
+        </div>
+      </Flex>
+    </Flex>
+  )
+}
+
+function GameOverModal({ open, won = false, reason, record, scrollReward, onRestart, onGoHome, onClose }: GameOverModalProps) {
   const anyBaseDestroyed = reason === 'any-base-destroyed'
   const stats = record?.stats
-  const attributes = stats?.attributesAtMaxLevel
+  const players = record?.players ?? []
   return (
     <Modal
       title={won ? '勝利' : '遊戲結束'}
@@ -68,10 +110,6 @@ function GameOverModal({ open, won = false, reason, record, scrollReward, onRest
             bordered
             items={[
               { key: 'rounds', label: '存活回合', children: record.roundsSurvived },
-              { key: 'level', label: '等級', children: record.playerLevel },
-              { key: 'prestige', label: '聲望', children: record.prestige },
-              { key: 'rank', label: '治理階級', children: record.governanceRank },
-              { key: 'money', label: '金錢結餘', children: record.money },
               { key: 'moneySpent', label: '累計消費', children: stats?.moneySpent ?? 0 },
               { key: 'creatures', label: '擊敗怪物', children: stats?.creaturesDefeated ?? 0 },
               { key: 'nests', label: '摧毀巢穴', children: stats?.nestsDestroyed ?? 0 },
@@ -91,25 +129,12 @@ function GameOverModal({ open, won = false, reason, record, scrollReward, onRest
           />
         )}
 
-        {attributes && record && (
-          <Flex gap={16} wrap align="flex-start">
-            <div style={{ flex: 1, minWidth: 220 }}>
-              <Typography.Text strong>最高等級五維</Typography.Text>
-              <AttributeSections attributes={attributes} />
-            </div>
-            <div style={{ flex: 1, minWidth: 220 }}>
-              <Typography.Text strong>內功功法</Typography.Text>
-              <SkillCard
-                icon="☯"
-                label="裝備內功"
-                element={record.innerSkill.element}
-                name={record.innerSkill.name}
-                description={record.innerSkill.description}
-                status="已裝備"
-                highlight={{ label: '目前傷害值', value: getSkillDamage(attributes, record.innerSkill, record.innerSkillLevel) }}
-                meta={`功法等級 Lv.${record.innerSkillLevel}`}
-              />
-            </div>
+        {players.length > 0 && (
+          <Flex vertical gap={16}>
+            <Divider style={{ margin: 0 }}>玩家結算</Divider>
+            {players.map((player) => (
+              <PlayerRecordSection key={player.id} player={player} />
+            ))}
           </Flex>
         )}
 
@@ -118,9 +143,14 @@ function GameOverModal({ open, won = false, reason, record, scrollReward, onRest
             關閉（觀察局末狀態）
           </Button>
         )}
-        <Button type="primary" block onClick={onRestart}>
-          重新開始
-        </Button>
+        <Flex gap={8}>
+          <Button block onClick={onRestart}>
+            本局重啓
+          </Button>
+          <Button type="primary" block onClick={onGoHome}>
+            回到首頁
+          </Button>
+        </Flex>
       </Flex>
     </Modal>
   )

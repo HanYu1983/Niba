@@ -31,9 +31,9 @@ function ItemBurstPreviewModal({ preview, onConfirm, onCancel }: ItemBurstPrevie
           </Typography.Paragraph>
           <PreviewStats
             items={[
-              { label: '預期傷害', value: preview.expectedDamage },
+              { label: '預期傷害', value: Math.round(preview.expectedDamage) },
               ...(preview.elementInteraction ? [{ label: '五行相剋', value: preview.elementInteraction }] : []),
-              { label: '目標血量', value: `${preview.targetHealth} / ${preview.targetMaxHealth}` },
+              { label: '目標血量', value: `${Math.round(preview.targetHealth)} / ${Math.round(preview.targetMaxHealth)}` },
             ]}
           />
         </Flex>

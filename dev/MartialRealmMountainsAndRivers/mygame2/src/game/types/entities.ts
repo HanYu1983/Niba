@@ -43,6 +43,17 @@ export type InventoryEntry = {
   quantity: number
 }
 
+/** 公共倉庫中的功法（含經驗值繼承）。 */
+export type SharedSkillEntry = {
+  skillId: string
+  /** 功法類型：內功或外功。 */
+  skillType: 'inner' | 'external'
+  /** 存入時的功法經驗（取出時繼承）。 */
+  experience: number
+  /** 存入時的功法等級。 */
+  level: number
+}
+
 export type SkillProgression = {
   experience: number
   level: number

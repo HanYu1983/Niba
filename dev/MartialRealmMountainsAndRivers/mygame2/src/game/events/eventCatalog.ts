@@ -70,7 +70,7 @@ export type EventEffect =
   | { type: 'money'; amount: number }
   | { type: 'prestige'; amount: number }
   | { type: 'item'; itemId: string; quantity: number }
-  | { type: 'learn-skill'; skillType: 'inner' | 'external' }
+  | { type: 'learn-skill'; skillType: 'inner' | 'external'; skillId?: string }
   | { type: 'spawn-creature'; creatureId: string }
   | { type: 'spawn-event'; eventId: string }
   | { type: 'spawn-base'; baseId: string }

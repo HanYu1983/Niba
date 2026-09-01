@@ -4,8 +4,11 @@ import {
   canWithdrawItem,
   canDepositEquipment,
   canWithdrawEquipment,
+  canDepositSkill,
+  canWithdrawSkill,
   getSharedWarehouseItemQuantity,
   getSharedEquipmentWarehouse,
+  getSharedSkillWarehouse,
   getPlayerItemQuantity,
   getPlayerEquipmentQuantity,
   addItemToPlayer,
@@ -16,6 +19,10 @@ import {
   removeEquipmentFromPlayer,
   addEquipmentToWarehouse,
   removeEquipmentFromWarehouse,
+  addSkillToPlayer,
+  removeSkillFromPlayer,
+  addSkillToWarehouse,
+  removeSkillFromWarehouse,
 } from './storageRules'
 import type { GameState, PlayerState, EquipmentInstance } from '../types'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from './playerStatsRules'
@@ -192,5 +199,88 @@ describe('公共裝備倉庫存取', () => {
     const next = removeEquipmentFromWarehouse(warehouse, 'eq-1')
     expect(next).toHaveLength(1)
     expect(next[0].instanceId).toBe('eq-2')
+  })
+})
+
+describe('公共功法倉庫存取', () => {
+  it('已學會且非當前內功時可存入', () => {
+    const player = makePlayer({
+      innerSkillIds: ['tuna-gong', 'golden-body-inner'],
+      innerSkillId: 'tuna-gong',
+      externalSkillIds: ['golden-body-external-damage'],
+      skillProgression: { 'golden-body-inner': { experience: 30, level: 2 } },
+    })
+    const state = makeExchangeState({ players: [player] })
+    expect(canDepositSkill(state, 'player-1', 'golden-body-inner').ok).toBe(true)
+  })
+
+  it('目前裝備的內功不可存入', () => {
+    const player = makePlayer({
+      innerSkillIds: ['tuna-gong'],
+      innerSkillId: 'tuna-gong',
+    })
+    const state = makeExchangeState({ players: [player] })
+    expect(canDepositSkill(state, 'player-1', 'tuna-gong').ok).toBe(false)
+  })
+
+  it('未學會的功法不可存入', () => {
+    const state = makeExchangeState()
+    expect(canDepositSkill(state, 'player-1', 'golden-body-inner').ok).toBe(false)
+  })
+
+  it('倉庫沒有功法時不可取出', () => {
+    const state = makeExchangeState()
+    expect(canWithdrawSkill(state, 'player-1', 'golden-body-inner').ok).toBe(false)
+  })
+
+  it('存入後倉庫有該功法且保留經驗值', () => {
+    const player = makePlayer({
+      innerSkillIds: ['tuna-gong', 'golden-body-inner'],
+      innerSkillId: 'tuna-gong',
+      skillProgression: { 'golden-body-inner': { experience: 30, level: 2 } },
+    })
+    const state = makeExchangeState({ players: [player] })
+    const warehouse = addSkillToWarehouse(getSharedSkillWarehouse(state), {
+      skillId: 'golden-body-inner',
+      skillType: 'inner',
+      experience: 30,
+      level: 2,
+    })
+    const stored = getSharedSkillWarehouse({ ...state, sharedSkillWarehouse: warehouse })
+    expect(stored).toHaveLength(1)
+    expect(stored[0]).toMatchObject({ skillId: 'golden-body-inner', experience: 30, level: 2 })
+  })
+
+  it('移除玩家功法時一併移除其經驗值', () => {
+    const player = makePlayer({
+      innerSkillIds: ['tuna-gong', 'golden-body-inner'],
+      innerSkillId: 'tuna-gong',
+      skillProgression: { 'golden-body-inner': { experience: 30, level: 2 } },
+    })
+    const next = removeSkillFromPlayer(player, 'golden-body-inner')
+    expect(next.innerSkillIds).not.toContain('golden-body-inner')
+    expect(next.skillProgression?.['golden-body-inner']).toBeUndefined()
+  })
+
+  it('加入玩家功法時繼承經驗值', () => {
+    const player = makePlayer()
+    const next = addSkillToPlayer(player, {
+      skillId: 'golden-body-inner',
+      skillType: 'inner',
+      experience: 30,
+      level: 2,
+    })
+    expect(next.innerSkillIds).toContain('golden-body-inner')
+    expect(next.skillProgression?.['golden-body-inner']).toEqual({ experience: 30, level: 2 })
+  })
+
+  it('移除倉庫功法', () => {
+    const warehouse = [
+      { skillId: 'golden-body-inner', skillType: 'inner' as const, experience: 30, level: 2 },
+      { skillId: 'swift-wind-inner', skillType: 'inner' as const, experience: 0, level: 1 },
+    ]
+    const next = removeSkillFromWarehouse(warehouse, 'golden-body-inner')
+    expect(next).toHaveLength(1)
+    expect(next[0].skillId).toBe('swift-wind-inner')
   })
 })

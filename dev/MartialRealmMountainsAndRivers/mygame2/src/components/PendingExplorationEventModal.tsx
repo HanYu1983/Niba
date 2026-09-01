@@ -38,9 +38,9 @@ function checkChoiceAffordability(player: PlayerState, gameState: GameState, req
 }
 
 /**
- * 回合結束隨機觸發的探索事件 Modal。
+ * 「輪到該玩家」的回合開始隨機觸發的探索事件 Modal。
  * 事件不佔用地圖格子，因此不顯示位置、不需移動到特定格。
- * 選擇後直接套用事件效果，不結束玩家回合（該玩家回合已在觸發時結束）。
+ * 選擇後直接套用事件效果，不結束玩家回合（事件在回合開始出現，玩家之後仍可行動）。
  */
 function PendingExplorationEventModal({ event, player, gameState, onChoose, onClose }: PendingExplorationEventModalProps) {
   const definition = event ? getExplorationEventDefinition(event.type as ExplorationEventType) : undefined

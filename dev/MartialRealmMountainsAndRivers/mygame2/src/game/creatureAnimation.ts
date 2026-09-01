@@ -23,7 +23,7 @@ function revivePlayersWithReturnLight(players: PlayerState[]): PlayerState[] {
     // 復活血量優先取實例覆寫值（等級縮放），無覆寫時回退定義基礎值。
     const revivePercent = returnLightBuff.reviveHealthPercent ?? definition?.reviveHealthPercent ?? 0.3
     const clearDebuffs = definition?.clearDebuffsOnRevive ?? true
-    const revivedHealth = Math.max(1, Math.floor(player.maxHealth * revivePercent))
+    const revivedHealth = Math.max(1, player.maxHealth * revivePercent)
     const remainingBuffs = clearDebuffs
       ? []
       : (player.buffs ?? []).filter((buff) => buff.id !== returnLightBuff.id)
@@ -73,7 +73,7 @@ export function animateCreatureTurn(
     return [{
       creatureId: before.id,
       creatureName: before.name,
-      message: `${damagingBuff?.name ?? 'Buff'} 對 ${before.name} 造成 ${damage} 點傷害。`,
+      message: `${damagingBuff?.name ?? 'Buff'} 對 ${before.name} 造成 ${Math.round(damage)} 點傷害。`,
     }]
   })
   const creaturesAfterBuffs = creaturesAfterPeriodicDamage
@@ -92,7 +92,7 @@ export function animateCreatureTurn(
     return [{
       creatureId: before.id,
       creatureName: before.name,
-      message: `${damagingBuff?.name ?? 'Buff'} 對 ${before.name} 造成 ${damage} 點傷害。`,
+      message: `${damagingBuff?.name ?? 'Buff'} 對 ${before.name} 造成 ${Math.round(damage)} 點傷害。`,
     }]
   })
 

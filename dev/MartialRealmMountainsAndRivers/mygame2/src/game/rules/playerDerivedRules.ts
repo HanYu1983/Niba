@@ -126,13 +126,13 @@ function buildScaledBuffDescription(definition: BuffDefinition): string | undefi
     case 'return-light':
       return definition.reviveHealthPercent !== undefined ? `瀕死時攔截死亡，復活至 ${pct(definition.reviveHealthPercent)} 血並清除所有 debuff（只保一次）。` : undefined
     case 'back-to-water':
-      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${definition.conditional.multiplier}。` : undefined
+      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${pct(definition.conditional.multiplier)}。` : undefined
     case 'nurture-qi':
-      return definition.conditional ? `血量高於 ${pct(definition.conditional.threshold)} 時，五維 ×${definition.conditional.multiplier}。` : undefined
+      return definition.conditional ? `血量高於 ${pct(definition.conditional.threshold)} 時，五維 ×${pct(definition.conditional.multiplier)}。` : undefined
     case 'all-in':
-      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${definition.conditional.multiplier}。` : undefined
+      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${pct(definition.conditional.multiplier)}。` : undefined
     case 'ghost-shadow-lone-resolve':
-      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${definition.conditional.multiplier}，持續 3 回合。` : undefined
+      return definition.conditional ? `血量低於 ${pct(definition.conditional.threshold)} 時，五維 ×${pct(definition.conditional.multiplier)}，持續 3 回合。` : undefined
     case 'sky-eye-vision':
     case 'sharp-edge-sword-heart':
       return definition.visionRadiusBonus !== undefined ? `自身地圖視野半徑 +${definition.visionRadiusBonus}。` : undefined
@@ -342,6 +342,11 @@ export function getEffectiveAttributesForPlayer(player: PlayerState): PlayerAttr
   return getEffectiveAttributesWithDefinitions(player, getActiveBuffDefinitions(player))
 }
 
+/** 玩家是否處於隱身狀態：持有 untargetable Buff 時，生物不會將其選為攻擊或追蹤目標。 */
+export function isPlayerUntargetable(player: PlayerState): boolean {
+  return getActiveBuffDefinitions(player).some((definition) => definition.untargetable === true)
+}
+
 /** 取得包含當前地形主場 Buff 的怪物有效五維。 */
 export function getEffectiveAttributesForCreature(creature: CreatureState, terrain?: TerrainType): PlayerAttributes {
   return getEffectiveAttributesWithDefinitions(creature, getActiveBuffDefinitionsForCreature(creature, terrain))
@@ -367,7 +372,15 @@ export function getTerrainStaminaCost(terrain: TerrainType, player?: PlayerState
   }
 
   if (!Number.isFinite(baseCost)) return baseCost
-  if (activeDefinitions.some((definition) => definition.id === 'swift-wind-movement')) return 2
+
+  // 所有地形消耗減免（疾行）：直接從基礎消耗扣除，最低為 1。
+  if (player) {
+    const reduction = activeDefinitions.reduce(
+      (total, definition) => total + (definition.terrainCostReduction ?? 0),
+      0,
+    )
+    if (reduction > 0) return Math.max(1, baseCost - reduction)
+  }
 
   const multiplier = player
     ? activeDefinitions.reduce((total, definition) => {
@@ -463,6 +476,30 @@ export function getCreatureDamageReductionPercent(creature: CreatureState, terra
     (total, definition) => total + (definition.damageReductionPercent ?? 0),
     0,
   )
+}
+
+/** 怪物回避率（百分比）：依有效身法（含主場 Buff）決定，並加上回避率加成 Buff。 */
+export function getCreatureEvasionRate(creature: CreatureState, terrain?: TerrainType): number {
+  const baseRate = getEffectiveAttributesForCreature(creature, terrain).agility
+  const bonus = getActiveBuffDefinitionsForCreature(creature, terrain).reduce(
+    (total, definition) => total + (definition.evasionRateBonus ?? 0),
+    0,
+  )
+  return Math.min(100, baseRate + bonus)
+}
+
+/** 怪物根骨減傷率（百分比）：依有效根骨（含主場 Buff）決定，每個根骨提供 2% 機率使傷害減半。 */
+export function getCreatureRootReductionRate(creature: CreatureState, terrain?: TerrainType): number {
+  return Math.min(100, getEffectiveAttributesForCreature(creature, terrain).constitution * 2)
+}
+
+/** 怪物普通攻擊暴擊率（百分比）：依有效臂力（含主場 Buff）決定，並套用暴擊 Buff 加成。 */
+export function getCreatureCriticalRate(creature: CreatureState, terrain?: TerrainType): number {
+  const baseRate = getEffectiveAttributesForCreature(creature, terrain).armStrength * 2
+  const definitions = getActiveBuffDefinitionsForCreature(creature, terrain)
+  const multiplier = definitions.reduce((rate, definition) => rate * (definition.criticalRateMultiplier ?? 1), 1)
+  const bonus = definitions.reduce((total, definition) => total + (definition.criticalRateBonus ?? 0), 0)
+  return baseRate * multiplier + bonus
 }
 
 /** 外功造成的最終傷害加成比例（罡氣訣）。 */

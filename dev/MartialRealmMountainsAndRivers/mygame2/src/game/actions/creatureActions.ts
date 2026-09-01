@@ -17,7 +17,7 @@ import type {
 } from '../types'
 import { isSamePosition } from '../types'
 import { uniqueCreaturesById } from '../rules/playerRules'
-import { getCreatureAttributes, getCreatureInnerSkillId, getCreatureSchoolId } from '../rules/creatureBehaviorRules'
+import { getCreatureAttributes, getCreatureEquippedExternalSkillIds, getCreatureInnerSkillId, getCreatureSchoolId } from '../rules/creatureBehaviorRules'
 import { defaultRandomSource, rollChance, type RandomSource } from '../rules/randomRules'
 import { runCreatureTurn, type CreatureTurnResult } from './creatureTurnPipeline'
 
@@ -28,6 +28,8 @@ export type CreatureActionDependencies = {
     id: string
     name: string
     innerSkillId: string
+    externalSkillIds?: string[]
+    equippedExternalSkillIds?: string[]
     level?: number
     position: { row: number; column: number }
     attributes: CreatureState['attributes']
@@ -106,7 +108,7 @@ export function spawnCreaturesFromNests(
 
   const nextNests = nests.map((nest) => {
     // 每回合回復 healthRegenPercent 比例的最大生命（上限為最大生命）。
-    const regenHealth = Math.min(nest.maxHealth, nest.health + Math.floor(nest.maxHealth * healthRegenPercent))
+    const regenHealth = Math.min(nest.maxHealth, nest.health + nest.maxHealth * healthRegenPercent)
 
     // 規則 2：生成後有 3 回合冷卻，冷卻期間不生成。
     if (nest.cooldownRounds > 0) {
@@ -146,18 +148,29 @@ export function spawnCreaturesFromNests(
     const level = nest.spawnLevel
     const finalSchoolId = getCreatureSchoolId(nest)
     const finalBehavior = nest.behaviorType ?? 'scavenger'
+    // 基礎五維採 6 起（與開局游蕩妖物一致）：確保 Lv.1 怪物的最大體力（0.5×身法 + 0.5×臂力 = 6）
+    // 不低於單次攻擊消耗（5），使怪物相鄰目標時能正常攻擊，而非體力不足造成空揮。
+    const attributes = getCreatureAttributes({
+      armStrength: 6,
+      constitution: 6,
+      agility: 6,
+      innerEnergy: 6,
+      insight: 6,
+    }, { schoolId: finalSchoolId, behaviorType: finalBehavior }, level)
+    const innerSkillId = getCreatureInnerSkillId({ schoolId: finalSchoolId }, level)
+    // 等級 3 以上怪物依悟性容量裝備所屬門派靈氣型外功。
+    const equippedExternalSkillIds = getCreatureEquippedExternalSkillIds(
+      { schoolId: finalSchoolId, attributes, innerSkillId },
+      level,
+    )
     nextCreatures.push(dependencies.createCreatureState({
       id: getNextCreatureId(),
       name: `${nest.name}的怪物 Lv.${level}`,
-      innerSkillId: getCreatureInnerSkillId({ schoolId: finalSchoolId }, level),
+      innerSkillId,
+      externalSkillIds: equippedExternalSkillIds,
+      equippedExternalSkillIds,
       position: spawnPosition,
-      attributes: getCreatureAttributes({
-        armStrength: 4,
-        constitution: 4,
-        agility: 4,
-        innerEnergy: 4,
-        insight: 4,
-      }, { schoolId: finalSchoolId, behaviorType: finalBehavior }, level),
+      attributes,
       prestige: 0,
       money: 0,
       experience: 0,

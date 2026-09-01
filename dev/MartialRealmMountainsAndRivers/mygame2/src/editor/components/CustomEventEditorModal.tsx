@@ -2,7 +2,7 @@ import { Button, Divider, Flex, Input, InputNumber, Modal, Select, Space, Switch
 import { PlusOutlined, DeleteOutlined, ArrowUpOutlined, ArrowDownOutlined, CopyOutlined } from '@ant-design/icons'
 import type { CustomEventData, CustomEventChoice } from '../editorTypes'
 import type { EventEffect, EventRequirement } from '../../game/events/eventCatalog'
-import { BUILDING_OPTIONS, LOOT_ITEM_OPTIONS } from '../editorOptions'
+import { BUILDING_OPTIONS, LOOT_ITEM_OPTIONS, INNER_SKILL_OPTIONS, EXTERNAL_SKILL_OPTIONS } from '../editorOptions'
 
 type CustomEventEditorModalProps = {
   open: boolean
@@ -160,17 +160,30 @@ function EffectEditor({
         </>
       )}
       {effect.type === 'learn-skill' && (
-        <Select
-          size="small"
-          value={(effect as { skillType?: string }).skillType}
-          placeholder="功法類型"
-          options={[
-            { value: 'inner', label: '內功' },
-            { value: 'external', label: '外功' },
-          ]}
-          style={{ width: 100 }}
-          onChange={(value) => onChange({ ...effect, skillType: value as 'inner' | 'external' })}
-        />
+        <>
+          <Select
+            size="small"
+            value={(effect as { skillType?: string }).skillType}
+            placeholder="功法類型"
+            options={[
+              { value: 'inner', label: '內功' },
+              { value: 'external', label: '外功' },
+            ]}
+            style={{ width: 100 }}
+            onChange={(value) => onChange({ ...effect, skillType: value as 'inner' | 'external', skillId: undefined })}
+          />
+          <Select
+            size="small"
+            value={(effect as { skillId?: string }).skillId}
+            placeholder="指定功法（留空＝隨機）"
+            allowClear
+            showSearch
+            optionFilterProp="label"
+            options={(effect as { skillType?: string }).skillType === 'inner' ? INNER_SKILL_OPTIONS : EXTERNAL_SKILL_OPTIONS}
+            style={{ width: 200 }}
+            onChange={(value) => onChange({ ...effect, skillId: value ?? undefined })}
+          />
+        </>
       )}
       {effect.type === 'spawn-creature' && (
         <>

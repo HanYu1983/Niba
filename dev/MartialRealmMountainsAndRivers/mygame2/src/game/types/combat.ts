@@ -16,6 +16,10 @@ export type AttackPreview = {
   targetMaxHealth: number
   elementInteraction?: string
   terrainResonance?: string
+  /** 敵方目標的減傷率（百分比；僅生物有）。 */
+  targetReduction?: number
+  /** 敵方目標的回避率（百分比；僅生物有）。 */
+  targetEvasion?: number
 }
 
 /** 元素爆發道具（element-burst）的預期結果預覽。 */
@@ -45,6 +49,8 @@ export type AttackExecutionResult = {
   maxHealth: number
   criticalRate: number
   criticalHit: boolean
+  /** 目標生物的防禦判定結果：`evaded`＝被回避（傷害為 0），`reduced`＝根骨減傷（傷害減半）。 */
+  targetDefense?: 'evaded' | 'reduced'
   terrainResonance?: string
   defeated: boolean
   experienceReward?: number
@@ -79,6 +85,8 @@ export type ExternalDamageExecutionResult = {
   nextHealth: number
   maxHealth: number
   innerPowerCost: number
+  /** 目標生物的防禦判定結果：`evaded`＝被回避（傷害為 0），`reduced`＝根骨減傷（傷害減半）。 */
+  targetDefense?: 'evaded' | 'reduced'
   /** 範圍攻擊（selectionMode = all）：各目標的傷害結果；單體攻擊時為 undefined。 */
   areaTargets?: Array<{
     targetType: AttackTargetType
@@ -89,6 +97,8 @@ export type ExternalDamageExecutionResult = {
     nextHealth: number
     maxHealth: number
     defeated: boolean
+    /** 單一目標的防禦判定結果。 */
+    targetDefense?: 'evaded' | 'reduced'
   }>
   /** 傷害型外功的暴擊率（內息每 1 點提供 2%）。 */
   criticalRate?: number
@@ -186,6 +196,10 @@ export type ExternalSkillPreview = {
   effectSummary?: string
   elementInteraction?: string
   terrainResonance?: string
+  /** 敵方目標的減傷率（百分比；僅生物有）。 */
+  targetReduction?: number
+  /** 敵方目標的回避率（百分比；僅生物有）。 */
+  targetEvasion?: number
 }
 
 /** 普通攻擊的暴擊率：臂力每 1 點提供 2%，最高 50%。 */

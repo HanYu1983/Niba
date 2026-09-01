@@ -14,7 +14,7 @@ export const terrainItemPointLootCatalog: Partial<Record<TerrainType, LootDefini
     ['bamboo-staff', 'swift-boots', 'insight-talisman', 'spirit-bracelet', 'celestial-robe'],
   ),
   mountain: createTerrainLoot(
-    ['immobilize-rope', 'recall-base-talisman', 'extend-life-pill', 'gold-glint-talisman', 'sharp-metal-talisman', 'armor-break-talisman', 'taibai-break-army-talisman'],
+    ['immobilize-rope', 'recall-base-talisman', 'concealment-talisman', 'extend-life-pill', 'gold-glint-talisman', 'sharp-metal-talisman', 'armor-break-talisman', 'taibai-break-army-talisman'],
     ['fine-steel-sword', 'chain-mail', 'thunder-spear', 'divine-sword', 'immortal-armor'],
   ),
   water: createTerrainLoot(

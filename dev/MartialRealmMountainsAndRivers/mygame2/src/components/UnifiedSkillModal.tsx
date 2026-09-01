@@ -96,7 +96,7 @@ function UnifiedSkillModal({
         <Flex wrap gap={24}>
           <StatValue label="內力">
             <span style={{ color: player.innerPower <= 0 ? '#dc2626' : undefined }}>
-              {Math.floor(player.innerPower)} / {Math.floor(player.maxInnerPower)}
+              {Math.round(player.innerPower)} / {Math.round(player.maxInnerPower)}
             </span>
           </StatValue>
           <StatValue label="悟性容量">

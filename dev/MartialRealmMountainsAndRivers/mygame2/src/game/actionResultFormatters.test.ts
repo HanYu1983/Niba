@@ -56,6 +56,23 @@ describe('action result formatters', () => {
     expect(formatMissionResult('測試據點', 3).rewards).toEqual(['玩家金錢 +30', '玩家聲望 +15'])
   })
 
+  it('攻擊被目標生物回避時說明回避', () => {
+    const result = formatAttackResult({
+      playerId: 'player-1', playerName: '玩家 1', targetType: 'creature', targetId: 'creature-1', targetName: 'Creature',
+      damage: 0, nextHealth: 10, maxHealth: 10, criticalRate: 0, criticalHit: false, targetDefense: 'evaded', defeated: false,
+    })
+    expect(result.rewards).toContain('造成傷害 0')
+    expect(result.rewards).toContain('敵人回避了本次攻擊，傷害為 0！')
+  })
+
+  it('攻擊被目標生物根骨減傷時說明減傷', () => {
+    const result = formatAttackResult({
+      playerId: 'player-1', playerName: '玩家 1', targetType: 'creature', targetId: 'creature-1', targetName: 'Creature',
+      damage: 4, nextHealth: 6, maxHealth: 10, criticalRate: 0, criticalHit: false, targetDefense: 'reduced', defeated: false,
+    })
+    expect(result.rewards).toContain('敵人根骨強健，傷害減半。')
+  })
+
   it('格式化防禦建造、道具使用與道具點撿取結果', () => {
     const definition = defenseStructureCatalog.find((candidate) => candidate.type === 'arrow-tower')
     expect(definition).toBeDefined()

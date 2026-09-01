@@ -228,14 +228,14 @@ export function resolvePendingExplorationEvent(state: GameState, _playerId: stri
   const event = state.pendingExplorationEvent
   if (!event) return { state, result: { ok: false, reason: '沒有待處理的探索事件。' } }
   if (event.id !== eventId) return { state, result: { ok: false, reason: '待處理的探索事件已改變。' } }
-  // 回合結束隨機觸發的事件，目標玩家記錄在 pendingExplorationEventPlayerId
-  // （觸發時 activePlayerId 可能已切換到下一名玩家）。
+  // 「輪到該玩家」的回合開始隨機觸發的事件，目標玩家記錄在 pendingExplorationEventPlayerId
+  // （觸發時可能指定了一名玩家，而非依賴當下 activePlayerId）。
   const playerId = state.pendingExplorationEventPlayerId ?? _playerId
   const player = state.players.find((candidate) => candidate.id === playerId)
   if (!player) return { state, result: { ok: false, reason: '玩家不存在。' } }
   const choice = getEventChoiceDefinition(event, choiceId)
   if (!choice) return { state, result: { ok: false, reason: '事件選項不存在。' } }
-  // 回合結束隨機觸發的事件不佔地圖格，因此跳過「玩家位於事件點」的條件，
+  // 回合開始隨機觸發的事件不佔地圖格，因此跳過「玩家位於事件點」的條件，
   // 但仍檢查其他條件（例如金錢是否足夠）。
   const requirements = choice.requirements.filter((requirement) => requirement.type !== 'adjacent-to-event')
   const requirementsCheck = checkEventRequirements({ ...state, activePlayerId: player.id }, playerId, event, requirements)
@@ -246,7 +246,7 @@ export function resolvePendingExplorationEvent(state: GameState, _playerId: stri
   const nextState = {
     ...state,
     players: state.players.map((candidate) => candidate.id === playerId ? nextPlayer : candidate),
-    // 回合結束隨機觸發的探索事件已回答，清除待處理事件。
+    // 回合開始隨機觸發的探索事件已回答，清除待處理事件。
     // 該事件不佔用地圖格子，因此不補回任何地圖探索點。
     pendingExplorationEvent: null,
     pendingExplorationEventPlayerId: null,

@@ -48,6 +48,7 @@ describe('buildGameStateFromScenario', () => {
     const state = buildGameStateFromScenario(makeScenario())
     expect(state.players).toHaveLength(1)
     expect(state.players[0].name).toBe('主角')
+    expect(state.players[0].isAI).toBe(false)
     expect(state.players[0].money).toBe(50)
     expect(state.bases).toHaveLength(1)
     expect(state.bases[0].name).toBe('青石村')
@@ -57,6 +58,88 @@ describe('buildGameStateFromScenario', () => {
     expect(state.creatures).toHaveLength(1)
     expect(state.creatures[0].isBoss).toBe(true)
     expect(state.creatures[0].homeNestId).toBe('nest-1')
+  })
+
+  it('保留劇本玩家的 AI 標記', () => {
+    const scenario = makeScenario()
+    scenario.entities.push({
+      id: 'player-ai-1',
+      kind: 'player',
+      position: { row: 8, column: 1 },
+      data: { name: '同行弟子', isAI: true },
+    })
+
+    const state = buildGameStateFromScenario(scenario)
+
+    expect(state.players.find((player) => player.id === 'player-ai-1')).toMatchObject({
+      name: '同行弟子',
+      isAI: true,
+    })
+    expect(state.aiOrders).toEqual([{
+      id: 'ai-order-decision-tree-player-ai-1',
+      type: 'decision-tree',
+      aiPlayerId: 'player-ai-1',
+      priority: 50,
+      status: 'active',
+    }])
+  })
+
+  it('劇本 aiOrders 可覆寫 AI 玩家預設策略（貼身保護）', () => {
+    const scenario = makeScenario()
+    scenario.entities.push({
+      id: 'player-ai-1',
+      kind: 'player',
+      position: { row: 8, column: 1 },
+      data: { name: '同行弟子', isAI: true },
+    })
+    scenario.aiOrders = [{
+      id: 'ai-order-yunni-follow',
+      type: 'support-player',
+      aiPlayerId: 'player-ai-1',
+      playerId: 'player-1',
+      maxDistance: 2,
+      priority: 80,
+      retreatHealthPercent: 30,
+      status: 'active',
+    }]
+
+    const state = buildGameStateFromScenario(scenario)
+
+    expect(state.aiOrders).toEqual([{
+      id: 'ai-order-yunni-follow',
+      type: 'support-player',
+      aiPlayerId: 'player-ai-1',
+      playerId: 'player-1',
+      maxDistance: 2,
+      priority: 80,
+      retreatHealthPercent: 30,
+      status: 'active',
+    }])
+    // 顯式指令的 AI 玩家不應再產生預設 decision-tree。
+    expect(state.aiOrders?.some((order) => order.type === 'decision-tree')).toBe(false)
+  })
+
+  it('玩家 data.aiType 自動生成對應 AI 指令（support-player 貼身保護）', () => {
+    const scenario = makeScenario()
+    scenario.entities.push({
+      id: 'player-ai-1',
+      kind: 'player',
+      position: { row: 8, column: 1 },
+      data: { name: '同行弟子', isAI: true, aiType: 'support-player' },
+    })
+
+    const state = buildGameStateFromScenario(scenario)
+
+    expect(state.aiOrders).toEqual([{
+      id: 'ai-order-support-player-player-ai-1',
+      type: 'support-player',
+      aiPlayerId: 'player-ai-1',
+      playerId: 'player-1',
+      maxDistance: 2,
+      priority: 50,
+      retreatHealthPercent: 30,
+      status: 'active',
+    }])
   })
 
   it('怪物等級影響五維：未覆寫屬性時依等級成長（與巢穴生成同公式）', () => {
@@ -73,9 +156,9 @@ describe('buildGameStateFromScenario', () => {
     const high = state.creatures.find((c) => c.id === 'high')!
     expect(low.level).toBe(1)
     expect(high.level).toBe(6)
-    // 等級 6 的五維應明顯高於等級 1（每級 +3 成長 × 5 級 = +15）
-    expect(high.attributes.armStrength).toBe(low.attributes.armStrength + 15)
-    expect(high.attributes.constitution).toBe(low.attributes.constitution + 15)
+    // 等級 6 的五維應明顯高於等級 1（每級 +2 成長 × 5 級 = +10）
+    expect(high.attributes.armStrength).toBe(low.attributes.armStrength + 10)
+    expect(high.attributes.constitution).toBe(low.attributes.constitution + 10)
     // 血量上限也應隨等級成長
     expect(high.maxHealth).toBeGreaterThan(low.maxHealth)
   })
@@ -88,8 +171,9 @@ describe('buildGameStateFromScenario', () => {
     ]
     const state = buildGameStateFromScenario(scenario)
     const custom = state.creatures.find((c) => c.id === 'custom')!
-    expect(custom.attributes.armStrength).toBe(10)
-    expect(custom.attributes.constitution).toBe(10)
+    // void-spirit 內功五維靈氣：臂力/根骨/悟性各 +1
+    expect(custom.attributes.armStrength).toBe(11)
+    expect(custom.attributes.constitution).toBe(11)
   })
 
   it('attributes 為空物件時視為未指定，仍依等級成長', () => {

@@ -119,6 +119,7 @@ function WorldObjectOverlays({
       <CreatureNestDetailsModal
         nest={detailsCreatureNest}
         currentPlayer={activePlayer}
+        healthRegenPercent={gameState.nestHealthRegenPercent}
         onAttack={onAttackNest}
         onClose={onCloseCreatureNestDetails}
       />

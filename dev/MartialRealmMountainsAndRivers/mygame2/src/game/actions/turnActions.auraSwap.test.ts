@@ -69,7 +69,7 @@ const emptyDeps = {
 }
 
 describe('更換靈氣型功法後仍累積經驗', () => {
-  it('同一功法解除後重新裝備，下一回合仍累積 +5 經驗', () => {
+  it('同一功法解除後重新裝備，下一回合仍累積 +3 經驗', () => {
     const auraSkillId = 'golden-body-external-functional'
     let state = makeSmallState({
       players: [makePlayer({
@@ -80,7 +80,7 @@ describe('更換靈氣型功法後仍累積經驗', () => {
     })
 
     let result = endPlayerTurn(state, 'player-1', emptyDeps)
-    expect(result.state.players[0]?.skillProgression?.[auraSkillId]?.experience).toBe(5)
+    expect(result.state.players[0]?.skillProgression?.[auraSkillId]?.experience).toBe(3)
 
     state = {
       ...result.state,
@@ -88,7 +88,7 @@ describe('更換靈氣型功法後仍累積經驗', () => {
       players: result.state.players.map((player) => ({ ...player, equippedExternalSkillIds: [], turnEnded: false })),
     }
     result = endPlayerTurn(state, 'player-1', emptyDeps)
-    expect(result.state.players[0]?.skillProgression?.[auraSkillId]?.experience).toBe(5)
+    expect(result.state.players[0]?.skillProgression?.[auraSkillId]?.experience).toBe(3)
 
     state = {
       ...result.state,
@@ -96,7 +96,7 @@ describe('更換靈氣型功法後仍累積經驗', () => {
       players: result.state.players.map((player) => ({ ...player, equippedExternalSkillIds: [auraSkillId], turnEnded: false })),
     }
     result = endPlayerTurn(state, 'player-1', emptyDeps)
-    expect(result.state.players[0]?.skillProgression?.[auraSkillId]?.experience).toBe(10)
+    expect(result.state.players[0]?.skillProgression?.[auraSkillId]?.experience).toBe(6)
   })
 
   it('先裝備 A 結束回合，再換成 B 結束回合，B 仍累積經驗', () => {

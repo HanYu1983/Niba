@@ -12,6 +12,7 @@ import type {
   DefenseStructureState,
   ExplorationEventState,
   CampaignState,
+  AiOrder,
 } from '../types'
 import { buildingCatalog } from '../catalogs/buildingCatalog'
 import { defenseStructureCatalog } from '../catalogs/defenseStructureCatalog'
@@ -95,6 +96,7 @@ function compilePlayers(placements: ScenarioEntityPlacement[]): PlayerState[] {
     return createCharacterState({
       id: placement.id,
       name: (data.name as string) ?? `玩家 ${index + 1}`,
+      isAI: (data.isAI as boolean) ?? false,
       innerSkillId: (data.innerSkillId as string) ?? 'tuna-gong',
       innerSkillIds: (data.innerSkillIds as string[]) ?? ['tuna-gong'],
       position: placement.position,
@@ -455,6 +457,51 @@ export function buildGameStateFromScenario(scenario: ScenarioDefinition): GameSt
   })
   const sectGates = compileSectGates(grouped.sectGates)
   const defenseStructures = compileDefenseStructures(grouped.defenseStructures)
+  // 劇本可顯式指定 AI 玩家指令（如「跟隨保護某玩家」）；未涵蓋的 AI 玩家
+  // 依玩家 data.aiType 生成對應指令，預設回退 decision-tree 策略。
+  const explicitOrders = scenario.aiOrders ?? []
+  const explicitAiIds = new Set(explicitOrders.map((order) => order.aiPlayerId))
+  const humanPlayer = players.find((player) => !player.isAI)
+  const firstBase = spawnedBases[0]
+  const aiOrders: AiOrder[] = [
+    ...explicitOrders,
+    ...players
+      .filter((player) => player.isAI && !explicitAiIds.has(player.id))
+      .map((player) => {
+        const placement = grouped.players.find((p) => p.id === player.id)
+        const aiType = (placement?.data as Record<string, unknown> | undefined)?.aiType as string | undefined
+        const base = {
+          id: `ai-order-${aiType ?? 'decision-tree'}-${player.id}`,
+          aiPlayerId: player.id,
+          priority: 50,
+          status: 'active' as const,
+        }
+        switch (aiType) {
+          case 'support-player':
+            return {
+              ...base,
+              type: 'support-player' as const,
+              playerId: humanPlayer?.id ?? player.id,
+              maxDistance: 2,
+              retreatHealthPercent: 30,
+            }
+          case 'protect-base':
+            return {
+              ...base,
+              type: 'protect-base' as const,
+              baseId: firstBase?.id ?? '',
+              radius: 6,
+              retreatHealthPercent: 30,
+            }
+          case 'fuzzy':
+            return { ...base, type: 'fuzzy' as const }
+          case 'graph-search':
+            return { ...base, type: 'graph-search' as const }
+          default:
+            return { ...base, type: 'decision-tree' as const }
+        }
+      }),
+  ]
 
   const activePlayer = players[0]
   const visibilityState = {
@@ -498,7 +545,7 @@ export function buildGameStateFromScenario(scenario: ScenarioDefinition): GameSt
     runId: generateRunId(),
     sharedWarehouse: [],
     sharedEquipmentWarehouse: [],
-    aiOrders: [],
+    aiOrders,
     aiConstructionPlans: [],
     // 劇本關卡：隨機事件預設關閉；若 enableRandomEvents 為 true 則用預設機率。
     explorationTriggerChance: scenario.enableRandomEvents ? 0.2 : 0,
