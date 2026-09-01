@@ -18,6 +18,7 @@ import { buyItem } from '../../actions/shopActions'
 import type { CombatActionDependencies } from '../../actions/combatActions'
 import { resolveExplorationEvent } from '../../actions/explorationActions'
 import { checkEventRequirements, getEventChoices } from '../../events/eventResolver'
+import { computeEventChoiceValue } from '../fuzzy/eventValue'
 
 export type ExecuteAiActionDependencies = {
   combat: CombatActionDependencies
@@ -35,9 +36,16 @@ function resolveAiExplorationEvent(state: GameState, playerId: string): GameStat
   )
   if (!event) return state
 
-  const choice = getEventChoices(event).find((candidate) =>
+  const eligibleChoices = getEventChoices(event).filter((candidate) =>
     checkEventRequirements(state, playerId, event, candidate.requirements).allowed,
   )
+  const choice = eligibleChoices
+    .map((candidate, index) => ({
+      candidate,
+      index,
+      value: computeEventChoiceValue({ effects: candidate.effects, playerMoney: player.money }),
+    }))
+    .sort((first, second) => second.value - first.value || first.index - second.index)[0]?.candidate
   if (!choice) return state
 
   const result = resolveExplorationEvent(state, playerId, event.id, choice.id)

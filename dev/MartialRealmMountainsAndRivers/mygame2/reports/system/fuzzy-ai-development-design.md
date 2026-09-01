@@ -329,7 +329,7 @@ while (體力 > 0 && loopCount < 50):
 |---|---|---|
 | 建設候選 value 已完成第一階段動態化 | `fuzzyInputs.ts`、`constructionValue.ts` | 已反映材料需求、威脅、成本、距離、升級與個性；後續可補建築實際產能效益 |
 | 攻擊候選價值仍是第一階段模型 | `fuzzyInputs.ts`、`combatValue.ts` | 已枚舉並排序所有可見生物；經驗/威脅度仍待接入更完整的領域收益資料 |
-| 事件選項選第一個符合條件者 | `executeAiAction.ts` | 未做選項間價值比較 |
+| 事件選項價值仍是第一階段模型 | `executeAiAction.ts`、`eventValue.ts` | 已在合法選項中排序直接效果；尚未納入完整個性與長期狀態效益 |
 | 裝備/內功「有更好就換」 | `fuzzyInputs.ts` | 未評估換裝效益 vs 機會成本 |
 | 各目標輸入契約不一致 | `goals.ts` | 缺統一的「需求/效益/急迫/風險/成本/距離/個性」框架 |
 
@@ -365,7 +365,7 @@ value = max(0,
 | 1 | 建設候選動態價值 | 已完成第一階段；後續補各建築的實際收益模型 |
 | 2 | 攻擊目標候選化 | 已完成第一階段；從「最近」改為「枚舉視野內所有生物 → 各自算價值」 |
 | 3 | 個性滲透到價值函數 | builder 偏好倉庫、aggressive 偏好箭塔 |
-| 4 | 事件選項價值判斷 | 從「第一個符合」改為「枚舉選項 → 算價值」 |
+| 4 | 事件選項價值判斷 | 已完成第一階段；從「第一個符合」改為「枚舉選項 → 算價值」 |
 | 5 | 裝備/內功換裝效益 | 評估屬性提升幅度 vs 損耗 |
 
 ### 10.4 不納入價值判斷的行為（明確排除）
@@ -420,6 +420,7 @@ value = max(0,
 | 5 種個性 profile | ✅ | personality 套用測試 | 通過 |
 | 建造/升級候選枚舉 + 最高價值選擇 | ✅ | construction 測試 21/21 | 通過 |
 | 攻擊目標候選枚舉 + 最高價值選擇 | ✅ 第一階段 | `combatValue.test.ts` + AI suite 119/119 | 通過 |
+| 事件合法選項枚舉 + 最高價值選擇 | ✅ 第一階段 | `eventValue.test.ts` + AI suite 122/122 | 通過 |
 | 通用 `upgrade` action（type/stamina/validate/execute/event） | ✅ | build + 規則測試 | 通過 |
 | 非相鄰候選移動保留目標 | ✅ | build | 通過 |
 | 一步一行動 + 350ms setTimeout | ✅ | scheduler 測試 15/15 | 通過 |
@@ -435,7 +436,7 @@ value = max(0,
 | 統一 ValueContext 契約（need/benefit/urgency/risk/cost/distance/personality） | P0 | AI | — | 建設已採用第一階段欄位；攻擊/事件候選仍待遷移 |
 | 建設候選動態價值（需求 + 效益 + 個性滲透） | ✅ 第一階段 | AI | — | `constructionValue.test.ts` 覆蓋個性、威脅、成本、距離與升級加成 |
 | 攻擊目標候選化（枚舉視野內生物 → 各自算價值） | ✅ 第一階段 | AI | — | `combatValue.ts` 依距離、傷害比例、目標血量、生存能力、等級與個性排序；後續補領域收益資料 |
-| 事件選項價值判斷 | P2 | AI | — | 從「第一個符合」改為「最高價值選項」 |
+| 事件選項價值判斷 | ✅ 第一階段 | AI | — | `eventValue.ts` 依金錢、聲望、道具、學習與敵對生成效果排序；同分保留原順序 |
 | 裝備/內功換裝效益評估 | P2 | AI | — | 換裝分數反映屬性提升幅度 |
 | 價值函數元件寫入 `[AI decision]` 日誌 | P1 | AI | — | 日誌含各維度分數，供 debug |
 | 候選枚舉抽成獨立純模組 | P3 | AI | — | `fuzzyInputs.ts` 不再內嵌枚舉邏輯 |
