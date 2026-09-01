@@ -73,8 +73,9 @@ export function evaluateSelfPreservation(
       healScore = Math.min(0.95, fuzzyAnd(f_urgency, f_effectiveness))
     }
 
-    // 取較高者：逃命 vs 用道具續命
-    const score = Math.max(retreatScore, healScore)
+    // 血量低且威脅相鄰時視為緊急自保，避免任務／建設分數壓過救命行動。
+    const emergencyScore = healthRatio < 0.5 && distToNearestThreat <= 1 ? 0.8 : 0
+    const score = Math.max(retreatScore, healScore, emergencyScore)
     if (healScore > retreatScore) {
       const result: GoalResult = {
         score,
@@ -458,7 +459,7 @@ function evaluateConstruction(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { materialRatio, canBuild, buildableBuilding, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint, visibleBaseIds, isAdjacentToBase } = inputs
+  const { materialRatio, canBuild, buildableBuilding, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint, visibleBaseIds, isAdjacentToBase, threatCountNearBase } = inputs
 
   // 無可見據點 → 分數 0
   if (visibleBaseIds.length === 0) {
@@ -477,7 +478,7 @@ function evaluateConstruction(
   }
 
   // 情境 B：建料滿 + 可建造
-  if (materialRatio >= 1 && canBuild && buildableBuilding && nearestBase) {
+  if (materialRatio >= 1 && canBuild && buildableBuilding && nearestBase && threatCountNearBase === 0) {
     // B1：已在據點旁 → 直接建造（高分）
     if (isAdjacentToBase) {
       const result: GoalResult = {
@@ -522,7 +523,7 @@ function evaluateConstruction(
   if (materialRatio < 1 && nearestResourcePoint && distToNearestResourcePoint < Infinity) {
     const f_materialUrgency = materialRatio <= 0.33 ? 1 : materialRatio <= 0.66 ? 0.4 : 0.1
     const result: GoalResult = {
-      score: 0.5 * f_materialUrgency,
+      score: 0.85 * f_materialUrgency,
       target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },
       distanceToTarget: distToNearestResourcePoint,
       context: { materialRatio, distToNearestResourcePoint, action: 'move-to-resource' },
@@ -787,20 +788,21 @@ function evaluateExecuteMission(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { hasMissionBoard, staminaRatio, materialRatio, feasibility } = inputs
+  const { hasMissionBoard, needsBaseVision, staminaRatio, materialRatio, feasibility } = inputs
 
   if (!hasMissionBoard) return { score: 0 }
   if (staminaRatio < 0.2) return { score: 0 }
   if (!feasibility.missionBaseId) return { score: 0 }
 
   // 建料充足時做任務的動機較低（已不需要金錢），建料不足時動機高
-  const f_needMaterials = materialRatio < 0.5 ? 0.7 : 0.4
+  const f_needMaterials = materialRatio < 0.5 ? 0.35 : 0.2
+  const score = needsBaseVision ? 0.95 : f_needMaterials
 
   const result: GoalResult = {
-    score: f_needMaterials,
+    score,
     target: { kind: 'use-facility', baseId: feasibility.missionBaseId, facilityType: 'mission' },
     distanceToTarget: feasibility.distToNearestActiveBase,
-    context: { materialRatio },
+    context: { materialRatio, needsBaseVision },
   }
 
   const actions = buildValidatedActionSequence('executeMission', result, state, player, dependencies)
@@ -847,10 +849,12 @@ function evaluateBuildDefense(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { buildableDefenseStructure, threatCountNearBase, materialRatio, staminaRatio, nearestBase } = inputs
+  const { buildableDefenseStructure, defenseTowerCount, threatCountNearBase, materialRatio, staminaRatio, nearestBase } = inputs
 
   if (!buildableDefenseStructure || !nearestBase) return { score: 0 }
   if (staminaRatio < 0.3 || materialRatio < 0.5) return { score: 0 }
+  const requiredTowerCount = Math.max(1, Math.ceil(threatCountNearBase / 2))
+  if (threatCountNearBase === 0 || defenseTowerCount >= requiredTowerCount) return { score: 0 }
 
   // 據點附近威脅越多 → 建造動機越高
   const f_threat = trapezoid(threatCountNearBase, 0, 1, 3, 5)
@@ -864,7 +868,7 @@ function evaluateBuildDefense(
     score: score * 0.7,
     target: { kind: 'defense-build', baseId: nearestBase.id, structureType: buildableDefenseStructure.type, position: nearestBase.position },
     distanceToTarget: inputs.feasibility.distToNearestActiveBase,
-    context: { structureName: buildableDefenseStructure.name, threatCountNearBase },
+    context: { structureName: buildableDefenseStructure.name, threatCountNearBase, defenseTowerCount, requiredTowerCount },
   }
 
   const actions = buildValidatedActionSequence('buildDefense', result, state, player, dependencies)

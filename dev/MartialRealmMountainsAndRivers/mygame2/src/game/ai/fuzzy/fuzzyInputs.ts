@@ -125,6 +125,8 @@ export interface FuzzyInputs {
   practiceableSkillAtGate: { gateId: string; skillId: string; name: string; position: Position } | undefined
   /** 附近據點是否有告示牌（可執行任務） */
   hasMissionBoard: boolean
+  /** 最近據點是否尚未完成首次告示牌任務（完成後解鎖永久視野） */
+  needsBaseVision: boolean
   /** 附近據點是否有醫療室（可就醫） */
   hasInfirmary: boolean
   /** 附近據點有工坊且裝備受損（可修理） */
@@ -139,6 +141,8 @@ export interface FuzzyInputs {
   buyableHealItem: { itemId: string; name: string; price: number } | undefined
   /** 可建造的防禦設施（材料夠 + rank 夠），取最近據點 */
   buildableDefenseStructure: { type: string; name: string } | undefined
+  /** 最近據點現有箭塔數量（含進階箭塔） */
+  defenseTowerCount: number
   /** 據點附近的威脅數量（曼哈頓 ≤ 5） */
   threatCountNearBase: number
   /** 是否與最近的 active 據點相鄰 */
@@ -352,6 +356,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
 
   // 告示牌任務 / 醫療室 / 修理工坊
   const hasMissionBoard = nearestBase != null && hasBuilding(nearestBase, 'board')
+  const needsBaseVision = nearestBase != null && nearestBase.discovered !== true
   const hasInfirmary = nearestBase != null && hasBuilding(nearestBase, 'infirmary')
   const hasWorkshopDamaged = nearestBase != null && hasBuilding(nearestBase, 'workshop')
     && getRepairSummary(player, nearestBase.buildings.find((b) => b.type === 'workshop')?.level ?? 1).equipmentCount > 0
@@ -366,6 +371,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
 
   // 防禦建設：找可建造的防禦設施
   const buildableDefenseStructure = findBuildableDefenseStructure(player, nearestBase)
+  const defenseTowerCount = nearestBase?.buildings.filter((building) => building.type === 'arrow-tower' || building.type === 'advanced-arrow-tower').length ?? 0
 
   // 據點附近威脅數（曼哈頓 ≤ 5）
   const threatCountNearBase = nearestBase
@@ -456,6 +462,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     learnableSkillAtGate,
     practiceableSkillAtGate,
     hasMissionBoard,
+    needsBaseVision,
     hasInfirmary,
     hasWorkshopDamaged,
     playerLevel,
@@ -463,6 +470,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     needsLeveling,
     buyableHealItem,
     buildableDefenseStructure,
+    defenseTowerCount,
     threatCountNearBase,
     isAdjacentToBase,
     killableCreature,
