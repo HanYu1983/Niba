@@ -67,16 +67,32 @@ function isValidSlot(slot: number): boolean {
 }
 
 function normalizeAiOrders(state: GameState): GameState {
-  if (!Array.isArray(state.aiOrders)) return state
+  const existingOrders = Array.isArray(state.aiOrders) ? state.aiOrders : []
+  let migratedLegacyOrder = false
+  const normalizedOrders = existingOrders.map((order) => {
+    const legacyOrder = order as unknown as { type?: string }
+    if (legacyOrder.type === 'decision-tree' || legacyOrder.type === 'graph-search') {
+      migratedLegacyOrder = true
+      return { ...order, type: 'fuzzy' as const }
+    }
+    return order
+  })
+  const orderedPlayerIds = new Set(normalizedOrders.map((order) => order.aiPlayerId))
+  const recoveredOrders = (Array.isArray(state.players) ? state.players : [])
+    .filter((player) => player.isAI === true && !orderedPlayerIds.has(player.id))
+    .map((player) => ({
+      id: `ai-order-fuzzy-${player.id}`,
+      type: 'fuzzy' as const,
+      aiPlayerId: player.id,
+      ...(player.aiPersonality ? { personality: player.aiPersonality } : {}),
+      priority: 50,
+      status: 'active' as const,
+    }))
+
+  if (recoveredOrders.length === 0 && !migratedLegacyOrder) return state
   return {
     ...state,
-    aiOrders: state.aiOrders.map((order) => {
-      const legacyOrder = order as unknown as { type?: string }
-      if (legacyOrder.type === 'decision-tree' || legacyOrder.type === 'graph-search') {
-        return { ...order, type: 'fuzzy' as const }
-      }
-      return order
-    }),
+    aiOrders: [...normalizedOrders, ...recoveredOrders],
   }
 }
 
