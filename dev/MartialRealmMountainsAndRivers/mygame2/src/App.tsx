@@ -21,7 +21,7 @@ import { ensureOfficialCharacters } from './game/characterRoster'
 import SkillTestPage from './components/SkillTestPage'
 import EditorApp from './editor/EditorApp'
 import { allExternalSkillCatalog } from './game/catalogs/martialHallSkillCatalog'
-import type { GameSettings } from './game/types'
+import type { AiPersonalityId, GameSettings } from './game/types'
 import { formatItemPointPickupResult } from './game/actionResultFormatters'
 import GameSaveModal from './components/GameSaveModal'
 import SystemCommandModal from './components/SystemCommandModal'
@@ -379,14 +379,8 @@ function App() {
         <StrategicCommandModal
           open={strategicCommandModalOpen}
           aiPlayers={gameState.players.filter((player) => player.isAI === true)}
-          players={gameState.players}
-          bases={gameState.bases}
-          orders={gameState.aiOrders ?? []}
-          constructionPlans={gameState.aiConstructionPlans ?? []}
           onClose={() => setStrategicCommandModalOpen(false)}
-          onSaveOrder={(order) => gameStore.setAiOrder(order)}
-          onDeleteOrder={(aiPlayerId, orderId) => gameStore.removeAiOrder(aiPlayerId, orderId)}
-          onSaveConstructionPlan={(plan) => gameStore.setAiConstructionPlan(plan)}
+          onSavePersonality={(playerId, personality: AiPersonalityId) => gameStore.setAiPersonality(playerId, personality)}
         />
 
         <GameSaveModal

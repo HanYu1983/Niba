@@ -476,6 +476,22 @@ export const gameStore = {
       : { ok: false, reason: '相同的 AI 命令已存在。' }
   },
 
+  setAiPersonality: (playerId: string, personality: PlayerState['aiPersonality']): ActionOutcome => {
+    let updated = false
+    updateGameState((state) => {
+      const player = state.players.find((candidate) => candidate.id === playerId && candidate.isAI === true)
+      if (!player || !personality) return state
+      updated = true
+      return {
+        ...state,
+        players: state.players.map((candidate) => candidate.id === playerId
+          ? { ...candidate, aiPersonality: personality }
+          : candidate),
+      }
+    })
+    return updated ? { ok: true } : { ok: false, reason: '指定的玩家不是 AI 玩家。' }
+  },
+
   removeAiOrder: (aiPlayerId: string, orderId: string): ActionOutcome => {
     let removed = false
     updateGameState((state) => {
