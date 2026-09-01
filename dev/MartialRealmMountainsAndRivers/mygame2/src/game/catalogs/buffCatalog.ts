@@ -132,7 +132,7 @@ export const buffCatalog: BuffDefinition[] = [
     attributeModifiers: { agility: 2, insight: 1 },
   },
   { id: 'golden-body-critical-boost', name: '暴擊強化', description: '暴擊率 +15%。', duration: 'persistent', category: 'buff', criticalRateBonus: 15, mapMarker: true, mapMarkerClass: 'golden-body-critical' },
-  { id: 'swift-wind-movement', name: '疾行', description: '地形消耗一律視為草地。', duration: 'persistent', category: 'buff', terrainCostOverride: 2, mapMarker: true, mapMarkerClass: 'swift-wind' },
+  { id: 'swift-wind-movement', name: '疾行', description: '所有地形移動消耗 -2（最低 1）。', duration: 'persistent', category: 'buff', terrainCostReduction: 2, mapMarker: true, mapMarkerClass: 'swift-wind' },
   { id: 'swift-wind-attack-focus', name: '追風攻勢', description: '普通攻擊體力消耗 -2。', duration: 'persistent', category: 'buff', basicAttackStaminaCostReduction: 2 },
   { id: 'void-spirit-return-qi', name: '迴氣悟道', description: '功法經驗獲得 +20%。', duration: 'persistent', category: 'buff', skillExpGainPercent: 0.2 },
   // 悟性輔助功法（靈氣型外功）：天眼望氣

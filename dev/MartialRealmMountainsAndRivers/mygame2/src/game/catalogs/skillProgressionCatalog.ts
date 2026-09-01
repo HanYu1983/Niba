@@ -82,7 +82,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
     }],
     damage: [{ name: '追風腿', description: '以身法帶動腿勁，朝 2 格內單一敵人造成傷害。', innerPowerCost: 6, range: 2 }],
     aura: [
-      { name: '疾行', description: '地形消耗一律視為草地。', passiveBuffIds: ['swift-wind-movement'], insightCost: 4 },
+      { name: '疾行', description: '所有地形移動消耗 -2（最低 1）。', passiveBuffIds: ['swift-wind-movement'], insightCost: 4 },
       { name: '林間步', description: '進入森林時，移動消耗降為 2。', passiveBuffIds: ['forest-step'] },
     ],
     enhancement: [],

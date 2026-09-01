@@ -372,7 +372,15 @@ export function getTerrainStaminaCost(terrain: TerrainType, player?: PlayerState
   }
 
   if (!Number.isFinite(baseCost)) return baseCost
-  if (activeDefinitions.some((definition) => definition.id === 'swift-wind-movement')) return 2
+
+  // 所有地形消耗減免（疾行）：直接從基礎消耗扣除，最低為 1。
+  if (player) {
+    const reduction = activeDefinitions.reduce(
+      (total, definition) => total + (definition.terrainCostReduction ?? 0),
+      0,
+    )
+    if (reduction > 0) return Math.max(1, baseCost - reduction)
+  }
 
   const multiplier = player
     ? activeDefinitions.reduce((total, definition) => {

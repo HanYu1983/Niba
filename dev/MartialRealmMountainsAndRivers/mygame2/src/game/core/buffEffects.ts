@@ -24,6 +24,8 @@ export type BuffEffects = {
   terrainCostOverride?: number
   /** 逐地形消耗覆寫（多地形版）。 */
   terrainCostOverrides?: Partial<Record<TerrainType, number>>
+  /** 所有地形消耗減免（直接從基礎消耗扣除，最低為 1）。 */
+  terrainCostReduction?: number
   /** 最大血量傷害比例。 */
   maxHealthDamagePercent?: number
   /** 反傷比例。 */
@@ -115,6 +117,7 @@ export const BuffEffectsKeys = [
   'criticalRateBonus',
   'terrainCostOverride',
   'terrainCostOverrides',
+  'terrainCostReduction',
   'maxHealthDamagePercent',
   'reflectionPercent',
   'attributeMultiplier',

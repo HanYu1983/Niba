@@ -118,6 +118,17 @@ describe('地形體力消耗', () => {
     const player = makePlayer()
     expect(canTraverseTerrain('wall', player)).toBe(false)
   })
+
+  it('疾行：所有地形移動消耗 -2（最低 1）', () => {
+    const player = makePlayer({ buffs: [{ id: 'b1', definitionId: 'swift-wind-movement', sourceId: 'test', remainingRounds: null }] })
+    // 平原 2-2=0 → 最低 1；森林 4-2=2；水域 6-2=4；山嶽 5-2=3；荒漠 3-2=1；官道 1-2 → 最低 1。
+    expect(getTerrainStaminaCost('plain', player)).toBe(1)
+    expect(getTerrainStaminaCost('forest', player)).toBe(2)
+    expect(getTerrainStaminaCost('water', player)).toBe(4)
+    expect(getTerrainStaminaCost('mountain', player)).toBe(3)
+    expect(getTerrainStaminaCost('desert', player)).toBe(1)
+    expect(getTerrainStaminaCost('road', player)).toBe(1)
+  })
 })
 
 describe('類別 1：資源轉換 Buff', () => {
