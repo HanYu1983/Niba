@@ -13,10 +13,15 @@ import { canTransportPlayer } from '../../rules/transportRules'
 import { getAiActionStaminaCost } from '../../rules/actionCostRules'
 
 const previousMovePositions = new Map<string, Position>()
+const recentMoveOrigins = new Map<string, Position[]>()
+const RECENT_MOVE_HISTORY_LIMIT = 8
 
 /** 記住 AI 上一步移動前的位置，供下一次尋路避免立即折返。 */
 export function rememberAiMoveOrigin(playerId: string, position: Position): void {
   previousMovePositions.set(playerId, position)
+  const history = recentMoveOrigins.get(playerId) ?? []
+  const nextHistory = [...history, position].slice(-RECENT_MOVE_HISTORY_LIMIT)
+  recentMoveOrigins.set(playerId, nextHistory)
 }
 
 /**
@@ -84,8 +89,11 @@ function findClosestReachablePosition(
   if (adjacents.length === 0) return player.position
 
   const previousPosition = previousMovePositions.get(player.id)
-  const forwardCandidates = previousPosition
-    ? adjacents.filter((candidate) => candidate.position.row !== previousPosition.row || candidate.position.column !== previousPosition.column)
+  const recentPositions = recentMoveOrigins.get(player.id) ?? (previousPosition ? [previousPosition] : [])
+  const forwardCandidates = recentPositions.length > 0
+    ? adjacents.filter((candidate) => !recentPositions.some((position) =>
+      candidate.position.row === position.row && candidate.position.column === position.column,
+    ))
     : adjacents
   const candidates = forwardCandidates.length > 0 ? forwardCandidates : adjacents
 
@@ -205,6 +213,9 @@ function getBaseTransportTargetId(result: GoalResult): string | undefined {
     return result.target.baseId
   }
   if (result.target?.kind === 'learn-skill' && result.target.baseId) return result.target.baseId
+  if (result.target?.kind === 'explore' && result.context?.target === 'undiscovered-base' && typeof result.context.targetBaseId === 'string') {
+    return result.context.targetBaseId
+  }
   return typeof result.context?.baseId === 'string' ? result.context.baseId : undefined
 }
 
@@ -221,6 +232,11 @@ function preferWaystationTransport(
   const transport = { type: 'transport' as const, actor: first.actor, targetId, reason: `驛站：傳送至據點 ${targetId}（比步行更快）` }
   const transportCheck = canTransportPlayer(state, player.id, targetId)
   if (!transportCheck.ok) return actions
+
+  // 探索未發現據點時，驛站是明確的策略優先項；步行只在驛站不可用時退回。
+  if (result.target?.kind === 'explore' && result.context?.target === 'undiscovered-base') {
+    return [transport, ...actions.slice(1)]
+  }
 
   const walkingCost = getAiActionStaminaCost(state, first)
   const transportCost = getAiActionStaminaCost(state, transport)

@@ -296,11 +296,22 @@ function evaluateAllocateAttributes(
 // ─── useItem ────────────────────────────────────────────────────
 // 有值得用的道具 → 高分
 
-function evaluateUseItem(inputs: FuzzyInputs): GoalResult {
+function evaluateUseItem(
+  inputs: FuzzyInputs,
+  state?: GameState,
+  player?: PlayerState,
+  dependencies?: ExecuteAiActionDependencies,
+): GoalResult {
   const { bestItemToUse, healthRatio, innerPowerRatio } = inputs
 
   if (!bestItemToUse) {
     return { score: 0 }
+  }
+
+  const withExecutableAction = (result: GoalResult): GoalResult => {
+    if (!state || !player || !dependencies) return result
+    const actions = buildValidatedActionSequence('useItem', result, state, player, dependencies)
+    return actions.length > 0 ? { ...result, actions } : { score: 0 }
   }
 
   // 回血道具：恢復量 / 缺血量，佔比越高分數越高；可完全恢復時 score = 1
@@ -309,11 +320,11 @@ function evaluateUseItem(inputs: FuzzyInputs): GoalResult {
     if (missingHealth <= 0) return { score: 0 }
     const restoreRatio = bestItemToUse.effectValue / (missingHealth * 100)
     const score = restoreRatio >= 1 ? 1 : restoreRatio
-    return {
+    return withExecutableAction({
       score,
       target: { kind: 'use-item', itemId: bestItemToUse.id },
       context: { effect: bestItemToUse.effect, name: bestItemToUse.name, effectValue: bestItemToUse.effectValue },
-    }
+    })
   }
 
   // 回內力道具：恢復量 / 缺內力量，佔比越高分數越高；可完全恢復時 score = 1
@@ -322,28 +333,28 @@ function evaluateUseItem(inputs: FuzzyInputs): GoalResult {
     if (missingInnerPower <= 0) return { score: 0 }
     const restoreRatio = bestItemToUse.effectValue / (missingInnerPower * 100)
     const score = restoreRatio >= 1 ? 1 : restoreRatio
-    return {
+    return withExecutableAction({
       score,
       target: { kind: 'use-item', itemId: bestItemToUse.id },
       context: { effect: bestItemToUse.effect, name: bestItemToUse.name, effectValue: bestItemToUse.effectValue },
-    }
+    })
   }
 
   // 回體力道具：固定分數
   if (bestItemToUse.effect === 'stamina') {
-    return {
+    return withExecutableAction({
       score: 0.6,
       target: { kind: 'use-item', itemId: bestItemToUse.id },
       context: { effect: bestItemToUse.effect, name: bestItemToUse.name },
-    }
+    })
   }
 
   // 其他道具：中等分數
-  return {
+  return withExecutableAction({
     score: 0.4,
     target: { kind: 'use-item', itemId: bestItemToUse.id },
     context: { effect: bestItemToUse.effect, name: bestItemToUse.name },
-  }
+  })
 }
 
 // ─── equipEquipment ────────────────────────────────────────────
@@ -390,7 +401,7 @@ export function evaluateAllGoals(
     exploration: evaluateExploration(inputs, state, player, dependencies),
     engageCombat: evaluateEngageCombat(inputs, state, player, dependencies),
     allocateAttributes: evaluateAllocateAttributes(inputs, state, player, dependencies),
-    useItem: evaluateUseItem(inputs),
+    useItem: evaluateUseItem(inputs, state, player, dependencies),
     equipEquipment: evaluateEquipEquipment(inputs, state, player, dependencies),
     attackNest: evaluateAttackNest(inputs, state, player, dependencies),
     equipInnerSkill: evaluateEquipInnerSkill(inputs, state, player, dependencies),
@@ -488,7 +499,14 @@ function evaluateConstruction(
   const candidates = constructionCandidates
     .filter((candidate) => threatCountNearBase === 0 || candidate.kind === 'upgrade' || candidate.buildingType === 'arrow-tower' || candidate.buildingType === 'advanced-arrow-tower')
     .sort((a, b) => b.value - a.value)
-  const bestCandidate = candidates[0]
+  const shouldPrepareUndiscoveredBase = isAdjacentToBase
+    && threatCountNearBase === 0
+    && nearestUndiscoveredBase != null
+    && nearestUndiscoveredBase.id !== nearestBase?.id
+  const waystationCandidate = shouldPrepareUndiscoveredBase
+    ? constructionCandidates.find((candidate) => candidate.kind === 'build' && candidate.buildingType === 'waystation')
+    : undefined
+  const bestCandidate = waystationCandidate ?? candidates[0]
 
   if (bestCandidate && nearestBase && materialRatio > 0) {
     const isWaystationAccessPlan = bestCandidate.buildingType === 'waystation'
@@ -599,6 +617,7 @@ function evaluateExploration(
     context: {
       unexploredInvisibleCells,
       target: nearestUndiscoveredBase ? 'undiscovered-base' : 'unexplored-cell',
+      targetBaseId: nearestUndiscoveredBase?.id,
       targetBasePosition: nearestUndiscoveredBase?.position,
     },
   }

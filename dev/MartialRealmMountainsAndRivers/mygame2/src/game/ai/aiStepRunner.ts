@@ -167,6 +167,13 @@ function recordAiStepEvent(
   action: AiAction,
   outcome: { ok: boolean; reason?: string },
 ): void {
+  console.info('[AI action]', {
+    round,
+    player: { id: playerId, name: playerName },
+    action,
+    result: outcome.ok ? 'succeeded' : 'failed',
+    reason: action.reason || outcome.reason,
+  })
   const event: AiActionEvent = createAiActionEvent({
     round,
     actor: { id: playerId, kind: 'player', name: playerName },
@@ -191,11 +198,57 @@ function logAiDecision(
   player: { id: string; name: string; position: { row: number; column: number } },
   order: { type: string; personality?: string; playerId?: string; maxDistance?: number },
   inputs: ReturnType<typeof computeFuzzyInputs>,
-  goalResults: Record<string, { score: number; target?: unknown; context?: unknown }>,
+  goalResults: Record<string, { score: number; target?: unknown; context?: unknown; actions?: AiAction[] }>,
   selectedGoal: string,
   threshold: number,
   actions: AiAction[],
 ): void {
+  const playerState = state.players.find((candidate) => candidate.id === player.id)
+  const topGoals = Object.entries(goalResults)
+    .sort((first, second) => second[1].score - first[1].score)
+    .slice(0, 5)
+    .map(([goal, result]) => ({
+      goal,
+      score: Number(result.score.toFixed(3)),
+      executable: (result.actions?.length ?? 0) > 0,
+      actions: result.actions?.map((action) => action.type) ?? [],
+    }))
+
+  console.info('[AI decision core]', {
+    round: state.round,
+    player: { id: player.id, name: player.name, position: player.position },
+    personality: order.personality ?? 'balanced',
+    status: {
+      stamina: playerState?.stamina,
+      health: playerState?.health,
+      level: playerState?.level,
+      turnEnded: playerState?.turnEnded,
+    },
+    perception: {
+      staminaRatio: Number(inputs.staminaRatio.toFixed(3)),
+      healthRatio: Number(inputs.healthRatio.toFixed(3)),
+      nearestThreatDistance: inputs.distToNearestThreat,
+      nearestBase: inputs.nearestBase?.id,
+      nearestUndiscoveredBase: inputs.nearestUndiscoveredBase?.id,
+      unexploredInvisibleCells: inputs.unexploredInvisibleCells,
+      reachableItemCount: inputs.reachableItemCount,
+      reachableResourceCount: inputs.reachableResourceCount,
+    },
+    topGoals,
+    selected: {
+      goal: selectedGoal,
+      score: Number((goalResults[selectedGoal]?.score ?? 0).toFixed(3)),
+      threshold,
+      context: goalResults[selectedGoal]?.context,
+      actions: actions.map((action) => ({
+        type: action.type,
+        destination: action.type === 'move' ? action.destination : undefined,
+        target: 'target' in action ? action.target : undefined,
+        reason: action.reason,
+      })),
+    },
+  })
+
   console.info('[AI decision]', {
     round: state.round,
     player: { id: player.id, name: player.name, position: player.position },
@@ -337,6 +390,14 @@ function runAiStepLoop(
     }
     const validation = validateAiAction(deps.getState(), action)
     if (!validation.valid) {
+      recordAiStepEvent(
+        deps.updateGameState,
+        deps.getState().round,
+        playerId,
+        currentPlayer.name,
+        action,
+        { ok: false, reason: `保底驗證失敗（代碼 bug）：${validation.reason}` },
+      )
       exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
       continue
     }
@@ -687,14 +748,17 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
     let actions: AiAction[] = []
     let goalFound = false
     let normalCandidate: typeof rankedGoals[number] | undefined
+    let fallbackMovementCandidate: typeof rankedGoals[number] | undefined
 
     for (const candidate of rankedGoals) {
       const threshold = getAiGoalConstraints(order.personality).goalThresholds?.[candidate.goal] ?? MIN_THRESHOLD
-      if (candidate.result.score < threshold) break
-
       const candidateActions = candidate.result.actions
       if (!candidateActions || candidateActions.length === 0) continue
       if (candidateActions.every((a) => a.type === 'hold')) continue
+      if (!fallbackMovementCandidate && candidateActions.some((action) => isMovementAction(action))) {
+        fallbackMovementCandidate = candidate
+      }
+      if (candidate.result.score < threshold) continue
 
       normalCandidate = candidate
       break
@@ -706,7 +770,7 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
       rankedGoals,
       getAiGoalConstraints(order.personality).goalThresholds ?? {},
       goalResults,
-      normalCandidate,
+      normalCandidate ?? fallbackMovementCandidate,
     )
     if (selectedCandidate) {
       actions = selectedCandidate.result.actions ?? []
@@ -720,10 +784,16 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
 
     if (!goalFound) {
       const highest = rankedGoals[0]
+      const diagnostics = Object.entries(goalResults)
+        .filter(([, result]) => result.score > 0 || (result.actions?.length ?? 0) > 0)
+        .sort((first, second) => second[1].score - first[1].score)
+        .slice(0, 4)
+        .map(([goal, result]) => `${goal}=${result.score.toFixed(2)}:${result.actions?.map((action) => action.type).join('|') || 'none'}`)
+        .join(', ')
       movementCommitments.delete(playerId)
       return {
         endTurnReason: highest
-            ? `模糊策略：${highest.goal} 分數 ${highest.result.score.toFixed(2)}，但目前沒有可執行 action，結束回合。`
+            ? `模糊策略：${highest.goal} 分數 ${highest.result.score.toFixed(2)}，但目前沒有可執行 action，結束回合。候選診斷：${diagnostics || '所有 goal 分數與 action 都為 0'}`
             : '模糊策略：沒有可執行 action，結束回合。',
       }
     }
