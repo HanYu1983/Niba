@@ -983,8 +983,10 @@ function evaluatePracticeSkill(
   if (!feasibility.canReachNearestGate) return { score: 0 }
   if (staminaRatio < 0.3) return { score: 0 }
 
-  // 等級落後時練功優先度提升
-  const baseScore = needsLeveling ? 0.6 : 0.4
+  // 練功升的是「功法等級」，不是角色等級。角色 Lv 靠擊殺 XP。
+  // 因此練功永遠不應壓過「可有效清怪」（兩回殺 0.55 / 一回殺 0.85+）：
+  // 有可打之怪時要清怪優先，才不會把體力耗在練功而錯失升級需要的擊殺 XP。
+  const baseScore = needsLeveling ? 0.45 : 0.35
   const f_stamina = trapezoid(staminaRatio, 0.3, 0.5, 1, 1)
 
   const result: GoalResult = {
