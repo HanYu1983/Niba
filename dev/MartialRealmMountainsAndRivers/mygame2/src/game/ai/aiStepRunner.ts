@@ -706,7 +706,17 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
     }
 
     if (!goalFound) {
-      return { exitReason: `所有目標分數過低或無法產生有效行動（最高 ${rankedGoals[0]?.goal} = ${rankedGoals[0]?.result.score.toFixed(2)}）` }
+      const highest = rankedGoals[0]
+      movementCommitments.delete(playerId)
+      return {
+        actions: [{
+          type: 'end-turn',
+          actor: { id: playerId, kind: 'player' },
+          reason: highest
+            ? `模糊策略：${highest.goal} 分數 ${highest.result.score.toFixed(2)}，但目前沒有可執行 action，結束回合。`
+            : '模糊策略：沒有可執行 action，結束回合。',
+        }],
+      }
     }
     return { actions }
   })

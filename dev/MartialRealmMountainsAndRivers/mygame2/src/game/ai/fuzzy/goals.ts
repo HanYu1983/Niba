@@ -594,6 +594,7 @@ function evaluateExploration(
     context: {
       unexploredInvisibleCells,
       target: nearestUndiscoveredBase ? 'undiscovered-base' : 'unexplored-cell',
+      targetBasePosition: nearestUndiscoveredBase?.position,
     },
   }
 

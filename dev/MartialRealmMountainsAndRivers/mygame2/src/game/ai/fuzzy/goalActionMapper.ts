@@ -58,7 +58,12 @@ function buildCostMapFrom(
  * 從玩家的相鄰可達格中，找出沿最短路徑最接近目標的格子。
  * 使用 Dijkstra 從目標反向建最短路徑樹，取代 manhattan 距離。
  */
-function findClosestReachablePosition(state: GameState, player: PlayerState, targetPosition: { row: number; column: number }): { row: number; column: number } {
+function findClosestReachablePosition(
+  state: GameState,
+  player: PlayerState,
+  targetPosition: { row: number; column: number },
+  approachPositions?: Position[],
+): { row: number; column: number } {
   const reachable = collectReachableCells(state, player)
   if (reachable.length === 0) return player.position
 
@@ -84,8 +89,15 @@ function findClosestReachablePosition(state: GameState, player: PlayerState, tar
     : adjacents
   const candidates = forwardCandidates.length > 0 ? forwardCandidates : adjacents
 
-  // 從目標位置建最短路徑樹
-  const targetCosts = buildCostMapFrom(state, targetPosition, player)
+  // 從目標位置或目標周邊可站立格建最短路徑樹。
+  // 據點/門派據點中心不可站立時，應以其相鄰格作為真正的導航目標。
+  const targetCosts = new Map<string, number>()
+  for (const approachPosition of approachPositions ?? [targetPosition]) {
+    for (const [cellId, cost] of buildCostMapFrom(state, approachPosition, player)) {
+      const previous = targetCosts.get(cellId)
+      if (previous === undefined || cost < previous) targetCosts.set(cellId, cost)
+    }
+  }
 
   // 從相鄰格中選「沿最短路徑最接近目標」的格子
   const best = candidates.reduce((best, c) => {
@@ -169,6 +181,13 @@ export function buildValidatedActionSequence(
     player,
   )
   if (actions.length === 0) return []
+
+  // 目前位置不是移動；避免被佔據的據點中心或不可達目標讓 AI 反覆產生原地 move。
+  if (actions.some((action) => action.type === 'move'
+    && action.destination.row === player.position.row
+    && action.destination.column === player.position.column)) {
+    return []
+  }
 
   let current = state
   for (const action of actions) {
@@ -569,7 +588,17 @@ function buildExplorationActions(
   player: PlayerState,
 ): AiAction[] {
   if (result.target?.kind === 'explore') {
-    const moveDest = findClosestReachablePosition(state, player, result.target.position)
+    const basePosition = result.context?.target === 'undiscovered-base'
+      && result.context.targetBasePosition
+      && typeof result.context.targetBasePosition === 'object'
+      ? result.context.targetBasePosition as Position
+      : undefined
+    const moveDest = findClosestReachablePosition(
+      state,
+      player,
+      result.target.position,
+      basePosition ? getAdjacentPositions(basePosition) : undefined,
+    )
     if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
       return [{
         type: 'hold',
