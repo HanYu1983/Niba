@@ -41,7 +41,7 @@ function AttackPreviewModal({ preview, onConfirm, onCancel }: AttackPreviewModal
                 : []),
               ...(preview.elementInteraction ? [{ label: '五行相剋', value: preview.elementInteraction }] : []),
               ...(preview.terrainResonance ? [{ label: '天地共鳴', value: preview.terrainResonance }] : []),
-              { label: '目標血量', value: `${preview.targetHealth} / ${preview.targetMaxHealth}` },
+              { label: '目標血量', value: `${Math.round(preview.targetHealth)} / ${Math.round(preview.targetMaxHealth)}` },
             ]}
           />
         </Flex>

@@ -50,7 +50,7 @@ export function formatAttackResult(result: AttackExecutionResult): ActionResult 
       ...(result.criticalRate > 0 ? [`普通攻擊暴擊率 ${result.criticalRate}%`] : []),
       result.defeated
         ? result.targetType === 'nest' ? '巢穴已摧毀' : '目標已被擊敗'
-        : `目標剩餘血量 ${result.nextHealth} / ${result.maxHealth}`,
+        : `目標剩餘血量 ${Math.round(result.nextHealth)} / ${Math.round(result.maxHealth)}`,
       ...(result.experienceReward ? [`玩家經驗 +${result.experienceReward}`] : []),
       ...(result.moneyReward ? [`獲得金錢 +${result.moneyReward}`] : []),
       ...(result.levelsGained && result.levelsGained > 0
@@ -125,11 +125,11 @@ export function formatItemBurstResult(result: ItemBurstExecutionResult): ActionR
     title: '道具攻擊結果',
     message: `${result.playerName} 使用 ${result.itemName} 攻擊 ${result.targetName}。`,
     rewards: [
-      `造成傷害 ${result.damage}`,
+      `造成傷害 ${Math.round(result.damage)}`,
       ...(result.element && result.targetType === 'creature' ? [`屬性：${getElementName(result.element as SchoolElement | undefined)}`] : []),
       result.defeated
         ? result.targetType === 'nest' ? '巢穴已摧毀' : '目標已被擊敗'
-        : `目標剩餘血量 ${result.nextHealth} / ${result.maxHealth}`,
+        : `目標剩餘血量 ${Math.round(result.nextHealth)} / ${Math.round(result.maxHealth)}`,
       ...(result.experienceReward ? [`玩家經驗 +${result.experienceReward}`] : []),
       ...(result.loot ? [`掉落：${formatLootLabel(result.loot)}`] : []),
       ...(result.moneyReward ? [`獲得金錢 +${result.moneyReward}`] : []),
