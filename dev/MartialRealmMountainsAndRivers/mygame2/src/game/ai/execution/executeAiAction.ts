@@ -43,7 +43,7 @@ function resolveAiExplorationEvent(state: GameState, playerId: string): GameStat
     .map((candidate, index) => ({
       candidate,
       index,
-      value: computeEventChoiceValue({ effects: candidate.effects, playerMoney: player.money }),
+      value: computeEventChoiceValue({ effects: candidate.effects, playerMoney: player.money, personality: player.aiPersonality }),
     }))
     .sort((first, second) => second.value - first.value || first.index - second.index)[0]?.candidate
   if (!choice) return state

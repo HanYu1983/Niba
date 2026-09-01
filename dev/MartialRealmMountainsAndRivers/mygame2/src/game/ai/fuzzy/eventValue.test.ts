@@ -30,4 +30,26 @@ describe('computeEventChoiceValue', () => {
       effects: [{ type: 'spawn-creature', creatureId: 'creature-1' }],
     })).toBe(0)
   })
+
+  it('經營型提高金錢收益事件的價值', () => {
+    expect(computeEventChoiceValue({
+      ...context,
+      effects: [{ type: 'money', amount: 20 }],
+      personality: 'economist',
+    })).toBeGreaterThan(computeEventChoiceValue({
+      ...context,
+      effects: [{ type: 'money', amount: 20 }],
+    }))
+  })
+
+  it('修煉型提高學習技能事件的價值', () => {
+    expect(computeEventChoiceValue({
+      ...context,
+      effects: [{ type: 'learn-skill', skillType: 'inner' }],
+      personality: 'scholar',
+    })).toBeGreaterThan(computeEventChoiceValue({
+      ...context,
+      effects: [{ type: 'learn-skill', skillType: 'inner' }],
+    }))
+  })
 })

@@ -1,9 +1,11 @@
 import type { EventEffect } from '../../events/eventCatalog'
+import type { AiPersonalityId } from '../../types/ai'
 import { clampValue, computeUnifiedValue, evaluateUnifiedValue, type ValueEvaluation } from './valueContext'
 
 export type EventValueContext = {
   effects: EventEffect[]
   playerMoney: number
+  personality?: AiPersonalityId
 }
 
 /** 估算事件選項的直接收益；需求合法性仍由事件規則層負責。 */
@@ -35,7 +37,10 @@ export function evaluateEventChoiceValue(context: EventValueContext): ValueEvalu
     risk: clampValue(-score),
     cost: 0,
     distance: 0,
-    personalityWeight: 1,
+    personalityWeight: context.personality === 'economist' ? 1.1
+      : context.personality === 'scholar' && context.effects.some((effect) => effect.type === 'learn-skill') ? 1.15
+        : context.personality === 'cautious' ? 0.95
+          : 1,
   })
 }
 
