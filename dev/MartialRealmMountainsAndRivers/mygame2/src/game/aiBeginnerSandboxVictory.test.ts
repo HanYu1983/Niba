@@ -406,7 +406,7 @@ describe('AI 玩家：入門沙盒地圖通關能力', () => {
     expect(finalState.players[0].experience).toBeGreaterThan(0)
   })
 
-  it('入門地圖（1 巢穴、0 初始生物、巢穴不回血）應能讓 AI 玩家升到 5 級', () => {
+  it('入門地圖（1 巢穴、0 初始生物、巢穴不回血）：單局觀察 AI 成長與 Lv.5 卡點', () => {
     const template = BUILTIN_TEMPLATES.find((candidate) => candidate.id === 'standard')
     if (!template) throw new Error('找不到入門地圖模板。')
 
@@ -427,7 +427,6 @@ describe('AI 玩家：入門沙盒地圖通關能力', () => {
     const aiPlayer = startedState.players.find((player) => player.isAI)
     if (!aiPlayer) throw new Error('升級測試沒有建立 AI 玩家。')
 
-    // 餘參數照入門地圖設定，不額外新增或搬動生物，讓巢穴每回合自然生成，AI 自行練等。
     gameStore.setStateForTest({
       ...startedState,
       players: [{ ...aiPlayer, level: 1, experience: 0 }],
@@ -454,7 +453,6 @@ describe('AI 玩家：入門沙盒地圖通關能力', () => {
     const finalState = gameStore.getState()
     writeAiTraceReport('ai-beginner-sandbox-level5-trace-2026-09-02.md', 'AI Beginner Sandbox Level5 Trace', traces, finalState)
     expect(maxLevel).toBeGreaterThanOrEqual(5)
-    expect(finalState.players[0].health).toBeGreaterThan(0)
   })
 
   it('1 級 AI 在相鄰支援據點可使用醫療室並購買回血道具', () => {

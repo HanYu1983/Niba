@@ -7,6 +7,8 @@ import { buildValidatedActionSequence } from './goalActionMapper'
 import type { ExecuteAiActionDependencies } from '../execution/executeAiAction'
 import type { AiGoalConstraints } from './personality'
 import { canTransportPlayer } from '../../rules/transportRules'
+import { getInnerSkill, getSkillDamage, getSkillProgression } from '../../rules/skillRules'
+import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
 
 export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'prepareNest' | 'equipInnerSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense'
 
@@ -297,14 +299,36 @@ function evaluateAllocateAttributes(
     return { score: 0 }
   }
 
-  // 血量低 → 優先根骨（增加 maxHealth）
-  // 血量正常 → 70% 根骨 / 30% 臂力
-  const attribute = healthRatio < 0.5 ? 'constitution' : (Math.random() < 0.7 ? 'constitution' : 'armStrength')
+  // 依目前裝備內功的傷害公式配點：對五維各試「+1」，選能讓內功傷害提升最多的屬性。
+  // 若提升持平（如均衡型功法），血量健康時投資臂力/根骨均衡輸出，血量低時優先根骨保命。
+  let chosen: 'armStrength' | 'constitution' | 'agility' | 'innerEnergy' | 'insight' = 'armStrength'
+  if (state && player) {
+    const innerSkill = getInnerSkill(player.innerSkillId)
+    const effective = getEffectiveAttributesForPlayer(player)
+    const baseLevel = getSkillProgression(player, player.innerSkillId).level
+    const baseDamage = Math.floor(getSkillDamage(effective, innerSkill, baseLevel))
+    const attrKeys = ['armStrength', 'constitution', 'agility', 'innerEnergy', 'insight'] as const
+    const gains = attrKeys.map((key) => {
+      const next = { ...effective, [key]: effective[key] + 1 }
+      const damage = Math.floor(getSkillDamage(next, innerSkill, baseLevel))
+      return { key, gain: damage - baseDamage }
+    })
+    // 取傷害增量最大者；通常只有功法公式吃到的屬性才會有增量。
+    const best = gains.reduce((acc, curr) => (curr.gain > acc.gain ? curr : acc), gains[0])
+    if (best.gain > 0) {
+      chosen = best.key
+    } else {
+      // 功法傷害對任何單項配點都無提升（均衡型）→ 血量低優先根骨保命，否則均衡輸出（臂力/根骨）。
+      chosen = healthRatio < 0.5 ? 'constitution' : 'armStrength'
+    }
+  } else {
+    chosen = healthRatio < 0.5 ? 'constitution' : 'armStrength'
+  }
 
   const result: GoalResult = {
     score: 1,
-    target: { kind: 'allocate-attribute', attribute },
-    context: { availableAttributePoints, chosen: attribute },
+    target: { kind: 'allocate-attribute', attribute: chosen },
+    context: { availableAttributePoints, chosen },
   }
   if (!state || !player || !dependencies) return result
 
@@ -847,17 +871,22 @@ function evaluateLearnMartialSkill(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { learnableSkillAtHall, learnableSkillAtGate, staminaRatio, feasibility } = inputs
+  const { learnableSkillAtHall, learnableSkillAtGate, staminaRatio, feasibility, combatDamageRatio } = inputs
+
+  // 傷害不足因子：玩家目前一擊能打掉怪物多少血（0~1）。打不動時學招需求高；傷害足夠時學招權重降低，
+  // 避免玩家傷害夠了仍被「學招」鎖在門派往返、不去實戰。
+  const f_damageNeed = combatDamageRatio != null && combatDamageRatio > 0
+    ? trapezoid(combatDamageRatio, 0, 0, 0.5, 0.75)
+    : 1
 
   // 門派學招：需要可步行到達 + 體力夠 + 金錢夠
-  // 學招是「先變強再打」的長期投資，遠比立刻攻擊巢穴重要：固定高分壓過 attackNest，
-  // 且不因距離過度衰減（距離尚可用 move 累積，打不死時硬打巢穴反而是浪費）。
+  // 學招是「先變強再打」的投資：傷害不足時高分，傷害足夠時分數降低讓位給實戰/清巢穴。
   if (learnableSkillAtGate && feasibility.canReachNearestGate && feasibility.canAffordGateLearn && staminaRatio > 0.3) {
     const result: GoalResult = {
-      score: 1,
+      score: 1 * (0.6 + 0.4 * f_damageNeed),
       target: { kind: 'learn-skill', gateId: learnableSkillAtGate.gateId, skillType: learnableSkillAtGate.skillType, skillId: learnableSkillAtGate.skillId },
       distanceToTarget: undefined,
-      context: { source: 'gate', name: learnableSkillAtGate.name, cost: feasibility.learnGateCost },
+      context: { source: 'gate', name: learnableSkillAtGate.name, cost: feasibility.learnGateCost, damageRatio: combatDamageRatio },
     }
     const actions = buildValidatedActionSequence('learnMartialSkill', result, state, player, dependencies)
     if (actions.length === 0) return { score: 0 }
