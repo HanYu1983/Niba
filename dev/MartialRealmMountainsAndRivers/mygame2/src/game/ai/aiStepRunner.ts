@@ -272,6 +272,7 @@ function getAiPlayer(state: GameState, playerId: string) {
 /** 單一步驟的決策結果：要執行的行動序列，或直接結束迴圈的 exitReason。 */
 type AiLoopDecision =
   | { actions: AiAction[] }
+  | { endTurnReason: string }
   | { exitReason: string }
 
 /**
@@ -307,6 +308,18 @@ function runAiStepLoop(
     const currentPlayer = deps.getState().players.find((p) => p.id === playerId)!
 
     const decision = decide()
+    if ('endTurnReason' in decision) {
+      deps.endPlayerTurn(playerId)
+      recordAiStepEvent(
+        deps.updateGameState,
+        deps.getState().round,
+        playerId,
+        currentPlayer.name,
+        { type: 'end-turn', actor, reason: decision.endTurnReason },
+        { ok: true },
+      )
+      return { ok: true }
+    }
     if ('exitReason' in decision) {
       exitReason = decision.exitReason
       continue
@@ -709,13 +722,9 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
       const highest = rankedGoals[0]
       movementCommitments.delete(playerId)
       return {
-        actions: [{
-          type: 'end-turn',
-          actor: { id: playerId, kind: 'player' },
-          reason: highest
+        endTurnReason: highest
             ? `模糊策略：${highest.goal} 分數 ${highest.result.score.toFixed(2)}，但目前沒有可執行 action，結束回合。`
             : '模糊策略：沒有可執行 action，結束回合。',
-        }],
       }
     }
     return { actions }

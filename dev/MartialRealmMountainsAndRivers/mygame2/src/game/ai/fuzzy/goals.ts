@@ -835,8 +835,12 @@ function evaluateExecuteMission(
   if (staminaRatio < 0.2) return { score: 0 }
   if (!feasibility.missionBaseId) return { score: 0 }
 
-  // 建料充足時做任務的動機較低（已不需要金錢），建料不足時動機高
-  const f_needMaterials = materialRatio < 0.5 ? 0.35 : 0.2
+  // 建料充足時做任務的動機較低；但已在告示牌旁時，任務是零移動成本的可執行行動，
+  // 不應因分數四捨五入到門檻以下而讓 AI 永遠停在據點外。
+  const isAdjacentToMissionBase = feasibility.distToNearestActiveBase <= 1
+  const f_needMaterials = isAdjacentToMissionBase
+    ? 0.35
+    : materialRatio < 0.5 ? 0.35 : 0.2
   const score = needsBaseVision ? 0.95 : f_needMaterials
 
   const result: GoalResult = {
