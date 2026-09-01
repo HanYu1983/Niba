@@ -140,4 +140,11 @@ export type AiAction =
       itemId: string
       reason: string
     }
+  | {
+      type: 'buy-equipment'
+      actor: AiActorRef
+      baseId: string
+      equipmentId: string
+      reason: string
+    }
 

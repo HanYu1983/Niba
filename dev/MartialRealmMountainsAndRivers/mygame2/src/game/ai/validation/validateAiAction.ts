@@ -162,6 +162,7 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
     case 'use-facility':
     case 'defense-build':
     case 'buy-item':
+    case 'buy-equipment':
       return { valid: true }
   }
 }

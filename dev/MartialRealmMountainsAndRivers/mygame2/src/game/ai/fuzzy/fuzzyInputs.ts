@@ -18,6 +18,7 @@ import { defenseStructureCatalog } from '../../catalogs/defenseStructureCatalog'
 import { getRepairSummary, hasBuilding } from '../../rules/buildingRules'
 import { getMartialHallSkillCost } from '../../actions/martialHallActions'
 import { canUpgradeBuildingType, getBuildingLevel, getBuildingUpgradeResult, getEffectiveBuildingUpgradeCost } from '../../rules/buildingProgressionRules'
+import { canBuyEquipment, getShopBaseId } from '../../rules/shopRules'
 import type { AiPersonalityId } from '../../types/ai'
 import { evaluateConstructionCandidateValue } from './constructionValue'
 import { evaluateCombatCandidateValue } from './combatValue'
@@ -200,6 +201,8 @@ export interface FuzzyInputs {
   buyableHealItem: { itemId: string; name: string; price: number } | undefined
   /** 值得花錢買的實用道具（永久屬性丹優先，其次回血）+ 可達商店基地 */
   buyableUsefulItem: { itemId: string; name: string; price: number; effect: string } | undefined
+  /** 值得在商店購買的裝備（能改善配裝 + 買得起）+ 可達商店基地 */
+  buyableEquipment: { baseId: string; equipmentId: string; name: string; price: number; slot: string } | undefined
   /** 為最近巢穴準備的可購買元素爆發道具 */
   buyableNestBurstItem: { itemId: string; name: string; price: number; damage: number } | undefined
   /** 可建造的防禦設施（材料夠 + rank 夠），取最近據點 */
@@ -461,6 +464,8 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
   // 裝備相關：找出值得裝備的裝備
   const equipmentCandidates = findEquipmentCandidates(player, personality)
   const equipableEquipment = equipmentCandidates[0]
+  // 值得在商店購買的裝備（能改善配裝且買得起）
+  const buyableEquipment = findBuyableEquipment(state, player)
 
   // 巢穴相關：最近巢穴
   const nests = state.creatureNests.filter((n) => n.health > 0)
@@ -668,6 +673,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     needsLeveling,
     buyableHealItem,
     buyableUsefulItem,
+    buyableEquipment,
     buyableNestBurstItem,
     buildableDefenseStructure,
     defenseTowerCount,
@@ -783,6 +789,59 @@ function findEquipmentCandidates(player: PlayerState, personality?: AiPersonalit
   }
 
   return candidates.sort((first, second) => second.value - first.value)
+}
+
+/**
+ * 找到「值得買的裝備」：**武器/防具/配件三槽各補一件即可**。
+ *
+ * 持有邏輯：「有就停」——某一槽若已持有（已穿戴或背包有）任何裝備，
+ * 就不再花錢買該槽的更強裝備（更強裝備靠道具點/掉落取得，省下金錢）。
+ * 只有「完全空槽」時，才花錢買該槽的第一件。
+ */
+function findBuyableEquipment(
+  state: GameState,
+  player: PlayerState,
+): { baseId: string; equipmentId: string; name: string; price: number; slot: string } | undefined {
+  const baseId = getShopBaseId(state, player.id)
+  if (!baseId) return undefined
+  const base = state.bases.find((candidate) => candidate.id === baseId)
+  if (!base) return undefined
+  const money = player.money ?? 0
+  const loadout = player.equipmentLoadout
+  const inventory = player.equipmentInventory ?? []
+
+  const getDef = (equipmentId: string) => equipmentCatalog.find((e) => e.id === equipmentId)
+  const slotKeys: Array<{ slot: string; key: 'weaponInstanceId' | 'armorInstanceId' | 'accessoryInstanceId' }> = [
+    { slot: 'weapon', key: 'weaponInstanceId' },
+    { slot: 'armor', key: 'armorInstanceId' },
+    { slot: 'accessory', key: 'accessoryInstanceId' },
+  ]
+
+  // 該槽是否「已有任何裝備」（已穿戴或背包有）→ 有就停，不再買。
+  const slotHasEquipment = (slot: string): boolean => {
+    const equippedInstanceId = loadout?.[slotKeys.find((s) => s.slot === slot)?.key as keyof typeof loadout]
+    if (equippedInstanceId) return true
+    return inventory.some((inst) => {
+      const def = getDef(inst.equipmentId)
+      return def?.slot === slot && inst.durability > 0
+    })
+  }
+
+  let best: { baseId: string; equipmentId: string; name: string; price: number; slot: string } | undefined
+  // 先優先「完全空槽」的槽位（武器 > 防具 > 配件），買該槽最便宜的一件
+  for (const { slot } of slotKeys) {
+    if (slotHasEquipment(slot)) continue
+    const candidate = equipmentCatalog
+      .filter((equipment) => equipment.slot === slot && equipment.buyPrice > 0 && money >= equipment.buyPrice)
+      .sort((a, b) => a.buyPrice - b.buyPrice)[0]
+    if (!candidate) continue
+    const validation = canBuyEquipment(state, player.id, candidate.id)
+    if (!validation.ok) continue
+    if (best) continue // 一次只補一個空槽，依 slotKeys 優先序（武器優先）
+    best = { baseId, equipmentId: candidate.id, name: candidate.name, price: candidate.buyPrice, slot }
+  }
+
+  return best
 }
 
 function findInnerSkillCandidates(

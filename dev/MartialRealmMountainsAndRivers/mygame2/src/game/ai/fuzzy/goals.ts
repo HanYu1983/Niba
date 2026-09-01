@@ -10,7 +10,7 @@ import { canTransportPlayer } from '../../rules/transportRules'
 import { getInnerSkill, getSkillDamage, getSkillProgression } from '../../rules/skillRules'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
 
-export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'prepareNest' | 'equipInnerSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense' | 'buyConsumable'
+export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'prepareNest' | 'equipInnerSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense' | 'buyConsumable' | 'buyEquipment'
 
 export interface GoalResult {
   score: number
@@ -43,6 +43,7 @@ export type GoalTarget =
   | { kind: 'use-facility'; baseId: string; facilityType: 'heal' | 'mission' | 'repair' }
   | { kind: 'defense-build'; baseId: string; structureType: string; position: Position }
   | { kind: 'buy-item'; baseId: string; itemId: string }
+  | { kind: 'buy-equipment'; baseId: string; equipmentId: string }
 
 // ─── selfPreservation ──────────────────────────────────────────────
 
@@ -461,6 +462,7 @@ export function evaluateAllGoals(
     repairEquipment: evaluateRepairEquipment(inputs, state, player, dependencies),
     buildDefense: evaluateBuildDefense(inputs, state, player, dependencies),
     buyConsumable: evaluateBuyConsumable(inputs, state, player, dependencies),
+    buyEquipment: evaluateBuyEquipment(inputs, state, player, dependencies),
   }
 
   // 距離衰減：探索與巢穴攻略都以移動 action 表達距離成本，不重複扣分。
@@ -535,6 +537,33 @@ function evaluateBuyConsumable(
     context: { baseId: nearestBase.id, itemName: buyableUsefulItem.name, price: buyableUsefulItem.price, effect: buyableUsefulItem.effect },
   }
   const actions = buildValidatedActionSequence('buyConsumable', result, state, player, dependencies)
+  return actions.length > 0 ? { ...result, actions } : { score: 0 }
+}
+
+// ─── buyEquipment ──────────────────────────────────────────────────
+// 有值得買的裝備（改善配裝 + 買得起）→ 中高分，買下強化自身
+
+function evaluateBuyEquipment(
+  inputs: FuzzyInputs,
+  state?: GameState,
+  player?: PlayerState,
+  dependencies?: ExecuteAiActionDependencies,
+): GoalResult {
+  const { buyableEquipment, staminaRatio } = inputs
+  if (!state || !player || !dependencies || !buyableEquipment) return { score: 0 }
+  if (staminaRatio < 0.3) return { score: 0 }
+
+  const base = state.bases.find((candidate) => candidate.id === buyableEquipment.baseId)
+  if (!base) return { score: 0 }
+  const distance = manhattan(player.position, base.position)
+
+  const result: GoalResult = {
+    score: 0.62,
+    target: { kind: 'buy-equipment', baseId: buyableEquipment.baseId, equipmentId: buyableEquipment.equipmentId },
+    distanceToTarget: distance,
+    context: { baseId: buyableEquipment.baseId, equipmentName: buyableEquipment.name, price: buyableEquipment.price, slot: buyableEquipment.slot },
+  }
+  const actions = buildValidatedActionSequence('buyEquipment', result, state, player, dependencies)
   return actions.length > 0 ? { ...result, actions } : { score: 0 }
 }
 

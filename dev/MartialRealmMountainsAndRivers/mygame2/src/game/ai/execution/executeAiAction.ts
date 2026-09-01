@@ -14,7 +14,7 @@ import { learnSkillAtMartialHall } from '../../actions/martialHallActions'
 import { learnSkillAtSectGate, practiceSkillAtSectGate } from '../../actions/sectGateActions'
 import { useInfirmary as executeInfirmary, executeMission } from '../../actions/explorationActions'
 import { clearRuin } from '../../actions/ruinActions'
-import { buyItem } from '../../actions/shopActions'
+import { buyItem, buyEquipment } from '../../actions/shopActions'
 import { transportPlayerAction } from '../../actions/transportActions'
 import type { CombatActionDependencies } from '../../actions/combatActions'
 import { resolveExplorationEvent } from '../../actions/explorationActions'
@@ -160,6 +160,10 @@ export function executeAiAction(
     }
     case 'buy-item': {
       const result = buyItem(state, action.actor.id, action.itemId, 1)
+      return { state: result.state, result: result.result }
+    }
+    case 'buy-equipment': {
+      const result = buyEquipment(state, action.actor.id, action.equipmentId)
       return { state: result.state, result: result.result }
     }
     case 'hold':

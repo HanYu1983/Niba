@@ -13,7 +13,7 @@ const ALL_GOALS: GoalName[] = [
   'selfPreservation', 'collectItems', 'positioning', 'construction', 'exploration',
   'engageCombat', 'allocateAttributes', 'useItem', 'equipEquipment', 'attackNest',
   'equipInnerSkill', 'useInnerSkillAttack', 'learnMartialSkill', 'practiceSkill',
-  'executeMission', 'repairEquipment', 'buildDefense', 'buyConsumable',
+  'executeMission', 'repairEquipment', 'buildDefense', 'buyConsumable', 'buyEquipment',
 ]
 
 export const AI_PERSONALITY_PROFILES: Record<AiPersonalityId, AiGoalConstraints> = {

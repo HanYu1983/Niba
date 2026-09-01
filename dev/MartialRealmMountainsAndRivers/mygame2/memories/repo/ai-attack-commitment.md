@@ -65,6 +65,26 @@
 ## 經濟循環的遺留課題
 - 打工→買裝（equipment-shop buy-equipment AI 管線）仍缺失；標準地圖無商店需自蓋、且無 buy-equipment AI action。
 
+## 買裝備管線（2026-09-02，完成）
+新增 AI action `buy-equipment` + 執行(executeAiAction→buyEquipment) + 輸入 `buyableEquipment`(fuzzyInputs.findBuyableEquipment) + goal `buyEquipment` + actionMapper `buildBuyEquipmentActions` + validation + actionCost(shop) + labels。
+- `findBuyableEquipment`：用 `canBuyEquipment`(商店鄰近+級別+錢)驗證，選「空槽或有增益>0」的可負擔裝備；**排除已持有同 id**避免重複買。
+- 測試「AI 在相鄰據點有裝備商店且錢夠時：會購買並裝備武器變強」通過。
+- trace：買不同武器（精鐵劍→青銅刀→青竹杖→門派武器），會 equip。
+- 已知小問題：`equip` 會在兩把「對彼此都增益>0」的武器間反覆切換（findEquipmentCandidates 只要 gain>0 就納入），非阻塞買裝主線，列待改。
+
+## 買裝備持有邏輯「三槽各一」+ 反覆切換修復（2026-09-02）
+`findBuyableEquipment` 改為**「有就停」**策略：
+- 武器/防具/配件三槽，**只補「完全空槽」**的槽（優先序武器>防具>配件），買該槽最便宜一件。
+- 槽位已持有（已穿戴或背包有）→ 不再為該槽買更強裝備（更強靠道具點/掉落）。
+- **順帶修復反覆切換**：不再用「增益>0」判斷，而是「空槽才值得買」，且一次只補一槽。
+
+trace 實證：買精鐵劍(weapon)→行者護衣(armor)→溫玉佩(accessory) 各一，equip 各一。
+- 之前：buy-equipment=6, equip=18（反覆換）；現在：buy=3, equip=3（三槽穿齊即停）。
+- 測試斷言「買過≥2種不同槽位」通過。
+
+## 買道具/買裝經濟體系全貌（已打通）
+打工存錢 →（生存優先買回血/回內力/回體力道具）→ 買永久屬性丹 → 買三槽裝備各一 → 更強裝備靠道具點撿。
+
 ## 已回退的失敗調整（2026-09-02）
 嘗試「安全時靠據點打工賺錢買裝」但失敗，已全部回退：
 1. `goals.ts` 打工加 `f_moneyNeed` 動機 → 打工分數達 1.0 壓過磨血戰鬥，AI 不打怪。
