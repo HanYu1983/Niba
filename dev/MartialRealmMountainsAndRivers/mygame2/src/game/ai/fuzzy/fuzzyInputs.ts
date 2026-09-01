@@ -335,6 +335,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
               materialRatio,
               threatCountNearBase,
               distanceToBase: manhattan(player.position, nearestBase.position),
+              waystationAccessNeed: nearestUndiscoveredBase && nearestUndiscoveredBase.id !== nearestBase.id ? 1 : 0,
               personality,
             })
             return {
@@ -364,6 +365,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
               materialRatio,
               threatCountNearBase,
               distanceToBase: manhattan(player.position, nearestBase.position),
+              waystationAccessNeed: nearestUndiscoveredBase && nearestUndiscoveredBase.id !== nearestBase.id ? 1 : 0,
               personality,
             })
             return {

@@ -17,7 +17,7 @@ const ALL_GOALS: GoalName[] = [
 ]
 
 export const AI_PERSONALITY_PROFILES: Record<AiPersonalityId, AiGoalConstraints> = {
-  balanced: { goalWeights: {} },
+  balanced: { goalWeights: { construction: 1.15 } },
   aggressive: { goalWeights: { engageCombat: 1.5, attackNest: 1.3, selfPreservation: 0.8 }, goalThresholds: { selfPreservation: 0.15 } },
   cautious: { goalWeights: { selfPreservation: 1.5, useItem: 1.2, engageCombat: 0.6 }, goalThresholds: { selfPreservation: 0.15 } },
   builder: { goalWeights: { construction: 1.5, buildDefense: 1.3, executeMission: 1.2 } },

@@ -8,6 +8,8 @@ export type ConstructionValueContext = {
   materialRatio: number
   threatCountNearBase: number
   distanceToBase: number
+  /** 另一個未發現據點需要透過驛站才能有效抵達。 */
+  waystationAccessNeed?: number
   personality?: AiPersonalityId
 }
 
@@ -33,7 +35,8 @@ const PERSONALITY_BONUS: Partial<Record<AiPersonalityId, Partial<Record<string, 
 
 /** 計算合法建設候選的相對價值；合法性由呼叫端處理。 */
 export function evaluateConstructionCandidateValue(context: ConstructionValueContext): ValueEvaluation {
-  const benefit = BASE_BENEFIT[context.buildingType] ?? 0.55
+  const benefit = (BASE_BENEFIT[context.buildingType] ?? 0.55)
+    + (context.buildingType === 'waystation' ? (context.waystationAccessNeed ?? 0) * 0.3 : 0)
   const personalityMultiplier = PERSONALITY_BONUS[context.personality ?? 'balanced']?.[context.buildingType] ?? 1
   const materialNeed = clampValue(context.materialRatio)
   const threatUrgency = context.threatCountNearBase > 0 && (context.buildingType === 'arrow-tower' || context.buildingType === 'advanced-arrow-tower')

@@ -466,7 +466,7 @@ function evaluateConstruction(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { materialRatio, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint, visibleBaseIds, isAdjacentToBase, threatCountNearBase, constructionCandidates } = inputs
+  const { materialRatio, nearestBase, nearestUndiscoveredBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint, visibleBaseIds, isAdjacentToBase, threatCountNearBase, constructionCandidates } = inputs
 
   // 無可見據點 → 分數 0
   if (visibleBaseIds.length === 0) {
@@ -491,13 +491,18 @@ function evaluateConstruction(
   const bestCandidate = candidates[0]
 
   if (bestCandidate && nearestBase && materialRatio > 0) {
+    const isWaystationAccessPlan = bestCandidate.buildingType === 'waystation'
+      && isAdjacentToBase
+      && nearestUndiscoveredBase != null
+      && nearestUndiscoveredBase.id !== nearestBase.id
+
     // B1：已在據點旁 → 直接建造（高分）
     if (isAdjacentToBase) {
       const target = bestCandidate.kind === 'build'
         ? { kind: 'build' as const, baseId: bestCandidate.baseId, buildingId: bestCandidate.buildingId, buildingName: bestCandidate.buildingName }
         : { kind: 'upgrade' as const, baseId: bestCandidate.baseId, buildingId: bestCandidate.buildingId, buildingType: bestCandidate.buildingType, buildingName: bestCandidate.buildingName, nextLevel: bestCandidate.nextLevel! }
       const result: GoalResult = {
-        score: bestCandidate.value,
+        score: isWaystationAccessPlan ? Math.max(0.82, bestCandidate.value) : bestCandidate.value,
         target,
         context: { materialRatio, action: bestCandidate.kind },
       }
