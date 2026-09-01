@@ -81,11 +81,11 @@ export const CREATURE_SCHOOL_ATTRIBUTE_MODIFIERS: Record<MartialSchoolId, Partia
 }
 
 const CREATURE_LEVEL_GROWTH: PlayerAttributes = {
-  armStrength: 1,
-  constitution: 1,
-  agility: 1,
-  innerEnergy: 1,
-  insight: 1,
+  armStrength: 2,
+  constitution: 2,
+  agility: 2,
+  innerEnergy: 2,
+  insight: 2,
 }
 
 export function getCreatureBehaviorType(creature: Pick<CreatureState, 'behaviorType'>): CreatureBehaviorType {
@@ -105,6 +105,8 @@ export function getCreatureIcon(creature: Pick<CreatureState, 'schoolId' | 'beha
   return CREATURE_SCHOOL_ICONS[getCreatureSchoolId(creature)]
 }
 
+const CREATURE_LEVEL_MULTIPLIER = 0.7
+
 export function getCreatureAttributes(
   baseAttributes: PlayerAttributes,
   creature: Pick<CreatureState, 'schoolId' | 'behaviorType'>,
@@ -114,12 +116,12 @@ export function getCreatureAttributes(
   const modifier = CREATURE_SCHOOL_ATTRIBUTE_MODIFIERS[schoolId]
   const levelBonus = Math.max(0, level - 1)
   return {
-    armStrength: Math.max(5, baseAttributes.armStrength + (modifier.armStrength ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.armStrength),
-    constitution: Math.max(5, baseAttributes.constitution + (modifier.constitution ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.constitution),
-    agility: Math.max(5, baseAttributes.agility + (modifier.agility ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.agility),
-    innerEnergy: Math.max(5,baseAttributes.innerEnergy + (modifier.innerEnergy ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.innerEnergy),
+    armStrength: Math.max(5, (baseAttributes.armStrength + (modifier.armStrength ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.armStrength) * CREATURE_LEVEL_MULTIPLIER),
+    constitution: Math.max(5, (baseAttributes.constitution + (modifier.constitution ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.constitution) * CREATURE_LEVEL_MULTIPLIER),
+    agility: Math.max(5, (baseAttributes.agility + (modifier.agility ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.agility) * CREATURE_LEVEL_MULTIPLIER),
+    innerEnergy: Math.max(5, (baseAttributes.innerEnergy + (modifier.innerEnergy ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.innerEnergy) * CREATURE_LEVEL_MULTIPLIER),
     // 怪物生成時最低保有 5 點悟性，避免內功效果因悟性容量不足而固定衰減。
-    insight: Math.max(5, baseAttributes.insight + (modifier.insight ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.insight),
+    insight: Math.max(5, (baseAttributes.insight + (modifier.insight ?? 0) * levelBonus + levelBonus * CREATURE_LEVEL_GROWTH.insight) * CREATURE_LEVEL_MULTIPLIER),
   }
 }
 
