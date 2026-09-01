@@ -15,9 +15,12 @@ import {
 import CampaignScenarioTab from './CampaignScenarioTab'
 import ChallengeTab from './ChallengeTab'
 import CharacterLibraryScreen from './CharacterLibraryScreen'
+import SaveSlotList from './SaveSlotList'
 import type { ScenarioDefinition } from '../editor/editorTypes'
 import { clearStoredScenarios } from '../game/scenarioStorage'
 import { getCharacters, type PersistentCharacter } from '../game/characterRoster'
+import { getGameSaveSlots, type GameSaveSlotSummary } from '../game/gameSave'
+import { gameStore } from '../game/gameStore'
 import {
   createGameBackup,
   getBackupFileName,
@@ -37,9 +40,11 @@ type GameStartScreenProps = {
   onOpenEditor: () => void
   /** 開始一個劇本關卡（載入完整劇本）。 */
   onStartScenario: (scenario: ScenarioDefinition) => void
+  /** 從存檔欄位讀取進度（開始頁面）。 */
+  onLoadSave: (slot: number) => void
 }
 
-function GameStartScreen({ onStart, onStartChallenge, onDebug, onOpenSkillTest, onOpenEditor, onStartScenario }: GameStartScreenProps) {
+function GameStartScreen({ onStart, onStartChallenge, onDebug, onOpenSkillTest, onOpenEditor, onStartScenario, onLoadSave }: GameStartScreenProps) {
   const [rosterCharacters, setRosterCharacters] = useState<PersistentCharacter[]>(() => getCharacters())
   // 依人類玩家順序記錄選用的名册角色 id（未選用為 undefined）。
   const [selectedCharacterIds, setSelectedCharacterIds] = useState<(string | undefined)[]>(() => {
@@ -49,6 +54,9 @@ function GameStartScreen({ onStart, onStartChallenge, onDebug, onOpenSkillTest, 
   })
   const [activeTab, setActiveTab] = useState('sandbox')
   const backupFileInputRef = useRef<HTMLInputElement>(null)
+  // 開始頁面的存檔欄位清單（供「存檔」Tab 讀取進度）。
+  const [saveSlots, setSaveSlots] = useState<GameSaveSlotSummary[]>(() => getGameSaveSlots())
+  const refreshSaveSlots = () => setSaveSlots(getGameSaveSlots())
 
   const handleExportBackup = () => {
     const backup = createGameBackup()
@@ -219,112 +227,133 @@ function GameStartScreen({ onStart, onStartChallenge, onDebug, onOpenSkillTest, 
           onChange={setActiveTab}
           items={[
             {
+              key: 'saves',
+              label: '💾 存檔',
+              children: (
+                <Flex vertical gap={12}>
+                  <Typography.Paragraph type="secondary">
+                    從已儲存的進度繼續遊戲。存檔只保存在目前瀏覽器的網頁快取（localStorage）中。
+                  </Typography.Paragraph>
+                  <SaveSlotList
+                    slots={saveSlots}
+                    showSave={false}
+                    onSave={() => { }}
+                    onLoad={(slot) => onLoadSave(slot)}
+                    onDelete={(slot) => {
+                      gameStore.deleteGameFromSlot(slot)
+                      refreshSaveSlots()
+                    }}
+                  />
+                </Flex>
+              ),
+            },
+            {
               key: 'sandbox',
               label: '🏜️ 沙盒地圖',
               children: (
                 <>
                   <Divider>開局模板</Divider>
-        <Flex className="game-settings__grid" gap={16} wrap align="center">
-          <label className="game-settings__template">
-            開局模板
-            <Select
-              style={{ minWidth: 200 }}
-              value={selectedTemplateId}
-              onChange={applyTemplate}
-              options={[
-                {
-                  label: '內建模板',
-                  options: BUILTIN_TEMPLATES.map((t) => ({ label: t.name, value: t.id })),
-                },
-                {
-                  label: '我的模板',
-                  options: customTemplates.map((t) => ({ label: t.name, value: t.id })),
-                },
-              ]}
-            />
-          </label>
-          <Button onClick={() => setSaveModalOpen(true)}>💾 儲存目前設定為模板</Button>
-          {selectedTemplate && !selectedTemplate.builtin && (
-            <Button danger onClick={() => handleDeleteTemplate(selectedTemplate.id)}>🗑 刪除此模板</Button>
-          )}
-        </Flex>
+                  <Flex className="game-settings__grid" gap={16} wrap align="center">
+                    <label className="game-settings__template">
+                      開局模板
+                      <Select
+                        style={{ minWidth: 200 }}
+                        value={selectedTemplateId}
+                        onChange={applyTemplate}
+                        options={[
+                          {
+                            label: '內建模板',
+                            options: BUILTIN_TEMPLATES.map((t) => ({ label: t.name, value: t.id })),
+                          },
+                          {
+                            label: '我的模板',
+                            options: customTemplates.map((t) => ({ label: t.name, value: t.id })),
+                          },
+                        ]}
+                      />
+                    </label>
+                    <Button onClick={() => setSaveModalOpen(true)}>💾 儲存目前設定為模板</Button>
+                    {selectedTemplate && !selectedTemplate.builtin && (
+                      <Button danger onClick={() => handleDeleteTemplate(selectedTemplate.id)}>🗑 刪除此模板</Button>
+                    )}
+                  </Flex>
 
-        <Divider>地圖設定</Divider>
-        <Flex className="game-settings__grid" gap={16} wrap>
-          <label>地圖行數<InputNumber min={15} max={80} value={settings.rows} onChange={(value) => update('rows', value)} /></label>
-          <label>地圖列數<InputNumber min={15} max={80} value={settings.columns} onChange={(value) => update('columns', value)} /></label>
-          <label>隨機種子<InputNumber min={0} max={999999999} value={settings.seed} onChange={(value) => update('seed', value)} /></label>
-          <Button onClick={randomizeTerrainWeights}>🎲 隨機生成地形權重</Button>
-        </Flex>
+                  <Divider>地圖設定</Divider>
+                  <Flex className="game-settings__grid" gap={16} wrap>
+                    <label>地圖行數<InputNumber min={15} max={80} value={settings.rows} onChange={(value) => update('rows', value)} /></label>
+                    <label>地圖列數<InputNumber min={15} max={80} value={settings.columns} onChange={(value) => update('columns', value)} /></label>
+                    <label>隨機種子<InputNumber min={0} max={999999999} value={settings.seed} onChange={(value) => update('seed', value)} /></label>
+                    <Button onClick={randomizeTerrainWeights}>🎲 隨機生成地形權重</Button>
+                  </Flex>
 
-        <Divider>地形權重</Divider>
-        <Typography.Paragraph type="secondary">
-          調整各可通行地形的生成權重，權重越高出現越多。邊界牆壁不受影響。
-        </Typography.Paragraph>
-        <Flex className="game-settings__grid" gap={16} wrap>
-          <label>草地<InputNumber min={0} max={100} value={settings.terrainWeights?.plain} onChange={(value) => updateTerrainWeight('plain', value)} /></label>
-          <label>森林<InputNumber min={0} max={100} value={settings.terrainWeights?.forest} onChange={(value) => updateTerrainWeight('forest', value)} /></label>
-          <label>水域<InputNumber min={0} max={100} value={settings.terrainWeights?.water} onChange={(value) => updateTerrainWeight('water', value)} /></label>
-          <label>山嶽<InputNumber min={0} max={100} value={settings.terrainWeights?.mountain} onChange={(value) => updateTerrainWeight('mountain', value)} /></label>
-          <label>荒漠<InputNumber min={0} max={100} value={settings.terrainWeights?.desert} onChange={(value) => updateTerrainWeight('desert', value)} /></label>
-        </Flex>
+                  <Divider>地形權重</Divider>
+                  <Typography.Paragraph type="secondary">
+                    調整各可通行地形的生成權重，權重越高出現越多。邊界牆壁不受影響。
+                  </Typography.Paragraph>
+                  <Flex className="game-settings__grid" gap={16} wrap>
+                    <label>草地<InputNumber min={0} max={100} value={settings.terrainWeights?.plain} onChange={(value) => updateTerrainWeight('plain', value)} /></label>
+                    <label>森林<InputNumber min={0} max={100} value={settings.terrainWeights?.forest} onChange={(value) => updateTerrainWeight('forest', value)} /></label>
+                    <label>水域<InputNumber min={0} max={100} value={settings.terrainWeights?.water} onChange={(value) => updateTerrainWeight('water', value)} /></label>
+                    <label>山嶽<InputNumber min={0} max={100} value={settings.terrainWeights?.mountain} onChange={(value) => updateTerrainWeight('mountain', value)} /></label>
+                    <label>荒漠<InputNumber min={0} max={100} value={settings.terrainWeights?.desert} onChange={(value) => updateTerrainWeight('desert', value)} /></label>
+                  </Flex>
 
-        <Divider>世界內容</Divider>
-        <Flex className="game-settings__grid" gap={16} wrap>
-          <label>據點數量<InputNumber min={1} max={12} value={settings.baseCount} onChange={(value) => update('baseCount', value)} /></label>
-          <label>巢穴數量<InputNumber min={0} max={30} value={settings.nestCount} onChange={(value) => update('nestCount', value)} /></label>
-          <label>巢穴回血(%)<InputNumber min={0} max={10} step={0.5} value={(settings.nestHealthRegenPercent ?? 0.01) * 100} onChange={(value) => update('nestHealthRegenPercent', value === null ? null : value / 100)} /></label>
-          <label>資源點數量<InputNumber min={0} max={60} value={settings.resourcePointCount} onChange={(value) => update('resourcePointCount', value)} /></label>
-          <label>道具點數量<InputNumber min={0} max={60} value={settings.itemPointCount} onChange={(value) => update('itemPointCount', value)} /></label>
-          <label>人類玩家數量<InputNumber min={1} max={4} value={settings.playerCount} onChange={(value) => update('playerCount', value)} /></label>
-          <label>AI 玩家數量<InputNumber min={0} max={8} value={settings.aiPlayerCount ?? 0} onChange={(value) => update('aiPlayerCount', value)} /></label>
-          <label>探索點數量<InputNumber min={0} max={60} value={settings.explorationEventCount} onChange={(value) => update('explorationEventCount', value)} /></label>
-          <label>回合結束事件機率<InputNumber min={0} max={1} step={0.05} value={settings.explorationTriggerChance ?? 0.2} onChange={(value) => update('explorationTriggerChance', value)} /></label>
-          <label>門派據點<InputNumber min={0} max={30} value={settings.sectGateCount} onChange={(value) => update('sectGateCount', value)} /></label>
-          <label>初始生物數量<InputNumber min={0} max={60} value={settings.creatureCount} onChange={(value) => update('creatureCount', value)} /></label>
-          <label>廢墟數量<InputNumber min={0} max={60} value={settings.ruinCount} onChange={(value) => update('ruinCount', value)} /></label>
-        </Flex>
+                  <Divider>世界內容</Divider>
+                  <Flex className="game-settings__grid" gap={16} wrap>
+                    <label>據點數量<InputNumber min={1} max={12} value={settings.baseCount} onChange={(value) => update('baseCount', value)} /></label>
+                    <label>巢穴數量<InputNumber min={0} max={30} value={settings.nestCount} onChange={(value) => update('nestCount', value)} /></label>
+                    <label>巢穴回血(%)<InputNumber min={0} max={10} step={0.5} value={(settings.nestHealthRegenPercent ?? 0.01) * 100} onChange={(value) => update('nestHealthRegenPercent', value === null ? null : value / 100)} /></label>
+                    <label>資源點數量<InputNumber min={0} max={60} value={settings.resourcePointCount} onChange={(value) => update('resourcePointCount', value)} /></label>
+                    <label>道具點數量<InputNumber min={0} max={60} value={settings.itemPointCount} onChange={(value) => update('itemPointCount', value)} /></label>
+                    <label>人類玩家數量<InputNumber min={1} max={4} value={settings.playerCount} onChange={(value) => update('playerCount', value)} /></label>
+                    <label>AI 玩家數量<InputNumber min={0} max={8} value={settings.aiPlayerCount ?? 0} onChange={(value) => update('aiPlayerCount', value)} /></label>
+                    <label>探索點數量<InputNumber min={0} max={60} value={settings.explorationEventCount} onChange={(value) => update('explorationEventCount', value)} /></label>
+                    <label>回合結束事件機率<InputNumber min={0} max={1} step={0.05} value={settings.explorationTriggerChance ?? 0.2} onChange={(value) => update('explorationTriggerChance', value)} /></label>
+                    <label>門派據點<InputNumber min={0} max={30} value={settings.sectGateCount} onChange={(value) => update('sectGateCount', value)} /></label>
+                    <label>初始生物數量<InputNumber min={0} max={60} value={settings.creatureCount} onChange={(value) => update('creatureCount', value)} /></label>
+                    <label>廢墟數量<InputNumber min={0} max={60} value={settings.ruinCount} onChange={(value) => update('ruinCount', value)} /></label>
+                  </Flex>
 
-        {invalid && <Typography.Text type="danger">地圖至少需要 15 x 15，且至少要有一個據點。</Typography.Text>}
+                  {invalid && <Typography.Text type="danger">地圖至少需要 15 x 15，且至少要有一個據點。</Typography.Text>}
 
-        <Divider>選擇角色</Divider>
-        <Flex className="game-settings__grid" gap={16} wrap align="center">
-          {Array.from({ length: settings.playerCount }, (_, playerIndex) => (
-            <label key={playerIndex} className="game-settings__template">
-              玩家 {playerIndex + 1} 角色
-              <Select
-                style={{ minWidth: 220 }}
-                placeholder="預設角色（五維全 8）"
-                allowClear
-                value={selectedCharacterIds[playerIndex]}
-                onChange={(id) => handleSelectCharacterForPlayer(playerIndex, id)}
-                options={rosterCharacters.map((character) => ({
-                  label: `${character.name}${character.title ? `（${character.title}）` : ''}`,
-                  value: character.id,
-                }))}
-              />
-            </label>
-          ))}
-          <Typography.Text type="secondary">
-            每位玩家可各自選擇名冊角色；其五維加成會疊加進開局基礎五維。未選擇者使用預設角色。
-          </Typography.Text>
-        </Flex>
+                  <Divider>選擇角色</Divider>
+                  <Flex className="game-settings__grid" gap={16} wrap align="center">
+                    {Array.from({ length: settings.playerCount }, (_, playerIndex) => (
+                      <label key={playerIndex} className="game-settings__template">
+                        玩家 {playerIndex + 1} 角色
+                        <Select
+                          style={{ minWidth: 220 }}
+                          placeholder="預設角色（五維全 8）"
+                          allowClear
+                          value={selectedCharacterIds[playerIndex]}
+                          onChange={(id) => handleSelectCharacterForPlayer(playerIndex, id)}
+                          options={rosterCharacters.map((character) => ({
+                            label: `${character.name}${character.title ? `（${character.title}）` : ''}`,
+                            value: character.id,
+                          }))}
+                        />
+                      </label>
+                    ))}
+                    <Typography.Text type="secondary">
+                      每位玩家可各自選擇名冊角色；其五維加成會疊加進開局基礎五維。未選擇者使用預設角色。
+                    </Typography.Text>
+                  </Flex>
 
-        <Space className="start-screen__actions" wrap>
-          <Button
-            type="primary"
-            size="large"
-            disabled={invalid}
-            onClick={() => {
-              const selected = selectedCharacterIds.map((id) =>
-                id ? rosterCharacters.find((character) => character.id === id) : undefined,
-              )
-              onStart(settings, selected)
-            }}
-          >
-            開始新遊戲
-          </Button>
-        </Space>
+                  <Space className="start-screen__actions" wrap>
+                    <Button
+                      type="primary"
+                      size="large"
+                      disabled={invalid}
+                      onClick={() => {
+                        const selected = selectedCharacterIds.map((id) =>
+                          id ? rosterCharacters.find((character) => character.id === id) : undefined,
+                        )
+                        onStart(settings, selected)
+                      }}
+                    >
+                      開始新遊戲
+                    </Button>
+                  </Space>
                 </>
               ),
             },
@@ -348,6 +377,7 @@ function GameStartScreen({ onStart, onStartChallenge, onDebug, onOpenSkillTest, 
                 }} />
               ),
             },
+
             {
               key: 'roster',
               label: '🗂️ 俠客名冊',

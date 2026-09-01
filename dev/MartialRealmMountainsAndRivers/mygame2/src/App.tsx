@@ -318,6 +318,15 @@ function App() {
             onStartChallenge={startChallengeGame}
             onOpenSkillTest={() => setSkillTestPageOpen(true)}
             onOpenEditor={() => setEditorOpen(true)}
+            onLoadSave={(slot) => {
+              const result = gameStore.loadGameFromSlot(slot)
+              if (result.ok) {
+                setScreen('game')
+                trackEvent('Gameplay', 'game_start', 'load_save')
+              } else {
+                window.alert(result.reason ?? '讀取存檔失敗。')
+              }
+            }}
             onStartScenario={(scenario) => {
               const result = gameStore.loadScenario(scenario)
               if (result.ok) {
