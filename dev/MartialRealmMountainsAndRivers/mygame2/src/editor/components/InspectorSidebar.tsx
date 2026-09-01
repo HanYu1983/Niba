@@ -1,4 +1,4 @@
-import { Empty, Input, InputNumber, Select, Switch, Typography, Flex, Button, message } from 'antd'
+import { Checkbox, Empty, Input, InputNumber, Select, Switch, Typography, Flex, Button, message } from 'antd'
 import { PlusOutlined, DeleteOutlined, CopyOutlined } from '@ant-design/icons'
 import type { Position } from '../../game/types'
 import type { MartialSchoolId } from '../../game/catalogs/martialSchoolCatalog'
@@ -291,6 +291,7 @@ function BaseInspector({ entity, onUpdate }: { entity: ScenarioEntityPlacement; 
 function PlayerInspector({ entity, onUpdate }: { entity: ScenarioEntityPlacement; onUpdate: (data: Record<string, unknown>) => void }) {
   const data = entity.data
   const name = (data.name as string) ?? '玩家'
+  const isAI = (data.isAI as boolean | undefined) ?? false
   const schoolId = (data.schoolId as MartialSchoolId) ?? 'void-spirit'
   const money = (data.money as number) ?? 30
   // 用預設值填補缺少的欄位，避免只調整部分欄位時，未調整欄位剩下 undefined。
@@ -329,6 +330,9 @@ function PlayerInspector({ entity, onUpdate }: { entity: ScenarioEntityPlacement
     <>
       <Field label="玩家名稱">
         <Input value={name} size="small" onChange={(e) => onUpdate({ name: e.target.value })} />
+      </Field>
+      <Field label="玩家控制">
+        <Checkbox checked={isAI} onChange={(e) => onUpdate({ isAI: e.target.checked })}>AI 玩家</Checkbox>
       </Field>
       <Field label="五行流派">
         <Select value={schoolId} size="small" style={{ width: '100%' }} options={SCHOOL_OPTIONS} onChange={(value) => onUpdate({ schoolId: value })} />

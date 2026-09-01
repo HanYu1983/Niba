@@ -48,6 +48,7 @@ describe('buildGameStateFromScenario', () => {
     const state = buildGameStateFromScenario(makeScenario())
     expect(state.players).toHaveLength(1)
     expect(state.players[0].name).toBe('主角')
+    expect(state.players[0].isAI).toBe(false)
     expect(state.players[0].money).toBe(50)
     expect(state.bases).toHaveLength(1)
     expect(state.bases[0].name).toBe('青石村')
@@ -57,6 +58,30 @@ describe('buildGameStateFromScenario', () => {
     expect(state.creatures).toHaveLength(1)
     expect(state.creatures[0].isBoss).toBe(true)
     expect(state.creatures[0].homeNestId).toBe('nest-1')
+  })
+
+  it('保留劇本玩家的 AI 標記', () => {
+    const scenario = makeScenario()
+    scenario.entities.push({
+      id: 'player-ai-1',
+      kind: 'player',
+      position: { row: 8, column: 1 },
+      data: { name: '同行弟子', isAI: true },
+    })
+
+    const state = buildGameStateFromScenario(scenario)
+
+    expect(state.players.find((player) => player.id === 'player-ai-1')).toMatchObject({
+      name: '同行弟子',
+      isAI: true,
+    })
+    expect(state.aiOrders).toEqual([{
+      id: 'ai-order-decision-tree-player-ai-1',
+      type: 'decision-tree',
+      aiPlayerId: 'player-ai-1',
+      priority: 50,
+      status: 'active',
+    }])
   })
 
   it('怪物等級影響五維：未覆寫屬性時依等級成長（與巢穴生成同公式）', () => {

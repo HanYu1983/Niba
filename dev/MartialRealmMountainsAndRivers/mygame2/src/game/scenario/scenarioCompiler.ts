@@ -12,6 +12,7 @@ import type {
   DefenseStructureState,
   ExplorationEventState,
   CampaignState,
+  AiOrder,
 } from '../types'
 import { buildingCatalog } from '../catalogs/buildingCatalog'
 import { defenseStructureCatalog } from '../catalogs/defenseStructureCatalog'
@@ -95,6 +96,7 @@ function compilePlayers(placements: ScenarioEntityPlacement[]): PlayerState[] {
     return createCharacterState({
       id: placement.id,
       name: (data.name as string) ?? `玩家 ${index + 1}`,
+      isAI: (data.isAI as boolean) ?? false,
       innerSkillId: (data.innerSkillId as string) ?? 'tuna-gong',
       innerSkillIds: (data.innerSkillIds as string[]) ?? ['tuna-gong'],
       position: placement.position,
@@ -455,6 +457,16 @@ export function buildGameStateFromScenario(scenario: ScenarioDefinition): GameSt
   })
   const sectGates = compileSectGates(grouped.sectGates)
   const defenseStructures = compileDefenseStructures(grouped.defenseStructures)
+  // 與沙盒開局一致：劇本中的 AI 玩家預設使用決策樹策略，無需另外下達命令才會接管回合。
+  const aiOrders: AiOrder[] = players
+    .filter((player) => player.isAI)
+    .map((player) => ({
+      id: `ai-order-decision-tree-${player.id}`,
+      type: 'decision-tree' as const,
+      aiPlayerId: player.id,
+      priority: 50,
+      status: 'active' as const,
+    }))
 
   const activePlayer = players[0]
   const visibilityState = {
@@ -498,7 +510,7 @@ export function buildGameStateFromScenario(scenario: ScenarioDefinition): GameSt
     runId: generateRunId(),
     sharedWarehouse: [],
     sharedEquipmentWarehouse: [],
-    aiOrders: [],
+    aiOrders,
     aiConstructionPlans: [],
     // 劇本關卡：隨機事件預設關閉；若 enableRandomEvents 為 true 則用預設機率。
     explorationTriggerChance: scenario.enableRandomEvents ? 0.2 : 0,

@@ -4120,7 +4120,8 @@
           "row": 21,
           "column": 3
         },
-        "name": "player"
+        "name": "同行弟子",
+        "isAI": true
       }
     }
   ],
