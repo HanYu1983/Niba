@@ -91,6 +91,7 @@ export function getAiActionStaminaCost(state: GameState, action: AiAction): numb
                              ? ACTION_STAMINA_COSTS.collectItem
                              : ACTION_STAMINA_COSTS.collectResource
     case 'build':         return ACTION_STAMINA_COSTS.build
+    case 'upgrade':       return ACTION_STAMINA_COSTS.upgrade
     case 'defense-build': return ACTION_STAMINA_COSTS.defenseBuild
     case 'buy-item':      return ACTION_STAMINA_COSTS.shop
     case 'use-facility':

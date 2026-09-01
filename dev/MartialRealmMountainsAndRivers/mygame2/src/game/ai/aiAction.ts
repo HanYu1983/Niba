@@ -49,6 +49,13 @@ export type AiAction =
       reason: string
     }
   | {
+      type: 'upgrade'
+      actor: AiActorRef
+      baseId: string
+      buildingId: string
+      reason: string
+    }
+  | {
       type: 'hold'
       actor: AiActorRef
       reason: string

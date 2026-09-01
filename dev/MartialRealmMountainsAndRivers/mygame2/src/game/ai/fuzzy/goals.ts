@@ -24,6 +24,7 @@ export type GoalTarget =
   | { kind: 'attack'; targetId: string; targetType: 'creature' | 'nest'; position: Position }
   | { kind: 'exit'; position: Position }
   | { kind: 'build'; baseId: string; buildingId: string; buildingName: string }
+  | { kind: 'upgrade'; baseId: string; buildingId: string; buildingType: string; buildingName: string; nextLevel: number }
   | { kind: 'resource-point'; resourcePointId: string; position: Position }
   | { kind: 'follow-player'; position: Position }
   | { kind: 'explore'; position: Position }
@@ -459,7 +460,7 @@ function evaluateConstruction(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { materialRatio, canBuild, buildableBuilding, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint, visibleBaseIds, isAdjacentToBase, threatCountNearBase } = inputs
+  const { materialRatio, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint, visibleBaseIds, isAdjacentToBase, threatCountNearBase, constructionCandidates } = inputs
 
   // 無可見據點 → 分數 0
   if (visibleBaseIds.length === 0) {
@@ -478,13 +479,21 @@ function evaluateConstruction(
   }
 
   // 情境 B：建料滿 + 可建造
-  if (materialRatio >= 1 && canBuild && buildableBuilding && nearestBase && threatCountNearBase === 0) {
+  const candidates = constructionCandidates
+    .filter((candidate) => threatCountNearBase === 0 || candidate.kind === 'upgrade' || candidate.buildingType === 'arrow-tower' || candidate.buildingType === 'advanced-arrow-tower')
+    .sort((a, b) => b.value - a.value)
+  const bestCandidate = candidates[0]
+
+  if (bestCandidate && nearestBase && materialRatio > 0) {
     // B1：已在據點旁 → 直接建造（高分）
     if (isAdjacentToBase) {
+      const target = bestCandidate.kind === 'build'
+        ? { kind: 'build' as const, baseId: bestCandidate.baseId, buildingId: bestCandidate.buildingId, buildingName: bestCandidate.buildingName }
+        : { kind: 'upgrade' as const, baseId: bestCandidate.baseId, buildingId: bestCandidate.buildingId, buildingType: bestCandidate.buildingType, buildingName: bestCandidate.buildingName, nextLevel: bestCandidate.nextLevel! }
       const result: GoalResult = {
-        score: 0.9,
-        target: { kind: 'build', baseId: nearestBase.id, buildingId: buildableBuilding.id, buildingName: buildableBuilding.name },
-        context: { materialRatio, action: 'build' },
+        score: bestCandidate.value,
+        target,
+        context: { materialRatio, action: bestCandidate.kind },
       }
       const actions = buildValidatedActionSequence('construction', result, state, player, dependencies)
       if (actions.length === 0) return { score: 0 }
@@ -494,9 +503,11 @@ function evaluateConstruction(
     // B2：不在據點旁 → 移動到據點（中高分）
     const result: GoalResult = {
       score: 0.7,
-      target: { kind: 'resource-point', resourcePointId: '', position: nearestBase.position },
+      target: bestCandidate.kind === 'build'
+        ? { kind: 'build' as const, baseId: bestCandidate.baseId, buildingId: bestCandidate.buildingId, buildingName: bestCandidate.buildingName }
+        : { kind: 'upgrade' as const, baseId: bestCandidate.baseId, buildingId: bestCandidate.buildingId, buildingType: bestCandidate.buildingType, buildingName: bestCandidate.buildingName, nextLevel: bestCandidate.nextLevel! },
       distanceToTarget: inputs.feasibility.distToNearestActiveBase,
-      context: { materialRatio, action: 'move-to-base-for-build' },
+      context: { materialRatio, action: 'move-to-base-for-build', baseId: nearestBase.id },
     }
     const actions = buildValidatedActionSequence('construction', result, state, player, dependencies)
     if (actions.length === 0) return { score: 0 }

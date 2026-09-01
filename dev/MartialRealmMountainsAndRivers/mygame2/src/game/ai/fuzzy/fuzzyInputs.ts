@@ -17,6 +17,19 @@ import { getSectGateSkills, getSectGateLearnCost } from '../../rules/sectGateRul
 import { defenseStructureCatalog } from '../../catalogs/defenseStructureCatalog'
 import { getRepairSummary, hasBuilding } from '../../rules/buildingRules'
 import { getMartialHallSkillCost } from '../../actions/martialHallActions'
+import { canUpgradeBuildingType, getBuildingLevel, getBuildingUpgradeResult, getEffectiveBuildingUpgradeCost } from '../../rules/buildingProgressionRules'
+
+export type ConstructionCandidate = {
+  kind: 'build' | 'upgrade'
+  baseId: string
+  buildingId: string
+  buildingType: string
+  buildingName: string
+  cost: number
+  currentLevel?: number
+  nextLevel?: number
+  value: number
+}
 
 /** 各目標的可行性資料：「能不能做」+「走多遠」 */
 export interface FeasibilityData {
@@ -143,6 +156,8 @@ export interface FuzzyInputs {
   buildableDefenseStructure: { type: string; name: string } | undefined
   /** 最近據點現有箭塔數量（含進階箭塔） */
   defenseTowerCount: number
+  /** 最近據點所有合法建造與升級候選，已附帶基礎價值 */
+  constructionCandidates: ConstructionCandidate[]
   /** 據點附近的威脅數量（曼哈頓 ≤ 5） */
   threatCountNearBase: number
   /** 是否與最近的 active 據點相鄰 */
@@ -247,6 +262,54 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     })
     : undefined
   const canBuild = !!buildableBuilding
+  const constructionCandidates: ConstructionCandidate[] = nearestBase
+    ? [
+        ...buildingCatalog
+          .filter((template) => {
+            if (existingTypes.has(template.type)) return false
+            if (nearestBase.martialSchoolId && template.schoolId && template.schoolId !== nearestBase.martialSchoolId) return false
+            if (nearestBase.allowedBuildings && !nearestBase.allowedBuildings.some((entry) => entry.type === template.type)) return false
+            if (!canPlayerBuildBuildingType(player, template.type)) return false
+            return nearestBase.buildingMaterials >= template.constructionCost
+          })
+          .map((template) => ({
+            kind: 'build' as const,
+            baseId: nearestBase.id,
+            buildingId: template.id,
+            buildingType: template.type,
+            buildingName: template.name,
+            cost: template.constructionCost,
+            value: template.type === 'equipment-shop' ? 0.9
+              : template.type === 'item-shop' ? 0.85
+                : template.type === 'infirmary' ? 0.8
+                  : template.type === 'warehouse' ? 0.75
+                    : template.type === 'workshop' ? 0.65
+                      : template.type === 'martial-hall' ? 0.7
+                        : 0.55,
+          })),
+        ...nearestBase.buildings
+          .filter((building) => {
+            if (!canUpgradeBuildingType(building.type)) return false
+            const allowedEntry = nearestBase.allowedBuildings?.find((entry) => entry.type === building.type)
+            if (allowedEntry?.maxLevel !== undefined && getBuildingLevel(building) >= allowedEntry.maxLevel) return false
+            return getBuildingUpgradeResult(nearestBase, building, player).ok
+          })
+          .map((building) => ({
+            kind: 'upgrade' as const,
+            baseId: nearestBase.id,
+            buildingId: building.id,
+            buildingType: building.type,
+            buildingName: building.name,
+            cost: getEffectiveBuildingUpgradeCost(building, player),
+            currentLevel: getBuildingLevel(building),
+            nextLevel: getBuildingLevel(building) + 1,
+            value: building.type === 'infirmary' ? 0.85
+              : building.type === 'equipment-shop' || building.type === 'item-shop' ? 0.8
+                : building.type === 'warehouse' ? 0.75
+                  : 0.65,
+          })),
+      ]
+    : []
 
   // 最近資源點（屬於最近據點）
   const baseResourcePoints = nearestBase
@@ -471,6 +534,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     buyableHealItem,
     buildableDefenseStructure,
     defenseTowerCount,
+    constructionCandidates,
     threatCountNearBase,
     isAdjacentToBase,
     killableCreature,

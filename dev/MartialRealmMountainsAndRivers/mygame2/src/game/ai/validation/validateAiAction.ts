@@ -99,6 +99,14 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
       if (!template) return { valid: false, reason: `未知建築：${action.buildingType}` }
       return { valid: true }
     }
+    case 'upgrade': {
+      const base = state.bases.find((candidate) => candidate.id === action.baseId)
+      if (!base) return { valid: false, reason: '升級目標據點不存在。' }
+      if (!base.buildings.some((building) => building.id === action.buildingId)) {
+        return { valid: false, reason: '升級目標建築不存在。' }
+      }
+      return { valid: true }
+    }
     case 'hold':
     case 'end-turn':
     case 'allocate-attribute':

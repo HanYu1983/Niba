@@ -2,7 +2,7 @@ import type { ActionOutcome, AttackTargetType, GameState } from '../../types'
 import type { AiAction } from '../aiAction'
 import { movePlayer } from '../../actions/movementActions'
 import { collectResourcePoint } from '../../actions/explorationActions'
-import { constructBuilding, constructDefenseStructure } from '../../actions/buildingActions'
+import { constructBuilding, constructDefenseStructure, upgradeBuilding } from '../../actions/buildingActions'
 import type { TurnActionDependencies } from '../../actions/turnActions'
 import { executeAiAttack } from './executeAiAttack'
 import { collectItemPointAction } from '../../actions/itemActions'
@@ -54,6 +54,10 @@ export function executeAiAction(
     }
     case 'build': {
       const result = constructBuilding(state, action.baseId, action.buildingType, action.actor.id)
+      return { state: result.state, result: result.result }
+    }
+    case 'upgrade': {
+      const result = upgradeBuilding(state, action.actor.id, action.baseId, action.buildingId)
       return { state: result.state, result: result.result }
     }
     case 'allocate-attribute':

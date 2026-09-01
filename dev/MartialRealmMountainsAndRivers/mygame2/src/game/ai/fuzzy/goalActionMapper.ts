@@ -405,6 +405,16 @@ function buildConstructionActions(
     }]
   }
 
+  if (result.target?.kind === 'upgrade') {
+    return [{
+      type: 'upgrade',
+      actor,
+      baseId: result.target.baseId,
+      buildingId: result.target.buildingId,
+      reason: `建設：升級 ${result.target.buildingName} 至 Lv.${result.target.nextLevel}`,
+    }]
+  }
+
   // collect：已在資源點旁，採集
   if (action === 'collect' && result.target?.kind === 'resource-point') {
     return [{
@@ -427,8 +437,10 @@ function buildConstructionActions(
   }
 
   // move-to-base-for-build：建料滿但不在據點旁，移動到據點
-  if (action === 'move-to-base-for-build' && result.target?.kind === 'resource-point') {
-    const moveDest = findClosestReachablePosition(state, player, result.target.position)
+  if (action === 'move-to-base-for-build' && result.context?.baseId) {
+    const base = state.bases.find((candidate) => candidate.id === result.context?.baseId)
+    if (!base) return [{ type: 'hold', actor, reason: '建設：找不到目標據點' }]
+    const moveDest = findClosestReachablePosition(state, player, base.position)
     return [{
       type: 'move',
       actor,
