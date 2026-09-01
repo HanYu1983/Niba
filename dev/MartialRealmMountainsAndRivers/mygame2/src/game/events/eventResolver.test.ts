@@ -66,6 +66,20 @@ describe('事件效果：習得功法', () => {
       allExternalSkillCatalog.some((skill) => skill.id === gainedId)
     expect(isJianghu).toBe(true)
   })
+
+  it('learn-skill 指定 skillId 時直接學會該功法', () => {
+    const player = makePlayer()
+    const next = applyEventEffects(player, [{ type: 'learn-skill', skillType: 'external', skillId: 'lingyuan-five-elements-mend' }])
+
+    expect(next.externalSkillIds).toContain('lingyuan-five-elements-mend')
+  })
+
+  it('learn-skill 指定 skillId 但已學會時不重複加入', () => {
+    const player = makePlayer({ externalSkillIds: ['lingyuan-five-elements-mend'] })
+    const next = applyEventEffects(player, [{ type: 'learn-skill', skillType: 'external', skillId: 'lingyuan-five-elements-mend' }])
+
+    expect(next.externalSkillIds.filter((id) => id === 'lingyuan-five-elements-mend')).toHaveLength(1)
+  })
 })
 
 describe('事件效果：spawn-event 生成探索事件點', () => {

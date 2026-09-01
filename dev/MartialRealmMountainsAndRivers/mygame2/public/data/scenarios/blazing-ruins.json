@@ -178,7 +178,7 @@
     {
       "row": 1,
       "column": 8,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 1,
@@ -228,7 +228,7 @@
     {
       "row": 1,
       "column": 18,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 1,
@@ -303,7 +303,7 @@
     {
       "row": 2,
       "column": 8,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 2,
@@ -353,7 +353,7 @@
     {
       "row": 2,
       "column": 18,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 2,
@@ -428,12 +428,12 @@
     {
       "row": 3,
       "column": 8,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 3,
       "column": 9,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 3,
@@ -478,12 +478,12 @@
     {
       "row": 3,
       "column": 18,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 3,
       "column": 19,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 3,
@@ -558,7 +558,7 @@
     {
       "row": 4,
       "column": 9,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 4,
@@ -603,7 +603,7 @@
     {
       "row": 4,
       "column": 18,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 4,
@@ -718,7 +718,7 @@
     {
       "row": 5,
       "column": 16,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 5,
@@ -783,7 +783,7 @@
     {
       "row": 6,
       "column": 4,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 6,
@@ -868,17 +868,17 @@
     {
       "row": 6,
       "column": 21,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 6,
       "column": 22,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 6,
       "column": 23,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 6,
@@ -908,12 +908,12 @@
     {
       "row": 7,
       "column": 4,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 7,
       "column": 5,
-      "terrain": "plain"
+      "terrain": "wall"
     },
     {
       "row": 7,
@@ -933,12 +933,12 @@
     {
       "row": 7,
       "column": 9,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 7,
       "column": 10,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 7,
@@ -1038,7 +1038,7 @@
     {
       "row": 8,
       "column": 5,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 8,
@@ -1078,12 +1078,12 @@
     {
       "row": 8,
       "column": 13,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 8,
       "column": 14,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 8,
@@ -1108,17 +1108,17 @@
     {
       "row": 8,
       "column": 19,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 8,
       "column": 20,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 8,
       "column": 21,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 8,
@@ -1163,12 +1163,12 @@
     {
       "row": 9,
       "column": 5,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 9,
       "column": 6,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 9,
@@ -1178,17 +1178,17 @@
     {
       "row": 9,
       "column": 8,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 9,
       "column": 9,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 9,
       "column": 10,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 9,
@@ -1213,7 +1213,7 @@
     {
       "row": 9,
       "column": 15,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 9,
@@ -1238,17 +1238,17 @@
     {
       "row": 9,
       "column": 20,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 9,
       "column": 21,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 9,
       "column": 22,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 9,
@@ -1293,7 +1293,7 @@
     {
       "row": 10,
       "column": 6,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 10,
@@ -1318,7 +1318,7 @@
     {
       "row": 10,
       "column": 11,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 10,
@@ -1373,7 +1373,7 @@
     {
       "row": 10,
       "column": 22,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 10,
@@ -1438,7 +1438,7 @@
     {
       "row": 11,
       "column": 10,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 11,
@@ -1498,7 +1498,7 @@
     {
       "row": 11,
       "column": 22,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 11,
@@ -1528,7 +1528,7 @@
     {
       "row": 12,
       "column": 3,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 12,
@@ -1568,12 +1568,12 @@
     {
       "row": 12,
       "column": 11,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 12,
       "column": 12,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 12,
@@ -1613,7 +1613,7 @@
     {
       "row": 12,
       "column": 20,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 12,
@@ -1653,22 +1653,22 @@
     {
       "row": 13,
       "column": 3,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 13,
       "column": 4,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 13,
       "column": 5,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 13,
       "column": 6,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 13,
@@ -1698,7 +1698,7 @@
     {
       "row": 13,
       "column": 12,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 13,
@@ -1738,7 +1738,7 @@
     {
       "row": 13,
       "column": 20,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 13,
@@ -1768,12 +1768,12 @@
     {
       "row": 14,
       "column": 1,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 14,
       "column": 2,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 14,
@@ -1793,7 +1793,7 @@
     {
       "row": 14,
       "column": 6,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 14,
@@ -1848,22 +1848,22 @@
     {
       "row": 14,
       "column": 17,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 14,
       "column": 18,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 14,
       "column": 19,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 14,
       "column": 20,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 14,
@@ -1873,12 +1873,12 @@
     {
       "row": 14,
       "column": 22,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 14,
       "column": 23,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 14,
@@ -1917,135 +1917,135 @@
     },
     {
       "row": 15,
-      "column": 6,
-      "terrain": "forest"
-    },
-    {
-      "row": 15,
-      "column": 7,
-      "terrain": "desert"
-    },
-    {
-      "row": 15,
-      "column": 8,
-      "terrain": "desert"
-    },
-    {
-      "row": 15,
-      "column": 9,
-      "terrain": "desert"
-    },
-    {
-      "row": 15,
-      "column": 10,
-      "terrain": "desert"
-    },
-    {
-      "row": 15,
-      "column": 11,
-      "terrain": "desert"
-    },
-    {
-      "row": 15,
-      "column": 12,
-      "terrain": "desert"
-    },
-    {
-      "row": 15,
-      "column": 13,
-      "terrain": "desert"
-    },
-    {
-      "row": 15,
-      "column": 14,
-      "terrain": "desert"
-    },
-    {
-      "row": 15,
-      "column": 15,
-      "terrain": "desert"
-    },
-    {
-      "row": 15,
-      "column": 16,
-      "terrain": "desert"
-    },
-    {
-      "row": 15,
-      "column": 17,
-      "terrain": "mountain"
-    },
-    {
-      "row": 15,
-      "column": 18,
-      "terrain": "mountain"
-    },
-    {
-      "row": 15,
-      "column": 19,
-      "terrain": "mountain"
-    },
-    {
-      "row": 15,
-      "column": 20,
-      "terrain": "mountain"
-    },
-    {
-      "row": 15,
-      "column": 21,
-      "terrain": "mountain"
-    },
-    {
-      "row": 15,
-      "column": 22,
-      "terrain": "mountain"
-    },
-    {
-      "row": 15,
-      "column": 23,
-      "terrain": "mountain"
-    },
-    {
-      "row": 15,
-      "column": 24,
-      "terrain": "wall"
-    },
-    {
-      "row": 16,
-      "column": 0,
-      "terrain": "wall"
-    },
-    {
-      "row": 16,
-      "column": 1,
-      "terrain": "mountain"
-    },
-    {
-      "row": 16,
-      "column": 2,
-      "terrain": "mountain"
-    },
-    {
-      "row": 16,
-      "column": 3,
-      "terrain": "mountain"
-    },
-    {
-      "row": 16,
-      "column": 4,
-      "terrain": "plain"
-    },
-    {
-      "row": 16,
-      "column": 5,
-      "terrain": "plain"
-    },
-    {
-      "row": 16,
       "column": 6,
       "terrain": "forest"
     },
     {
+      "row": 15,
+      "column": 7,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 8,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 9,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 10,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 11,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 12,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 13,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 14,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 15,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 16,
+      "terrain": "desert"
+    },
+    {
+      "row": 15,
+      "column": 17,
+      "terrain": "mountain"
+    },
+    {
+      "row": 15,
+      "column": 18,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 19,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 20,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 21,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 22,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 23,
+      "terrain": "wall"
+    },
+    {
+      "row": 15,
+      "column": 24,
+      "terrain": "wall"
+    },
+    {
+      "row": 16,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 16,
+      "column": 1,
+      "terrain": "mountain"
+    },
+    {
+      "row": 16,
+      "column": 2,
+      "terrain": "mountain"
+    },
+    {
+      "row": 16,
+      "column": 3,
+      "terrain": "mountain"
+    },
+    {
+      "row": 16,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 16,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 16,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
       "row": 16,
       "column": 7,
       "terrain": "desert"
@@ -2128,7 +2128,7 @@
     {
       "row": 16,
       "column": 23,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 16,
@@ -2268,7 +2268,7 @@
     {
       "row": 18,
       "column": 1,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 18,
@@ -2313,12 +2313,12 @@
     {
       "row": 18,
       "column": 10,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 18,
       "column": 11,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 18,
@@ -2338,12 +2338,12 @@
     {
       "row": 18,
       "column": 15,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 18,
       "column": 16,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 18,
@@ -2433,12 +2433,12 @@
     {
       "row": 19,
       "column": 9,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 19,
       "column": 10,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 19,
@@ -2468,7 +2468,7 @@
     {
       "row": 19,
       "column": 16,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 19,
@@ -2558,7 +2558,7 @@
     {
       "row": 20,
       "column": 9,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 20,
@@ -2678,12 +2678,12 @@
     {
       "row": 21,
       "column": 8,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 21,
       "column": 9,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 21,
@@ -2723,17 +2723,17 @@
     {
       "row": 21,
       "column": 17,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 21,
       "column": 18,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 21,
       "column": 19,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 21,
@@ -2798,17 +2798,17 @@
     {
       "row": 22,
       "column": 7,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 22,
       "column": 8,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 22,
       "column": 9,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 22,
@@ -2858,7 +2858,7 @@
     {
       "row": 22,
       "column": 19,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 22,
@@ -2923,17 +2923,17 @@
     {
       "row": 23,
       "column": 7,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 23,
       "column": 8,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 23,
       "column": 9,
-      "terrain": "mountain"
+      "terrain": "wall"
     },
     {
       "row": 23,
@@ -2983,7 +2983,7 @@
     {
       "row": 23,
       "column": 19,
-      "terrain": "desert"
+      "terrain": "wall"
     },
     {
       "row": 23,
@@ -3176,13 +3176,11 @@
         },
         "externalSkillIds": [
           "lingyuan-mountain-pulse",
-          "lingyuan-rivers-sustain",
-          "lingyuan-five-elements-mend"
+          "lingyuan-rivers-sustain"
         ],
         "equippedExternalSkillIds": [
           "lingyuan-mountain-pulse",
-          "lingyuan-rivers-sustain",
-          "lingyuan-five-elements-mend"
+          "lingyuan-rivers-sustain"
         ]
       }
     },
@@ -3458,7 +3456,8 @@
               },
               {
                 "type": "learn-skill",
-                "skillType": "external"
+                "skillType": "external",
+                "skillId": "lingyuan-five-elements-mend"
               }
             ]
           }
@@ -3502,7 +3501,7 @@
         "name": "軍需補給",
         "customDrops": [
           {
-            "lootId": "great-return-pill",
+            "lootId": "suppress-mountain-talisman",
             "chance": 100
           }
         ]
@@ -3585,7 +3584,13 @@
           "row": 3,
           "column": 22
         },
-        "name": "itemPoint"
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "recall-base-talisman",
+            "chance": 100
+          }
+        ]
       }
     },
     {
@@ -3600,7 +3605,13 @@
           "row": 10,
           "column": 1
         },
-        "name": "itemPoint"
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "concealment-talisman",
+            "chance": 100
+          }
+        ]
       }
     },
     {
@@ -3736,6 +3747,380 @@
         },
         "name": "sectGate",
         "schoolId": "frost-water"
+      }
+    },
+    {
+      "id": "ruin-17-5-mtifqqdr",
+      "kind": "ruin",
+      "position": {
+        "row": 16,
+        "column": 4
+      },
+      "data": {
+        "position": {
+          "row": 17,
+          "column": 5
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-17-6-mtifqseh",
+      "kind": "ruin",
+      "position": {
+        "row": 16,
+        "column": 6
+      },
+      "data": {
+        "position": {
+          "row": 17,
+          "column": 6
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-18-14-mtifqv6m",
+      "kind": "ruin",
+      "position": {
+        "row": 18,
+        "column": 14
+      },
+      "data": {
+        "position": {
+          "row": 18,
+          "column": 14
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-13-7-mtifqzxz",
+      "kind": "ruin",
+      "position": {
+        "row": 13,
+        "column": 7
+      },
+      "data": {
+        "position": {
+          "row": 13,
+          "column": 7
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-10-5-mtifr2nq",
+      "kind": "ruin",
+      "position": {
+        "row": 10,
+        "column": 5
+      },
+      "data": {
+        "position": {
+          "row": 10,
+          "column": 5
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-14-12-mtifr5wm",
+      "kind": "ruin",
+      "position": {
+        "row": 14,
+        "column": 12
+      },
+      "data": {
+        "position": {
+          "row": 14,
+          "column": 12
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-16-20-mtifrc5n",
+      "kind": "ruin",
+      "position": {
+        "row": 16,
+        "column": 20
+      },
+      "data": {
+        "position": {
+          "row": 16,
+          "column": 20
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-13-19-mtifrivq",
+      "kind": "ruin",
+      "position": {
+        "row": 13,
+        "column": 19
+      },
+      "data": {
+        "position": {
+          "row": 13,
+          "column": 19
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-11-11-mtifrjpk",
+      "kind": "ruin",
+      "position": {
+        "row": 11,
+        "column": 11
+      },
+      "data": {
+        "position": {
+          "row": 11,
+          "column": 11
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-10-10-mtifrkfl",
+      "kind": "ruin",
+      "position": {
+        "row": 10,
+        "column": 10
+      },
+      "data": {
+        "position": {
+          "row": 10,
+          "column": 10
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-7-8-mtifrmnv",
+      "kind": "ruin",
+      "position": {
+        "row": 7,
+        "column": 8
+      },
+      "data": {
+        "position": {
+          "row": 7,
+          "column": 8
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-3-12-mtifrq2h",
+      "kind": "ruin",
+      "position": {
+        "row": 3,
+        "column": 12
+      },
+      "data": {
+        "position": {
+          "row": 3,
+          "column": 12
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-4-19-mtifrrkw",
+      "kind": "ruin",
+      "position": {
+        "row": 4,
+        "column": 19
+      },
+      "data": {
+        "position": {
+          "row": 4,
+          "column": 19
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-10-15-mtifrtny",
+      "kind": "ruin",
+      "position": {
+        "row": 10,
+        "column": 15
+      },
+      "data": {
+        "position": {
+          "row": 10,
+          "column": 15
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-17-10-mtifrv9z",
+      "kind": "ruin",
+      "position": {
+        "row": 18,
+        "column": 9
+      },
+      "data": {
+        "position": {
+          "row": 17,
+          "column": 10
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-14-16-mtifrw98",
+      "kind": "ruin",
+      "position": {
+        "row": 14,
+        "column": 16
+      },
+      "data": {
+        "position": {
+          "row": 14,
+          "column": 16
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-13-13-mtifrx15",
+      "kind": "ruin",
+      "position": {
+        "row": 13,
+        "column": 13
+      },
+      "data": {
+        "position": {
+          "row": 13,
+          "column": 13
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-8-16-mtifryhf",
+      "kind": "ruin",
+      "position": {
+        "row": 8,
+        "column": 16
+      },
+      "data": {
+        "position": {
+          "row": 8,
+          "column": 16
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "ruin-6-3-mtifs2dd",
+      "kind": "ruin",
+      "position": {
+        "row": 6,
+        "column": 3
+      },
+      "data": {
+        "position": {
+          "row": 6,
+          "column": 3
+        },
+        "name": "ruin"
+      }
+    },
+    {
+      "id": "defenseStructure-21-5-mtiftwh8",
+      "kind": "defenseStructure",
+      "position": {
+        "row": 21,
+        "column": 5
+      },
+      "data": {
+        "position": {
+          "row": 21,
+          "column": 5
+        },
+        "name": "defenseStructure",
+        "type": "advanced-arrow-tower"
+      }
+    },
+    {
+      "id": "defenseStructure-19-2-mtifu1kf",
+      "kind": "defenseStructure",
+      "position": {
+        "row": 19,
+        "column": 2
+      },
+      "data": {
+        "position": {
+          "row": 19,
+          "column": 2
+        },
+        "name": "defenseStructure",
+        "type": "advanced-arrow-tower"
+      }
+    },
+    {
+      "id": "itemPoint-1-17-mtig0gkr",
+      "kind": "itemPoint",
+      "position": {
+        "row": 1,
+        "column": 17
+      },
+      "data": {
+        "position": {
+          "row": 1,
+          "column": 17
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "frost-doom-needle",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "itemPoint-23-18-mtig0jwj",
+      "kind": "itemPoint",
+      "position": {
+        "row": 23,
+        "column": 18
+      },
+      "data": {
+        "position": {
+          "row": 23,
+          "column": 18
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "great-return-pill",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "player-21-3-mtig1ye1",
+      "kind": "player",
+      "position": {
+        "row": 21,
+        "column": 3
+      },
+      "data": {
+        "position": {
+          "row": 21,
+          "column": 3
+        },
+        "name": "player"
       }
     }
   ],
