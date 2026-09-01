@@ -406,7 +406,7 @@ describe('AI 玩家：入門沙盒地圖通關能力', () => {
     expect(finalState.players[0].experience).toBeGreaterThan(0)
   })
 
-  it('入門地圖（1 巢穴、0 初始生物、巢穴不回血）：單局觀察 AI 成長與 Lv.5 卡點', () => {
+  it('入門地圖（1 巢穴、0 初始生物、巢穴不回血、上限 80 round）：單局觀察 AI 成長與 Lv.5 卡點', () => {
     const template = BUILTIN_TEMPLATES.find((candidate) => candidate.id === 'standard')
     if (!template) throw new Error('找不到入門地圖模板。')
 
@@ -433,11 +433,11 @@ describe('AI 玩家：入門沙盒地圖通關能力', () => {
       activePlayerId: aiPlayer.id,
     })
 
-    const maxTurns = 200
+    const maxRounds = 80
     let aiTurns = 0
     let maxLevel = 1
     const traces: AiTurnTrace[] = []
-    while (!gameStore.getState().gameOver && aiTurns < maxTurns) {
+    while (!gameStore.getState().gameOver && gameStore.getState().round < maxRounds) {
       const state = gameStore.getState()
       const activePlayer = state.players.find((player) => player.id === state.activePlayerId)
       if (!activePlayer) throw new Error(`找不到當前玩家 ${state.activePlayerId}。`)

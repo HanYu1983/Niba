@@ -162,6 +162,8 @@ export interface FuzzyInputs {
   nearestNestId: string
   /** 視野範圍內的生物 id 陣列（近到遠排序） */
   visibleCreatureIds: string[]
+  /** 場上存活生物總數（含視野外）；越多代表囤怪壓力越大，應優先清怪避免被圍攻 */
+  totalCreatureCount: number
   /** 所有視野內生物的攻擊價值候選（高到低排序） */
   combatCandidates: CombatCandidate[]
   /** 建議裝備的內功（有更強的未裝備內功），無則 undefined */
@@ -431,6 +433,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
 
   // 戰鬥相關：視野內生物（近到遠）
   const visibleCreatureIds = visibleCreatures.map((c) => c.creature.id)
+  const totalCreatureCount = state.creatures.filter((c) => c.health > 0).length
   const distToNearestCreature = visibleCreatures.length > 0
     ? manhattan(player.position, visibleCreatures[0].creature.position)
     : Infinity
@@ -643,6 +646,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     distToNearestNest,
     nearestNestId: nearestNest?.id ?? '',
     visibleCreatureIds,
+    totalCreatureCount,
     combatCandidates,
     betterInnerSkill: bestInnerSkill,
     innerSkillCandidates,

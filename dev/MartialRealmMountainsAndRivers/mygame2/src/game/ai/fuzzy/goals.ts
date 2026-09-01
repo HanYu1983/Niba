@@ -210,7 +210,10 @@ function evaluateEngageCombat(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { hitsSurvivable, combatCandidates, hasGrowthPath, playerLevel, needsLeveling } = inputs
+  const { hitsSurvivable, combatCandidates, hasGrowthPath, playerLevel, needsLeveling, totalCreatureCount } = inputs
+
+  // 場上怪壓力：場上存活生物越多，清怪優先度越高（避免囤怪被圍攻致死）。
+  const f_pressure = totalCreatureCount == null ? 0 : trapezoid(totalCreatureCount, 1, 2, 4, 6)
   const nearestNest = state.creatureNests
     .filter((nest) => nest.health > 0)
     .sort((first, second) => manhattan(player.position, first.position) - manhattan(player.position, second.position))[0]
@@ -270,13 +273,15 @@ function evaluateEngageCombat(
   // 完全打不死（或打不到）：
   // - 低等級且願意磨血練等 → 提高磨血意願（低於兩回殺但仍有練功價值），避免「打不死就不打」死鎖。
   // - 有變強途徑 → 略低；等級高 → 幾乎不磨（重視效率）。
+  // - 場上怪多（f_pressure 高）→ 即使打不死也抬高出清意願，避免囤積被圍攻致死。
   const lowCombatBase = hasGrowthPath ? 0.2 : 0.35
-  const lowCombatScore = killable ? lowCombatBase + 0.25 * f_grindWillingness : 0
+  const pressureBonus = 0.4 * f_pressure
+  const lowCombatScore = killable ? lowCombatBase + 0.25 * f_grindWillingness + pressureBonus : 0
   const result: GoalResult = {
     score: lowCombatScore,
     target: { kind: 'attack', targetId: creatureId, targetType: 'creature', position },
     distanceToTarget: distance,
-    context: { distance, creatureId, killable, canKillInOneTurn: false, canKillInTwoTurns: false, damageRatio, grindWillingness: f_grindWillingness },
+    context: { distance, creatureId, killable, canKillInOneTurn: false, canKillInTwoTurns: false, damageRatio, grindWillingness: f_grindWillingness, totalCreatureCount },
   }
   const actions = buildValidatedActionSequence('engageCombat', result, state, player, dependencies)
   if (actions.length === 0) return { score: 0 }
