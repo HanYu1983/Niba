@@ -21,6 +21,7 @@ import { canUpgradeBuildingType, getBuildingLevel, getBuildingUpgradeResult, get
 import type { AiPersonalityId } from '../../types/ai'
 import { computeConstructionCandidateValue } from './constructionValue'
 import { computeCombatCandidateValue } from './combatValue'
+import { computeEquipmentCandidateValue, computeInnerSkillCandidateValue } from './equipmentValue'
 
 export type ConstructionCandidate = {
   kind: 'build' | 'upgrade'
@@ -41,6 +42,23 @@ export type CombatCandidate = {
   distance: number
   damageRatio: number
   healthRatio: number
+  value: number
+}
+
+export type EquipmentCandidate = {
+  instanceId: string
+  equipmentId: string
+  slot: string
+  name: string
+  durability: number
+  value: number
+}
+
+export type InnerSkillCandidate = {
+  id: string
+  name: string
+  insightRequirement: number
+  damageGainRatio: number
   value: number
 }
 
@@ -129,6 +147,8 @@ export interface FuzzyInputs {
   bestItemToUse: { id: string; effect: string; name: string; effectValue: number } | undefined
   /** 建議裝備的裝備（部位空 or 耐久=0 需替換），無則 undefined */
   equipableEquipment: { instanceId: string; equipmentId: string; slot: string; name: string; durability: number } | undefined
+  /** 所有可替換裝備候選，依價值由高到低排序 */
+  equipmentCandidates: EquipmentCandidate[]
   /** 到最近巢穴的距離，無巢穴 = Infinity */
   distToNearestNest: number
   /** 最近巢穴 id，無則空字串 */
@@ -139,6 +159,8 @@ export interface FuzzyInputs {
   combatCandidates: CombatCandidate[]
   /** 建議裝備的內功（有更強的未裝備內功），無則 undefined */
   betterInnerSkill: { id: string; name: string; insightRequirement: number } | undefined
+  /** 所有可替換內功候選，依價值由高到低排序 */
+  innerSkillCandidates: InnerSkillCandidate[]
   /** 是否有傷害型內功已裝備 */
   hasDamageInnerSkill: boolean
   /** 目前內功單次傷害／最近可見敵人最大生命值，0~1 */
@@ -405,7 +427,8 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     : undefined
 
   // 裝備相關：找出值得裝備的裝備
-  const equipableEquipment = findBestEquipCandidate(player)
+  const equipmentCandidates = findEquipmentCandidates(player, personality)
+  const equipableEquipment = equipmentCandidates[0]
 
   // 巢穴相關：最近巢穴
   const nests = state.creatureNests.filter((n) => n.health > 0)
@@ -460,7 +483,8 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     .sort((first, second) => second.value - first.value)
 
   // 找更好的內功：已學會但未裝備，且悟性足夠，且比目前內功更強
-  const bestInnerSkill = findBetterInnerSkill(player, effectiveAttributes)
+  const innerSkillCandidates = findInnerSkillCandidates(player, effectiveAttributes, personality)
+  const bestInnerSkill = innerSkillCandidates[0]
 
   // ── 新增目標相關輸入 ──────────────────────────────────────────
 
@@ -563,11 +587,13 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     availableAttributePoints,
     bestItemToUse,
     equipableEquipment,
+    equipmentCandidates,
     distToNearestNest,
     nearestNestId: nearestNest?.id ?? '',
     visibleCreatureIds,
     combatCandidates,
     betterInnerSkill: bestInnerSkill,
+    innerSkillCandidates,
     hasDamageInnerSkill,
     combatDamageRatio,
     innerPowerRatio,
@@ -649,10 +675,10 @@ function pickBestItem(
   return undefined
 }
 
-function findBestEquipCandidate(player: PlayerState): { instanceId: string; equipmentId: string; slot: string; name: string; durability: number } | undefined {
+function findEquipmentCandidates(player: PlayerState, personality?: AiPersonalityId): EquipmentCandidate[] {
   const loadout = player.equipmentLoadout
   const inventory = player.equipmentInventory ?? []
-  if (inventory.length === 0) return undefined
+  if (inventory.length === 0) return []
 
   const getDef = (equipmentId: string) => equipmentCatalog.find((e) => e.id === equipmentId)
   const slotKeys: Array<{ slot: string; key: 'weaponInstanceId' | 'armorInstanceId' | 'accessoryInstanceId' }> = [
@@ -661,77 +687,68 @@ function findBestEquipCandidate(player: PlayerState): { instanceId: string; equi
     { slot: 'accessory', key: 'accessoryInstanceId' },
   ]
 
+  const candidates: EquipmentCandidate[] = []
   for (const { slot, key } of slotKeys) {
     const currentInstanceId = loadout?.[key]
     const currentInstance = currentInstanceId
       ? inventory.find((e) => e.instanceId === currentInstanceId)
       : undefined
-
-    // 情況 A：部位空 → 找第一個該部位、耐久 > 0 的裝備
-    if (!currentInstance) {
-      const candidate = inventory.find((e) => {
-        if (e.durability <= 0) return false
-        const def = getDef(e.equipmentId)
-        return def?.slot === slot
+    const currentDef = currentInstance ? getDef(currentInstance.equipmentId) : undefined
+    const replacesBroken = currentInstance?.durability === 0
+    for (const candidate of inventory) {
+      if (candidate.instanceId === currentInstance?.instanceId || candidate.durability <= 0) continue
+      const def = getDef(candidate.equipmentId)
+      if (!def || def.slot !== slot) continue
+      const attributeGain = Object.entries(def.modifiers).reduce((total, [attribute, amount]) =>
+        total + (amount ?? 0) - (currentDef?.modifiers[attribute as keyof typeof def.modifiers] ?? 0), 0)
+      if (currentInstance && !replacesBroken && attributeGain <= 0) continue
+      candidates.push({
+        instanceId: candidate.instanceId,
+        equipmentId: candidate.equipmentId,
+        slot,
+        name: def.name,
+        durability: candidate.durability,
+        value: computeEquipmentCandidateValue({
+          attributeGain,
+          durabilityRatio: candidate.durability / Math.max(1, def.maxDurability),
+          replacesBroken: !!replacesBroken,
+          personality,
+        }),
       })
-      if (candidate) {
-        const def = getDef(candidate.equipmentId)
-        return {
-          instanceId: candidate.instanceId,
-          equipmentId: candidate.equipmentId,
-          slot,
-          name: def?.name ?? candidate.equipmentId,
-          durability: candidate.durability,
-        }
       }
-    }
-
-    // 情況 B：部位有裝備但耐久 = 0 → 找同部位替換品（耐久 > 0）
-    if (currentInstance && currentInstance.durability <= 0) {
-      const candidate = inventory.find((e) => {
-        if (e.instanceId === currentInstance.instanceId) return false
-        if (e.durability <= 0) return false
-        const def = getDef(e.equipmentId)
-        return def?.slot === slot
-      })
-      if (candidate) {
-        const def = getDef(candidate.equipmentId)
-        return {
-          instanceId: candidate.instanceId,
-          equipmentId: candidate.equipmentId,
-          slot,
-          name: def?.name ?? candidate.equipmentId,
-          durability: candidate.durability,
-        }
-      }
-    }
   }
 
-  return undefined
+  return candidates.sort((first, second) => second.value - first.value)
 }
 
-function findBetterInnerSkill(
+function findInnerSkillCandidates(
   player: PlayerState,
   effectiveAttributes: { insight: number; armStrength: number; constitution: number; agility: number; innerEnergy: number },
-): { id: string; name: string; insightRequirement: number } | undefined {
+  personality?: AiPersonalityId,
+): InnerSkillCandidate[] {
   const currentSkill = allInnerSkillCatalog.find((s) => s.id === player.innerSkillId)
   const currentDamage = currentSkill?.calculateDamage?.(effectiveAttributes) ?? 0
 
   const candidates = allInnerSkillCatalog.filter((s) => player.innerSkillIds.includes(s.id) && s.id !== player.innerSkillId)
-
-  let best: { id: string; name: string; insightRequirement: number } | undefined
-  let bestDamage = currentDamage
-
-  for (const skill of candidates) {
-    if (effectiveAttributes.insight < skill.insightRequirement) continue
-    const damage = skill.calculateDamage(effectiveAttributes)
-    if (damage > bestDamage) {
-      bestDamage = damage
-      best = { id: skill.id, name: skill.name, insightRequirement: skill.insightRequirement }
-    }
-  }
-
-  return best
+  return candidates
+    .filter((skill) => effectiveAttributes.insight >= skill.insightRequirement)
+    .map((skill) => {
+      const damage = skill.calculateDamage(effectiveAttributes)
+      const damageGainRatio = (damage - currentDamage) / Math.max(1, currentDamage)
+      return {
+        id: skill.id,
+        name: skill.name,
+        insightRequirement: skill.insightRequirement,
+        damageGainRatio,
+        value: computeInnerSkillCandidateValue({
+          damageGainRatio,
+          insightRatio: effectiveAttributes.insight > 0 ? skill.insightRequirement / effectiveAttributes.insight : 0,
+          personality,
+        }),
+      }
+    })
+    .filter((candidate) => candidate.damageGainRatio > 0)
+    .sort((first, second) => second.value - first.value)
 }
 
 // ── 新增目標輔助函數 ───────────────────────────────────────────

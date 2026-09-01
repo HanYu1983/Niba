@@ -354,16 +354,17 @@ function evaluateEquipEquipment(
   player?: PlayerState,
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
-  const { equipableEquipment } = inputs
+  const { equipmentCandidates } = inputs
+  const equipableEquipment = equipmentCandidates[0]
 
   if (!equipableEquipment) {
     return { score: 0 }
   }
 
   const result: GoalResult = {
-    score: 1,
+    score: equipableEquipment.value,
     target: { kind: 'equip', instanceId: equipableEquipment.instanceId },
-    context: { slot: equipableEquipment.slot, name: equipableEquipment.name, durability: equipableEquipment.durability },
+    context: { slot: equipableEquipment.slot, name: equipableEquipment.name, durability: equipableEquipment.durability, value: equipableEquipment.value },
   }
   if (!state || !player || !dependencies) return result
 
@@ -686,7 +687,8 @@ export function evaluateEquipInnerSkill(
   player?: PlayerState,
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
-  const { betterInnerSkill, innerPowerRatio } = inputs
+  const { innerSkillCandidates, innerPowerRatio } = inputs
+  const betterInnerSkill = innerSkillCandidates[0]
 
   if (!betterInnerSkill) return { score: 0 }
 
@@ -697,7 +699,7 @@ export function evaluateEquipInnerSkill(
   const result: GoalResult = {
     score,
     target: { kind: 'equip-inner-skill', skillId: betterInnerSkill.id },
-    context: { skillId: betterInnerSkill.id, skillName: betterInnerSkill.name },
+    context: { skillId: betterInnerSkill.id, skillName: betterInnerSkill.name, value: betterInnerSkill.value },
   }
   if (!state || !player || !dependencies) return result
 
