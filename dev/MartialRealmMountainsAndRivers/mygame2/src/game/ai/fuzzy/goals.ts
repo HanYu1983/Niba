@@ -6,6 +6,7 @@ import type { AiAction } from '../aiAction'
 import { buildValidatedActionSequence } from './goalActionMapper'
 import type { ExecuteAiActionDependencies } from '../execution/executeAiAction'
 import type { AiGoalConstraints } from './personality'
+import { canTransportPlayer } from '../../rules/transportRules'
 
 export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'equipInnerSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense'
 
@@ -602,9 +603,12 @@ function evaluateExploration(
     return { score: 0.1 }
   }
 
+  const canTransportToUndiscoveredBase = nearestUndiscoveredBase != null
+    && canTransportPlayer(state, player.id, nearestUndiscoveredBase.id).ok
+
   // 未發現據點是探索的首要目標；沒有時才以一般不可見格作為探索方向。
   const baseScore = nearestUndiscoveredBase
-    ? 0.9
+    ? canTransportToUndiscoveredBase ? 1 : 0.9
     : Math.min(0.6, unexploredInvisibleCells / 10)
   const score = staminaRatio > 0.3 ? baseScore : baseScore * 0.5
 
@@ -617,6 +621,7 @@ function evaluateExploration(
     context: {
       unexploredInvisibleCells,
       target: nearestUndiscoveredBase ? 'undiscovered-base' : 'unexplored-cell',
+      canTransportToUndiscoveredBase,
       targetBaseId: nearestUndiscoveredBase?.id,
       targetBasePosition: nearestUndiscoveredBase?.position,
     },
@@ -909,7 +914,7 @@ function evaluateRepairEquipment(
 }
 
 // ─── buildDefense ──────────────────────────────────────────────
-// 據點附近有威脅 + 可建造防禦設施 → 建造
+// 有可建造防禦設施且據點尚未達到防禦需求 → 建造
 
 function evaluateBuildDefense(
   inputs: FuzzyInputs,
@@ -918,15 +923,18 @@ function evaluateBuildDefense(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { buildableDefenseStructure, defenseTowerCount, threatCountNearBase, materialRatio, staminaRatio, nearestBase } = inputs
+  const { buildableDefenseStructure, defenseTowerCount, threatCountNearBase, materialRatio, staminaRatio, nearestBase, isAdjacentToBase } = inputs
 
   if (!buildableDefenseStructure || !nearestBase) return { score: 0 }
   if (staminaRatio < 0.3 || materialRatio < 0.5) return { score: 0 }
   const requiredTowerCount = Math.max(1, Math.ceil(threatCountNearBase / 2))
-  if (threatCountNearBase === 0 || defenseTowerCount >= requiredTowerCount) return { score: 0 }
+  if (defenseTowerCount >= requiredTowerCount) return { score: 0 }
 
   // 據點附近威脅越多 → 建造動機越高
-  const f_threat = trapezoid(threatCountNearBase, 0, 1, 3, 5)
+  // 沒有威脅時仍保留一座基礎箭塔的低強度防禦需求。
+  const f_threat = threatCountNearBase === 0
+    ? 0.45
+    : trapezoid(threatCountNearBase, 0, 1, 3, 5)
   // 建料充足 → 加分
   const f_material = trapezoid(materialRatio, 0.5, 0.7, 1, 1)
 
@@ -934,7 +942,7 @@ function evaluateBuildDefense(
   if (score <= 0) return { score: 0 }
 
   const result: GoalResult = {
-    score: score * 0.7,
+    score: threatCountNearBase === 0 && isAdjacentToBase ? 0.95 : score * (threatCountNearBase === 0 ? 0.55 : 0.7),
     target: { kind: 'defense-build', baseId: nearestBase.id, structureType: buildableDefenseStructure.type, position: nearestBase.position },
     distanceToTarget: inputs.feasibility.distToNearestActiveBase,
     context: { structureName: buildableDefenseStructure.name, threatCountNearBase, defenseTowerCount, requiredTowerCount },
