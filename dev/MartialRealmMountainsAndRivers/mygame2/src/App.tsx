@@ -675,8 +675,8 @@ function App() {
                 title: '就醫結果',
                 message: `已在醫療室 Lv.${result.data.infirmaryLevel} 接受治療。`,
                 rewards: [
-                  `氣血 +${result.data.healthRecovery}`,
-                  `內力 +${result.data.innerPowerRecovery}`,
+                  `氣血 +${Math.round(result.data.healthRecovery)}`,
+                  `內力 +${Math.round(result.data.innerPowerRecovery)}`,
                   '目前玩家回合結束',
                 ],
               })
