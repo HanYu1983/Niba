@@ -39,14 +39,28 @@ function resolveAiExplorationEvent(state: GameState, playerId: string): GameStat
   const eligibleChoices = getEventChoices(event).filter((candidate) =>
     checkEventRequirements(state, playerId, event, candidate.requirements).allowed,
   )
-  const choice = eligibleChoices
+  const rankedChoices = eligibleChoices
     .map((candidate, index) => ({
       candidate,
       index,
       value: computeEventChoiceValue({ effects: candidate.effects, playerMoney: player.money, personality: player.aiPersonality }),
     }))
-    .sort((first, second) => second.value - first.value || first.index - second.index)[0]?.candidate
+    .sort((first, second) => second.value - first.value || first.index - second.index)
+  const choice = rankedChoices[0]?.candidate
   if (!choice) return state
+
+  console.info('[AI decision]', {
+    kind: 'exploration-event',
+    player: { id: player.id, name: player.name, position: player.position },
+    event: { id: event.id, type: event.type, name: event.name },
+    personality: player.aiPersonality ?? 'balanced',
+    choices: rankedChoices.map(({ candidate, value }) => ({
+      id: candidate.id,
+      label: candidate.label,
+      value: Number(value.toFixed(3)),
+    })),
+    selectedChoice: choice.id,
+  })
 
   const result = resolveExplorationEvent(state, playerId, event.id, choice.id)
   return result.result.ok ? result.state : state

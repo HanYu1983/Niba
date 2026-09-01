@@ -329,10 +329,10 @@ while (體力 > 0 && loopCount < 50):
 |---|---|---|
 | 建設候選 value 已完成第一階段動態化 | `fuzzyInputs.ts`、`constructionValue.ts` | 已反映材料需求、威脅、成本、距離、升級與個性；後續可補建築實際產能效益 |
 | 攻擊候選價值仍是第一階段模型 | `fuzzyInputs.ts`、`combatValue.ts` | 已枚舉並排序所有可見生物；經驗/威脅度仍待接入更完整的領域收益資料 |
-| 事件選項價值仍是第一階段模型 | `executeAiAction.ts`、`eventValue.ts` | 已在合法選項中排序直接效果；尚未納入完整個性與長期狀態效益 |
+| 事件選項價值仍是第一階段模型 | `executeAiAction.ts`、`eventValue.ts` | 已在合法選項中排序直接效果並接入經營/修煉/謹慎個性；長期狀態效益仍可細化 |
 | 裝備/內功候選價值仍是第一階段模型 | `fuzzyInputs.ts`、`equipmentValue.ts` | 已評估屬性提升、耐久、損壞替換、傷害提升與個性；尚未納入完整防禦收益與長期機會成本 |
 | 價值函式仍需深化領域模型 | `valueContext.ts`、各領域 value module | 建設、戰鬥、事件、裝備/內功已接入共用契約；經驗收益、防禦收益與長期機會成本仍可細化 |
-| 事件選項與長期收益仍可深化 | `eventValue.ts`、各領域 value module | ValueContext factors 已寫入候選 runtime log；事件選項仍以直接效果估值，經驗/防禦/長期機會成本可再細化 |
+| 事件選項與長期收益仍可深化 | `eventValue.ts`、各領域 value module | ValueContext factors 已寫入候選 runtime log；事件選項已記錄合法候選排序，但仍以直接效果估值，經驗/防禦/長期機會成本可再細化 |
 
 ### 10.2 統一價值函數契約（ValueContext）
 
@@ -365,7 +365,7 @@ value = max(0,
 |---|---|---|
 | 1 | 建設候選動態價值 | 已完成第一階段；後續補各建築的實際收益模型 |
 | 2 | 攻擊目標候選化 | 已完成第一階段；從「最近」改為「枚舉視野內所有生物 → 各自算價值」 |
-| 3 | 個性滲透到價值函數 | builder 偏好倉庫、aggressive 偏好箭塔 |
+| 3 | 個性滲透到價值函數 | 已完成第一階段；建設、戰鬥、事件、裝備/內功均有個性權重 |
 | 4 | 事件選項價值判斷 | 已完成第一階段；從「第一個符合」改為「枚舉選項 → 算價值」 |
 | 5 | 裝備/內功換裝效益 | 已完成第一階段；評估屬性提升、耐久與內功傷害提升 |
 
@@ -438,7 +438,7 @@ value = max(0,
 | 統一 ValueContext 契約（need/benefit/urgency/risk/cost/distance/personality） | ✅ 第一階段 | AI | — | `valueContext.ts` 建立契約與聚合器，建設、戰鬥、事件、裝備/內功均已接入 |
 | 建設候選動態價值（需求 + 效益 + 個性滲透） | ✅ 第一階段 | AI | — | `constructionValue.test.ts` 覆蓋個性、威脅、成本、距離與升級加成 |
 | 攻擊目標候選化（枚舉視野內生物 → 各自算價值） | ✅ 第一階段 | AI | — | `combatValue.ts` 依距離、傷害比例、目標血量、生存能力、等級與個性排序；後續補領域收益資料 |
-| 事件選項價值判斷 | ✅ 第一階段 | AI | — | `eventValue.ts` 依金錢、聲望、道具、學習與敵對生成效果排序；同分保留原順序 |
+| 事件選項價值判斷 | ✅ | AI | — | `eventValue.ts` 依金錢、聲望、道具、學習、敵對生成效果與個性排序；同分保留原順序，runtime 記錄候選比較 |
 | 裝備/內功換裝效益評估 | ✅ 第一階段 | AI | — | `equipmentValue.ts` 依屬性提升、耐久、損壞替換、傷害提升與修煉型個性排序 |
 | 價值函數元件寫入 `[AI decision]` 日誌 | ✅ | AI | — | 日誌含 goal context、selectedContext、候選排名與每個候選的 ValueEvaluation factors |
 | 候選枚舉抽成獨立純模組 | P3 | AI | — | `fuzzyInputs.ts` 不再內嵌枚舉邏輯 |
@@ -448,7 +448,7 @@ value = max(0,
 | Milestone | Acceptance Criteria | Test Method | Result |
 |---|---|---|---|
 | M1：候選式決策統一 | 建造/攻擊/事件都走「枚舉 → 算價值 → 選最高」 | 回歸測試 + 行為對照 | 未開始 |
-| M2：個性滲透價值函數 | 不同個性在相同局面選出不同候選 | 個性對照測試 | 未開始 |
+| M2：個性滲透價值函數 | 不同個性在相同局面選出不同候選 | 建設、事件、裝備/內功個性對照測試 | 第一階段完成 |
 | M3：價值可解釋性 | `[AI decision]` 日誌含 goal context、selectedContext、候選排名與 ValueEvaluation factors | AI suite + console 檢查 | 完成 |
 
 ---
