@@ -331,7 +331,7 @@ while (體力 > 0 && loopCount < 50):
 | 攻擊候選價值仍是第一階段模型 | `fuzzyInputs.ts`、`combatValue.ts` | 已枚舉並排序所有可見生物；經驗/威脅度仍待接入更完整的領域收益資料 |
 | 事件選項價值仍是第一階段模型 | `executeAiAction.ts`、`eventValue.ts` | 已在合法選項中排序直接效果；尚未納入完整個性與長期狀態效益 |
 | 裝備/內功候選價值仍是第一階段模型 | `fuzzyInputs.ts`、`equipmentValue.ts` | 已評估屬性提升、耐久、損壞替換、傷害提升與個性；尚未納入完整防禦收益與長期機會成本 |
-| 價值函式遷移尚未完成 | `valueContext.ts`、各領域 value module | 共用契約與聚合器已建立，建設已遷移；戰鬥、事件、裝備仍保留領域特化聚合 |
+| 價值函式仍需深化領域模型 | `valueContext.ts`、各領域 value module | 建設、戰鬥、事件、裝備/內功已接入共用契約；經驗收益、防禦收益與長期機會成本仍可細化 |
 
 ### 10.2 統一價值函數契約（ValueContext）
 
@@ -434,7 +434,7 @@ value = max(0,
 
 | Task Item | Priority | Owner | Deadline | 完成條件 |
 |---|---|---|---|---|
-| 統一 ValueContext 契約（need/benefit/urgency/risk/cost/distance/personality） | ✅ 第一階段 | AI | — | `valueContext.ts` 建立契約與聚合器，建設已完成遷移；其他領域待逐步接入 |
+| 統一 ValueContext 契約（need/benefit/urgency/risk/cost/distance/personality） | ✅ 第一階段 | AI | — | `valueContext.ts` 建立契約與聚合器，建設、戰鬥、事件、裝備/內功均已接入 |
 | 建設候選動態價值（需求 + 效益 + 個性滲透） | ✅ 第一階段 | AI | — | `constructionValue.test.ts` 覆蓋個性、威脅、成本、距離與升級加成 |
 | 攻擊目標候選化（枚舉視野內生物 → 各自算價值） | ✅ 第一階段 | AI | — | `combatValue.ts` 依距離、傷害比例、目標血量、生存能力、等級與個性排序；後續補領域收益資料 |
 | 事件選項價值判斷 | ✅ 第一階段 | AI | — | `eventValue.ts` 依金錢、聲望、道具、學習與敵對生成效果排序；同分保留原順序 |

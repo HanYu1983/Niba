@@ -1,4 +1,5 @@
 import type { EventEffect } from '../../events/eventCatalog'
+import { clampValue, computeUnifiedValue } from './valueContext'
 
 export type EventValueContext = {
   effects: EventEffect[]
@@ -27,5 +28,13 @@ export function computeEventChoiceValue(context: EventValueContext): number {
     }
   }, 0)
 
-  return Math.max(0, Math.min(1, score))
+  return computeUnifiedValue({
+    need: 1,
+    benefit: clampValue(score),
+    urgency: 1,
+    risk: clampValue(-score),
+    cost: 0,
+    distance: 0,
+    personalityWeight: 1,
+  })
 }

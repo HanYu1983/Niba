@@ -1,30 +1,34 @@
 import type { AiPersonalityId } from '../../types/ai'
+import { clampValue, computeUnifiedValue } from './valueContext'
 
 export type CombatValueContext = {
   distance: number
   healthRatio: number
   damageRatio: number
   hitsSurvivable: number
+  staminaRatio: number
   level: number
   personality?: AiPersonalityId
 }
 
 /** 計算可見生物的相對攻擊價值；目標合法性由 action validation 處理。 */
 export function computeCombatCandidateValue(context: CombatValueContext): number {
-  const proximity = Math.max(0, 1 - Math.min(10, context.distance) * 0.05)
-  const killOpportunity = Math.min(1, context.damageRatio * 1.5)
-  const vulnerability = Math.max(0, Math.min(1, 1 - context.healthRatio))
-  const survival = Math.max(0, Math.min(1, context.hitsSurvivable / 5))
-  const levelReward = Math.max(0, Math.min(1, context.level / 10))
-  const riskPenalty = context.hitsSurvivable < 1 ? 0.45 : context.hitsSurvivable < 2 ? 0.75 : 1
+  const killOpportunity = clampValue(context.damageRatio * 1.5)
+  const vulnerability = clampValue(1 - context.healthRatio)
+  const survival = clampValue(context.hitsSurvivable / 5)
+  const levelReward = clampValue(context.level / 10)
+  const risk = context.hitsSurvivable < 1 ? 1 : context.hitsSurvivable < 2 ? 0.5 : 0
   const personalityMultiplier = context.personality === 'aggressive' ? 1.15
     : context.personality === 'cautious' || context.personality === 'guardian' ? 0.85
       : 1
 
-  return Math.max(0, Math.min(1,
-    (killOpportunity * 0.45 + vulnerability * 0.2 + survival * 0.15 + levelReward * 0.2)
-      * proximity
-      * riskPenalty
-      * personalityMultiplier,
-  ))
+  return computeUnifiedValue({
+    need: clampValue(0.5 + context.staminaRatio * 0.5),
+    benefit: killOpportunity * 0.45 + vulnerability * 0.2 + survival * 0.15 + levelReward * 0.2,
+    urgency: killOpportunity,
+    risk,
+    cost: clampValue(1 - context.staminaRatio),
+    distance: context.distance,
+    personalityWeight: personalityMultiplier,
+  })
 }

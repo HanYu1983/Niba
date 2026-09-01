@@ -475,6 +475,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
           healthRatio: creature.health / Math.max(1, creature.maxHealth),
           damageRatio,
           hitsSurvivable: hitsAgainstCreature > 0 ? player.health / Math.max(1, Math.floor(creature.maxHealth * 0.3)) : 0,
+          staminaRatio: staminaRatioVal,
           level: creature.level ?? 1,
           personality,
         }),

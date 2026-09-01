@@ -9,6 +9,7 @@ function value(overrides: Partial<Parameters<typeof computeCombatCandidateValue>
     hitsSurvivable: 5,
     level: 3,
     ...overrides,
+    staminaRatio: overrides.staminaRatio ?? 1,
   })
 }
 
