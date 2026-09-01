@@ -12,6 +12,13 @@ import { executeAiAction, type ExecuteAiActionDependencies } from '../execution/
 import { canTransportPlayer } from '../../rules/transportRules'
 import { getAiActionStaminaCost } from '../../rules/actionCostRules'
 
+const previousMovePositions = new Map<string, Position>()
+
+/** 記住 AI 上一步移動前的位置，供下一次尋路避免立即折返。 */
+export function rememberAiMoveOrigin(playerId: string, position: Position): void {
+  previousMovePositions.set(playerId, position)
+}
+
 /**
  * 從指定位置出發，用 Dijkstra 計算到所有可达格的最短路徑成本。
  * 回傳 cellId → cost 的 Map（起點 cost = 0）。
@@ -71,14 +78,28 @@ function findClosestReachablePosition(state: GameState, player: PlayerState, tar
 
   if (adjacents.length === 0) return player.position
 
+  const previousPosition = previousMovePositions.get(player.id)
+  const forwardCandidates = previousPosition
+    ? adjacents.filter((candidate) => candidate.position.row !== previousPosition.row || candidate.position.column !== previousPosition.column)
+    : adjacents
+  const candidates = forwardCandidates.length > 0 ? forwardCandidates : adjacents
+
   // 從目標位置建最短路徑樹
   const targetCosts = buildCostMapFrom(state, targetPosition, player)
 
   // 從相鄰格中選「沿最短路徑最接近目標」的格子
-  const best = adjacents.reduce((best, c) => {
+  const best = candidates.reduce((best, c) => {
     const dBest = targetCosts.get(best.cellId) ?? Infinity
     const dC = targetCosts.get(c.cellId) ?? Infinity
-    return dC < dBest ? c : best
+    if (dC !== dBest) return dC < dBest ? c : best
+
+    // 目標格被據點/門派據點阻擋時，反向成本可能全部為 Infinity；
+    // 此時以曼哈頓距離穩定決勝，避免 reduce 依地圖列舉順序走向錯誤方向。
+    const distanceBest = Math.abs(best.position.row - targetPosition.row)
+      + Math.abs(best.position.column - targetPosition.column)
+    const distanceCurrent = Math.abs(c.position.row - targetPosition.row)
+      + Math.abs(c.position.column - targetPosition.column)
+    return distanceCurrent < distanceBest || (distanceCurrent === distanceBest && c.cost < best.cost) ? c : best
   })
   return best.position
 }

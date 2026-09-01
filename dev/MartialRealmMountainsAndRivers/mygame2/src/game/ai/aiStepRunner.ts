@@ -9,7 +9,7 @@ import { validateAiAction } from './validation/validateAiAction'
 import { getPlayerAiEmergency } from './policy/aiPolicyRegistry'
 import { pickNextBuildCandidate, pickUpgradeCandidate } from './construction/constructionAi'
 import { computeFuzzyInputs } from './fuzzy/fuzzyInputs'
-import { evaluateAllGoals } from './fuzzy/goals'
+import { evaluateAllGoals, type GoalName } from './fuzzy/goals'
 import { MIN_THRESHOLD, rankGoals } from './fuzzy/decision'
 import { getAiGoalConstraints } from './fuzzy/personality'
 import { ACTION_STAMINA_COSTS, canPlayerPerformAction } from '../rules/actionCostRules'
@@ -19,12 +19,22 @@ import { createCharacterState } from '../characterFactory'
 import { defaultRandomSource } from '../rules/randomRules'
 import { isSameOrAdjacent } from '../types'
 import type { ExecuteAiActionDependencies } from './execution/executeAiAction'
+import { rememberAiMoveOrigin } from './fuzzy/goalActionMapper'
 
 /** 全域行動日誌上限：只保留最新 N 筆，避免長局面資料無限成長（重構文件 §4.5）。 */
 const MAX_ACTION_EVENTS = 200
 
 /** AI step 迴圈上限：避免異常狀態下無限迴圈。 */
 const MAX_LOOPS = 50
+
+/** 移動目標的決策衝量：避免相近分數的目標在相鄰 step 間來回切換。 */
+const AI_MOVEMENT_MOMENTUM_MARGIN = 0.2
+const movementCommitments = new Map<string, {
+  orderId: string
+  goal: string
+  targetKey: string
+  score: number
+}>()
 
 /** 圖搜索／模糊策略評估用的 stub combat deps（不實際結算掉落/升級）。 */
 const STUB_COMBAT_DEPS: ExecuteAiActionDependencies['combat'] = {
@@ -49,6 +59,66 @@ export interface AiStepRunnerDeps {
   collectResourcePoint: (playerId: string, resourcePointId: string) => ActionOutcome
   /** 顯示行動結果彈窗。 */
   showActionResult: (result: ActionResult) => void
+}
+
+function getGoalTargetKey(result: { target?: unknown }): string {
+  return result.target ? JSON.stringify(result.target) : ''
+}
+
+function isMovementAction(action: AiAction): boolean {
+  return action.type === 'move' || action.type === 'transport'
+}
+
+function isHighThreat(goalResults: Record<string, { score: number }>): boolean {
+  return (goalResults.selfPreservation?.score ?? 0) >= 0.6
+}
+
+function selectFuzzyCandidateWithMomentum(
+  playerId: string,
+  orderId: string,
+  rankedGoals: Array<{ goal: GoalName; result: { score: number; target?: unknown; actions?: AiAction[] } }>,
+  thresholds: Partial<Record<GoalName, number>>,
+  goalResults: Record<string, { score: number }>,
+  normalCandidate: { goal: GoalName; result: { score: number; target?: unknown; actions?: AiAction[] } } | undefined,
+): { goal: GoalName; result: { score: number; target?: unknown; actions?: AiAction[] } } | undefined {
+  const eligible = rankedGoals.filter((candidate) => {
+    const threshold = thresholds[candidate.goal] ?? MIN_THRESHOLD
+    return candidate.result.score >= threshold
+      && candidate.result.actions?.some((action) => isMovementAction(action))
+  })
+  const commitment = movementCommitments.get(playerId)
+  if (!commitment || commitment.orderId !== orderId) return normalCandidate
+  if (isHighThreat(goalResults)) {
+    movementCommitments.delete(playerId)
+    return normalCandidate
+  }
+
+  const committed = eligible.find((candidate) =>
+    candidate.goal === commitment.goal && getGoalTargetKey(candidate.result) === commitment.targetKey,
+  )
+  if (!committed) {
+    movementCommitments.delete(playerId)
+    return normalCandidate
+  }
+  if (!normalCandidate || normalCandidate.goal === committed.goal && getGoalTargetKey(normalCandidate.result) === commitment.targetKey) return committed
+
+  // 新目標必須顯著更好，否則沿用原路線，避免一步向左、一步向右。
+  if (normalCandidate.result.score >= committed.result.score + AI_MOVEMENT_MOMENTUM_MARGIN) {
+    movementCommitments.delete(playerId)
+    return normalCandidate
+  }
+  return committed
+}
+
+function rememberMovementCommitment(playerId: string, orderId: string, candidate: { goal: string; result: { score: number; target?: unknown; actions?: AiAction[] } }): void {
+  const action = candidate.result.actions?.[0]
+  if (!action || !isMovementAction(action)) return
+  movementCommitments.set(playerId, {
+    orderId,
+    goal: candidate.goal,
+    targetKey: getGoalTargetKey(candidate.result),
+    score: candidate.result.score,
+  })
 }
 
 /** 建立 AI 行動執行所需的 turn dependencies（與 executeAiAction 共用）。 */
@@ -262,6 +332,9 @@ function runAiStepLoop(
     if (!actionResult.ok) {
       exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
       continue
+    }
+    if (action.type === 'move') {
+      rememberAiMoveOrigin(playerId, currentPlayer.position)
     }
 
     // 一次只執行一個 action；下一個 action 由 scheduler 的下一個 timer 觸發。
@@ -600,6 +673,7 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
     const rankedGoals = rankGoals(goalResults)
     let actions: AiAction[] = []
     let goalFound = false
+    let normalCandidate: typeof rankedGoals[number] | undefined
 
     for (const candidate of rankedGoals) {
       const threshold = getAiGoalConstraints(order.personality).goalThresholds?.[candidate.goal] ?? MIN_THRESHOLD
@@ -609,10 +683,26 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
       if (!candidateActions || candidateActions.length === 0) continue
       if (candidateActions.every((a) => a.type === 'hold')) continue
 
-      actions = candidateActions
-      goalFound = true
-      logAiDecision(deps.getState(), currentPlayer, order, inputs, goalResults, candidate.goal, threshold, actions)
+      normalCandidate = candidate
       break
+    }
+
+    const selectedCandidate = selectFuzzyCandidateWithMomentum(
+      playerId,
+      order.id,
+      rankedGoals,
+      getAiGoalConstraints(order.personality).goalThresholds ?? {},
+      goalResults,
+      normalCandidate,
+    )
+    if (selectedCandidate) {
+      actions = selectedCandidate.result.actions ?? []
+      goalFound = actions.length > 0
+      if (goalFound) {
+        rememberMovementCommitment(playerId, order.id, selectedCandidate)
+        const threshold = getAiGoalConstraints(order.personality).goalThresholds?.[selectedCandidate.goal] ?? MIN_THRESHOLD
+        logAiDecision(deps.getState(), currentPlayer, order, inputs, goalResults, selectedCandidate.goal, threshold, actions)
+      }
     }
 
     if (!goalFound) {

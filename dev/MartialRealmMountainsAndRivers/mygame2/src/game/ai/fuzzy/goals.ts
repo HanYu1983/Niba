@@ -597,8 +597,22 @@ function evaluateExploration(
     },
   }
 
-  const actions = buildValidatedActionSequence('exploration', result, state, player, dependencies)
-  if (actions.length === 0) return { score: 0 }
+  let actions = buildValidatedActionSequence('exploration', result, state, player, dependencies)
+  const hasMovement = actions.some((action) => action.type !== 'hold')
+
+  // 未發現據點可能被障礙或剩餘體力封鎖；此時退回可行的未知格，避免保留一個只有 hold 的虛假探索目標。
+  if (!hasMovement && nearestUndiscoveredBase && nearestUnexploredInvisiblePosition) {
+    const fallbackResult: GoalResult = {
+      ...result,
+      target: { kind: 'explore', position: nearestUnexploredInvisiblePosition },
+      distanceToTarget: undefined,
+      context: { unexploredInvisibleCells, target: 'unexplored-cell-fallback' },
+    }
+    actions = buildValidatedActionSequence('exploration', fallbackResult, state, player, dependencies)
+    if (actions.some((action) => action.type !== 'hold')) return { ...fallbackResult, actions }
+  }
+
+  if (actions.length === 0 || actions.every((action) => action.type === 'hold')) return { score: 0 }
   result.actions = actions
   return result
 }
