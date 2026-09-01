@@ -1,4 +1,5 @@
 import type { AiPersonalityId } from '../../types/ai'
+import { clampValue, computeUnifiedValue } from './valueContext'
 
 export type ConstructionValueContext = {
   kind: 'build' | 'upgrade'
@@ -29,29 +30,24 @@ const PERSONALITY_BONUS: Partial<Record<AiPersonalityId, Partial<Record<string, 
   scholar: { 'martial-hall': 1.25, workshop: 1.1 },
 }
 
-function clamp(value: number): number {
-  return Math.max(0, Math.min(1, value))
-}
-
 /** 計算合法建設候選的相對價值；合法性由呼叫端處理。 */
 export function computeConstructionCandidateValue(context: ConstructionValueContext): number {
   const benefit = BASE_BENEFIT[context.buildingType] ?? 0.55
   const personalityMultiplier = PERSONALITY_BONUS[context.personality ?? 'balanced']?.[context.buildingType] ?? 1
-  const materialNeed = clamp(context.materialRatio)
+  const materialNeed = clampValue(context.materialRatio)
   const threatUrgency = context.threatCountNearBase > 0 && (context.buildingType === 'arrow-tower' || context.buildingType === 'advanced-arrow-tower')
-    ? clamp(0.6 + context.threatCountNearBase * 0.1)
+    ? clampValue(0.6 + context.threatCountNearBase * 0.1)
     : context.threatCountNearBase > 0 ? 0.35 : 0.7
-  const costPressure = clamp(context.cost / 100)
-  const distanceDecay = Math.max(0, 1 - Math.min(10, context.distanceToBase) * 0.05)
+  const costPressure = clampValue(context.cost / 100)
   const upgradeBonus = context.kind === 'upgrade' ? 1.05 : 1
 
-  return clamp(
-    benefit
-      * personalityMultiplier
-      * (0.4 + materialNeed * 0.6)
-      * threatUrgency
-      * (1 - costPressure * 0.25)
-      * distanceDecay
-      * upgradeBonus,
-  )
+  return computeUnifiedValue({
+    need: 0.4 + materialNeed * 0.6,
+    benefit: benefit * upgradeBonus,
+    urgency: threatUrgency,
+    risk: 0,
+    cost: costPressure * (0.25 / 0.3),
+    distance: context.distanceToBase,
+    personalityWeight: personalityMultiplier,
+  })
 }
