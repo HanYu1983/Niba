@@ -121,7 +121,7 @@ function logAiDecision(
   player: { id: string; name: string; position: { row: number; column: number } },
   order: { type: string; personality?: string; playerId?: string; maxDistance?: number },
   inputs: ReturnType<typeof computeFuzzyInputs>,
-  goalResults: Record<string, { score: number; target?: unknown }>,
+  goalResults: Record<string, { score: number; target?: unknown; context?: unknown }>,
   selectedGoal: string,
   threshold: number,
   actions: AiAction[],
@@ -139,8 +139,33 @@ function logAiDecision(
     goals: Object.fromEntries(Object.entries(goalResults).map(([goal, result]) => [goal, {
       score: Number(result.score.toFixed(3)),
       target: result.target,
+      context: result.context,
     }])),
     selectedGoal,
+    selectedContext: goalResults[selectedGoal]?.context,
+    candidateRanking: {
+      construction: inputs.constructionCandidates.map((candidate) => ({
+        id: candidate.buildingId,
+        kind: candidate.kind,
+        value: Number(candidate.value.toFixed(3)),
+      })),
+      combat: inputs.combatCandidates.map((candidate) => ({
+        id: candidate.creatureId,
+        distance: candidate.distance,
+        damageRatio: Number(candidate.damageRatio.toFixed(3)),
+        value: Number(candidate.value.toFixed(3)),
+      })),
+      equipment: inputs.equipmentCandidates.map((candidate) => ({
+        id: candidate.instanceId,
+        slot: candidate.slot,
+        value: Number(candidate.value.toFixed(3)),
+      })),
+      innerSkills: inputs.innerSkillCandidates.map((candidate) => ({
+        id: candidate.id,
+        damageGainRatio: Number(candidate.damageGainRatio.toFixed(3)),
+        value: Number(candidate.value.toFixed(3)),
+      })),
+    },
     threshold,
     actions,
   })
