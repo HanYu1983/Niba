@@ -20,6 +20,7 @@ import { getMartialHallSkillCost } from '../../actions/martialHallActions'
 import { canUpgradeBuildingType, getBuildingLevel, getBuildingUpgradeResult, getEffectiveBuildingUpgradeCost } from '../../rules/buildingProgressionRules'
 import type { AiPersonalityId } from '../../types/ai'
 import { computeConstructionCandidateValue } from './constructionValue'
+import { computeCombatCandidateValue } from './combatValue'
 
 export type ConstructionCandidate = {
   kind: 'build' | 'upgrade'
@@ -30,6 +31,16 @@ export type ConstructionCandidate = {
   cost: number
   currentLevel?: number
   nextLevel?: number
+  value: number
+}
+
+export type CombatCandidate = {
+  creatureId: string
+  creatureName: string
+  position: Position
+  distance: number
+  damageRatio: number
+  healthRatio: number
   value: number
 }
 
@@ -124,6 +135,8 @@ export interface FuzzyInputs {
   nearestNestId: string
   /** 視野範圍內的生物 id 陣列（近到遠排序） */
   visibleCreatureIds: string[]
+  /** 所有視野內生物的攻擊價值候選（高到低排序） */
+  combatCandidates: CombatCandidate[]
   /** 建議裝備的內功（有更強的未裝備內功），無則 undefined */
   betterInnerSkill: { id: string; name: string; insightRequirement: number } | undefined
   /** 是否有傷害型內功已裝備 */
@@ -416,6 +429,35 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
       getSkillProgression(player, currentInnerSkill.id).level,
     ) / Math.max(1, nearestVisibleCreature.maxHealth))
     : 0
+  const combatCandidates: CombatCandidate[] = visibleCreatures
+    .map(({ creature }) => {
+      const distance = manhattan(player.position, creature.position)
+      const damageRatio = currentInnerSkill
+        ? Math.min(1, getSkillDamage(
+          effectiveAttributes,
+          currentInnerSkill,
+          getSkillProgression(player, currentInnerSkill.id).level,
+        ) / Math.max(1, creature.maxHealth))
+        : 0
+      const hitsAgainstCreature = creature.health / Math.max(1, Math.floor(creature.maxHealth * 0.3))
+      return {
+        creatureId: creature.id,
+        creatureName: creature.name,
+        position: creature.position,
+        distance,
+        damageRatio,
+        healthRatio: creature.health / Math.max(1, creature.maxHealth),
+        value: computeCombatCandidateValue({
+          distance,
+          healthRatio: creature.health / Math.max(1, creature.maxHealth),
+          damageRatio,
+          hitsSurvivable: hitsAgainstCreature > 0 ? player.health / Math.max(1, Math.floor(creature.maxHealth * 0.3)) : 0,
+          level: creature.level ?? 1,
+          personality,
+        }),
+      }
+    })
+    .sort((first, second) => second.value - first.value)
 
   // 找更好的內功：已學會但未裝備，且悟性足夠，且比目前內功更強
   const bestInnerSkill = findBetterInnerSkill(player, effectiveAttributes)
@@ -524,6 +566,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     distToNearestNest,
     nearestNestId: nearestNest?.id ?? '',
     visibleCreatureIds,
+    combatCandidates,
     betterInnerSkill: bestInnerSkill,
     hasDamageInnerSkill,
     combatDamageRatio,

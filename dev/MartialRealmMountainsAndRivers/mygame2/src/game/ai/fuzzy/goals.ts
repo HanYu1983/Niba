@@ -205,20 +205,24 @@ function evaluateEngageCombat(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { distToNearestCreature, staminaRatio, hitsSurvivable, nearestCreatureId, needsLeveling, killableCreature, combatDamageRatio } = inputs
+  const { staminaRatio, hitsSurvivable, needsLeveling, combatCandidates } = inputs
+  const bestCandidate = combatCandidates[0]
 
-  if (!nearestCreatureId || distToNearestCreature === Infinity) {
+  if (!bestCandidate) {
     return { score: 0 }
   }
 
+  const { creatureId, position, distance, damageRatio } = bestCandidate
+  const killable = distance === 1 && hitsSurvivable >= 1 && player.stamina > 0
+
   // 可擊殺仍需考量功法傷害；弱功法不應無條件壓過經營目標。
-  if (killableCreature) {
-    const combatReadiness = Math.min(1, combatDamageRatio * 1.5)
+  if (killable) {
+    const combatReadiness = Math.min(1, damageRatio * 1.5)
     const result: GoalResult = {
       score: combatReadiness,
-      target: { kind: 'attack', targetId: nearestCreatureId, targetType: 'creature', position: { row: -1, column: -1 } },
-      distanceToTarget: distToNearestCreature,
-      context: { distToNearestCreature, nearestCreatureId, killable: true, combatDamageRatio, combatReadiness },
+      target: { kind: 'attack', targetId: creatureId, targetType: 'creature', position },
+      distanceToTarget: distance,
+      context: { distance, creatureId, killable: true, damageRatio, combatReadiness },
     }
     const actions = buildValidatedActionSequence('engageCombat', result, state, player, dependencies)
     if (actions.length === 0) return { score: 0 }
@@ -226,9 +230,9 @@ function evaluateEngageCombat(
     return result
   }
 
-  const f_closeCreature = distToNearestCreature <= 1
+  const f_closeCreature = distance <= 1
     ? 1
-    : distToNearestCreature <= 3
+    : distance <= 3
       ? 0.7
       : 0.3
 
@@ -238,7 +242,7 @@ function evaluateEngageCombat(
   let score = Math.min(0.85, fuzzyAnd(
     fuzzyOr(f_closeCreature, f_healthy),
     fuzzyOr(f_staminaHigh, f_closeCreature),
-    Math.min(1, combatDamageRatio * 1.5),
+    Math.min(1, damageRatio * 1.5),
   ))
 
   // 等級落後時打怪分數提升
@@ -248,9 +252,9 @@ function evaluateEngageCombat(
 
   const result: GoalResult = {
     score,
-    target: { kind: 'attack', targetId: nearestCreatureId, targetType: 'creature', position: { row: -1, column: -1 } },
-    distanceToTarget: distToNearestCreature,
-    context: { distToNearestCreature, nearestCreatureId, killable: false, combatDamageRatio },
+    target: { kind: 'attack', targetId: creatureId, targetType: 'creature', position },
+    distanceToTarget: distance,
+    context: { distance, creatureId, killable: false, damageRatio },
   }
   const actions = buildValidatedActionSequence('engageCombat', result, state, player, dependencies)
   if (actions.length === 0) return { score: 0 }
