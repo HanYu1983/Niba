@@ -4,6 +4,7 @@ import type { FuzzyInputs } from './fuzzyInputs'
 import type { AiAction } from '../aiAction'
 import { buildValidatedActionSequence } from './goalActionMapper'
 import type { ExecuteAiActionDependencies } from '../execution/executeAiAction'
+import type { AiGoalConstraints } from './personality'
 
 export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'equipInnerSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense'
 
@@ -347,6 +348,7 @@ export function evaluateAllGoals(
   state?: GameState,
   player?: PlayerState,
   dependencies?: ExecuteAiActionDependencies,
+  constraints: AiGoalConstraints = {},
 ): Record<GoalName, GoalResult> {
   const results: Record<GoalName, GoalResult> = {
     selfPreservation: evaluateSelfPreservation(inputs, state, player, dependencies),
@@ -377,6 +379,16 @@ export function evaluateAllGoals(
       const decay = Math.max(0, 1 - r.distanceToTarget * 0.05)
       r.score *= decay
     }
+  }
+
+  const allowedGoals = constraints.allowedGoals ? new Set(constraints.allowedGoals) : undefined
+  for (const goal of Object.keys(results) as GoalName[]) {
+    if (allowedGoals && !allowedGoals.has(goal)) {
+      results[goal] = { score: 0 }
+      continue
+    }
+    const weight = constraints.goalWeights?.[goal]
+    if (weight !== undefined) results[goal].score *= Math.max(0, weight)
   }
 
   return results

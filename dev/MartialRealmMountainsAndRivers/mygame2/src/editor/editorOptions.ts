@@ -92,9 +92,15 @@ export const ATTRIBUTE_FIELDS: Array<{ key: keyof import('../game/types').Player
 
 /** AI 玩家類型選項（對應 AiOrder.type）。 */
 export const AI_TYPE_OPTIONS: Array<{ value: string; label: string }> = [
-  { value: 'decision-tree', label: '決策樹（自主行動）' },
+  { value: 'fuzzy', label: '通用 AI（模糊策略）' },
   { value: 'support-player', label: '跟隨保護玩家' },
   { value: 'protect-base', label: '保護據點' },
-  { value: 'fuzzy', label: '模糊策略' },
-  { value: 'graph-search', label: '圖搜索' },
+]
+
+export const AI_PERSONALITY_OPTIONS: Array<{ value: string; label: string }> = [
+  { value: 'balanced', label: '均衡型' },
+  { value: 'aggressive', label: '好戰型' },
+  { value: 'cautious', label: '謹慎型' },
+  { value: 'builder', label: '建設型' },
+  { value: 'explorer', label: '探索型' },
 ]

@@ -12,8 +12,7 @@ import { pickNextBuildCandidate, pickUpgradeCandidate } from './construction/con
 import { computeFuzzyInputs } from './fuzzy/fuzzyInputs'
 import { evaluateAllGoals } from './fuzzy/goals'
 import { MIN_THRESHOLD, rankGoals } from './fuzzy/decision'
-import { decideNextAction } from './decisionTree/decideNextAction'
-import { runGraphSearchStep as runGraphSearchStepDomain } from './graphSearch/runGraphSearchStep'
+import { getAiGoalConstraints } from './fuzzy/personality'
 import { ACTION_STAMINA_COSTS, canPlayerPerformAction } from '../rules/actionCostRules'
 import { constructBuilding, upgradeBuilding } from '../actions/buildingActions'
 import { moveCreatures, spawnCreaturesFromNests as spawnCreaturesFromNestsAction } from '../actions/creatureActions'
@@ -36,7 +35,6 @@ const STUB_COMBAT_DEPS: ExecuteAiActionDependencies['combat'] = {
   applyExperienceAndLevelUp: (player) => player,
   addLootToPlayer: (player) => player,
 }
-
 export interface AiStepRunnerDeps {
   getState: () => GameState
   updateGameState: (updater: (state: GameState) => GameState) => void
@@ -151,7 +149,7 @@ type AiLoopDecision =
 /**
  * AI step 迴圈骨架（重構文件 §11 Turn Scheduler 共用框架）。
  *
- * 封裝 fuzzy / decision-tree / graph-search 三種 step 共用的迴圈邏輯：
+ * 封裝 fuzzy step 的共用迴圈邏輯：
  * - 每步呼叫 `decide` 取得要執行的行動（或直接結束）。
  * - 執行前保底 validate（正常必定通過，不通過 = 代碼 bug）。
  * - 體力耗盡／迴圈上限／行動失敗時設定 exitReason 結束。
@@ -509,7 +507,7 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
   const state = deps.getState()
   const player = getAiPlayer(state, playerId)
   const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'fuzzy' && candidate.status === 'active')
-  if (!player || !order) {
+  if (!player || !order || order.type !== 'fuzzy') {
     return { ok: false, reason: '目前無法執行模糊策略回合。' }
   }
 
@@ -522,7 +520,13 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
     const inputs = computeFuzzyInputs(deps.getState(), currentPlayer)
 
     // 2. Evaluate（evaluateAllGoals 內部已做 validate + apply）
-    const goalResults = evaluateAllGoals(inputs, deps.getState(), currentPlayer, aiDeps)
+    const goalResults = evaluateAllGoals(
+      inputs,
+      deps.getState(),
+      currentPlayer,
+      aiDeps,
+      getAiGoalConstraints(order.personality),
+    )
 
     // 4. Select（result.actions 已由 evaluate 保證合法）
     const rankedGoals = rankGoals(goalResults)
@@ -530,7 +534,8 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
     let goalFound = false
 
     for (const candidate of rankedGoals) {
-      if (candidate.result.score < MIN_THRESHOLD) break
+      const threshold = getAiGoalConstraints(order.personality).goalThresholds?.[candidate.goal] ?? MIN_THRESHOLD
+      if (candidate.result.score < threshold) break
 
       const candidateActions = candidate.result.actions
       if (!candidateActions || candidateActions.length === 0) continue
@@ -548,46 +553,3 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
   })
 }
 
-/** 執行決策樹（decision-tree）step。 */
-export function runDecisionTreeStep(deps: AiStepRunnerDeps, playerId: string): ActionOutcome {
-  const state = deps.getState()
-  const player = getAiPlayer(state, playerId)
-  const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'decision-tree' && candidate.status === 'active')
-  if (!player || !order) {
-    return { ok: false, reason: '目前無法執行決策樹回合。' }
-  }
-
-  return runAiStepLoop(deps, playerId, player.name, '決策樹', () => {
-    const diagnostics: import('./decisionTree/decideNextAction').DecisionTreeDiagnostics = { reasons: [] }
-    const action = decideNextAction(deps.getState(), playerId, diagnostics)
-
-    if (!action) {
-      return {
-        exitReason: diagnostics.reasons.length > 0
-          ? `決策樹無可執行行動（${diagnostics.reasons.join('；')}）`
-          : '決策樹無可執行行動',
-      }
-    }
-    return { actions: [action] }
-  })
-}
-
-/** 執行圖搜索（graph-search）step。 */
-export function runGraphSearchStep(deps: AiStepRunnerDeps, playerId: string): ActionOutcome {
-  const state = deps.getState()
-  const player = getAiPlayer(state, playerId)
-  const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'graph-search' && candidate.status === 'active')
-  if (!player || !order) {
-    return { ok: false, reason: '目前無法執行圖搜索回合。' }
-  }
-
-  const aiDeps = buildAiDependencies(STUB_COMBAT_DEPS)
-
-  return runAiStepLoop(deps, playerId, player.name, '圖搜索', () => {
-    const { actions, exitReason: searchExit } = runGraphSearchStepDomain(deps.getState(), playerId, aiDeps)
-    if (actions.length === 0) {
-      return { exitReason: searchExit ?? '圖搜索無結果' }
-    }
-    return { actions }
-  })
-}

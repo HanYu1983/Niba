@@ -14,7 +14,7 @@
 
 export const AI_TURN_STEP_DELAY_MS = 350
 
-export type AiOrderKind = 'protect-base' | 'support-player' | 'construction' | 'fuzzy' | 'decision-tree' | 'graph-search'
+export type AiOrderKind = 'protect-base' | 'support-player' | 'construction' | 'fuzzy'
 
 export interface AiTurnSchedulerDeps {
   /** 讀取最新局面（判斷 Actor 是否仍是當前回合玩家）。 */
@@ -23,8 +23,6 @@ export interface AiTurnSchedulerDeps {
   runSupportStep(actorId: string): { ok: boolean; reason?: string }
   runConstructionStep(actorId: string): { ok: boolean; reason?: string }
   runFuzzyStep(actorId: string): { ok: boolean; reason?: string }
-  runDecisionTreeStep(actorId: string): { ok: boolean; reason?: string }
-  runGraphSearchStep(actorId: string): { ok: boolean; reason?: string }
   /** step 失敗且 Actor 仍在回合中時，結束其回合。 */
   endTurn(actorId: string): void
   /** step 失敗時通知 UI 顯示原因（可選）。 */
@@ -66,8 +64,6 @@ export function createAiTurnScheduler(deps: AiTurnSchedulerDeps): AiTurnSchedule
       case 'support-player': return deps.runSupportStep(actorId)
       case 'construction':   return deps.runConstructionStep(actorId)
       case 'fuzzy':          return deps.runFuzzyStep(actorId)
-      case 'decision-tree':  return deps.runDecisionTreeStep(actorId)
-      case 'graph-search':   return deps.runGraphSearchStep(actorId)
     }
     const never: never = orderType
     throw new Error(`非法 AI 訂單類型：${never as string}`)

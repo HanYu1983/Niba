@@ -63,6 +63,7 @@ export type PlayerState = {
   id: string
   name: string
   isAI?: boolean
+  aiPersonality?: import('./ai').AiPersonalityId
   position: Position
   attributes: PlayerAttributes
   baseAttributes?: PlayerAttributes

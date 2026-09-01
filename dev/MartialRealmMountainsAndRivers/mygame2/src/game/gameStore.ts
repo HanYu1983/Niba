@@ -166,8 +166,6 @@ import {
   runAiSupportStep as runAiSupportStepDomain,
   runAiConstructionStep as runAiConstructionStepDomain,
   runFuzzyStep as runFuzzyStepDomain,
-  runDecisionTreeStep as runDecisionTreeStepDomain,
-  runGraphSearchStep as runGraphSearchStepDomain,
   buildAiDependencies,
   type AiStepRunnerDeps,
 } from './ai/aiStepRunner'
@@ -465,7 +463,7 @@ export const gameStore = {
           ? current.type === 'protect-base' && current.baseId === order.baseId
           : order.type === 'support-player'
             ? current.type === 'support-player' && current.playerId === order.playerId
-            : order.type === 'fuzzy' || order.type === 'decision-tree'),
+            : order.type === 'fuzzy'),
       )
       if (duplicate) return state
       saved = true
@@ -1411,13 +1409,6 @@ export const gameStore = {
     return runFuzzyStepDomain(aiStepDeps, playerId)
   },
 
-  runDecisionTreeStep: (playerId: string): ActionOutcome => {
-    return runDecisionTreeStepDomain(aiStepDeps, playerId)
-  },
-
-  runGraphSearchStep: (playerId: string): ActionOutcome => {
-    return runGraphSearchStepDomain(aiStepDeps, playerId)
-  },
   endPlayerTurn: (playerId: string) => {
     let scheduledCreatureTurn: CreatureTurnResult | null = null
     let creatureTurnBasePlayers: PlayerState[] | null = null

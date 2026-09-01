@@ -97,6 +97,7 @@ function compilePlayers(placements: ScenarioEntityPlacement[]): PlayerState[] {
       id: placement.id,
       name: (data.name as string) ?? `玩家 ${index + 1}`,
       isAI: (data.isAI as boolean) ?? false,
+      aiPersonality: data.aiPersonality as PlayerState['aiPersonality'],
       innerSkillId: (data.innerSkillId as string) ?? 'tuna-gong',
       innerSkillIds: (data.innerSkillIds as string[]) ?? ['tuna-gong'],
       position: placement.position,
@@ -458,7 +459,7 @@ export function buildGameStateFromScenario(scenario: ScenarioDefinition): GameSt
   const sectGates = compileSectGates(grouped.sectGates)
   const defenseStructures = compileDefenseStructures(grouped.defenseStructures)
   // 劇本可顯式指定 AI 玩家指令（如「跟隨保護某玩家」）；未涵蓋的 AI 玩家
-  // 依玩家 data.aiType 生成對應指令，預設回退 decision-tree 策略。
+  // 依玩家 data.aiType 生成對應指令，未指定命令時回退 fuzzy 通用 AI。
   const explicitOrders = scenario.aiOrders ?? []
   const explicitAiIds = new Set(explicitOrders.map((order) => order.aiPlayerId))
   const humanPlayer = players.find((player) => !player.isAI)
@@ -471,7 +472,7 @@ export function buildGameStateFromScenario(scenario: ScenarioDefinition): GameSt
         const placement = grouped.players.find((p) => p.id === player.id)
         const aiType = (placement?.data as Record<string, unknown> | undefined)?.aiType as string | undefined
         const base = {
-          id: `ai-order-${aiType ?? 'decision-tree'}-${player.id}`,
+          id: `ai-order-${aiType ?? 'fuzzy'}-${player.id}`,
           aiPlayerId: player.id,
           priority: 50,
           status: 'active' as const,
@@ -494,11 +495,9 @@ export function buildGameStateFromScenario(scenario: ScenarioDefinition): GameSt
               retreatHealthPercent: 30,
             }
           case 'fuzzy':
-            return { ...base, type: 'fuzzy' as const }
-          case 'graph-search':
-            return { ...base, type: 'graph-search' as const }
+            return { ...base, type: 'fuzzy' as const, ...(player.aiPersonality ? { personality: player.aiPersonality } : {}) }
           default:
-            return { ...base, type: 'decision-tree' as const }
+            return { ...base, type: 'fuzzy' as const, ...(player.aiPersonality ? { personality: player.aiPersonality } : {}) }
         }
       }),
   ]

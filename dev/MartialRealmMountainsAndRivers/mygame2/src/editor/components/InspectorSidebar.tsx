@@ -4,7 +4,7 @@ import type { Position } from '../../game/types'
 import type { MartialSchoolId } from '../../game/catalogs/martialSchoolCatalog'
 import type { CreatureBehaviorType } from '../../game/rules/creatureBehaviorRules'
 import type { ScenarioEntityPlacement } from '../editorTypes'
-import { SCHOOL_OPTIONS, BEHAVIOR_OPTIONS, POLICY_OPTIONS, EVENT_TYPE_OPTIONS, LOOT_ITEM_OPTIONS, INNER_SKILL_OPTIONS, EXTERNAL_SKILL_OPTIONS, ATTRIBUTE_FIELDS, BUILDING_OPTIONS, DEFENSE_STRUCTURE_OPTIONS, AI_TYPE_OPTIONS } from '../editorOptions'
+import { SCHOOL_OPTIONS, BEHAVIOR_OPTIONS, POLICY_OPTIONS, EVENT_TYPE_OPTIONS, LOOT_ITEM_OPTIONS, INNER_SKILL_OPTIONS, EXTERNAL_SKILL_OPTIONS, ATTRIBUTE_FIELDS, BUILDING_OPTIONS, DEFENSE_STRUCTURE_OPTIONS, AI_TYPE_OPTIONS, AI_PERSONALITY_OPTIONS } from '../editorOptions'
 
 type InspectorSidebarProps = {
   selectedEntity: ScenarioEntityPlacement | null
@@ -292,7 +292,8 @@ function PlayerInspector({ entity, onUpdate }: { entity: ScenarioEntityPlacement
   const data = entity.data
   const name = (data.name as string) ?? '玩家'
   const isAI = (data.isAI as boolean | undefined) ?? false
-  const aiType = (data.aiType as string | undefined) ?? 'decision-tree'
+  const aiType = (data.aiType as string | undefined) ?? 'fuzzy'
+  const aiPersonality = (data.aiPersonality as string | undefined) ?? 'balanced'
   const schoolId = (data.schoolId as MartialSchoolId) ?? 'void-spirit'
   const money = (data.money as number) ?? 30
   // 用預設值填補缺少的欄位，避免只調整部分欄位時，未調整欄位剩下 undefined。
@@ -342,6 +343,17 @@ function PlayerInspector({ entity, onUpdate }: { entity: ScenarioEntityPlacement
             style={{ width: '100%' }}
             options={AI_TYPE_OPTIONS}
             onChange={(value) => onUpdate({ aiType: value })}
+          />
+        </Field>
+      )}
+      {isAI && (
+        <Field label="AI 個性">
+          <Select
+            value={aiPersonality}
+            size="small"
+            style={{ width: '100%' }}
+            options={AI_PERSONALITY_OPTIONS}
+            onChange={(value) => onUpdate({ aiPersonality: value })}
           />
         </Field>
       )}

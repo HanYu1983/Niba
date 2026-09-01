@@ -136,8 +136,6 @@ function App() {
       runSupportStep: (actorId) => gameStore.runAiSupportStep(actorId),
       runConstructionStep: (actorId) => gameStore.runAiConstructionStep(actorId),
       runFuzzyStep: (actorId) => gameStore.runFuzzyStep(actorId),
-      runDecisionTreeStep: (actorId) => gameStore.runDecisionTreeStep(actorId),
-      runGraphSearchStep: (actorId) => gameStore.runGraphSearchStep(actorId),
       endTurn: (actorId) => gameStore.endPlayerTurn(actorId),
       onStepFailed: (_actorId, reason) => { message.warning({ content: reason, duration: 10 }) },
     }),

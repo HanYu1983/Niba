@@ -171,19 +171,6 @@ export function makeFuzzyOrder(
   }
 }
 
-export function makeGraphSearchOrder(
-  overrides: Partial<Extract<AiOrder, { type: 'graph-search' }>> = {},
-): Extract<AiOrder, { type: 'graph-search' }> {
-  return {
-    id: 'order-graph-search',
-    type: 'graph-search',
-    aiPlayerId: 'ai-1',
-    priority: 50,
-    status: 'active',
-    ...overrides,
-  }
-}
-
 export function makeTestResourcePoint(overrides: Partial<ResourcePointState> = {}): ResourcePointState {
   return {
     id: 'resource-point-1',

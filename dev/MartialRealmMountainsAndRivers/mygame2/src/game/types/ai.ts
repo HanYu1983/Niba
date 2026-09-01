@@ -1,5 +1,13 @@
 export type AiOrderStatus = 'active' | 'paused' | 'completed' | 'failed'
 
+export type AiPersonalityId = 'balanced' | 'aggressive' | 'cautious' | 'builder' | 'explorer'
+
+export type AiPersonalityProfile = {
+  id: AiPersonalityId
+  goalWeights: Partial<Record<import('../ai/fuzzy/goals').GoalName, number>>
+  goalThresholds?: Partial<Record<import('../ai/fuzzy/goals').GoalName, number>>
+}
+
 export type AiOrder =
   | {
       id: string
@@ -25,20 +33,7 @@ export type AiOrder =
       id: string
       type: 'fuzzy'
       aiPlayerId: string
-      priority: number
-      status: AiOrderStatus
-    }
-  | {
-      id: string
-      type: 'decision-tree'
-      aiPlayerId: string
-      priority: number
-      status: AiOrderStatus
-    }
-  | {
-      id: string
-      type: 'graph-search'
-      aiPlayerId: string
+      personality?: AiPersonalityId
       priority: number
       status: AiOrderStatus
     }
