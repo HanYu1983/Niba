@@ -11,11 +11,61 @@ import { itemCatalog } from '../../catalogs/itemCatalog'
 import { equipmentCatalog } from '../../catalogs/equipmentCatalog'
 import { allInnerSkillCatalog, getMartialHallSkills, martialHallInnerSkillCatalog, martialHallExternalSkillCatalog } from '../../catalogs/martialHallSkillCatalog'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
+import { getSkillDamage, getSkillProgression } from '../../rules/skillRules'
 import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
 import { getSectGateSkills, getSectGateLearnCost } from '../../rules/sectGateRules'
 import { defenseStructureCatalog } from '../../catalogs/defenseStructureCatalog'
 import { getRepairSummary, hasBuilding } from '../../rules/buildingRules'
 import { getMartialHallSkillCost } from '../../actions/martialHallActions'
+import { canUpgradeBuildingType, getBuildingLevel, getBuildingUpgradeResult, getEffectiveBuildingUpgradeCost } from '../../rules/buildingProgressionRules'
+import type { AiPersonalityId } from '../../types/ai'
+import { evaluateConstructionCandidateValue } from './constructionValue'
+import { evaluateCombatCandidateValue } from './combatValue'
+import { evaluateEquipmentCandidateValue, evaluateInnerSkillCandidateValue } from './equipmentValue'
+import type { ValueEvaluation } from './valueContext'
+
+export type ConstructionCandidate = {
+  kind: 'build' | 'upgrade'
+  baseId: string
+  buildingId: string
+  buildingType: string
+  buildingName: string
+  cost: number
+  currentLevel?: number
+  nextLevel?: number
+  value: number
+  valueFactors: ValueEvaluation['factors']
+}
+
+export type CombatCandidate = {
+  creatureId: string
+  creatureName: string
+  position: Position
+  distance: number
+  damageRatio: number
+  healthRatio: number
+  value: number
+  valueFactors: ValueEvaluation['factors']
+}
+
+export type EquipmentCandidate = {
+  instanceId: string
+  equipmentId: string
+  slot: string
+  name: string
+  durability: number
+  value: number
+  valueFactors: ValueEvaluation['factors']
+}
+
+export type InnerSkillCandidate = {
+  id: string
+  name: string
+  insightRequirement: number
+  damageGainRatio: number
+  value: number
+  valueFactors: ValueEvaluation['factors']
+}
 
 /** 各目標的可行性資料：「能不能做」+「走多遠」 */
 export interface FeasibilityData {
@@ -72,6 +122,8 @@ export interface FuzzyInputs {
   visibleBaseIds: string[]
   /** 所有據點是否都在視野內 */
   allBasesVisible: boolean
+  /** 最近尚未取得視野的據點，無則 undefined */
+  nearestUndiscoveredBase: BaseState | undefined
   /** 據點建料比 0~1（buildingMaterials / maxBuildingMaterials），無據點 = 0 */
   materialRatio: number
   /** 據點是否可建造建築（有模板 + rank 夠 + 材料夠） */
@@ -102,16 +154,24 @@ export interface FuzzyInputs {
   bestItemToUse: { id: string; effect: string; name: string; effectValue: number } | undefined
   /** 建議裝備的裝備（部位空 or 耐久=0 需替換），無則 undefined */
   equipableEquipment: { instanceId: string; equipmentId: string; slot: string; name: string; durability: number } | undefined
+  /** 所有可替換裝備候選，依價值由高到低排序 */
+  equipmentCandidates: EquipmentCandidate[]
   /** 到最近巢穴的距離，無巢穴 = Infinity */
   distToNearestNest: number
   /** 最近巢穴 id，無則空字串 */
   nearestNestId: string
   /** 視野範圍內的生物 id 陣列（近到遠排序） */
   visibleCreatureIds: string[]
+  /** 所有視野內生物的攻擊價值候選（高到低排序） */
+  combatCandidates: CombatCandidate[]
   /** 建議裝備的內功（有更強的未裝備內功），無則 undefined */
   betterInnerSkill: { id: string; name: string; insightRequirement: number } | undefined
+  /** 所有可替換內功候選，依價值由高到低排序 */
+  innerSkillCandidates: InnerSkillCandidate[]
   /** 是否有傷害型內功已裝備 */
   hasDamageInnerSkill: boolean
+  /** 目前內功單次傷害／最近可見敵人最大生命值，0~1 */
+  combatDamageRatio: number
   /** 內力比 0~1 */
   innerPowerRatio: number
   /** 可在武館學習的技能（最近據點的武館），無則 undefined */
@@ -122,6 +182,8 @@ export interface FuzzyInputs {
   practiceableSkillAtGate: { gateId: string; skillId: string; name: string; position: Position } | undefined
   /** 附近據點是否有告示牌（可執行任務） */
   hasMissionBoard: boolean
+  /** 最近據點是否尚未完成首次告示牌任務（完成後解鎖永久視野） */
+  needsBaseVision: boolean
   /** 附近據點是否有醫療室（可就醫） */
   hasInfirmary: boolean
   /** 附近據點有工坊且裝備受損（可修理） */
@@ -136,6 +198,10 @@ export interface FuzzyInputs {
   buyableHealItem: { itemId: string; name: string; price: number } | undefined
   /** 可建造的防禦設施（材料夠 + rank 夠），取最近據點 */
   buildableDefenseStructure: { type: string; name: string } | undefined
+  /** 最近據點現有箭塔數量（含進階箭塔） */
+  defenseTowerCount: number
+  /** 最近據點所有合法建造與升級候選，已附帶基礎價值 */
+  constructionCandidates: ConstructionCandidate[]
   /** 據點附近的威脅數量（曼哈頓 ≤ 5） */
   threatCountNearBase: number
   /** 是否與最近的 active 據點相鄰 */
@@ -156,7 +222,7 @@ function manhattan(a: Position, b: Position): number {
  * V1 簡化：maxVisibleEnemyDamage 用 creature.health * 0.3 粗估，
  * 後續可替換為精確傷害公式。
  */
-export function computeFuzzyInputs(state: GameState, player: PlayerState): FuzzyInputs {
+export function computeFuzzyInputs(state: GameState, player: PlayerState, personality?: AiPersonalityId): FuzzyInputs {
   const hostiles = listHostileActors(state)
 
   // 先計算視野，後續用於過濾可見生物
@@ -223,6 +289,11 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     ? activeBases.reduce((best, b) => manhattan(player.position, b.position) < manhattan(player.position, best.position) ? b : best)
     : undefined
 
+  const undiscoveredBases = activeBases.filter((base) => base.discovered !== true)
+  const nearestUndiscoveredBase = undiscoveredBases.length > 0
+    ? undiscoveredBases.reduce((best, base) => manhattan(player.position, base.position) < manhattan(player.position, best.position) ? base : best)
+    : undefined
+
   const materialRatio = nearestBase
     ? nearestBase.buildingMaterials / Math.max(1, nearestBase.maxBuildingMaterials)
     : 0
@@ -240,6 +311,78 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     })
     : undefined
   const canBuild = !!buildableBuilding
+  const threatCountNearBase = nearestBase
+    ? hostiles.filter((h) => {
+      const pos = h.sourceType === 'creature' ? h.creature.position : h.nest.position
+      return manhattan(nearestBase.position, pos) <= 5
+    }).length
+    : 0
+  const constructionCandidates: ConstructionCandidate[] = nearestBase
+    ? [
+        ...buildingCatalog
+          .filter((template) => {
+            if (existingTypes.has(template.type)) return false
+            if (nearestBase.martialSchoolId && template.schoolId && template.schoolId !== nearestBase.martialSchoolId) return false
+            if (nearestBase.allowedBuildings && !nearestBase.allowedBuildings.some((entry) => entry.type === template.type)) return false
+            if (!canPlayerBuildBuildingType(player, template.type)) return false
+            return nearestBase.buildingMaterials >= template.constructionCost
+          })
+          .map((template) => {
+            const evaluation = evaluateConstructionCandidateValue({
+              kind: 'build',
+              buildingType: template.type,
+              cost: template.constructionCost,
+              materialRatio,
+              threatCountNearBase,
+              distanceToBase: manhattan(player.position, nearestBase.position),
+              waystationAccessNeed: nearestUndiscoveredBase && nearestUndiscoveredBase.id !== nearestBase.id ? 1 : 0,
+              personality,
+            })
+            return {
+            kind: 'build' as const,
+            baseId: nearestBase.id,
+            buildingId: template.id,
+            buildingType: template.type,
+            buildingName: template.name,
+            cost: template.constructionCost,
+              value: evaluation.value,
+              valueFactors: evaluation.factors,
+            }
+          }),
+        ...nearestBase.buildings
+          .filter((building) => {
+            if (!canUpgradeBuildingType(building.type)) return false
+            const allowedEntry = nearestBase.allowedBuildings?.find((entry) => entry.type === building.type)
+            if (allowedEntry?.maxLevel !== undefined && getBuildingLevel(building) >= allowedEntry.maxLevel) return false
+            return getBuildingUpgradeResult(nearestBase, building, player).ok
+          })
+          .map((building) => {
+            const cost = getEffectiveBuildingUpgradeCost(building, player)
+            const evaluation = evaluateConstructionCandidateValue({
+              kind: 'upgrade',
+              buildingType: building.type,
+              cost,
+              materialRatio,
+              threatCountNearBase,
+              distanceToBase: manhattan(player.position, nearestBase.position),
+              waystationAccessNeed: nearestUndiscoveredBase && nearestUndiscoveredBase.id !== nearestBase.id ? 1 : 0,
+              personality,
+            })
+            return {
+            kind: 'upgrade' as const,
+            baseId: nearestBase.id,
+            buildingId: building.id,
+            buildingType: building.type,
+            buildingName: building.name,
+            cost,
+            currentLevel: getBuildingLevel(building),
+            nextLevel: getBuildingLevel(building) + 1,
+              value: evaluation.value,
+              valueFactors: evaluation.factors,
+            }
+          }),
+      ]
+    : []
 
   // 最近資源點（屬於最近據點）
   const baseResourcePoints = nearestBase
@@ -307,7 +450,8 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     : undefined
 
   // 裝備相關：找出值得裝備的裝備
-  const equipableEquipment = findBestEquipCandidate(player)
+  const equipmentCandidates = findEquipmentCandidates(player, personality)
+  const equipableEquipment = equipmentCandidates[0]
 
   // 巢穴相關：最近巢穴
   const nests = state.creatureNests.filter((n) => n.health > 0)
@@ -323,9 +467,50 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
   const innerPowerRatio = player.maxInnerPower > 0 ? player.innerPower / player.maxInnerPower : 0
   const currentInnerSkill = allInnerSkillCatalog.find((s) => s.id === player.innerSkillId)
   const hasDamageInnerSkill = currentInnerSkill != null && currentInnerSkill.calculateDamage != null
+  const nearestVisibleCreature = visibleCreatures[0]?.creature
+  const combatDamageRatio = currentInnerSkill && nearestVisibleCreature
+    ? Math.min(1, getSkillDamage(
+      effectiveAttributes,
+      currentInnerSkill,
+      getSkillProgression(player, currentInnerSkill.id).level,
+    ) / Math.max(1, nearestVisibleCreature.maxHealth))
+    : 0
+  const combatCandidates: CombatCandidate[] = visibleCreatures
+    .map(({ creature }) => {
+      const distance = manhattan(player.position, creature.position)
+      const damageRatio = currentInnerSkill
+        ? Math.min(1, getSkillDamage(
+          effectiveAttributes,
+          currentInnerSkill,
+          getSkillProgression(player, currentInnerSkill.id).level,
+        ) / Math.max(1, creature.maxHealth))
+        : 0
+      const hitsAgainstCreature = creature.health / Math.max(1, Math.floor(creature.maxHealth * 0.3))
+      const evaluation = evaluateCombatCandidateValue({
+        distance,
+        healthRatio: creature.health / Math.max(1, creature.maxHealth),
+        damageRatio,
+        hitsSurvivable: hitsAgainstCreature > 0 ? player.health / Math.max(1, Math.floor(creature.maxHealth * 0.3)) : 0,
+        staminaRatio: staminaRatioVal,
+        level: creature.level ?? 1,
+        personality,
+      })
+      return {
+        creatureId: creature.id,
+        creatureName: creature.name,
+        position: creature.position,
+        distance,
+        damageRatio,
+        healthRatio: creature.health / Math.max(1, creature.maxHealth),
+        value: evaluation.value,
+        valueFactors: evaluation.factors,
+      }
+    })
+    .sort((first, second) => second.value - first.value)
 
   // 找更好的內功：已學會但未裝備，且悟性足夠，且比目前內功更強
-  const bestInnerSkill = findBetterInnerSkill(player, effectiveAttributes)
+  const innerSkillCandidates = findInnerSkillCandidates(player, effectiveAttributes, personality)
+  const bestInnerSkill = innerSkillCandidates[0]
 
   // ── 新增目標相關輸入 ──────────────────────────────────────────
 
@@ -341,6 +526,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
 
   // 告示牌任務 / 醫療室 / 修理工坊
   const hasMissionBoard = nearestBase != null && hasBuilding(nearestBase, 'board')
+  const needsBaseVision = nearestBase != null && nearestBase.discovered !== true
   const hasInfirmary = nearestBase != null && hasBuilding(nearestBase, 'infirmary')
   const hasWorkshopDamaged = nearestBase != null && hasBuilding(nearestBase, 'workshop')
     && getRepairSummary(player, nearestBase.buildings.find((b) => b.type === 'workshop')?.level ?? 1).equipmentCount > 0
@@ -355,14 +541,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
 
   // 防禦建設：找可建造的防禦設施
   const buildableDefenseStructure = findBuildableDefenseStructure(player, nearestBase)
-
-  // 據點附近威脅數（曼哈頓 ≤ 5）
-  const threatCountNearBase = nearestBase
-    ? hostiles.filter((h) => {
-      const pos = h.sourceType === 'creature' ? h.creature.position : h.nest.position
-      return manhattan(nearestBase.position, pos) <= 5
-    }).length
-    : 0
+  const defenseTowerCount = nearestBase?.buildings.filter((building) => building.type === 'arrow-tower' || building.type === 'advanced-arrow-tower').length ?? 0
 
   // 是否與最近 active 據點相鄰
   const isAdjacentToBase = nearestBase != null && manhattan(player.position, nearestBase.position) === 1
@@ -417,6 +596,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     nearestBase,
     visibleBaseIds,
     allBasesVisible,
+    nearestUndiscoveredBase,
     materialRatio,
     canBuild,
     buildableBuilding: buildableBuilding ? { id: buildableBuilding.id, type: buildableBuilding.type, name: buildableBuilding.name } : undefined,
@@ -434,16 +614,21 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     availableAttributePoints,
     bestItemToUse,
     equipableEquipment,
+    equipmentCandidates,
     distToNearestNest,
     nearestNestId: nearestNest?.id ?? '',
     visibleCreatureIds,
+    combatCandidates,
     betterInnerSkill: bestInnerSkill,
+    innerSkillCandidates,
     hasDamageInnerSkill,
+    combatDamageRatio,
     innerPowerRatio,
     learnableSkillAtHall,
     learnableSkillAtGate,
     practiceableSkillAtGate,
     hasMissionBoard,
+    needsBaseVision,
     hasInfirmary,
     hasWorkshopDamaged,
     playerLevel,
@@ -451,6 +636,8 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     needsLeveling,
     buyableHealItem,
     buildableDefenseStructure,
+    defenseTowerCount,
+    constructionCandidates,
     threatCountNearBase,
     isAdjacentToBase,
     killableCreature,
@@ -515,10 +702,10 @@ function pickBestItem(
   return undefined
 }
 
-function findBestEquipCandidate(player: PlayerState): { instanceId: string; equipmentId: string; slot: string; name: string; durability: number } | undefined {
+function findEquipmentCandidates(player: PlayerState, personality?: AiPersonalityId): EquipmentCandidate[] {
   const loadout = player.equipmentLoadout
   const inventory = player.equipmentInventory ?? []
-  if (inventory.length === 0) return undefined
+  if (inventory.length === 0) return []
 
   const getDef = (equipmentId: string) => equipmentCatalog.find((e) => e.id === equipmentId)
   const slotKeys: Array<{ slot: string; key: 'weaponInstanceId' | 'armorInstanceId' | 'accessoryInstanceId' }> = [
@@ -527,77 +714,72 @@ function findBestEquipCandidate(player: PlayerState): { instanceId: string; equi
     { slot: 'accessory', key: 'accessoryInstanceId' },
   ]
 
+  const candidates: EquipmentCandidate[] = []
   for (const { slot, key } of slotKeys) {
     const currentInstanceId = loadout?.[key]
     const currentInstance = currentInstanceId
       ? inventory.find((e) => e.instanceId === currentInstanceId)
       : undefined
-
-    // 情況 A：部位空 → 找第一個該部位、耐久 > 0 的裝備
-    if (!currentInstance) {
-      const candidate = inventory.find((e) => {
-        if (e.durability <= 0) return false
-        const def = getDef(e.equipmentId)
-        return def?.slot === slot
+    const currentDef = currentInstance ? getDef(currentInstance.equipmentId) : undefined
+    const replacesBroken = currentInstance?.durability === 0
+    for (const candidate of inventory) {
+      if (candidate.instanceId === currentInstance?.instanceId || candidate.durability <= 0) continue
+      const def = getDef(candidate.equipmentId)
+      if (!def || def.slot !== slot) continue
+      const attributeGain = Object.entries(def.modifiers).reduce((total, [attribute, amount]) =>
+        total + (amount ?? 0) - (currentDef?.modifiers[attribute as keyof typeof def.modifiers] ?? 0), 0)
+      if (currentInstance && !replacesBroken && attributeGain <= 0) continue
+      const evaluation = evaluateEquipmentCandidateValue({
+        attributeGain,
+        durabilityRatio: candidate.durability / Math.max(1, def.maxDurability),
+        replacesBroken: !!replacesBroken,
+        personality,
       })
-      if (candidate) {
-        const def = getDef(candidate.equipmentId)
-        return {
-          instanceId: candidate.instanceId,
-          equipmentId: candidate.equipmentId,
-          slot,
-          name: def?.name ?? candidate.equipmentId,
-          durability: candidate.durability,
-        }
-      }
-    }
-
-    // 情況 B：部位有裝備但耐久 = 0 → 找同部位替換品（耐久 > 0）
-    if (currentInstance && currentInstance.durability <= 0) {
-      const candidate = inventory.find((e) => {
-        if (e.instanceId === currentInstance.instanceId) return false
-        if (e.durability <= 0) return false
-        const def = getDef(e.equipmentId)
-        return def?.slot === slot
+      candidates.push({
+        instanceId: candidate.instanceId,
+        equipmentId: candidate.equipmentId,
+        slot,
+        name: def.name,
+        durability: candidate.durability,
+        value: evaluation.value,
+        valueFactors: evaluation.factors,
       })
-      if (candidate) {
-        const def = getDef(candidate.equipmentId)
-        return {
-          instanceId: candidate.instanceId,
-          equipmentId: candidate.equipmentId,
-          slot,
-          name: def?.name ?? candidate.equipmentId,
-          durability: candidate.durability,
-        }
       }
-    }
   }
 
-  return undefined
+  return candidates.sort((first, second) => second.value - first.value)
 }
 
-function findBetterInnerSkill(
+function findInnerSkillCandidates(
   player: PlayerState,
   effectiveAttributes: { insight: number; armStrength: number; constitution: number; agility: number; innerEnergy: number },
-): { id: string; name: string; insightRequirement: number } | undefined {
+  personality?: AiPersonalityId,
+): InnerSkillCandidate[] {
   const currentSkill = allInnerSkillCatalog.find((s) => s.id === player.innerSkillId)
   const currentDamage = currentSkill?.calculateDamage?.(effectiveAttributes) ?? 0
 
   const candidates = allInnerSkillCatalog.filter((s) => player.innerSkillIds.includes(s.id) && s.id !== player.innerSkillId)
-
-  let best: { id: string; name: string; insightRequirement: number } | undefined
-  let bestDamage = currentDamage
-
-  for (const skill of candidates) {
-    if (effectiveAttributes.insight < skill.insightRequirement) continue
-    const damage = skill.calculateDamage(effectiveAttributes)
-    if (damage > bestDamage) {
-      bestDamage = damage
-      best = { id: skill.id, name: skill.name, insightRequirement: skill.insightRequirement }
-    }
-  }
-
-  return best
+  return candidates
+    .filter((skill) => effectiveAttributes.insight >= skill.insightRequirement)
+    .map((skill) => {
+      const damage = skill.calculateDamage(effectiveAttributes)
+      const damageGainRatio = (damage - currentDamage) / Math.max(1, currentDamage)
+      const evaluation = evaluateInnerSkillCandidateValue({
+        damageGainRatio,
+        insightRatio: effectiveAttributes.insight > 0 ? skill.insightRequirement / effectiveAttributes.insight : 0,
+        personality,
+      })
+      return {
+        id: skill.id,
+        name: skill.name,
+        insightRequirement: skill.insightRequirement,
+        damageGainRatio,
+        value: evaluation.value,
+        valueFactors: evaluation.factors,
+      }
+    })
+    .filter((candidate) => candidate.damageGainRatio > 0)
+    .sort((first, second) => second.value - first.value)
 }
 
 // ── 新增目標輔助函數 ───────────────────────────────────────────

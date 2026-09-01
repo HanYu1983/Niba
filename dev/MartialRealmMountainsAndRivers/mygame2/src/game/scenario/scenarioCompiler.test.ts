@@ -76,8 +76,8 @@ describe('buildGameStateFromScenario', () => {
       isAI: true,
     })
     expect(state.aiOrders).toEqual([{
-      id: 'ai-order-decision-tree-player-ai-1',
-      type: 'decision-tree',
+      id: 'ai-order-fuzzy-player-ai-1',
+      type: 'fuzzy',
       aiPlayerId: 'player-ai-1',
       priority: 50,
       status: 'active',
@@ -115,8 +115,8 @@ describe('buildGameStateFromScenario', () => {
       retreatHealthPercent: 30,
       status: 'active',
     }])
-    // 顯式指令的 AI 玩家不應再產生預設 decision-tree。
-    expect(state.aiOrders?.some((order) => order.type === 'decision-tree')).toBe(false)
+    // 顯式指令的 AI 玩家不應再產生預設 fuzzy。
+    expect(state.aiOrders?.some((order) => order.type === 'fuzzy')).toBe(false)
   })
 
   it('玩家 data.aiType 自動生成對應 AI 指令（support-player 貼身保護）', () => {

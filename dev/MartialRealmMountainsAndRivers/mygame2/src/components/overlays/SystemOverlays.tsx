@@ -1,5 +1,6 @@
 import GameOverModal from '../GameOverModal'
 import ActionResultModal from '../ActionResultModal'
+import { Modal, Typography } from 'antd'
 import StoryDialogueModal from '../StoryDialogueModal'
 import { gameStore } from '../../game/gameStore'
 import type { GameState } from '../../game/types'
@@ -9,6 +10,7 @@ import { computeScrollReward } from '../../game/characterRoster'
 import { getCharacter } from '../../game/characterRoster'
 import { trackGameEnd } from '../../lib/analytics'
 import { useEffect, useRef, useState } from 'react'
+import { formatAiActionEvent } from '../../game/ai/aiActionEvent'
 
 type SystemOverlaysProps = {
   gameState: GameState
@@ -38,6 +40,11 @@ function SystemOverlays({ gameState, onRestartToMap, onGoHome, gameOverModalDism
   // 本局結算獲得的武學殘卷（局末回寫後計算，供結算畫面醒目顯示）。
   // 'skipped' 表示此局已領取過（runId 已登記），顯示提示而非 0 卷。
   const [scrollRewardState, setScrollReward] = useState<number | 'skipped' | null>(null)
+  const [dismissedAiActionId, setDismissedAiActionId] = useState<string | null>(null)
+  const latestAiAction = [...(gameState.actionEvents ?? [])]
+    .reverse()
+    .find((event) => event.actor.kind === 'player' && gameState.players.some((player) => player.id === event.actor.id && player.isAI))
+  const aiActionModalEvent = latestAiAction?.id === dismissedAiActionId ? null : latestAiAction
   // 非局末渲染一律視為 null（取代 effect 內同步 setScrollReward(null)，避免級聯渲染）。
   const scrollReward = gameEnded ? scrollRewardState : null
   // 僅在 GameOverModal 實際顯示時記錄一次通關狀態（避免重複觸發）。
@@ -119,6 +126,21 @@ function SystemOverlays({ gameState, onRestartToMap, onGoHome, gameOverModalDism
         result={gameState.blockingModal?.type === 'action-result' ? gameState.blockingModal.result : null}
         onClose={() => gameStore.confirmBlockingModal()}
       />
+      <Modal
+        title="AI 行動"
+        open={aiActionModalEvent !== undefined && aiActionModalEvent !== null}
+        onCancel={() => {
+          if (aiActionModalEvent) setDismissedAiActionId(aiActionModalEvent.id)
+        }}
+        footer={null}
+        destroyOnHidden
+      >
+        {aiActionModalEvent && (
+          <Typography.Paragraph style={{ margin: 0 }}>
+            {formatAiActionEvent(aiActionModalEvent)}
+          </Typography.Paragraph>
+        )}
+      </Modal>
       <StoryDialogueModal
         entry={dialogue ? dialogue.entry : null}
         remaining={dialogue ? dialogue.remaining : 0}

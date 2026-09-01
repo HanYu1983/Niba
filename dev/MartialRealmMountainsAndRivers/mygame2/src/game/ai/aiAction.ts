@@ -30,6 +30,12 @@ export type AiAction =
       reason: string
     }
   | {
+      type: 'transport'
+      actor: AiActorRef
+      targetId: string
+      reason: string
+    }
+  | {
       type: 'attack'
       actor: AiActorRef
       target: AiTargetRef
@@ -46,6 +52,13 @@ export type AiAction =
       actor: AiActorRef
       baseId: string
       buildingType: string
+      reason: string
+    }
+  | {
+      type: 'upgrade'
+      actor: AiActorRef
+      baseId: string
+      buildingId: string
       reason: string
     }
   | {

@@ -2,7 +2,7 @@ import type { ActionOutcome, AttackTargetType, GameState } from '../../types'
 import type { AiAction } from '../aiAction'
 import { movePlayer } from '../../actions/movementActions'
 import { collectResourcePoint } from '../../actions/explorationActions'
-import { constructBuilding, constructDefenseStructure } from '../../actions/buildingActions'
+import { constructBuilding, constructDefenseStructure, upgradeBuilding } from '../../actions/buildingActions'
 import type { TurnActionDependencies } from '../../actions/turnActions'
 import { executeAiAttack } from './executeAiAttack'
 import { collectItemPointAction } from '../../actions/itemActions'
@@ -15,11 +15,56 @@ import { learnSkillAtSectGate, practiceSkillAtSectGate } from '../../actions/sec
 import { useInfirmary as executeInfirmary, executeMission } from '../../actions/explorationActions'
 import { clearRuin } from '../../actions/ruinActions'
 import { buyItem } from '../../actions/shopActions'
+import { transportPlayerAction } from '../../actions/transportActions'
 import type { CombatActionDependencies } from '../../actions/combatActions'
+import { resolveExplorationEvent } from '../../actions/explorationActions'
+import { checkEventRequirements, getEventChoices } from '../../events/eventResolver'
+import { computeEventChoiceValue } from '../fuzzy/eventValue'
 
 export type ExecuteAiActionDependencies = {
   combat: CombatActionDependencies
   turn: TurnActionDependencies
+}
+
+function resolveAiExplorationEvent(state: GameState, playerId: string): GameState {
+  const player = state.players.find((candidate) => candidate.id === playerId)
+  if (!player?.isAI) return state
+
+  const event = (state.explorationEvents ?? []).find((candidate) =>
+    candidate.status === 'available'
+      && candidate.position.row === player.position.row
+      && candidate.position.column === player.position.column,
+  )
+  if (!event) return state
+
+  const eligibleChoices = getEventChoices(event).filter((candidate) =>
+    checkEventRequirements(state, playerId, event, candidate.requirements).allowed,
+  )
+  const rankedChoices = eligibleChoices
+    .map((candidate, index) => ({
+      candidate,
+      index,
+      value: computeEventChoiceValue({ effects: candidate.effects, playerMoney: player.money, personality: player.aiPersonality }),
+    }))
+    .sort((first, second) => second.value - first.value || first.index - second.index)
+  const choice = rankedChoices[0]?.candidate
+  if (!choice) return state
+
+  console.info('[AI decision]', {
+    kind: 'exploration-event',
+    player: { id: player.id, name: player.name, position: player.position },
+    event: { id: event.id, type: event.type, name: event.name },
+    personality: player.aiPersonality ?? 'balanced',
+    choices: rankedChoices.map(({ candidate, value }) => ({
+      id: candidate.id,
+      label: candidate.label,
+      value: Number(value.toFixed(3)),
+    })),
+    selectedChoice: choice.id,
+  })
+
+  const result = resolveExplorationEvent(state, playerId, event.id, choice.id)
+  return result.result.ok ? result.state : state
 }
 
 /**
@@ -34,8 +79,13 @@ export function executeAiAction(
   dependencies: ExecuteAiActionDependencies,
 ): { state: GameState; result: ActionOutcome } {
   switch (action.type) {
-    case 'move':
-      return movePlayer(state, action.actor.id, action.destination.row, action.destination.column)
+    case 'transport':
+      return transportPlayerAction(state, action.actor.id, action.targetId)
+    case 'move': {
+      const result = movePlayer(state, action.actor.id, action.destination.row, action.destination.column)
+      if (!result.result.ok) return result
+      return { state: resolveAiExplorationEvent(result.state, action.actor.id), result: result.result }
+    }
     case 'attack': {
       const result = executeAiAttack(state, action.actor.id, action.target.kind as AttackTargetType, action.target.id, dependencies.combat)
       return { state: result.state, result: result.result }
@@ -54,6 +104,10 @@ export function executeAiAction(
     }
     case 'build': {
       const result = constructBuilding(state, action.baseId, action.buildingType, action.actor.id)
+      return { state: result.state, result: result.result }
+    }
+    case 'upgrade': {
+      const result = upgradeBuilding(state, action.actor.id, action.baseId, action.buildingId)
       return { state: result.state, result: result.result }
     }
     case 'allocate-attribute':

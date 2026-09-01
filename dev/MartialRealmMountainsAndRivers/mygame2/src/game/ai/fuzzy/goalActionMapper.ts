@@ -1,4 +1,4 @@
-import type { GameState, PlayerState } from '../../types'
+import type { GameState, PlayerState, Position } from '../../types'
 import { getAdjacentPositions } from '../../types'
 import type { AiAction, AiActorRef } from '../aiAction'
 import type { GoalName, GoalResult } from './goals'
@@ -9,6 +9,20 @@ import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
 import { externalSkillCatalog } from '../../catalogs/externalSkillCatalog'
 import { validateAiAction } from '../validation/validateAiAction'
 import { executeAiAction, type ExecuteAiActionDependencies } from '../execution/executeAiAction'
+import { canTransportPlayer } from '../../rules/transportRules'
+import { getAiActionStaminaCost } from '../../rules/actionCostRules'
+
+const previousMovePositions = new Map<string, Position>()
+const recentMoveOrigins = new Map<string, Position[]>()
+const RECENT_MOVE_HISTORY_LIMIT = 8
+
+/** 記住 AI 上一步移動前的位置，供下一次尋路避免立即折返。 */
+export function rememberAiMoveOrigin(playerId: string, position: Position): void {
+  previousMovePositions.set(playerId, position)
+  const history = recentMoveOrigins.get(playerId) ?? []
+  const nextHistory = [...history, position].slice(-RECENT_MOVE_HISTORY_LIMIT)
+  recentMoveOrigins.set(playerId, nextHistory)
+}
 
 /**
  * 從指定位置出發，用 Dijkstra 計算到所有可达格的最短路徑成本。
@@ -49,7 +63,12 @@ function buildCostMapFrom(
  * 從玩家的相鄰可達格中，找出沿最短路徑最接近目標的格子。
  * 使用 Dijkstra 從目標反向建最短路徑樹，取代 manhattan 距離。
  */
-function findClosestReachablePosition(state: GameState, player: PlayerState, targetPosition: { row: number; column: number }): { row: number; column: number } {
+function findClosestReachablePosition(
+  state: GameState,
+  player: PlayerState,
+  targetPosition: { row: number; column: number },
+  approachPositions?: Position[],
+): { row: number; column: number } {
   const reachable = collectReachableCells(state, player)
   if (reachable.length === 0) return player.position
 
@@ -69,16 +88,85 @@ function findClosestReachablePosition(state: GameState, player: PlayerState, tar
 
   if (adjacents.length === 0) return player.position
 
-  // 從目標位置建最短路徑樹
-  const targetCosts = buildCostMapFrom(state, targetPosition, player)
+  const previousPosition = previousMovePositions.get(player.id)
+  const recentPositions = recentMoveOrigins.get(player.id) ?? (previousPosition ? [previousPosition] : [])
+  const forwardCandidates = recentPositions.length > 0
+    ? adjacents.filter((candidate) => !recentPositions.some((position) =>
+      candidate.position.row === position.row && candidate.position.column === position.column,
+    ))
+    : adjacents
+  const candidates = forwardCandidates.length > 0 ? forwardCandidates : adjacents
+
+  // 從目標位置或目標周邊可站立格建最短路徑樹。
+  // 據點/門派據點中心不可站立時，應以其相鄰格作為真正的導航目標。
+  const targetCosts = new Map<string, number>()
+  for (const approachPosition of approachPositions ?? [targetPosition]) {
+    for (const [cellId, cost] of buildCostMapFrom(state, approachPosition, player)) {
+      const previous = targetCosts.get(cellId)
+      if (previous === undefined || cost < previous) targetCosts.set(cellId, cost)
+    }
+  }
 
   // 從相鄰格中選「沿最短路徑最接近目標」的格子
-  const best = adjacents.reduce((best, c) => {
+  const best = candidates.reduce((best, c) => {
     const dBest = targetCosts.get(best.cellId) ?? Infinity
     const dC = targetCosts.get(c.cellId) ?? Infinity
-    return dC < dBest ? c : best
+    if (dC !== dBest) return dC < dBest ? c : best
+
+    // 目標格被據點/門派據點阻擋時，反向成本可能全部為 Infinity；
+    // 此時以曼哈頓距離穩定決勝，避免 reduce 依地圖列舉順序走向錯誤方向。
+    const distanceBest = Math.abs(best.position.row - targetPosition.row)
+      + Math.abs(best.position.column - targetPosition.column)
+    const distanceCurrent = Math.abs(c.position.row - targetPosition.row)
+      + Math.abs(c.position.column - targetPosition.column)
+    return distanceCurrent < distanceBest || (distanceCurrent === distanceBest && c.cost < best.cost) ? c : best
   })
   return best.position
+}
+
+/** 目標被完整廢墟堵住時，先移到廢墟旁並清除，下一個 AI step 再重新尋路。 */
+function buildRuinClearingActions(
+  actor: AiActorRef,
+  state: GameState,
+  player: PlayerState,
+  targetPosition: Position,
+): AiAction[] | undefined {
+  const intactRuins = (state.ruins ?? []).filter((ruin) => ruin.status === 'intact')
+  const adjacent = intactRuins.find((ruin) => Math.abs(player.position.row - ruin.position.row) + Math.abs(player.position.column - ruin.position.column) === 1)
+  if (adjacent) {
+    return [{
+      type: 'collect',
+      actor,
+      target: { id: adjacent.id, kind: 'ruin', position: adjacent.position },
+      reason: `清障：清除廢墟 ${adjacent.name}`,
+    }]
+  }
+
+  const reachable = collectReachableCells(state, player)
+  const candidates = intactRuins.flatMap((ruin) => getAdjacentPositions(ruin.position)
+    .map((position) => ({ ruin, position, cell: reachable.find((candidate) => candidate.position.row === position.row && candidate.position.column === position.column) }))
+    .filter((candidate): candidate is typeof candidate & { cell: NonNullable<typeof candidate.cell> } => candidate.cell != null))
+  const best = candidates.sort((first, second) => {
+    const firstDistance = Math.abs(first.position.row - targetPosition.row) + Math.abs(first.position.column - targetPosition.column)
+    const secondDistance = Math.abs(second.position.row - targetPosition.row) + Math.abs(second.position.column - targetPosition.column)
+    return firstDistance - secondDistance || first.cell.cost - second.cell.cost
+  })[0]
+  if (!best) return undefined
+
+  return [
+    {
+      type: 'move',
+      actor,
+      destination: best.position,
+      reason: `清障：移動到廢墟 ${best.ruin.name} 附近`,
+    },
+    {
+      type: 'collect',
+      actor,
+      target: { id: best.ruin.id, kind: 'ruin', position: best.ruin.position },
+      reason: `清障：清除廢墟 ${best.ruin.name}`,
+    },
+  ]
 }
 
 /**
@@ -94,8 +182,20 @@ export function buildValidatedActionSequence(
   player: PlayerState,
   dependencies: ExecuteAiActionDependencies,
 ): AiAction[] {
-  const actions = buildActionSequence(goal, result, state, player)
+  const actions = preferWaystationTransport(
+    buildActionSequence(goal, result, state, player),
+    result,
+    state,
+    player,
+  )
   if (actions.length === 0) return []
+
+  // 目前位置不是移動；避免被佔據的據點中心或不可達目標讓 AI 反覆產生原地 move。
+  if (actions.some((action) => action.type === 'move'
+    && action.destination.row === player.position.row
+    && action.destination.column === player.position.column)) {
+    return []
+  }
 
   let current = state
   for (const action of actions) {
@@ -106,6 +206,41 @@ export function buildValidatedActionSequence(
     current = outcome.state
   }
   return actions
+}
+
+function getBaseTransportTargetId(result: GoalResult): string | undefined {
+  if (result.target?.kind === 'build' || result.target?.kind === 'upgrade' || result.target?.kind === 'use-facility' || result.target?.kind === 'buy-item') {
+    return result.target.baseId
+  }
+  if (result.target?.kind === 'learn-skill' && result.target.baseId) return result.target.baseId
+  if (result.target?.kind === 'explore' && result.context?.target === 'undiscovered-base' && typeof result.context.targetBaseId === 'string') {
+    return result.context.targetBaseId
+  }
+  return typeof result.context?.baseId === 'string' ? result.context.baseId : undefined
+}
+
+function preferWaystationTransport(
+  actions: AiAction[],
+  result: GoalResult,
+  state: GameState,
+  player: PlayerState,
+): AiAction[] {
+  const first = actions[0]
+  const targetId = getBaseTransportTargetId(result)
+  if (!first || first.type !== 'move' || !targetId) return actions
+
+  const transport = { type: 'transport' as const, actor: first.actor, targetId, reason: `驛站：傳送至據點 ${targetId}（比步行更快）` }
+  const transportCheck = canTransportPlayer(state, player.id, targetId)
+  if (!transportCheck.ok) return actions
+
+  // 探索未發現據點時，驛站是明確的策略優先項；步行只在驛站不可用時退回。
+  if (result.target?.kind === 'explore' && result.context?.target === 'undiscovered-base') {
+    return [transport, ...actions.slice(1)]
+  }
+
+  const walkingCost = getAiActionStaminaCost(state, first)
+  const transportCost = getAiActionStaminaCost(state, transport)
+  return walkingCost > transportCost ? [transport, ...actions.slice(1)] : actions
 }
 
 /**
@@ -313,9 +448,25 @@ function buildPositioningActions(
     return buildPositioningAttack(actor, state, player)
   }
 
+  if (result.target?.kind === 'follow-player') {
+    const moveDest = findClosestReachablePosition(state, player, result.target.position)
+    if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
+      return [{ type: 'hold', actor, reason: '定位：已在支援距離內' }]
+    }
+    return [{
+      type: 'move',
+      actor,
+      destination: moveDest,
+      reason: `定位：跟隨支援目標 (${result.target.position.row},${result.target.position.column})`,
+    }]
+  }
+
   // 有出口 → 移動到最近出口
   if (result.target?.kind === 'exit') {
     const moveDest = findClosestReachablePosition(state, player, result.target.position)
+    if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
+      return [{ type: 'hold', actor, reason: '定位：出口目前不可達（體力或路徑不足）' }]
+    }
     return [{
       type: 'move',
       actor,
@@ -392,6 +543,16 @@ function buildConstructionActions(
     }]
   }
 
+  if (result.target?.kind === 'upgrade') {
+    return [{
+      type: 'upgrade',
+      actor,
+      baseId: result.target.baseId,
+      buildingId: result.target.buildingId,
+      reason: `建設：升級 ${result.target.buildingName} 至 Lv.${result.target.nextLevel}`,
+    }]
+  }
+
   // collect：已在資源點旁，採集
   if (action === 'collect' && result.target?.kind === 'resource-point') {
     return [{
@@ -414,8 +575,10 @@ function buildConstructionActions(
   }
 
   // move-to-base-for-build：建料滿但不在據點旁，移動到據點
-  if (action === 'move-to-base-for-build' && result.target?.kind === 'resource-point') {
-    const moveDest = findClosestReachablePosition(state, player, result.target.position)
+  if (action === 'move-to-base-for-build' && result.context?.baseId) {
+    const base = state.bases.find((candidate) => candidate.id === result.context?.baseId)
+    if (!base) return [{ type: 'hold', actor, reason: '建設：找不到目標據點' }]
+    const moveDest = findClosestReachablePosition(state, player, base.position)
     return [{
       type: 'move',
       actor,
@@ -440,8 +603,31 @@ function buildExplorationActions(
   state: GameState,
   player: PlayerState,
 ): AiAction[] {
+  // 探索路線被相鄰完好廢墟截斷時，先清障；清除後下一個 step 會重新評估中期路線。
   if (result.target?.kind === 'explore') {
-    const moveDest = findClosestReachablePosition(state, player, result.target.position)
+    const clearingActions = buildRuinClearingActions(actor, state, player, result.target.position)
+    if (clearingActions?.length) return clearingActions
+  }
+
+  if (result.target?.kind === 'explore') {
+    const basePosition = result.context?.target === 'undiscovered-base'
+      && result.context.targetBasePosition
+      && typeof result.context.targetBasePosition === 'object'
+      ? result.context.targetBasePosition as Position
+      : undefined
+    const moveDest = findClosestReachablePosition(
+      state,
+      player,
+      result.target.position,
+      basePosition ? getAdjacentPositions(basePosition) : undefined,
+    )
+    if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
+      return [{
+        type: 'hold',
+        actor,
+        reason: '探索：剩餘體力不足以移動到下一格，原地待命',
+      }]
+    }
     return [{
       type: 'move',
       actor,
@@ -732,6 +918,10 @@ function buildLearnSkillActions(
       }]
     }
     const moveDest = findClosestReachablePosition(state, player, gate.position)
+    if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
+      return buildRuinClearingActions(actor, state, player, gate.position)
+        ?? [{ type: 'hold', actor, reason: '學招：門派據點不可達，且無可清除障礙' }]
+    }
     return [{
       type: 'move',
       actor,
@@ -756,6 +946,10 @@ function buildLearnSkillActions(
       }]
     }
     const moveDest = findClosestReachablePosition(state, player, base.position)
+    if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
+      return buildRuinClearingActions(actor, state, player, base.position)
+        ?? [{ type: 'hold', actor, reason: '學招：武館據點不可達，且無可清除障礙' }]
+    }
     return [{
       type: 'move',
       actor,

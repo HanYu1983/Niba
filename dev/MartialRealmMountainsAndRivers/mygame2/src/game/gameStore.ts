@@ -49,15 +49,6 @@ import {
 import { getRepairSummary, getWorkshopLevel, repairEquipmentInventory } from './rules/buildingRules'
 import { applyMaterialPrestige } from './rules/governanceRules'
 import {
-  canTransportPlayer,
-  getTransportLandingPosition,
-  resolveTransportTarget,
-  WAYSTATION_TRANSPORT_COST,
-} from './rules/transportRules'
-import {
-  updatePlayerVisibility,
-} from './rules/visibilityRules'
-import {
   applyEquipmentLoadout,
 } from './rules/equipmentRules'
 import { type EquipmentSlot } from './catalogs/equipmentCatalog'
@@ -115,6 +106,7 @@ import {
   withdrawSkill as withdrawSkillAction,
 } from './actions/storageActions'
 import { movePlayer as movePlayerAction } from './actions/movementActions'
+import { transportPlayerAction } from './actions/transportActions'
 import { collectItemPointAction, useItemAction as executeUseItemAction } from './actions/itemActions'
 import { executeItemBurstAction } from './actions/itemBurstActions'
 import {
@@ -166,8 +158,6 @@ import {
   runAiSupportStep as runAiSupportStepDomain,
   runAiConstructionStep as runAiConstructionStepDomain,
   runFuzzyStep as runFuzzyStepDomain,
-  runDecisionTreeStep as runDecisionTreeStepDomain,
-  runGraphSearchStep as runGraphSearchStepDomain,
   buildAiDependencies,
   type AiStepRunnerDeps,
 } from './ai/aiStepRunner'
@@ -465,7 +455,7 @@ export const gameStore = {
           ? current.type === 'protect-base' && current.baseId === order.baseId
           : order.type === 'support-player'
             ? current.type === 'support-player' && current.playerId === order.playerId
-            : order.type === 'fuzzy' || order.type === 'decision-tree'),
+            : order.type === 'fuzzy'),
       )
       if (duplicate) return state
       saved = true
@@ -484,6 +474,22 @@ export const gameStore = {
     return saved
       ? { ok: true }
       : { ok: false, reason: '相同的 AI 命令已存在。' }
+  },
+
+  setAiPersonality: (playerId: string, personality: PlayerState['aiPersonality']): ActionOutcome => {
+    let updated = false
+    updateGameState((state) => {
+      const player = state.players.find((candidate) => candidate.id === playerId && candidate.isAI === true)
+      if (!player || !personality) return state
+      updated = true
+      return {
+        ...state,
+        players: state.players.map((candidate) => candidate.id === playerId
+          ? { ...candidate, aiPersonality: personality }
+          : candidate),
+      }
+    })
+    return updated ? { ok: true } : { ok: false, reason: '指定的玩家不是 AI 玩家。' }
   },
 
   removeAiOrder: (aiPlayerId: string, orderId: string): ActionOutcome => {
@@ -1180,45 +1186,11 @@ export const gameStore = {
 
   transportPlayer: (playerId: string, targetId: string): ActionOutcome => {
     let result: ActionOutcome = { ok: false, reason: '傳送失敗。' }
-
     updateGameState((state) => {
-      const validation = canTransportPlayer(state, playerId, targetId)
-      if (!validation.ok) {
-        result = { ok: false, reason: validation.reason ?? '傳送失敗。' }
-        return state
-      }
-
-      const target = resolveTransportTarget(state, targetId)
-      if (!target) {
-        result = { ok: false, reason: '目標不存在。' }
-        return state
-      }
-
-      const landingPosition = getTransportLandingPosition(state, target, playerId)
-      if (!landingPosition) {
-        result = { ok: false, reason: '目標周遭沒有可供降落的空地。' }
-        return state
-      }
-
-      result = { ok: true }
-      const cost = validation.cost ?? WAYSTATION_TRANSPORT_COST
-
-      const nextState = {
-        ...state,
-        players: state.players.map((currentPlayer) =>
-          currentPlayer.id === playerId
-            ? {
-              ...currentPlayer,
-              position: landingPosition,
-              money: currentPlayer.money - cost,
-            }
-            : currentPlayer,
-        ),
-      }
-
-      return { ...nextState, visibility: updatePlayerVisibility(nextState, playerId) }
+      const action = transportPlayerAction(state, playerId, targetId)
+      result = action.result
+      return action.result.ok ? action.state : state
     })
-
     return result
   },
 
@@ -1411,13 +1383,6 @@ export const gameStore = {
     return runFuzzyStepDomain(aiStepDeps, playerId)
   },
 
-  runDecisionTreeStep: (playerId: string): ActionOutcome => {
-    return runDecisionTreeStepDomain(aiStepDeps, playerId)
-  },
-
-  runGraphSearchStep: (playerId: string): ActionOutcome => {
-    return runGraphSearchStepDomain(aiStepDeps, playerId)
-  },
   endPlayerTurn: (playerId: string) => {
     let scheduledCreatureTurn: CreatureTurnResult | null = null
     let creatureTurnBasePlayers: PlayerState[] | null = null

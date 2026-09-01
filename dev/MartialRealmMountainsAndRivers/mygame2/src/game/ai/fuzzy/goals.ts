@@ -1,9 +1,12 @@
 import type { GameState, PlayerState, Position } from '../../types'
+import { getManhattanDistance as manhattan } from '../../rules/mapCellStateRules'
 import { trapezoid, fuzzyAnd, fuzzyOr } from './membershipFunctions'
 import type { FuzzyInputs } from './fuzzyInputs'
 import type { AiAction } from '../aiAction'
 import { buildValidatedActionSequence } from './goalActionMapper'
 import type { ExecuteAiActionDependencies } from '../execution/executeAiAction'
+import type { AiGoalConstraints } from './personality'
+import { canTransportPlayer } from '../../rules/transportRules'
 
 export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'equipInnerSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense'
 
@@ -23,7 +26,9 @@ export type GoalTarget =
   | { kind: 'attack'; targetId: string; targetType: 'creature' | 'nest'; position: Position }
   | { kind: 'exit'; position: Position }
   | { kind: 'build'; baseId: string; buildingId: string; buildingName: string }
+  | { kind: 'upgrade'; baseId: string; buildingId: string; buildingType: string; buildingName: string; nextLevel: number }
   | { kind: 'resource-point'; resourcePointId: string; position: Position }
+  | { kind: 'follow-player'; position: Position }
   | { kind: 'explore'; position: Position }
   | { kind: 'allocate-attribute'; attribute: string }
   | { kind: 'use-item'; itemId: string }
@@ -71,8 +76,9 @@ export function evaluateSelfPreservation(
       healScore = Math.min(0.95, fuzzyAnd(f_urgency, f_effectiveness))
     }
 
-    // 取較高者：逃命 vs 用道具續命
-    const score = Math.max(retreatScore, healScore)
+    // 血量低且威脅相鄰時視為緊急自保，避免任務／建設分數壓過救命行動。
+    const emergencyScore = healthRatio < 0.5 && distToNearestThreat <= 1 ? 0.8 : 0
+    const score = Math.max(retreatScore, healScore, emergencyScore)
     if (healScore > retreatScore) {
       const result: GoalResult = {
         score,
@@ -201,19 +207,24 @@ function evaluateEngageCombat(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { distToNearestCreature, staminaRatio, hitsSurvivable, nearestCreatureId, needsLeveling, killableCreature } = inputs
+  const { staminaRatio, hitsSurvivable, needsLeveling, combatCandidates } = inputs
+  const bestCandidate = combatCandidates[0]
 
-  if (!nearestCreatureId || distToNearestCreature === Infinity) {
+  if (!bestCandidate) {
     return { score: 0 }
   }
 
-  // 可擊殺 → score = 1
-  if (killableCreature) {
+  const { creatureId, position, distance, damageRatio } = bestCandidate
+  const killable = distance === 1 && hitsSurvivable >= 1 && player.stamina > 0
+
+  // 可擊殺仍需考量功法傷害；弱功法不應無條件壓過經營目標。
+  if (killable) {
+    const combatReadiness = Math.min(1, damageRatio * 1.5)
     const result: GoalResult = {
-      score: 1,
-      target: { kind: 'attack', targetId: nearestCreatureId, targetType: 'creature', position: { row: -1, column: -1 } },
-      distanceToTarget: distToNearestCreature,
-      context: { distToNearestCreature, nearestCreatureId, killable: true },
+      score: combatReadiness,
+      target: { kind: 'attack', targetId: creatureId, targetType: 'creature', position },
+      distanceToTarget: distance,
+      context: { distance, creatureId, killable: true, damageRatio, combatReadiness },
     }
     const actions = buildValidatedActionSequence('engageCombat', result, state, player, dependencies)
     if (actions.length === 0) return { score: 0 }
@@ -221,16 +232,20 @@ function evaluateEngageCombat(
     return result
   }
 
-  const f_closeCreature = distToNearestCreature <= 1
+  const f_closeCreature = distance <= 1
     ? 1
-    : distToNearestCreature <= 3
+    : distance <= 3
       ? 0.7
       : 0.3
 
   const f_staminaHigh = trapezoid(staminaRatio, 0.4, 0.6, 1, 1)
   const f_healthy = trapezoid(hitsSurvivable, 3, 5, 10, 10)
 
-  let score = Math.min(0.85, fuzzyAnd(fuzzyOr(f_closeCreature, f_healthy), fuzzyOr(f_staminaHigh, f_closeCreature)))
+  let score = Math.min(0.85, fuzzyAnd(
+    fuzzyOr(f_closeCreature, f_healthy),
+    fuzzyOr(f_staminaHigh, f_closeCreature),
+    Math.min(1, damageRatio * 1.5),
+  ))
 
   // 等級落後時打怪分數提升
   if (needsLeveling) {
@@ -239,9 +254,9 @@ function evaluateEngageCombat(
 
   const result: GoalResult = {
     score,
-    target: { kind: 'attack', targetId: nearestCreatureId, targetType: 'creature', position: { row: -1, column: -1 } },
-    distanceToTarget: distToNearestCreature,
-    context: { distToNearestCreature, nearestCreatureId, killable: false },
+    target: { kind: 'attack', targetId: creatureId, targetType: 'creature', position },
+    distanceToTarget: distance,
+    context: { distance, creatureId, killable: false, damageRatio },
   }
   const actions = buildValidatedActionSequence('engageCombat', result, state, player, dependencies)
   if (actions.length === 0) return { score: 0 }
@@ -252,7 +267,12 @@ function evaluateEngageCombat(
 // ─── allocateAttributes ─────────────────────────────────────────
 // 有可分配屬性點 → 分數 = 1（最高優先）
 
-function evaluateAllocateAttributes(inputs: FuzzyInputs): GoalResult {
+function evaluateAllocateAttributes(
+  inputs: FuzzyInputs,
+  state?: GameState,
+  player?: PlayerState,
+  dependencies?: ExecuteAiActionDependencies,
+): GoalResult {
   const { availableAttributePoints, healthRatio } = inputs
 
   if (availableAttributePoints <= 0) {
@@ -263,21 +283,36 @@ function evaluateAllocateAttributes(inputs: FuzzyInputs): GoalResult {
   // 血量正常 → 70% 根骨 / 30% 臂力
   const attribute = healthRatio < 0.5 ? 'constitution' : (Math.random() < 0.7 ? 'constitution' : 'armStrength')
 
-  return {
+  const result: GoalResult = {
     score: 1,
     target: { kind: 'allocate-attribute', attribute },
     context: { availableAttributePoints, chosen: attribute },
   }
+  if (!state || !player || !dependencies) return result
+
+  const actions = buildValidatedActionSequence('allocateAttributes', result, state, player, dependencies)
+  return actions.length > 0 ? { ...result, actions } : { score: 0 }
 }
 
 // ─── useItem ────────────────────────────────────────────────────
 // 有值得用的道具 → 高分
 
-function evaluateUseItem(inputs: FuzzyInputs): GoalResult {
+function evaluateUseItem(
+  inputs: FuzzyInputs,
+  state?: GameState,
+  player?: PlayerState,
+  dependencies?: ExecuteAiActionDependencies,
+): GoalResult {
   const { bestItemToUse, healthRatio, innerPowerRatio } = inputs
 
   if (!bestItemToUse) {
     return { score: 0 }
+  }
+
+  const withExecutableAction = (result: GoalResult): GoalResult => {
+    if (!state || !player || !dependencies) return result
+    const actions = buildValidatedActionSequence('useItem', result, state, player, dependencies)
+    return actions.length > 0 ? { ...result, actions } : { score: 0 }
   }
 
   // 回血道具：恢復量 / 缺血量，佔比越高分數越高；可完全恢復時 score = 1
@@ -286,11 +321,11 @@ function evaluateUseItem(inputs: FuzzyInputs): GoalResult {
     if (missingHealth <= 0) return { score: 0 }
     const restoreRatio = bestItemToUse.effectValue / (missingHealth * 100)
     const score = restoreRatio >= 1 ? 1 : restoreRatio
-    return {
+    return withExecutableAction({
       score,
       target: { kind: 'use-item', itemId: bestItemToUse.id },
       context: { effect: bestItemToUse.effect, name: bestItemToUse.name, effectValue: bestItemToUse.effectValue },
-    }
+    })
   }
 
   // 回內力道具：恢復量 / 缺內力量，佔比越高分數越高；可完全恢復時 score = 1
@@ -299,45 +334,55 @@ function evaluateUseItem(inputs: FuzzyInputs): GoalResult {
     if (missingInnerPower <= 0) return { score: 0 }
     const restoreRatio = bestItemToUse.effectValue / (missingInnerPower * 100)
     const score = restoreRatio >= 1 ? 1 : restoreRatio
-    return {
+    return withExecutableAction({
       score,
       target: { kind: 'use-item', itemId: bestItemToUse.id },
       context: { effect: bestItemToUse.effect, name: bestItemToUse.name, effectValue: bestItemToUse.effectValue },
-    }
+    })
   }
 
   // 回體力道具：固定分數
   if (bestItemToUse.effect === 'stamina') {
-    return {
+    return withExecutableAction({
       score: 0.6,
       target: { kind: 'use-item', itemId: bestItemToUse.id },
       context: { effect: bestItemToUse.effect, name: bestItemToUse.name },
-    }
+    })
   }
 
   // 其他道具：中等分數
-  return {
+  return withExecutableAction({
     score: 0.4,
     target: { kind: 'use-item', itemId: bestItemToUse.id },
     context: { effect: bestItemToUse.effect, name: bestItemToUse.name },
-  }
+  })
 }
 
 // ─── equipEquipment ────────────────────────────────────────────
 // 有可裝備的武具（部位空 or 耐久=0）→ score = 1
 
-function evaluateEquipEquipment(inputs: FuzzyInputs): GoalResult {
-  const { equipableEquipment } = inputs
+function evaluateEquipEquipment(
+  inputs: FuzzyInputs,
+  state?: GameState,
+  player?: PlayerState,
+  dependencies?: ExecuteAiActionDependencies,
+): GoalResult {
+  const { equipmentCandidates } = inputs
+  const equipableEquipment = equipmentCandidates[0]
 
   if (!equipableEquipment) {
     return { score: 0 }
   }
 
-  return {
-    score: 1,
+  const result: GoalResult = {
+    score: equipableEquipment.value,
     target: { kind: 'equip', instanceId: equipableEquipment.instanceId },
-    context: { slot: equipableEquipment.slot, name: equipableEquipment.name, durability: equipableEquipment.durability },
+    context: { slot: equipableEquipment.slot, name: equipableEquipment.name, durability: equipableEquipment.durability, value: equipableEquipment.value },
   }
+  if (!state || !player || !dependencies) return result
+
+  const actions = buildValidatedActionSequence('equipEquipment', result, state, player, dependencies)
+  return actions.length > 0 ? { ...result, actions } : { score: 0 }
 }
 
 // ─── evaluateAllGoals ──────────────────────────────────────────────
@@ -347,6 +392,7 @@ export function evaluateAllGoals(
   state?: GameState,
   player?: PlayerState,
   dependencies?: ExecuteAiActionDependencies,
+  constraints: AiGoalConstraints = {},
 ): Record<GoalName, GoalResult> {
   const results: Record<GoalName, GoalResult> = {
     selfPreservation: evaluateSelfPreservation(inputs, state, player, dependencies),
@@ -355,11 +401,11 @@ export function evaluateAllGoals(
     construction: evaluateConstruction(inputs, state, player, dependencies),
     exploration: evaluateExploration(inputs, state, player, dependencies),
     engageCombat: evaluateEngageCombat(inputs, state, player, dependencies),
-    allocateAttributes: evaluateAllocateAttributes(inputs),
-    useItem: evaluateUseItem(inputs),
-    equipEquipment: evaluateEquipEquipment(inputs),
+    allocateAttributes: evaluateAllocateAttributes(inputs, state, player, dependencies),
+    useItem: evaluateUseItem(inputs, state, player, dependencies),
+    equipEquipment: evaluateEquipEquipment(inputs, state, player, dependencies),
     attackNest: evaluateAttackNest(inputs, state, player, dependencies),
-    equipInnerSkill: evaluateEquipInnerSkill(inputs),
+    equipInnerSkill: evaluateEquipInnerSkill(inputs, state, player, dependencies),
     useInnerSkillAttack: evaluateUseInnerSkillAttack(inputs, state, player, dependencies),
     learnMartialSkill: evaluateLearnMartialSkill(inputs, state, player, dependencies),
     practiceSkill: evaluatePracticeSkill(inputs, state, player, dependencies),
@@ -379,6 +425,46 @@ export function evaluateAllGoals(
     }
   }
 
+  const allowedGoals = constraints.allowedGoals ? new Set(constraints.allowedGoals) : undefined
+  if (constraints.followTarget && state && player && dependencies) {
+    const distance = Math.abs(player.position.row - constraints.followTarget.position.row)
+      + Math.abs(player.position.column - constraints.followTarget.position.column)
+    const followResult: GoalResult = {
+      score: distance > constraints.followTarget.maxDistance
+        ? Math.min(1, 0.65 + (distance - constraints.followTarget.maxDistance) * 0.08)
+        : 0,
+      target: { kind: 'follow-player', position: constraints.followTarget.position },
+      distanceToTarget: distance,
+      context: { distance, maxDistance: constraints.followTarget.maxDistance },
+    }
+    const actions = buildValidatedActionSequence('positioning', followResult, state, player, dependencies)
+    results.positioning = actions.length > 0 ? { ...followResult, actions } : { score: 0 }
+  }
+  if (constraints.forcedCombatTarget && state && player && dependencies) {
+    const combatResult: GoalResult = {
+      score: 1,
+      target: { kind: 'attack', targetId: constraints.forcedCombatTarget.id, targetType: 'creature', position: constraints.forcedCombatTarget.position },
+      distanceToTarget: Math.abs(player.position.row - constraints.forcedCombatTarget.position.row)
+        + Math.abs(player.position.column - constraints.forcedCombatTarget.position.column),
+      context: { forcedBy: 'support-player' },
+    }
+    const actions: AiAction[] = [{
+      type: 'attack',
+      actor: { id: player.id, kind: 'player' },
+      target: { id: constraints.forcedCombatTarget.id, kind: 'creature', position: constraints.forcedCombatTarget.position },
+      reason: '支援命令：保護目標，攔截威脅',
+    }]
+    results.engageCombat = actions.length > 0 ? { ...combatResult, actions } : { score: 0 }
+  }
+  for (const goal of Object.keys(results) as GoalName[]) {
+    if (allowedGoals && !allowedGoals.has(goal)) {
+      results[goal] = { score: 0 }
+      continue
+    }
+    const weight = constraints.goalWeights?.[goal]
+    if (weight !== undefined) results[goal].score *= Math.max(0, weight)
+  }
+
   return results
 }
 
@@ -392,7 +478,7 @@ function evaluateConstruction(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { materialRatio, canBuild, buildableBuilding, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint, visibleBaseIds, isAdjacentToBase } = inputs
+  const { materialRatio, nearestBase, nearestUndiscoveredBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint, visibleBaseIds, isAdjacentToBase, threatCountNearBase, constructionCandidates } = inputs
 
   // 無可見據點 → 分數 0
   if (visibleBaseIds.length === 0) {
@@ -411,13 +497,33 @@ function evaluateConstruction(
   }
 
   // 情境 B：建料滿 + 可建造
-  if (materialRatio >= 1 && canBuild && buildableBuilding && nearestBase) {
+  const candidates = constructionCandidates
+    .filter((candidate) => threatCountNearBase === 0 || candidate.kind === 'upgrade' || candidate.buildingType === 'arrow-tower' || candidate.buildingType === 'advanced-arrow-tower')
+    .sort((a, b) => b.value - a.value)
+  const shouldPrepareUndiscoveredBase = isAdjacentToBase
+    && threatCountNearBase === 0
+    && nearestUndiscoveredBase != null
+    && nearestUndiscoveredBase.id !== nearestBase?.id
+  const waystationCandidate = shouldPrepareUndiscoveredBase
+    ? constructionCandidates.find((candidate) => candidate.kind === 'build' && candidate.buildingType === 'waystation')
+    : undefined
+  const bestCandidate = waystationCandidate ?? candidates[0]
+
+  if (bestCandidate && nearestBase && materialRatio > 0) {
+    const isWaystationAccessPlan = bestCandidate.buildingType === 'waystation'
+      && isAdjacentToBase
+      && nearestUndiscoveredBase != null
+      && nearestUndiscoveredBase.id !== nearestBase.id
+
     // B1：已在據點旁 → 直接建造（高分）
     if (isAdjacentToBase) {
+      const target = bestCandidate.kind === 'build'
+        ? { kind: 'build' as const, baseId: bestCandidate.baseId, buildingId: bestCandidate.buildingId, buildingName: bestCandidate.buildingName }
+        : { kind: 'upgrade' as const, baseId: bestCandidate.baseId, buildingId: bestCandidate.buildingId, buildingType: bestCandidate.buildingType, buildingName: bestCandidate.buildingName, nextLevel: bestCandidate.nextLevel! }
       const result: GoalResult = {
-        score: 0.9,
-        target: { kind: 'build', baseId: nearestBase.id, buildingId: buildableBuilding.id, buildingName: buildableBuilding.name },
-        context: { materialRatio, action: 'build' },
+        score: isWaystationAccessPlan ? Math.max(0.82, bestCandidate.value) : bestCandidate.value,
+        target,
+        context: { materialRatio, action: bestCandidate.kind },
       }
       const actions = buildValidatedActionSequence('construction', result, state, player, dependencies)
       if (actions.length === 0) return { score: 0 }
@@ -427,9 +533,11 @@ function evaluateConstruction(
     // B2：不在據點旁 → 移動到據點（中高分）
     const result: GoalResult = {
       score: 0.7,
-      target: { kind: 'resource-point', resourcePointId: '', position: nearestBase.position },
+      target: bestCandidate.kind === 'build'
+        ? { kind: 'build' as const, baseId: bestCandidate.baseId, buildingId: bestCandidate.buildingId, buildingName: bestCandidate.buildingName }
+        : { kind: 'upgrade' as const, baseId: bestCandidate.baseId, buildingId: bestCandidate.buildingId, buildingType: bestCandidate.buildingType, buildingName: bestCandidate.buildingName, nextLevel: bestCandidate.nextLevel! },
       distanceToTarget: inputs.feasibility.distToNearestActiveBase,
-      context: { materialRatio, action: 'move-to-base-for-build' },
+      context: { materialRatio, action: 'move-to-base-for-build', baseId: nearestBase.id },
     }
     const actions = buildValidatedActionSequence('construction', result, state, player, dependencies)
     if (actions.length === 0) return { score: 0 }
@@ -456,7 +564,7 @@ function evaluateConstruction(
   if (materialRatio < 1 && nearestResourcePoint && distToNearestResourcePoint < Infinity) {
     const f_materialUrgency = materialRatio <= 0.33 ? 1 : materialRatio <= 0.66 ? 0.4 : 0.1
     const result: GoalResult = {
-      score: 0.5 * f_materialUrgency,
+      score: 0.85 * f_materialUrgency,
       target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },
       distanceToTarget: distToNearestResourcePoint,
       context: { materialRatio, distToNearestResourcePoint, action: 'move-to-resource' },
@@ -484,9 +592,9 @@ function evaluateExploration(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { unexploredInvisibleCells, nearestUnexploredInvisiblePosition, staminaRatio, allBasesVisible } = inputs
+  const { unexploredInvisibleCells, nearestUnexploredInvisiblePosition, nearestUndiscoveredBase, staminaRatio, allBasesVisible } = inputs
 
-  if (unexploredInvisibleCells === 0 || !nearestUnexploredInvisiblePosition) {
+  if (!nearestUndiscoveredBase && (unexploredInvisibleCells === 0 || !nearestUnexploredInvisiblePosition)) {
     return { score: 0 }
   }
 
@@ -495,18 +603,46 @@ function evaluateExploration(
     return { score: 0.1 }
   }
 
-  // 不可見未探索格越多分數越高，體力充足時加分，上限 0.6
-  const baseScore = Math.min(0.6, unexploredInvisibleCells / 10)
+  const canTransportToUndiscoveredBase = nearestUndiscoveredBase != null
+    && canTransportPlayer(state, player.id, nearestUndiscoveredBase.id).ok
+
+  // 未發現據點是探索的首要目標；沒有時才以一般不可見格作為探索方向。
+  const baseScore = nearestUndiscoveredBase
+    ? canTransportToUndiscoveredBase ? 1 : 0.9
+    : Math.min(0.6, unexploredInvisibleCells / 10)
   const score = staminaRatio > 0.3 ? baseScore : baseScore * 0.5
 
   const result: GoalResult = {
     score,
-    target: { kind: 'explore', position: nearestUnexploredInvisiblePosition },
-    context: { unexploredInvisibleCells },
+    target: { kind: 'explore', position: nearestUndiscoveredBase?.position ?? nearestUnexploredInvisiblePosition! },
+    distanceToTarget: nearestUndiscoveredBase
+      ? manhattan(player.position, nearestUndiscoveredBase.position)
+      : undefined,
+    context: {
+      unexploredInvisibleCells,
+      target: nearestUndiscoveredBase ? 'undiscovered-base' : 'unexplored-cell',
+      canTransportToUndiscoveredBase,
+      targetBaseId: nearestUndiscoveredBase?.id,
+      targetBasePosition: nearestUndiscoveredBase?.position,
+    },
   }
 
-  const actions = buildValidatedActionSequence('exploration', result, state, player, dependencies)
-  if (actions.length === 0) return { score: 0 }
+  let actions = buildValidatedActionSequence('exploration', result, state, player, dependencies)
+  const hasMovement = actions.some((action) => action.type !== 'hold')
+
+  // 未發現據點可能被障礙或剩餘體力封鎖；此時退回可行的未知格，避免保留一個只有 hold 的虛假探索目標。
+  if (!hasMovement && nearestUndiscoveredBase && nearestUnexploredInvisiblePosition) {
+    const fallbackResult: GoalResult = {
+      ...result,
+      target: { kind: 'explore', position: nearestUnexploredInvisiblePosition },
+      distanceToTarget: undefined,
+      context: { unexploredInvisibleCells, target: 'unexplored-cell-fallback' },
+    }
+    actions = buildValidatedActionSequence('exploration', fallbackResult, state, player, dependencies)
+    if (actions.some((action) => action.type !== 'hold')) return { ...fallbackResult, actions }
+  }
+
+  if (actions.length === 0 || actions.every((action) => action.type === 'hold')) return { score: 0 }
   result.actions = actions
   return result
 }
@@ -598,8 +734,14 @@ export function evaluateAttackNest(
 
 // ─── equipInnerSkill ────────────────────────────────────────────
 
-export function evaluateEquipInnerSkill(inputs: FuzzyInputs): GoalResult {
-  const { betterInnerSkill, innerPowerRatio } = inputs
+export function evaluateEquipInnerSkill(
+  inputs: FuzzyInputs,
+  state?: GameState,
+  player?: PlayerState,
+  dependencies?: ExecuteAiActionDependencies,
+): GoalResult {
+  const { innerSkillCandidates, innerPowerRatio } = inputs
+  const betterInnerSkill = innerSkillCandidates[0]
 
   if (!betterInnerSkill) return { score: 0 }
 
@@ -607,11 +749,15 @@ export function evaluateEquipInnerSkill(inputs: FuzzyInputs): GoalResult {
   const f_hasPower = trapezoid(innerPowerRatio, 0.1, 0.2, 1, 1)
   const score = fuzzyAnd(f_hasCapacity, f_hasPower)
 
-  return {
+  const result: GoalResult = {
     score,
     target: { kind: 'equip-inner-skill', skillId: betterInnerSkill.id },
-    context: { skillId: betterInnerSkill.id, skillName: betterInnerSkill.name },
+    context: { skillId: betterInnerSkill.id, skillName: betterInnerSkill.name, value: betterInnerSkill.value },
   }
+  if (!state || !player || !dependencies) return result
+
+  const actions = buildValidatedActionSequence('equipInnerSkill', result, state, player, dependencies)
+  return actions.length > 0 ? { ...result, actions } : { score: 0 }
 }
 
 // ─── useInnerSkillAttack ───────────────────────────────────────
@@ -712,20 +858,25 @@ function evaluateExecuteMission(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { hasMissionBoard, staminaRatio, materialRatio, feasibility } = inputs
+  const { hasMissionBoard, needsBaseVision, staminaRatio, materialRatio, feasibility } = inputs
 
   if (!hasMissionBoard) return { score: 0 }
   if (staminaRatio < 0.2) return { score: 0 }
   if (!feasibility.missionBaseId) return { score: 0 }
 
-  // 建料充足時做任務的動機較低（已不需要金錢），建料不足時動機高
-  const f_needMaterials = materialRatio < 0.5 ? 0.7 : 0.4
+  // 建料充足時做任務的動機較低；但已在告示牌旁時，任務是零移動成本的可執行行動，
+  // 不應因分數四捨五入到門檻以下而讓 AI 永遠停在據點外。
+  const isAdjacentToMissionBase = feasibility.distToNearestActiveBase <= 1
+  const f_needMaterials = isAdjacentToMissionBase
+    ? 0.35
+    : materialRatio < 0.5 ? 0.35 : 0.2
+  const score = needsBaseVision ? 0.95 : f_needMaterials
 
   const result: GoalResult = {
-    score: f_needMaterials,
+    score,
     target: { kind: 'use-facility', baseId: feasibility.missionBaseId, facilityType: 'mission' },
     distanceToTarget: feasibility.distToNearestActiveBase,
-    context: { materialRatio },
+    context: { materialRatio, needsBaseVision },
   }
 
   const actions = buildValidatedActionSequence('executeMission', result, state, player, dependencies)
@@ -763,7 +914,7 @@ function evaluateRepairEquipment(
 }
 
 // ─── buildDefense ──────────────────────────────────────────────
-// 據點附近有威脅 + 可建造防禦設施 → 建造
+// 有可建造防禦設施且據點尚未達到防禦需求 → 建造
 
 function evaluateBuildDefense(
   inputs: FuzzyInputs,
@@ -772,13 +923,18 @@ function evaluateBuildDefense(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { buildableDefenseStructure, threatCountNearBase, materialRatio, staminaRatio, nearestBase } = inputs
+  const { buildableDefenseStructure, defenseTowerCount, threatCountNearBase, materialRatio, staminaRatio, nearestBase, isAdjacentToBase } = inputs
 
   if (!buildableDefenseStructure || !nearestBase) return { score: 0 }
   if (staminaRatio < 0.3 || materialRatio < 0.5) return { score: 0 }
+  const requiredTowerCount = Math.max(1, Math.ceil(threatCountNearBase / 2))
+  if (defenseTowerCount >= requiredTowerCount) return { score: 0 }
 
   // 據點附近威脅越多 → 建造動機越高
-  const f_threat = trapezoid(threatCountNearBase, 0, 1, 3, 5)
+  // 沒有威脅時仍保留一座基礎箭塔的低強度防禦需求。
+  const f_threat = threatCountNearBase === 0
+    ? 0.45
+    : trapezoid(threatCountNearBase, 0, 1, 3, 5)
   // 建料充足 → 加分
   const f_material = trapezoid(materialRatio, 0.5, 0.7, 1, 1)
 
@@ -786,10 +942,10 @@ function evaluateBuildDefense(
   if (score <= 0) return { score: 0 }
 
   const result: GoalResult = {
-    score: score * 0.7,
+    score: threatCountNearBase === 0 && isAdjacentToBase ? 0.95 : score * (threatCountNearBase === 0 ? 0.55 : 0.7),
     target: { kind: 'defense-build', baseId: nearestBase.id, structureType: buildableDefenseStructure.type, position: nearestBase.position },
     distanceToTarget: inputs.feasibility.distToNearestActiveBase,
-    context: { structureName: buildableDefenseStructure.name, threatCountNearBase },
+    context: { structureName: buildableDefenseStructure.name, threatCountNearBase, defenseTowerCount, requiredTowerCount },
   }
 
   const actions = buildValidatedActionSequence('buildDefense', result, state, player, dependencies)
