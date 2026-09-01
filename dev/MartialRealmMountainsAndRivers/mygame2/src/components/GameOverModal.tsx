@@ -11,7 +11,10 @@ type GameOverModalProps = {
   record?: BattleRecord
   /** 本局結算獲得的武學殘卷（null 表示未選用名册角色；'skipped' 表示此局已領取過）。 */
   scrollReward?: number | 'skipped' | null
+  /** 本局重啓（以相同設定重新開始本局）。 */
   onRestart: () => void
+  /** 回到遊戲開始畫面。 */
+  onGoHome: () => void
   /** 關閉結算彈窗（玩家可回到地圖觀察局末狀態）。 */
   onClose?: () => void
 }
@@ -55,7 +58,7 @@ function PlayerRecordSection({ player }: { player: PlayerBattleRecord }) {
   )
 }
 
-function GameOverModal({ open, won = false, reason, record, scrollReward, onRestart, onClose }: GameOverModalProps) {
+function GameOverModal({ open, won = false, reason, record, scrollReward, onRestart, onGoHome, onClose }: GameOverModalProps) {
   const anyBaseDestroyed = reason === 'any-base-destroyed'
   const stats = record?.stats
   const players = record?.players ?? []
@@ -140,9 +143,14 @@ function GameOverModal({ open, won = false, reason, record, scrollReward, onRest
             關閉（觀察局末狀態）
           </Button>
         )}
-        <Button type="primary" block onClick={onRestart}>
-          重新開始
-        </Button>
+        <Flex gap={8}>
+          <Button block onClick={onRestart}>
+            本局重啓
+          </Button>
+          <Button type="primary" block onClick={onGoHome}>
+            回到首頁
+          </Button>
+        </Flex>
       </Flex>
     </Modal>
   )

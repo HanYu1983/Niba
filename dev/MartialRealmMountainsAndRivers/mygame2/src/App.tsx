@@ -606,6 +606,10 @@ function App() {
             setPlaytestMode(false)
             setScreen('start')
           }}
+          onGoHome={() => {
+            setPlaytestMode(false)
+            setScreen('start')
+          }}
           gameOverModalDismissed={gameOverModalDismissed}
           onDismissGameOverModal={() => setGameOverModalDismissed(true)}
           activePlayer={activePlayer}
