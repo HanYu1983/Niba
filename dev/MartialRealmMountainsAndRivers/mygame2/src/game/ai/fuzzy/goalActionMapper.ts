@@ -1,4 +1,4 @@
-import type { GameState, PlayerState } from '../../types'
+import type { GameState, PlayerState, Position } from '../../types'
 import { getAdjacentPositions } from '../../types'
 import type { AiAction, AiActorRef } from '../aiAction'
 import type { GoalName, GoalResult } from './goals'
@@ -79,6 +79,51 @@ function findClosestReachablePosition(state: GameState, player: PlayerState, tar
     return dC < dBest ? c : best
   })
   return best.position
+}
+
+/** 目標被完整廢墟堵住時，先移到廢墟旁並清除，下一個 AI step 再重新尋路。 */
+function buildRuinClearingActions(
+  actor: AiActorRef,
+  state: GameState,
+  player: PlayerState,
+  targetPosition: Position,
+): AiAction[] | undefined {
+  const intactRuins = (state.ruins ?? []).filter((ruin) => ruin.status === 'intact')
+  const adjacent = intactRuins.find((ruin) => Math.abs(player.position.row - ruin.position.row) + Math.abs(player.position.column - ruin.position.column) === 1)
+  if (adjacent) {
+    return [{
+      type: 'collect',
+      actor,
+      target: { id: adjacent.id, kind: 'ruin', position: adjacent.position },
+      reason: `清障：清除廢墟 ${adjacent.name}`,
+    }]
+  }
+
+  const reachable = collectReachableCells(state, player)
+  const candidates = intactRuins.flatMap((ruin) => getAdjacentPositions(ruin.position)
+    .map((position) => ({ ruin, position, cell: reachable.find((candidate) => candidate.position.row === position.row && candidate.position.column === position.column) }))
+    .filter((candidate): candidate is typeof candidate & { cell: NonNullable<typeof candidate.cell> } => candidate.cell != null))
+  const best = candidates.sort((first, second) => {
+    const firstDistance = Math.abs(first.position.row - targetPosition.row) + Math.abs(first.position.column - targetPosition.column)
+    const secondDistance = Math.abs(second.position.row - targetPosition.row) + Math.abs(second.position.column - targetPosition.column)
+    return firstDistance - secondDistance || first.cell.cost - second.cell.cost
+  })[0]
+  if (!best) return undefined
+
+  return [
+    {
+      type: 'move',
+      actor,
+      destination: best.position,
+      reason: `清障：移動到廢墟 ${best.ruin.name} 附近`,
+    },
+    {
+      type: 'collect',
+      actor,
+      target: { id: best.ruin.id, kind: 'ruin', position: best.ruin.position },
+      reason: `清障：清除廢墟 ${best.ruin.name}`,
+    },
+  ]
 }
 
 /**
@@ -764,6 +809,10 @@ function buildLearnSkillActions(
       }]
     }
     const moveDest = findClosestReachablePosition(state, player, gate.position)
+    if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
+      return buildRuinClearingActions(actor, state, player, gate.position)
+        ?? [{ type: 'hold', actor, reason: '學招：門派據點不可達，且無可清除障礙' }]
+    }
     return [{
       type: 'move',
       actor,
@@ -788,6 +837,10 @@ function buildLearnSkillActions(
       }]
     }
     const moveDest = findClosestReachablePosition(state, player, base.position)
+    if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
+      return buildRuinClearingActions(actor, state, player, base.position)
+        ?? [{ type: 'hold', actor, reason: '學招：武館據點不可達，且無可清除障礙' }]
+    }
     return [{
       type: 'move',
       actor,

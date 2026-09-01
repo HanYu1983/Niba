@@ -398,6 +398,7 @@ value = max(0,
 | AI 移動到探索點但無符合選項 | 保留事件，繼續正常流程 |
 | 升級目標建築不存在 | `validateAiAction` 擋下（基礎驗證）+ `upgradeBuilding` 領域驗證 |
 | 非相鄰建造候選移動中據點消失 | mapper 回傳 hold（「找不到目標據點」） |
+| AI 前往門派/武館被完整廢墟封鎖 | mapper 先移動到廢墟相鄰格並執行清除；下一個 step 重新尋路 |
 
 ### 11.3 排程層
 
@@ -442,6 +443,7 @@ value = max(0,
 | 裝備/內功換裝效益評估 | ✅ 第一階段 | AI | — | `equipmentValue.ts` 依屬性提升、耐久、損壞替換、傷害提升與修煉型個性排序 |
 | 價值函數元件寫入 `[AI decision]` 日誌 | ✅ | AI | — | 日誌含 goal context、selectedContext、候選排名與每個候選的 ValueEvaluation factors |
 | 候選枚舉抽成獨立純模組 | P3 | AI | — | `fuzzyInputs.ts` 不再內嵌枚舉邏輯 |
+| AI 障礙導航（廢墟清除後繼續前往目標） | ✅ | AI | — | 不可達目標會產生清障 action；無可清除障礙時回傳明確 hold reason |
 
 ### 12.3 Milestone
 
