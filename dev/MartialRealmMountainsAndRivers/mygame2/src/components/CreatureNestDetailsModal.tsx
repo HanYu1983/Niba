@@ -4,17 +4,20 @@ import { getCreatureBehaviorName, getCreatureSchoolId } from '../game/rules/crea
 import { martialSchoolCatalog } from '../game/catalogs/martialSchoolCatalog'
 import { getSchoolElement } from '../game/catalogs/skillProgressionCatalog'
 import { getElementName } from '../game/rules/skillRules'
+import { NEST_HEALTH_REGEN_PER_ROUND } from '../game/actions/creatureActions'
 import LocationDetailsCard from './LocationDetailsCard'
 import StatValue from './StatValue'
 
 type CreatureNestDetailsModalProps = {
   nest: CreatureNestState | null
   currentPlayer: PlayerState | null
+  /** 巢穴每回合回復的最大生命比例（0–1）；未提供時使用預設 1%。 */
+  healthRegenPercent?: number
   onAttack: (nestId: string) => void
   onClose: () => void
 }
 
-function CreatureNestDetailsModal({ nest, currentPlayer, onAttack, onClose }: CreatureNestDetailsModalProps) {
+function CreatureNestDetailsModal({ nest, currentPlayer, healthRegenPercent = NEST_HEALTH_REGEN_PER_ROUND, onAttack, onClose }: CreatureNestDetailsModalProps) {
   const behaviorName = nest ? getCreatureBehaviorName(nest) : null
   const schoolId = nest ? getCreatureSchoolId(nest) : 'frost-water'
   const schoolName = martialSchoolCatalog.find((school) => school.id === schoolId)?.name ?? schoolId
@@ -48,7 +51,7 @@ function CreatureNestDetailsModal({ nest, currentPlayer, onAttack, onClose }: Cr
           <StatValue label="生成機率">{(nest.spawnChance * 100).toFixed(1)}%（每回合 +0.5%，上限 30%）</StatValue>
           <StatValue label="冷卻回合">{nest.cooldownRounds > 0 ? `剩餘 ${nest.cooldownRounds} 回合` : '可生成'}</StatValue>
           <StatValue label="目前生成等級">Lv.{nest.spawnLevel}</StatValue>
-          <StatValue label="每回合回復">最大生命 2%</StatValue>
+          <StatValue label="每回合回復">最大生命 {(healthRegenPercent * 100).toFixed(1)}%</StatValue>
           <StatValue label="生成行為">{behaviorName}</StatValue>
           <StatValue label="功法流派">{schoolName}</StatValue>
           <StatValue label="五行屬性">{elementName}</StatValue>
