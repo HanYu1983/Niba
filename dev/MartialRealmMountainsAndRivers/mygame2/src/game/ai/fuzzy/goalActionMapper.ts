@@ -587,6 +587,12 @@ function buildExplorationActions(
   state: GameState,
   player: PlayerState,
 ): AiAction[] {
+  // 探索路線被相鄰完好廢墟截斷時，先清障；清除後下一個 step 會重新評估中期路線。
+  if (result.target?.kind === 'explore') {
+    const clearingActions = buildRuinClearingActions(actor, state, player, result.target.position)
+    if (clearingActions?.length) return clearingActions
+  }
+
   if (result.target?.kind === 'explore') {
     const basePosition = result.context?.target === 'undiscovered-base'
       && result.context.targetBasePosition
