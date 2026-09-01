@@ -455,6 +455,13 @@ function buildExplorationActions(
 ): AiAction[] {
   if (result.target?.kind === 'explore') {
     const moveDest = findClosestReachablePosition(state, player, result.target.position)
+    if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
+      return [{
+        type: 'hold',
+        actor,
+        reason: '探索：剩餘體力不足以移動到下一格，原地待命',
+      }]
+    }
     return [{
       type: 'move',
       actor,

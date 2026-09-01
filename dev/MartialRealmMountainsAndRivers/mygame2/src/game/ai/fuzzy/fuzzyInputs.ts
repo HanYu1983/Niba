@@ -11,6 +11,7 @@ import { itemCatalog } from '../../catalogs/itemCatalog'
 import { equipmentCatalog } from '../../catalogs/equipmentCatalog'
 import { allInnerSkillCatalog, getMartialHallSkills, martialHallInnerSkillCatalog, martialHallExternalSkillCatalog } from '../../catalogs/martialHallSkillCatalog'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
+import { getSkillDamage, getSkillProgression } from '../../rules/skillRules'
 import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
 import { getSectGateSkills, getSectGateLearnCost } from '../../rules/sectGateRules'
 import { defenseStructureCatalog } from '../../catalogs/defenseStructureCatalog'
@@ -112,6 +113,8 @@ export interface FuzzyInputs {
   betterInnerSkill: { id: string; name: string; insightRequirement: number } | undefined
   /** 是否有傷害型內功已裝備 */
   hasDamageInnerSkill: boolean
+  /** 目前內功單次傷害／最近可見敵人最大生命值，0~1 */
+  combatDamageRatio: number
   /** 內力比 0~1 */
   innerPowerRatio: number
   /** 可在武館學習的技能（最近據點的武館），無則 undefined */
@@ -323,6 +326,14 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
   const innerPowerRatio = player.maxInnerPower > 0 ? player.innerPower / player.maxInnerPower : 0
   const currentInnerSkill = allInnerSkillCatalog.find((s) => s.id === player.innerSkillId)
   const hasDamageInnerSkill = currentInnerSkill != null && currentInnerSkill.calculateDamage != null
+  const nearestVisibleCreature = visibleCreatures[0]?.creature
+  const combatDamageRatio = currentInnerSkill && nearestVisibleCreature
+    ? Math.min(1, getSkillDamage(
+      effectiveAttributes,
+      currentInnerSkill,
+      getSkillProgression(player, currentInnerSkill.id).level,
+    ) / Math.max(1, nearestVisibleCreature.maxHealth))
+    : 0
 
   // 找更好的內功：已學會但未裝備，且悟性足夠，且比目前內功更強
   const bestInnerSkill = findBetterInnerSkill(player, effectiveAttributes)
@@ -439,6 +450,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     visibleCreatureIds,
     betterInnerSkill: bestInnerSkill,
     hasDamageInnerSkill,
+    combatDamageRatio,
     innerPowerRatio,
     learnableSkillAtHall,
     learnableSkillAtGate,

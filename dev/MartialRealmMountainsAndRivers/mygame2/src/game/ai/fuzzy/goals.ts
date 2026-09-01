@@ -203,19 +203,20 @@ function evaluateEngageCombat(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { distToNearestCreature, staminaRatio, hitsSurvivable, nearestCreatureId, needsLeveling, killableCreature } = inputs
+  const { distToNearestCreature, staminaRatio, hitsSurvivable, nearestCreatureId, needsLeveling, killableCreature, combatDamageRatio } = inputs
 
   if (!nearestCreatureId || distToNearestCreature === Infinity) {
     return { score: 0 }
   }
 
-  // 可擊殺 → score = 1
+  // 可擊殺仍需考量功法傷害；弱功法不應無條件壓過經營目標。
   if (killableCreature) {
+    const combatReadiness = Math.min(1, combatDamageRatio * 1.5)
     const result: GoalResult = {
-      score: 1,
+      score: combatReadiness,
       target: { kind: 'attack', targetId: nearestCreatureId, targetType: 'creature', position: { row: -1, column: -1 } },
       distanceToTarget: distToNearestCreature,
-      context: { distToNearestCreature, nearestCreatureId, killable: true },
+      context: { distToNearestCreature, nearestCreatureId, killable: true, combatDamageRatio, combatReadiness },
     }
     const actions = buildValidatedActionSequence('engageCombat', result, state, player, dependencies)
     if (actions.length === 0) return { score: 0 }
@@ -232,7 +233,11 @@ function evaluateEngageCombat(
   const f_staminaHigh = trapezoid(staminaRatio, 0.4, 0.6, 1, 1)
   const f_healthy = trapezoid(hitsSurvivable, 3, 5, 10, 10)
 
-  let score = Math.min(0.85, fuzzyAnd(fuzzyOr(f_closeCreature, f_healthy), fuzzyOr(f_staminaHigh, f_closeCreature)))
+  let score = Math.min(0.85, fuzzyAnd(
+    fuzzyOr(f_closeCreature, f_healthy),
+    fuzzyOr(f_staminaHigh, f_closeCreature),
+    Math.min(1, combatDamageRatio * 1.5),
+  ))
 
   // 等級落後時打怪分數提升
   if (needsLeveling) {
@@ -243,7 +248,7 @@ function evaluateEngageCombat(
     score,
     target: { kind: 'attack', targetId: nearestCreatureId, targetType: 'creature', position: { row: -1, column: -1 } },
     distanceToTarget: distToNearestCreature,
-    context: { distToNearestCreature, nearestCreatureId, killable: false },
+    context: { distToNearestCreature, nearestCreatureId, killable: false, combatDamageRatio },
   }
   const actions = buildValidatedActionSequence('engageCombat', result, state, player, dependencies)
   if (actions.length === 0) return { score: 0 }
@@ -254,7 +259,12 @@ function evaluateEngageCombat(
 // ─── allocateAttributes ─────────────────────────────────────────
 // 有可分配屬性點 → 分數 = 1（最高優先）
 
-function evaluateAllocateAttributes(inputs: FuzzyInputs): GoalResult {
+function evaluateAllocateAttributes(
+  inputs: FuzzyInputs,
+  state?: GameState,
+  player?: PlayerState,
+  dependencies?: ExecuteAiActionDependencies,
+): GoalResult {
   const { availableAttributePoints, healthRatio } = inputs
 
   if (availableAttributePoints <= 0) {
@@ -265,11 +275,15 @@ function evaluateAllocateAttributes(inputs: FuzzyInputs): GoalResult {
   // 血量正常 → 70% 根骨 / 30% 臂力
   const attribute = healthRatio < 0.5 ? 'constitution' : (Math.random() < 0.7 ? 'constitution' : 'armStrength')
 
-  return {
+  const result: GoalResult = {
     score: 1,
     target: { kind: 'allocate-attribute', attribute },
     context: { availableAttributePoints, chosen: attribute },
   }
+  if (!state || !player || !dependencies) return result
+
+  const actions = buildValidatedActionSequence('allocateAttributes', result, state, player, dependencies)
+  return actions.length > 0 ? { ...result, actions } : { score: 0 }
 }
 
 // ─── useItem ────────────────────────────────────────────────────
@@ -328,18 +342,27 @@ function evaluateUseItem(inputs: FuzzyInputs): GoalResult {
 // ─── equipEquipment ────────────────────────────────────────────
 // 有可裝備的武具（部位空 or 耐久=0）→ score = 1
 
-function evaluateEquipEquipment(inputs: FuzzyInputs): GoalResult {
+function evaluateEquipEquipment(
+  inputs: FuzzyInputs,
+  state?: GameState,
+  player?: PlayerState,
+  dependencies?: ExecuteAiActionDependencies,
+): GoalResult {
   const { equipableEquipment } = inputs
 
   if (!equipableEquipment) {
     return { score: 0 }
   }
 
-  return {
+  const result: GoalResult = {
     score: 1,
     target: { kind: 'equip', instanceId: equipableEquipment.instanceId },
     context: { slot: equipableEquipment.slot, name: equipableEquipment.name, durability: equipableEquipment.durability },
   }
+  if (!state || !player || !dependencies) return result
+
+  const actions = buildValidatedActionSequence('equipEquipment', result, state, player, dependencies)
+  return actions.length > 0 ? { ...result, actions } : { score: 0 }
 }
 
 // ─── evaluateAllGoals ──────────────────────────────────────────────
@@ -358,11 +381,11 @@ export function evaluateAllGoals(
     construction: evaluateConstruction(inputs, state, player, dependencies),
     exploration: evaluateExploration(inputs, state, player, dependencies),
     engageCombat: evaluateEngageCombat(inputs, state, player, dependencies),
-    allocateAttributes: evaluateAllocateAttributes(inputs),
+    allocateAttributes: evaluateAllocateAttributes(inputs, state, player, dependencies),
     useItem: evaluateUseItem(inputs),
-    equipEquipment: evaluateEquipEquipment(inputs),
+    equipEquipment: evaluateEquipEquipment(inputs, state, player, dependencies),
     attackNest: evaluateAttackNest(inputs, state, player, dependencies),
-    equipInnerSkill: evaluateEquipInnerSkill(inputs),
+    equipInnerSkill: evaluateEquipInnerSkill(inputs, state, player, dependencies),
     useInnerSkillAttack: evaluateUseInnerSkillAttack(inputs, state, player, dependencies),
     learnMartialSkill: evaluateLearnMartialSkill(inputs, state, player, dependencies),
     practiceSkill: evaluatePracticeSkill(inputs, state, player, dependencies),
@@ -641,7 +664,12 @@ export function evaluateAttackNest(
 
 // ─── equipInnerSkill ────────────────────────────────────────────
 
-export function evaluateEquipInnerSkill(inputs: FuzzyInputs): GoalResult {
+export function evaluateEquipInnerSkill(
+  inputs: FuzzyInputs,
+  state?: GameState,
+  player?: PlayerState,
+  dependencies?: ExecuteAiActionDependencies,
+): GoalResult {
   const { betterInnerSkill, innerPowerRatio } = inputs
 
   if (!betterInnerSkill) return { score: 0 }
@@ -650,11 +678,15 @@ export function evaluateEquipInnerSkill(inputs: FuzzyInputs): GoalResult {
   const f_hasPower = trapezoid(innerPowerRatio, 0.1, 0.2, 1, 1)
   const score = fuzzyAnd(f_hasCapacity, f_hasPower)
 
-  return {
+  const result: GoalResult = {
     score,
     target: { kind: 'equip-inner-skill', skillId: betterInnerSkill.id },
     context: { skillId: betterInnerSkill.id, skillName: betterInnerSkill.name },
   }
+  if (!state || !player || !dependencies) return result
+
+  const actions = buildValidatedActionSequence('equipInnerSkill', result, state, player, dependencies)
+  return actions.length > 0 ? { ...result, actions } : { score: 0 }
 }
 
 // ─── useInnerSkillAttack ───────────────────────────────────────

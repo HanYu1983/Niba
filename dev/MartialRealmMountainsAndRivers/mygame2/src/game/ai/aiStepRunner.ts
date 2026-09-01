@@ -116,6 +116,36 @@ function validateAiStepAction(state: GameState, action: AiAction): string | null
   return validation.valid ? null : validation.reason
 }
 
+function logAiDecision(
+  state: GameState,
+  player: { id: string; name: string; position: { row: number; column: number } },
+  order: { type: string; personality?: string; playerId?: string; maxDistance?: number },
+  inputs: ReturnType<typeof computeFuzzyInputs>,
+  goalResults: Record<string, { score: number; target?: unknown }>,
+  selectedGoal: string,
+  threshold: number,
+  actions: AiAction[],
+): void {
+  console.info('[AI decision]', {
+    round: state.round,
+    player: { id: player.id, name: player.name, position: player.position },
+    order: order.type,
+    personality: order.personality ?? 'balanced',
+    supportTarget: order.type === 'support-player' ? {
+      id: order.playerId,
+      maxDistance: order.maxDistance,
+    } : undefined,
+    inputs,
+    goals: Object.fromEntries(Object.entries(goalResults).map(([goal, result]) => [goal, {
+      score: Number(result.score.toFixed(3)),
+      target: result.target,
+    }])),
+    selectedGoal,
+    threshold,
+    actions,
+  })
+}
+
 /** 更新建設計畫中單一 queue item 的狀態。 */
 function updateConstructionPlanItem(
   updateGameState: AiStepRunnerDeps['updateGameState'],
@@ -323,7 +353,12 @@ export function runAiSupportStep(deps: AiStepRunnerDeps, playerId: string): Acti
     }))
     .sort((first, second) => first.distance - second.distance)[0]
   if (combatTarget) {
-    constraints.forcedCombatTarget = { id: combatTarget.creature.id, position: combatTarget.creature.position }
+    if (combatTarget.distance > 1) {
+      // 遠處的怪物不能被支援命令直接指定為攔截目標，避免 fuzzy 選出不可執行的遠距攻擊。
+      constraints.forcedCombatTarget = undefined
+    } else {
+      constraints.forcedCombatTarget = { id: combatTarget.creature.id, position: combatTarget.creature.position }
+    }
   }
 
   return runAiStepLoop(deps, playerId, player.name, '模糊支援策略', () => {
@@ -339,6 +374,16 @@ export function runAiSupportStep(deps: AiStepRunnerDeps, playerId: string): Acti
     for (const candidate of rankedGoals) {
       if (candidate.result.score < (constraints.goalThresholds?.[candidate.goal] ?? MIN_THRESHOLD)) break
       if (candidate.result.actions?.length && candidate.result.actions.some((action) => action.type !== 'hold')) {
+        logAiDecision(
+          deps.getState(),
+          currentPlayer,
+          order,
+          computeFuzzyInputs(deps.getState(), currentPlayer),
+          goalResults,
+          candidate.goal,
+          constraints.goalThresholds?.[candidate.goal] ?? MIN_THRESHOLD,
+          candidate.result.actions,
+        )
         return { actions: candidate.result.actions }
       }
     }
@@ -522,6 +567,7 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
 
       actions = candidateActions
       goalFound = true
+      logAiDecision(deps.getState(), currentPlayer, order, inputs, goalResults, candidate.goal, threshold, actions)
       break
     }
 
