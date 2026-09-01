@@ -1,4 +1,5 @@
 import type { GameState, PlayerState, Position } from '../../types'
+import { getManhattanDistance as manhattan } from '../../rules/mapCellStateRules'
 import { trapezoid, fuzzyAnd, fuzzyOr } from './membershipFunctions'
 import type { FuzzyInputs } from './fuzzyInputs'
 import type { AiAction } from '../aiAction'
@@ -567,9 +568,9 @@ function evaluateExploration(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { unexploredInvisibleCells, nearestUnexploredInvisiblePosition, staminaRatio, allBasesVisible } = inputs
+  const { unexploredInvisibleCells, nearestUnexploredInvisiblePosition, nearestUndiscoveredBase, staminaRatio, allBasesVisible } = inputs
 
-  if (unexploredInvisibleCells === 0 || !nearestUnexploredInvisiblePosition) {
+  if (!nearestUndiscoveredBase && (unexploredInvisibleCells === 0 || !nearestUnexploredInvisiblePosition)) {
     return { score: 0 }
   }
 
@@ -578,14 +579,22 @@ function evaluateExploration(
     return { score: 0.1 }
   }
 
-  // 不可見未探索格越多分數越高，體力充足時加分，上限 0.6
-  const baseScore = Math.min(0.6, unexploredInvisibleCells / 10)
+  // 未發現據點是探索的首要目標；沒有時才以一般不可見格作為探索方向。
+  const baseScore = nearestUndiscoveredBase
+    ? 0.9
+    : Math.min(0.6, unexploredInvisibleCells / 10)
   const score = staminaRatio > 0.3 ? baseScore : baseScore * 0.5
 
   const result: GoalResult = {
     score,
-    target: { kind: 'explore', position: nearestUnexploredInvisiblePosition },
-    context: { unexploredInvisibleCells },
+    target: { kind: 'explore', position: nearestUndiscoveredBase?.position ?? nearestUnexploredInvisiblePosition! },
+    distanceToTarget: nearestUndiscoveredBase
+      ? manhattan(player.position, nearestUndiscoveredBase.position)
+      : undefined,
+    context: {
+      unexploredInvisibleCells,
+      target: nearestUndiscoveredBase ? 'undiscovered-base' : 'unexplored-cell',
+    },
   }
 
   const actions = buildValidatedActionSequence('exploration', result, state, player, dependencies)

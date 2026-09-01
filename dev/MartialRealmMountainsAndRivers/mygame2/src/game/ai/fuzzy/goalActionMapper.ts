@@ -374,6 +374,9 @@ function buildPositioningActions(
   // 有出口 → 移動到最近出口
   if (result.target?.kind === 'exit') {
     const moveDest = findClosestReachablePosition(state, player, result.target.position)
+    if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
+      return [{ type: 'hold', actor, reason: '定位：出口目前不可達（體力或路徑不足）' }]
+    }
     return [{
       type: 'move',
       actor,

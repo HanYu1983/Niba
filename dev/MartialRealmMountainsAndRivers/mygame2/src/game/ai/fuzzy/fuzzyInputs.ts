@@ -122,6 +122,8 @@ export interface FuzzyInputs {
   visibleBaseIds: string[]
   /** 所有據點是否都在視野內 */
   allBasesVisible: boolean
+  /** 最近尚未取得視野的據點，無則 undefined */
+  nearestUndiscoveredBase: BaseState | undefined
   /** 據點建料比 0~1（buildingMaterials / maxBuildingMaterials），無據點 = 0 */
   materialRatio: number
   /** 據點是否可建造建築（有模板 + rank 夠 + 材料夠） */
@@ -285,6 +287,11 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
 
   const nearestBase = activeBases.length > 0
     ? activeBases.reduce((best, b) => manhattan(player.position, b.position) < manhattan(player.position, best.position) ? b : best)
+    : undefined
+
+  const undiscoveredBases = activeBases.filter((base) => base.discovered !== true)
+  const nearestUndiscoveredBase = undiscoveredBases.length > 0
+    ? undiscoveredBases.reduce((best, base) => manhattan(player.position, base.position) < manhattan(player.position, best.position) ? base : best)
     : undefined
 
   const materialRatio = nearestBase
@@ -587,6 +594,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     nearestBase,
     visibleBaseIds,
     allBasesVisible,
+    nearestUndiscoveredBase,
     materialRatio,
     canBuild,
     buildableBuilding: buildableBuilding ? { id: buildableBuilding.id, type: buildableBuilding.type, name: buildableBuilding.name } : undefined,
