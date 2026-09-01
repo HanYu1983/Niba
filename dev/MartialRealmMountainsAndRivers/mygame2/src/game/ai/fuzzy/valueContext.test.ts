@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { computeUnifiedValue, distanceDecay } from './valueContext'
+import { computeUnifiedValue, distanceDecay, evaluateUnifiedValue } from './valueContext'
 
 describe('computeUnifiedValue', () => {
   const base = {
@@ -27,5 +27,13 @@ describe('computeUnifiedValue', () => {
   it('結果限制在 0 到 1', () => {
     expect(computeUnifiedValue({ ...base, personalityWeight: 10 })).toBeLessThanOrEqual(1)
     expect(computeUnifiedValue({ ...base, risk: 10, cost: 10 })).toBeGreaterThanOrEqual(0)
+  })
+
+  it('回傳可供日誌使用的正規化因子', () => {
+    const evaluation = evaluateUnifiedValue({ ...base, risk: 0.4, cost: 0.2 })
+    expect(evaluation.value).toBe(computeUnifiedValue({ ...base, risk: 0.4, cost: 0.2 }))
+    expect(evaluation.factors.need).toBe(0.8)
+    expect(evaluation.factors.riskPenalty).toBe(0.8)
+    expect(evaluation.factors.costPenalty).toBe(0.94)
   })
 })
