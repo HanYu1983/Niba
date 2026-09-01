@@ -313,6 +313,19 @@ function buildPositioningActions(
     return buildPositioningAttack(actor, state, player)
   }
 
+  if (result.target?.kind === 'follow-player') {
+    const moveDest = findClosestReachablePosition(state, player, result.target.position)
+    if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
+      return [{ type: 'hold', actor, reason: '定位：已在支援距離內' }]
+    }
+    return [{
+      type: 'move',
+      actor,
+      destination: moveDest,
+      reason: `定位：跟隨支援目標 (${result.target.position.row},${result.target.position.column})`,
+    }]
+  }
+
   // 有出口 → 移動到最近出口
   if (result.target?.kind === 'exit') {
     const moveDest = findClosestReachablePosition(state, player, result.target.position)

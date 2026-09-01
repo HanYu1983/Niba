@@ -5,6 +5,8 @@ export type AiGoalConstraints = {
   allowedGoals?: readonly GoalName[]
   goalWeights?: Partial<Record<GoalName, number>>
   goalThresholds?: Partial<Record<GoalName, number>>
+  followTarget?: { position: { row: number; column: number }; maxDistance: number }
+  forcedCombatTarget?: { id: string; position: { row: number; column: number } }
 }
 
 const ALL_GOALS: GoalName[] = [

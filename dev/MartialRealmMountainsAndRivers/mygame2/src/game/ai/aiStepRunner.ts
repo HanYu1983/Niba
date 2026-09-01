@@ -4,7 +4,6 @@ import type { AiActionEvent } from './aiActionEvent'
 import { createAiActionEvent } from './aiActionEvent'
 import { chooseSelfPreservationAction } from '../aiSelfPreservationRules'
 import { chooseDefenseAction } from '../aiDefenseRules'
-import { chooseSupportAction } from '../aiSupportRules'
 import { defenseActionToAiAction } from './defenseActionAdapter'
 import { validateAiAction } from './validation/validateAiAction'
 import { getPlayerAiEmergency } from './policy/aiPolicyRegistry'
@@ -168,6 +167,7 @@ function runAiStepLoop(
   playerName: string,
   loopLabel: string,
   decide: () => AiLoopDecision,
+  executeAction: (action: AiAction) => ActionOutcome = deps.executeAiAction,
 ): ActionOutcome {
   const actor = { id: playerId, kind: 'player' as const }
   let loopCount = 0
@@ -194,7 +194,7 @@ function runAiStepLoop(
         exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
         break
       }
-      const actionResult = deps.executeAiAction(action)
+      const actionResult = executeAction(action)
       recordAiStepEvent(deps.updateGameState, deps.getState().round, playerId, currentPlayer.name, action, actionResult)
       if (!actionResult.ok) {
         exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
@@ -292,29 +292,6 @@ export function runAiSupportStep(deps: AiStepRunnerDeps, playerId: string): Acti
   if (!player || !order || order.type !== 'support-player') {
     return { ok: false, reason: '目前無法執行 AI 支援回合。' }
   }
-  const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent, getPlayerAiEmergency())
-  if (selfPreservation?.type === 'move') {
-    const action = defenseActionToAiAction(state, playerId, selfPreservation)
-    const rejection = validateAiStepAction(state, action)
-    if (rejection) {
-      recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, action, { ok: false, reason: rejection })
-      return { ok: false, reason: rejection }
-    }
-    const result = deps.movePlayerTo(playerId, selfPreservation.position.row, selfPreservation.position.column)
-    recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, action, result)
-    return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 自保移動失敗。' }
-  }
-  if (selfPreservation) {
-    const action = defenseActionToAiAction(state, playerId, selfPreservation)
-    const rejection = validateAiStepAction(state, action)
-    if (rejection) {
-      recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, action, { ok: false, reason: rejection })
-      return { ok: false, reason: rejection }
-    }
-    deps.endPlayerTurn(playerId)
-    recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, action, { ok: true })
-    return { ok: true }
-  }
   const target = state.players.find((candidate) => candidate.id === order.playerId)
   if (!target || target.health <= 0) {
     deps.updateGameState((current) => ({
@@ -332,41 +309,43 @@ export function runAiSupportStep(deps: AiStepRunnerDeps, playerId: string): Acti
     )
     return { ok: true }
   }
+  const aiDeps = buildAiDependencies(STUB_COMBAT_DEPS)
+  const constraints = getAiGoalConstraints(player.aiPersonality, ['selfPreservation', 'engageCombat', 'positioning'])
+  constraints.followTarget = { position: target.position, maxDistance: order.maxDistance }
+  const combatTarget = state.creatures
+    .filter((creature) => creature.health > 0)
+    .map((creature) => ({
+      creature,
+      distance: Math.min(
+        Math.abs(creature.position.row - target.position.row) + Math.abs(creature.position.column - target.position.column),
+        Math.abs(creature.position.row - player.position.row) + Math.abs(creature.position.column - player.position.column),
+      ),
+    }))
+    .sort((first, second) => first.distance - second.distance)[0]
+  if (combatTarget) {
+    constraints.forcedCombatTarget = { id: combatTarget.creature.id, position: combatTarget.creature.position }
+  }
 
-  const decision = chooseSupportAction(state, playerId, order)
-  if (decision.type === 'attack') {
-    const action = defenseActionToAiAction(state, playerId, decision)
-    const rejection = validateAiStepAction(state, action)
-    if (rejection) {
-      recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, action, { ok: false, reason: rejection })
-      return { ok: false, reason: rejection }
+  return runAiStepLoop(deps, playerId, player.name, '模糊支援策略', () => {
+    const currentPlayer = deps.getState().players.find((candidate) => candidate.id === playerId)!
+    const goalResults = evaluateAllGoals(
+      computeFuzzyInputs(deps.getState(), currentPlayer),
+      deps.getState(),
+      currentPlayer,
+      aiDeps,
+      constraints,
+    )
+    const rankedGoals = rankGoals(goalResults)
+    for (const candidate of rankedGoals) {
+      if (candidate.result.score < (constraints.goalThresholds?.[candidate.goal] ?? MIN_THRESHOLD)) break
+      if (candidate.result.actions?.length && candidate.result.actions.some((action) => action.type !== 'hold')) {
+        return { actions: candidate.result.actions }
+      }
     }
-    const result = deps.executeAiAttack(playerId, decision.targetType, decision.targetId)
-    recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, action, result.ok ? { ok: true } : { ok: false, reason: result.reason })
-    return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 支援攻擊失敗。' }
-  }
-  if (decision.type === 'move') {
-    const action = defenseActionToAiAction(state, playerId, decision)
-    const rejection = validateAiStepAction(state, action)
-    if (rejection) {
-      recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, action, { ok: false, reason: rejection })
-      return { ok: false, reason: rejection }
-    }
-    const result = deps.movePlayerTo(playerId, decision.position.row, decision.position.column)
-    recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, action, result)
-    return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 支援移動失敗。' }
-  }
-  {
-    const action = defenseActionToAiAction(state, playerId, decision)
-    const rejection = validateAiStepAction(state, action)
-    if (rejection) {
-      recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, action, { ok: false, reason: rejection })
-      return { ok: false, reason: rejection }
-    }
-    deps.endPlayerTurn(playerId)
-    recordAiStepEvent(deps.updateGameState, state.round, playerId, player.name, action, { ok: true })
-    return { ok: true }
-  }
+    return { exitReason: '支援命令下沒有可執行的 fuzzy 行動' }
+  }, (action) => action.type === 'attack'
+    ? deps.executeAiAttack(playerId, action.target.kind === 'creature' ? 'creature' : action.target.kind, action.target.id)
+    : deps.executeAiAction(action))
 }
 
 /** 執行建設（construction）step。 */

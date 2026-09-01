@@ -25,6 +25,7 @@ export type GoalTarget =
   | { kind: 'exit'; position: Position }
   | { kind: 'build'; baseId: string; buildingId: string; buildingName: string }
   | { kind: 'resource-point'; resourcePointId: string; position: Position }
+  | { kind: 'follow-player'; position: Position }
   | { kind: 'explore'; position: Position }
   | { kind: 'allocate-attribute'; attribute: string }
   | { kind: 'use-item'; itemId: string }
@@ -382,6 +383,36 @@ export function evaluateAllGoals(
   }
 
   const allowedGoals = constraints.allowedGoals ? new Set(constraints.allowedGoals) : undefined
+  if (constraints.followTarget && state && player && dependencies) {
+    const distance = Math.abs(player.position.row - constraints.followTarget.position.row)
+      + Math.abs(player.position.column - constraints.followTarget.position.column)
+    const followResult: GoalResult = {
+      score: distance > constraints.followTarget.maxDistance
+        ? Math.min(1, 0.65 + (distance - constraints.followTarget.maxDistance) * 0.08)
+        : 0,
+      target: { kind: 'follow-player', position: constraints.followTarget.position },
+      distanceToTarget: distance,
+      context: { distance, maxDistance: constraints.followTarget.maxDistance },
+    }
+    const actions = buildValidatedActionSequence('positioning', followResult, state, player, dependencies)
+    results.positioning = actions.length > 0 ? { ...followResult, actions } : { score: 0 }
+  }
+  if (constraints.forcedCombatTarget && state && player && dependencies) {
+    const combatResult: GoalResult = {
+      score: 1,
+      target: { kind: 'attack', targetId: constraints.forcedCombatTarget.id, targetType: 'creature', position: constraints.forcedCombatTarget.position },
+      distanceToTarget: Math.abs(player.position.row - constraints.forcedCombatTarget.position.row)
+        + Math.abs(player.position.column - constraints.forcedCombatTarget.position.column),
+      context: { forcedBy: 'support-player' },
+    }
+    const actions: AiAction[] = [{
+      type: 'attack',
+      actor: { id: player.id, kind: 'player' },
+      target: { id: constraints.forcedCombatTarget.id, kind: 'creature', position: constraints.forcedCombatTarget.position },
+      reason: '支援命令：保護目標，攔截威脅',
+    }]
+    results.engageCombat = actions.length > 0 ? { ...combatResult, actions } : { score: 0 }
+  }
   for (const goal of Object.keys(results) as GoalName[]) {
     if (allowedGoals && !allowedGoals.has(goal)) {
       results[goal] = { score: 0 }
