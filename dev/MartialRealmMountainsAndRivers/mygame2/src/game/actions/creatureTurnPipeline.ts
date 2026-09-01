@@ -521,7 +521,14 @@ function resolveAttackAgainstPlayer(
     context.reflectedDamageByCreatureId.set(creature.id, reflectedDamage)
     context.logs.push({ creatureId: adjacentPlayer.id, creatureName: adjacentPlayer.name, message: `${adjacentPlayer.name} 的反震對 ${creature.name} 造成 ${reflectedDamage} 點傷害。` })
   }
-  context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: `${creature.name} 攻擊 ${adjacentPlayer.name}，${avoided ? '被閃避。' : halved ? `造成 ${damage} 點傷害（根骨減傷${criticalHit ? '，暴擊' : ''}）。` : `造成 ${damage} 點傷害${criticalHit ? '（暴擊）' : ''}。`}` })
+  // 日誌顯示「實際扣除的血量」（finalDamage），並在有減傷時標註，避免誤以為只扣了部分傷害。
+  const reductionNote = reduction > 0 && finalDamage > 0 ? `（鐵壁減傷 ${Math.round(reduction * 100)}%）` : ''
+  const damageNote = avoided
+    ? '被閃避。'
+    : halved
+      ? `造成 ${finalDamage} 點傷害（根骨減傷${reductionNote}${criticalHit ? '，暴擊' : ''}）。`
+      : `造成 ${finalDamage} 點傷害${reductionNote}${criticalHit ? '（暴擊）' : ''}。`
+  context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: `${creature.name} 攻擊 ${adjacentPlayer.name}，${damageNote}` })
 }
 
 /**
