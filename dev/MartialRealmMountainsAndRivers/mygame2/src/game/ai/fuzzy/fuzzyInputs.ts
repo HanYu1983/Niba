@@ -177,9 +177,9 @@ export interface FuzzyInputs {
   /** 可在武館學習的技能（最近據點的武館），無則 undefined */
   learnableSkillAtHall: { baseId: string; skillType: 'inner' | 'external'; skillId: string; name: string } | undefined
   /** 可在門派據點學習的技能（最近門派），無則 undefined */
-  learnableSkillAtGate: { gateId: string; skillId: string; name: string; position: Position } | undefined
+  learnableSkillAtGate: { gateId: string; skillType: 'inner' | 'external'; skillId: string; name: string; position: Position } | undefined
   /** 可在門派據點練功的技能，無則 undefined */
-  practiceableSkillAtGate: { gateId: string; skillId: string; name: string; position: Position } | undefined
+  practiceableSkillAtGate: { gateId: string; skillType: 'inner' | 'external'; skillId: string; name: string; position: Position } | undefined
   /** 附近據點是否有告示牌（可執行任務） */
   hasMissionBoard: boolean
   /** 最近據點是否尚未完成首次告示牌任務（完成後解鎖永久視野） */
@@ -571,8 +571,12 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
   const canReachNearestGate = (() => {
     if (!nearestSectGate) return false
     const costs = buildMovementCostMap(state.map, player)
-    const cost = costs.get(`${nearestSectGate.position.row}-${nearestSectGate.position.column}`) ?? 0
-    return cost > 0
+    const gateDistance = manhattan(player.position, nearestSectGate.position)
+    if (gateDistance <= 1) return true
+    return getAdjacentPositions(nearestSectGate.position).some((position) => {
+      const cost = costs.get(`${position.row}-${position.column}`) ?? 0
+      return cost > 0
+    })
   })()
 
   // 任務/修理/就醫：視野內最近有設施的據點 id
@@ -808,22 +812,24 @@ function findLearnableSkillAtHall(
 function findLearnableSkillAtGate(
   player: PlayerState,
   gate: SectGateState | undefined,
-): { gateId: string; skillId: string; name: string; position: Position } | undefined {
+): { gateId: string; skillType: 'inner' | 'external'; skillId: string; name: string; position: Position } | undefined {
   if (!gate) return undefined
   const skills = getSectGateSkills(gate.schoolId)
   const all = [...skills.inner, ...skills.damage, ...skills.aura]
   const unlearned = all.find((s) => {
-    if ('insightRequirement' in s) return !player.innerSkillIds.includes(s.id)
+    if ('insightRequirement' in s) {
+      return !player.innerSkillIds.includes(s.id) && (player.attributes?.insight ?? 0) >= s.insightRequirement
+    }
     return !player.externalSkillIds.includes(s.id)
   })
   if (!unlearned) return undefined
-  return { gateId: gate.id, skillId: unlearned.id, name: unlearned.name, position: gate.position }
+  return { gateId: gate.id, skillType: 'insightRequirement' in unlearned ? 'inner' : 'external', skillId: unlearned.id, name: unlearned.name, position: gate.position }
 }
 
 function findPracticeableSkillAtGate(
   player: PlayerState,
   gate: SectGateState | undefined,
-): { gateId: string; skillId: string; name: string; position: Position } | undefined {
+): { gateId: string; skillType: 'inner' | 'external'; skillId: string; name: string; position: Position } | undefined {
   if (!gate) return undefined
   const skills = getSectGateSkills(gate.schoolId)
   const all = [...skills.inner, ...skills.damage, ...skills.aura]
@@ -832,7 +838,7 @@ function findPracticeableSkillAtGate(
     return player.externalSkillIds.includes(s.id)
   })
   if (!learned) return undefined
-  return { gateId: gate.id, skillId: learned.id, name: learned.name, position: gate.position }
+  return { gateId: gate.id, skillType: 'insightRequirement' in learned ? 'inner' : 'external', skillId: learned.id, name: learned.name, position: gate.position }
 }
 
 function findBuyableHealItem(

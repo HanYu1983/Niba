@@ -57,10 +57,11 @@ export function evaluateSelfPreservation(
   if (distToNearestThreat !== Infinity) {
     const f_hitsLow = trapezoid(hitsSurvivable, 0, 0.5, 1, 2)
     const f_threatClose = trapezoid(distToNearestThreat, 0, 0, 2, 4)
+    const f_healthLow = trapezoid(healthRatio, 0, 0.2, 0.5, 0.8)
 
     // 逃命分數
     const retreatScore = Math.min(1, fuzzyOr(
-      f_hitsLow,
+      fuzzyAnd(f_hitsLow, f_healthLow),
       fuzzyAnd(f_hitsLow, f_threatClose),
     ))
 
@@ -208,23 +209,30 @@ function evaluateEngageCombat(
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
   const { staminaRatio, hitsSurvivable, needsLeveling, combatCandidates } = inputs
-  const bestCandidate = combatCandidates[0]
+  const nearestNest = state.creatureNests
+    .filter((nest) => nest.health > 0)
+    .sort((first, second) => manhattan(player.position, first.position) - manhattan(player.position, second.position))[0]
+  const nestThreat = nearestNest
+    ? combatCandidates.find((candidate) => manhattan(candidate.position, nearestNest.position) <= 2)
+    : undefined
+  const bestCandidate = nestThreat ?? combatCandidates[0]
 
   if (!bestCandidate) {
     return { score: 0 }
   }
 
   const { creatureId, position, distance, damageRatio } = bestCandidate
+  const isNestThreat = nestThreat?.creatureId === creatureId
   const killable = distance === 1 && hitsSurvivable >= 1 && player.stamina > 0
 
   // 可擊殺仍需考量功法傷害；弱功法不應無條件壓過經營目標。
   if (killable) {
     const combatReadiness = Math.min(1, damageRatio * 1.5)
     const result: GoalResult = {
-      score: combatReadiness,
+      score: isNestThreat ? Math.max(0.85, combatReadiness) : combatReadiness,
       target: { kind: 'attack', targetId: creatureId, targetType: 'creature', position },
       distanceToTarget: distance,
-      context: { distance, creatureId, killable: true, damageRatio, combatReadiness },
+      context: { distance, creatureId, killable: true, damageRatio, combatReadiness, isNestThreat },
     }
     const actions = buildValidatedActionSequence('engageCombat', result, state, player, dependencies)
     if (actions.length === 0) return { score: 0 }
@@ -250,6 +258,9 @@ function evaluateEngageCombat(
   // 等級落後時打怪分數提升
   if (needsLeveling) {
     score = Math.min(0.85, score * 1.5)
+  }
+  if (isNestThreat) {
+    score = Math.max(score, 0.8)
   }
 
   const result: GoalResult = {
@@ -727,7 +738,7 @@ export function evaluateAttackNest(
 
   if (distToNearestNest === Infinity) return { score: 0 }
 
-  const f_safeHealth = Math.min(1, Math.max(0, (hitsSurvivable - 4) / 2))
+  const f_safeHealth = Math.min(1, Math.max(0, (hitsSurvivable - 2) / 2))
   const nearestNest = state.creatureNests
     .filter((nest) => nest.health > 0)
     .sort((first, second) => {
@@ -742,10 +753,10 @@ export function evaluateAttackNest(
         + Math.abs(creature.position.column - nearestNest.position.column) <= 2
     }).length
     : 0
-  const f_noCreatures = localThreatCount === 0 ? 1 : 0
+  const f_nestArea = localThreatCount === 0 ? 1 : 0.9
   const f_nestClose = 1
 
-  const score = fuzzyAnd(f_safeHealth, fuzzyAnd(f_noCreatures, f_nestClose))
+  const score = fuzzyAnd(f_safeHealth, fuzzyAnd(f_nestArea, f_nestClose))
 
   const result: GoalResult = {
     score,
@@ -818,8 +829,8 @@ function evaluateLearnMartialSkill(
   // 門派學招：需要可步行到達 + 體力夠 + 金錢夠
   if (learnableSkillAtGate && feasibility.canReachNearestGate && feasibility.canAffordGateLearn && staminaRatio > 0.3) {
     const result: GoalResult = {
-      score: 0.7,
-      target: { kind: 'learn-skill', gateId: learnableSkillAtGate.gateId, skillType: 'inner', skillId: learnableSkillAtGate.skillId },
+      score: feasibility.distToNearestGate <= 1 ? 1 : 0.7,
+      target: { kind: 'learn-skill', gateId: learnableSkillAtGate.gateId, skillType: learnableSkillAtGate.skillType, skillId: learnableSkillAtGate.skillId },
       distanceToTarget: feasibility.distToNearestGate,
       context: { source: 'gate', name: learnableSkillAtGate.name, cost: feasibility.learnGateCost },
     }

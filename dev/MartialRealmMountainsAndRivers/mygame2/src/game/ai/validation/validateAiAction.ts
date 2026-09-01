@@ -8,6 +8,7 @@ import { defenseActionToAiAction } from '../defenseActionAdapter'
 import type { AiDefenseAction } from '../../aiDefenseRules'
 import { buildingCatalog } from '../../catalogs/buildingCatalog'
 import { elementBurstItems } from '../../catalogs/itemCatalog'
+import { getSectGateSkills, getSectGateLearnCost } from '../../rules/sectGateRules'
 
 export type AiValidationResult = { valid: true } | { valid: false; reason: string }
 
@@ -134,7 +135,29 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
     }
     case 'equip':
     case 'equip-inner-skill':
-    case 'learn-skill':
+      return { valid: true }
+    case 'learn-skill': {
+      const player = state.players.find((candidate) => candidate.id === action.actor.id)
+      if (!player) return { valid: false, reason: '學招玩家不存在。' }
+      if (action.gateId) {
+        const gate = state.sectGates?.find((candidate) => candidate.id === action.gateId)
+        if (!gate) return { valid: false, reason: '門派據點不存在。' }
+        if (!isSameOrAdjacent(player.position, gate.position)) return { valid: false, reason: '需位於門派據點旁才能學習功法。' }
+        const skills = getSectGateSkills(gate.schoolId)
+        const skill = [...skills.inner, ...skills.damage, ...skills.aura].find((candidate) => candidate.id === action.skillId)
+        if (!skill) return { valid: false, reason: '門派據點沒有指定功法。' }
+        const isInner = skills.inner.some((candidate) => candidate.id === action.skillId)
+        if (action.skillType !== (isInner ? 'inner' : 'external')) return { valid: false, reason: '功法類型與門派功法不符。' }
+        if (isInner && (player.attributes?.insight ?? 0) < (skill as { insightRequirement: number }).insightRequirement) {
+          return { valid: false, reason: '悟性不足，無法學習此內功。' }
+        }
+        const learned = isInner ? player.innerSkillIds.includes(action.skillId) : player.externalSkillIds.includes(action.skillId)
+        if (learned) return { valid: false, reason: '玩家已學會此功法。' }
+        const cost = getSectGateLearnCost(gate.schoolId, action.skillId)
+        if ((player.money ?? 0) < cost) return { valid: false, reason: `金錢不足，需要 ${cost} 金錢。` }
+      }
+      return { valid: true }
+    }
     case 'practice-skill':
     case 'use-facility':
     case 'defense-build':

@@ -810,6 +810,41 @@ function buildAttackNestActions(
     return [{ type: 'hold', actor, reason: '打巢穴：無可攻擊巢穴' }]
   }
 
+  const visibleCellIds = getPlayerVisibleCellIds(state, player.id)
+  const cellsByPosition = new Map(state.map.cells.map((cell) => [`${cell.row}-${cell.column}`, cell.id]))
+  const localThreat = state.creatures
+    .filter((creature) => creature.health > 0)
+    .filter((creature) => {
+      const cellId = cellsByPosition.get(`${creature.position.row}-${creature.position.column}`)
+      if (!cellId || !visibleCellIds.has(cellId)) return false
+      const distanceToNest = Math.abs(creature.position.row - nest.position.row) + Math.abs(creature.position.column - nest.position.column)
+      return distanceToNest <= 2
+    })
+    .sort((first, second) => {
+      const firstDistance = Math.abs(first.position.row - player.position.row) + Math.abs(first.position.column - player.position.column)
+      const secondDistance = Math.abs(second.position.row - player.position.row) + Math.abs(second.position.column - player.position.column)
+      return firstDistance - secondDistance
+    })[0]
+
+  if (localThreat) {
+    const threatDistance = Math.abs(localThreat.position.row - player.position.row) + Math.abs(localThreat.position.column - player.position.column)
+    if (threatDistance <= 1) {
+      return [{
+        type: 'attack',
+        actor,
+        target: { id: localThreat.id, kind: 'creature', position: localThreat.position },
+        reason: `打巢穴：先清除巢穴附近生物 ${localThreat.name}`,
+      }]
+    }
+    const moveDest = findClosestReachablePosition(state, player, localThreat.position)
+    return [{
+      type: 'move',
+      actor,
+      destination: moveDest,
+      reason: `打巢穴：先接近巢穴附近生物 ${localThreat.name}`,
+    }]
+  }
+
   const dist = Math.abs(nest.position.row - player.position.row) + Math.abs(nest.position.column - player.position.column)
 
   if (dist <= 1) {
@@ -944,7 +979,7 @@ function buildLearnSkillActions(
         type: 'learn-skill',
         actor,
         gateId: gate.id,
-        skillType: 'inner',
+        skillType: target.skillType,
         skillId: target.skillId,
         reason: `學招：學習門派功法 ${result.context?.name ?? target.skillId}`,
       }]
