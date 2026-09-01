@@ -345,6 +345,15 @@ function buildRetreatActions(
     const healTarget = result.target
     const base = state.bases.find((b) => b.id === healTarget.baseId)
     if (!base) return [{ type: 'hold', actor, reason: '保命：據點不存在' }]
+    if (isSameOrAdjacent(player.position, base.position) && (player.position.row !== base.position.row || player.position.column !== base.position.column)) {
+      return [{
+        type: 'use-facility',
+        actor,
+        baseId: base.id,
+        facilityType: 'heal',
+        reason: `保命：使用醫療室就醫（血量比=${result.context?.healthRatio ?? '?'}）`,
+      }]
+    }
     const moveDest = findClosestReachablePosition(state, player, base.position)
     if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
       // 已在據點旁 → 使用醫療室

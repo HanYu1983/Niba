@@ -208,7 +208,7 @@ function evaluateEngageCombat(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { staminaRatio, hitsSurvivable, needsLeveling, combatCandidates } = inputs
+  const { hitsSurvivable, combatCandidates, hasGrowthPath, playerLevel, needsLeveling } = inputs
   const nearestNest = state.creatureNests
     .filter((nest) => nest.health > 0)
     .sort((first, second) => manhattan(player.position, first.position) - manhattan(player.position, second.position))[0]
@@ -225,14 +225,20 @@ function evaluateEngageCombat(
   const isNestThreat = nestThreat?.creatureId === creatureId
   const killable = distance === 1 && hitsSurvivable >= 1 && player.stamina > 0
 
-  // 可擊殺仍需考量功法傷害；弱功法不應無條件壓過經營目標。
-  if (killable) {
+  // 傷害評估（damageRatio = 一回合總傷害（內功普攻 + 可用外功）/ 怪物血量）：
+  // - canKillInOneTurn：一回合總傷≥75%，很可能一回合收 → 最高權重。
+  // - canKillInTwoTurns：一回合總傷≥40%，兩回合可磨死 → 中高權重（無法一回收，但仍有磨血價值）。
+  // - 否則：完全打不死 → 放低權重，優先學招/升級/練功變強。
+  const canKillInOneTurn = damageRatio >= 0.75
+  const canKillInTwoTurns = damageRatio >= 0.4
+
+  if (killable && canKillInOneTurn) {
     const combatReadiness = Math.min(1, damageRatio * 1.5)
     const result: GoalResult = {
-      score: isNestThreat ? Math.max(0.85, combatReadiness) : combatReadiness,
+      score: isNestThreat ? Math.max(0.9, combatReadiness) : Math.max(0.85, combatReadiness),
       target: { kind: 'attack', targetId: creatureId, targetType: 'creature', position },
       distanceToTarget: distance,
-      context: { distance, creatureId, killable: true, damageRatio, combatReadiness, isNestThreat },
+      context: { distance, creatureId, killable: true, canKillInOneTurn, canKillInTwoTurns, damageRatio, combatReadiness, isNestThreat },
     }
     const actions = buildValidatedActionSequence('engageCombat', result, state, player, dependencies)
     if (actions.length === 0) return { score: 0 }
@@ -240,34 +246,35 @@ function evaluateEngageCombat(
     return result
   }
 
-  const f_closeCreature = distance <= 1
-    ? 1
-    : distance <= 3
-      ? 0.7
-      : 0.3
-
-  const f_staminaHigh = trapezoid(staminaRatio, 0.4, 0.6, 1, 1)
-  const f_healthy = trapezoid(hitsSurvivable, 3, 5, 10, 10)
-
-  let score = Math.min(0.85, fuzzyAnd(
-    fuzzyOr(f_closeCreature, f_healthy),
-    fuzzyOr(f_staminaHigh, f_closeCreature),
-    Math.min(1, damageRatio * 1.5),
-  ))
-
-  // 等級落後時打怪分數提升
-  if (needsLeveling) {
-    score = Math.min(0.85, score * 1.5)
-  }
-  if (isNestThreat) {
-    score = Math.max(score, 0.8)
+  // 兩回殺可磨：無法一回合收，但兩回合內可磨死 → 保留中高意願，仍優於去打完全不死的怪。
+  // 巢穴守衛（isNestThreat）給較高分，因為不打會被持續消耗。
+  if (killable && canKillInTwoTurns) {
+    const result: GoalResult = {
+      score: isNestThreat ? 0.7 : 0.55,
+      target: { kind: 'attack', targetId: creatureId, targetType: 'creature', position },
+      distanceToTarget: distance,
+      context: { distance, creatureId, killable: true, canKillInOneTurn: false, canKillInTwoTurns, damageRatio, isNestThreat },
+    }
+    const actions = buildValidatedActionSequence('engageCombat', result, state, player, dependencies)
+    if (actions.length === 0) return { score: 0 }
+    result.actions = actions
+    return result
   }
 
+  // 磨血意願：低等級（或等級落後）時不計較能不能快速殺，先磨血練等累積經驗；
+  // 等級高了才要求效率。Lv.1~5 高度願意磨，Lv.8+ 降至 0（重視快速擊殺）。
+  const f_grindWillingness = needsLeveling ? 1 : trapezoid(playerLevel, 1, 1, 5, 8)
+
+  // 完全打不死（或打不到）：
+  // - 低等級且願意磨血練等 → 提高磨血意願（低於兩回殺但仍有練功價值），避免「打不死就不打」死鎖。
+  // - 有變強途徑 → 略低；等級高 → 幾乎不磨（重視效率）。
+  const lowCombatBase = hasGrowthPath ? 0.2 : 0.35
+  const lowCombatScore = killable ? lowCombatBase + 0.25 * f_grindWillingness : 0
   const result: GoalResult = {
-    score,
+    score: lowCombatScore,
     target: { kind: 'attack', targetId: creatureId, targetType: 'creature', position },
     distanceToTarget: distance,
-    context: { distance, creatureId, killable: false, damageRatio },
+    context: { distance, creatureId, killable, canKillInOneTurn: false, canKillInTwoTurns: false, damageRatio, grindWillingness: f_grindWillingness },
   }
   const actions = buildValidatedActionSequence('engageCombat', result, state, player, dependencies)
   if (actions.length === 0) return { score: 0 }
@@ -622,54 +629,64 @@ function evaluateExploration(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { unexploredInvisibleCells, nearestUnexploredInvisiblePosition, nearestUndiscoveredBase, staminaRatio, allBasesVisible } = inputs
+  const { unexploredReachableCount, nearestUnexploredPosition, nearestUndiscoveredBase, staminaRatio, allBasesVisible } = inputs
 
-  if (!nearestUndiscoveredBase && (unexploredInvisibleCells === 0 || !nearestUnexploredInvisiblePosition)) {
-    return { score: 0 }
+  // 探索的重點是「把據點納入視野」；若沒有未發現據點，探索僅以「體力可達的未探索格」為目標，
+  // 避免跑去遙遠/不可達的不可見格卡住空轉，資源應轉向建設/經營。
+  if (!nearestUndiscoveredBase) {
+    // 完全沒有可達未探索格 → 0
+    if (unexploredReachableCount === 0 || !nearestUnexploredPosition) {
+      return { score: 0 }
+    }
+    // 以「最近的可行未探索格」為目標，給中等偏低分（可持續推進地圖，但不搶經營）。
+    const result: GoalResult = {
+      score: 0.15,
+      target: { kind: 'explore', position: nearestUnexploredPosition },
+      context: { unexploredReachableCount, target: 'unexplored-cell-reachable' },
+    }
+    const actions = buildValidatedActionSequence('exploration', result, state, player, dependencies)
+    if (actions.length === 0 || actions.every((action) => action.type === 'hold')) return { score: 0 }
+    result.actions = actions
+    return result
   }
 
-  // 所有據點在視野內 → 探索分數急降
+  // 所有據點在視野內 → 探索分數極低（無未發現據點時已於上面攔截，這裡是保險）
   if (allBasesVisible) {
-    return { score: 0.1 }
+    return { score: 0.03 }
   }
 
   const canTransportToUndiscoveredBase = nearestUndiscoveredBase != null
     && canTransportPlayer(state, player.id, nearestUndiscoveredBase.id).ok
 
-  // 未發現據點是探索的首要目標；沒有時才以一般不可見格作為探索方向。
-  const baseScore = nearestUndiscoveredBase
-    ? canTransportToUndiscoveredBase ? 1 : 0.9
-    : Math.min(0.6, unexploredInvisibleCells / 10)
+  // 到這裡必存在未發現據點（無未發現據點已提前 return）：探索聚焦把據點納入視野。
+  const baseScore = canTransportToUndiscoveredBase ? 1 : 0.9
   const score = staminaRatio > 0.3 ? baseScore : baseScore * 0.5
 
   const result: GoalResult = {
     score,
-    target: { kind: 'explore', position: nearestUndiscoveredBase?.position ?? nearestUnexploredInvisiblePosition! },
-    distanceToTarget: nearestUndiscoveredBase
-      ? manhattan(player.position, nearestUndiscoveredBase.position)
-      : undefined,
+    target: { kind: 'explore', position: nearestUndiscoveredBase!.position },
+    distanceToTarget: manhattan(player.position, nearestUndiscoveredBase!.position),
     context: {
-      unexploredInvisibleCells,
-      target: nearestUndiscoveredBase ? 'undiscovered-base' : 'unexplored-cell',
+      target: 'undiscovered-base',
       canTransportToUndiscoveredBase,
-      targetBaseId: nearestUndiscoveredBase?.id,
-      targetBasePosition: nearestUndiscoveredBase?.position,
+      targetBaseId: nearestUndiscoveredBase!.id,
+      targetBasePosition: nearestUndiscoveredBase!.position,
     },
   }
 
-  let actions = buildValidatedActionSequence('exploration', result, state, player, dependencies)
+  const actions = buildValidatedActionSequence('exploration', result, state, player, dependencies)
   const hasMovement = actions.some((action) => action.type !== 'hold')
 
-  // 未發現據點可能被障礙或剩餘體力封鎖；此時退回可行的未知格，避免保留一個只有 hold 的虛假探索目標。
-  if (!hasMovement && nearestUndiscoveredBase && nearestUnexploredInvisiblePosition) {
+  // 未發現據點可能被障礙或剩餘體力封鎖；此時退回可行的未探索格（若有），避免只有 hold 的虛假目標。
+  if (!hasMovement && nearestUndiscoveredBase && nearestUnexploredPosition) {
     const fallbackResult: GoalResult = {
       ...result,
-      target: { kind: 'explore', position: nearestUnexploredInvisiblePosition },
+      target: { kind: 'explore', position: nearestUnexploredPosition },
       distanceToTarget: undefined,
-      context: { unexploredInvisibleCells, target: 'unexplored-cell-fallback' },
+      context: { target: 'unexplored-cell-fallback' },
     }
-    actions = buildValidatedActionSequence('exploration', fallbackResult, state, player, dependencies)
-    if (actions.some((action) => action.type !== 'hold')) return { ...fallbackResult, actions }
+    const fallbackActions = buildValidatedActionSequence('exploration', fallbackResult, state, player, dependencies)
+    if (fallbackActions.some((action) => action.type !== 'hold')) return { ...fallbackResult, actions: fallbackActions }
   }
 
   if (actions.length === 0 || actions.every((action) => action.type === 'hold')) return { score: 0 }
@@ -734,9 +751,13 @@ export function evaluateAttackNest(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
-  const { hitsSurvivable, distToNearestNest, visibleCreatureIds } = inputs
+  const { hitsSurvivable, distToNearestNest, visibleCreatureIds, playerLevel } = inputs
 
   if (distToNearestNest === Infinity) return { score: 0 }
+
+  // 戰力門檻：攻擊巢穴是高風險的長期目標，應等玩家有一定戰力才逐漸加權。
+  // Lv.7 以下幾乎不主動攻擊巢穴（優先學招/練功變強）；Lv.7+ 權重隨等級平滑升高。
+  const f_levelGate = trapezoid(playerLevel, 5, 7, 9, 12)
 
   const f_safeHealth = Math.min(1, Math.max(0, (hitsSurvivable - 2) / 2))
   const nearestNest = state.creatureNests
@@ -756,13 +777,15 @@ export function evaluateAttackNest(
   const f_nestArea = localThreatCount === 0 ? 1 : 0.9
   const f_nestClose = 1
 
-  const score = fuzzyAnd(f_safeHealth, fuzzyAnd(f_nestArea, f_nestClose))
+  // 基礎分（安全度＋巢穴無守衛）再乘上等級門檻：戰力不足時攻擊巢穴意願大幅壓低。
+  const baseScore = fuzzyAnd(f_safeHealth, fuzzyAnd(f_nestArea, f_nestClose))
+  const score = baseScore * f_levelGate
 
   const result: GoalResult = {
     score,
     target: { kind: 'attack', targetId: '', targetType: 'nest', position: { row: -1, column: -1 } },
     distanceToTarget: distToNearestNest,
-    context: { distToNearestNest, visibleCreatureCount: visibleCreatureIds.length, localThreatCount },
+    context: { distToNearestNest, visibleCreatureCount: visibleCreatureIds.length, localThreatCount, playerLevel, levelGate: f_levelGate },
   }
 
   if (score > 0) {
@@ -827,11 +850,13 @@ function evaluateLearnMartialSkill(
   const { learnableSkillAtHall, learnableSkillAtGate, staminaRatio, feasibility } = inputs
 
   // 門派學招：需要可步行到達 + 體力夠 + 金錢夠
+  // 學招是「先變強再打」的長期投資，遠比立刻攻擊巢穴重要：固定高分壓過 attackNest，
+  // 且不因距離過度衰減（距離尚可用 move 累積，打不死時硬打巢穴反而是浪費）。
   if (learnableSkillAtGate && feasibility.canReachNearestGate && feasibility.canAffordGateLearn && staminaRatio > 0.3) {
     const result: GoalResult = {
-      score: feasibility.distToNearestGate <= 1 ? 1 : 0.7,
+      score: 1,
       target: { kind: 'learn-skill', gateId: learnableSkillAtGate.gateId, skillType: learnableSkillAtGate.skillType, skillId: learnableSkillAtGate.skillId },
-      distanceToTarget: feasibility.distToNearestGate,
+      distanceToTarget: undefined,
       context: { source: 'gate', name: learnableSkillAtGate.name, cost: feasibility.learnGateCost },
     }
     const actions = buildValidatedActionSequence('learnMartialSkill', result, state, player, dependencies)

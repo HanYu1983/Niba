@@ -5,7 +5,7 @@ import { resolve } from 'node:path'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { BUILTIN_TEMPLATES } from './mapTemplates'
 import { gameStore } from './gameStore'
-import type { GameState } from './types'
+import type { BaseState, GameState } from './types'
 import { getInnerSkill, getSkillDamage, getSkillProgression } from './rules/skillRules'
 import { getEffectiveAttributesForPlayer } from './rules/playerDerivedRules'
 
@@ -82,6 +82,12 @@ function countActionTypes(traces: AiTurnTrace[]): Record<string, number> {
   return counts
 }
 
+function progressBar(ratio: number, width: number = 12): string {
+  const clamped = Math.max(0, Math.min(1, ratio))
+  const filled = Math.round(clamped * width)
+  return `${'█'.repeat(filled)}${'·'.repeat(width - filled)}`
+}
+
 function traceNestHealth(traces: AiTurnTrace[]): Record<string, number> {
   const map: Record<string, number> = {}
   for (const trace of traces) {
@@ -105,20 +111,41 @@ function writeAiTraceReport(fileName: string, title: string, traces: AiTurnTrace
   const leveledUp = traces.filter((trace) => trace.leveledUp).length
   const lastTurn = traces[traces.length - 1]
   const player = lastTurn?.player
+  // KPI：基於每個 turn 的 action 與玩家快照估算效率指標。
+  const productiveActionTypes = new Set([
+    'attack', 'use-facility', 'buy-item', 'sell-item', 'learn-skill', 'practice-skill',
+    'collect', 'use-item', 'use-element-burst', 'equip', 'equip-inner-skill',
+  ])
+  let totalActions = 0
+  let productiveActions = 0
+  let totalAttackActions = 0
+  for (const trace of traces) {
+    for (const event of trace.actions) {
+      const type = (event as { action?: { type?: string } }).action?.type
+      if (!type) continue
+      totalActions += 1
+      if (productiveActionTypes.has(type)) productiveActions += 1
+      if (type === 'attack') totalAttackActions += 1
+    }
+  }
+  const productiveRatio = totalActions > 0 ? productiveActions / totalActions : 0
+  const killEfficiency = totalSpawned > 0 ? totalDefeated / totalSpawned : 0
+  const killCost = totalDefeated > 0 ? totalAttackActions / totalDefeated : 0
+  const totalExperience = Math.max(0, player?.experience ?? 0)
+  const xpPerTurn = traces.length > 0 ? totalExperience / traces.length : 0
   const startNestHealth = traces
     .reduce<Record<string, number>>((map, trace) => {
       for (const nest of trace.nests) if (!(nest.id in map)) map[nest.id] = nest.health
       return map
     }, {})
   const endNestHealth = traceNestHealth(traces)
-
-  const lines = [
+  const lines: string[] = [
     `# ${title}`,
     '',
     `- AI turns: ${traces.length}`,
-    `- Final round: ${finalState.round}`,
-    `- Game won: ${finalState.gameWon === true}`,
-    `- Game over: ${finalState.gameOver === true}`,
+    `- Final round: ${lastTurn?.round ?? '?'}`,
+    `- Game won: ${finalState.gameWon === true ? 'true' : 'false'}`,
+    `- Game over: ${finalState.gameOver === true ? 'true' : 'false'}`,
     `- Remaining nests: ${finalState.creatureNests.length}`,
     '',
     '## Aggregate',
@@ -129,6 +156,14 @@ function writeAiTraceReport(fileName: string, title: string, traces: AiTurnTrace
     `- Level-ups observed: ${leveledUp}`,
     `- Final player: level ${player?.level ?? '?'}, experience ${player?.experience ?? '?'}, inner skill ${player?.innerSkill.name} (${player?.innerSkill.id}) lv.${player?.innerSkill.level} damage ${player?.innerSkill.damage}`,
     `- Final attributes: armStrength=${player?.attributes.armStrength ?? '?'}, constitution=${player?.attributes.constitution ?? '?'}, agility=${player?.attributes.agility ?? '?'}, innerEnergy=${player?.attributes.innerEnergy ?? '?'}, insight=${player?.attributes.insight ?? '?'}`,
+    '',
+    '## Efficiency (KPI)',
+    '',
+    `- 行動產出率 (productive): ${progressBar(productiveRatio)} ${(productiveRatio * 100).toFixed(1)}% (${productiveActions}/${totalActions})`,
+    `- 擊殺效率 (kill/generate): ${progressBar(killEfficiency)} ${killEfficiency.toFixed(2)} (${totalDefeated}/${totalSpawned || 0})`,
+    `- 擊殺成本 (attack/kill): ${totalDefeated > 0 ? killCost.toFixed(2) : 'n/a'} (${totalAttackActions} 次攻擊 / ${totalDefeated} 擊殺)`,
+    `- 經驗效率 (XP/turn): ${xpPerTurn.toFixed(2)} (${totalExperience} XP / ${traces.length} turns)`,
+    '',
     `- Nest health (start → end): ${Object.entries(endNestHealth).map(([id, health]) => `${id}=${startNestHealth[id] ?? '?'}→${health}`).join(', ') || 'none'}`,
     '',
     '## Turn Trace',
@@ -215,7 +250,7 @@ describe('AI 玩家：入門沙盒地圖通關能力', () => {
     })
   })
 
-  it('簡單難度：沒有初始生物時應能摧毀唯一妖物巢穴', () => {
+  it.each([20260903, 20260904])('簡單難度（seed %s）：沒有初始生物時應能摧毀唯一妖物巢穴', (seed) => {
     const template = BUILTIN_TEMPLATES.find((candidate) => candidate.id === 'standard')
     if (!template) throw new Error('找不到入門地圖模板。')
 
@@ -223,7 +258,7 @@ describe('AI 玩家：入門沙盒地圖通關能力', () => {
       ...template.settings,
       rows: 15,
       columns: 15,
-      seed: 20260903,
+      seed,
       nestCount: 1,
       creatureCount: 0,
       resourcePointCount: 0,
@@ -239,13 +274,30 @@ describe('AI 玩家：入門沙盒地圖通關能力', () => {
     const aiPlayer = startedState.players.find((player) => player.isAI)
     if (!aiPlayer) throw new Error('簡單難度沒有建立 AI 玩家。')
     expect(startedState.sectGates ?? []).toHaveLength(1)
+    const supportBase: BaseState = {
+      id: 'ai-support-base',
+      name: 'AI 補給據點',
+      position: { row: aiPlayer.position.row, column: aiPlayer.position.column + 1 },
+      buildings: [
+        { id: 'ai-support-infirmary', type: 'infirmary', name: '醫療室', description: '', constructionCost: 50, level: 1 },
+        { id: 'ai-support-item-shop', type: 'item-shop', name: '道具商店', description: '', constructionCost: 30, level: 1 },
+      ],
+      buildingMaterials: 0,
+      maxBuildingMaterials: 100,
+      health: 100,
+      maxHealth: 100,
+    }
     gameStore.setStateForTest({
       ...startedState,
-      players: [{ ...aiPlayer, money: 200 }],
+      players: [{
+        ...aiPlayer,
+        money: 200,
+      }],
+      bases: [...startedState.bases, supportBase],
       activePlayerId: aiPlayer.id,
       sectGates: startedState.sectGates?.map((gate) => ({
         ...gate,
-        position: { row: aiPlayer.position.row, column: aiPlayer.position.column - 1 },
+        position: { row: aiPlayer.position.row, column: Math.max(1, aiPlayer.position.column - 4) },
       })),
       creatureNests: startedState.creatureNests.map((nest) => ({ ...nest, spawnChance: 0 })),
       nestHealthRegenPercent: 0,
@@ -286,5 +338,194 @@ describe('AI 玩家：入門沙盒地圖通關能力', () => {
       remainingNests: 0,
       aiTurns: expect.any(Number),
     })
+  })
+
+  it('1 級 AI 應能找到並擊敗唯一的 1 級敵人生物', () => {
+    const template = BUILTIN_TEMPLATES.find((candidate) => candidate.id === 'standard')
+    if (!template) throw new Error('找不到入門地圖模板。')
+
+    gameStore.startGame({
+      ...template.settings,
+      rows: 15,
+      columns: 15,
+      seed: 20260906,
+      nestCount: 0,
+      creatureCount: 1,
+      resourcePointCount: 0,
+      itemPointCount: 0,
+      ruinCount: 0,
+      sectGateCount: 0,
+      aiPlayerCount: 1,
+      explorationEventCount: 0,
+      explorationTriggerChance: 0,
+    })
+
+    const startedState = gameStore.getState()
+    const aiPlayer = startedState.players.find((player) => player.isAI)
+    const creature = startedState.creatures[0]
+    if (!aiPlayer || !creature) throw new Error('生物測試沒有建立 AI 玩家或敵人生物。')
+
+    gameStore.setStateForTest({
+      ...startedState,
+      players: [{ ...aiPlayer, level: 1, experience: 0 }],
+      creatures: [{
+        ...creature,
+        name: '1 級測試生物',
+        isAI: false,
+        level: 1,
+        experience: 0,
+        health: 1,
+        maxHealth: 1,
+        position: { row: aiPlayer.position.row, column: aiPlayer.position.column + 1 },
+        behaviorType: 'hunter',
+        aggroRange: 0,
+      }],
+      creatureNests: [],
+      activePlayerId: aiPlayer.id,
+    })
+
+    const maxTurns = 20
+    let aiTurns = 0
+    const traces: AiTurnTrace[] = []
+    while (!gameStore.getState().gameOver && aiTurns < maxTurns && gameStore.getState().creatures.length > 0) {
+      const state = gameStore.getState()
+      const activePlayer = state.players.find((player) => player.id === state.activePlayerId)
+      if (!activePlayer) throw new Error(`找不到當前玩家 ${state.activePlayerId}。`)
+
+      const result = gameStore.runFuzzyStep(activePlayer.id)
+      expect(result.ok, result.ok ? undefined : result.reason).toBe(true)
+      aiTurns++
+      traces.push(recordAiTurn(state, gameStore.getState(), aiTurns))
+    }
+
+    const finalState = gameStore.getState()
+    const actionTypes = countActionTypes(traces)
+    expect(finalState.creatures).toHaveLength(0)
+    expect(finalState.players[0].health).toBeGreaterThan(0)
+    expect(actionTypes.attack ?? 0).toBeGreaterThan(0)
+    expect(finalState.players[0].experience).toBeGreaterThan(0)
+  })
+
+  it('入門地圖（1 巢穴、0 初始生物、巢穴不回血）應能讓 AI 玩家升到 5 級', () => {
+    const template = BUILTIN_TEMPLATES.find((candidate) => candidate.id === 'standard')
+    if (!template) throw new Error('找不到入門地圖模板。')
+
+    gameStore.startGame({
+      ...template.settings,
+      rows: 15,
+      columns: 15,
+      seed: 20260907,
+      nestCount: 1,
+      creatureCount: 0,
+      nestHealthRegenPercent: 0,
+      aiPlayerCount: 1,
+      explorationEventCount: 0,
+      explorationTriggerChance: 0,
+    })
+
+    const startedState = gameStore.getState()
+    const aiPlayer = startedState.players.find((player) => player.isAI)
+    if (!aiPlayer) throw new Error('升級測試沒有建立 AI 玩家。')
+
+    // 餘參數照入門地圖設定，不額外新增或搬動生物，讓巢穴每回合自然生成，AI 自行練等。
+    gameStore.setStateForTest({
+      ...startedState,
+      players: [{ ...aiPlayer, level: 1, experience: 0 }],
+      activePlayerId: aiPlayer.id,
+    })
+
+    const maxTurns = 200
+    let aiTurns = 0
+    let maxLevel = 1
+    const traces: AiTurnTrace[] = []
+    while (!gameStore.getState().gameOver && aiTurns < maxTurns) {
+      const state = gameStore.getState()
+      const activePlayer = state.players.find((player) => player.id === state.activePlayerId)
+      if (!activePlayer) throw new Error(`找不到當前玩家 ${state.activePlayerId}。`)
+
+      const result = gameStore.runFuzzyStep(activePlayer.id)
+      expect(result.ok, result.ok ? undefined : result.reason).toBe(true)
+      aiTurns++
+      maxLevel = Math.max(maxLevel, gameStore.getState().players[0].level ?? 1)
+      traces.push(recordAiTurn(state, gameStore.getState(), aiTurns))
+      if (maxLevel >= 5) break
+    }
+
+    const finalState = gameStore.getState()
+    writeAiTraceReport('ai-beginner-sandbox-level5-trace-2026-09-02.md', 'AI Beginner Sandbox Level5 Trace', traces, finalState)
+    expect(maxLevel).toBeGreaterThanOrEqual(5)
+    expect(finalState.players[0].health).toBeGreaterThan(0)
+  })
+
+  it('1 級 AI 在相鄰支援據點可使用醫療室並購買回血道具', () => {
+    const template = BUILTIN_TEMPLATES.find((candidate) => candidate.id === 'standard')
+    if (!template) throw new Error('找不到入門地圖模板。')
+
+    gameStore.startGame({
+      ...template.settings,
+      rows: 15,
+      columns: 15,
+      seed: 20260905,
+      nestCount: 0,
+      creatureCount: 0,
+      resourcePointCount: 0,
+      itemPointCount: 0,
+      ruinCount: 0,
+      sectGateCount: 0,
+      aiPlayerCount: 1,
+      explorationEventCount: 0,
+      explorationTriggerChance: 0,
+    })
+
+    const startedState = gameStore.getState()
+    const aiPlayer = startedState.players.find((player) => player.isAI)
+    if (!aiPlayer) throw new Error('支援據點測試沒有建立 AI 玩家。')
+    const supportBase: BaseState = {
+      id: 'ai-support-base',
+      name: 'AI 補給據點',
+      position: { row: aiPlayer.position.row, column: aiPlayer.position.column + 1 },
+      buildings: [
+        { id: 'ai-support-infirmary', type: 'infirmary', name: '醫療室', description: '', constructionCost: 50, level: 1 },
+        { id: 'ai-support-item-shop', type: 'item-shop', name: '道具商店', description: '', constructionCost: 30, level: 1 },
+      ],
+      buildingMaterials: 0,
+      maxBuildingMaterials: 100,
+      health: 100,
+      maxHealth: 100,
+    }
+    gameStore.setStateForTest({
+      ...startedState,
+      players: [{
+        ...aiPlayer,
+        health: 1,
+        inventory: aiPlayer.inventory.filter((entry) => entry.itemId !== 'heal-wound-medicine'),
+        money: 200,
+      }],
+      bases: [supportBase],
+      activePlayerId: aiPlayer.id,
+    })
+
+    const traces: AiTurnTrace[] = []
+    for (let step = 0; step < 8; step++) {
+      const before = gameStore.getState()
+      const result = gameStore.runFuzzyStep(aiPlayer.id)
+      expect(result.ok, result.ok ? undefined : result.reason).toBe(true)
+      const after = gameStore.getState()
+      const trace = recordAiTurn(before, after, step + 1)
+      traces.push(trace)
+    }
+    const afterHeal = gameStore.getState()
+    expect(afterHeal.players[0].health).toBeGreaterThan(1)
+    expect(countActionTypes(traces)['use-facility'] ?? 0).toBeGreaterThan(0)
+
+    const playerReadyToShop = afterHeal.players.find((player) => player.id === aiPlayer.id)
+    if (!playerReadyToShop) throw new Error('支援據點測試找不到 AI 玩家。')
+    gameStore.setStateForTest({
+      ...afterHeal,
+      players: [{ ...playerReadyToShop, position: aiPlayer.position, turnEnded: false }],
+      activePlayerId: aiPlayer.id,
+    })
+    expect(gameStore.buyItem(aiPlayer.id, 'heal-wound-medicine', 1).ok).toBe(true)
+    expect(gameStore.getState().players[0].inventory).toContainEqual({ itemId: 'heal-wound-medicine', quantity: 1 })
   })
 })

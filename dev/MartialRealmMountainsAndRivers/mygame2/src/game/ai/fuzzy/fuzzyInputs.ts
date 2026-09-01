@@ -11,7 +11,7 @@ import { elementBurstItems, itemCatalog } from '../../catalogs/itemCatalog'
 import { equipmentCatalog } from '../../catalogs/equipmentCatalog'
 import { allInnerSkillCatalog, getMartialHallSkills, martialHallInnerSkillCatalog, martialHallExternalSkillCatalog } from '../../catalogs/martialHallSkillCatalog'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
-import { getElementDamageMultiplier, getSchoolElement, getSkillDamage, getSkillProgression } from '../../rules/skillRules'
+import { getElementDamageMultiplier, getSchoolElement, getSkillDamage, getSkillProgression, getExternalSkill, getSkillInnerPowerCost } from '../../rules/skillRules'
 import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
 import { getSectGateSkills, getSectGateLearnCost } from '../../rules/sectGateRules'
 import { defenseStructureCatalog } from '../../catalogs/defenseStructureCatalog'
@@ -210,6 +210,8 @@ export interface FuzzyInputs {
   isAdjacentToBase: boolean
   /** 是否有可擊殺的生物（相鄰 + 扛得住 + 體力夠） */
   killableCreature: boolean
+  /** 是否有可行「變強途徑」（可學招/練功/買裝/升內功/分配屬性）；打不死時據此決定是否放棄攻擊轉向經營 */
+  hasGrowthPath: boolean
   /** 各目標可行性資料 */
   feasibility: FeasibilityData
 }
@@ -469,24 +471,30 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
   const innerPowerRatio = player.maxInnerPower > 0 ? player.innerPower / player.maxInnerPower : 0
   const currentInnerSkill = allInnerSkillCatalog.find((s) => s.id === player.innerSkillId)
   const hasDamageInnerSkill = currentInnerSkill != null && currentInnerSkill.calculateDamage != null
+  // 玩家一回合可用的傷害手段總和：內功普通攻擊 + 所有「已裝備、目標為敵人、非功能型、內力足夠」的傷害外功。
+  const innerAttackDamage = currentInnerSkill
+    ? getSkillDamage(effectiveAttributes, currentInnerSkill, getSkillProgression(player, currentInnerSkill.id).level)
+    : 0
+  const equippedDamageExternalSkills = (player.equippedExternalSkillIds ?? [])
+    .map((skillId) => getExternalSkill(skillId))
+    .filter((skill) =>
+      skill.target === 'target'
+      && !skill.functionalEffect
+      && (!skill.innerPowerCost || player.innerPower >= getSkillInnerPowerCost(skill.innerPowerCost, getSkillProgression(player, skill.id).level)),
+    )
+  const externalTurnDamage = equippedDamageExternalSkills.reduce(
+    (total, skill) => total + getSkillDamage(effectiveAttributes, skill, getSkillProgression(player, skill.id).level),
+    0,
+  )
+  const maxTurnDamage = innerAttackDamage + externalTurnDamage
   const nearestVisibleCreature = visibleCreatures[0]?.creature
-  const combatDamageRatio = currentInnerSkill && nearestVisibleCreature
-    ? Math.min(1, getSkillDamage(
-      effectiveAttributes,
-      currentInnerSkill,
-      getSkillProgression(player, currentInnerSkill.id).level,
-    ) / Math.max(1, nearestVisibleCreature.maxHealth))
+  const combatDamageRatio = nearestVisibleCreature
+    ? Math.min(1, maxTurnDamage / Math.max(1, nearestVisibleCreature.maxHealth))
     : 0
   const combatCandidates: CombatCandidate[] = visibleCreatures
     .map(({ creature }) => {
       const distance = manhattan(player.position, creature.position)
-      const damageRatio = currentInnerSkill
-        ? Math.min(1, getSkillDamage(
-          effectiveAttributes,
-          currentInnerSkill,
-          getSkillProgression(player, currentInnerSkill.id).level,
-        ) / Math.max(1, creature.maxHealth))
-        : 0
+      const damageRatio = Math.min(1, maxTurnDamage / Math.max(1, creature.maxHealth))
       const hitsAgainstCreature = creature.health / Math.max(1, Math.floor(creature.maxHealth * 0.3))
       const evaluation = evaluateCombatCandidateValue({
         distance,
@@ -551,6 +559,16 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
 
   // 可擊殺：怪在相鄰格 + 扛得住 + 體力夠
   const killableCreature = distToNearestCreature === 1 && hitsSurvivable >= 1 && player.stamina > 0
+
+  // 可行變強途徑：能學招/練功/買裝/升內功/分配屬性。打不死時若有途徑應優先變強而非空轉或硬打。
+  const hasGrowthPath = Boolean(
+    learnableSkillAtHall
+    || learnableSkillAtGate
+    || practiceableSkillAtGate
+    || equipableEquipment
+    || innerSkillCandidates.length > 0
+    || availableAttributePoints > 0,
+  )
 
   // ── feasibility ────────────────────────────────────────────────
 
@@ -649,6 +667,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     threatCountNearBase,
     isAdjacentToBase,
     killableCreature,
+    hasGrowthPath,
     feasibility: {
       learnGateCost,
       canAffordGateLearn,
@@ -815,15 +834,29 @@ function findLearnableSkillAtGate(
 ): { gateId: string; skillType: 'inner' | 'external'; skillId: string; name: string; position: Position } | undefined {
   if (!gate) return undefined
   const skills = getSectGateSkills(gate.schoolId)
-  const all = [...skills.inner, ...skills.damage, ...skills.aura]
-  const unlearned = all.find((s) => {
-    if ('insightRequirement' in s) {
-      return !player.innerSkillIds.includes(s.id) && (player.attributes?.insight ?? 0) >= s.insightRequirement
+  // 已在門派學過任一內功（排除初始吐納功）→ 有基本戰力，之後優先補外功。
+  const gateInnerIds = new Set(skills.inner.map((s) => s.id))
+  const hasLearnedGateInner = player.innerSkillIds.some((id) => gateInnerIds.has(id))
+  const unlearnedDamage = skills.damage.find((s) => !player.externalSkillIds.includes(s.id))
+  const unlearnedAura = skills.aura.find((s) => !player.externalSkillIds.includes(s.id))
+  const unlearnedInner = skills.inner.find((s) => !player.innerSkillIds.includes(s.id) && (player.attributes?.insight ?? 0) >= s.insightRequirement)
+
+  // 已學過門派內功後，優先補齊傷害外功與靈氣型外功，而非繼續堆疊內功。
+  if (hasLearnedGateInner) {
+    const damageCandidate = unlearnedDamage ?? unlearnedAura
+    if (damageCandidate) {
+      return { gateId: gate.id, skillType: 'external', skillId: damageCandidate.id, name: damageCandidate.name, position: gate.position }
     }
-    return !player.externalSkillIds.includes(s.id)
-  })
-  if (!unlearned) return undefined
-  return { gateId: gate.id, skillType: 'insightRequirement' in unlearned ? 'inner' : 'external', skillId: unlearned.id, name: unlearned.name, position: gate.position }
+  }
+
+  if (unlearnedInner) {
+    return { gateId: gate.id, skillType: 'inner', skillId: unlearnedInner.id, name: unlearnedInner.name, position: gate.position }
+  }
+  const remainingExternal = unlearnedDamage ?? unlearnedAura
+  if (remainingExternal) {
+    return { gateId: gate.id, skillType: 'external', skillId: remainingExternal.id, name: remainingExternal.name, position: gate.position }
+  }
+  return undefined
 }
 
 function findPracticeableSkillAtGate(
