@@ -84,6 +84,64 @@ describe('buildGameStateFromScenario', () => {
     }])
   })
 
+  it('劇本 aiOrders 可覆寫 AI 玩家預設策略（貼身保護）', () => {
+    const scenario = makeScenario()
+    scenario.entities.push({
+      id: 'player-ai-1',
+      kind: 'player',
+      position: { row: 8, column: 1 },
+      data: { name: '同行弟子', isAI: true },
+    })
+    scenario.aiOrders = [{
+      id: 'ai-order-yunni-follow',
+      type: 'support-player',
+      aiPlayerId: 'player-ai-1',
+      playerId: 'player-1',
+      maxDistance: 2,
+      priority: 80,
+      retreatHealthPercent: 30,
+      status: 'active',
+    }]
+
+    const state = buildGameStateFromScenario(scenario)
+
+    expect(state.aiOrders).toEqual([{
+      id: 'ai-order-yunni-follow',
+      type: 'support-player',
+      aiPlayerId: 'player-ai-1',
+      playerId: 'player-1',
+      maxDistance: 2,
+      priority: 80,
+      retreatHealthPercent: 30,
+      status: 'active',
+    }])
+    // 顯式指令的 AI 玩家不應再產生預設 decision-tree。
+    expect(state.aiOrders?.some((order) => order.type === 'decision-tree')).toBe(false)
+  })
+
+  it('玩家 data.aiType 自動生成對應 AI 指令（support-player 貼身保護）', () => {
+    const scenario = makeScenario()
+    scenario.entities.push({
+      id: 'player-ai-1',
+      kind: 'player',
+      position: { row: 8, column: 1 },
+      data: { name: '同行弟子', isAI: true, aiType: 'support-player' },
+    })
+
+    const state = buildGameStateFromScenario(scenario)
+
+    expect(state.aiOrders).toEqual([{
+      id: 'ai-order-support-player-player-ai-1',
+      type: 'support-player',
+      aiPlayerId: 'player-ai-1',
+      playerId: 'player-1',
+      maxDistance: 2,
+      priority: 50,
+      retreatHealthPercent: 30,
+      status: 'active',
+    }])
+  })
+
   it('怪物等級影響五維：未覆寫屬性時依等級成長（與巢穴生成同公式）', () => {
     // 回歸測試：compileCreatures 原本未套用 getCreatureAttributes，
     // 導致編輯器設定的 level 只顯示不生效（五維恆為預設值）。

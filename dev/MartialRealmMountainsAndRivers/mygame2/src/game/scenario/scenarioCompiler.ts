@@ -457,16 +457,51 @@ export function buildGameStateFromScenario(scenario: ScenarioDefinition): GameSt
   })
   const sectGates = compileSectGates(grouped.sectGates)
   const defenseStructures = compileDefenseStructures(grouped.defenseStructures)
-  // 與沙盒開局一致：劇本中的 AI 玩家預設使用決策樹策略，無需另外下達命令才會接管回合。
-  const aiOrders: AiOrder[] = players
-    .filter((player) => player.isAI)
-    .map((player) => ({
-      id: `ai-order-decision-tree-${player.id}`,
-      type: 'decision-tree' as const,
-      aiPlayerId: player.id,
-      priority: 50,
-      status: 'active' as const,
-    }))
+  // 劇本可顯式指定 AI 玩家指令（如「跟隨保護某玩家」）；未涵蓋的 AI 玩家
+  // 依玩家 data.aiType 生成對應指令，預設回退 decision-tree 策略。
+  const explicitOrders = scenario.aiOrders ?? []
+  const explicitAiIds = new Set(explicitOrders.map((order) => order.aiPlayerId))
+  const humanPlayer = players.find((player) => !player.isAI)
+  const firstBase = spawnedBases[0]
+  const aiOrders: AiOrder[] = [
+    ...explicitOrders,
+    ...players
+      .filter((player) => player.isAI && !explicitAiIds.has(player.id))
+      .map((player) => {
+        const placement = grouped.players.find((p) => p.id === player.id)
+        const aiType = (placement?.data as Record<string, unknown> | undefined)?.aiType as string | undefined
+        const base = {
+          id: `ai-order-${aiType ?? 'decision-tree'}-${player.id}`,
+          aiPlayerId: player.id,
+          priority: 50,
+          status: 'active' as const,
+        }
+        switch (aiType) {
+          case 'support-player':
+            return {
+              ...base,
+              type: 'support-player' as const,
+              playerId: humanPlayer?.id ?? player.id,
+              maxDistance: 2,
+              retreatHealthPercent: 30,
+            }
+          case 'protect-base':
+            return {
+              ...base,
+              type: 'protect-base' as const,
+              baseId: firstBase?.id ?? '',
+              radius: 6,
+              retreatHealthPercent: 30,
+            }
+          case 'fuzzy':
+            return { ...base, type: 'fuzzy' as const }
+          case 'graph-search':
+            return { ...base, type: 'graph-search' as const }
+          default:
+            return { ...base, type: 'decision-tree' as const }
+        }
+      }),
+  ]
 
   const activePlayer = players[0]
   const visibilityState = {
