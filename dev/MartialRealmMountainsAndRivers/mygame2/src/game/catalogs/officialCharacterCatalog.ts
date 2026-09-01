@@ -60,9 +60,9 @@ export type OfficialCharacterDefinition = {
 export const lingyuan: OfficialCharacterDefinition = {
   characterId: 'official-lingyuan',
   chapterId: 'prologue-village',
-  // 凌淵貫穿五章：序章（青石遺恨）→ 第二章（林海伏妖）→ 第三章（寒水之殤），
-  // 對應官方關卡 id 為 prologue-village / forest-hunt / frost-water-lament。
-  chapterIds: ['prologue-village', 'forest-hunt', 'frost-water-lament'],
+  // 凌淵貫穿五章：序章（青石遺恨）→ 第二章（林海伏妖）→ 第三章（寒水之殤）→ 第四章（赤焰之劫），
+  // 對應官方關卡 id 為 prologue-village / forest-hunt / frost-water-lament / blazing-ruins。
+  chapterIds: ['prologue-village', 'forest-hunt', 'frost-water-lament', 'blazing-ruins'],
   name: '凌淵',
   title: '山河守護者',
   portrait: '⚔️',
@@ -101,11 +101,10 @@ export const lingyuan: OfficialCharacterDefinition = {
       scenarioId: 'frost-water-lament',
       skillIds: ['lingyuan-rivers-sustain'],
     },
-    // 第四章（尚未實作）：預計解鎖外功「五行歸元」（強化型）——
-    // 呼應「重整五行秩序」的主題。待第四章 scenario id 定案後，
-    // 將下方 scenarioId 替換為實際 id 即可生效。
+    // 第四章「赤焰之劫」：解鎖外功「五行歸元」（強化型）——
+    // 呼應「重整五行秩序」的主題，在古城封印之地領悟守護者一脈的治療心法。
     {
-      scenarioId: 'chapter-4-tbd',
+      scenarioId: 'blazing-ruins',
       skillIds: ['lingyuan-five-elements-mend'],
     },
   ],
