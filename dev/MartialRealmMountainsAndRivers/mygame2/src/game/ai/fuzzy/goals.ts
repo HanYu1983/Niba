@@ -10,7 +10,7 @@ import { canTransportPlayer } from '../../rules/transportRules'
 import { getInnerSkill, getSkillDamage, getSkillProgression } from '../../rules/skillRules'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
 
-export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'prepareNest' | 'equipInnerSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense'
+export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'prepareNest' | 'equipInnerSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense' | 'buyConsumable'
 
 export interface GoalResult {
   score: number
@@ -460,6 +460,7 @@ export function evaluateAllGoals(
     executeMission: evaluateExecuteMission(inputs, state, player, dependencies),
     repairEquipment: evaluateRepairEquipment(inputs, state, player, dependencies),
     buildDefense: evaluateBuildDefense(inputs, state, player, dependencies),
+    buyConsumable: evaluateBuyConsumable(inputs, state, player, dependencies),
   }
 
   // 距離衰減：探索與巢穴攻略都以移動 action 表達距離成本，不重複扣分。
@@ -514,6 +515,27 @@ export function evaluateAllGoals(
   }
 
   return results
+}
+
+function evaluateBuyConsumable(
+  inputs: FuzzyInputs,
+  state?: GameState,
+  player?: PlayerState,
+  dependencies?: ExecuteAiActionDependencies,
+): GoalResult {
+  const { buyableUsefulItem, nearestBase, isAdjacentToBase, staminaRatio } = inputs
+  // 避免在體力低時遠赴商店購物（優先保留體力做更緊急的事）
+  if (!state || !player || !dependencies || !buyableUsefulItem || !nearestBase) return { score: 0 }
+  if (staminaRatio < 0.3) return { score: 0 }
+
+  const result: GoalResult = {
+    score: 0.55,
+    target: { kind: 'buy-item', baseId: nearestBase.id, itemId: buyableUsefulItem.itemId },
+    distanceToTarget: isAdjacentToBase ? 0 : manhattan(player.position, nearestBase.position),
+    context: { baseId: nearestBase.id, itemName: buyableUsefulItem.name, price: buyableUsefulItem.price, effect: buyableUsefulItem.effect },
+  }
+  const actions = buildValidatedActionSequence('buyConsumable', result, state, player, dependencies)
+  return actions.length > 0 ? { ...result, actions } : { score: 0 }
 }
 
 function evaluatePrepareNest(

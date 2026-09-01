@@ -198,6 +198,8 @@ export interface FuzzyInputs {
   needsLeveling: boolean
   /** 可在商店購買的回血道具（有商店 + 有錢 + 未買過） */
   buyableHealItem: { itemId: string; name: string; price: number } | undefined
+  /** 值得花錢買的實用道具（永久屬性丹優先，其次回血）+ 可達商店基地 */
+  buyableUsefulItem: { itemId: string; name: string; price: number; effect: string } | undefined
   /** 為最近巢穴準備的可購買元素爆發道具 */
   buyableNestBurstItem: { itemId: string; name: string; price: number; damage: number } | undefined
   /** 可建造的防禦設施（材料夠 + rank 夠），取最近據點 */
@@ -551,6 +553,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
 
   // 商店買道具：附近有道具商店 + 有錢買回血道具
   const buyableHealItem = findBuyableHealItem(player, nearestBase, state)
+  const buyableUsefulItem = findBuyableUsefulItem(player, nearestBase)
   const buyableNestBurstItem = findBuyableNestBurstItem(player, nearestBase, nearestNest, state)
 
   // 防禦建設：找可建造的防禦設施
@@ -664,6 +667,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     expectedLevel,
     needsLeveling,
     buyableHealItem,
+    buyableUsefulItem,
     buyableNestBurstItem,
     buildableDefenseStructure,
     defenseTowerCount,
@@ -896,6 +900,60 @@ function findBuyableHealItem(
   if (affordable.length === 0) return undefined
   const best = affordable[0]
   return { itemId: best.id, name: best.name, price: best.buyPrice }
+}
+
+/**
+ * 找到「值得花錢買」的實用道具：優先確保生存，再談變強。
+ *
+ * 生存優先（第一層）：
+ * - 確保身上「回復氣血 / 回復內力 / 回復體力」三類道具各至少 1 個。
+ *   AI 需先有續航力，才不會在打鬥/練功途中資源枯竭暴斃。
+ *   （優先順序：回血 > 回內力 > 回體力，依生存關鍵程度。）
+ *
+ * 變強（第二層）：三類生存道具都有了，才買永久屬性丹。
+ */
+function findBuyableUsefulItem(
+  player: PlayerState,
+  base: BaseState | undefined,
+): { itemId: string; name: string; price: number; effect: string } | undefined {
+  if (!base) return undefined
+  if (!hasBuilding(base, 'item-shop')) return undefined
+  const money = player.money ?? 0
+  // 統計身上各效果道具的持有總量
+  const ownedCountByEffect = new Map<string, number>()
+  for (const entry of player.inventory ?? []) {
+    if (entry.quantity <= 0) continue
+    const def = itemCatalog.find((i) => i.id === entry.itemId)
+    if (def?.effect) {
+      ownedCountByEffect.set(def.effect, (ownedCountByEffect.get(def.effect) ?? 0) + entry.quantity)
+    }
+  }
+  const hasAtLeastOne = (effect: string): boolean => (ownedCountByEffect.get(effect) ?? 0) > 0
+
+  // 1. 正在用的生存效果：身上缺哪類就補哪類（回復效果類）
+  const survivalEffects: Array<{ effect: string; label: string }> = [
+    { effect: 'health', label: '回血' },
+    { effect: 'inner-power', label: '回內力' },
+    { effect: 'stamina', label: '回體力' },
+  ]
+  for (const { effect } of survivalEffects) {
+    if (!hasAtLeastOne(effect)) {
+      const recovery = itemCatalog
+        .filter((i) => i.effect === effect && i.buyPrice > 0 && i.buyPrice <= money)
+        .sort((a, b) => a.buyPrice - b.buyPrice)[0]
+      if (recovery) return { itemId: recovery.id, name: recovery.name, price: recovery.buyPrice, effect: recovery.effect }
+    }
+  }
+
+  // 2. 三類生存道具都齊 → 才買永久屬性丹（真正的變強投資）
+  const attrPill = itemCatalog
+    .filter((i) => i.effect === 'attribute-up' && i.buyPrice > 0 && i.buyPrice <= money)
+    .sort((a, b) => a.buyPrice - b.buyPrice)[0]
+  if (attrPill) {
+    return { itemId: attrPill.id, name: attrPill.name, price: attrPill.buyPrice, effect: 'attribute-up' }
+  }
+
+  return undefined
 }
 
 function findBuyableNestBurstItem(

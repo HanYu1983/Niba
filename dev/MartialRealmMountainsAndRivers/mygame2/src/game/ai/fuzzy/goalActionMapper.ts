@@ -281,6 +281,8 @@ export function buildActionSequence(
       return buildAttackNestActions(actor, result, state, player)
     case 'prepareNest':
       return buildPrepareNestActions(actor, result, state, player)
+    case 'buyConsumable':
+      return buildBuyItemActions(actor, result, state, player)
     case 'equipInnerSkill':
       return buildEquipInnerSkillActions(actor, result)
     case 'useInnerSkillAttack':
@@ -296,6 +298,22 @@ export function buildActionSequence(
     case 'buildDefense':
       return buildDefenseActions(actor, result, state, player)
   }
+}
+
+function buildBuyItemActions(
+  actor: AiActorRef,
+  result: GoalResult,
+  state: GameState,
+  player: PlayerState,
+): AiAction[] {
+  const target = result.target
+  if (!target || target.kind !== 'buy-item') return [{ type: 'hold', actor, reason: '購買道具：無購買目標' }]
+  const base = state.bases.find((candidate) => candidate.id === target.baseId)
+  if (!base) return [{ type: 'hold', actor, reason: '購買道具：據點不存在' }]
+  if (isSameOrAdjacent(player.position, base.position)) {
+    return [{ type: 'buy-item', actor, baseId: base.id, itemId: target.itemId, reason: `購買道具：購買 ${result.context?.itemName ?? target.itemId}` }]
+  }
+  return [{ type: 'move', actor, destination: findClosestReachablePosition(state, player, base.position), reason: `購買道具：前往 ${base.name} 購買` }]
 }
 
 function buildPrepareNestActions(

@@ -25,6 +25,7 @@ const PRIORITY_ORDER: GoalName[] = [
   'construction',
   'buildDefense',
   'executeMission',
+  'buyConsumable',
   'exploration',
 ]
 

@@ -8,6 +8,8 @@ import { gameStore } from './gameStore'
 import type { BaseState, GameState } from './types'
 import { getInnerSkill, getSkillDamage, getSkillProgression } from './rules/skillRules'
 import { getEffectiveAttributesForPlayer } from './rules/playerDerivedRules'
+import { itemCatalog } from './catalogs/itemCatalog'
+import { clearMidTermGoals } from './ai/fuzzy/midTermGoal'
 
 declare const process: { cwd(): string }
 
@@ -189,6 +191,7 @@ function writeAiTraceReport(fileName: string, title: string, traces: AiTurnTrace
 describe('AI 玩家：入門沙盒地圖通關能力', () => {
   beforeEach(() => {
     gameStore.resetForTest()
+    clearMidTermGoals()
   })
 
   it('應能在有限回合內摧毀所有妖物巢穴並取得勝利', () => {
@@ -525,5 +528,91 @@ describe('AI 玩家：入門沙盒地圖通關能力', () => {
     })
     expect(gameStore.buyItem(aiPlayer.id, 'heal-wound-medicine', 1).ok).toBe(true)
     expect(gameStore.getState().players[0].inventory).toContainEqual({ itemId: 'heal-wound-medicine', quantity: 1 })
+  })
+
+  it('AI 缺錢且在相鄰據點有告示牌時：會主動打工存錢，金錢明顯上升', () => {
+    const template = BUILTIN_TEMPLATES.find((candidate) => candidate.id === 'standard')
+    if (!template) throw new Error('找不到入門地圖模板。')
+
+    gameStore.startGame({
+      ...template.settings,
+      rows: 15,
+      columns: 15,
+      seed: 20260911,
+      nestCount: 0,
+      creatureCount: 0,
+      resourcePointCount: 0,
+      itemPointCount: 0,
+      ruinCount: 0,
+      sectGateCount: 0,
+      aiPlayerCount: 1,
+      explorationEventCount: 0,
+      explorationTriggerChance: 0,
+    })
+
+    const startedState = gameStore.getState()
+    const aiPlayer = startedState.players.find((player) => player.isAI)
+    if (!aiPlayer) throw new Error('打工測試沒有建立 AI 玩家。')
+    // 受控基地：緊鄰玩家，含告示牌(board)可打工；item-shop 供後續買道具。
+    const economyBase: BaseState = {
+      id: 'ai-economy-base',
+      name: 'AI 經濟據點',
+      position: { row: aiPlayer.position.row, column: aiPlayer.position.column + 1 },
+      buildings: [
+        { id: 'ai-economy-board', type: 'board', name: '告示牌', description: '', constructionCost: 30, level: 1 },
+        { id: 'ai-economy-item-shop', type: 'item-shop', name: '道具商店', description: '', constructionCost: 30, level: 1 },
+      ],
+      buildingMaterials: 0,
+      maxBuildingMaterials: 100,
+      health: 100,
+      maxHealth: 100,
+    }
+    gameStore.setStateForTest({
+      ...startedState,
+      players: [{ ...aiPlayer, money: 0 }],
+      bases: [economyBase],
+      activePlayerId: aiPlayer.id,
+    })
+
+    const traces: AiTurnTrace[] = []
+    const maxSteps = 60
+    for (let step = 0; step < maxSteps; step++) {
+      const before = gameStore.getState()
+      const result = gameStore.runFuzzyStep(aiPlayer.id)
+      expect(result.ok, result.ok ? undefined : result.reason).toBe(true)
+      const after = gameStore.getState()
+      traces.push(recordAiTurn(before, after, step + 1))
+    }
+
+    const finalState = gameStore.getState()
+    const finalPlayer = finalState.players.find((player) => player.id === aiPlayer.id)
+    if (!finalPlayer) throw new Error('打工測試找不到玩家。')
+    const actionTypes = countActionTypes(traces)
+    // 玩家起始 money 0 → 應透過打工賺到錢
+    expect(finalPlayer.money).toBeGreaterThan(0)
+    // 應至少發生過一次打工（use-facility facilityType=mission）
+    expect(actionTypes['use-facility'] ?? 0).toBeGreaterThan(0)
+    const missionEvents = traces
+      .flatMap((trace) => trace.actions)
+      .filter((event) => (event as { action?: { type?: string; facilityType?: string } }).action?.type === 'use-facility')
+    expect(missionEvents.some((event) => (event as { action?: { facilityType?: string } }).action?.facilityType === 'mission')).toBe(true)
+
+    //「生存優先」：存到錢後應先去道具商店補齊「回血/回內力/回體力」生存道具，
+    // 確保身上三類各至少 1 個（續航力是生存率的根本）。
+    const boughtItem = traces
+      .flatMap((trace) => trace.actions)
+      .some((event) => (event as { action?: { type?: string } }).action?.type === 'buy-item')
+    expect(boughtItem).toBe(true)
+    const inventoryByEffect = new Map<string, number>()
+    for (const entry of finalPlayer.inventory ?? []) {
+      const def = itemCatalog.find((i) => i.id === entry.itemId)
+      if (def?.effect && entry.quantity > 0) {
+        inventoryByEffect.set(def.effect, (inventoryByEffect.get(def.effect) ?? 0) + entry.quantity)
+      }
+    }
+    // 至少補齊回血道具（生存最關鍵）
+    expect((inventoryByEffect.get('health') ?? 0)).toBeGreaterThan(0)
+
+    writeAiTraceReport('ai-economy-mission-trace-2026-09-02.md', 'AI Economy Mission Trace', traces, finalState)
   })
 })

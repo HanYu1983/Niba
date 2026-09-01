@@ -39,6 +39,32 @@
 - 上局 trace `practice-skill=55` 異常高 + `end-turn=61` 高 → 部分局花太多時間練功/空轉。
 - 單局仍不穩定（Lv2/Lv4 也有），受巢穴 spawn 隨機影響大。
 
+## 打工經濟循環（2026-09-02，驗證成功）
+新增測試「AI 缺錢且在相鄰據點有告示牌時：會主動打工存錢，金錢明顯上升」（`aiBeginnerSandboxVictory.test.ts`）。
+- 受控環境：玩家 money:0 + 相鄰基地含 board+item-shop。
+- 結果：AI 連續 `use-facility mission` ×4、money 0→40、行動產出率 100%。**存錢中期目標在真實 trigger**。
+- 證明打工→存錢循環可行（只要「據點近、有告示牌、缺錢」三條件成立）。
+- 既有 4 個通關測試（標準勝利/簡單難度/level-5）仍失敗=已知瓶頸，與本次無關，勿誤判為回歸。
+
+## 未補經濟鏈（有待做）
+- **買裝備機制完全缺失**：`findEquipmentCandidates` 只從背包庫存挑，無「去 equipment-shop 買」動機。標準地圖基地初始只有 board，無 shop，需 AI 自蓋。
+- AI 只在「受傷買藥 / 打巢穴買爆發符」時才 buy-item，無「純買裝變強」動機。
+
+## 買道具變強（2026-09-02，完整循環成功）
+新增輸入 `buyableUsefulItem`（fuzzyInputs）+ goal `buyConsumable`（goals.ts）+ actionMapper `buyConsumable`→`buildBuyItemActions`（買 item）+ decision `PRIORITY_ORDER` + personality `ALL_GOALS`。
+- `findBuyableUsefulItem`：優先永久屬性丹(attribute-up)，其次缺血買回血藥。需 money≥price。
+- **循環驗證成功**（受控測試）：打工42次 → buy-item 5次（大力丸/輕身丸/續命丹）→ use-item 3次吃掉 → 屬性 8/8/8→9/9/9 → 再買再吃。行動產出率 83%。
+- 完整達成「打工→存錢→買道具→變強」，money 充分轉為戰力。
+
+## 生存優先買道具（2026-09-02，更新）
+`findBuyableUsefulItem` 改為**生存優先**：
+1. 優先確保身上「回血(health) / 回內力(inner-power) / 回體力(stamina)」三類各≥1（續航=生存率根本）。
+2. 三類都齊才買永久屬性丹。
+- trace 實證：AI 先買回氣丹(回體力)補生存，再買大力丸(屬性丹)。測試斷言購物 + 持有回血道具都通過。
+
+## 經濟循環的遺留課題
+- 打工→買裝（equipment-shop buy-equipment AI 管線）仍缺失；標準地圖無商店需自蓋、且無 buy-equipment AI action。
+
 ## 已回退的失敗調整（2026-09-02）
 嘗試「安全時靠據點打工賺錢買裝」但失敗，已全部回退：
 1. `goals.ts` 打工加 `f_moneyNeed` 動機 → 打工分數達 1.0 壓過磨血戰鬥，AI 不打怪。
