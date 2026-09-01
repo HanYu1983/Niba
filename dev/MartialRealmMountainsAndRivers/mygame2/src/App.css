@@ -1636,6 +1636,17 @@
   background: linear-gradient(145deg, #a855f7, #6d28d9);
 }
 
+/* 隱身靈氣：持有者半透明化，提示敵人無法攻擊或追蹤。 */
+.player--creature.creature--buff-concealment {
+  border-color: #e2e8f0;
+  background: linear-gradient(145deg, #cbd5e1, #94a3b8);
+  opacity: 0.55;
+  box-shadow:
+    0 0 0 2px rgba(226, 232, 240, 0.6),
+    0 0 12px rgba(148, 163, 184, 0.5),
+    0 1px 4px rgba(10, 20, 30, 0.5);
+}
+
 /* 震懾：三重共振命中的生物疊加灰色，提示暫時無法行動。 */
 .player--creature.creature--buff-triple-resonance-stun {
   border-color: #9ca3af;

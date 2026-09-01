@@ -342,6 +342,11 @@ export function getEffectiveAttributesForPlayer(player: PlayerState): PlayerAttr
   return getEffectiveAttributesWithDefinitions(player, getActiveBuffDefinitions(player))
 }
 
+/** 玩家是否處於隱身狀態：持有 untargetable Buff 時，生物不會將其選為攻擊或追蹤目標。 */
+export function isPlayerUntargetable(player: PlayerState): boolean {
+  return getActiveBuffDefinitions(player).some((definition) => definition.untargetable === true)
+}
+
 /** 取得包含當前地形主場 Buff 的怪物有效五維。 */
 export function getEffectiveAttributesForCreature(creature: CreatureState, terrain?: TerrainType): PlayerAttributes {
   return getEffectiveAttributesWithDefinitions(creature, getActiveBuffDefinitionsForCreature(creature, terrain))

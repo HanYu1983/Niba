@@ -96,6 +96,8 @@ export type BuffEffects = {
   confused?: boolean
   /** 來自友軍的傷害加成。 */
   damageTakenFromAlliesBonus?: number
+  /** 隱身：持有此 Buff 的目標不會被生物選為攻擊或追蹤目標（用於安全逃離或潛行刺殺巢穴）。 */
+  untargetable?: boolean
   /** 條件觸發型：依血量區間觸發的五維乘算。 */
   conditional?: BuffConditional
 }
@@ -149,5 +151,6 @@ export const BuffEffectsKeys = [
   'skillExpGainPercent',
   'confused',
   'damageTakenFromAlliesBonus',
+  'untargetable',
   'conditional',
 ] as const satisfies readonly (keyof BuffEffects)[]

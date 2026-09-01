@@ -44,6 +44,20 @@ describe('creatureBehaviorRules', () => {
   })
   it('攻城型有據點時優先前往據點', () => expect(selectCreatureTarget(state(creature('sieger'), [{ id: 'base-1', name: '據點', position: { row: 2, column: 5 }, buildings: [], buildingMaterials: 0, maxBuildingMaterials: 100, health: 100, maxHealth: 100 }]), creature('sieger'))?.type).toBe('base'))
 
+  it('持有隱身靈氣的玩家不會被生物選為目標', () => {
+    const current = creature('hunter')
+    const concealedPlayer = {
+      ...current,
+      id: 'p1',
+      name: 'player',
+      position: { row: 2, column: 4 },
+      buffs: [{ id: 'buff-1', definitionId: 'concealment-aura', sourceId: 'concealment-talisman', remainingRounds: 3 }],
+    }
+    const concealedState = { ...state(current), players: [concealedPlayer] }
+    // 獵殺型只鎖定玩家，但唯一玩家已隱身 → 無目標。
+    expect(selectCreatureTarget(concealedState, current)).toBeNull()
+  })
+
   it('怪物相鄰箭塔時優先攻擊箭塔（即使有玩家在警戒範圍內）', () => {
     const current = creature('hunter')
     const arrowTower = {

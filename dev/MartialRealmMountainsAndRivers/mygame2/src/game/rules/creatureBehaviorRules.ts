@@ -5,6 +5,7 @@ import { getCreatureAiParameters } from '../ai/policy/aiPolicyRegistry'
 import { getManhattanDistance as distance } from './mapCellStateRules'
 import { getMartialHallSkills } from '../catalogs/martialHallSkillCatalog'
 import { getInnerSkill } from './skillRules'
+import { isPlayerUntargetable } from './playerDerivedRules'
 
 export type CreatureBehaviorType = 'scavenger' | 'hunter' | 'sieger' | 'wanderer' | 'roamer'
 export type CreatureTargetType = 'player' | 'resource' | 'item' | 'base' | 'defense'
@@ -226,7 +227,7 @@ export function selectCreatureTarget(state: GameState, creature: CreatureState):
   const range = creature.aggroRange ?? getCreatureAggroRange(behavior)
 
   if (behavior === 'roamer') {
-    const targets = state.players.filter((player) => player.health > 0 && distance(creature.position, player.position) <= range)
+    const targets = state.players.filter((player) => player.health > 0 && !isPlayerUntargetable(player) && distance(creature.position, player.position) <= range)
     const target = nearest(creature.position, targets)
     return target ? {
       type: 'player',
@@ -251,7 +252,7 @@ export function selectCreatureTarget(state: GameState, creature: CreatureState):
     }
   }
 
-  const players = state.players.filter((player) => player.health > 0 && distance(creature.position, player.position) <= range)
+  const players = state.players.filter((player) => player.health > 0 && !isPlayerUntargetable(player) && distance(creature.position, player.position) <= range)
   const resources = state.resourcePoints.filter((point) => point.active !== false && distance(creature.position, point.position) <= range)
   const bases = state.bases.filter((base) => base.health > 0 && distance(creature.position, base.position) <= range)
   const items = state.itemPoints.filter((point) => distance(creature.position, point.position) <= range)

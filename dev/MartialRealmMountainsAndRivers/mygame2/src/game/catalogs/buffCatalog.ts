@@ -156,6 +156,8 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'trap-immobilize', name: '定身', description: '被陷阱定身，本回合無法移動。', duration: 'rounds', durationRounds: 3, immobilized: true },
   { id: 'triple-resonance-stun', name: '震懾', description: '三重共振衝擊，目標下一個回合完全無法行動。', duration: 'rounds', durationRounds: 1, stunned: true, mapMarker: true, mapMarkerClass: 'triple-resonance-stun' },
   { id: 'return-light', name: '回光', description: '瀕死時攔截死亡，復活至 30% 血並清除所有 debuff（只保一次）。', duration: 'persistent', reviveOnDeath: true, reviveHealthPercent: 0.3, clearDebuffsOnRevive: true },
+  // 隱身靈氣（道具「隱身符」）：3 回合內敵人無法攻擊或追蹤持有者，用於安全逃離或潛行刺殺巢穴。
+  { id: 'concealment-aura', name: '隱身靈氣', description: '3 回合內，敵人無法攻擊或追蹤你。', duration: 'rounds', durationRounds: 3, category: 'buff', untargetable: true, mapMarker: true, mapMarkerClass: 'concealment' },
   // 類別 5：移動類 — 指定地形消耗降為 1
   { id: 'plain-step', name: '草行', description: '進入草地時，移動消耗降為 1。', duration: 'persistent', category: 'buff', terrainCostOverrides: { plain: 1 } },
   { id: 'forest-step', name: '林行', description: '進入森林時，移動消耗降為 2。', duration: 'persistent', category: 'buff', terrainCostOverrides: { forest: 2 } },

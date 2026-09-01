@@ -410,6 +410,23 @@ describe('useItem', () => {
     ])
   })
 
+  it('隱身符：使用後獲得 3 回合隱身靈氣 Buff', () => {
+    const player = makeTestCreature({
+      inventory: [{ itemId: 'concealment-talisman', quantity: 1 }],
+    })
+    gameStore.setStateForTest(makeGameState({ players: [player] }))
+
+    const used = gameStore.useItem('player-1', 'concealment-talisman')
+
+    expect(used.ok).toBe(true)
+    const state = gameStore.getState()
+    const buff = state.players[0].buffs?.find((candidate) => candidate.definitionId === 'concealment-aura')
+    expect(buff).toBeDefined()
+    expect(buff?.remainingRounds).toBe(3)
+    expect(state.players[0].inventory).toHaveLength(0)
+    expect(state.players[0].itemEffectsUsedThisTurn).toEqual(['buff'])
+  })
+
   it('每種道具類型一回合一次：探地符再次使用被拒絕', () => {
     const player = makeTestCreature({
       position: { row: 5, column: 5 },
