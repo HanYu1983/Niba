@@ -10,7 +10,7 @@ import { getPlayerAiEmergency } from './policy/aiPolicyRegistry'
 import { pickNextBuildCandidate, pickUpgradeCandidate } from './construction/constructionAi'
 import { computeFuzzyInputs } from './fuzzy/fuzzyInputs'
 import { evaluateAllGoals, type GoalName } from './fuzzy/goals'
-import { applyMidTermGoalInputs, overrideScoreForMidTermGoal, abortMidTermGoal } from './fuzzy/midTermGoal'
+import { applyMidTermGoalInputs, overrideScoreForMidTermGoal, abortMidTermGoal, applyKillGoalInputs } from './fuzzy/midTermGoal'
 import { MIN_THRESHOLD, rankGoals } from './fuzzy/decision'
 import { getAiGoalConstraints } from './fuzzy/personality'
 import { ACTION_STAMINA_COSTS, canPlayerPerformAction } from '../rules/actionCostRules'
@@ -762,13 +762,24 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
       guardianConstraints,
     )
 
-    // 2.5 中期目標：決定是否鎖定「存錢打工」，並對目標分數覆寫（優先執行）。
+    // 2.5 中期目標：決定是否鎖定「擊殺獵物 / 存錢打工」，並對目標分數覆寫（優先執行）。
     applyMidTermGoalInputs(
       currentPlayer.id,
       currentPlayer.money ?? 0,
       inputs.staminaRatio,
       inputs.hasMissionBoard,
       inputs.feasibility.missionBaseId,
+    )
+    applyKillGoalInputs(
+      currentPlayer.id,
+      inputs.combatCandidates.map((candidate) => ({
+        targetId: candidate.creatureId,
+        targetType: 'creature' as const,
+        distance: candidate.distance,
+        damageRatio: candidate.damageRatio,
+        canSurvive: inputs.hitsSurvivable >= 1,
+      })),
+      inputs.staminaRatio,
     )
     for (const goalName of Object.keys(goalResults) as GoalName[]) {
       goalResults[goalName] = overrideScoreForMidTermGoal(currentPlayer.id, goalName, goalResults[goalName])
