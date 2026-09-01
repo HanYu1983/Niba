@@ -1,6 +1,6 @@
 export type AiOrderStatus = 'active' | 'paused' | 'completed' | 'failed'
 
-export type AiPersonalityId = 'balanced' | 'aggressive' | 'cautious' | 'builder' | 'explorer'
+export type AiPersonalityId = 'balanced' | 'aggressive' | 'cautious' | 'builder' | 'explorer' | 'guardian' | 'economist' | 'scholar'
 
 export type AiPersonalityProfile = {
   id: AiPersonalityId

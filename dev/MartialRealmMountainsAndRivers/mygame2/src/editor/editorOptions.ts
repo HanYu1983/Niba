@@ -99,8 +99,11 @@ export const AI_TYPE_OPTIONS: Array<{ value: string; label: string }> = [
 
 export const AI_PERSONALITY_OPTIONS: Array<{ value: string; label: string }> = [
   { value: 'balanced', label: '均衡型' },
-  { value: 'aggressive', label: '好戰型' },
+  { value: 'aggressive', label: '戰鬥偏好型（好戰）' },
   { value: 'cautious', label: '謹慎型' },
-  { value: 'builder', label: '建設型' },
+  { value: 'builder', label: '建設偏好型' },
   { value: 'explorer', label: '探索型' },
+  { value: 'guardian', label: '支援輔助玩家型（護衛）' },
+  { value: 'economist', label: '經營型' },
+  { value: 'scholar', label: '修煉型' },
 ]

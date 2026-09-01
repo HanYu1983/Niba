@@ -18,6 +18,8 @@ import { defenseStructureCatalog } from '../../catalogs/defenseStructureCatalog'
 import { getRepairSummary, hasBuilding } from '../../rules/buildingRules'
 import { getMartialHallSkillCost } from '../../actions/martialHallActions'
 import { canUpgradeBuildingType, getBuildingLevel, getBuildingUpgradeResult, getEffectiveBuildingUpgradeCost } from '../../rules/buildingProgressionRules'
+import type { AiPersonalityId } from '../../types/ai'
+import { computeConstructionCandidateValue } from './constructionValue'
 
 export type ConstructionCandidate = {
   kind: 'build' | 'upgrade'
@@ -178,7 +180,7 @@ function manhattan(a: Position, b: Position): number {
  * V1 簡化：maxVisibleEnemyDamage 用 creature.health * 0.3 粗估，
  * 後續可替換為精確傷害公式。
  */
-export function computeFuzzyInputs(state: GameState, player: PlayerState): FuzzyInputs {
+export function computeFuzzyInputs(state: GameState, player: PlayerState, personality?: AiPersonalityId): FuzzyInputs {
   const hostiles = listHostileActors(state)
 
   // 先計算視野，後續用於過濾可見生物
@@ -262,6 +264,12 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     })
     : undefined
   const canBuild = !!buildableBuilding
+  const threatCountNearBase = nearestBase
+    ? hostiles.filter((h) => {
+      const pos = h.sourceType === 'creature' ? h.creature.position : h.nest.position
+      return manhattan(nearestBase.position, pos) <= 5
+    }).length
+    : 0
   const constructionCandidates: ConstructionCandidate[] = nearestBase
     ? [
         ...buildingCatalog
@@ -279,13 +287,15 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
             buildingType: template.type,
             buildingName: template.name,
             cost: template.constructionCost,
-            value: template.type === 'equipment-shop' ? 0.9
-              : template.type === 'item-shop' ? 0.85
-                : template.type === 'infirmary' ? 0.8
-                  : template.type === 'warehouse' ? 0.75
-                    : template.type === 'workshop' ? 0.65
-                      : template.type === 'martial-hall' ? 0.7
-                        : 0.55,
+            value: computeConstructionCandidateValue({
+              kind: 'build',
+              buildingType: template.type,
+              cost: template.constructionCost,
+              materialRatio,
+              threatCountNearBase,
+              distanceToBase: manhattan(player.position, nearestBase.position),
+              personality,
+            }),
           })),
         ...nearestBase.buildings
           .filter((building) => {
@@ -303,10 +313,15 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
             cost: getEffectiveBuildingUpgradeCost(building, player),
             currentLevel: getBuildingLevel(building),
             nextLevel: getBuildingLevel(building) + 1,
-            value: building.type === 'infirmary' ? 0.85
-              : building.type === 'equipment-shop' || building.type === 'item-shop' ? 0.8
-                : building.type === 'warehouse' ? 0.75
-                  : 0.65,
+            value: computeConstructionCandidateValue({
+              kind: 'upgrade',
+              buildingType: building.type,
+              cost: getEffectiveBuildingUpgradeCost(building, player),
+              materialRatio,
+              threatCountNearBase,
+              distanceToBase: manhattan(player.position, nearestBase.position),
+              personality,
+            }),
           })),
       ]
     : []
@@ -435,14 +450,6 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
   // 防禦建設：找可建造的防禦設施
   const buildableDefenseStructure = findBuildableDefenseStructure(player, nearestBase)
   const defenseTowerCount = nearestBase?.buildings.filter((building) => building.type === 'arrow-tower' || building.type === 'advanced-arrow-tower').length ?? 0
-
-  // 據點附近威脅數（曼哈頓 ≤ 5）
-  const threatCountNearBase = nearestBase
-    ? hostiles.filter((h) => {
-      const pos = h.sourceType === 'creature' ? h.creature.position : h.nest.position
-      return manhattan(nearestBase.position, pos) <= 5
-    }).length
-    : 0
 
   // 是否與最近 active 據點相鄰
   const isAdjacentToBase = nearestBase != null && manhattan(player.position, nearestBase.position) === 1

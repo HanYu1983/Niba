@@ -22,6 +22,12 @@ export const AI_PERSONALITY_PROFILES: Record<AiPersonalityId, AiGoalConstraints>
   cautious: { goalWeights: { selfPreservation: 1.5, useItem: 1.2, engageCombat: 0.6 }, goalThresholds: { selfPreservation: 0.15 } },
   builder: { goalWeights: { construction: 1.5, buildDefense: 1.3, executeMission: 1.2 } },
   explorer: { goalWeights: { exploration: 1.5, collectItems: 1.2, engageCombat: 0.7 } },
+  // 護衛型：跟隨並保護人類玩家（fuzzy 命令下自動設定 followTarget）。
+  guardian: { goalWeights: { selfPreservation: 1.3, engageCombat: 1.2, positioning: 1.5, construction: 0.7, exploration: 0.5, executeMission: 0.6 } },
+  // 經營型：任務、建設、採集為主，戰鬥為輔。
+  economist: { goalWeights: { executeMission: 1.5, construction: 1.3, collectItems: 1.2, engageCombat: 0.7, attackNest: 0.6 } },
+  // 修煉型：學招、練功、裝備功法為主。
+  scholar: { goalWeights: { learnMartialSkill: 1.5, practiceSkill: 1.5, equipInnerSkill: 1.3, equipEquipment: 1.2, engageCombat: 0.8 } },
 }
 
 export function getAiGoalConstraints(

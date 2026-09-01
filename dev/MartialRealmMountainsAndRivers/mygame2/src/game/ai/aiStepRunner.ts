@@ -370,7 +370,7 @@ export function runAiSupportStep(deps: AiStepRunnerDeps, playerId: string): Acti
   return runAiStepLoop(deps, playerId, player.name, '模糊支援策略', () => {
     const currentPlayer = deps.getState().players.find((candidate) => candidate.id === playerId)!
     const goalResults = evaluateAllGoals(
-      computeFuzzyInputs(deps.getState(), currentPlayer),
+      computeFuzzyInputs(deps.getState(), currentPlayer, player.aiPersonality),
       deps.getState(),
       currentPlayer,
       aiDeps,
@@ -384,7 +384,7 @@ export function runAiSupportStep(deps: AiStepRunnerDeps, playerId: string): Acti
           deps.getState(),
           currentPlayer,
           order,
-          computeFuzzyInputs(deps.getState(), currentPlayer),
+          computeFuzzyInputs(deps.getState(), currentPlayer, player.aiPersonality),
           goalResults,
           candidate.goal,
           constraints.goalThresholds?.[candidate.goal] ?? MIN_THRESHOLD,
@@ -543,11 +543,20 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
 
   const aiDeps = buildAiDependencies(STUB_COMBAT_DEPS)
 
+  // 護衛型（guardian）：fuzzy 命令下自動跟隨最近的人類玩家（複用 support-player 的 followTarget 機制）。
+  const guardianConstraints = getAiGoalConstraints(order.personality)
+  if (order.personality === 'guardian') {
+    const humanTarget = deps.getState().players.find((candidate) => !candidate.isAI && candidate.health > 0)
+    if (humanTarget) {
+      guardianConstraints.followTarget = { position: humanTarget.position, maxDistance: 3 }
+    }
+  }
+
   return runAiStepLoop(deps, playerId, player.name, '模糊策略', () => {
     const currentPlayer = deps.getState().players.find((p) => p.id === playerId)!
 
     // 1. Perceive
-    const inputs = computeFuzzyInputs(deps.getState(), currentPlayer)
+    const inputs = computeFuzzyInputs(deps.getState(), currentPlayer, order.personality)
 
     // 2. Evaluate（evaluateAllGoals 內部已做 validate + apply）
     const goalResults = evaluateAllGoals(
@@ -555,7 +564,7 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
       deps.getState(),
       currentPlayer,
       aiDeps,
-      getAiGoalConstraints(order.personality),
+      guardianConstraints,
     )
 
     // 4. Select（result.actions 已由 evaluate 保證合法）
