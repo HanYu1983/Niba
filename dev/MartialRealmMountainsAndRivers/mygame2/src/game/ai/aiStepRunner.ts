@@ -602,7 +602,7 @@ export function runAiSupportStep(deps: AiStepRunnerDeps, playerId: string): Acti
         return { actions: candidate.result.actions }
       }
     }
-    return { exitReason: '支援命令下沒有可執行的 fuzzy 行動' }
+    return { exitReason: '支援命令下目前沒有可執行的行動。' }
   }, (action) => action.type === 'attack'
     ? deps.executeAiAttack(playerId, action.target.kind === 'creature' ? 'creature' : action.target.kind, action.target.id)
     : deps.executeAiAction(action))

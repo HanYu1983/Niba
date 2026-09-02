@@ -3552,7 +3552,7 @@
           "row": 8,
           "column": 4
         },
-        "name": "event",
+        "name": "雲遊學者",
         "eventType": "wandering-scholar"
       }
     },
@@ -3568,7 +3568,7 @@
           "row": 17,
           "column": 17
         },
-        "name": "event",
+        "name": "資源儲藏",
         "eventType": "resource-cache"
       }
     },
@@ -3584,7 +3584,7 @@
           "row": 3,
           "column": 22
         },
-        "name": "itemPoint",
+        "name": "回營符遺跡",
         "customDrops": [
           {
             "lootId": "recall-base-talisman",
@@ -3605,7 +3605,7 @@
           "row": 10,
           "column": 1
         },
-        "name": "itemPoint",
+        "name": "隱身符遺跡",
         "customDrops": [
           {
             "lootId": "concealment-talisman",
@@ -3626,7 +3626,7 @@
           "row": 9,
           "column": 2
         },
-        "name": "creature",
+        "name": "荒漠妖狼",
         "level": 8
       }
     },
@@ -3642,7 +3642,7 @@
           "row": 21,
           "column": 12
         },
-        "name": "creature",
+        "name": "荒漠妖物",
         "level": 8
       }
     },
@@ -3658,7 +3658,7 @@
           "row": 20,
           "column": 21
         },
-        "name": "creature",
+        "name": "游蕩妖物",
         "level": 8,
         "behaviorType": "roamer",
         "aggroRange": 4
@@ -3676,7 +3676,7 @@
           "row": 2,
           "column": 21
         },
-        "name": "creature",
+        "name": "荒漠妖蠍",
         "level": 8
       }
     },
@@ -3692,7 +3692,7 @@
           "row": 3,
           "column": 13
         },
-        "name": "creature",
+        "name": "荒漠妖物",
         "level": 8
       }
     },
@@ -3708,7 +3708,7 @@
           "row": 11,
           "column": 17
         },
-        "name": "creature",
+        "name": "疾風獵妖",
         "level": 7,
         "behaviorType": "hunter",
         "aggroRange": 5,
@@ -3727,7 +3727,7 @@
           "row": 15,
           "column": 8
         },
-        "name": "creature",
+        "name": "荒漠獵妖",
         "level": 7,
         "behaviorType": "hunter",
         "aggroRange": 4
@@ -3745,7 +3745,7 @@
           "row": 2,
           "column": 11
         },
-        "name": "sectGate",
+        "name": "霜水武館",
         "schoolId": "frost-water"
       }
     },
@@ -3761,7 +3761,7 @@
           "row": 17,
           "column": 5
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3776,7 +3776,7 @@
           "row": 17,
           "column": 6
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3791,7 +3791,7 @@
           "row": 18,
           "column": 14
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3806,7 +3806,7 @@
           "row": 13,
           "column": 7
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3821,7 +3821,7 @@
           "row": 10,
           "column": 5
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3836,7 +3836,7 @@
           "row": 14,
           "column": 12
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3851,7 +3851,7 @@
           "row": 16,
           "column": 20
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3866,7 +3866,7 @@
           "row": 13,
           "column": 19
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3881,7 +3881,7 @@
           "row": 11,
           "column": 11
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3896,7 +3896,7 @@
           "row": 10,
           "column": 10
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3911,7 +3911,7 @@
           "row": 7,
           "column": 8
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3926,7 +3926,7 @@
           "row": 3,
           "column": 12
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3941,7 +3941,7 @@
           "row": 4,
           "column": 19
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3956,7 +3956,7 @@
           "row": 10,
           "column": 15
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3971,7 +3971,7 @@
           "row": 17,
           "column": 10
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -3986,7 +3986,7 @@
           "row": 14,
           "column": 16
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -4001,7 +4001,7 @@
           "row": 13,
           "column": 13
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -4016,7 +4016,7 @@
           "row": 8,
           "column": 16
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -4031,7 +4031,7 @@
           "row": 6,
           "column": 3
         },
-        "name": "ruin"
+        "name": "古城廢墟"
       }
     },
     {
@@ -4046,7 +4046,7 @@
           "row": 21,
           "column": 5
         },
-        "name": "defenseStructure",
+        "name": "高級箭塔",
         "type": "advanced-arrow-tower"
       }
     },
@@ -4062,7 +4062,7 @@
           "row": 19,
           "column": 2
         },
-        "name": "defenseStructure",
+        "name": "高級箭塔",
         "type": "advanced-arrow-tower"
       }
     },
@@ -4078,7 +4078,7 @@
           "row": 1,
           "column": 17
         },
-        "name": "itemPoint",
+        "name": "玄霜針遺跡",
         "customDrops": [
           {
             "lootId": "frost-doom-needle",
@@ -4099,7 +4099,7 @@
           "row": 23,
           "column": 18
         },
-        "name": "itemPoint",
+        "name": "大還丹遺跡",
         "customDrops": [
           {
             "lootId": "great-return-pill",
