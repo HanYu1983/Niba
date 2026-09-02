@@ -1,28 +1,30 @@
 # AI Beginner Sandbox Standard Trace
 
-- AI turns: 190
-- Final round: 44
+- AI turns: 200
+- Final round: 43
 - Game won: false
-- Game over: true
+- Game over: false
 - Remaining nests: 3
 
 ## Aggregate
 
-- Action counts: hold=411, move=164, attack=80, end-turn=43, collect=11, allocate-attribute=10, practice-skill=4, learn-skill=3, use-item=3, equip=2, equip-inner-skill=1, equip-external-skill=1
-- Creatures spawned (total): 17
-- Creatures defeated (total): 15
-- Level-ups observed: 5
-- Final player: level 6, experience 182, inner skill 烈陽戰體 (blazing-sun-inner) lv.3 damage 30
-- Final attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
+- Action counts: hold=474, move=130, attack=48, end-turn=42, use-facility=30, allocate-attribute=6, learn-skill=5, collect=4, use-item=4, build=3, buy-equipment=3, equip=3, practice-skill=2, buy-item=2, equip-inner-skill=1, equip-external-skill=1, upgrade=1
+- Creatures spawned (total): 13
+- Creatures defeated (total): 8
+- Level-ups observed: 3
+- Final player: level 4, experience 174, inner skill 烈陽戰體 (blazing-sun-inner) lv.2 damage 21
+- Final attributes: armStrength=16, constitution=13, agility=9, innerEnergy=9, insight=9
 
 ## Efficiency (KPI)
 
-- 行動產出率 (productive): ██·········· 14.2% (104/733)
-- 擊殺效率 (kill/generate): ███████████· 0.88 (15/17)
-- 擊殺成本 (attack/kill): 5.33 (80 次攻擊 / 15 擊殺)
-- 經驗效率 (XP/turn): 0.96 (182 XP / 190 turns)
+- 行動產出率 (productive): ██·········· 13.0% (99/759)
+- 擊殺效率 (kill/generate): ███████····· 0.62 (8/13)
+- 擊殺成本 (attack/kill): 6.00 (48 次攻擊 / 8 擊殺)
+- 經驗效率 (XP/turn): 0.87 (174 XP / 200 turns)
+- 目標切換次數 (goal switches): 294
+- 無效行動率 (ineffective): █████████··· 72.2% (548/759)
 
-- Nest health (start → end): creature-nest-1=120→176.42999999999992, creature-nest-2=120→175, creature-nest-3=120→186.63000000000005
+- Nest health (start → end): creature-nest-1=120→176.22999999999993, creature-nest-2=120→151.36, creature-nest-3=120→186.58000000000004
 
 ## Turn Trace
 
@@ -60,7 +62,7 @@
       },
       "result": "succeeded",
       "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.086Z"
+      "createdAt": "2026-09-02T16:10:20.922Z"
     }
   ],
   "creatureLogs": [],
@@ -102,7 +104,7 @@
       },
       "result": "succeeded",
       "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.100Z"
+      "createdAt": "2026-09-02T16:10:20.935Z"
     }
   ],
   "creatureLogs": [],
@@ -144,7 +146,7 @@
       },
       "result": "succeeded",
       "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.113Z"
+      "createdAt": "2026-09-02T16:10:20.947Z"
     }
   ],
   "creatureLogs": [],
@@ -186,7 +188,7 @@
       },
       "result": "succeeded",
       "reason": "保命：逃離 游蕩妖物（hitsSurvivable=4.8）",
-      "createdAt": "2026-09-02T15:47:51.121Z"
+      "createdAt": "2026-09-02T16:10:20.955Z"
     }
   ],
   "creatureLogs": [],
@@ -224,7 +226,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.123Z"
+      "createdAt": "2026-09-02T16:10:20.958Z"
     },
     {
       "id": "action-1-roamer-creature-2-6",
@@ -244,7 +246,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.124Z"
+      "createdAt": "2026-09-02T16:10:20.958Z"
     },
     {
       "id": "action-1-roamer-creature-3-7",
@@ -264,7 +266,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.124Z"
+      "createdAt": "2026-09-02T16:10:20.958Z"
     },
     {
       "id": "action-1-roamer-creature-4-8",
@@ -284,7 +286,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.124Z"
+      "createdAt": "2026-09-02T16:10:20.958Z"
     },
     {
       "id": "action-1-roamer-creature-5-9",
@@ -304,7 +306,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.124Z"
+      "createdAt": "2026-09-02T16:10:20.958Z"
     },
     {
       "id": "action-1-roamer-creature-6-10",
@@ -324,7 +326,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.125Z"
+      "createdAt": "2026-09-02T16:10:20.958Z"
     },
     {
       "id": "action-1-roamer-creature-7-11",
@@ -344,7 +346,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.125Z"
+      "createdAt": "2026-09-02T16:10:20.958Z"
     },
     {
       "id": "action-1-roamer-creature-8-12",
@@ -364,7 +366,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.125Z"
+      "createdAt": "2026-09-02T16:10:20.958Z"
     },
     {
       "id": "action-1-roamer-creature-9-13",
@@ -384,7 +386,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.125Z"
+      "createdAt": "2026-09-02T16:10:20.959Z"
     },
     {
       "id": "action-1-roamer-creature-10-14",
@@ -404,7 +406,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.125Z"
+      "createdAt": "2026-09-02T16:10:20.959Z"
     },
     {
       "id": "action-2-player-2-15",
@@ -424,10 +426,16 @@
       },
       "result": "succeeded",
       "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-02T15:47:51.128Z"
+      "createdAt": "2026-09-02T16:10:20.962Z"
     }
   ],
-  "creatureLogs": [],
+  "creatureLogs": [
+    {
+      "creatureId": "roamer-creature-5",
+      "creatureName": "游蕩妖物",
+      "message": "游蕩妖物 發現並摧毀了道具點。"
+    }
+  ],
   "spawnedCreatures": []
 }
 ```
@@ -466,7 +474,7 @@
       },
       "result": "succeeded",
       "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.135Z"
+      "createdAt": "2026-09-02T16:10:20.968Z"
     }
   ],
   "creatureLogs": [],
@@ -507,7 +515,7 @@
       },
       "result": "succeeded",
       "reason": "學招：學習門派功法 烈陽戰體",
-      "createdAt": "2026-09-02T15:47:51.141Z"
+      "createdAt": "2026-09-02T16:10:20.974Z"
     }
   ],
   "creatureLogs": [],
@@ -520,9 +528,9 @@
 - Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
 - Inner skill: 吐納功 (tuna-gong), level 1, damage 5
 - Stored experience change: +0
-- Spawned creatures: 0
+- Spawned creatures: 1
 - Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=120/120
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=120/132
 
 ```json
 {
@@ -545,7 +553,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.142Z"
+      "createdAt": "2026-09-02T16:10:20.974Z"
     },
     {
       "id": "action-2-roamer-creature-2-19",
@@ -565,7 +573,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.142Z"
+      "createdAt": "2026-09-02T16:10:20.974Z"
     },
     {
       "id": "action-2-roamer-creature-3-20",
@@ -585,7 +593,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.142Z"
+      "createdAt": "2026-09-02T16:10:20.974Z"
     },
     {
       "id": "action-2-roamer-creature-4-21",
@@ -605,7 +613,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.142Z"
+      "createdAt": "2026-09-02T16:10:20.974Z"
     },
     {
       "id": "action-2-roamer-creature-5-22",
@@ -625,7 +633,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.143Z"
+      "createdAt": "2026-09-02T16:10:20.974Z"
     },
     {
       "id": "action-2-roamer-creature-6-23",
@@ -645,7 +653,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.143Z"
+      "createdAt": "2026-09-02T16:10:20.975Z"
     },
     {
       "id": "action-2-roamer-creature-7-24",
@@ -665,7 +673,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.143Z"
+      "createdAt": "2026-09-02T16:10:20.975Z"
     },
     {
       "id": "action-2-roamer-creature-8-25",
@@ -685,7 +693,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.143Z"
+      "createdAt": "2026-09-02T16:10:20.975Z"
     },
     {
       "id": "action-2-roamer-creature-9-26",
@@ -705,7 +713,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.143Z"
+      "createdAt": "2026-09-02T16:10:20.975Z"
     },
     {
       "id": "action-2-roamer-creature-10-27",
@@ -725,7 +733,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.143Z"
+      "createdAt": "2026-09-02T16:10:20.975Z"
     },
     {
       "id": "action-3-player-2-28",
@@ -745,17 +753,74 @@
       },
       "result": "succeeded",
       "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-02T15:47:51.144Z"
+      "createdAt": "2026-09-02T16:10:20.976Z"
     }
   ],
-  "creatureLogs": [
+  "creatureLogs": [],
+  "spawnedCreatures": [
     {
-      "creatureId": "roamer-creature-3",
-      "creatureName": "游蕩妖物",
-      "message": "游蕩妖物 發現並摧毀了道具點。"
+      "id": "nest-creature-1",
+      "name": "生物巢穴 3的怪物 Lv.1",
+      "innerSkillId": "void-spirit-inner",
+      "externalSkillIds": [],
+      "equippedExternalSkillIds": [],
+      "position": {
+        "row": 11,
+        "column": 7
+      },
+      "attributes": {
+        "armStrength": 6,
+        "constitution": 6,
+        "agility": 5,
+        "innerEnergy": 5,
+        "insight": 6
+      },
+      "prestige": 0,
+      "money": 0,
+      "experience": 0,
+      "turnEnded": false,
+      "level": 1,
+      "behaviorType": "scavenger",
+      "schoolId": "void-spirit",
+      "homePosition": {
+        "row": 11,
+        "column": 8
+      },
+      "homeNestId": "creature-nest-3",
+      "spawnedRound": 3,
+      "baseAttributes": {
+        "armStrength": 5,
+        "constitution": 5,
+        "agility": 5,
+        "innerEnergy": 5,
+        "insight": 5
+      },
+      "health": 18,
+      "maxHealth": 18,
+      "stamina": 5.5,
+      "maxStamina": 5.5,
+      "innerPower": 15,
+      "maxInnerPower": 15,
+      "availableAttributePoints": 0,
+      "governanceRank": 1,
+      "unlockedPolicyIds": [
+        "basic"
+      ],
+      "inventory": [],
+      "unlockedEquipmentDropIds": [],
+      "equipmentInventory": [],
+      "equipmentLoadout": {
+        "weaponInstanceId": null,
+        "armorInstanceId": null,
+        "accessoryInstanceId": null
+      },
+      "innerSkillIds": [
+        "tuna-gong"
+      ],
+      "skillProgression": {},
+      "buffs": []
     }
-  ],
-  "spawnedCreatures": []
+  ]
 }
 ```
 
@@ -766,7 +831,7 @@
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=120/120
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=120/132
 
 ```json
 {
@@ -790,7 +855,7 @@
       },
       "result": "succeeded",
       "reason": "裝備功法：烈陽戰體",
-      "createdAt": "2026-09-02T15:47:51.150Z"
+      "createdAt": "2026-09-02T16:10:20.984Z"
     }
   ],
   "creatureLogs": [],
@@ -805,7 +870,7 @@
 - Stored experience change: +20
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=120/120
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=120/132
 
 ```json
 {
@@ -836,7 +901,7 @@
       },
       "result": "succeeded",
       "reason": "清障：清除廢墟 長亭村",
-      "createdAt": "2026-09-02T15:47:51.154Z"
+      "createdAt": "2026-09-02T16:10:20.992Z"
     }
   ],
   "creatureLogs": [],
@@ -844,809 +909,21 @@
 }
 ```
 
-### Turn 11 (round 4)
-- Player: 胡斐 (player-2), level 1, experience 26, at (12, 5), health 25.5, stamina 8.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +6
-- Spawned creatures: 1
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=120/132, creature-nest-3=120/120
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-3-roamer-creature-1-31",
-      "round": 3,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.159Z"
-    },
-    {
-      "id": "action-3-roamer-creature-2-32",
-      "round": 3,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.159Z"
-    },
-    {
-      "id": "action-3-roamer-creature-3-33",
-      "round": 3,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.159Z"
-    },
-    {
-      "id": "action-3-roamer-creature-4-34",
-      "round": 3,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.159Z"
-    },
-    {
-      "id": "action-3-roamer-creature-5-35",
-      "round": 3,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.159Z"
-    },
-    {
-      "id": "action-3-roamer-creature-6-36",
-      "round": 3,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.159Z"
-    },
-    {
-      "id": "action-3-roamer-creature-7-37",
-      "round": 3,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.159Z"
-    },
-    {
-      "id": "action-3-roamer-creature-8-38",
-      "round": 3,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.159Z"
-    },
-    {
-      "id": "action-3-roamer-creature-9-39",
-      "round": 3,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.159Z"
-    },
-    {
-      "id": "action-3-roamer-creature-10-40",
-      "round": 3,
-      "actor": {
-        "id": "roamer-creature-10",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-10",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.159Z"
-    },
-    {
-      "id": "action-4-player-2-41",
-      "round": 4,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：practiceSkill 分數 0.12，但目前沒有可執行 action，結束回合。候選診斷：practiceSkill=0.12:practice-skill, selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：practiceSkill 分數 0.12，但目前沒有可執行 action，結束回合。候選診斷：practiceSkill=0.12:practice-skill, selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.160Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": [
-    {
-      "id": "nest-creature-1",
-      "name": "生物巢穴 2的怪物 Lv.1",
-      "innerSkillId": "yellow-earth-inner",
-      "externalSkillIds": [],
-      "equippedExternalSkillIds": [],
-      "position": {
-        "row": 3,
-        "column": 3
-      },
-      "attributes": {
-        "armStrength": 5,
-        "constitution": 7,
-        "agility": 6,
-        "innerEnergy": 5,
-        "insight": 5
-      },
-      "prestige": 0,
-      "money": 0,
-      "experience": 0,
-      "turnEnded": false,
-      "level": 1,
-      "behaviorType": "scavenger",
-      "schoolId": "yellow-earth",
-      "homePosition": {
-        "row": 4,
-        "column": 3
-      },
-      "homeNestId": "creature-nest-2",
-      "spawnedRound": 4,
-      "baseAttributes": {
-        "armStrength": 5,
-        "constitution": 5,
-        "agility": 5,
-        "innerEnergy": 5,
-        "insight": 5
-      },
-      "health": 21,
-      "maxHealth": 21,
-      "stamina": 5.5,
-      "maxStamina": 5.5,
-      "innerPower": 15,
-      "maxInnerPower": 15,
-      "availableAttributePoints": 0,
-      "governanceRank": 1,
-      "unlockedPolicyIds": [
-        "basic"
-      ],
-      "inventory": [],
-      "unlockedEquipmentDropIds": [],
-      "equipmentInventory": [],
-      "equipmentLoadout": {
-        "weaponInstanceId": null,
-        "armorInstanceId": null,
-        "accessoryInstanceId": null
-      },
-      "innerSkillIds": [
-        "tuna-gong"
-      ],
-      "skillProgression": {},
-      "buffs": []
-    }
-  ]
-}
-```
-
-### Turn 12 (round 4)
-- Player: 胡斐 (player-2), level 1, experience 26, at (12, 5), health 25.5, stamina 5.5
+### Turn 11 (round 3)
+- Player: 胡斐 (player-2), level 1, experience 20, at (13, 5), health 24, stamina 1
 - Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=120/132, creature-nest-3=120/120
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=120/132
 
 ```json
 {
   "actions": [
     {
-      "id": "action-4-player-2-42",
-      "round": 4,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "practice-skill",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "gateId": "sect-gate-4",
-        "skillId": "blazing-sun-inner",
-        "reason": "練功：練習功法 烈陽戰體"
-      },
-      "result": "succeeded",
-      "reason": "練功：練習功法 烈陽戰體",
-      "createdAt": "2026-09-02T15:47:51.165Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 13 (round 4)
-- Player: 胡斐 (player-2), level 1, experience 26, at (12, 5), health 25.5, stamina 2.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=120/132, creature-nest-3=120/120
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-4-player-2-43",
-      "round": 4,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "practice-skill",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "gateId": "sect-gate-4",
-        "skillId": "blazing-sun-inner",
-        "reason": "練功：練習功法 烈陽戰體"
-      },
-      "result": "succeeded",
-      "reason": "練功：練習功法 烈陽戰體",
-      "createdAt": "2026-09-02T15:47:51.169Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 14 (round 5)
-- Player: 胡斐 (player-2), level 1, experience 31, at (12, 5), health 27, stamina 8.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +5
-- Spawned creatures: 1
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=121.32/132, creature-nest-3=120/132
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-4-roamer-creature-1-44",
-      "round": 4,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.173Z"
-    },
-    {
-      "id": "action-4-roamer-creature-2-45",
-      "round": 4,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.173Z"
-    },
-    {
-      "id": "action-4-roamer-creature-3-46",
-      "round": 4,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.174Z"
-    },
-    {
-      "id": "action-4-roamer-creature-4-47",
-      "round": 4,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.174Z"
-    },
-    {
-      "id": "action-4-roamer-creature-5-48",
-      "round": 4,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.174Z"
-    },
-    {
-      "id": "action-4-roamer-creature-6-49",
-      "round": 4,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.174Z"
-    },
-    {
-      "id": "action-4-roamer-creature-7-50",
-      "round": 4,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.174Z"
-    },
-    {
-      "id": "action-4-roamer-creature-8-51",
-      "round": 4,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.174Z"
-    },
-    {
-      "id": "action-4-roamer-creature-9-52",
-      "round": 4,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.174Z"
-    },
-    {
-      "id": "action-4-roamer-creature-10-53",
-      "round": 4,
-      "actor": {
-        "id": "roamer-creature-10",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-10",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.175Z"
-    },
-    {
-      "id": "action-4-nest-creature-1-54",
-      "round": 4,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.176Z"
-    },
-    {
-      "id": "action-5-player-2-55",
-      "round": 5,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.177Z"
-    }
-  ],
-  "creatureLogs": [
-    {
-      "creatureId": "creature-nest-3",
-      "creatureName": "生物巢穴 3",
-      "message": "生物巢穴 3 生成了 Lv.1 怪物。"
-    }
-  ],
-  "spawnedCreatures": [
-    {
-      "id": "nest-creature-2",
-      "name": "生物巢穴 3的怪物 Lv.1",
-      "innerSkillId": "void-spirit-inner",
-      "externalSkillIds": [],
-      "equippedExternalSkillIds": [],
-      "position": {
-        "row": 11,
-        "column": 7
-      },
-      "attributes": {
-        "armStrength": 6,
-        "constitution": 6,
-        "agility": 5,
-        "innerEnergy": 5,
-        "insight": 6
-      },
-      "prestige": 0,
-      "money": 0,
-      "experience": 0,
-      "turnEnded": false,
-      "level": 1,
-      "behaviorType": "scavenger",
-      "schoolId": "void-spirit",
-      "homePosition": {
-        "row": 11,
-        "column": 8
-      },
-      "homeNestId": "creature-nest-3",
-      "spawnedRound": 5,
-      "baseAttributes": {
-        "armStrength": 5,
-        "constitution": 5,
-        "agility": 5,
-        "innerEnergy": 5,
-        "insight": 5
-      },
-      "health": 18,
-      "maxHealth": 18,
-      "stamina": 5.5,
-      "maxStamina": 5.5,
-      "innerPower": 15,
-      "maxInnerPower": 15,
-      "availableAttributePoints": 0,
-      "governanceRank": 1,
-      "unlockedPolicyIds": [
-        "basic"
-      ],
-      "inventory": [],
-      "unlockedEquipmentDropIds": [],
-      "equipmentInventory": [],
-      "equipmentLoadout": {
-        "weaponInstanceId": null,
-        "armorInstanceId": null,
-        "accessoryInstanceId": null
-      },
-      "innerSkillIds": [
-        "tuna-gong"
-      ],
-      "skillProgression": {},
-      "buffs": []
-    }
-  ]
-}
-```
-
-### Turn 15 (round 5)
-- Player: 胡斐 (player-2), level 1, experience 31, at (12, 5), health 27, stamina 5.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=121.32/132, creature-nest-3=120/132
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-5-player-2-56",
-      "round": 5,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "practice-skill",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "gateId": "sect-gate-4",
-        "skillId": "blazing-sun-inner",
-        "reason": "練功：練習功法 烈陽戰體"
-      },
-      "result": "succeeded",
-      "reason": "練功：練習功法 烈陽戰體",
-      "createdAt": "2026-09-02T15:47:51.183Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 16 (round 5)
-- Player: 胡斐 (player-2), level 1, experience 31, at (12, 5), health 27, stamina 2.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=121.32/132, creature-nest-3=120/132
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-5-player-2-57",
-      "round": 5,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "practice-skill",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "gateId": "sect-gate-4",
-        "skillId": "blazing-sun-inner",
-        "reason": "練功：練習功法 烈陽戰體"
-      },
-      "result": "succeeded",
-      "reason": "練功：練習功法 烈陽戰體",
-      "createdAt": "2026-09-02T15:47:51.188Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 17 (round 5)
-- Player: 胡斐 (player-2), level 1, experience 31, at (13, 5), health 24, stamina 0.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=121.32/132, creature-nest-3=120/132
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-5-player-2-58",
-      "round": 5,
+      "id": "action-3-player-2-31",
+      "round": 3,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -1662,11 +939,11 @@
           "row": 13,
           "column": 5
         },
-        "reason": "保命：逃離 生物巢穴 3的怪物 Lv.1（hitsSurvivable=5.4）"
+        "reason": "保命：逃離 生物巢穴 3的怪物 Lv.1（hitsSurvivable=4.8）"
       },
       "result": "succeeded",
-      "reason": "保命：逃離 生物巢穴 3的怪物 Lv.1（hitsSurvivable=5.4）",
-      "createdAt": "2026-09-02T15:47:51.195Z"
+      "reason": "保命：逃離 生物巢穴 3的怪物 Lv.1（hitsSurvivable=4.8）",
+      "createdAt": "2026-09-02T16:10:20.998Z"
     }
   ],
   "creatureLogs": [],
@@ -1674,21 +951,21 @@
 }
 ```
 
-### Turn 18 (round 6)
-- Player: 胡斐 (player-2), level 1, experience 32, at (13, 5), health 25.5, stamina 8.5
+### Turn 12 (round 4)
+- Player: 胡斐 (player-2), level 1, experience 22, at (13, 5), health 25.5, stamina 8.5
 - Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +1
+- Stored experience change: +2
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=122.63999999999999/132, creature-nest-3=121.32/132
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=121.32/132
 
 ```json
 {
   "actions": [
     {
-      "id": "action-5-roamer-creature-1-59",
-      "round": 5,
+      "id": "action-3-roamer-creature-1-32",
+      "round": 3,
       "actor": {
         "id": "roamer-creature-1",
         "kind": "creature",
@@ -1704,11 +981,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.198Z"
+      "createdAt": "2026-09-02T16:10:21.002Z"
     },
     {
-      "id": "action-5-roamer-creature-2-60",
-      "round": 5,
+      "id": "action-3-roamer-creature-2-33",
+      "round": 3,
       "actor": {
         "id": "roamer-creature-2",
         "kind": "creature",
@@ -1724,11 +1001,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.198Z"
+      "createdAt": "2026-09-02T16:10:21.002Z"
     },
     {
-      "id": "action-5-roamer-creature-3-61",
-      "round": 5,
+      "id": "action-3-roamer-creature-3-34",
+      "round": 3,
       "actor": {
         "id": "roamer-creature-3",
         "kind": "creature",
@@ -1744,11 +1021,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.198Z"
+      "createdAt": "2026-09-02T16:10:21.002Z"
     },
     {
-      "id": "action-5-roamer-creature-4-62",
-      "round": 5,
+      "id": "action-3-roamer-creature-4-35",
+      "round": 3,
       "actor": {
         "id": "roamer-creature-4",
         "kind": "creature",
@@ -1764,11 +1041,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.198Z"
+      "createdAt": "2026-09-02T16:10:21.002Z"
     },
     {
-      "id": "action-5-roamer-creature-5-63",
-      "round": 5,
+      "id": "action-3-roamer-creature-5-36",
+      "round": 3,
       "actor": {
         "id": "roamer-creature-5",
         "kind": "creature",
@@ -1784,11 +1061,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.198Z"
+      "createdAt": "2026-09-02T16:10:21.002Z"
     },
     {
-      "id": "action-5-roamer-creature-6-64",
-      "round": 5,
+      "id": "action-3-roamer-creature-6-37",
+      "round": 3,
       "actor": {
         "id": "roamer-creature-6",
         "kind": "creature",
@@ -1804,11 +1081,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.198Z"
+      "createdAt": "2026-09-02T16:10:21.002Z"
     },
     {
-      "id": "action-5-roamer-creature-7-65",
-      "round": 5,
+      "id": "action-3-roamer-creature-7-38",
+      "round": 3,
       "actor": {
         "id": "roamer-creature-7",
         "kind": "creature",
@@ -1824,11 +1101,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.198Z"
+      "createdAt": "2026-09-02T16:10:21.002Z"
     },
     {
-      "id": "action-5-roamer-creature-8-66",
-      "round": 5,
+      "id": "action-3-roamer-creature-8-39",
+      "round": 3,
       "actor": {
         "id": "roamer-creature-8",
         "kind": "creature",
@@ -1844,11 +1121,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.198Z"
+      "createdAt": "2026-09-02T16:10:21.002Z"
     },
     {
-      "id": "action-5-roamer-creature-9-67",
-      "round": 5,
+      "id": "action-3-roamer-creature-9-40",
+      "round": 3,
       "actor": {
         "id": "roamer-creature-9",
         "kind": "creature",
@@ -1864,11 +1141,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.198Z"
+      "createdAt": "2026-09-02T16:10:21.002Z"
     },
     {
-      "id": "action-5-roamer-creature-10-68",
-      "round": 5,
+      "id": "action-3-roamer-creature-10-41",
+      "round": 3,
       "actor": {
         "id": "roamer-creature-10",
         "kind": "creature",
@@ -1884,40 +1161,20 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.199Z"
+      "createdAt": "2026-09-02T16:10:21.002Z"
     },
     {
-      "id": "action-5-nest-creature-1-69",
-      "round": 5,
+      "id": "action-3-nest-creature-1-42",
+      "round": 3,
       "actor": {
         "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.199Z"
-    },
-    {
-      "id": "action-5-nest-creature-2-70",
-      "round": 5,
-      "actor": {
-        "id": "nest-creature-2",
         "kind": "creature",
         "name": "生物巢穴 3的怪物 Lv.1"
       },
       "action": {
         "type": "move",
         "actor": {
-          "id": "nest-creature-2",
+          "id": "nest-creature-1",
           "kind": "creature"
         },
         "destination": {
@@ -1928,11 +1185,11 @@
       },
       "result": "succeeded",
       "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.199Z"
+      "createdAt": "2026-09-02T16:10:21.002Z"
     },
     {
-      "id": "action-6-player-2-71",
-      "round": 6,
+      "id": "action-4-player-2-43",
+      "round": 4,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -1948,29 +1205,35 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.200Z"
+      "createdAt": "2026-09-02T16:10:21.003Z"
     }
   ],
-  "creatureLogs": [],
+  "creatureLogs": [
+    {
+      "creatureId": "roamer-creature-10",
+      "creatureName": "游蕩妖物",
+      "message": "游蕩妖物 發現並摧毀了道具點。"
+    }
+  ],
   "spawnedCreatures": []
 }
 ```
 
-### Turn 19 (round 6)
-- Player: 胡斐 (player-2), level 1, experience 32, at (13, 4), health 24, stamina 6.5
+### Turn 13 (round 4)
+- Player: 胡斐 (player-2), level 1, experience 22, at (13, 4), health 24, stamina 6.5
 - Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=122.63999999999999/132, creature-nest-3=121.32/132
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=121.32/132
 
 ```json
 {
   "actions": [
     {
-      "id": "action-6-player-2-72",
-      "round": 6,
+      "id": "action-4-player-2-44",
+      "round": 4,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -1990,7 +1253,7 @@
       },
       "result": "succeeded",
       "reason": "練功：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.213Z"
+      "createdAt": "2026-09-02T16:10:21.018Z"
     }
   ],
   "creatureLogs": [],
@@ -1998,21 +1261,21 @@
 }
 ```
 
-### Turn 20 (round 6)
-- Player: 胡斐 (player-2), level 1, experience 32, at (13, 3), health 24, stamina 4.5
+### Turn 14 (round 4)
+- Player: 胡斐 (player-2), level 1, experience 22, at (13, 3), health 24, stamina 4.5
 - Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=122.63999999999999/132, creature-nest-3=121.32/132
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=121.32/132
 
 ```json
 {
   "actions": [
     {
-      "id": "action-6-player-2-73",
-      "round": 6,
+      "id": "action-4-player-2-45",
+      "round": 4,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -2032,7 +1295,7 @@
       },
       "result": "succeeded",
       "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.223Z"
+      "createdAt": "2026-09-02T16:10:21.033Z"
     }
   ],
   "creatureLogs": [],
@@ -2040,21 +1303,21 @@
 }
 ```
 
-### Turn 21 (round 6)
-- Player: 胡斐 (player-2), level 1, experience 32, at (12, 3), health 24, stamina 2.5
+### Turn 15 (round 4)
+- Player: 胡斐 (player-2), level 1, experience 22, at (12, 3), health 24, stamina 2.5
 - Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=122.63999999999999/132, creature-nest-3=121.32/132
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=121.32/132
 
 ```json
 {
   "actions": [
     {
-      "id": "action-6-player-2-74",
-      "round": 6,
+      "id": "action-4-player-2-46",
+      "round": 4,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -2074,7 +1337,7 @@
       },
       "result": "succeeded",
       "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.233Z"
+      "createdAt": "2026-09-02T16:10:21.043Z"
     }
   ],
   "creatureLogs": [],
@@ -2082,21 +1345,21 @@
 }
 ```
 
-### Turn 22 (round 6)
-- Player: 胡斐 (player-2), level 1, experience 32, at (12, 2), health 24, stamina 0.5
+### Turn 16 (round 4)
+- Player: 胡斐 (player-2), level 1, experience 22, at (12, 2), health 24, stamina 0.5
 - Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=122.63999999999999/132, creature-nest-3=121.32/132
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=121.32/132
 
 ```json
 {
   "actions": [
     {
-      "id": "action-6-player-2-75",
-      "round": 6,
+      "id": "action-4-player-2-47",
+      "round": 4,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -2112,11 +1375,11 @@
           "row": 12,
           "column": 2
         },
-        "reason": "探索：移動到未探索格 (6,13)"
+        "reason": "收集道具：移動到道具位置"
       },
       "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.239Z"
+      "reason": "收集道具：移動到道具位置",
+      "createdAt": "2026-09-02T16:10:21.055Z"
     }
   ],
   "creatureLogs": [],
@@ -2124,21 +1387,21 @@
 }
 ```
 
-### Turn 23 (round 6)
-- Player: 胡斐 (player-2), level 1, experience 32, at (12, 2), health 24, stamina 0.5
+### Turn 17 (round 4)
+- Player: 胡斐 (player-2), level 1, experience 22, at (12, 2), health 24, stamina 0.5
 - Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=122.63999999999999/132, creature-nest-3=121.32/132
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=121.32/132
 
 ```json
 {
   "actions": [
     {
-      "id": "action-6-player-2-76",
-      "round": 6,
+      "id": "action-4-player-2-48",
+      "round": 4,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -2162,7 +1425,709 @@
       },
       "result": "succeeded",
       "reason": "收集道具：拾取",
-      "createdAt": "2026-09-02T15:47:51.247Z"
+      "createdAt": "2026-09-02T16:10:21.059Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 18 (round 5)
+- Player: 胡斐 (player-2), level 1, experience 23, at (12, 2), health 25.5, stamina 8.5
+- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=122.63999999999999/132
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-4-roamer-creature-1-49",
+      "round": 4,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.062Z"
+    },
+    {
+      "id": "action-4-roamer-creature-2-50",
+      "round": 4,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.062Z"
+    },
+    {
+      "id": "action-4-roamer-creature-3-51",
+      "round": 4,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.062Z"
+    },
+    {
+      "id": "action-4-roamer-creature-4-52",
+      "round": 4,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.062Z"
+    },
+    {
+      "id": "action-4-roamer-creature-5-53",
+      "round": 4,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.062Z"
+    },
+    {
+      "id": "action-4-roamer-creature-6-54",
+      "round": 4,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.062Z"
+    },
+    {
+      "id": "action-4-roamer-creature-7-55",
+      "round": 4,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.062Z"
+    },
+    {
+      "id": "action-4-roamer-creature-8-56",
+      "round": 4,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.062Z"
+    },
+    {
+      "id": "action-4-roamer-creature-9-57",
+      "round": 4,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.062Z"
+    },
+    {
+      "id": "action-4-roamer-creature-10-58",
+      "round": 4,
+      "actor": {
+        "id": "roamer-creature-10",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-10",
+          "kind": "creature"
+        },
+        "reason": "未能接近目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.063Z"
+    },
+    {
+      "id": "action-4-nest-creature-1-59",
+      "round": 4,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.1"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.063Z"
+    },
+    {
+      "id": "action-5-player-2-60",
+      "round": 5,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.063Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 19 (round 5)
+- Player: 胡斐 (player-2), level 1, experience 26, at (12, 2), health 25.5, stamina 3.5
+- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=122.63999999999999/132
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-5-player-2-61",
+      "round": 5,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "roamer-creature-10",
+          "kind": "creature",
+          "position": {
+            "row": 12,
+            "column": 1
+          }
+        },
+        "reason": "交戰：攻擊 游蕩妖物"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 游蕩妖物",
+      "createdAt": "2026-09-02T16:10:21.074Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 20 (round 5)
+- Player: 胡斐 (player-2), level 1, experience 26, at (12, 3), health 24, stamina 1.5
+- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=122.63999999999999/132
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-5-player-2-62",
+      "round": 5,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 12,
+          "column": 3
+        },
+        "reason": "探索：移動到未探索格 (6,13)"
+      },
+      "result": "succeeded",
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.082Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 21 (round 6)
+- Player: 胡斐 (player-2), level 1, experience 29, at (12, 3), health 25.5, stamina 8.5
+- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=123.95999999999998/132
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-5-roamer-creature-1-63",
+      "round": 5,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.086Z"
+    },
+    {
+      "id": "action-5-roamer-creature-2-64",
+      "round": 5,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.086Z"
+    },
+    {
+      "id": "action-5-roamer-creature-3-65",
+      "round": 5,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.086Z"
+    },
+    {
+      "id": "action-5-roamer-creature-4-66",
+      "round": 5,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.086Z"
+    },
+    {
+      "id": "action-5-roamer-creature-5-67",
+      "round": 5,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.086Z"
+    },
+    {
+      "id": "action-5-roamer-creature-6-68",
+      "round": 5,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.086Z"
+    },
+    {
+      "id": "action-5-roamer-creature-7-69",
+      "round": 5,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.086Z"
+    },
+    {
+      "id": "action-5-roamer-creature-8-70",
+      "round": 5,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.086Z"
+    },
+    {
+      "id": "action-5-roamer-creature-9-71",
+      "round": 5,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.086Z"
+    },
+    {
+      "id": "action-5-roamer-creature-10-72",
+      "round": 5,
+      "actor": {
+        "id": "roamer-creature-10",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-10",
+          "kind": "creature"
+        },
+        "reason": "未能接近目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.086Z"
+    },
+    {
+      "id": "action-5-nest-creature-1-73",
+      "round": 5,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 12,
+          "column": 5
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.087Z"
+    },
+    {
+      "id": "action-6-player-2-74",
+      "round": 6,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.087Z"
+    }
+  ],
+  "creatureLogs": [
+    {
+      "creatureId": "roamer-creature-5",
+      "creatureName": "游蕩妖物",
+      "message": "游蕩妖物 發現並摧毀了道具點。"
+    }
+  ],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 22 (round 6)
+- Player: 胡斐 (player-2), level 1, experience 49, at (12, 3), health 25.5, stamina 3.5
+- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
+- Stored experience change: +20
+- Spawned creatures: 0
+- Defeated creatures: roamer-creature-10
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=123.95999999999998/132
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-6-player-2-75",
+      "round": 6,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "roamer-creature-10",
+          "kind": "creature",
+          "position": {
+            "row": 12,
+            "column": 2
+          }
+        },
+        "reason": "交戰：攻擊 游蕩妖物"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 游蕩妖物",
+      "createdAt": "2026-09-02T16:10:21.096Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 23 (round 6)
+- Player: 胡斐 (player-2), level 1, experience 49, at (13, 3), health 24, stamina 1.5
+- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=123.95999999999998/132
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-6-player-2-76",
+      "round": 6,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 13,
+          "column": 3
+        },
+        "reason": "探索：移動到未探索格 (6,13)"
+      },
+      "result": "succeeded",
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.102Z"
     }
   ],
   "creatureLogs": [],
@@ -2171,13 +2136,13 @@
 ```
 
 ### Turn 24 (round 7)
-- Player: 胡斐 (player-2), level 1, experience 33, at (12, 2), health 25.5, stamina 8.5
+- Player: 胡斐 (player-2), level 2, experience 2, at (13, 3), health 25.5, stamina 8.5
 - Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +1
-- Spawned creatures: 0
+- Stored experience change: -47 (level up; stored experience reset by game rules)
+- Spawned creatures: 1
 - Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=123.95999999999998/132, creature-nest-3=122.63999999999999/132
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=125.27999999999997/145
 
 ```json
 {
@@ -2200,7 +2165,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.250Z"
+      "createdAt": "2026-09-02T16:10:21.107Z"
     },
     {
       "id": "action-6-roamer-creature-2-78",
@@ -2220,7 +2185,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.250Z"
+      "createdAt": "2026-09-02T16:10:21.107Z"
     },
     {
       "id": "action-6-roamer-creature-3-79",
@@ -2240,7 +2205,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.250Z"
+      "createdAt": "2026-09-02T16:10:21.107Z"
     },
     {
       "id": "action-6-roamer-creature-4-80",
@@ -2260,7 +2225,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.250Z"
+      "createdAt": "2026-09-02T16:10:21.107Z"
     },
     {
       "id": "action-6-roamer-creature-5-81",
@@ -2280,7 +2245,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.250Z"
+      "createdAt": "2026-09-02T16:10:21.107Z"
     },
     {
       "id": "action-6-roamer-creature-6-82",
@@ -2300,7 +2265,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.250Z"
+      "createdAt": "2026-09-02T16:10:21.107Z"
     },
     {
       "id": "action-6-roamer-creature-7-83",
@@ -2320,7 +2285,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.250Z"
+      "createdAt": "2026-09-02T16:10:21.107Z"
     },
     {
       "id": "action-6-roamer-creature-8-84",
@@ -2340,7 +2305,7 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.250Z"
+      "createdAt": "2026-09-02T16:10:21.107Z"
     },
     {
       "id": "action-6-roamer-creature-9-85",
@@ -2360,35 +2325,15 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.250Z"
+      "createdAt": "2026-09-02T16:10:21.107Z"
     },
     {
-      "id": "action-6-roamer-creature-10-86",
-      "round": 6,
-      "actor": {
-        "id": "roamer-creature-10",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-10",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.251Z"
-    },
-    {
-      "id": "action-6-nest-creature-1-87",
+      "id": "action-6-nest-creature-1-86",
       "round": 6,
       "actor": {
         "id": "nest-creature-1",
         "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
+        "name": "生物巢穴 3的怪物 Lv.1"
       },
       "action": {
         "type": "hold",
@@ -2396,34 +2341,14 @@
           "id": "nest-creature-1",
           "kind": "creature"
         },
-        "reason": "沒有可執行的目標，原地待命。"
+        "reason": "未能接近目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.251Z"
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.107Z"
     },
     {
-      "id": "action-6-nest-creature-2-88",
-      "round": 6,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.251Z"
-    },
-    {
-      "id": "action-7-player-2-89",
+      "id": "action-7-player-2-87",
       "round": 7,
       "actor": {
         "id": "player-2",
@@ -2436,840 +2361,14 @@
           "id": "player-2",
           "kind": "player"
         },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
       },
       "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.251Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 25 (round 7)
-- Player: 胡斐 (player-2), level 1, experience 33, at (11, 2), health 24, stamina 3.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=123.95999999999998/132, creature-nest-3=122.63999999999999/132
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-7-player-2-90",
-      "round": 7,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 11,
-          "column": 2
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.260Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 26 (round 7)
-- Player: 胡斐 (player-2), level 1, experience 33, at (10, 2), health 24, stamina 1.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=123.95999999999998/132, creature-nest-3=122.63999999999999/132
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-7-player-2-91",
-      "round": 7,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 10,
-          "column": 2
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.267Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 27 (round 8)
-- Player: 胡斐 (player-2), level 1, experience 36, at (10, 2), health 25.5, stamina 8.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=125.27999999999997/132, creature-nest-3=123.95999999999998/132
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-7-roamer-creature-1-92",
-      "round": 7,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.269Z"
-    },
-    {
-      "id": "action-7-roamer-creature-2-93",
-      "round": 7,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.269Z"
-    },
-    {
-      "id": "action-7-roamer-creature-3-94",
-      "round": 7,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.269Z"
-    },
-    {
-      "id": "action-7-roamer-creature-4-95",
-      "round": 7,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.269Z"
-    },
-    {
-      "id": "action-7-roamer-creature-5-96",
-      "round": 7,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.269Z"
-    },
-    {
-      "id": "action-7-roamer-creature-6-97",
-      "round": 7,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.269Z"
-    },
-    {
-      "id": "action-7-roamer-creature-7-98",
-      "round": 7,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.269Z"
-    },
-    {
-      "id": "action-7-roamer-creature-8-99",
-      "round": 7,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.269Z"
-    },
-    {
-      "id": "action-7-roamer-creature-9-100",
-      "round": 7,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.270Z"
-    },
-    {
-      "id": "action-7-roamer-creature-10-101",
-      "round": 7,
-      "actor": {
-        "id": "roamer-creature-10",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-10",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.270Z"
-    },
-    {
-      "id": "action-7-nest-creature-1-102",
-      "round": 7,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.270Z"
-    },
-    {
-      "id": "action-7-nest-creature-2-103",
-      "round": 7,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.270Z"
-    },
-    {
-      "id": "action-8-player-2-104",
-      "round": 8,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.270Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 28 (round 8)
-- Player: 胡斐 (player-2), level 1, experience 36, at (9, 2), health 24, stamina 6.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=125.27999999999997/132, creature-nest-3=123.95999999999998/132
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-8-player-2-105",
-      "round": 8,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 9,
-          "column": 2
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.282Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 29 (round 8)
-- Player: 胡斐 (player-2), level 1, experience 36, at (9, 3), health 24, stamina 4.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=125.27999999999997/132, creature-nest-3=123.95999999999998/132
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-8-player-2-106",
-      "round": 8,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 9,
-          "column": 3
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.288Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 30 (round 8)
-- Player: 胡斐 (player-2), level 1, experience 36, at (9, 4), health 24, stamina 2.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=125.27999999999997/132, creature-nest-3=123.95999999999998/132
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-8-player-2-107",
-      "round": 8,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 9,
-          "column": 4
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.299Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 31 (round 8)
-- Player: 胡斐 (player-2), level 1, experience 36, at (9, 5), health 24, stamina 0.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/120, creature-nest-2=125.27999999999997/132, creature-nest-3=123.95999999999998/132
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-8-player-2-108",
-      "round": 8,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 9,
-          "column": 5
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.307Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 32 (round 9)
-- Player: 胡斐 (player-2), level 1, experience 37, at (9, 5), health 20.5, stamina 8.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +1
-- Spawned creatures: 2
-- Defeated creatures: none
-- Nests: creature-nest-1=120/132, creature-nest-2=126.59999999999997/132, creature-nest-3=125.27999999999997/145
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-8-roamer-creature-1-109",
-      "round": 8,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.311Z"
-    },
-    {
-      "id": "action-8-roamer-creature-2-110",
-      "round": 8,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.311Z"
-    },
-    {
-      "id": "action-8-roamer-creature-3-111",
-      "round": 8,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.311Z"
-    },
-    {
-      "id": "action-8-roamer-creature-4-112",
-      "round": 8,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.311Z"
-    },
-    {
-      "id": "action-8-roamer-creature-5-113",
-      "round": 8,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.311Z"
-    },
-    {
-      "id": "action-8-roamer-creature-6-114",
-      "round": 8,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.311Z"
-    },
-    {
-      "id": "action-8-roamer-creature-7-115",
-      "round": 8,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.311Z"
-    },
-    {
-      "id": "action-8-roamer-creature-8-116",
-      "round": 8,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.311Z"
-    },
-    {
-      "id": "action-8-roamer-creature-9-117",
-      "round": 8,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.311Z"
-    },
-    {
-      "id": "action-8-roamer-creature-10-118",
-      "round": 8,
-      "actor": {
-        "id": "roamer-creature-10",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "roamer-creature-10",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 9,
-            "column": 5
-          }
-        },
-        "reason": "與 胡斐 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:51.312Z"
-    },
-    {
-      "id": "action-8-nest-creature-1-119",
-      "round": 8,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.313Z"
-    },
-    {
-      "id": "action-8-nest-creature-2-120",
-      "round": 8,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.313Z"
-    },
-    {
-      "id": "action-9-player-2-121",
-      "round": 9,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.314Z"
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.108Z"
     }
   ],
   "creatureLogs": [
-    {
-      "creatureId": "roamer-creature-10",
-      "creatureName": "游蕩妖物",
-      "message": "游蕩妖物 攻擊 胡斐，造成 5 點傷害。"
-    },
-    {
-      "creatureId": "creature-nest-1",
-      "creatureName": "生物巢穴 1",
-      "message": "生物巢穴 1 生成了 Lv.1 怪物。"
-    },
     {
       "creatureId": "creature-nest-3",
       "creatureName": "生物巢穴 3",
@@ -3278,76 +2377,14 @@
   ],
   "spawnedCreatures": [
     {
-      "id": "nest-creature-3",
-      "name": "生物巢穴 1的怪物 Lv.1",
-      "innerSkillId": "void-spirit-inner",
-      "externalSkillIds": [],
-      "equippedExternalSkillIds": [],
-      "position": {
-        "row": 12,
-        "column": 2
-      },
-      "attributes": {
-        "armStrength": 6,
-        "constitution": 6,
-        "agility": 5,
-        "innerEnergy": 5,
-        "insight": 6
-      },
-      "prestige": 0,
-      "money": 0,
-      "experience": 0,
-      "turnEnded": false,
-      "level": 1,
-      "behaviorType": "sieger",
-      "schoolId": "void-spirit",
-      "homePosition": {
-        "row": 13,
-        "column": 2
-      },
-      "homeNestId": "creature-nest-1",
-      "spawnedRound": 9,
-      "baseAttributes": {
-        "armStrength": 5,
-        "constitution": 5,
-        "agility": 5,
-        "innerEnergy": 5,
-        "insight": 5
-      },
-      "health": 18,
-      "maxHealth": 18,
-      "stamina": 5.5,
-      "maxStamina": 5.5,
-      "innerPower": 15,
-      "maxInnerPower": 15,
-      "availableAttributePoints": 0,
-      "governanceRank": 1,
-      "unlockedPolicyIds": [
-        "basic"
-      ],
-      "inventory": [],
-      "unlockedEquipmentDropIds": [],
-      "equipmentInventory": [],
-      "equipmentLoadout": {
-        "weaponInstanceId": null,
-        "armorInstanceId": null,
-        "accessoryInstanceId": null
-      },
-      "innerSkillIds": [
-        "tuna-gong"
-      ],
-      "skillProgression": {},
-      "buffs": []
-    },
-    {
-      "id": "nest-creature-4",
+      "id": "nest-creature-2",
       "name": "生物巢穴 3的怪物 Lv.2",
       "innerSkillId": "void-spirit-inner",
       "externalSkillIds": [],
       "equippedExternalSkillIds": [],
       "position": {
-        "row": 10,
-        "column": 8
+        "row": 11,
+        "column": 7
       },
       "attributes": {
         "armStrength": 6,
@@ -3368,7 +2405,7 @@
         "column": 8
       },
       "homeNestId": "creature-nest-3",
-      "spawnedRound": 9,
+      "spawnedRound": 7,
       "baseAttributes": {
         "armStrength": 5.6,
         "constitution": 5.6,
@@ -3405,477 +2442,21 @@
 }
 ```
 
-### Turn 33 (round 9)
-- Player: 胡斐 (player-2), level 1, experience 40, at (9, 5), health 20.5, stamina 3.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/132, creature-nest-2=126.59999999999997/132, creature-nest-3=125.27999999999997/145
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-9-player-2-122",
-      "round": 9,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "roamer-creature-10",
-          "kind": "creature",
-          "position": {
-            "row": 8,
-            "column": 5
-          }
-        },
-        "reason": "交戰：攻擊 游蕩妖物"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 游蕩妖物",
-      "createdAt": "2026-09-02T15:47:51.323Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 34 (round 9)
-- Player: 胡斐 (player-2), level 1, experience 40, at (9, 6), health 20.5, stamina 1.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=120/132, creature-nest-2=126.59999999999997/132, creature-nest-3=125.27999999999997/145
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-9-player-2-123",
-      "round": 9,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 9,
-          "column": 6
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.331Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 35 (round 10)
-- Player: 胡斐 (player-2), level 1, experience 43, at (9, 6), health 22, stamina 8.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=121.32/132, creature-nest-2=127.91999999999996/132, creature-nest-3=126.72999999999998/145
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-9-roamer-creature-1-124",
-      "round": 9,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.334Z"
-    },
-    {
-      "id": "action-9-roamer-creature-2-125",
-      "round": 9,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.334Z"
-    },
-    {
-      "id": "action-9-roamer-creature-3-126",
-      "round": 9,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.334Z"
-    },
-    {
-      "id": "action-9-roamer-creature-4-127",
-      "round": 9,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.334Z"
-    },
-    {
-      "id": "action-9-roamer-creature-5-128",
-      "round": 9,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.334Z"
-    },
-    {
-      "id": "action-9-roamer-creature-6-129",
-      "round": 9,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.334Z"
-    },
-    {
-      "id": "action-9-roamer-creature-7-130",
-      "round": 9,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.334Z"
-    },
-    {
-      "id": "action-9-roamer-creature-8-131",
-      "round": 9,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.334Z"
-    },
-    {
-      "id": "action-9-roamer-creature-9-132",
-      "round": 9,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.335Z"
-    },
-    {
-      "id": "action-9-roamer-creature-10-133",
-      "round": 9,
-      "actor": {
-        "id": "roamer-creature-10",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-10",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.335Z"
-    },
-    {
-      "id": "action-9-nest-creature-1-134",
-      "round": 9,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.335Z"
-    },
-    {
-      "id": "action-9-nest-creature-2-135",
-      "round": 9,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.335Z"
-    },
-    {
-      "id": "action-9-nest-creature-3-136",
-      "round": 9,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 11,
-          "column": 2
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.335Z"
-    },
-    {
-      "id": "action-9-nest-creature-4-137",
-      "round": 9,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.335Z"
-    },
-    {
-      "id": "action-10-player-2-138",
-      "round": 10,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.336Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 36 (round 10)
-- Player: 胡斐 (player-2), level 2, experience 13, at (9, 6), health 22, stamina 3.5
-- Attributes: armStrength=8, constitution=8, agility=8, innerEnergy=8, insight=13
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 9
-- Stored experience change: -30 (level up; stored experience reset by game rules)
-- Spawned creatures: 0
-- Defeated creatures: roamer-creature-10
-- Nests: creature-nest-1=121.32/132, creature-nest-2=127.91999999999996/132, creature-nest-3=126.72999999999998/145
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-10-player-2-139",
-      "round": 10,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "roamer-creature-10",
-          "kind": "creature",
-          "position": {
-            "row": 9,
-            "column": 5
-          }
-        },
-        "reason": "交戰：攻擊 游蕩妖物"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 游蕩妖物",
-      "createdAt": "2026-09-02T15:47:51.343Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 37 (round 10)
-- Player: 胡斐 (player-2), level 2, experience 13, at (9, 6), health 22, stamina 3.5
+### Turn 25 (round 7)
+- Player: 胡斐 (player-2), level 2, experience 2, at (13, 3), health 25.5, stamina 8.5
 - Attributes: armStrength=10, constitution=10, agility=8, innerEnergy=8, insight=8
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=121.32/132, creature-nest-2=127.91999999999996/132, creature-nest-3=126.72999999999998/145
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=125.27999999999997/145
 
 ```json
 {
   "actions": [
     {
-      "id": "action-10-player-2-140",
-      "round": 10,
+      "id": "action-7-player-2-88",
+      "round": 7,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -3892,7 +2473,7 @@
       },
       "result": "succeeded",
       "reason": "屬性分配：提升 armStrength",
-      "createdAt": "2026-09-02T15:47:51.348Z"
+      "createdAt": "2026-09-02T16:10:21.115Z"
     }
   ],
   "creatureLogs": [],
@@ -3900,21 +2481,21 @@
 }
 ```
 
-### Turn 38 (round 10)
-- Player: 胡斐 (player-2), level 2, experience 13, at (9, 6), health 22, stamina 3.5
+### Turn 26 (round 7)
+- Player: 胡斐 (player-2), level 2, experience 2, at (13, 3), health 25.5, stamina 8.5
 - Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=121.32/132, creature-nest-2=127.91999999999996/132, creature-nest-3=126.72999999999998/145
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=125.27999999999997/145
 
 ```json
 {
   "actions": [
     {
-      "id": "action-10-player-2-141",
-      "round": 10,
+      "id": "action-7-player-2-89",
+      "round": 7,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -3931,7 +2512,7 @@
       },
       "result": "succeeded",
       "reason": "屬性分配：提升 armStrength",
-      "createdAt": "2026-09-02T15:47:51.352Z"
+      "createdAt": "2026-09-02T16:10:21.123Z"
     }
   ],
   "creatureLogs": [],
@@ -3939,351 +2520,87 @@
 }
 ```
 
-### Turn 39 (round 10)
-- Player: 胡斐 (player-2), level 2, experience 13, at (10, 6), health 22, stamina 1.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=121.32/132, creature-nest-2=127.91999999999996/132, creature-nest-3=126.72999999999998/145
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-10-player-2-142",
-      "round": 10,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 10,
-          "column": 6
-        },
-        "reason": "練功：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "練功：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.357Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 40 (round 11)
-- Player: 胡斐 (player-2), level 2, experience 16, at (10, 6), health 23.5, stamina 9.5
+### Turn 27 (round 7)
+- Player: 胡斐 (player-2), level 2, experience 5, at (13, 3), health 25.5, stamina 3.5
 - Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
 - Stored experience change: +3
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=122.63999999999999/132, creature-nest-2=129.23999999999995/132, creature-nest-3=128.17999999999998/145
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=125.27999999999997/145
 
 ```json
 {
   "actions": [
     {
-      "id": "action-10-roamer-creature-1-143",
-      "round": 10,
+      "id": "action-7-player-2-90",
+      "round": 7,
       "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
       },
       "action": {
-        "type": "hold",
+        "type": "attack",
         "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
+          "id": "player-2",
+          "kind": "player"
         },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.360Z"
-    },
-    {
-      "id": "action-10-roamer-creature-2-144",
-      "round": 10,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.360Z"
-    },
-    {
-      "id": "action-10-roamer-creature-3-145",
-      "round": 10,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.360Z"
-    },
-    {
-      "id": "action-10-roamer-creature-4-146",
-      "round": 10,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.360Z"
-    },
-    {
-      "id": "action-10-roamer-creature-5-147",
-      "round": 10,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.360Z"
-    },
-    {
-      "id": "action-10-roamer-creature-6-148",
-      "round": 10,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.360Z"
-    },
-    {
-      "id": "action-10-roamer-creature-7-149",
-      "round": 10,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.360Z"
-    },
-    {
-      "id": "action-10-roamer-creature-8-150",
-      "round": 10,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.361Z"
-    },
-    {
-      "id": "action-10-roamer-creature-9-151",
-      "round": 10,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.361Z"
-    },
-    {
-      "id": "action-10-nest-creature-1-152",
-      "round": 10,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
+        "target": {
           "id": "nest-creature-1",
-          "kind": "creature"
+          "kind": "creature",
+          "position": {
+            "row": 13,
+            "column": 4
+          }
         },
-        "destination": {
-          "row": 7,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
+        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.1"
       },
       "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.361Z"
-    },
+      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.1",
+      "createdAt": "2026-09-02T16:10:21.131Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 28 (round 7)
+- Player: 胡斐 (player-2), level 2, experience 5, at (12, 3), health 25.5, stamina 1.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=120/120, creature-nest-2=120/120, creature-nest-3=125.27999999999997/145
+
+```json
+{
+  "actions": [
     {
-      "id": "action-10-nest-creature-2-153",
-      "round": 10,
+      "id": "action-7-player-2-91",
+      "round": 7,
       "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
       },
       "action": {
         "type": "move",
         "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
+          "id": "player-2",
+          "kind": "player"
         },
         "destination": {
           "row": 12,
-          "column": 7
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.361Z"
-    },
-    {
-      "id": "action-10-nest-creature-3-154",
-      "round": 10,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 10,
           "column": 3
         },
-        "reason": "移動接近 胡斐。"
+        "reason": "探索：移動到未探索格 (6,13)"
       },
       "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.361Z"
-    },
-    {
-      "id": "action-10-nest-creature-4-155",
-      "round": 10,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.361Z"
-    },
-    {
-      "id": "action-11-player-2-156",
-      "round": 11,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.361Z"
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.139Z"
     }
   ],
   "creatureLogs": [],
@@ -4291,151 +2608,21 @@
 }
 ```
 
-### Turn 41 (round 11)
-- Player: 胡斐 (player-2), level 2, experience 19, at (10, 6), health 23.5, stamina 4.5
+### Turn 29 (round 8)
+- Player: 胡斐 (player-2), level 2, experience 8, at (12, 3), health 27, stamina 9.5
 - Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
 - Stored experience change: +3
-- Spawned creatures: 0
+- Spawned creatures: 1
 - Defeated creatures: none
-- Nests: creature-nest-1=122.63999999999999/132, creature-nest-2=129.23999999999995/132, creature-nest-3=128.17999999999998/145
+- Nests: creature-nest-1=120/132, creature-nest-2=120/120, creature-nest-3=126.72999999999998/145
 
 ```json
 {
   "actions": [
     {
-      "id": "action-11-player-2-157",
-      "round": 11,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-4",
-          "kind": "creature",
-          "position": {
-            "row": 10,
-            "column": 7
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.2"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.2",
-      "createdAt": "2026-09-02T15:47:51.368Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 42 (round 11)
-- Player: 胡斐 (player-2), level 2, experience 19, at (9, 6), health 23.5, stamina 2.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=122.63999999999999/132, creature-nest-2=129.23999999999995/132, creature-nest-3=128.17999999999998/145
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-11-player-2-158",
-      "round": 11,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 9,
-          "column": 6
-        },
-        "reason": "定位：前往出口 (9,6)"
-      },
-      "result": "succeeded",
-      "reason": "定位：前往出口 (9,6)",
-      "createdAt": "2026-09-02T15:47:51.373Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 43 (round 11)
-- Player: 胡斐 (player-2), level 2, experience 19, at (9, 5), health 23.5, stamina 0.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=122.63999999999999/132, creature-nest-2=129.23999999999995/132, creature-nest-3=128.17999999999998/145
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-11-player-2-159",
-      "round": 11,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 9,
-          "column": 5
-        },
-        "reason": "保命：逃離 生物巢穴 2的怪物 Lv.1（hitsSurvivable=3.9166666666666665）"
-      },
-      "result": "succeeded",
-      "reason": "保命：逃離 生物巢穴 2的怪物 Lv.1（hitsSurvivable=3.9166666666666665）",
-      "createdAt": "2026-09-02T15:47:51.379Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 44 (round 12)
-- Player: 胡斐 (player-2), level 2, experience 20, at (9, 5), health 25, stamina 9.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +1
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=123.95999999999998/132, creature-nest-2=130.55999999999995/132, creature-nest-3=129.62999999999997/145
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-11-roamer-creature-1-160",
-      "round": 11,
+      "id": "action-7-roamer-creature-1-92",
+      "round": 7,
       "actor": {
         "id": "roamer-creature-1",
         "kind": "creature",
@@ -4451,11 +2638,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.383Z"
+      "createdAt": "2026-09-02T16:10:21.142Z"
     },
     {
-      "id": "action-11-roamer-creature-2-161",
-      "round": 11,
+      "id": "action-7-roamer-creature-2-93",
+      "round": 7,
       "actor": {
         "id": "roamer-creature-2",
         "kind": "creature",
@@ -4471,11 +2658,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.383Z"
+      "createdAt": "2026-09-02T16:10:21.142Z"
     },
     {
-      "id": "action-11-roamer-creature-3-162",
-      "round": 11,
+      "id": "action-7-roamer-creature-3-94",
+      "round": 7,
       "actor": {
         "id": "roamer-creature-3",
         "kind": "creature",
@@ -4491,11 +2678,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.383Z"
+      "createdAt": "2026-09-02T16:10:21.142Z"
     },
     {
-      "id": "action-11-roamer-creature-4-163",
-      "round": 11,
+      "id": "action-7-roamer-creature-4-95",
+      "round": 7,
       "actor": {
         "id": "roamer-creature-4",
         "kind": "creature",
@@ -4511,11 +2698,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.383Z"
+      "createdAt": "2026-09-02T16:10:21.142Z"
     },
     {
-      "id": "action-11-roamer-creature-5-164",
-      "round": 11,
+      "id": "action-7-roamer-creature-5-96",
+      "round": 7,
       "actor": {
         "id": "roamer-creature-5",
         "kind": "creature",
@@ -4531,11 +2718,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.383Z"
+      "createdAt": "2026-09-02T16:10:21.142Z"
     },
     {
-      "id": "action-11-roamer-creature-6-165",
-      "round": 11,
+      "id": "action-7-roamer-creature-6-97",
+      "round": 7,
       "actor": {
         "id": "roamer-creature-6",
         "kind": "creature",
@@ -4551,11 +2738,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.383Z"
+      "createdAt": "2026-09-02T16:10:21.142Z"
     },
     {
-      "id": "action-11-roamer-creature-7-166",
-      "round": 11,
+      "id": "action-7-roamer-creature-7-98",
+      "round": 7,
       "actor": {
         "id": "roamer-creature-7",
         "kind": "creature",
@@ -4571,11 +2758,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.383Z"
+      "createdAt": "2026-09-02T16:10:21.142Z"
     },
     {
-      "id": "action-11-roamer-creature-8-167",
-      "round": 11,
+      "id": "action-7-roamer-creature-8-99",
+      "round": 7,
       "actor": {
         "id": "roamer-creature-8",
         "kind": "creature",
@@ -4591,11 +2778,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.383Z"
+      "createdAt": "2026-09-02T16:10:21.142Z"
     },
     {
-      "id": "action-11-roamer-creature-9-168",
-      "round": 11,
+      "id": "action-7-roamer-creature-9-100",
+      "round": 7,
       "actor": {
         "id": "roamer-creature-9",
         "kind": "creature",
@@ -4611,15 +2798,15 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.383Z"
+      "createdAt": "2026-09-02T16:10:21.143Z"
     },
     {
-      "id": "action-11-nest-creature-1-169",
-      "round": 11,
+      "id": "action-7-nest-creature-1-101",
+      "round": 7,
       "actor": {
         "id": "nest-creature-1",
         "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
+        "name": "生物巢穴 3的怪物 Lv.1"
       },
       "action": {
         "type": "hold",
@@ -4631,15 +2818,15 @@
       },
       "result": "succeeded",
       "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.383Z"
+      "createdAt": "2026-09-02T16:10:21.143Z"
     },
     {
-      "id": "action-11-nest-creature-2-170",
-      "round": 11,
+      "id": "action-7-nest-creature-2-102",
+      "round": 7,
       "actor": {
         "id": "nest-creature-2",
         "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
+        "name": "生物巢穴 3的怪物 Lv.2"
       },
       "action": {
         "type": "move",
@@ -4649,501 +2836,17 @@
         },
         "destination": {
           "row": 12,
-          "column": 7
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.384Z"
-    },
-    {
-      "id": "action-11-nest-creature-3-171",
-      "round": 11,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.384Z"
-    },
-    {
-      "id": "action-11-nest-creature-4-172",
-      "round": 11,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 10,
-          "column": 7
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.384Z"
-    },
-    {
-      "id": "action-12-player-2-173",
-      "round": 12,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.384Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 45 (round 12)
-- Player: 胡斐 (player-2), level 2, experience 20, at (8, 5), health 25, stamina 7.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=123.95999999999998/132, creature-nest-2=130.55999999999995/132, creature-nest-3=129.62999999999997/145
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-12-player-2-174",
-      "round": 12,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 8,
-          "column": 5
-        },
-        "reason": "定位：前往出口 (8,5)"
-      },
-      "result": "succeeded",
-      "reason": "定位：前往出口 (8,5)",
-      "createdAt": "2026-09-02T15:47:51.392Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 46 (round 12)
-- Player: 胡斐 (player-2), level 2, experience 20, at (8, 4), health 25, stamina 5.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=123.95999999999998/132, creature-nest-2=130.55999999999995/132, creature-nest-3=129.62999999999997/145
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-12-player-2-175",
-      "round": 12,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 8,
-          "column": 4
-        },
-        "reason": "交戰：移動到 生物巢穴 1的怪物 Lv.1 附近"
-      },
-      "result": "succeeded",
-      "reason": "交戰：移動到 生物巢穴 1的怪物 Lv.1 附近",
-      "createdAt": "2026-09-02T15:47:51.399Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 47 (round 12)
-- Player: 胡斐 (player-2), level 2, experience 23, at (8, 4), health 25, stamina 0.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=123.95999999999998/132, creature-nest-2=130.55999999999995/132, creature-nest-3=129.62999999999997/145
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-12-player-2-176",
-      "round": 12,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-3",
-          "kind": "creature",
-          "position": {
-            "row": 9,
-            "column": 4
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.1"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.1",
-      "createdAt": "2026-09-02T15:47:51.405Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 48 (round 13)
-- Player: 胡斐 (player-2), level 2, experience 24, at (8, 4), health 21.5, stamina 9.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +1
-- Spawned creatures: 2
-- Defeated creatures: none
-- Nests: creature-nest-1=125.27999999999997/132, creature-nest-2=131.87999999999994/145, creature-nest-3=131.07999999999996/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-12-roamer-creature-1-177",
-      "round": 12,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.408Z"
-    },
-    {
-      "id": "action-12-roamer-creature-2-178",
-      "round": 12,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.408Z"
-    },
-    {
-      "id": "action-12-roamer-creature-3-179",
-      "round": 12,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.408Z"
-    },
-    {
-      "id": "action-12-roamer-creature-4-180",
-      "round": 12,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.408Z"
-    },
-    {
-      "id": "action-12-roamer-creature-5-181",
-      "round": 12,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.408Z"
-    },
-    {
-      "id": "action-12-roamer-creature-6-182",
-      "round": 12,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.408Z"
-    },
-    {
-      "id": "action-12-roamer-creature-7-183",
-      "round": 12,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.408Z"
-    },
-    {
-      "id": "action-12-roamer-creature-8-184",
-      "round": 12,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.408Z"
-    },
-    {
-      "id": "action-12-roamer-creature-9-185",
-      "round": 12,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.408Z"
-    },
-    {
-      "id": "action-12-nest-creature-1-186",
-      "round": 12,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.408Z"
-    },
-    {
-      "id": "action-12-nest-creature-2-187",
-      "round": 12,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.409Z"
-    },
-    {
-      "id": "action-12-nest-creature-3-188",
-      "round": 12,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.1"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 8,
-            "column": 4
-          }
-        },
-        "reason": "與 胡斐 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:51.409Z"
-    },
-    {
-      "id": "action-12-nest-creature-4-189",
-      "round": 12,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 9,
           "column": 6
         },
         "reason": "移動接近 胡斐。"
       },
       "result": "succeeded",
       "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.409Z"
+      "createdAt": "2026-09-02T16:10:21.143Z"
     },
     {
-      "id": "action-13-player-2-190",
-      "round": 13,
+      "id": "action-8-player-2-103",
+      "round": 8,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -5159,132 +2862,54 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.410Z"
+      "createdAt": "2026-09-02T16:10:21.143Z"
     }
   ],
-  "creatureLogs": [
-    {
-      "creatureId": "nest-creature-3",
-      "creatureName": "生物巢穴 1的怪物 Lv.1",
-      "message": "生物巢穴 1的怪物 Lv.1 攻擊 胡斐，造成 5 點傷害。"
-    },
-    {
-      "creatureId": "creature-nest-2",
-      "creatureName": "生物巢穴 2",
-      "message": "生物巢穴 2 生成了 Lv.2 怪物。"
-    },
-    {
-      "creatureId": "creature-nest-3",
-      "creatureName": "生物巢穴 3",
-      "message": "生物巢穴 3 生成了 Lv.3 怪物。"
-    }
-  ],
+  "creatureLogs": [],
   "spawnedCreatures": [
     {
-      "id": "nest-creature-5",
-      "name": "生物巢穴 2的怪物 Lv.2",
-      "innerSkillId": "yellow-earth-inner",
-      "externalSkillIds": [],
-      "equippedExternalSkillIds": [],
-      "position": {
-        "row": 3,
-        "column": 3
-      },
-      "attributes": {
-        "armStrength": 6,
-        "constitution": 9,
-        "agility": 6,
-        "innerEnergy": 6,
-        "insight": 5
-      },
-      "prestige": 0,
-      "money": 0,
-      "experience": 0,
-      "turnEnded": false,
-      "level": 2,
-      "behaviorType": "scavenger",
-      "schoolId": "yellow-earth",
-      "homePosition": {
-        "row": 4,
-        "column": 3
-      },
-      "homeNestId": "creature-nest-2",
-      "spawnedRound": 13,
-      "baseAttributes": {
-        "armStrength": 6.3,
-        "constitution": 7,
-        "agility": 5.6,
-        "innerEnergy": 6.3,
-        "insight": 5
-      },
-      "health": 27,
-      "maxHealth": 27,
-      "stamina": 6,
-      "maxStamina": 6,
-      "innerPower": 18,
-      "maxInnerPower": 18,
-      "availableAttributePoints": 0,
-      "governanceRank": 1,
-      "unlockedPolicyIds": [
-        "basic"
-      ],
-      "inventory": [],
-      "unlockedEquipmentDropIds": [],
-      "equipmentInventory": [],
-      "equipmentLoadout": {
-        "weaponInstanceId": null,
-        "armorInstanceId": null,
-        "accessoryInstanceId": null
-      },
-      "innerSkillIds": [
-        "tuna-gong"
-      ],
-      "skillProgression": {},
-      "buffs": []
-    },
-    {
-      "id": "nest-creature-6",
-      "name": "生物巢穴 3的怪物 Lv.3",
+      "id": "nest-creature-3",
+      "name": "生物巢穴 1的怪物 Lv.1",
       "innerSkillId": "void-spirit-inner",
       "externalSkillIds": [],
       "equippedExternalSkillIds": [],
       "position": {
-        "row": 10,
-        "column": 8
+        "row": 12,
+        "column": 2
       },
       "attributes": {
-        "armStrength": 8,
-        "constitution": 8,
-        "agility": 7,
-        "innerEnergy": 7,
-        "insight": 8
+        "armStrength": 6,
+        "constitution": 6,
+        "agility": 5,
+        "innerEnergy": 5,
+        "insight": 6
       },
       "prestige": 0,
       "money": 0,
       "experience": 0,
       "turnEnded": false,
-      "level": 3,
-      "behaviorType": "scavenger",
+      "level": 1,
+      "behaviorType": "sieger",
       "schoolId": "void-spirit",
       "homePosition": {
-        "row": 11,
-        "column": 8
+        "row": 13,
+        "column": 2
       },
-      "homeNestId": "creature-nest-3",
-      "spawnedRound": 13,
+      "homeNestId": "creature-nest-1",
+      "spawnedRound": 8,
       "baseAttributes": {
-        "armStrength": 7,
-        "constitution": 7,
-        "agility": 7,
-        "innerEnergy": 7,
-        "insight": 7
+        "armStrength": 5,
+        "constitution": 5,
+        "agility": 5,
+        "innerEnergy": 5,
+        "insight": 5
       },
-      "health": 24,
-      "maxHealth": 24,
-      "stamina": 7.5,
-      "maxStamina": 7.5,
-      "innerPower": 21,
-      "maxInnerPower": 21,
+      "health": 18,
+      "maxHealth": 18,
+      "stamina": 5.5,
+      "maxStamina": 5.5,
+      "innerPower": 15,
+      "maxInnerPower": 15,
       "availableAttributePoints": 0,
       "governanceRank": 1,
       "unlockedPolicyIds": [
@@ -5308,21 +2933,1228 @@
 }
 ```
 
-### Turn 49 (round 13)
-- Player: 胡斐 (player-2), level 2, experience 44, at (8, 4), health 21.5, stamina 4.5
+### Turn 30 (round 8)
+- Player: 胡斐 (player-2), level 2, experience 11, at (12, 3), health 27, stamina 4.5
 - Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
 - Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +20
+- Stored experience change: +3
 - Spawned creatures: 0
-- Defeated creatures: nest-creature-3
-- Nests: creature-nest-1=125.27999999999997/132, creature-nest-2=131.87999999999994/145, creature-nest-3=131.07999999999996/159
+- Defeated creatures: none
+- Nests: creature-nest-1=120/132, creature-nest-2=120/120, creature-nest-3=126.72999999999998/145
 
 ```json
 {
   "actions": [
     {
-      "id": "action-13-player-2-191",
-      "round": 13,
+      "id": "action-8-player-2-104",
+      "round": 8,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "nest-creature-1",
+          "kind": "creature",
+          "position": {
+            "row": 13,
+            "column": 3
+          }
+        },
+        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.1"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.1",
+      "createdAt": "2026-09-02T16:10:21.149Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 31 (round 8)
+- Player: 胡斐 (player-2), level 2, experience 11, at (12, 3), health 27, stamina 1.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=120/132, creature-nest-2=120/120, creature-nest-3=126.72999999999998/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-8-player-2-105",
+      "round": 8,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "practice-skill",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "gateId": "sect-gate-4",
+        "skillId": "blazing-sun-inner",
+        "reason": "練功：練習功法 烈陽戰體"
+      },
+      "result": "succeeded",
+      "reason": "練功：練習功法 烈陽戰體",
+      "createdAt": "2026-09-02T16:10:21.153Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 32 (round 9)
+- Player: 胡斐 (player-2), level 2, experience 14, at (12, 3), health 19.5, stamina 9.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=121.32/132, creature-nest-2=120/120, creature-nest-3=128.17999999999998/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-8-roamer-creature-1-106",
+      "round": 8,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.156Z"
+    },
+    {
+      "id": "action-8-roamer-creature-2-107",
+      "round": 8,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.156Z"
+    },
+    {
+      "id": "action-8-roamer-creature-3-108",
+      "round": 8,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.156Z"
+    },
+    {
+      "id": "action-8-roamer-creature-4-109",
+      "round": 8,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.156Z"
+    },
+    {
+      "id": "action-8-roamer-creature-5-110",
+      "round": 8,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.156Z"
+    },
+    {
+      "id": "action-8-roamer-creature-6-111",
+      "round": 8,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.156Z"
+    },
+    {
+      "id": "action-8-roamer-creature-7-112",
+      "round": 8,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.156Z"
+    },
+    {
+      "id": "action-8-roamer-creature-8-113",
+      "round": 8,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.156Z"
+    },
+    {
+      "id": "action-8-roamer-creature-9-114",
+      "round": 8,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.156Z"
+    },
+    {
+      "id": "action-8-nest-creature-1-115",
+      "round": 8,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.1"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 12,
+            "column": 3
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.157Z"
+    },
+    {
+      "id": "action-8-nest-creature-2-116",
+      "round": 8,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 12,
+          "column": 5
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.157Z"
+    },
+    {
+      "id": "action-8-nest-creature-3-117",
+      "round": 8,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.1"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 12,
+            "column": 3
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.157Z"
+    },
+    {
+      "id": "action-9-player-2-118",
+      "round": 9,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.67，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.67:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.67，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.67:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.158Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 33 (round 9)
+- Player: 胡斐 (player-2), level 2, experience 17, at (12, 3), health 19.5, stamina 4.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=121.32/132, creature-nest-2=120/120, creature-nest-3=128.17999999999998/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-9-player-2-119",
+      "round": 9,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "nest-creature-1",
+          "kind": "creature",
+          "position": {
+            "row": 13,
+            "column": 3
+          }
+        },
+        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.1"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.1",
+      "createdAt": "2026-09-02T16:10:21.164Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 34 (round 9)
+- Player: 胡斐 (player-2), level 2, experience 17, at (12, 3), health 19.5, stamina 1.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=121.32/132, creature-nest-2=120/120, creature-nest-3=128.17999999999998/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-9-player-2-120",
+      "round": 9,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "practice-skill",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "gateId": "sect-gate-4",
+        "skillId": "blazing-sun-inner",
+        "reason": "練功：練習功法 烈陽戰體"
+      },
+      "result": "succeeded",
+      "reason": "練功：練習功法 烈陽戰體",
+      "createdAt": "2026-09-02T16:10:21.167Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 35 (round 10)
+- Player: 胡斐 (player-2), level 2, experience 20, at (12, 3), health 11, stamina 9.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=122.63999999999999/132, creature-nest-2=120/120, creature-nest-3=129.62999999999997/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-9-roamer-creature-1-121",
+      "round": 9,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.170Z"
+    },
+    {
+      "id": "action-9-roamer-creature-2-122",
+      "round": 9,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.170Z"
+    },
+    {
+      "id": "action-9-roamer-creature-3-123",
+      "round": 9,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.170Z"
+    },
+    {
+      "id": "action-9-roamer-creature-4-124",
+      "round": 9,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.170Z"
+    },
+    {
+      "id": "action-9-roamer-creature-5-125",
+      "round": 9,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.170Z"
+    },
+    {
+      "id": "action-9-roamer-creature-6-126",
+      "round": 9,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.170Z"
+    },
+    {
+      "id": "action-9-roamer-creature-7-127",
+      "round": 9,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.170Z"
+    },
+    {
+      "id": "action-9-roamer-creature-8-128",
+      "round": 9,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.170Z"
+    },
+    {
+      "id": "action-9-roamer-creature-9-129",
+      "round": 9,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.170Z"
+    },
+    {
+      "id": "action-9-nest-creature-1-130",
+      "round": 9,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.1"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 12,
+            "column": 3
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.170Z"
+    },
+    {
+      "id": "action-9-nest-creature-2-131",
+      "round": 9,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 11,
+          "column": 5
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.171Z"
+    },
+    {
+      "id": "action-9-nest-creature-3-132",
+      "round": 9,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.1"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 12,
+            "column": 3
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.171Z"
+    },
+    {
+      "id": "action-10-player-2-133",
+      "round": 10,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.67，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.67:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.67，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.67:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.171Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 36 (round 10)
+- Player: 胡斐 (player-2), level 2, experience 40, at (12, 3), health 11, stamina 4.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +20
+- Spawned creatures: 0
+- Defeated creatures: nest-creature-1
+- Nests: creature-nest-1=122.63999999999999/132, creature-nest-2=120/120, creature-nest-3=129.62999999999997/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-10-player-2-134",
+      "round": 10,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "nest-creature-1",
+          "kind": "creature",
+          "position": {
+            "row": 13,
+            "column": 3
+          }
+        },
+        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.1"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.1",
+      "createdAt": "2026-09-02T16:10:21.178Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 37 (round 10)
+- Player: 胡斐 (player-2), level 2, experience 40, at (13, 3), health 11, stamina 2.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=122.63999999999999/132, creature-nest-2=120/120, creature-nest-3=129.62999999999997/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-10-player-2-135",
+      "round": 10,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 13,
+          "column": 3
+        },
+        "reason": "探索：移動到未探索格 (6,13)"
+      },
+      "result": "succeeded",
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.183Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 38 (round 10)
+- Player: 胡斐 (player-2), level 2, experience 40, at (12, 3), health 11, stamina 0.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=122.63999999999999/132, creature-nest-2=120/120, creature-nest-3=129.62999999999997/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-10-player-2-136",
+      "round": 10,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 12,
+          "column": 3
+        },
+        "reason": "探索：移動到未探索格 (6,13)"
+      },
+      "result": "succeeded",
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.190Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 39 (round 10)
+- Player: 胡斐 (player-2), level 2, experience 40, at (12, 3), health 30, stamina 0.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=122.63999999999999/132, creature-nest-2=120/120, creature-nest-3=129.62999999999997/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-10-player-2-137",
+      "round": 10,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-item",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "itemId": "heal-wound-medicine",
+        "reason": "使用道具：療傷藥"
+      },
+      "result": "succeeded",
+      "reason": "使用道具：療傷藥",
+      "createdAt": "2026-09-02T16:10:21.193Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 40 (round 11)
+- Player: 胡斐 (player-2), level 2, experience 41, at (12, 3), health 26.5, stamina 9.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=123.95999999999998/132, creature-nest-2=120/120, creature-nest-3=131.07999999999996/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-10-roamer-creature-1-138",
+      "round": 10,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.195Z"
+    },
+    {
+      "id": "action-10-roamer-creature-2-139",
+      "round": 10,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.196Z"
+    },
+    {
+      "id": "action-10-roamer-creature-3-140",
+      "round": 10,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.196Z"
+    },
+    {
+      "id": "action-10-roamer-creature-4-141",
+      "round": 10,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.196Z"
+    },
+    {
+      "id": "action-10-roamer-creature-5-142",
+      "round": 10,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.196Z"
+    },
+    {
+      "id": "action-10-roamer-creature-6-143",
+      "round": 10,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.196Z"
+    },
+    {
+      "id": "action-10-roamer-creature-7-144",
+      "round": 10,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.196Z"
+    },
+    {
+      "id": "action-10-roamer-creature-8-145",
+      "round": 10,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.196Z"
+    },
+    {
+      "id": "action-10-roamer-creature-9-146",
+      "round": 10,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.196Z"
+    },
+    {
+      "id": "action-10-nest-creature-2-147",
+      "round": 10,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 12,
+          "column": 5
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.196Z"
+    },
+    {
+      "id": "action-10-nest-creature-3-148",
+      "round": 10,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.1"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 12,
+            "column": 3
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.196Z"
+    },
+    {
+      "id": "action-11-player-2-149",
+      "round": 11,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.196Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 41 (round 11)
+- Player: 胡斐 (player-2), level 2, experience 44, at (12, 3), health 26.5, stamina 4.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=123.95999999999998/132, creature-nest-2=120/120, creature-nest-3=131.07999999999996/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-11-player-2-150",
+      "round": 11,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -5338,15 +4170,860 @@
           "id": "nest-creature-3",
           "kind": "creature",
           "position": {
-            "row": 9,
-            "column": 4
+            "row": 12,
+            "column": 2
           }
         },
         "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.1"
       },
       "result": "succeeded",
       "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.1",
-      "createdAt": "2026-09-02T15:47:51.416Z"
+      "createdAt": "2026-09-02T16:10:21.202Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 42 (round 11)
+- Player: 胡斐 (player-2), level 2, experience 44, at (13, 3), health 26.5, stamina 2.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=123.95999999999998/132, creature-nest-2=120/120, creature-nest-3=131.07999999999996/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-11-player-2-151",
+      "round": 11,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 13,
+          "column": 3
+        },
+        "reason": "探索：移動到未探索格 (6,13)"
+      },
+      "result": "succeeded",
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.209Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 43 (round 11)
+- Player: 胡斐 (player-2), level 2, experience 44, at (13, 4), health 26.5, stamina 0.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=123.95999999999998/132, creature-nest-2=120/120, creature-nest-3=131.07999999999996/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-11-player-2-152",
+      "round": 11,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 13,
+          "column": 4
+        },
+        "reason": "探索：移動到未探索格 (6,13)"
+      },
+      "result": "succeeded",
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.216Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 44 (round 12)
+- Player: 胡斐 (player-2), level 2, experience 45, at (13, 4), health 28, stamina 9.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Stored experience change: +1
+- Spawned creatures: 1
+- Defeated creatures: none
+- Nests: creature-nest-1=125.27999999999997/132, creature-nest-2=120/132, creature-nest-3=132.52999999999994/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-11-roamer-creature-1-153",
+      "round": 11,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.221Z"
+    },
+    {
+      "id": "action-11-roamer-creature-2-154",
+      "round": 11,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.221Z"
+    },
+    {
+      "id": "action-11-roamer-creature-3-155",
+      "round": 11,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.221Z"
+    },
+    {
+      "id": "action-11-roamer-creature-4-156",
+      "round": 11,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.221Z"
+    },
+    {
+      "id": "action-11-roamer-creature-5-157",
+      "round": 11,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.221Z"
+    },
+    {
+      "id": "action-11-roamer-creature-6-158",
+      "round": 11,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.221Z"
+    },
+    {
+      "id": "action-11-roamer-creature-7-159",
+      "round": 11,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.221Z"
+    },
+    {
+      "id": "action-11-roamer-creature-8-160",
+      "round": 11,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.221Z"
+    },
+    {
+      "id": "action-11-roamer-creature-9-161",
+      "round": 11,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.221Z"
+    },
+    {
+      "id": "action-11-nest-creature-2-162",
+      "round": 11,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "未能接近目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.221Z"
+    },
+    {
+      "id": "action-11-nest-creature-3-163",
+      "round": 11,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.1"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "未能接近目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.221Z"
+    },
+    {
+      "id": "action-12-player-2-164",
+      "round": 12,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.222Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": [
+    {
+      "id": "nest-creature-1",
+      "name": "生物巢穴 2的怪物 Lv.1",
+      "innerSkillId": "yellow-earth-inner",
+      "externalSkillIds": [],
+      "equippedExternalSkillIds": [],
+      "position": {
+        "row": 3,
+        "column": 3
+      },
+      "attributes": {
+        "armStrength": 5,
+        "constitution": 7,
+        "agility": 6,
+        "innerEnergy": 5,
+        "insight": 5
+      },
+      "prestige": 0,
+      "money": 0,
+      "experience": 0,
+      "turnEnded": false,
+      "level": 1,
+      "behaviorType": "scavenger",
+      "schoolId": "yellow-earth",
+      "homePosition": {
+        "row": 4,
+        "column": 3
+      },
+      "homeNestId": "creature-nest-2",
+      "spawnedRound": 12,
+      "baseAttributes": {
+        "armStrength": 5,
+        "constitution": 5,
+        "agility": 5,
+        "innerEnergy": 5,
+        "insight": 5
+      },
+      "health": 21,
+      "maxHealth": 21,
+      "stamina": 5.5,
+      "maxStamina": 5.5,
+      "innerPower": 15,
+      "maxInnerPower": 15,
+      "availableAttributePoints": 0,
+      "governanceRank": 1,
+      "unlockedPolicyIds": [
+        "basic"
+      ],
+      "inventory": [],
+      "unlockedEquipmentDropIds": [],
+      "equipmentInventory": [],
+      "equipmentLoadout": {
+        "weaponInstanceId": null,
+        "armorInstanceId": null,
+        "accessoryInstanceId": null
+      },
+      "innerSkillIds": [
+        "tuna-gong"
+      ],
+      "skillProgression": {},
+      "buffs": []
+    }
+  ]
+}
+```
+
+### Turn 45 (round 12)
+- Player: 胡斐 (player-2), level 2, experience 65, at (13, 4), health 28, stamina 4.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +20
+- Spawned creatures: 0
+- Defeated creatures: nest-creature-3
+- Nests: creature-nest-1=125.27999999999997/132, creature-nest-2=120/132, creature-nest-3=132.52999999999994/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-12-player-2-165",
+      "round": 12,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "nest-creature-3",
+          "kind": "creature",
+          "position": {
+            "row": 13,
+            "column": 3
+          }
+        },
+        "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.1"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.1",
+      "createdAt": "2026-09-02T16:10:21.225Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 46 (round 12)
+- Player: 胡斐 (player-2), level 2, experience 65, at (13, 3), health 28, stamina 2.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=125.27999999999997/132, creature-nest-2=120/132, creature-nest-3=132.52999999999994/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-12-player-2-166",
+      "round": 12,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 13,
+          "column": 3
+        },
+        "reason": "探索：移動到未探索格 (6,13)"
+      },
+      "result": "succeeded",
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.231Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 47 (round 12)
+- Player: 胡斐 (player-2), level 2, experience 65, at (12, 3), health 28, stamina 0.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=125.27999999999997/132, creature-nest-2=120/132, creature-nest-3=132.52999999999994/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-12-player-2-167",
+      "round": 12,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 12,
+          "column": 3
+        },
+        "reason": "探索：移動到未探索格 (6,13)"
+      },
+      "result": "succeeded",
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.240Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 48 (round 13)
+- Player: 胡斐 (player-2), level 2, experience 66, at (12, 3), health 29.5, stamina 9.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=126.59999999999997/132, creature-nest-2=121.32/132, creature-nest-3=133.97999999999993/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-12-roamer-creature-1-168",
+      "round": 12,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.243Z"
+    },
+    {
+      "id": "action-12-roamer-creature-2-169",
+      "round": 12,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.243Z"
+    },
+    {
+      "id": "action-12-roamer-creature-3-170",
+      "round": 12,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.243Z"
+    },
+    {
+      "id": "action-12-roamer-creature-4-171",
+      "round": 12,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.243Z"
+    },
+    {
+      "id": "action-12-roamer-creature-5-172",
+      "round": 12,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.243Z"
+    },
+    {
+      "id": "action-12-roamer-creature-6-173",
+      "round": 12,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.243Z"
+    },
+    {
+      "id": "action-12-roamer-creature-7-174",
+      "round": 12,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.243Z"
+    },
+    {
+      "id": "action-12-roamer-creature-8-175",
+      "round": 12,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.243Z"
+    },
+    {
+      "id": "action-12-roamer-creature-9-176",
+      "round": 12,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.243Z"
+    },
+    {
+      "id": "action-12-nest-creature-2-177",
+      "round": 12,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 12,
+          "column": 5
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.243Z"
+    },
+    {
+      "id": "action-12-nest-creature-1-178",
+      "round": 12,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.243Z"
+    },
+    {
+      "id": "action-13-player-2-179",
+      "round": 13,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.244Z"
+    }
+  ],
+  "creatureLogs": [
+    {
+      "creatureId": "roamer-creature-8",
+      "creatureName": "游蕩妖物",
+      "message": "游蕩妖物 發現並摧毀了道具點。"
+    }
+  ],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 49 (round 13)
+- Player: 胡斐 (player-2), level 2, experience 66, at (11, 3), health 29.5, stamina 4.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=126.59999999999997/132, creature-nest-2=121.32/132, creature-nest-3=133.97999999999993/145
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-13-player-2-180",
+      "round": 13,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 11,
+          "column": 3
+        },
+        "reason": "探索：移動到未探索格 (6,13)"
+      },
+      "result": "succeeded",
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.252Z"
     }
   ],
   "creatureLogs": [],
@@ -5355,19 +5032,19 @@
 ```
 
 ### Turn 50 (round 13)
-- Player: 胡斐 (player-2), level 2, experience 44, at (8, 3), health 21.5, stamina 2.5
+- Player: 胡斐 (player-2), level 2, experience 66, at (10, 3), health 29.5, stamina 2.5
 - Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=125.27999999999997/132, creature-nest-2=131.87999999999994/145, creature-nest-3=131.07999999999996/159
+- Nests: creature-nest-1=126.59999999999997/132, creature-nest-2=121.32/132, creature-nest-3=133.97999999999993/145
 
 ```json
 {
   "actions": [
     {
-      "id": "action-13-player-2-192",
+      "id": "action-13-player-2-181",
       "round": 13,
       "actor": {
         "id": "player-2",
@@ -5381,14 +5058,14 @@
           "kind": "player"
         },
         "destination": {
-          "row": 8,
+          "row": 10,
           "column": 3
         },
-        "reason": "收集道具：移動到道具位置"
+        "reason": "探索：移動到未探索格 (6,13)"
       },
       "result": "succeeded",
-      "reason": "收集道具：移動到道具位置",
-      "createdAt": "2026-09-02T15:47:51.423Z"
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.260Z"
     }
   ],
   "creatureLogs": [],
@@ -5397,65 +5074,19 @@
 ```
 
 ### Turn 51 (round 13)
-- Player: 胡斐 (player-2), level 2, experience 44, at (8, 3), health 21.5, stamina 2.5
+- Player: 胡斐 (player-2), level 2, experience 66, at (9, 3), health 29.5, stamina 0.5
 - Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=125.27999999999997/132, creature-nest-2=131.87999999999994/145, creature-nest-3=131.07999999999996/159
+- Nests: creature-nest-1=126.59999999999997/132, creature-nest-2=121.32/132, creature-nest-3=133.97999999999993/145
 
 ```json
 {
   "actions": [
     {
-      "id": "action-13-player-2-193",
-      "round": 13,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "collect",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "item-point-19",
-          "kind": "item",
-          "position": {
-            "row": 8,
-            "column": 3
-          }
-        },
-        "reason": "收集道具：拾取"
-      },
-      "result": "succeeded",
-      "reason": "收集道具：拾取",
-      "createdAt": "2026-09-02T15:47:51.429Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 52 (round 13)
-- Player: 胡斐 (player-2), level 2, experience 44, at (7, 3), health 21.5, stamina 0.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=125.27999999999997/132, creature-nest-2=131.87999999999994/145, creature-nest-3=131.07999999999996/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-13-player-2-194",
+      "id": "action-13-player-2-182",
       "round": 13,
       "actor": {
         "id": "player-2",
@@ -5469,14 +5100,14 @@
           "kind": "player"
         },
         "destination": {
-          "row": 7,
+          "row": 9,
           "column": 3
         },
         "reason": "探索：移動到未探索格 (6,13)"
       },
       "result": "succeeded",
       "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.436Z"
+      "createdAt": "2026-09-02T16:10:21.266Z"
     }
   ],
   "creatureLogs": [],
@@ -5484,20 +5115,20 @@
 }
 ```
 
-### Turn 53 (round 14)
-- Player: 胡斐 (player-2), level 2, experience 45, at (7, 3), health 23, stamina 9.5
+### Turn 52 (round 14)
+- Player: 胡斐 (player-2), level 2, experience 67, at (9, 3), health 26, stamina 9.5
 - Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
 - Stored experience change: +1
-- Spawned creatures: 1
+- Spawned creatures: 2
 - Defeated creatures: none
-- Nests: creature-nest-1=126.59999999999997/145, creature-nest-2=133.32999999999993/145, creature-nest-3=132.66999999999996/159
+- Nests: creature-nest-1=127.91999999999996/145, creature-nest-2=122.63999999999999/132, creature-nest-3=135.42999999999992/159
 
 ```json
 {
   "actions": [
     {
-      "id": "action-13-roamer-creature-1-195",
+      "id": "action-13-roamer-creature-1-183",
       "round": 13,
       "actor": {
         "id": "roamer-creature-1",
@@ -5514,10 +5145,10 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.438Z"
+      "createdAt": "2026-09-02T16:10:21.269Z"
     },
     {
-      "id": "action-13-roamer-creature-2-196",
+      "id": "action-13-roamer-creature-2-184",
       "round": 13,
       "actor": {
         "id": "roamer-creature-2",
@@ -5530,14 +5161,14 @@
           "id": "roamer-creature-2",
           "kind": "creature"
         },
-        "reason": "未能接近目標，原地待命。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.438Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.269Z"
     },
     {
-      "id": "action-13-roamer-creature-3-197",
+      "id": "action-13-roamer-creature-3-185",
       "round": 13,
       "actor": {
         "id": "roamer-creature-3",
@@ -5554,10 +5185,10 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.438Z"
+      "createdAt": "2026-09-02T16:10:21.269Z"
     },
     {
-      "id": "action-13-roamer-creature-4-198",
+      "id": "action-13-roamer-creature-4-186",
       "round": 13,
       "actor": {
         "id": "roamer-creature-4",
@@ -5574,10 +5205,10 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.438Z"
+      "createdAt": "2026-09-02T16:10:21.269Z"
     },
     {
-      "id": "action-13-roamer-creature-5-199",
+      "id": "action-13-roamer-creature-5-187",
       "round": 13,
       "actor": {
         "id": "roamer-creature-5",
@@ -5594,10 +5225,10 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.438Z"
+      "createdAt": "2026-09-02T16:10:21.269Z"
     },
     {
-      "id": "action-13-roamer-creature-6-200",
+      "id": "action-13-roamer-creature-6-188",
       "round": 13,
       "actor": {
         "id": "roamer-creature-6",
@@ -5614,10 +5245,10 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.438Z"
+      "createdAt": "2026-09-02T16:10:21.269Z"
     },
     {
-      "id": "action-13-roamer-creature-7-201",
+      "id": "action-13-roamer-creature-7-189",
       "round": 13,
       "actor": {
         "id": "roamer-creature-7",
@@ -5634,10 +5265,10 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.439Z"
+      "createdAt": "2026-09-02T16:10:21.270Z"
     },
     {
-      "id": "action-13-roamer-creature-8-202",
+      "id": "action-13-roamer-creature-8-190",
       "round": 13,
       "actor": {
         "id": "roamer-creature-8",
@@ -5645,19 +5276,27 @@
         "name": "游蕩妖物"
       },
       "action": {
-        "type": "hold",
+        "type": "attack",
         "actor": {
           "id": "roamer-creature-8",
           "kind": "creature"
         },
-        "reason": "沒有可執行的目標，原地待命。"
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 9,
+            "column": 3
+          }
+        },
+        "reason": "與 胡斐 交戰。"
       },
       "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.439Z"
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.270Z"
     },
     {
-      "id": "action-13-roamer-creature-9-203",
+      "id": "action-13-roamer-creature-9-191",
       "round": 13,
       "actor": {
         "id": "roamer-creature-9",
@@ -5674,10 +5313,34 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.439Z"
+      "createdAt": "2026-09-02T16:10:21.270Z"
     },
     {
-      "id": "action-13-nest-creature-1-204",
+      "id": "action-13-nest-creature-2-192",
+      "round": 13,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 11,
+          "column": 5
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.270Z"
+    },
+    {
+      "id": "action-13-nest-creature-1-193",
       "round": 13,
       "actor": {
         "id": "nest-creature-1",
@@ -5690,102 +5353,14 @@
           "id": "nest-creature-1",
           "kind": "creature"
         },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.439Z"
-    },
-    {
-      "id": "action-13-nest-creature-2-205",
-      "round": 13,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
         "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.439Z"
+      "createdAt": "2026-09-02T16:10:21.270Z"
     },
     {
-      "id": "action-13-nest-creature-4-206",
-      "round": 13,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 7,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.439Z"
-    },
-    {
-      "id": "action-13-nest-creature-5-207",
-      "round": 13,
-      "actor": {
-        "id": "nest-creature-5",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-5",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 3,
-          "column": 3
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.439Z"
-    },
-    {
-      "id": "action-13-nest-creature-6-208",
-      "round": 13,
-      "actor": {
-        "id": "nest-creature-6",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-6",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.439Z"
-    },
-    {
-      "id": "action-14-player-2-209",
+      "id": "action-14-player-2-194",
       "round": 14,
       "actor": {
         "id": "player-2",
@@ -5802,10 +5377,16 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.439Z"
+      "createdAt": "2026-09-02T16:10:21.270Z"
     }
   ],
-  "creatureLogs": [],
+  "creatureLogs": [
+    {
+      "creatureId": "creature-nest-3",
+      "creatureName": "生物巢穴 3",
+      "message": "生物巢穴 3 生成了 Lv.3 怪物。"
+    }
+  ],
   "spawnedCreatures": [
     {
       "id": "nest-creature-3",
@@ -5868,5074 +5449,16 @@
       ],
       "skillProgression": {},
       "buffs": []
-    }
-  ]
-}
-```
-
-### Turn 54 (round 14)
-- Player: 胡斐 (player-2), level 2, experience 45, at (6, 3), health 23, stamina 4.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=126.59999999999997/145, creature-nest-2=133.32999999999993/145, creature-nest-3=132.66999999999996/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-14-player-2-210",
-      "round": 14,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 6,
-          "column": 3
-        },
-        "reason": "定位：前往出口 (6,3)"
-      },
-      "result": "succeeded",
-      "reason": "定位：前往出口 (6,3)",
-      "createdAt": "2026-09-02T15:47:51.448Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 55 (round 14)
-- Player: 胡斐 (player-2), level 2, experience 45, at (6, 4), health 23, stamina 2.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=126.59999999999997/145, creature-nest-2=133.32999999999993/145, creature-nest-3=132.66999999999996/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-14-player-2-211",
-      "round": 14,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 6,
-          "column": 4
-        },
-        "reason": "保命：逃離 游蕩妖物（hitsSurvivable=2.875）"
-      },
-      "result": "succeeded",
-      "reason": "保命：逃離 游蕩妖物（hitsSurvivable=2.875）",
-      "createdAt": "2026-09-02T15:47:51.453Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 56 (round 15)
-- Player: 胡斐 (player-2), level 2, experience 50, at (6, 4), health 18.5, stamina 9.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +5
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=128.04999999999995/145, creature-nest-2=134.77999999999992/145, creature-nest-3=134.25999999999996/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-14-roamer-creature-1-212",
-      "round": 14,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
     },
-    {
-      "id": "action-14-roamer-creature-2-213",
-      "round": 14,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-roamer-creature-3-214",
-      "round": 14,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-roamer-creature-4-215",
-      "round": 14,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-roamer-creature-5-216",
-      "round": 14,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-roamer-creature-6-217",
-      "round": 14,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-roamer-creature-7-218",
-      "round": 14,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-roamer-creature-8-219",
-      "round": 14,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-roamer-creature-9-220",
-      "round": 14,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-nest-creature-1-221",
-      "round": 14,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 6,
-            "column": 4
-          }
-        },
-        "reason": "與 胡斐 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-nest-creature-2-222",
-      "round": 14,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-nest-creature-4-223",
-      "round": 14,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-nest-creature-5-224",
-      "round": 14,
-      "actor": {
-        "id": "nest-creature-5",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-5",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-nest-creature-6-225",
-      "round": 14,
-      "actor": {
-        "id": "nest-creature-6",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-6",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-14-nest-creature-3-226",
-      "round": 14,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.456Z"
-    },
-    {
-      "id": "action-15-player-2-227",
-      "round": 15,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.457Z"
-    }
-  ],
-  "creatureLogs": [
-    {
-      "creatureId": "nest-creature-1",
-      "creatureName": "生物巢穴 2的怪物 Lv.1",
-      "message": "生物巢穴 2的怪物 Lv.1 攻擊 胡斐，造成 6 點傷害。"
-    }
-  ],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 57 (round 15)
-- Player: 胡斐 (player-2), level 2, experience 70, at (6, 4), health 18.5, stamina 4.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +20
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=128.04999999999995/145, creature-nest-2=134.77999999999992/145, creature-nest-3=134.25999999999996/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-15-player-2-228",
-      "round": 15,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "collect",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "ruin-3",
-          "kind": "ruin",
-          "position": {
-            "row": 6,
-            "column": 5
-          }
-        },
-        "reason": "清障：清除廢墟 燈火村"
-      },
-      "result": "succeeded",
-      "reason": "清障：清除廢墟 燈火村",
-      "createdAt": "2026-09-02T15:47:51.463Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 58 (round 15)
-- Player: 胡斐 (player-2), level 2, experience 70, at (6, 5), health 18.5, stamina 2.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=128.04999999999995/145, creature-nest-2=134.77999999999992/145, creature-nest-3=134.25999999999996/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-15-player-2-229",
-      "round": 15,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 6,
-          "column": 5
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.472Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 59 (round 15)
-- Player: 胡斐 (player-2), level 2, experience 70, at (7, 5), health 18.5, stamina 0.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=128.04999999999995/145, creature-nest-2=134.77999999999992/145, creature-nest-3=134.25999999999996/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-15-player-2-230",
-      "round": 15,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 7,
-          "column": 5
-        },
-        "reason": "收集道具：移動到道具位置"
-      },
-      "result": "succeeded",
-      "reason": "收集道具：移動到道具位置",
-      "createdAt": "2026-09-02T15:47:51.479Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 60 (round 15)
-- Player: 胡斐 (player-2), level 2, experience 70, at (7, 5), health 18.5, stamina 0.5
-- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 10
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=128.04999999999995/145, creature-nest-2=134.77999999999992/145, creature-nest-3=134.25999999999996/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-15-player-2-231",
-      "round": 15,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "collect",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "item-point-6",
-          "kind": "item",
-          "position": {
-            "row": 7,
-            "column": 5
-          }
-        },
-        "reason": "收集道具：拾取"
-      },
-      "result": "succeeded",
-      "reason": "收集道具：拾取",
-      "createdAt": "2026-09-02T15:47:51.482Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 61 (round 15)
-- Player: 胡斐 (player-2), level 2, experience 70, at (7, 5), health 18.5, stamina 0.5
-- Attributes: armStrength=11, constitution=11, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 11
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=128.04999999999995/145, creature-nest-2=134.77999999999992/145, creature-nest-3=134.25999999999996/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-15-player-2-232",
-      "round": 15,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "equip",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "instanceId": "equipment-player-2-c37cbcfb-5abb-4b5b-835b-1e944e7c60b4",
-        "reason": "裝備：行者護衣（armor）"
-      },
-      "result": "succeeded",
-      "reason": "裝備：行者護衣（armor）",
-      "createdAt": "2026-09-02T15:47:51.487Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 62 (round 16)
-- Player: 胡斐 (player-2), level 2, experience 71, at (7, 5), health 14.15, stamina 10
-- Attributes: armStrength=11, constitution=11, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 1, damage 11
-- Stored experience change: +1
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=129.49999999999994/145, creature-nest-2=136.2299999999999/145, creature-nest-3=135.84999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-15-roamer-creature-1-233",
-      "round": 15,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-roamer-creature-2-234",
-      "round": 15,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-roamer-creature-3-235",
-      "round": 15,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-roamer-creature-4-236",
-      "round": 15,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-roamer-creature-5-237",
-      "round": 15,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-roamer-creature-6-238",
-      "round": 15,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-roamer-creature-7-239",
-      "round": 15,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-roamer-creature-8-240",
-      "round": 15,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-roamer-creature-9-241",
-      "round": 15,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-nest-creature-1-242",
-      "round": 15,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 7,
-            "column": 5
-          }
-        },
-        "reason": "與 胡斐 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-nest-creature-2-243",
-      "round": 15,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-nest-creature-4-244",
-      "round": 15,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-nest-creature-5-245",
-      "round": 15,
-      "actor": {
-        "id": "nest-creature-5",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-5",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-nest-creature-6-246",
-      "round": 15,
-      "actor": {
-        "id": "nest-creature-6",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-6",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 6,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-15-nest-creature-3-247",
-      "round": 15,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.490Z"
-    },
-    {
-      "id": "action-16-player-2-248",
-      "round": 16,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.491Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 63 (round 16)
-- Player: 胡斐 (player-2), level 3, experience 11, at (7, 5), health 14.15, stamina 5
-- Attributes: armStrength=11, constitution=11, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
-- Stored experience change: -60 (level up; stored experience reset by game rules)
-- Spawned creatures: 0
-- Defeated creatures: nest-creature-4
-- Nests: creature-nest-1=129.49999999999994/145, creature-nest-2=136.2299999999999/145, creature-nest-3=135.84999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-16-player-2-249",
-      "round": 16,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-4",
-          "kind": "creature",
-          "position": {
-            "row": 7,
-            "column": 6
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.2"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.2",
-      "createdAt": "2026-09-02T15:47:51.498Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 64 (round 16)
-- Player: 胡斐 (player-2), level 3, experience 11, at (7, 5), health 14.15, stamina 5
-- Attributes: armStrength=11, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=129.49999999999994/145, creature-nest-2=136.2299999999999/145, creature-nest-3=135.84999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-16-player-2-250",
-      "round": 16,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "allocate-attribute",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "attribute": "constitution",
-        "reason": "屬性分配：提升 constitution"
-      },
-      "result": "succeeded",
-      "reason": "屬性分配：提升 constitution",
-      "createdAt": "2026-09-02T15:47:51.504Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 65 (round 16)
-- Player: 胡斐 (player-2), level 3, experience 11, at (7, 5), health 14.15, stamina 5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=129.49999999999994/145, creature-nest-2=136.2299999999999/145, creature-nest-3=135.84999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-16-player-2-251",
-      "round": 16,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "allocate-attribute",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "attribute": "armStrength",
-        "reason": "屬性分配：提升 armStrength"
-      },
-      "result": "succeeded",
-      "reason": "屬性分配：提升 armStrength",
-      "createdAt": "2026-09-02T15:47:51.511Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 66 (round 16)
-- Player: 胡斐 (player-2), level 3, experience 14, at (7, 5), health 14.15, stamina 0
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=129.49999999999994/145, creature-nest-2=136.2299999999999/145, creature-nest-3=135.84999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-16-player-2-252",
-      "round": 16,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-1",
-          "kind": "creature",
-          "position": {
-            "row": 7,
-            "column": 4
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 2的怪物 Lv.1"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 2的怪物 Lv.1",
-      "createdAt": "2026-09-02T15:47:51.516Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 67 (round 17)
-- Player: 胡斐 (player-2), level 3, experience 14, at (7, 5), health 9.950000000000001, stamina 10.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 1
-- Defeated creatures: none
-- Nests: creature-nest-1=130.94999999999993/145, creature-nest-2=137.6799999999999/159, creature-nest-3=137.43999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-16-roamer-creature-1-253",
-      "round": 16,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.517Z"
-    },
-    {
-      "id": "action-16-roamer-creature-2-254",
-      "round": 16,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.517Z"
-    },
-    {
-      "id": "action-16-roamer-creature-3-255",
-      "round": 16,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.517Z"
-    },
-    {
-      "id": "action-16-roamer-creature-4-256",
-      "round": 16,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.517Z"
-    },
-    {
-      "id": "action-16-roamer-creature-5-257",
-      "round": 16,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.517Z"
-    },
-    {
-      "id": "action-16-roamer-creature-6-258",
-      "round": 16,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.517Z"
-    },
-    {
-      "id": "action-16-roamer-creature-7-259",
-      "round": 16,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.517Z"
-    },
-    {
-      "id": "action-16-roamer-creature-8-260",
-      "round": 16,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.517Z"
-    },
-    {
-      "id": "action-16-roamer-creature-9-261",
-      "round": 16,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.517Z"
-    },
-    {
-      "id": "action-16-nest-creature-1-262",
-      "round": 16,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 7,
-            "column": 5
-          }
-        },
-        "reason": "與 胡斐 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:51.517Z"
-    },
-    {
-      "id": "action-16-nest-creature-2-263",
-      "round": 16,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.517Z"
-    },
-    {
-      "id": "action-16-nest-creature-5-264",
-      "round": 16,
-      "actor": {
-        "id": "nest-creature-5",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.2"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-5",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 7,
-            "column": 5
-          }
-        },
-        "reason": "與 胡斐 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:51.517Z"
-    },
-    {
-      "id": "action-16-nest-creature-6-265",
-      "round": 16,
-      "actor": {
-        "id": "nest-creature-6",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-6",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.528Z"
-    },
-    {
-      "id": "action-16-nest-creature-3-266",
-      "round": 16,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 11,
-          "column": 3
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.528Z"
-    },
-    {
-      "id": "action-17-player-2-267",
-      "round": 17,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略迴圈結束（0 步）"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-02T15:47:51.528Z"
-    }
-  ],
-  "creatureLogs": [
-    {
-      "creatureId": "nest-creature-2",
-      "creatureName": "生物巢穴 3的怪物 Lv.1",
-      "message": "生物巢穴 3的怪物 Lv.1 發現並摧毀了道具點。"
-    },
-    {
-      "creatureId": "nest-creature-5",
-      "creatureName": "生物巢穴 2的怪物 Lv.2",
-      "message": "生物巢穴 2的怪物 Lv.2 攻擊 胡斐，被閃避。"
-    },
-    {
-      "creatureId": "creature-nest-2",
-      "creatureName": "生物巢穴 2",
-      "message": "生物巢穴 2 生成了 Lv.3 怪物。"
-    }
-  ],
-  "spawnedCreatures": [
     {
       "id": "nest-creature-4",
-      "name": "生物巢穴 2的怪物 Lv.3",
-      "innerSkillId": "yellow-earth-inner",
+      "name": "生物巢穴 3的怪物 Lv.3",
+      "innerSkillId": "void-spirit-inner",
       "externalSkillIds": [],
       "equippedExternalSkillIds": [],
-      "position": {
-        "row": 3,
-        "column": 3
-      },
-      "attributes": {
-        "armStrength": 8,
-        "constitution": 11,
-        "agility": 8,
-        "innerEnergy": 8,
-        "insight": 5
-      },
-      "prestige": 0,
-      "money": 0,
-      "experience": 0,
-      "turnEnded": false,
-      "level": 3,
-      "behaviorType": "scavenger",
-      "schoolId": "yellow-earth",
-      "homePosition": {
-        "row": 4,
-        "column": 3
-      },
-      "homeNestId": "creature-nest-2",
-      "spawnedRound": 17,
-      "baseAttributes": {
-        "armStrength": 8.399999999999999,
-        "constitution": 9.799999999999999,
-        "agility": 7,
-        "innerEnergy": 8.399999999999999,
-        "insight": 5.6
-      },
-      "health": 33,
-      "maxHealth": 33,
-      "stamina": 8,
-      "maxStamina": 8,
-      "innerPower": 24,
-      "maxInnerPower": 24,
-      "availableAttributePoints": 0,
-      "governanceRank": 1,
-      "unlockedPolicyIds": [
-        "basic"
-      ],
-      "inventory": [],
-      "unlockedEquipmentDropIds": [],
-      "equipmentInventory": [],
-      "equipmentLoadout": {
-        "weaponInstanceId": null,
-        "armorInstanceId": null,
-        "accessoryInstanceId": null
-      },
-      "innerSkillIds": [
-        "tuna-gong"
-      ],
-      "skillProgression": {},
-      "buffs": []
-    }
-  ]
-}
-```
-
-### Turn 68 (round 17)
-- Player: 胡斐 (player-2), level 3, experience 14, at (7, 6), health 9.950000000000001, stamina 8.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=130.94999999999993/145, creature-nest-2=137.6799999999999/159, creature-nest-3=137.43999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-17-player-2-268",
-      "round": 17,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 7,
-          "column": 6
-        },
-        "reason": "保命：逃離 生物巢穴 2的怪物 Lv.1（hitsSurvivable=1.2437500000000001）"
-      },
-      "result": "succeeded",
-      "reason": "保命：逃離 生物巢穴 2的怪物 Lv.1（hitsSurvivable=1.2437500000000001）",
-      "createdAt": "2026-09-02T15:47:51.536Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 69 (round 17)
-- Player: 胡斐 (player-2), level 3, experience 14, at (6, 6), health 9.950000000000001, stamina 6.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=130.94999999999993/145, creature-nest-2=137.6799999999999/159, creature-nest-3=137.43999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-17-player-2-269",
-      "round": 17,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 6,
-          "column": 6
-        },
-        "reason": "保命：逃離 生物巢穴 2的怪物 Lv.1（hitsSurvivable=1.2437500000000001）"
-      },
-      "result": "succeeded",
-      "reason": "保命：逃離 生物巢穴 2的怪物 Lv.1（hitsSurvivable=1.2437500000000001）",
-      "createdAt": "2026-09-02T15:47:51.544Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 70 (round 17)
-- Player: 胡斐 (player-2), level 3, experience 14, at (5, 6), health 9.950000000000001, stamina 4.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=130.94999999999993/145, creature-nest-2=137.6799999999999/159, creature-nest-3=137.43999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-17-player-2-270",
-      "round": 17,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 5,
-          "column": 6
-        },
-        "reason": "保命：逃離 生物巢穴 2的怪物 Lv.2（hitsSurvivable=1.2437500000000001）"
-      },
-      "result": "succeeded",
-      "reason": "保命：逃離 生物巢穴 2的怪物 Lv.2（hitsSurvivable=1.2437500000000001）",
-      "createdAt": "2026-09-02T15:47:51.549Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 71 (round 17)
-- Player: 胡斐 (player-2), level 3, experience 14, at (4, 6), health 9.950000000000001, stamina 2.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=130.94999999999993/145, creature-nest-2=137.6799999999999/159, creature-nest-3=137.43999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-17-player-2-271",
-      "round": 17,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 4,
-          "column": 6
-        },
-        "reason": "保命：逃離 游蕩妖物（hitsSurvivable=1.2437500000000001）"
-      },
-      "result": "succeeded",
-      "reason": "保命：逃離 游蕩妖物（hitsSurvivable=1.2437500000000001）",
-      "createdAt": "2026-09-02T15:47:51.554Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 72 (round 17)
-- Player: 胡斐 (player-2), level 3, experience 14, at (4, 7), health 9.950000000000001, stamina 0.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=130.94999999999993/145, creature-nest-2=137.6799999999999/159, creature-nest-3=137.43999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-17-player-2-272",
-      "round": 17,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 4,
-          "column": 7
-        },
-        "reason": "保命：逃離 游蕩妖物（hitsSurvivable=1.2437500000000001）"
-      },
-      "result": "succeeded",
-      "reason": "保命：逃離 游蕩妖物（hitsSurvivable=1.2437500000000001）",
-      "createdAt": "2026-09-02T15:47:51.559Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 73 (round 17)
-- Player: 胡斐 (player-2), level 3, experience 14, at (4, 7), health 29.950000000000003, stamina 0.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=130.94999999999993/145, creature-nest-2=137.6799999999999/159, creature-nest-3=137.43999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-17-player-2-273",
-      "round": 17,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "use-item",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "itemId": "heal-wound-medicine",
-        "reason": "使用道具：療傷藥"
-      },
-      "result": "succeeded",
-      "reason": "使用道具：療傷藥",
-      "createdAt": "2026-09-02T15:47:51.562Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 74 (round 18)
-- Player: 胡斐 (player-2), level 3, experience 15, at (4, 7), health 26.750000000000004, stamina 10.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +1
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=132.39999999999992/145, creature-nest-2=139.2699999999999/159, creature-nest-3=139.02999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-17-roamer-creature-1-274",
-      "round": 17,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.564Z"
-    },
-    {
-      "id": "action-17-roamer-creature-2-275",
-      "round": 17,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-roamer-creature-3-276",
-      "round": 17,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-roamer-creature-4-277",
-      "round": 17,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-roamer-creature-5-278",
-      "round": 17,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-roamer-creature-6-279",
-      "round": 17,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-roamer-creature-7-280",
-      "round": 17,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-roamer-creature-8-281",
-      "round": 17,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-roamer-creature-9-282",
-      "round": 17,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 4,
-            "column": 7
-          }
-        },
-        "reason": "與 胡斐 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-nest-creature-1-283",
-      "round": 17,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-nest-creature-2-284",
-      "round": 17,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-nest-creature-5-285",
-      "round": 17,
-      "actor": {
-        "id": "nest-creature-5",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-5",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-nest-creature-6-286",
-      "round": 17,
-      "actor": {
-        "id": "nest-creature-6",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-6",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 6,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-nest-creature-3-287",
-      "round": 17,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-17-nest-creature-4-288",
-      "round": 17,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 4,
-          "column": 4
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.565Z"
-    },
-    {
-      "id": "action-18-player-2-289",
-      "round": 18,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.566Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 75 (round 18)
-- Player: 胡斐 (player-2), level 3, experience 15, at (4, 6), health 26.750000000000004, stamina 8.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=132.39999999999992/145, creature-nest-2=139.2699999999999/159, creature-nest-3=139.02999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-18-player-2-290",
-      "round": 18,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 4,
-          "column": 6
-        },
-        "reason": "定位：前往出口 (4,6)"
-      },
-      "result": "succeeded",
-      "reason": "定位：前往出口 (4,6)",
-      "createdAt": "2026-09-02T15:47:51.572Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 76 (round 18)
-- Player: 胡斐 (player-2), level 3, experience 35, at (4, 6), health 26.750000000000004, stamina 3.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +20
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=132.39999999999992/145, creature-nest-2=139.2699999999999/159, creature-nest-3=139.02999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-18-player-2-291",
-      "round": 18,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "collect",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "ruin-15",
-          "kind": "ruin",
-          "position": {
-            "row": 4,
-            "column": 5
-          }
-        },
-        "reason": "清障：清除廢墟 稻香村"
-      },
-      "result": "succeeded",
-      "reason": "清障：清除廢墟 稻香村",
-      "createdAt": "2026-09-02T15:47:51.579Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 77 (round 18)
-- Player: 胡斐 (player-2), level 3, experience 35, at (4, 5), health 26.750000000000004, stamina 0.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=132.39999999999992/145, creature-nest-2=139.2699999999999/159, creature-nest-3=139.02999999999997/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-18-player-2-292",
-      "round": 18,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 4,
-          "column": 5
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.586Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 78 (round 19)
-- Player: 胡斐 (player-2), level 3, experience 36, at (4, 5), health 24.550000000000004, stamina 10.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +1
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=133.8499999999999/145, creature-nest-2=140.8599999999999/159, creature-nest-3=140.61999999999998/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-18-roamer-creature-1-293",
-      "round": 18,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.588Z"
-    },
-    {
-      "id": "action-18-roamer-creature-2-294",
-      "round": 18,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.588Z"
-    },
-    {
-      "id": "action-18-roamer-creature-3-295",
-      "round": 18,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.588Z"
-    },
-    {
-      "id": "action-18-roamer-creature-4-296",
-      "round": 18,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.588Z"
-    },
-    {
-      "id": "action-18-roamer-creature-5-297",
-      "round": 18,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.588Z"
-    },
-    {
-      "id": "action-18-roamer-creature-6-298",
-      "round": 18,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.588Z"
-    },
-    {
-      "id": "action-18-roamer-creature-7-299",
-      "round": 18,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.589Z"
-    },
-    {
-      "id": "action-18-roamer-creature-8-300",
-      "round": 18,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.589Z"
-    },
-    {
-      "id": "action-18-roamer-creature-9-301",
-      "round": 18,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.589Z"
-    },
-    {
-      "id": "action-18-nest-creature-1-302",
-      "round": 18,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 6,
-          "column": 5
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.589Z"
-    },
-    {
-      "id": "action-18-nest-creature-2-303",
-      "round": 18,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.589Z"
-    },
-    {
-      "id": "action-18-nest-creature-5-304",
-      "round": 18,
-      "actor": {
-        "id": "nest-creature-5",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-5",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.589Z"
-    },
-    {
-      "id": "action-18-nest-creature-6-305",
-      "round": 18,
-      "actor": {
-        "id": "nest-creature-6",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-6",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.589Z"
-    },
-    {
-      "id": "action-18-nest-creature-3-306",
-      "round": 18,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.589Z"
-    },
-    {
-      "id": "action-18-nest-creature-4-307",
-      "round": 18,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 4,
-            "column": 5
-          }
-        },
-        "reason": "與 胡斐 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:51.589Z"
-    },
-    {
-      "id": "action-19-player-2-308",
-      "round": 19,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.589Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 79 (round 19)
-- Player: 胡斐 (player-2), level 3, experience 36, at (3, 5), health 24.550000000000004, stamina 5.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=133.8499999999999/145, creature-nest-2=140.8599999999999/159, creature-nest-3=140.61999999999998/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-19-player-2-309",
-      "round": 19,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 3,
-          "column": 5
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.598Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 80 (round 19)
-- Player: 胡斐 (player-2), level 3, experience 36, at (3, 6), health 24.550000000000004, stamina 0.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=133.8499999999999/145, creature-nest-2=140.8599999999999/159, creature-nest-3=140.61999999999998/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-19-player-2-310",
-      "round": 19,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 3,
-          "column": 6
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.606Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 81 (round 20)
-- Player: 胡斐 (player-2), level 3, experience 37, at (3, 6), health 24.350000000000005, stamina 10.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +1
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=135.2999999999999/145, creature-nest-2=142.4499999999999/159, creature-nest-3=142.20999999999998/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-19-roamer-creature-1-311",
-      "round": 19,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.610Z"
-    },
-    {
-      "id": "action-19-roamer-creature-2-312",
-      "round": 19,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.610Z"
-    },
-    {
-      "id": "action-19-roamer-creature-3-313",
-      "round": 19,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.610Z"
-    },
-    {
-      "id": "action-19-roamer-creature-4-314",
-      "round": 19,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.610Z"
-    },
-    {
-      "id": "action-19-roamer-creature-5-315",
-      "round": 19,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.610Z"
-    },
-    {
-      "id": "action-19-roamer-creature-6-316",
-      "round": 19,
-      "actor": {
-        "id": "roamer-creature-6",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "roamer-creature-6",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 3,
-            "column": 6
-          }
-        },
-        "reason": "與 胡斐 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:51.611Z"
-    },
-    {
-      "id": "action-19-roamer-creature-7-317",
-      "round": 19,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.611Z"
-    },
-    {
-      "id": "action-19-roamer-creature-8-318",
-      "round": 19,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.611Z"
-    },
-    {
-      "id": "action-19-roamer-creature-9-319",
-      "round": 19,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.611Z"
-    },
-    {
-      "id": "action-19-nest-creature-1-320",
-      "round": 19,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 7,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.611Z"
-    },
-    {
-      "id": "action-19-nest-creature-2-321",
-      "round": 19,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.611Z"
-    },
-    {
-      "id": "action-19-nest-creature-5-322",
-      "round": 19,
-      "actor": {
-        "id": "nest-creature-5",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-5",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.611Z"
-    },
-    {
-      "id": "action-19-nest-creature-6-323",
-      "round": 19,
-      "actor": {
-        "id": "nest-creature-6",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-6",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 6,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.611Z"
-    },
-    {
-      "id": "action-19-nest-creature-3-324",
-      "round": 19,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.611Z"
-    },
-    {
-      "id": "action-19-nest-creature-4-325",
-      "round": 19,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 2,
-          "column": 4
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.611Z"
-    },
-    {
-      "id": "action-20-player-2-326",
-      "round": 20,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.612Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 82 (round 20)
-- Player: 胡斐 (player-2), level 3, experience 57, at (3, 6), health 24.350000000000005, stamina 5.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +20
-- Spawned creatures: 0
-- Defeated creatures: roamer-creature-6
-- Nests: creature-nest-1=135.2999999999999/145, creature-nest-2=142.4499999999999/159, creature-nest-3=142.20999999999998/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-20-player-2-327",
-      "round": 20,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "roamer-creature-6",
-          "kind": "creature",
-          "position": {
-            "row": 4,
-            "column": 6
-          }
-        },
-        "reason": "交戰：攻擊 游蕩妖物"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 游蕩妖物",
-      "createdAt": "2026-09-02T15:47:51.618Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 83 (round 20)
-- Player: 胡斐 (player-2), level 3, experience 57, at (3, 7), health 24.350000000000005, stamina 3.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=135.2999999999999/145, creature-nest-2=142.4499999999999/159, creature-nest-3=142.20999999999998/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-20-player-2-328",
-      "round": 20,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 3,
-          "column": 7
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.627Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 84 (round 20)
-- Player: 胡斐 (player-2), level 3, experience 57, at (4, 7), health 24.350000000000005, stamina 1.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=135.2999999999999/145, creature-nest-2=142.4499999999999/159, creature-nest-3=142.20999999999998/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-20-player-2-329",
-      "round": 20,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 4,
-          "column": 7
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.637Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 85 (round 21)
-- Player: 胡斐 (player-2), level 3, experience 60, at (4, 7), health 26.150000000000006, stamina 10.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=136.7499999999999/145, creature-nest-2=144.0399999999999/159, creature-nest-3=143.79999999999998/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-20-roamer-creature-1-330",
-      "round": 20,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-roamer-creature-2-331",
-      "round": 20,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-roamer-creature-3-332",
-      "round": 20,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-roamer-creature-4-333",
-      "round": 20,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-roamer-creature-5-334",
-      "round": 20,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-roamer-creature-7-335",
-      "round": 20,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-roamer-creature-8-336",
-      "round": 20,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-roamer-creature-9-337",
-      "round": 20,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-nest-creature-1-338",
-      "round": 20,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-nest-creature-2-339",
-      "round": 20,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-nest-creature-5-340",
-      "round": 20,
-      "actor": {
-        "id": "nest-creature-5",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-5",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 3,
-          "column": 5
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-nest-creature-6-341",
-      "round": 20,
-      "actor": {
-        "id": "nest-creature-6",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-6",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-nest-creature-3-342",
-      "round": 20,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-20-nest-creature-4-343",
-      "round": 20,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 4,
-          "column": 5
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.640Z"
-    },
-    {
-      "id": "action-21-player-2-344",
-      "round": 21,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.641Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 86 (round 21)
-- Player: 胡斐 (player-2), level 3, experience 60, at (4, 8), health 26.150000000000006, stamina 5.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=136.7499999999999/145, creature-nest-2=144.0399999999999/159, creature-nest-3=143.79999999999998/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-21-player-2-345",
-      "round": 21,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 4,
-          "column": 8
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.650Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 87 (round 21)
-- Player: 胡斐 (player-2), level 3, experience 80, at (4, 8), health 26.150000000000006, stamina 0.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +20
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=136.7499999999999/145, creature-nest-2=144.0399999999999/159, creature-nest-3=143.79999999999998/159
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-21-player-2-346",
-      "round": 21,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "collect",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "ruin-17",
-          "kind": "ruin",
-          "position": {
-            "row": 4,
-            "column": 9
-          }
-        },
-        "reason": "清障：清除廢墟 隴頭村"
-      },
-      "result": "succeeded",
-      "reason": "清障：清除廢墟 隴頭村",
-      "createdAt": "2026-09-02T15:47:51.658Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 88 (round 22)
-- Player: 胡斐 (player-2), level 3, experience 81, at (4, 8), health 27.950000000000006, stamina 10.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +1
-- Spawned creatures: 1
-- Defeated creatures: none
-- Nests: creature-nest-1=138.19999999999987/145, creature-nest-2=145.6299999999999/159, creature-nest-3=145.39/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-21-roamer-creature-1-347",
-      "round": 21,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-roamer-creature-2-348",
-      "round": 21,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-roamer-creature-3-349",
-      "round": 21,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-roamer-creature-4-350",
-      "round": 21,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-roamer-creature-5-351",
-      "round": 21,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-roamer-creature-7-352",
-      "round": 21,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-roamer-creature-8-353",
-      "round": 21,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-roamer-creature-9-354",
-      "round": 21,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-nest-creature-1-355",
-      "round": 21,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 3,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-nest-creature-2-356",
-      "round": 21,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-nest-creature-5-357",
-      "round": 21,
-      "actor": {
-        "id": "nest-creature-5",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-5",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 2,
-          "column": 5
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-nest-creature-6-358",
-      "round": 21,
-      "actor": {
-        "id": "nest-creature-6",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-6",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 6,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-nest-creature-3-359",
-      "round": 21,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-21-nest-creature-4-360",
-      "round": 21,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.663Z"
-    },
-    {
-      "id": "action-22-player-2-361",
-      "round": 22,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.665Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": [
-    {
-      "id": "nest-creature-7",
-      "name": "生物巢穴 3的怪物 Lv.4",
-      "innerSkillId": "void-spirit-inner",
-      "externalSkillIds": [
-        "void-spirit-external-functional"
-      ],
-      "equippedExternalSkillIds": [
-        "void-spirit-external-functional"
-      ],
       "position": {
         "row": 10,
         "column": 8
-      },
-      "attributes": {
-        "armStrength": 9,
-        "constitution": 9,
-        "agility": 8,
-        "innerEnergy": 8,
-        "insight": 9
-      },
-      "prestige": 0,
-      "money": 0,
-      "experience": 0,
-      "turnEnded": false,
-      "level": 4,
-      "behaviorType": "scavenger",
-      "schoolId": "void-spirit",
-      "homePosition": {
-        "row": 11,
-        "column": 8
-      },
-      "homeNestId": "creature-nest-3",
-      "spawnedRound": 22,
-      "baseAttributes": {
-        "armStrength": 8.399999999999999,
-        "constitution": 8.399999999999999,
-        "agility": 8.399999999999999,
-        "innerEnergy": 8.399999999999999,
-        "insight": 8.399999999999999
-      },
-      "health": 27,
-      "maxHealth": 27,
-      "stamina": 8.5,
-      "maxStamina": 8.5,
-      "innerPower": 24,
-      "maxInnerPower": 24,
-      "availableAttributePoints": 0,
-      "governanceRank": 1,
-      "unlockedPolicyIds": [
-        "basic"
-      ],
-      "inventory": [],
-      "unlockedEquipmentDropIds": [],
-      "equipmentInventory": [],
-      "equipmentLoadout": {
-        "weaponInstanceId": null,
-        "armorInstanceId": null,
-        "accessoryInstanceId": null
-      },
-      "innerSkillIds": [
-        "tuna-gong"
-      ],
-      "skillProgression": {},
-      "buffs": []
-    }
-  ]
-}
-```
-
-### Turn 89 (round 22)
-- Player: 胡斐 (player-2), level 3, experience 84, at (4, 8), health 27.950000000000006, stamina 5.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=138.19999999999987/145, creature-nest-2=145.6299999999999/159, creature-nest-3=145.39/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-22-player-2-362",
-      "round": 22,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "roamer-creature-9",
-          "kind": "creature",
-          "position": {
-            "row": 4,
-            "column": 7
-          }
-        },
-        "reason": "交戰：攻擊 游蕩妖物"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 游蕩妖物",
-      "createdAt": "2026-09-02T15:47:51.673Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 90 (round 22)
-- Player: 胡斐 (player-2), level 3, experience 87, at (4, 8), health 27.950000000000006, stamina 0.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=138.19999999999987/145, creature-nest-2=145.6299999999999/159, creature-nest-3=145.39/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-22-player-2-363",
-      "round": 22,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "roamer-creature-9",
-          "kind": "creature",
-          "position": {
-            "row": 4,
-            "column": 7
-          }
-        },
-        "reason": "交戰：攻擊 游蕩妖物"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 游蕩妖物",
-      "createdAt": "2026-09-02T15:47:51.682Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 91 (round 23)
-- Player: 胡斐 (player-2), level 3, experience 88, at (4, 8), health 24.750000000000007, stamina 10.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +1
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=139.64999999999986/145, creature-nest-2=147.2199999999999/159, creature-nest-3=147.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-22-roamer-creature-1-364",
-      "round": 22,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.685Z"
-    },
-    {
-      "id": "action-22-roamer-creature-2-365",
-      "round": 22,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.685Z"
-    },
-    {
-      "id": "action-22-roamer-creature-3-366",
-      "round": 22,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.685Z"
-    },
-    {
-      "id": "action-22-roamer-creature-4-367",
-      "round": 22,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.685Z"
-    },
-    {
-      "id": "action-22-roamer-creature-5-368",
-      "round": 22,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.685Z"
-    },
-    {
-      "id": "action-22-roamer-creature-7-369",
-      "round": 22,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.685Z"
-    },
-    {
-      "id": "action-22-roamer-creature-8-370",
-      "round": 22,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.685Z"
-    },
-    {
-      "id": "action-22-roamer-creature-9-371",
-      "round": 22,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 4,
-            "column": 8
-          }
-        },
-        "reason": "與 胡斐 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:51.685Z"
-    },
-    {
-      "id": "action-22-nest-creature-1-372",
-      "round": 22,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 3,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.685Z"
-    },
-    {
-      "id": "action-22-nest-creature-2-373",
-      "round": 22,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.685Z"
-    },
-    {
-      "id": "action-22-nest-creature-5-374",
-      "round": 22,
-      "actor": {
-        "id": "nest-creature-5",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-5",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 4,
-          "column": 5
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.686Z"
-    },
-    {
-      "id": "action-22-nest-creature-6-375",
-      "round": 22,
-      "actor": {
-        "id": "nest-creature-6",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-6",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.686Z"
-    },
-    {
-      "id": "action-22-nest-creature-3-376",
-      "round": 22,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.686Z"
-    },
-    {
-      "id": "action-22-nest-creature-4-377",
-      "round": 22,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.686Z"
-    },
-    {
-      "id": "action-22-nest-creature-7-378",
-      "round": 22,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.686Z"
-    },
-    {
-      "id": "action-23-player-2-379",
-      "round": 23,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.686Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 92 (round 23)
-- Player: 胡斐 (player-2), level 3, experience 88, at (4, 9), health 24.750000000000007, stamina 8.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=139.64999999999986/145, creature-nest-2=147.2199999999999/159, creature-nest-3=147.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-23-player-2-380",
-      "round": 23,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 4,
-          "column": 9
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.696Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 93 (round 23)
-- Player: 胡斐 (player-2), level 3, experience 88, at (3, 9), health 24.750000000000007, stamina 5.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=139.64999999999986/145, creature-nest-2=147.2199999999999/159, creature-nest-3=147.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-23-player-2-381",
-      "round": 23,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 3,
-          "column": 9
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.704Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 94 (round 23)
-- Player: 胡斐 (player-2), level 3, experience 88, at (3, 9), health 24.750000000000007, stamina 2.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=139.64999999999986/145, creature-nest-2=147.2199999999999/159, creature-nest-3=147.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-23-player-2-382",
-      "round": 23,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "learn-skill",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "gateId": "sect-gate-2",
-        "skillType": "inner",
-        "skillId": "swift-wind-inner",
-        "reason": "學招：學習門派功法 追風吐納"
-      },
-      "result": "succeeded",
-      "reason": "學招：學習門派功法 追風吐納",
-      "createdAt": "2026-09-02T15:47:51.711Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 95 (round 23)
-- Player: 胡斐 (player-2), level 3, experience 88, at (4, 9), health 24.750000000000007, stamina 0.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=139.64999999999986/145, creature-nest-2=147.2199999999999/159, creature-nest-3=147.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-23-player-2-383",
-      "round": 23,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 4,
-          "column": 9
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.718Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 96 (round 24)
-- Player: 胡斐 (player-2), level 3, experience 89, at (4, 9), health 26.550000000000008, stamina 10.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +1
-- Spawned creatures: 1
-- Defeated creatures: none
-- Nests: creature-nest-1=141.09999999999985/159, creature-nest-2=148.80999999999992/159, creature-nest-3=148.89/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-23-roamer-creature-1-384",
-      "round": 23,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-roamer-creature-2-385",
-      "round": 23,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-roamer-creature-3-386",
-      "round": 23,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-roamer-creature-4-387",
-      "round": 23,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-roamer-creature-5-388",
-      "round": 23,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-roamer-creature-7-389",
-      "round": 23,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-roamer-creature-8-390",
-      "round": 23,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-roamer-creature-9-391",
-      "round": 23,
-      "actor": {
-        "id": "roamer-creature-9",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-9",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-nest-creature-1-392",
-      "round": 23,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 4,
-          "column": 7
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-nest-creature-2-393",
-      "round": 23,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-nest-creature-5-394",
-      "round": 23,
-      "actor": {
-        "id": "nest-creature-5",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-5",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 4,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-nest-creature-6-395",
-      "round": 23,
-      "actor": {
-        "id": "nest-creature-6",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-6",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 6,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-nest-creature-3-396",
-      "round": 23,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-nest-creature-4-397",
-      "round": 23,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-23-nest-creature-7-398",
-      "round": 23,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.721Z"
-    },
-    {
-      "id": "action-24-player-2-399",
-      "round": 24,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.722Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": [
-    {
-      "id": "nest-creature-8",
-      "name": "生物巢穴 1的怪物 Lv.3",
-      "innerSkillId": "void-spirit-inner",
-      "externalSkillIds": [],
-      "equippedExternalSkillIds": [],
-      "position": {
-        "row": 12,
-        "column": 2
       },
       "attributes": {
         "armStrength": 8,
@@ -10949,14 +5472,14 @@
       "experience": 0,
       "turnEnded": false,
       "level": 3,
-      "behaviorType": "sieger",
+      "behaviorType": "scavenger",
       "schoolId": "void-spirit",
       "homePosition": {
-        "row": 13,
-        "column": 2
+        "row": 11,
+        "column": 8
       },
-      "homeNestId": "creature-nest-1",
-      "spawnedRound": 24,
+      "homeNestId": "creature-nest-3",
+      "spawnedRound": 14,
       "baseAttributes": {
         "armStrength": 7,
         "constitution": 7,
@@ -10993,21 +5516,21 @@
 }
 ```
 
-### Turn 97 (round 24)
-- Player: 胡斐 (player-2), level 3, experience 92, at (4, 9), health 26.550000000000008, stamina 5.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+### Turn 53 (round 14)
+- Player: 胡斐 (player-2), level 2, experience 70, at (9, 3), health 26, stamina 4.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
 - Stored experience change: +3
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=141.09999999999985/159, creature-nest-2=148.80999999999992/159, creature-nest-3=148.89/175
+- Nests: creature-nest-1=127.91999999999996/145, creature-nest-2=122.63999999999999/132, creature-nest-3=135.42999999999992/159
 
 ```json
 {
   "actions": [
     {
-      "id": "action-24-player-2-400",
-      "round": 24,
+      "id": "action-14-player-2-195",
+      "round": 14,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -11020,18 +5543,18 @@
           "kind": "player"
         },
         "target": {
-          "id": "roamer-creature-9",
+          "id": "roamer-creature-2",
           "kind": "creature",
           "position": {
-            "row": 4,
-            "column": 8
+            "row": 10,
+            "column": 3
           }
         },
         "reason": "交戰：攻擊 游蕩妖物"
       },
       "result": "succeeded",
       "reason": "交戰：攻擊 游蕩妖物",
-      "createdAt": "2026-09-02T15:47:51.730Z"
+      "createdAt": "2026-09-02T16:10:21.281Z"
     }
   ],
   "creatureLogs": [],
@@ -11039,45 +5562,41 @@
 }
 ```
 
-### Turn 98 (round 24)
-- Player: 胡斐 (player-2), level 3, experience 112, at (4, 9), health 26.550000000000008, stamina 0.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +20
+### Turn 54 (round 14)
+- Player: 胡斐 (player-2), level 2, experience 70, at (9, 4), health 26, stamina 2.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +0
 - Spawned creatures: 0
-- Defeated creatures: roamer-creature-9
-- Nests: creature-nest-1=141.09999999999985/159, creature-nest-2=148.80999999999992/159, creature-nest-3=148.89/175
+- Defeated creatures: none
+- Nests: creature-nest-1=127.91999999999996/145, creature-nest-2=122.63999999999999/132, creature-nest-3=135.42999999999992/159
 
 ```json
 {
   "actions": [
     {
-      "id": "action-24-player-2-401",
-      "round": 24,
+      "id": "action-14-player-2-196",
+      "round": 14,
       "actor": {
         "id": "player-2",
         "kind": "player",
         "name": "胡斐"
       },
       "action": {
-        "type": "attack",
+        "type": "move",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "target": {
-          "id": "roamer-creature-9",
-          "kind": "creature",
-          "position": {
-            "row": 4,
-            "column": 8
-          }
+        "destination": {
+          "row": 9,
+          "column": 4
         },
-        "reason": "交戰：攻擊 游蕩妖物"
+        "reason": "探索：移動到未探索格 (6,13)"
       },
       "result": "succeeded",
-      "reason": "交戰：攻擊 游蕩妖物",
-      "createdAt": "2026-09-02T15:47:51.737Z"
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.289Z"
     }
   ],
   "creatureLogs": [],
@@ -11085,21 +5604,63 @@
 }
 ```
 
-### Turn 99 (round 25)
-- Player: 胡斐 (player-2), level 3, experience 113, at (4, 9), health 28.35000000000001, stamina 10.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +1
-- Spawned creatures: 1
+### Turn 55 (round 14)
+- Player: 胡斐 (player-2), level 2, experience 70, at (9, 5), health 26, stamina 0.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +0
+- Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=142.68999999999986/159, creature-nest-2=150.39999999999992/175, creature-nest-3=150.64/175
+- Nests: creature-nest-1=127.91999999999996/145, creature-nest-2=122.63999999999999/132, creature-nest-3=135.42999999999992/159
 
 ```json
 {
   "actions": [
     {
-      "id": "action-24-roamer-creature-1-402",
-      "round": 24,
+      "id": "action-14-player-2-197",
+      "round": 14,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 9,
+          "column": 5
+        },
+        "reason": "探索：移動到未探索格 (6,13)"
+      },
+      "result": "succeeded",
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.296Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 56 (round 15)
+- Player: 胡斐 (player-2), level 2, experience 71, at (9, 5), health 27.5, stamina 9.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=129.36999999999995/145, creature-nest-2=123.95999999999998/132, creature-nest-3=137.01999999999992/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-14-roamer-creature-1-198",
+      "round": 14,
       "actor": {
         "id": "roamer-creature-1",
         "kind": "creature",
@@ -11115,11 +5676,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.739Z"
+      "createdAt": "2026-09-02T16:10:21.299Z"
     },
     {
-      "id": "action-24-roamer-creature-2-403",
-      "round": 24,
+      "id": "action-14-roamer-creature-2-199",
+      "round": 14,
       "actor": {
         "id": "roamer-creature-2",
         "kind": "creature",
@@ -11135,11 +5696,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
+      "createdAt": "2026-09-02T16:10:21.299Z"
     },
     {
-      "id": "action-24-roamer-creature-3-404",
-      "round": 24,
+      "id": "action-14-roamer-creature-3-200",
+      "round": 14,
       "actor": {
         "id": "roamer-creature-3",
         "kind": "creature",
@@ -11155,11 +5716,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
+      "createdAt": "2026-09-02T16:10:21.300Z"
     },
     {
-      "id": "action-24-roamer-creature-4-405",
-      "round": 24,
+      "id": "action-14-roamer-creature-4-201",
+      "round": 14,
       "actor": {
         "id": "roamer-creature-4",
         "kind": "creature",
@@ -11175,11 +5736,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
+      "createdAt": "2026-09-02T16:10:21.300Z"
     },
     {
-      "id": "action-24-roamer-creature-5-406",
-      "round": 24,
+      "id": "action-14-roamer-creature-5-202",
+      "round": 14,
       "actor": {
         "id": "roamer-creature-5",
         "kind": "creature",
@@ -11195,11 +5756,31 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
+      "createdAt": "2026-09-02T16:10:21.300Z"
     },
     {
-      "id": "action-24-roamer-creature-7-407",
-      "round": 24,
+      "id": "action-14-roamer-creature-6-203",
+      "round": 14,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.300Z"
+    },
+    {
+      "id": "action-14-roamer-creature-7-204",
+      "round": 14,
       "actor": {
         "id": "roamer-creature-7",
         "kind": "creature",
@@ -11215,11 +5796,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
+      "createdAt": "2026-09-02T16:10:21.300Z"
     },
     {
-      "id": "action-24-roamer-creature-8-408",
-      "round": 24,
+      "id": "action-14-roamer-creature-8-205",
+      "round": 14,
       "actor": {
         "id": "roamer-creature-8",
         "kind": "creature",
@@ -11235,39 +5816,35 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
+      "createdAt": "2026-09-02T16:10:21.300Z"
     },
     {
-      "id": "action-24-nest-creature-1-409",
-      "round": 24,
+      "id": "action-14-roamer-creature-9-206",
+      "round": 14,
       "actor": {
-        "id": "nest-creature-1",
+        "id": "roamer-creature-9",
         "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
+        "name": "游蕩妖物"
       },
       "action": {
-        "type": "move",
+        "type": "hold",
         "actor": {
-          "id": "nest-creature-1",
+          "id": "roamer-creature-9",
           "kind": "creature"
         },
-        "destination": {
-          "row": 3,
-          "column": 8
-        },
-        "reason": "移動接近 耕田。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.300Z"
     },
     {
-      "id": "action-24-nest-creature-2-410",
-      "round": 24,
+      "id": "action-14-nest-creature-2-207",
+      "round": 14,
       "actor": {
         "id": "nest-creature-2",
         "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
+        "name": "生物巢穴 3的怪物 Lv.2"
       },
       "action": {
         "type": "hold",
@@ -11275,143 +5852,79 @@
           "id": "nest-creature-2",
           "kind": "creature"
         },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
-    },
-    {
-      "id": "action-24-nest-creature-5-411",
-      "round": 24,
-      "actor": {
-        "id": "nest-creature-5",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-5",
-          "kind": "creature"
-        },
         "reason": "未能接近目標，原地待命。"
       },
       "result": "succeeded",
       "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
+      "createdAt": "2026-09-02T16:10:21.300Z"
     },
     {
-      "id": "action-24-nest-creature-6-412",
-      "round": 24,
+      "id": "action-14-nest-creature-1-208",
+      "round": 14,
       "actor": {
-        "id": "nest-creature-6",
+        "id": "nest-creature-1",
         "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
+        "name": "生物巢穴 2的怪物 Lv.1"
       },
       "action": {
-        "type": "move",
+        "type": "hold",
         "actor": {
-          "id": "nest-creature-6",
+          "id": "nest-creature-1",
           "kind": "creature"
         },
-        "destination": {
-          "row": 7,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.300Z"
     },
     {
-      "id": "action-24-nest-creature-3-413",
-      "round": 24,
+      "id": "action-14-nest-creature-3-209",
+      "round": 14,
       "actor": {
         "id": "nest-creature-3",
         "kind": "creature",
         "name": "生物巢穴 1的怪物 Lv.2"
       },
       "action": {
-        "type": "hold",
+        "type": "move",
         "actor": {
           "id": "nest-creature-3",
           "kind": "creature"
         },
-        "reason": "沒有可執行的目標，原地待命。"
+        "destination": {
+          "row": 11,
+          "column": 2
+        },
+        "reason": "移動接近 胡斐。"
       },
       "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.300Z"
     },
     {
-      "id": "action-24-nest-creature-4-414",
-      "round": 24,
+      "id": "action-14-nest-creature-4-210",
+      "round": 14,
       "actor": {
         "id": "nest-creature-4",
         "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
+        "name": "生物巢穴 3的怪物 Lv.3"
       },
       "action": {
-        "type": "move",
+        "type": "hold",
         "actor": {
           "id": "nest-creature-4",
           "kind": "creature"
         },
-        "destination": {
-          "row": 5,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
+        "reason": "未能接近目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.300Z"
     },
     {
-      "id": "action-24-nest-creature-7-415",
-      "round": 24,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
-    },
-    {
-      "id": "action-24-nest-creature-8-416",
-      "round": 24,
-      "actor": {
-        "id": "nest-creature-8",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.3"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.740Z"
-    },
-    {
-      "id": "action-25-player-2-417",
-      "round": 25,
+      "id": "action-15-player-2-211",
+      "round": 15,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -11427,54 +5940,1942 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.742Z"
+      "createdAt": "2026-09-02T16:10:21.300Z"
     }
   ],
   "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 57 (round 15)
+- Player: 胡斐 (player-2), level 2, experience 74, at (9, 5), health 27.5, stamina 4.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=129.36999999999995/145, creature-nest-2=123.95999999999998/132, creature-nest-3=137.01999999999992/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-15-player-2-212",
+      "round": 15,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "nest-creature-2",
+          "kind": "creature",
+          "position": {
+            "row": 10,
+            "column": 5
+          }
+        },
+        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.2"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.2",
+      "createdAt": "2026-09-02T16:10:21.309Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 58 (round 15)
+- Player: 胡斐 (player-2), level 2, experience 74, at (8, 5), health 27.5, stamina 2.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=129.36999999999995/145, creature-nest-2=123.95999999999998/132, creature-nest-3=137.01999999999992/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-15-player-2-213",
+      "round": 15,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 8,
+          "column": 5
+        },
+        "reason": "定位：前往出口 (8,5)"
+      },
+      "result": "succeeded",
+      "reason": "定位：前往出口 (8,5)",
+      "createdAt": "2026-09-02T16:10:21.316Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 59 (round 15)
+- Player: 胡斐 (player-2), level 2, experience 74, at (7, 5), health 27.5, stamina 0.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=129.36999999999995/145, creature-nest-2=123.95999999999998/132, creature-nest-3=137.01999999999992/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-15-player-2-214",
+      "round": 15,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 7,
+          "column": 5
+        },
+        "reason": "收集道具：移動到道具位置"
+      },
+      "result": "succeeded",
+      "reason": "收集道具：移動到道具位置",
+      "createdAt": "2026-09-02T16:10:21.321Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 60 (round 15)
+- Player: 胡斐 (player-2), level 2, experience 74, at (7, 5), health 27.5, stamina 0.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=129.36999999999995/145, creature-nest-2=123.95999999999998/132, creature-nest-3=137.01999999999992/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-15-player-2-215",
+      "round": 15,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "collect",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "item-point-6",
+          "kind": "item",
+          "position": {
+            "row": 7,
+            "column": 5
+          }
+        },
+        "reason": "收集道具：拾取"
+      },
+      "result": "succeeded",
+      "reason": "收集道具：拾取",
+      "createdAt": "2026-09-02T16:10:21.324Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 61 (round 16)
+- Player: 胡斐 (player-2), level 2, experience 75, at (7, 5), health 29, stamina 9.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=130.81999999999994/145, creature-nest-2=125.27999999999997/132, creature-nest-3=138.60999999999993/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-15-roamer-creature-1-216",
+      "round": 15,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-15-roamer-creature-2-217",
+      "round": 15,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-15-roamer-creature-3-218",
+      "round": 15,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-15-roamer-creature-4-219",
+      "round": 15,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-15-roamer-creature-5-220",
+      "round": 15,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-15-roamer-creature-6-221",
+      "round": 15,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-15-roamer-creature-7-222",
+      "round": 15,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-15-roamer-creature-8-223",
+      "round": 15,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-15-roamer-creature-9-224",
+      "round": 15,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-15-nest-creature-2-225",
+      "round": 15,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 9,
+          "column": 4
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-15-nest-creature-1-226",
+      "round": 15,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-15-nest-creature-3-227",
+      "round": 15,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 11,
+          "column": 3
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-15-nest-creature-4-228",
+      "round": 15,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "未能接近目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    },
+    {
+      "id": "action-16-player-2-229",
+      "round": 16,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.327Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 62 (round 16)
+- Player: 胡斐 (player-2), level 2, experience 95, at (7, 5), health 29, stamina 4.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +20
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=130.81999999999994/145, creature-nest-2=125.27999999999997/132, creature-nest-3=138.60999999999993/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-16-player-2-230",
+      "round": 16,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "collect",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "ruin-3",
+          "kind": "ruin",
+          "position": {
+            "row": 6,
+            "column": 5
+          }
+        },
+        "reason": "清障：清除廢墟 燈火村"
+      },
+      "result": "succeeded",
+      "reason": "清障：清除廢墟 燈火村",
+      "createdAt": "2026-09-02T16:10:21.334Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 63 (round 16)
+- Player: 胡斐 (player-2), level 2, experience 95, at (6, 5), health 29, stamina 2.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=130.81999999999994/145, creature-nest-2=125.27999999999997/132, creature-nest-3=138.60999999999993/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-16-player-2-231",
+      "round": 16,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 6,
+          "column": 5
+        },
+        "reason": "探索：移動到未探索格 (6,13)"
+      },
+      "result": "succeeded",
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.342Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 64 (round 16)
+- Player: 胡斐 (player-2), level 2, experience 95, at (6, 6), health 29, stamina 0.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=130.81999999999994/145, creature-nest-2=125.27999999999997/132, creature-nest-3=138.60999999999993/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-16-player-2-232",
+      "round": 16,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 6,
+          "column": 6
+        },
+        "reason": "探索：移動到未探索格 (6,13)"
+      },
+      "result": "succeeded",
+      "reason": "探索：移動到未探索格 (6,13)",
+      "createdAt": "2026-09-02T16:10:21.347Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 65 (round 17)
+- Player: 胡斐 (player-2), level 2, experience 96, at (6, 6), health 21.5, stamina 9.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=132.26999999999992/145, creature-nest-2=126.59999999999997/132, creature-nest-3=140.19999999999993/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-16-roamer-creature-1-233",
+      "round": 16,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-16-roamer-creature-2-234",
+      "round": 16,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-16-roamer-creature-3-235",
+      "round": 16,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-16-roamer-creature-4-236",
+      "round": 16,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-16-roamer-creature-5-237",
+      "round": 16,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-16-roamer-creature-6-238",
+      "round": 16,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-16-roamer-creature-7-239",
+      "round": 16,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-16-roamer-creature-8-240",
+      "round": 16,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-16-roamer-creature-9-241",
+      "round": 16,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 6,
+            "column": 6
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-16-nest-creature-2-242",
+      "round": 16,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 7,
+          "column": 4
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-16-nest-creature-1-243",
+      "round": 16,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 4,
+          "column": 6
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-16-nest-creature-3-244",
+      "round": 16,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-16-nest-creature-4-245",
+      "round": 16,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 6,
+            "column": 6
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    },
+    {
+      "id": "action-17-player-2-246",
+      "round": 17,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.350Z"
+    }
+  ],
+  "creatureLogs": [
+    {
+      "creatureId": "roamer-creature-9",
+      "creatureName": "游蕩妖物",
+      "message": "游蕩妖物 攻擊 胡斐，造成 2 點傷害（根骨減傷）。"
+    },
+    {
+      "creatureId": "nest-creature-4",
+      "creatureName": "生物巢穴 3的怪物 Lv.3",
+      "message": "生物巢穴 3的怪物 Lv.3 攻擊 胡斐，造成 7 點傷害。"
+    }
+  ],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 66 (round 17)
+- Player: 胡斐 (player-2), level 2, experience 96, at (6, 7), health 21.5, stamina 4.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=132.26999999999992/145, creature-nest-2=126.59999999999997/132, creature-nest-3=140.19999999999993/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-17-player-2-247",
+      "round": 17,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 6,
+          "column": 7
+        },
+        "reason": "防禦建設：移動到據點"
+      },
+      "result": "succeeded",
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.357Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 67 (round 17)
+- Player: 胡斐 (player-2), level 2, experience 96, at (5, 7), health 21.5, stamina 2.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=132.26999999999992/145, creature-nest-2=126.59999999999997/132, creature-nest-3=140.19999999999993/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-17-player-2-248",
+      "round": 17,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 7
+        },
+        "reason": "防禦建設：移動到據點"
+      },
+      "result": "succeeded",
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.362Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 68 (round 18)
+- Player: 胡斐 (player-2), level 3, experience 1, at (5, 7), health 11, stamina 9.5
+- Attributes: armStrength=11, constitution=10, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 15
+- Stored experience change: -95 (level up; stored experience reset by game rules)
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=133.7199999999999/145, creature-nest-2=127.91999999999996/132, creature-nest-3=141.78999999999994/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-17-roamer-creature-1-249",
+      "round": 17,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.365Z"
+    },
+    {
+      "id": "action-17-roamer-creature-2-250",
+      "round": 17,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.365Z"
+    },
+    {
+      "id": "action-17-roamer-creature-3-251",
+      "round": 17,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.365Z"
+    },
+    {
+      "id": "action-17-roamer-creature-4-252",
+      "round": 17,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.365Z"
+    },
+    {
+      "id": "action-17-roamer-creature-5-253",
+      "round": 17,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 5,
+            "column": 7
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.365Z"
+    },
+    {
+      "id": "action-17-roamer-creature-6-254",
+      "round": 17,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.365Z"
+    },
+    {
+      "id": "action-17-roamer-creature-7-255",
+      "round": 17,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.366Z"
+    },
+    {
+      "id": "action-17-roamer-creature-8-256",
+      "round": 17,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.366Z"
+    },
+    {
+      "id": "action-17-roamer-creature-9-257",
+      "round": 17,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 5,
+            "column": 7
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.366Z"
+    },
+    {
+      "id": "action-17-nest-creature-2-258",
+      "round": 17,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 6,
+          "column": 5
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.366Z"
+    },
+    {
+      "id": "action-17-nest-creature-1-259",
+      "round": 17,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 4,
+          "column": 6
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.366Z"
+    },
+    {
+      "id": "action-17-nest-creature-3-260",
+      "round": 17,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.366Z"
+    },
+    {
+      "id": "action-17-nest-creature-4-261",
+      "round": 17,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "未能接近目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.366Z"
+    },
+    {
+      "id": "action-18-player-2-262",
+      "round": 18,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.366Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 69 (round 18)
+- Player: 胡斐 (player-2), level 3, experience 1, at (5, 7), health 11, stamina 9.5
+- Attributes: armStrength=11, constitution=11, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=133.7199999999999/145, creature-nest-2=127.91999999999996/132, creature-nest-3=141.78999999999994/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-18-player-2-263",
+      "round": 18,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "allocate-attribute",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "attribute": "constitution",
+        "reason": "屬性分配：提升 constitution"
+      },
+      "result": "succeeded",
+      "reason": "屬性分配：提升 constitution",
+      "createdAt": "2026-09-02T16:10:21.375Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 70 (round 18)
+- Player: 胡斐 (player-2), level 3, experience 1, at (5, 7), health 11, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=133.7199999999999/145, creature-nest-2=127.91999999999996/132, creature-nest-3=141.78999999999994/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-18-player-2-264",
+      "round": 18,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "allocate-attribute",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "attribute": "constitution",
+        "reason": "屬性分配：提升 constitution"
+      },
+      "result": "succeeded",
+      "reason": "屬性分配：提升 constitution",
+      "createdAt": "2026-09-02T16:10:21.383Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 71 (round 18)
+- Player: 胡斐 (player-2), level 3, experience 1, at (5, 8), health 11, stamina 4.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=133.7199999999999/145, creature-nest-2=127.91999999999996/132, creature-nest-3=141.78999999999994/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-18-player-2-265",
+      "round": 18,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 8
+        },
+        "reason": "保命：逃離 游蕩妖物（hitsSurvivable=1.5714285714285714）"
+      },
+      "result": "succeeded",
+      "reason": "保命：逃離 游蕩妖物（hitsSurvivable=1.5714285714285714）",
+      "createdAt": "2026-09-02T16:10:21.392Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 72 (round 18)
+- Player: 胡斐 (player-2), level 3, experience 1, at (5, 7), health 11, stamina 2.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=133.7199999999999/145, creature-nest-2=127.91999999999996/132, creature-nest-3=141.78999999999994/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-18-player-2-266",
+      "round": 18,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 7
+        },
+        "reason": "保命：逃離 游蕩妖物（hitsSurvivable=1.5714285714285714）"
+      },
+      "result": "succeeded",
+      "reason": "保命：逃離 游蕩妖物（hitsSurvivable=1.5714285714285714）",
+      "createdAt": "2026-09-02T16:10:21.399Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 73 (round 18)
+- Player: 胡斐 (player-2), level 3, experience 1, at (5, 7), health 31, stamina 2.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=133.7199999999999/145, creature-nest-2=127.91999999999996/132, creature-nest-3=141.78999999999994/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-18-player-2-267",
+      "round": 18,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-item",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "itemId": "heal-wound-medicine",
+        "reason": "使用道具：療傷藥"
+      },
+      "result": "succeeded",
+      "reason": "使用道具：療傷藥",
+      "createdAt": "2026-09-02T16:10:21.403Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 74 (round 19)
+- Player: 胡斐 (player-2), level 3, experience 6, at (5, 7), health 25.8, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +5
+- Spawned creatures: 1
+- Defeated creatures: none
+- Nests: creature-nest-1=135.1699999999999/159, creature-nest-2=129.23999999999995/132, creature-nest-3=143.37999999999994/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-18-roamer-creature-1-268",
+      "round": 18,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.406Z"
+    },
+    {
+      "id": "action-18-roamer-creature-2-269",
+      "round": 18,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.407Z"
+    },
+    {
+      "id": "action-18-roamer-creature-3-270",
+      "round": 18,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.407Z"
+    },
+    {
+      "id": "action-18-roamer-creature-4-271",
+      "round": 18,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.407Z"
+    },
+    {
+      "id": "action-18-roamer-creature-5-272",
+      "round": 18,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 5,
+            "column": 7
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.407Z"
+    },
+    {
+      "id": "action-18-roamer-creature-6-273",
+      "round": 18,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 2,
+          "column": 7
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.407Z"
+    },
+    {
+      "id": "action-18-roamer-creature-7-274",
+      "round": 18,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.407Z"
+    },
+    {
+      "id": "action-18-roamer-creature-8-275",
+      "round": 18,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.407Z"
+    },
+    {
+      "id": "action-18-roamer-creature-9-276",
+      "round": 18,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 5,
+            "column": 7
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.407Z"
+    },
+    {
+      "id": "action-18-nest-creature-2-277",
+      "round": 18,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 6,
+          "column": 5
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.407Z"
+    },
+    {
+      "id": "action-18-nest-creature-1-278",
+      "round": 18,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 4,
+          "column": 6
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.407Z"
+    },
+    {
+      "id": "action-18-nest-creature-3-279",
+      "round": 18,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.407Z"
+    },
+    {
+      "id": "action-18-nest-creature-4-280",
+      "round": 18,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 7,
+          "column": 6
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.407Z"
+    },
+    {
+      "id": "action-19-player-2-281",
+      "round": 19,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.67，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.67:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.67，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.67:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.408Z"
+    }
+  ],
+  "creatureLogs": [
+    {
+      "creatureId": "creature-nest-1",
+      "creatureName": "生物巢穴 1",
+      "message": "生物巢穴 1 生成了 Lv.3 怪物。"
+    }
+  ],
   "spawnedCreatures": [
     {
-      "id": "nest-creature-9",
-      "name": "生物巢穴 2的怪物 Lv.4",
-      "innerSkillId": "yellow-earth-inner",
+      "id": "nest-creature-5",
+      "name": "生物巢穴 1的怪物 Lv.3",
+      "innerSkillId": "void-spirit-inner",
       "externalSkillIds": [],
       "equippedExternalSkillIds": [],
       "position": {
-        "row": 3,
-        "column": 3
+        "row": 13,
+        "column": 1
       },
       "attributes": {
-        "armStrength": 10,
-        "constitution": 14,
-        "agility": 9,
-        "innerEnergy": 10,
-        "insight": 6
+        "armStrength": 8,
+        "constitution": 8,
+        "agility": 7,
+        "innerEnergy": 7,
+        "insight": 8
       },
       "prestige": 0,
       "money": 0,
       "experience": 0,
       "turnEnded": false,
-      "level": 4,
-      "behaviorType": "scavenger",
-      "schoolId": "yellow-earth",
+      "level": 3,
+      "behaviorType": "sieger",
+      "schoolId": "void-spirit",
       "homePosition": {
-        "row": 4,
-        "column": 3
+        "row": 13,
+        "column": 2
       },
-      "homeNestId": "creature-nest-2",
-      "spawnedRound": 25,
+      "homeNestId": "creature-nest-1",
+      "spawnedRound": 19,
       "baseAttributes": {
-        "armStrength": 10.5,
-        "constitution": 12.6,
-        "agility": 8.399999999999999,
-        "innerEnergy": 10.5,
-        "insight": 6.3
+        "armStrength": 7,
+        "constitution": 7,
+        "agility": 7,
+        "innerEnergy": 7,
+        "insight": 7
       },
-      "health": 42,
-      "maxHealth": 42,
-      "stamina": 9.5,
-      "maxStamina": 9.5,
-      "innerPower": 30,
-      "maxInnerPower": 30,
+      "health": 24,
+      "maxHealth": 24,
+      "stamina": 7.5,
+      "maxStamina": 7.5,
+      "innerPower": 21,
+      "maxInnerPower": 21,
       "availableAttributePoints": 0,
       "governanceRank": 1,
       "unlockedPolicyIds": [
@@ -11498,130 +7899,41 @@
 }
 ```
 
-### Turn 100 (round 25)
-- Player: 胡斐 (player-2), level 3, experience 116, at (4, 9), health 28.35000000000001, stamina 5.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=142.68999999999986/159, creature-nest-2=150.39999999999992/175, creature-nest-3=150.64/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-25-player-2-418",
-      "round": 25,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-5",
-          "kind": "creature",
-          "position": {
-            "row": 4,
-            "column": 8
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 2的怪物 Lv.2"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 2的怪物 Lv.2",
-      "createdAt": "2026-09-02T15:47:51.751Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 101 (round 25)
-- Player: 胡斐 (player-2), level 4, experience 6, at (4, 9), health 28.35000000000001, stamina 0.5
-- Attributes: armStrength=12, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
-- Stored experience change: -110 (level up; stored experience reset by game rules)
-- Spawned creatures: 0
-- Defeated creatures: nest-creature-5
-- Nests: creature-nest-1=142.68999999999986/159, creature-nest-2=150.39999999999992/175, creature-nest-3=150.64/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-25-player-2-419",
-      "round": 25,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-5",
-          "kind": "creature",
-          "position": {
-            "row": 4,
-            "column": 8
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 2的怪物 Lv.2"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 2的怪物 Lv.2",
-      "createdAt": "2026-09-02T15:47:51.760Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 102 (round 25)
-- Player: 胡斐 (player-2), level 4, experience 6, at (4, 9), health 28.35000000000001, stamina 0.5
-- Attributes: armStrength=13, constitution=12, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+### Turn 75 (round 19)
+- Player: 胡斐 (player-2), level 3, experience 6, at (5, 8), health 25.8, stamina 4.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=142.68999999999986/159, creature-nest-2=150.39999999999992/175, creature-nest-3=150.64/175
+- Nests: creature-nest-1=135.1699999999999/159, creature-nest-2=129.23999999999995/132, creature-nest-3=143.37999999999994/159
 
 ```json
 {
   "actions": [
     {
-      "id": "action-25-player-2-420",
-      "round": 25,
+      "id": "action-19-player-2-282",
+      "round": 19,
       "actor": {
         "id": "player-2",
         "kind": "player",
         "name": "胡斐"
       },
       "action": {
-        "type": "allocate-attribute",
+        "type": "move",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "attribute": "armStrength",
-        "reason": "屬性分配：提升 armStrength"
+        "destination": {
+          "row": 5,
+          "column": 8
+        },
+        "reason": "防禦建設：移動到據點"
       },
       "result": "succeeded",
-      "reason": "屬性分配：提升 armStrength",
-      "createdAt": "2026-09-02T15:47:51.765Z"
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.414Z"
     }
   ],
   "creatureLogs": [],
@@ -11629,38 +7941,41 @@
 }
 ```
 
-### Turn 103 (round 25)
-- Player: 胡斐 (player-2), level 4, experience 6, at (4, 9), health 28.35000000000001, stamina 0.5
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
+### Turn 76 (round 19)
+- Player: 胡斐 (player-2), level 3, experience 6, at (5, 9), health 25.8, stamina 2.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=142.68999999999986/159, creature-nest-2=150.39999999999992/175, creature-nest-3=150.64/175
+- Nests: creature-nest-1=135.1699999999999/159, creature-nest-2=129.23999999999995/132, creature-nest-3=143.37999999999994/159
 
 ```json
 {
   "actions": [
     {
-      "id": "action-25-player-2-421",
-      "round": 25,
+      "id": "action-19-player-2-283",
+      "round": 19,
       "actor": {
         "id": "player-2",
         "kind": "player",
         "name": "胡斐"
       },
       "action": {
-        "type": "allocate-attribute",
+        "type": "move",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "attribute": "constitution",
-        "reason": "屬性分配：提升 constitution"
+        "destination": {
+          "row": 5,
+          "column": 9
+        },
+        "reason": "防禦建設：移動到據點"
       },
       "result": "succeeded",
-      "reason": "屬性分配：提升 constitution",
-      "createdAt": "2026-09-02T15:47:51.770Z"
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.419Z"
     }
   ],
   "creatureLogs": [],
@@ -11668,21 +7983,63 @@
 }
 ```
 
-### Turn 104 (round 26)
-- Player: 胡斐 (player-2), level 4, experience 7, at (4, 9), health 30.300000000000008, stamina 11
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
+### Turn 77 (round 19)
+- Player: 胡斐 (player-2), level 3, experience 6, at (5, 10), health 25.8, stamina 0.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=135.1699999999999/159, creature-nest-2=129.23999999999995/132, creature-nest-3=143.37999999999994/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-19-player-2-284",
+      "round": 19,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 10
+        },
+        "reason": "定位：前往出口 (5,8)"
+      },
+      "result": "succeeded",
+      "reason": "定位：前往出口 (5,8)",
+      "createdAt": "2026-09-02T16:10:21.424Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 78 (round 20)
+- Player: 胡斐 (player-2), level 3, experience 7, at (5, 10), health 27.6, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
 - Stored experience change: +1
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=144.27999999999986/159, creature-nest-2=152.14999999999992/175, creature-nest-3=152.39/175
+- Nests: creature-nest-1=136.7599999999999/159, creature-nest-2=130.55999999999995/132, creature-nest-3=144.96999999999994/159
 
 ```json
 {
   "actions": [
     {
-      "id": "action-25-roamer-creature-1-422",
-      "round": 25,
+      "id": "action-19-roamer-creature-1-285",
+      "round": 19,
       "actor": {
         "id": "roamer-creature-1",
         "kind": "creature",
@@ -11698,11 +8055,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.775Z"
+      "createdAt": "2026-09-02T16:10:21.426Z"
     },
     {
-      "id": "action-25-roamer-creature-2-423",
-      "round": 25,
+      "id": "action-19-roamer-creature-2-286",
+      "round": 19,
       "actor": {
         "id": "roamer-creature-2",
         "kind": "creature",
@@ -11718,11 +8075,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.775Z"
+      "createdAt": "2026-09-02T16:10:21.426Z"
     },
     {
-      "id": "action-25-roamer-creature-3-424",
-      "round": 25,
+      "id": "action-19-roamer-creature-3-287",
+      "round": 19,
       "actor": {
         "id": "roamer-creature-3",
         "kind": "creature",
@@ -11738,11 +8095,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.775Z"
+      "createdAt": "2026-09-02T16:10:21.426Z"
     },
     {
-      "id": "action-25-roamer-creature-4-425",
-      "round": 25,
+      "id": "action-19-roamer-creature-4-288",
+      "round": 19,
       "actor": {
         "id": "roamer-creature-4",
         "kind": "creature",
@@ -11752,2490 +8109,57 @@
         "type": "hold",
         "actor": {
           "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.775Z"
-    },
-    {
-      "id": "action-25-roamer-creature-5-426",
-      "round": 25,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.775Z"
-    },
-    {
-      "id": "action-25-roamer-creature-7-427",
-      "round": 25,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.775Z"
-    },
-    {
-      "id": "action-25-roamer-creature-8-428",
-      "round": 25,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.775Z"
-    },
-    {
-      "id": "action-25-nest-creature-1-429",
-      "round": 25,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 3,
-          "column": 8
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.775Z"
-    },
-    {
-      "id": "action-25-nest-creature-2-430",
-      "round": 25,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.775Z"
-    },
-    {
-      "id": "action-25-nest-creature-6-431",
-      "round": 25,
-      "actor": {
-        "id": "nest-creature-6",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-6",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 6,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.775Z"
-    },
-    {
-      "id": "action-25-nest-creature-3-432",
-      "round": 25,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.775Z"
-    },
-    {
-      "id": "action-25-nest-creature-4-433",
-      "round": 25,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "resource-point-3",
-          "kind": "resource",
-          "position": {
-            "row": 6,
-            "column": 11
-          }
-        },
-        "reason": "與 耕田 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.776Z"
-    },
-    {
-      "id": "action-25-nest-creature-7-434",
-      "round": 25,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 9,
-          "column": 11
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.776Z"
-    },
-    {
-      "id": "action-25-nest-creature-8-435",
-      "round": 25,
-      "actor": {
-        "id": "nest-creature-8",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.3"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.776Z"
-    },
-    {
-      "id": "action-25-nest-creature-9-436",
-      "round": 25,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.776Z"
-    },
-    {
-      "id": "action-26-player-2-437",
-      "round": 26,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.776Z"
-    }
-  ],
-  "creatureLogs": [
-    {
-      "creatureId": "nest-creature-4",
-      "creatureName": "生物巢穴 2的怪物 Lv.3",
-      "message": "生物巢穴 2的怪物 Lv.3 攻擊耕田，造成 6 點傷害。"
-    },
-    {
-      "creatureId": "nest-creature-7",
-      "creatureName": "生物巢穴 3的怪物 Lv.4",
-      "message": "生物巢穴 3的怪物 Lv.4 發現並摧毀了道具點。"
-    }
-  ],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 105 (round 26)
-- Player: 胡斐 (player-2), level 4, experience 7, at (5, 10), health 30.300000000000008, stamina 7
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=144.27999999999986/159, creature-nest-2=152.14999999999992/175, creature-nest-3=152.39/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-26-player-2-438",
-      "round": 26,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 5,
-          "column": 10
-        },
-        "reason": "清障：移動到廢墟 柳岸村 附近"
-      },
-      "result": "succeeded",
-      "reason": "清障：移動到廢墟 柳岸村 附近",
-      "createdAt": "2026-09-02T15:47:51.784Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 106 (round 26)
-- Player: 胡斐 (player-2), level 4, experience 7, at (5, 9), health 30.300000000000008, stamina 5
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=144.27999999999986/159, creature-nest-2=152.14999999999992/175, creature-nest-3=152.39/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-26-player-2-439",
-      "round": 26,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 5,
-          "column": 9
-        },
-        "reason": "交戰：移動到 生物巢穴 3的怪物 Lv.3 附近"
-      },
-      "result": "succeeded",
-      "reason": "交戰：移動到 生物巢穴 3的怪物 Lv.3 附近",
-      "createdAt": "2026-09-02T15:47:51.795Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 107 (round 26)
-- Player: 胡斐 (player-2), level 4, experience 67, at (5, 9), health 30.300000000000008, stamina 0
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +60
-- Spawned creatures: 0
-- Defeated creatures: nest-creature-6
-- Nests: creature-nest-1=144.27999999999986/159, creature-nest-2=152.14999999999992/175, creature-nest-3=152.39/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-26-player-2-440",
-      "round": 26,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-6",
-          "kind": "creature",
-          "position": {
-            "row": 6,
-            "column": 9
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.3"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.3",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 108 (round 27)
-- Player: 胡斐 (player-2), level 4, experience 67, at (5, 9), health 32.25000000000001, stamina 11
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=145.86999999999986/159, creature-nest-2=153.89999999999992/175, creature-nest-3=154.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-26-roamer-creature-1-441",
-      "round": 26,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    },
-    {
-      "id": "action-26-roamer-creature-2-442",
-      "round": 26,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    },
-    {
-      "id": "action-26-roamer-creature-3-443",
-      "round": 26,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    },
-    {
-      "id": "action-26-roamer-creature-4-444",
-      "round": 26,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    },
-    {
-      "id": "action-26-roamer-creature-5-445",
-      "round": 26,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    },
-    {
-      "id": "action-26-roamer-creature-7-446",
-      "round": 26,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    },
-    {
-      "id": "action-26-roamer-creature-8-447",
-      "round": 26,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    },
-    {
-      "id": "action-26-nest-creature-1-448",
-      "round": 26,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 4,
-          "column": 9
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    },
-    {
-      "id": "action-26-nest-creature-2-449",
-      "round": 26,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    },
-    {
-      "id": "action-26-nest-creature-3-450",
-      "round": 26,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    },
-    {
-      "id": "action-26-nest-creature-4-451",
-      "round": 26,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "resource-point-3",
-          "kind": "resource",
-          "position": {
-            "row": 6,
-            "column": 11
-          }
-        },
-        "reason": "與 耕田 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    },
-    {
-      "id": "action-26-nest-creature-7-452",
-      "round": 26,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "resource-point-3",
-          "kind": "resource",
-          "position": {
-            "row": 6,
-            "column": 11
-          }
-        },
-        "reason": "與 耕田 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.802Z"
-    },
-    {
-      "id": "action-26-nest-creature-8-453",
-      "round": 26,
-      "actor": {
-        "id": "nest-creature-8",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.3"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.803Z"
-    },
-    {
-      "id": "action-26-nest-creature-9-454",
-      "round": 26,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.803Z"
-    },
-    {
-      "id": "action-27-player-2-455",
-      "round": 27,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略迴圈結束（0 步）"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-02T15:47:51.803Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 109 (round 27)
-- Player: 胡斐 (player-2), level 4, experience 70, at (5, 9), health 32.25000000000001, stamina 6
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=145.86999999999986/159, creature-nest-2=153.89999999999992/175, creature-nest-3=154.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-27-player-2-456",
-      "round": 27,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-1",
-          "kind": "creature",
-          "position": {
-            "row": 4,
-            "column": 9
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 2的怪物 Lv.1"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 2的怪物 Lv.1",
-      "createdAt": "2026-09-02T15:47:51.812Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 110 (round 27)
-- Player: 胡斐 (player-2), level 4, experience 73, at (5, 9), health 32.25000000000001, stamina 1
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=145.86999999999986/159, creature-nest-2=153.89999999999992/175, creature-nest-3=154.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-27-player-2-457",
-      "round": 27,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-1",
-          "kind": "creature",
-          "position": {
-            "row": 4,
-            "column": 9
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 2的怪物 Lv.1"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 2的怪物 Lv.1",
-      "createdAt": "2026-09-02T15:47:51.819Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 111 (round 28)
-- Player: 胡斐 (player-2), level 4, experience 75, at (5, 9), health 34.20000000000001, stamina 11
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +2
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=147.45999999999987/159, creature-nest-2=155.64999999999992/175, creature-nest-3=155.89/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-27-roamer-creature-1-458",
-      "round": 27,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-roamer-creature-2-459",
-      "round": 27,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-roamer-creature-3-460",
-      "round": 27,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-roamer-creature-4-461",
-      "round": 27,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-roamer-creature-5-462",
-      "round": 27,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-roamer-creature-7-463",
-      "round": 27,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-roamer-creature-8-464",
-      "round": 27,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-nest-creature-1-465",
-      "round": 27,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 10
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-nest-creature-2-466",
-      "round": 27,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 8,
-          "column": 9
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-nest-creature-3-467",
-      "round": 27,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-nest-creature-4-468",
-      "round": 27,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "resource-point-3",
-          "kind": "resource",
-          "position": {
-            "row": 6,
-            "column": 11
-          }
-        },
-        "reason": "與 耕田 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-nest-creature-7-469",
-      "round": 27,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "resource-point-3",
-          "kind": "resource",
-          "position": {
-            "row": 6,
-            "column": 11
-          }
-        },
-        "reason": "與 耕田 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-nest-creature-8-470",
-      "round": 27,
-      "actor": {
-        "id": "nest-creature-8",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.3"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-27-nest-creature-9-471",
-      "round": 27,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.822Z"
-    },
-    {
-      "id": "action-28-player-2-472",
-      "round": 28,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:51.823Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 112 (round 28)
-- Player: 胡斐 (player-2), level 4, experience 95, at (5, 9), health 34.20000000000001, stamina 6
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +20
-- Spawned creatures: 0
-- Defeated creatures: nest-creature-1
-- Nests: creature-nest-1=147.45999999999987/159, creature-nest-2=155.64999999999992/175, creature-nest-3=155.89/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-28-player-2-473",
-      "round": 28,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-1",
-          "kind": "creature",
-          "position": {
-            "row": 5,
-            "column": 10
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 2的怪物 Lv.1"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 2的怪物 Lv.1",
-      "createdAt": "2026-09-02T15:47:51.831Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 113 (round 28)
-- Player: 胡斐 (player-2), level 4, experience 95, at (6, 9), health 34.20000000000001, stamina 4
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=147.45999999999987/159, creature-nest-2=155.64999999999992/175, creature-nest-3=155.89/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-28-player-2-474",
-      "round": 28,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 6,
-          "column": 9
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.839Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 114 (round 28)
-- Player: 胡斐 (player-2), level 4, experience 95, at (7, 9), health 34.20000000000001, stamina 2
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=147.45999999999987/159, creature-nest-2=155.64999999999992/175, creature-nest-3=155.89/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-28-player-2-475",
-      "round": 28,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 7,
-          "column": 9
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.847Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 115 (round 28)
-- Player: 胡斐 (player-2), level 4, experience 95, at (6, 9), health 34.20000000000001, stamina 0
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=147.45999999999987/159, creature-nest-2=155.64999999999992/175, creature-nest-3=155.89/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-28-player-2-476",
-      "round": 28,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 6,
-          "column": 9
-        },
-        "reason": "保命：逃離 生物巢穴 3的怪物 Lv.1（hitsSurvivable=4.275000000000001）"
-      },
-      "result": "succeeded",
-      "reason": "保命：逃離 生物巢穴 3的怪物 Lv.1（hitsSurvivable=4.275000000000001）",
-      "createdAt": "2026-09-02T15:47:51.852Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 116 (round 29)
-- Player: 胡斐 (player-2), level 4, experience 95, at (6, 9), health 36.15000000000001, stamina 11
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=149.04999999999987/159, creature-nest-2=157.39999999999992/175, creature-nest-3=157.64/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-28-roamer-creature-1-477",
-      "round": 28,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-28-roamer-creature-2-478",
-      "round": 28,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-28-roamer-creature-3-479",
-      "round": 28,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-28-roamer-creature-4-480",
-      "round": 28,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-28-roamer-creature-5-481",
-      "round": 28,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-28-roamer-creature-7-482",
-      "round": 28,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-28-roamer-creature-8-483",
-      "round": 28,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-28-nest-creature-2-484",
-      "round": 28,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.1"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 7,
-          "column": 10
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-28-nest-creature-3-485",
-      "round": 28,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-28-nest-creature-4-486",
-      "round": 28,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "resource-point-2",
-          "kind": "resource",
-          "position": {
-            "row": 4,
-            "column": 12
-          }
-        },
-        "reason": "與 耕田 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-28-nest-creature-7-487",
-      "round": 28,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "resource-point-1",
-          "kind": "resource",
-          "position": {
-            "row": 7,
-            "column": 13
-          }
-        },
-        "reason": "與 耕田 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-28-nest-creature-8-488",
-      "round": 28,
-      "actor": {
-        "id": "nest-creature-8",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.3"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-28-nest-creature-9-489",
-      "round": 28,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    },
-    {
-      "id": "action-29-player-2-490",
-      "round": 29,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略迴圈結束（0 步）"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-02T15:47:51.853Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 117 (round 29)
-- Player: 胡斐 (player-2), level 4, experience 95, at (7, 9), health 36.15000000000001, stamina 9
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=149.04999999999987/159, creature-nest-2=157.39999999999992/175, creature-nest-3=157.64/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-29-player-2-491",
-      "round": 29,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 7,
-          "column": 9
-        },
-        "reason": "交戰：移動到 生物巢穴 3的怪物 Lv.1 附近"
-      },
-      "result": "succeeded",
-      "reason": "交戰：移動到 生物巢穴 3的怪物 Lv.1 附近",
-      "createdAt": "2026-09-02T15:47:51.863Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 118 (round 29)
-- Player: 胡斐 (player-2), level 4, experience 115, at (7, 9), health 36.15000000000001, stamina 4
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +20
-- Spawned creatures: 0
-- Defeated creatures: nest-creature-2
-- Nests: creature-nest-1=149.04999999999987/159, creature-nest-2=157.39999999999992/175, creature-nest-3=157.64/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-29-player-2-492",
-      "round": 29,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-2",
-          "kind": "creature",
-          "position": {
-            "row": 7,
-            "column": 10
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.1"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.1",
-      "createdAt": "2026-09-02T15:47:51.869Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 119 (round 29)
-- Player: 胡斐 (player-2), level 4, experience 115, at (7, 10), health 36.15000000000001, stamina 2
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=149.04999999999987/159, creature-nest-2=157.39999999999992/175, creature-nest-3=157.64/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-29-player-2-493",
-      "round": 29,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 7,
-          "column": 10
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.879Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 120 (round 29)
-- Player: 胡斐 (player-2), level 4, experience 115, at (8, 10), health 36.15000000000001, stamina 0
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=149.04999999999987/159, creature-nest-2=157.39999999999992/175, creature-nest-3=157.64/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-29-player-2-494",
-      "round": 29,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 8,
-          "column": 10
-        },
-        "reason": "收集道具：移動到道具位置"
-      },
-      "result": "succeeded",
-      "reason": "收集道具：移動到道具位置",
-      "createdAt": "2026-09-02T15:47:51.884Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 121 (round 30)
-- Player: 胡斐 (player-2), level 4, experience 115, at (8, 10), health 38.100000000000016, stamina 11
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=150.63999999999987/159, creature-nest-2=159.14999999999992/175, creature-nest-3=159.39/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-29-roamer-creature-1-495",
-      "round": 29,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.884Z"
-    },
-    {
-      "id": "action-29-roamer-creature-2-496",
-      "round": 29,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.884Z"
-    },
-    {
-      "id": "action-29-roamer-creature-3-497",
-      "round": 29,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.884Z"
-    },
-    {
-      "id": "action-29-roamer-creature-4-498",
-      "round": 29,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.884Z"
-    },
-    {
-      "id": "action-29-roamer-creature-5-499",
-      "round": 29,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.884Z"
-    },
-    {
-      "id": "action-29-roamer-creature-7-500",
-      "round": 29,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.884Z"
-    },
-    {
-      "id": "action-29-roamer-creature-8-501",
-      "round": 29,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.884Z"
-    },
-    {
-      "id": "action-29-nest-creature-3-502",
-      "round": 29,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 8,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.884Z"
-    },
-    {
-      "id": "action-29-nest-creature-4-503",
-      "round": 29,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "resource-point-2",
-          "kind": "resource",
-          "position": {
-            "row": 4,
-            "column": 12
-          }
-        },
-        "reason": "與 耕田 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.884Z"
-    },
-    {
-      "id": "action-29-nest-creature-7-504",
-      "round": 29,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "resource-point-1",
-          "kind": "resource",
-          "position": {
-            "row": 7,
-            "column": 13
-          }
-        },
-        "reason": "與 耕田 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.884Z"
-    },
-    {
-      "id": "action-29-nest-creature-8-505",
-      "round": 29,
-      "actor": {
-        "id": "nest-creature-8",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.3"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.884Z"
-    },
-    {
-      "id": "action-29-nest-creature-9-506",
-      "round": 29,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 4,
-          "column": 10
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.885Z"
-    },
-    {
-      "id": "action-30-player-2-507",
-      "round": 30,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略迴圈結束（0 步）"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-02T15:47:51.885Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 122 (round 30)
-- Player: 胡斐 (player-2), level 4, experience 115, at (8, 10), health 38.100000000000016, stamina 11
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=150.63999999999987/159, creature-nest-2=159.14999999999992/175, creature-nest-3=159.39/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-30-player-2-508",
-      "round": 30,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "collect",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "item-point-15",
-          "kind": "item",
-          "position": {
-            "row": 8,
-            "column": 10
-          }
-        },
-        "reason": "收集道具：拾取"
-      },
-      "result": "succeeded",
-      "reason": "收集道具：拾取",
-      "createdAt": "2026-09-02T15:47:51.894Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 123 (round 30)
-- Player: 胡斐 (player-2), level 4, experience 115, at (8, 9), health 38.100000000000016, stamina 9
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=150.63999999999987/159, creature-nest-2=159.14999999999992/175, creature-nest-3=159.39/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-30-player-2-509",
-      "round": 30,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 8,
-          "column": 9
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.903Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 124 (round 30)
-- Player: 胡斐 (player-2), level 4, experience 135, at (8, 9), health 38.100000000000016, stamina 4
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +20
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=150.63999999999987/159, creature-nest-2=159.14999999999992/175, creature-nest-3=159.39/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-30-player-2-510",
-      "round": 30,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "collect",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "ruin-18",
-          "kind": "ruin",
-          "position": {
-            "row": 9,
-            "column": 9
-          }
-        },
-        "reason": "清障：清除廢墟 忘憂谷村"
-      },
-      "result": "succeeded",
-      "reason": "清障：清除廢墟 忘憂谷村",
-      "createdAt": "2026-09-02T15:47:51.910Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 125 (round 30)
-- Player: 胡斐 (player-2), level 4, experience 135, at (8, 8), health 38.100000000000016, stamina 2
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=150.63999999999987/159, creature-nest-2=159.14999999999992/175, creature-nest-3=159.39/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-30-player-2-511",
-      "round": 30,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 8,
-          "column": 8
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.917Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 126 (round 30)
-- Player: 胡斐 (player-2), level 4, experience 135, at (9, 8), health 38.100000000000016, stamina 0
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=150.63999999999987/159, creature-nest-2=159.14999999999992/175, creature-nest-3=159.39/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-30-player-2-512",
-      "round": 30,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 9,
-          "column": 8
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:51.925Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 127 (round 31)
-- Player: 胡斐 (player-2), level 4, experience 135, at (9, 8), health 39, stamina 11
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
-- Stored experience change: +0
-- Spawned creatures: 1
-- Defeated creatures: none
-- Nests: creature-nest-1=152.22999999999988/175, creature-nest-2=160.89999999999992/175, creature-nest-3=161.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-30-roamer-creature-1-513",
-      "round": 30,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.925Z"
-    },
-    {
-      "id": "action-30-roamer-creature-2-514",
-      "round": 30,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.925Z"
-    },
-    {
-      "id": "action-30-roamer-creature-3-515",
-      "round": 30,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.925Z"
-    },
-    {
-      "id": "action-30-roamer-creature-4-516",
-      "round": 30,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.925Z"
-    },
-    {
-      "id": "action-30-roamer-creature-5-517",
-      "round": 30,
-      "actor": {
-        "id": "roamer-creature-5",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-5",
           "kind": "creature"
         },
         "reason": "未能接近目標，原地待命。"
       },
       "result": "succeeded",
       "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.926Z"
+      "createdAt": "2026-09-02T16:10:21.426Z"
     },
     {
-      "id": "action-30-roamer-creature-7-518",
-      "round": 30,
+      "id": "action-19-roamer-creature-5-289",
+      "round": 19,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.426Z"
+    },
+    {
+      "id": "action-19-roamer-creature-6-290",
+      "round": 19,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.426Z"
+    },
+    {
+      "id": "action-19-roamer-creature-7-291",
+      "round": 19,
       "actor": {
         "id": "roamer-creature-7",
         "kind": "creature",
@@ -14251,11 +8175,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.926Z"
+      "createdAt": "2026-09-02T16:10:21.426Z"
     },
     {
-      "id": "action-30-roamer-creature-8-519",
-      "round": 30,
+      "id": "action-19-roamer-creature-8-292",
+      "round": 19,
       "actor": {
         "id": "roamer-creature-8",
         "kind": "creature",
@@ -14271,139 +8195,135 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.926Z"
+      "createdAt": "2026-09-02T16:10:21.427Z"
     },
     {
-      "id": "action-30-nest-creature-3-520",
-      "round": 30,
+      "id": "action-19-roamer-creature-9-293",
+      "round": 19,
       "actor": {
-        "id": "nest-creature-3",
+        "id": "roamer-creature-9",
         "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.427Z"
+    },
+    {
+      "id": "action-19-nest-creature-2-294",
+      "round": 19,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.427Z"
+    },
+    {
+      "id": "action-19-nest-creature-1-295",
+      "round": 19,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
       },
       "action": {
         "type": "move",
         "actor": {
-          "id": "nest-creature-3",
+          "id": "nest-creature-1",
           "kind": "creature"
         },
         "destination": {
-          "row": 8,
+          "row": 4,
           "column": 6
         },
         "reason": "移動接近 胡斐。"
       },
       "result": "succeeded",
       "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.926Z"
+      "createdAt": "2026-09-02T16:10:21.427Z"
     },
     {
-      "id": "action-30-nest-creature-4-521",
-      "round": 30,
+      "id": "action-19-nest-creature-3-296",
+      "round": 19,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.427Z"
+    },
+    {
+      "id": "action-19-nest-creature-4-297",
+      "round": 19,
       "actor": {
         "id": "nest-creature-4",
         "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
+        "name": "生物巢穴 3的怪物 Lv.3"
       },
       "action": {
-        "type": "attack",
+        "type": "hold",
         "actor": {
           "id": "nest-creature-4",
           "kind": "creature"
         },
-        "target": {
-          "id": "resource-point-2",
-          "kind": "resource",
-          "position": {
-            "row": 4,
-            "column": 12
-          }
-        },
-        "reason": "與 耕田 交戰。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.926Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.427Z"
     },
     {
-      "id": "action-30-nest-creature-7-522",
-      "round": 30,
+      "id": "action-19-nest-creature-5-298",
+      "round": 19,
       "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "resource-point-1",
-          "kind": "resource",
-          "position": {
-            "row": 7,
-            "column": 13
-          }
-        },
-        "reason": "與 耕田 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.926Z"
-    },
-    {
-      "id": "action-30-nest-creature-8-523",
-      "round": 30,
-      "actor": {
-        "id": "nest-creature-8",
+        "id": "nest-creature-5",
         "kind": "creature",
         "name": "生物巢穴 1的怪物 Lv.3"
       },
       "action": {
-        "type": "move",
+        "type": "hold",
         "actor": {
-          "id": "nest-creature-8",
+          "id": "nest-creature-5",
           "kind": "creature"
         },
-        "destination": {
-          "row": 9,
-          "column": 4
-        },
-        "reason": "移動接近 胡斐。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.926Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.427Z"
     },
     {
-      "id": "action-30-nest-creature-9-524",
-      "round": 30,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 4,
-          "column": 10
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.926Z"
-    },
-    {
-      "id": "action-31-player-2-525",
-      "round": 31,
+      "id": "action-20-player-2-299",
+      "round": 20,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -14415,24 +8335,2305 @@
           "id": "player-2",
           "kind": "player"
         },
-        "reason": "模糊策略迴圈結束（0 步）"
+        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
       },
       "result": "succeeded",
-      "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-02T15:47:51.926Z"
+      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.427Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 79 (round 20)
+- Player: 胡斐 (player-2), level 3, experience 10, at (5, 10), health 27.6, stamina 4.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=136.7599999999999/159, creature-nest-2=130.55999999999995/132, creature-nest-3=144.96999999999994/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-20-player-2-300",
+      "round": 20,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "roamer-creature-4",
+          "kind": "creature",
+          "position": {
+            "row": 5,
+            "column": 9
+          }
+        },
+        "reason": "交戰：攻擊 游蕩妖物"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 游蕩妖物",
+      "createdAt": "2026-09-02T16:10:21.433Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 80 (round 20)
+- Player: 胡斐 (player-2), level 3, experience 10, at (5, 11), health 27.6, stamina 2.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=136.7599999999999/159, creature-nest-2=130.55999999999995/132, creature-nest-3=144.96999999999994/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-20-player-2-301",
+      "round": 20,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 11
+        },
+        "reason": "防禦建設：移動到據點"
+      },
+      "result": "succeeded",
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.439Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 81 (round 20)
+- Player: 胡斐 (player-2), level 3, experience 10, at (5, 12), health 27.6, stamina 0.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=136.7599999999999/159, creature-nest-2=130.55999999999995/132, creature-nest-3=144.96999999999994/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-20-player-2-302",
+      "round": 20,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 12
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.446Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 82 (round 21)
+- Player: 胡斐 (player-2), level 3, experience 11, at (5, 12), health 29.400000000000002, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=138.3499999999999/159, creature-nest-2=131.87999999999994/132, creature-nest-3=146.55999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-20-roamer-creature-1-303",
+      "round": 20,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 5,
+            "column": 12
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.448Z"
+    },
+    {
+      "id": "action-20-roamer-creature-2-304",
+      "round": 20,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.448Z"
+    },
+    {
+      "id": "action-20-roamer-creature-3-305",
+      "round": 20,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.448Z"
+    },
+    {
+      "id": "action-20-roamer-creature-4-306",
+      "round": 20,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.448Z"
+    },
+    {
+      "id": "action-20-roamer-creature-5-307",
+      "round": 20,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.449Z"
+    },
+    {
+      "id": "action-20-roamer-creature-6-308",
+      "round": 20,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.449Z"
+    },
+    {
+      "id": "action-20-roamer-creature-7-309",
+      "round": 20,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.449Z"
+    },
+    {
+      "id": "action-20-roamer-creature-8-310",
+      "round": 20,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.449Z"
+    },
+    {
+      "id": "action-20-roamer-creature-9-311",
+      "round": 20,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.449Z"
+    },
+    {
+      "id": "action-20-nest-creature-2-312",
+      "round": 20,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.449Z"
+    },
+    {
+      "id": "action-20-nest-creature-1-313",
+      "round": 20,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.449Z"
+    },
+    {
+      "id": "action-20-nest-creature-3-314",
+      "round": 20,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.449Z"
+    },
+    {
+      "id": "action-20-nest-creature-4-315",
+      "round": 20,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.449Z"
+    },
+    {
+      "id": "action-20-nest-creature-5-316",
+      "round": 20,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.449Z"
+    },
+    {
+      "id": "action-21-player-2-317",
+      "round": 21,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：exploration 分數 0.03，但目前沒有可執行 action，結束回合。候選診斷：exploration=0.03:none, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：exploration 分數 0.03，但目前沒有可執行 action，結束回合。候選診斷：exploration=0.03:none, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.449Z"
     }
   ],
   "creatureLogs": [
     {
-      "creatureId": "creature-nest-1",
-      "creatureName": "生物巢穴 1",
-      "message": "生物巢穴 1 生成了 Lv.4 怪物。"
+      "creatureId": "roamer-creature-1",
+      "creatureName": "游蕩妖物",
+      "message": "游蕩妖物 攻擊 胡斐，被閃避。"
+    }
+  ],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 83 (round 21)
+- Player: 胡斐 (player-2), level 3, experience 14, at (5, 12), health 29.400000000000002, stamina 4.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=138.3499999999999/159, creature-nest-2=131.87999999999994/132, creature-nest-3=146.55999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-21-player-2-318",
+      "round": 21,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "roamer-creature-1",
+          "kind": "creature",
+          "position": {
+            "row": 4,
+            "column": 12
+          }
+        },
+        "reason": "交戰：攻擊 游蕩妖物"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 游蕩妖物",
+      "createdAt": "2026-09-02T16:10:21.454Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 84 (round 21)
+- Player: 胡斐 (player-2), level 3, experience 14, at (5, 13), health 29.400000000000002, stamina 2.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=138.3499999999999/159, creature-nest-2=131.87999999999994/132, creature-nest-3=146.55999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-21-player-2-319",
+      "round": 21,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 13
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.460Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 85 (round 21)
+- Player: 胡斐 (player-2), level 3, experience 14, at (5, 13), health 29.400000000000002, stamina 0.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=138.3499999999999/159, creature-nest-2=131.87999999999994/132, creature-nest-3=146.55999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-21-player-2-320",
+      "round": 21,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.466Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 86 (round 22)
+- Player: 胡斐 (player-2), level 3, experience 15, at (5, 13), health 31.200000000000003, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=139.9399999999999/159, creature-nest-2=132/132, creature-nest-3=148.14999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-21-roamer-creature-1-321",
+      "round": 21,
+      "actor": {
+        "id": "roamer-creature-1",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-1",
+          "kind": "creature"
+        },
+        "reason": "未能接近目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-roamer-creature-2-322",
+      "round": 21,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-roamer-creature-3-323",
+      "round": 21,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-roamer-creature-4-324",
+      "round": 21,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-roamer-creature-5-325",
+      "round": 21,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-roamer-creature-6-326",
+      "round": 21,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-roamer-creature-7-327",
+      "round": 21,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "未能接近目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-roamer-creature-8-328",
+      "round": 21,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-roamer-creature-9-329",
+      "round": 21,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-nest-creature-2-330",
+      "round": 21,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-nest-creature-1-331",
+      "round": 21,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-nest-creature-3-332",
+      "round": 21,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-nest-creature-4-333",
+      "round": 21,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.469Z"
+    },
+    {
+      "id": "action-21-nest-creature-5-334",
+      "round": 21,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.470Z"
+    },
+    {
+      "id": "action-22-player-2-335",
+      "round": 22,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.470Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 87 (round 22)
+- Player: 胡斐 (player-2), level 3, experience 35, at (5, 13), health 31.200000000000003, stamina 4.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +20
+- Spawned creatures: 0
+- Defeated creatures: roamer-creature-1
+- Nests: creature-nest-1=139.9399999999999/159, creature-nest-2=132/132, creature-nest-3=148.14999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-22-player-2-336",
+      "round": 22,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "roamer-creature-1",
+          "kind": "creature",
+          "position": {
+            "row": 5,
+            "column": 12
+          }
+        },
+        "reason": "交戰：攻擊 游蕩妖物"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 游蕩妖物",
+      "createdAt": "2026-09-02T16:10:21.473Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 88 (round 22)
+- Player: 胡斐 (player-2), level 3, experience 35, at (5, 12), health 31.200000000000003, stamina 2.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=139.9399999999999/159, creature-nest-2=132/132, creature-nest-3=148.14999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-22-player-2-337",
+      "round": 22,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 12
+        },
+        "reason": "定位：前往出口 (5,12)"
+      },
+      "result": "succeeded",
+      "reason": "定位：前往出口 (5,12)",
+      "createdAt": "2026-09-02T16:10:21.480Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 89 (round 22)
+- Player: 胡斐 (player-2), level 3, experience 35, at (4, 12), health 31.200000000000003, stamina 0.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=139.9399999999999/159, creature-nest-2=132/132, creature-nest-3=148.14999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-22-player-2-338",
+      "round": 22,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 4,
+          "column": 12
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.486Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 90 (round 23)
+- Player: 胡斐 (player-2), level 3, experience 36, at (4, 12), health 28.000000000000004, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=141.52999999999992/159, creature-nest-2=132/132, creature-nest-3=149.73999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-22-roamer-creature-2-339",
+      "round": 22,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-22-roamer-creature-3-340",
+      "round": 22,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-22-roamer-creature-4-341",
+      "round": 22,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-22-roamer-creature-5-342",
+      "round": 22,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-22-roamer-creature-6-343",
+      "round": 22,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-22-roamer-creature-7-344",
+      "round": 22,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 4,
+            "column": 12
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-22-roamer-creature-8-345",
+      "round": 22,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-22-roamer-creature-9-346",
+      "round": 22,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-22-nest-creature-2-347",
+      "round": 22,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-22-nest-creature-1-348",
+      "round": 22,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-22-nest-creature-3-349",
+      "round": 22,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-22-nest-creature-4-350",
+      "round": 22,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-22-nest-creature-5-351",
+      "round": 22,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.489Z"
+    },
+    {
+      "id": "action-23-player-2-352",
+      "round": 23,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.490Z"
+    }
+  ],
+  "creatureLogs": [
+    {
+      "creatureId": "roamer-creature-7",
+      "creatureName": "游蕩妖物",
+      "message": "游蕩妖物 攻擊 胡斐，造成 5 點傷害。"
+    }
+  ],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 91 (round 23)
+- Player: 胡斐 (player-2), level 3, experience 36, at (3, 12), health 28.000000000000004, stamina 7.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=141.52999999999992/159, creature-nest-2=132/132, creature-nest-3=149.73999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-23-player-2-353",
+      "round": 23,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 3,
+          "column": 12
+        },
+        "reason": "學招：移動到門派據點"
+      },
+      "result": "succeeded",
+      "reason": "學招：移動到門派據點",
+      "createdAt": "2026-09-02T16:10:21.499Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 92 (round 23)
+- Player: 胡斐 (player-2), level 3, experience 36, at (3, 11), health 28.000000000000004, stamina 5.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=141.52999999999992/159, creature-nest-2=132/132, creature-nest-3=149.73999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-23-player-2-354",
+      "round": 23,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 3,
+          "column": 11
+        },
+        "reason": "學招：移動到門派據點"
+      },
+      "result": "succeeded",
+      "reason": "學招：移動到門派據點",
+      "createdAt": "2026-09-02T16:10:21.507Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 93 (round 23)
+- Player: 胡斐 (player-2), level 3, experience 36, at (3, 11), health 28.000000000000004, stamina 2.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=141.52999999999992/159, creature-nest-2=132/132, creature-nest-3=149.73999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-23-player-2-355",
+      "round": 23,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "learn-skill",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "gateId": "sect-gate-2",
+        "skillType": "inner",
+        "skillId": "swift-wind-inner",
+        "reason": "學招：學習門派功法 追風吐納"
+      },
+      "result": "succeeded",
+      "reason": "學招：學習門派功法 追風吐納",
+      "createdAt": "2026-09-02T16:10:21.515Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 94 (round 23)
+- Player: 胡斐 (player-2), level 3, experience 36, at (2, 11), health 28.000000000000004, stamina 0.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=141.52999999999992/159, creature-nest-2=132/132, creature-nest-3=149.73999999999995/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-23-player-2-356",
+      "round": 23,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 2,
+          "column": 11
+        },
+        "reason": "定位：前往出口 (2,11)"
+      },
+      "result": "succeeded",
+      "reason": "定位：前往出口 (2,11)",
+      "createdAt": "2026-09-02T16:10:21.522Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 95 (round 24)
+- Player: 胡斐 (player-2), level 3, experience 37, at (2, 11), health 29.800000000000004, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=143.11999999999992/159, creature-nest-2=132/132, creature-nest-3=151.32999999999996/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-23-roamer-creature-2-357",
+      "round": 23,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-23-roamer-creature-3-358",
+      "round": 23,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-23-roamer-creature-4-359",
+      "round": 23,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-23-roamer-creature-5-360",
+      "round": 23,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-23-roamer-creature-6-361",
+      "round": 23,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-23-roamer-creature-7-362",
+      "round": 23,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-23-roamer-creature-8-363",
+      "round": 23,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-23-roamer-creature-9-364",
+      "round": 23,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-23-nest-creature-2-365",
+      "round": 23,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-23-nest-creature-1-366",
+      "round": 23,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-23-nest-creature-3-367",
+      "round": 23,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-23-nest-creature-4-368",
+      "round": 23,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-23-nest-creature-5-369",
+      "round": 23,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    },
+    {
+      "id": "action-24-player-2-370",
+      "round": 24,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, construction=0.11:none, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, construction=0.11:none, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.526Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 96 (round 24)
+- Player: 胡斐 (player-2), level 3, experience 37, at (2, 12), health 29.800000000000004, stamina 7.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=143.11999999999992/159, creature-nest-2=132/132, creature-nest-3=151.32999999999996/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-24-player-2-371",
+      "round": 24,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 2,
+          "column": 12
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.532Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 97 (round 24)
+- Player: 胡斐 (player-2), level 3, experience 37, at (2, 13), health 29.800000000000004, stamina 5.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=143.11999999999992/159, creature-nest-2=132/132, creature-nest-3=151.32999999999996/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-24-player-2-372",
+      "round": 24,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 2,
+          "column": 13
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.537Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 98 (round 24)
+- Player: 胡斐 (player-2), level 3, experience 37, at (3, 13), health 29.800000000000004, stamina 3.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=143.11999999999992/159, creature-nest-2=132/132, creature-nest-3=151.32999999999996/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-24-player-2-373",
+      "round": 24,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 3,
+          "column": 13
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.542Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 99 (round 24)
+- Player: 胡斐 (player-2), level 3, experience 37, at (4, 13), health 29.800000000000004, stamina 1.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=143.11999999999992/159, creature-nest-2=132/132, creature-nest-3=151.32999999999996/159
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-24-player-2-374",
+      "round": 24,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 4,
+          "column": 13
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.547Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 100 (round 25)
+- Player: 胡斐 (player-2), level 3, experience 40, at (4, 13), health 31.600000000000005, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
+- Spawned creatures: 1
+- Defeated creatures: none
+- Nests: creature-nest-1=144.70999999999992/159, creature-nest-2=132/132, creature-nest-3=152.91999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-24-roamer-creature-2-375",
+      "round": 24,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.548Z"
+    },
+    {
+      "id": "action-24-roamer-creature-3-376",
+      "round": 24,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.548Z"
+    },
+    {
+      "id": "action-24-roamer-creature-4-377",
+      "round": 24,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.548Z"
+    },
+    {
+      "id": "action-24-roamer-creature-5-378",
+      "round": 24,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.548Z"
+    },
+    {
+      "id": "action-24-roamer-creature-6-379",
+      "round": 24,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.548Z"
+    },
+    {
+      "id": "action-24-roamer-creature-7-380",
+      "round": 24,
+      "actor": {
+        "id": "roamer-creature-7",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-7",
+          "kind": "creature"
+        },
+        "reason": "未能接近目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.548Z"
+    },
+    {
+      "id": "action-24-roamer-creature-8-381",
+      "round": 24,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.549Z"
+    },
+    {
+      "id": "action-24-roamer-creature-9-382",
+      "round": 24,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.549Z"
+    },
+    {
+      "id": "action-24-nest-creature-2-383",
+      "round": 24,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.549Z"
+    },
+    {
+      "id": "action-24-nest-creature-1-384",
+      "round": 24,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.549Z"
+    },
+    {
+      "id": "action-24-nest-creature-3-385",
+      "round": 24,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.549Z"
+    },
+    {
+      "id": "action-24-nest-creature-4-386",
+      "round": 24,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.549Z"
+    },
+    {
+      "id": "action-24-nest-creature-5-387",
+      "round": 24,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.549Z"
+    },
+    {
+      "id": "action-25-player-2-388",
+      "round": 25,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.550Z"
+    }
+  ],
+  "creatureLogs": [
+    {
+      "creatureId": "creature-nest-3",
+      "creatureName": "生物巢穴 3",
+      "message": "生物巢穴 3 生成了 Lv.4 怪物。"
     }
   ],
   "spawnedCreatures": [
     {
-      "id": "nest-creature-1",
-      "name": "生物巢穴 1的怪物 Lv.4",
+      "id": "nest-creature-6",
+      "name": "生物巢穴 3的怪物 Lv.4",
       "innerSkillId": "void-spirit-inner",
       "externalSkillIds": [
         "void-spirit-external-functional"
@@ -14441,8 +10642,8 @@
         "void-spirit-external-functional"
       ],
       "position": {
-        "row": 12,
-        "column": 2
+        "row": 10,
+        "column": 8
       },
       "attributes": {
         "armStrength": 9,
@@ -14456,14 +10657,14 @@
       "experience": 0,
       "turnEnded": false,
       "level": 4,
-      "behaviorType": "sieger",
+      "behaviorType": "scavenger",
       "schoolId": "void-spirit",
       "homePosition": {
-        "row": 13,
-        "column": 2
+        "row": 11,
+        "column": 8
       },
-      "homeNestId": "creature-nest-1",
-      "spawnedRound": 31,
+      "homeNestId": "creature-nest-3",
+      "spawnedRound": 25,
       "baseAttributes": {
         "armStrength": 8.399999999999999,
         "constitution": 8.399999999999999,
@@ -14500,21 +10701,21 @@
 }
 ```
 
-### Turn 128 (round 31)
-- Player: 胡斐 (player-2), level 4, experience 155, at (9, 8), health 39, stamina 6
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
+### Turn 101 (round 25)
+- Player: 胡斐 (player-2), level 3, experience 60, at (4, 13), health 31.600000000000005, stamina 4.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
 - Stored experience change: +20
 - Spawned creatures: 0
-- Defeated creatures: roamer-creature-5
-- Nests: creature-nest-1=152.22999999999988/175, creature-nest-2=160.89999999999992/175, creature-nest-3=161.14/175
+- Defeated creatures: roamer-creature-7
+- Nests: creature-nest-1=144.70999999999992/159, creature-nest-2=132/132, creature-nest-3=152.91999999999996/175
 
 ```json
 {
   "actions": [
     {
-      "id": "action-31-player-2-526",
-      "round": 31,
+      "id": "action-25-player-2-389",
+      "round": 25,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -14527,18 +10728,2715 @@
           "kind": "player"
         },
         "target": {
-          "id": "roamer-creature-5",
+          "id": "roamer-creature-7",
           "kind": "creature",
           "position": {
-            "row": 9,
-            "column": 7
+            "row": 4,
+            "column": 12
           }
         },
         "reason": "交戰：攻擊 游蕩妖物"
       },
       "result": "succeeded",
       "reason": "交戰：攻擊 游蕩妖物",
-      "createdAt": "2026-09-02T15:47:51.934Z"
+      "createdAt": "2026-09-02T16:10:21.559Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 102 (round 25)
+- Player: 胡斐 (player-2), level 3, experience 60, at (5, 13), health 31.600000000000005, stamina 2.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=144.70999999999992/159, creature-nest-2=132/132, creature-nest-3=152.91999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-25-player-2-390",
+      "round": 25,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 13
+        },
+        "reason": "練功：移動到門派據點"
+      },
+      "result": "succeeded",
+      "reason": "練功：移動到門派據點",
+      "createdAt": "2026-09-02T16:10:21.566Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 103 (round 25)
+- Player: 胡斐 (player-2), level 3, experience 60, at (5, 13), health 31.600000000000005, stamina 0.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=144.70999999999992/159, creature-nest-2=132/132, creature-nest-3=152.91999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-25-player-2-391",
+      "round": 25,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.569Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 104 (round 26)
+- Player: 胡斐 (player-2), level 3, experience 61, at (5, 13), health 33.400000000000006, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +1
+- Spawned creatures: 1
+- Defeated creatures: none
+- Nests: creature-nest-1=146.29999999999993/175, creature-nest-2=132/132, creature-nest-3=154.66999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-25-roamer-creature-2-392",
+      "round": 25,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.571Z"
+    },
+    {
+      "id": "action-25-roamer-creature-3-393",
+      "round": 25,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.571Z"
+    },
+    {
+      "id": "action-25-roamer-creature-4-394",
+      "round": 25,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.571Z"
+    },
+    {
+      "id": "action-25-roamer-creature-5-395",
+      "round": 25,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.571Z"
+    },
+    {
+      "id": "action-25-roamer-creature-6-396",
+      "round": 25,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.571Z"
+    },
+    {
+      "id": "action-25-roamer-creature-8-397",
+      "round": 25,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.571Z"
+    },
+    {
+      "id": "action-25-roamer-creature-9-398",
+      "round": 25,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.571Z"
+    },
+    {
+      "id": "action-25-nest-creature-2-399",
+      "round": 25,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.572Z"
+    },
+    {
+      "id": "action-25-nest-creature-1-400",
+      "round": 25,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.572Z"
+    },
+    {
+      "id": "action-25-nest-creature-3-401",
+      "round": 25,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.572Z"
+    },
+    {
+      "id": "action-25-nest-creature-4-402",
+      "round": 25,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.572Z"
+    },
+    {
+      "id": "action-25-nest-creature-5-403",
+      "round": 25,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.572Z"
+    },
+    {
+      "id": "action-25-nest-creature-6-404",
+      "round": 25,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.572Z"
+    },
+    {
+      "id": "action-26-player-2-405",
+      "round": 26,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.573Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": [
+    {
+      "id": "nest-creature-7",
+      "name": "生物巢穴 1的怪物 Lv.4",
+      "innerSkillId": "void-spirit-inner",
+      "externalSkillIds": [
+        "void-spirit-external-functional"
+      ],
+      "equippedExternalSkillIds": [
+        "void-spirit-external-functional"
+      ],
+      "position": {
+        "row": 12,
+        "column": 2
+      },
+      "attributes": {
+        "armStrength": 9,
+        "constitution": 9,
+        "agility": 8,
+        "innerEnergy": 8,
+        "insight": 9
+      },
+      "prestige": 0,
+      "money": 0,
+      "experience": 0,
+      "turnEnded": false,
+      "level": 4,
+      "behaviorType": "sieger",
+      "schoolId": "void-spirit",
+      "homePosition": {
+        "row": 13,
+        "column": 2
+      },
+      "homeNestId": "creature-nest-1",
+      "spawnedRound": 26,
+      "baseAttributes": {
+        "armStrength": 8.399999999999999,
+        "constitution": 8.399999999999999,
+        "agility": 8.399999999999999,
+        "innerEnergy": 8.399999999999999,
+        "insight": 8.399999999999999
+      },
+      "health": 27,
+      "maxHealth": 27,
+      "stamina": 8.5,
+      "maxStamina": 8.5,
+      "innerPower": 24,
+      "maxInnerPower": 24,
+      "availableAttributePoints": 0,
+      "governanceRank": 1,
+      "unlockedPolicyIds": [
+        "basic"
+      ],
+      "inventory": [],
+      "unlockedEquipmentDropIds": [],
+      "equipmentInventory": [],
+      "equipmentLoadout": {
+        "weaponInstanceId": null,
+        "armorInstanceId": null,
+        "accessoryInstanceId": null
+      },
+      "innerSkillIds": [
+        "tuna-gong"
+      ],
+      "skillProgression": {},
+      "buffs": []
+    }
+  ]
+}
+```
+
+### Turn 105 (round 26)
+- Player: 胡斐 (player-2), level 3, experience 61, at (5, 13), health 33.400000000000006, stamina 7.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=146.29999999999993/175, creature-nest-2=132/132, creature-nest-3=154.66999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-26-player-2-406",
+      "round": 26,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.579Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 106 (round 26)
+- Player: 胡斐 (player-2), level 3, experience 61, at (5, 13), health 33.400000000000006, stamina 5.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=146.29999999999993/175, creature-nest-2=132/132, creature-nest-3=154.66999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-26-player-2-407",
+      "round": 26,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.586Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 107 (round 26)
+- Player: 胡斐 (player-2), level 3, experience 61, at (5, 13), health 33.400000000000006, stamina 3.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=146.29999999999993/175, creature-nest-2=132/132, creature-nest-3=154.66999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-26-player-2-408",
+      "round": 26,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.593Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 108 (round 26)
+- Player: 胡斐 (player-2), level 3, experience 61, at (5, 13), health 33.400000000000006, stamina 1.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=146.29999999999993/175, creature-nest-2=132/132, creature-nest-3=154.66999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-26-player-2-409",
+      "round": 26,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.600Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 109 (round 27)
+- Player: 胡斐 (player-2), level 3, experience 64, at (5, 13), health 35.2, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=148.04999999999993/175, creature-nest-2=132/132, creature-nest-3=156.41999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-26-roamer-creature-2-410",
+      "round": 26,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.602Z"
+    },
+    {
+      "id": "action-26-roamer-creature-3-411",
+      "round": 26,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.602Z"
+    },
+    {
+      "id": "action-26-roamer-creature-4-412",
+      "round": 26,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.602Z"
+    },
+    {
+      "id": "action-26-roamer-creature-5-413",
+      "round": 26,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.602Z"
+    },
+    {
+      "id": "action-26-roamer-creature-6-414",
+      "round": 26,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.602Z"
+    },
+    {
+      "id": "action-26-roamer-creature-8-415",
+      "round": 26,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.602Z"
+    },
+    {
+      "id": "action-26-roamer-creature-9-416",
+      "round": 26,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.602Z"
+    },
+    {
+      "id": "action-26-nest-creature-2-417",
+      "round": 26,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.603Z"
+    },
+    {
+      "id": "action-26-nest-creature-1-418",
+      "round": 26,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.603Z"
+    },
+    {
+      "id": "action-26-nest-creature-3-419",
+      "round": 26,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.603Z"
+    },
+    {
+      "id": "action-26-nest-creature-4-420",
+      "round": 26,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.603Z"
+    },
+    {
+      "id": "action-26-nest-creature-5-421",
+      "round": 26,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.603Z"
+    },
+    {
+      "id": "action-26-nest-creature-6-422",
+      "round": 26,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 8,
+          "column": 10
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.603Z"
+    },
+    {
+      "id": "action-26-nest-creature-7-423",
+      "round": 26,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.603Z"
+    },
+    {
+      "id": "action-27-player-2-424",
+      "round": 27,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, construction=0.11:none, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, construction=0.11:none, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.604Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 110 (round 27)
+- Player: 胡斐 (player-2), level 3, experience 64, at (5, 13), health 35.2, stamina 7.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=148.04999999999993/175, creature-nest-2=132/132, creature-nest-3=156.41999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-27-player-2-425",
+      "round": 27,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.611Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 111 (round 27)
+- Player: 胡斐 (player-2), level 3, experience 64, at (5, 13), health 35.2, stamina 5.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=148.04999999999993/175, creature-nest-2=132/132, creature-nest-3=156.41999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-27-player-2-426",
+      "round": 27,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.618Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 112 (round 27)
+- Player: 胡斐 (player-2), level 3, experience 64, at (5, 13), health 35.2, stamina 3.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=148.04999999999993/175, creature-nest-2=132/132, creature-nest-3=156.41999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-27-player-2-427",
+      "round": 27,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.624Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 113 (round 27)
+- Player: 胡斐 (player-2), level 3, experience 64, at (5, 13), health 35.2, stamina 1.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=148.04999999999993/175, creature-nest-2=132/132, creature-nest-3=156.41999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-27-player-2-428",
+      "round": 27,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.631Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 114 (round 28)
+- Player: 胡斐 (player-2), level 3, experience 67, at (5, 13), health 36, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
+- Spawned creatures: 1
+- Defeated creatures: none
+- Nests: creature-nest-1=149.79999999999993/175, creature-nest-2=132/145, creature-nest-3=158.16999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-27-roamer-creature-2-429",
+      "round": 27,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-roamer-creature-3-430",
+      "round": 27,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-roamer-creature-4-431",
+      "round": 27,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-roamer-creature-5-432",
+      "round": 27,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-roamer-creature-6-433",
+      "round": 27,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-roamer-creature-8-434",
+      "round": 27,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-roamer-creature-9-435",
+      "round": 27,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-nest-creature-2-436",
+      "round": 27,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-nest-creature-1-437",
+      "round": 27,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-nest-creature-3-438",
+      "round": 27,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-nest-creature-4-439",
+      "round": 27,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-nest-creature-5-440",
+      "round": 27,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-nest-creature-6-441",
+      "round": 27,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "resource-point-3",
+          "kind": "resource",
+          "position": {
+            "row": 6,
+            "column": 11
+          }
+        },
+        "reason": "與 耕田 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-27-nest-creature-7-442",
+      "round": 27,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.634Z"
+    },
+    {
+      "id": "action-28-player-2-443",
+      "round": 28,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, construction=0.11:none, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, construction=0.11:none, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.635Z"
+    }
+  ],
+  "creatureLogs": [
+    {
+      "creatureId": "nest-creature-6",
+      "creatureName": "生物巢穴 3的怪物 Lv.4",
+      "message": "生物巢穴 3的怪物 Lv.4 攻擊耕田，造成 7 點傷害。"
+    },
+    {
+      "creatureId": "creature-nest-2",
+      "creatureName": "生物巢穴 2",
+      "message": "生物巢穴 2 生成了 Lv.2 怪物。"
+    }
+  ],
+  "spawnedCreatures": [
+    {
+      "id": "nest-creature-8",
+      "name": "生物巢穴 2的怪物 Lv.2",
+      "innerSkillId": "yellow-earth-inner",
+      "externalSkillIds": [],
+      "equippedExternalSkillIds": [],
+      "position": {
+        "row": 3,
+        "column": 3
+      },
+      "attributes": {
+        "armStrength": 6,
+        "constitution": 9,
+        "agility": 6,
+        "innerEnergy": 6,
+        "insight": 5
+      },
+      "prestige": 0,
+      "money": 0,
+      "experience": 0,
+      "turnEnded": false,
+      "level": 2,
+      "behaviorType": "scavenger",
+      "schoolId": "yellow-earth",
+      "homePosition": {
+        "row": 4,
+        "column": 3
+      },
+      "homeNestId": "creature-nest-2",
+      "spawnedRound": 28,
+      "baseAttributes": {
+        "armStrength": 6.3,
+        "constitution": 7,
+        "agility": 5.6,
+        "innerEnergy": 6.3,
+        "insight": 5
+      },
+      "health": 27,
+      "maxHealth": 27,
+      "stamina": 6,
+      "maxStamina": 6,
+      "innerPower": 18,
+      "maxInnerPower": 18,
+      "availableAttributePoints": 0,
+      "governanceRank": 1,
+      "unlockedPolicyIds": [
+        "basic"
+      ],
+      "inventory": [],
+      "unlockedEquipmentDropIds": [],
+      "equipmentInventory": [],
+      "equipmentLoadout": {
+        "weaponInstanceId": null,
+        "armorInstanceId": null,
+        "accessoryInstanceId": null
+      },
+      "innerSkillIds": [
+        "tuna-gong"
+      ],
+      "skillProgression": {},
+      "buffs": []
+    }
+  ]
+}
+```
+
+### Turn 115 (round 28)
+- Player: 胡斐 (player-2), level 3, experience 67, at (5, 12), health 36, stamina 7.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=149.79999999999993/175, creature-nest-2=132/145, creature-nest-3=158.16999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-28-player-2-444",
+      "round": 28,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 12
+        },
+        "reason": "學招：移動到門派據點"
+      },
+      "result": "succeeded",
+      "reason": "學招：移動到門派據點",
+      "createdAt": "2026-09-02T16:10:21.642Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 116 (round 28)
+- Player: 胡斐 (player-2), level 3, experience 67, at (4, 12), health 36, stamina 5.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=149.79999999999993/175, creature-nest-2=132/145, creature-nest-3=158.16999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-28-player-2-445",
+      "round": 28,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 4,
+          "column": 12
+        },
+        "reason": "學招：移動到門派據點"
+      },
+      "result": "succeeded",
+      "reason": "學招：移動到門派據點",
+      "createdAt": "2026-09-02T16:10:21.651Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 117 (round 28)
+- Player: 胡斐 (player-2), level 3, experience 67, at (3, 12), health 36, stamina 3.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=149.79999999999993/175, creature-nest-2=132/145, creature-nest-3=158.16999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-28-player-2-446",
+      "round": 28,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 3,
+          "column": 12
+        },
+        "reason": "學招：移動到門派據點"
+      },
+      "result": "succeeded",
+      "reason": "學招：移動到門派據點",
+      "createdAt": "2026-09-02T16:10:21.659Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 118 (round 28)
+- Player: 胡斐 (player-2), level 3, experience 67, at (3, 11), health 36, stamina 1.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=149.79999999999993/175, creature-nest-2=132/145, creature-nest-3=158.16999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-28-player-2-447",
+      "round": 28,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 3,
+          "column": 11
+        },
+        "reason": "學招：移動到門派據點"
+      },
+      "result": "succeeded",
+      "reason": "學招：移動到門派據點",
+      "createdAt": "2026-09-02T16:10:21.668Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 119 (round 29)
+- Player: 胡斐 (player-2), level 3, experience 70, at (3, 11), health 36, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=151.54999999999993/175, creature-nest-2=133.45/145, creature-nest-3=159.91999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-28-roamer-creature-2-448",
+      "round": 28,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.671Z"
+    },
+    {
+      "id": "action-28-roamer-creature-3-449",
+      "round": 28,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.671Z"
+    },
+    {
+      "id": "action-28-roamer-creature-4-450",
+      "round": 28,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-28-roamer-creature-5-451",
+      "round": 28,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-28-roamer-creature-6-452",
+      "round": 28,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-28-roamer-creature-8-453",
+      "round": 28,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-28-roamer-creature-9-454",
+      "round": 28,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-28-nest-creature-2-455",
+      "round": 28,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-28-nest-creature-1-456",
+      "round": 28,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 2,
+          "column": 8
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-28-nest-creature-3-457",
+      "round": 28,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-28-nest-creature-4-458",
+      "round": 28,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-28-nest-creature-5-459",
+      "round": 28,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-28-nest-creature-6-460",
+      "round": 28,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "resource-point-3",
+          "kind": "resource",
+          "position": {
+            "row": 6,
+            "column": 11
+          }
+        },
+        "reason": "與 耕田 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-28-nest-creature-7-461",
+      "round": 28,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-28-nest-creature-8-462",
+      "round": 28,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.672Z"
+    },
+    {
+      "id": "action-29-player-2-463",
+      "round": 29,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, construction=0.11:none, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, construction=0.11:none, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.673Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 120 (round 29)
+- Player: 胡斐 (player-2), level 3, experience 70, at (3, 11), health 36, stamina 6.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=151.54999999999993/175, creature-nest-2=133.45/145, creature-nest-3=159.91999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-29-player-2-464",
+      "round": 29,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "learn-skill",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "gateId": "sect-gate-2",
+        "skillType": "external",
+        "skillId": "swift-wind-external-damage",
+        "reason": "學招：學習門派功法 追風腿"
+      },
+      "result": "succeeded",
+      "reason": "學招：學習門派功法 追風腿",
+      "createdAt": "2026-09-02T16:10:21.680Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 121 (round 29)
+- Player: 胡斐 (player-2), level 3, experience 70, at (3, 11), health 36, stamina 6.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=151.54999999999993/175, creature-nest-2=133.45/145, creature-nest-3=159.91999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-29-player-2-465",
+      "round": 29,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "equip-external-skill",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "skillId": "swift-wind-external-damage",
+        "reason": "啟用外功：追風腿"
+      },
+      "result": "succeeded",
+      "reason": "啟用外功：追風腿",
+      "createdAt": "2026-09-02T16:10:21.686Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 122 (round 29)
+- Player: 胡斐 (player-2), level 3, experience 70, at (3, 11), health 36, stamina 3.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=151.54999999999993/175, creature-nest-2=133.45/145, creature-nest-3=159.91999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-29-player-2-466",
+      "round": 29,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "learn-skill",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "gateId": "sect-gate-2",
+        "skillType": "external",
+        "skillId": "swift-wind-external-functional",
+        "reason": "學招：學習門派功法 疾行"
+      },
+      "result": "succeeded",
+      "reason": "學招：學習門派功法 疾行",
+      "createdAt": "2026-09-02T16:10:21.693Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 123 (round 29)
+- Player: 胡斐 (player-2), level 3, experience 70, at (3, 11), health 36, stamina 0.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=151.54999999999993/175, creature-nest-2=133.45/145, creature-nest-3=159.91999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-29-player-2-467",
+      "round": 29,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "learn-skill",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "gateId": "sect-gate-2",
+        "skillType": "external",
+        "skillId": "swift-wind-external-functional-2",
+        "reason": "學招：學習門派功法 林間步"
+      },
+      "result": "succeeded",
+      "reason": "學招：學習門派功法 林間步",
+      "createdAt": "2026-09-02T16:10:21.700Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 124 (round 30)
+- Player: 胡斐 (player-2), level 3, experience 71, at (3, 11), health 36, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=153.29999999999993/175, creature-nest-2=134.89999999999998/145, creature-nest-3=161.66999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-29-roamer-creature-2-468",
+      "round": 29,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-roamer-creature-3-469",
+      "round": 29,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-roamer-creature-4-470",
+      "round": 29,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-roamer-creature-5-471",
+      "round": 29,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 2,
+          "column": 9
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-roamer-creature-6-472",
+      "round": 29,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-roamer-creature-8-473",
+      "round": 29,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-roamer-creature-9-474",
+      "round": 29,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-nest-creature-2-475",
+      "round": 29,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-nest-creature-1-476",
+      "round": 29,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 3,
+          "column": 9
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-nest-creature-3-477",
+      "round": 29,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-nest-creature-4-478",
+      "round": 29,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-nest-creature-5-479",
+      "round": 29,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-nest-creature-6-480",
+      "round": 29,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "resource-point-3",
+          "kind": "resource",
+          "position": {
+            "row": 6,
+            "column": 11
+          }
+        },
+        "reason": "與 耕田 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-nest-creature-7-481",
+      "round": 29,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-29-nest-creature-8-482",
+      "round": 29,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.703Z"
+    },
+    {
+      "id": "action-30-player-2-483",
+      "round": 30,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, construction=0.11:none, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, construction=0.11:none, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.704Z"
+    }
+  ],
+  "creatureLogs": [
+    {
+      "creatureId": "nest-creature-6",
+      "creatureName": "生物巢穴 3的怪物 Lv.4",
+      "message": "生物巢穴 3的怪物 Lv.4 攻擊耕田，造成 7 點傷害。"
+    }
+  ],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 125 (round 30)
+- Player: 胡斐 (player-2), level 3, experience 71, at (2, 11), health 36, stamina 7.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=153.29999999999993/175, creature-nest-2=134.89999999999998/145, creature-nest-3=161.66999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-30-player-2-484",
+      "round": 30,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 2,
+          "column": 11
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.712Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 126 (round 30)
+- Player: 胡斐 (player-2), level 3, experience 71, at (2, 12), health 36, stamina 5.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=153.29999999999993/175, creature-nest-2=134.89999999999998/145, creature-nest-3=161.66999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-30-player-2-485",
+      "round": 30,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 2,
+          "column": 12
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.720Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 127 (round 30)
+- Player: 胡斐 (player-2), level 3, experience 71, at (2, 13), health 36, stamina 3.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=153.29999999999993/175, creature-nest-2=134.89999999999998/145, creature-nest-3=161.66999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-30-player-2-486",
+      "round": 30,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 2,
+          "column": 13
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.727Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 128 (round 30)
+- Player: 胡斐 (player-2), level 3, experience 71, at (3, 13), health 36, stamina 1.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=153.29999999999993/175, creature-nest-2=134.89999999999998/145, creature-nest-3=161.66999999999996/175
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-30-player-2-487",
+      "round": 30,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 3,
+          "column": 13
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.734Z"
     }
   ],
   "creatureLogs": [],
@@ -14547,637 +13445,20 @@
 ```
 
 ### Turn 129 (round 31)
-- Player: 胡斐 (player-2), level 4, experience 155, at (9, 7), health 39, stamina 4
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=152.22999999999988/175, creature-nest-2=160.89999999999992/175, creature-nest-3=161.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-31-player-2-527",
-      "round": 31,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 9,
-          "column": 7
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.943Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 130 (round 31)
-- Player: 胡斐 (player-2), level 4, experience 155, at (10, 7), health 39, stamina 2
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=8, insight=8
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=152.22999999999988/175, creature-nest-2=160.89999999999992/175, creature-nest-3=161.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-31-player-2-528",
-      "round": 31,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 10,
-          "column": 7
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.953Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 131 (round 31)
-- Player: 胡斐 (player-2), level 4, experience 155, at (10, 7), health 39, stamina 2
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=152.22999999999988/175, creature-nest-2=160.89999999999992/175, creature-nest-3=161.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-31-player-2-529",
-      "round": 31,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "equip",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "instanceId": "equipment-player-2-0cf2f656-8d71-40ba-9c4c-47c75d19cb76",
-        "reason": "裝備：溫玉佩（accessory）"
-      },
-      "result": "succeeded",
-      "reason": "裝備：溫玉佩（accessory）",
-      "createdAt": "2026-09-02T15:47:51.960Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 132 (round 31)
-- Player: 胡斐 (player-2), level 4, experience 155, at (10, 8), health 39, stamina 0
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=152.22999999999988/175, creature-nest-2=160.89999999999992/175, creature-nest-3=161.14/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-31-player-2-530",
-      "round": 31,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 10,
-          "column": 8
-        },
-        "reason": "保命：逃離 生物巢穴 1的怪物 Lv.2（hitsSurvivable=7.8）"
-      },
-      "result": "succeeded",
-      "reason": "保命：逃離 生物巢穴 1的怪物 Lv.2（hitsSurvivable=7.8）",
-      "createdAt": "2026-09-02T15:47:51.966Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 133 (round 32)
-- Player: 胡斐 (player-2), level 4, experience 155, at (10, 8), health 39, stamina 11
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=153.97999999999988/175, creature-nest-2=162.64999999999992/175, creature-nest-3=162.89/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-31-roamer-creature-1-531",
-      "round": 31,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.966Z"
-    },
-    {
-      "id": "action-31-roamer-creature-2-532",
-      "round": 31,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.966Z"
-    },
-    {
-      "id": "action-31-roamer-creature-3-533",
-      "round": 31,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.966Z"
-    },
-    {
-      "id": "action-31-roamer-creature-4-534",
-      "round": 31,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.966Z"
-    },
-    {
-      "id": "action-31-roamer-creature-7-535",
-      "round": 31,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.966Z"
-    },
-    {
-      "id": "action-31-roamer-creature-8-536",
-      "round": 31,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.966Z"
-    },
-    {
-      "id": "action-31-nest-creature-3-537",
-      "round": 31,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 10,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.966Z"
-    },
-    {
-      "id": "action-31-nest-creature-4-538",
-      "round": 31,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "resource-point-2",
-          "kind": "resource",
-          "position": {
-            "row": 4,
-            "column": 12
-          }
-        },
-        "reason": "與 耕田 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.966Z"
-    },
-    {
-      "id": "action-31-nest-creature-7-539",
-      "round": 31,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "resource-point-1",
-          "kind": "resource",
-          "position": {
-            "row": 7,
-            "column": 13
-          }
-        },
-        "reason": "與 耕田 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:51.966Z"
-    },
-    {
-      "id": "action-31-nest-creature-8-540",
-      "round": 31,
-      "actor": {
-        "id": "nest-creature-8",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-8",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 9,
-          "column": 4
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:51.967Z"
-    },
-    {
-      "id": "action-31-nest-creature-9-541",
-      "round": 31,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 4,
-          "column": 10
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:51.967Z"
-    },
-    {
-      "id": "action-31-nest-creature-1-542",
-      "round": 31,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.4"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:51.967Z"
-    },
-    {
-      "id": "action-32-player-2-543",
-      "round": 32,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略迴圈結束（0 步）"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-02T15:47:51.967Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 134 (round 32)
-- Player: 胡斐 (player-2), level 4, experience 155, at (10, 9), health 39, stamina 9
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=153.97999999999988/175, creature-nest-2=162.64999999999992/175, creature-nest-3=162.89/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-32-player-2-544",
-      "round": 32,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 10,
-          "column": 9
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.982Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 135 (round 32)
-- Player: 胡斐 (player-2), level 4, experience 155, at (11, 9), health 39, stamina 4
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=153.97999999999988/175, creature-nest-2=162.64999999999992/175, creature-nest-3=162.89/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-32-player-2-545",
-      "round": 32,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 11,
-          "column": 9
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:51.993Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 136 (round 32)
-- Player: 胡斐 (player-2), level 4, experience 155, at (12, 9), health 39, stamina 2
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=153.97999999999988/175, creature-nest-2=162.64999999999992/175, creature-nest-3=162.89/175
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-32-player-2-546",
-      "round": 32,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 12,
-          "column": 9
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:52.001Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 137 (round 33)
-- Player: 胡斐 (player-2), level 4, experience 159, at (12, 9), health 39, stamina 11
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +4
+- Player: 胡斐 (player-2), level 3, experience 74, at (3, 13), health 36, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
 - Spawned creatures: 1
 - Defeated creatures: none
-- Nests: creature-nest-1=155.72999999999988/175, creature-nest-2=164.39999999999992/175, creature-nest-3=164.64/193
+- Nests: creature-nest-1=155.04999999999993/175, creature-nest-2=136.34999999999997/145, creature-nest-3=163.41999999999996/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-32-roamer-creature-1-547",
-      "round": 32,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.003Z"
-    },
-    {
-      "id": "action-32-roamer-creature-2-548",
-      "round": 32,
+      "id": "action-30-roamer-creature-2-488",
+      "round": 30,
       "actor": {
         "id": "roamer-creature-2",
         "kind": "creature",
@@ -15193,11 +13474,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.003Z"
+      "createdAt": "2026-09-02T16:10:21.736Z"
     },
     {
-      "id": "action-32-roamer-creature-3-549",
-      "round": 32,
+      "id": "action-30-roamer-creature-3-489",
+      "round": 30,
       "actor": {
         "id": "roamer-creature-3",
         "kind": "creature",
@@ -15213,11 +13494,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.003Z"
+      "createdAt": "2026-09-02T16:10:21.736Z"
     },
     {
-      "id": "action-32-roamer-creature-4-550",
-      "round": 32,
+      "id": "action-30-roamer-creature-4-490",
+      "round": 30,
       "actor": {
         "id": "roamer-creature-4",
         "kind": "creature",
@@ -15233,31 +13514,51 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.003Z"
+      "createdAt": "2026-09-02T16:10:21.736Z"
     },
     {
-      "id": "action-32-roamer-creature-7-551",
-      "round": 32,
+      "id": "action-30-roamer-creature-5-491",
+      "round": 30,
       "actor": {
-        "id": "roamer-creature-7",
+        "id": "roamer-creature-5",
         "kind": "creature",
         "name": "游蕩妖物"
       },
       "action": {
         "type": "hold",
         "actor": {
-          "id": "roamer-creature-7",
+          "id": "roamer-creature-5",
           "kind": "creature"
         },
         "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.003Z"
+      "createdAt": "2026-09-02T16:10:21.736Z"
     },
     {
-      "id": "action-32-roamer-creature-8-552",
-      "round": 32,
+      "id": "action-30-roamer-creature-6-492",
+      "round": 30,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.736Z"
+    },
+    {
+      "id": "action-30-roamer-creature-8-493",
+      "round": 30,
       "actor": {
         "id": "roamer-creature-8",
         "kind": "creature",
@@ -15273,95 +13574,187 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.003Z"
+      "createdAt": "2026-09-02T16:10:21.736Z"
     },
     {
-      "id": "action-32-nest-creature-3-553",
-      "round": 32,
+      "id": "action-30-roamer-creature-9-494",
+      "round": 30,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.737Z"
+    },
+    {
+      "id": "action-30-nest-creature-2-495",
+      "round": 30,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.737Z"
+    },
+    {
+      "id": "action-30-nest-creature-1-496",
+      "round": 30,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 3,
+          "column": 9
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.737Z"
+    },
+    {
+      "id": "action-30-nest-creature-3-497",
+      "round": 30,
       "actor": {
         "id": "nest-creature-3",
         "kind": "creature",
         "name": "生物巢穴 1的怪物 Lv.2"
       },
       "action": {
-        "type": "move",
+        "type": "hold",
         "actor": {
           "id": "nest-creature-3",
           "kind": "creature"
         },
-        "destination": {
-          "row": 11,
-          "column": 7
-        },
-        "reason": "移動接近 胡斐。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:52.003Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.737Z"
     },
     {
-      "id": "action-32-nest-creature-4-554",
-      "round": 32,
+      "id": "action-30-nest-creature-4-498",
+      "round": 30,
       "actor": {
         "id": "nest-creature-4",
         "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
+        "name": "生物巢穴 3的怪物 Lv.3"
       },
       "action": {
-        "type": "attack",
+        "type": "hold",
         "actor": {
           "id": "nest-creature-4",
           "kind": "creature"
         },
-        "target": {
-          "id": "resource-point-2",
-          "kind": "resource",
-          "position": {
-            "row": 4,
-            "column": 12
-          }
-        },
-        "reason": "與 耕田 交戰。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:52.004Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.737Z"
     },
     {
-      "id": "action-32-nest-creature-7-555",
-      "round": 32,
+      "id": "action-30-nest-creature-5-499",
+      "round": 30,
       "actor": {
-        "id": "nest-creature-7",
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.737Z"
+    },
+    {
+      "id": "action-30-nest-creature-6-500",
+      "round": 30,
+      "actor": {
+        "id": "nest-creature-6",
         "kind": "creature",
         "name": "生物巢穴 3的怪物 Lv.4"
       },
       "action": {
         "type": "attack",
         "actor": {
-          "id": "nest-creature-7",
+          "id": "nest-creature-6",
           "kind": "creature"
         },
         "target": {
-          "id": "resource-point-1",
+          "id": "resource-point-3",
           "kind": "resource",
           "position": {
-            "row": 7,
-            "column": 13
+            "row": 6,
+            "column": 11
           }
         },
         "reason": "與 耕田 交戰。"
       },
       "result": "succeeded",
       "reason": "與 耕田 交戰。",
-      "createdAt": "2026-09-02T15:47:52.004Z"
+      "createdAt": "2026-09-02T16:10:21.737Z"
     },
     {
-      "id": "action-32-nest-creature-8-556",
-      "round": 32,
+      "id": "action-30-nest-creature-7-501",
+      "round": 30,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.737Z"
+    },
+    {
+      "id": "action-30-nest-creature-8-502",
+      "round": 30,
       "actor": {
         "id": "nest-creature-8",
         "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.3"
+        "name": "生物巢穴 2的怪物 Lv.2"
       },
       "action": {
         "type": "hold",
@@ -15373,55 +13766,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.004Z"
+      "createdAt": "2026-09-02T16:10:21.737Z"
     },
     {
-      "id": "action-32-nest-creature-9-557",
-      "round": 32,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 4,
-          "column": 10
-        },
-        "reason": "移動接近 耕田。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 耕田。",
-      "createdAt": "2026-09-02T15:47:52.004Z"
-    },
-    {
-      "id": "action-32-nest-creature-1-558",
-      "round": 32,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.4"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.004Z"
-    },
-    {
-      "id": "action-33-player-2-559",
-      "round": 33,
+      "id": "action-31-player-2-503",
+      "round": 31,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -15433,23 +13782,17 @@
           "id": "player-2",
           "kind": "player"
         },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
+        "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, selfPreservation=0.00:hold"
       },
       "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:52.004Z"
+      "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.738Z"
     }
   ],
-  "creatureLogs": [
-    {
-      "creatureId": "creature-nest-3",
-      "creatureName": "生物巢穴 3",
-      "message": "生物巢穴 3 生成了 Lv.5 怪物。"
-    }
-  ],
+  "creatureLogs": [],
   "spawnedCreatures": [
     {
-      "id": "nest-creature-2",
+      "id": "nest-creature-9",
       "name": "生物巢穴 3的怪物 Lv.5",
       "innerSkillId": "void-spirit-inner",
       "externalSkillIds": [
@@ -15481,7 +13824,7 @@
         "column": 8
       },
       "homeNestId": "creature-nest-3",
-      "spawnedRound": 33,
+      "spawnedRound": 31,
       "baseAttributes": {
         "armStrength": 9.799999999999999,
         "constitution": 9.799999999999999,
@@ -15518,45 +13861,693 @@
 }
 ```
 
-### Turn 138 (round 33)
-- Player: 胡斐 (player-2), level 4, experience 179, at (12, 9), health 39, stamina 6
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +20
+### Turn 130 (round 31)
+- Player: 胡斐 (player-2), level 3, experience 74, at (4, 13), health 36, stamina 7.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=155.72999999999988/175, creature-nest-2=164.39999999999992/175, creature-nest-3=164.64/193
+- Nests: creature-nest-1=155.04999999999993/175, creature-nest-2=136.34999999999997/145, creature-nest-3=163.41999999999996/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-33-player-2-560",
-      "round": 33,
+      "id": "action-31-player-2-504",
+      "round": 31,
       "actor": {
         "id": "player-2",
         "kind": "player",
         "name": "胡斐"
       },
       "action": {
-        "type": "collect",
+        "type": "move",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "target": {
-          "id": "ruin-6",
-          "kind": "ruin",
-          "position": {
-            "row": 12,
-            "column": 10
-          }
+        "destination": {
+          "row": 4,
+          "column": 13
         },
-        "reason": "清障：清除廢墟 白鷺村"
+        "reason": "任務：移動到告示牌據點"
       },
       "result": "succeeded",
-      "reason": "清障：清除廢墟 白鷺村",
-      "createdAt": "2026-09-02T15:47:52.012Z"
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.746Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 131 (round 31)
+- Player: 胡斐 (player-2), level 3, experience 74, at (5, 13), health 36, stamina 5.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=155.04999999999993/175, creature-nest-2=136.34999999999997/145, creature-nest-3=163.41999999999996/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-31-player-2-505",
+      "round": 31,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 13
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.753Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 132 (round 31)
+- Player: 胡斐 (player-2), level 3, experience 74, at (5, 13), health 36, stamina 3.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=155.04999999999993/175, creature-nest-2=136.34999999999997/145, creature-nest-3=163.41999999999996/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-31-player-2-506",
+      "round": 31,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.759Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 133 (round 31)
+- Player: 胡斐 (player-2), level 3, experience 74, at (5, 13), health 36, stamina 1.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=155.04999999999993/175, creature-nest-2=136.34999999999997/145, creature-nest-3=163.41999999999996/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-31-player-2-507",
+      "round": 31,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.765Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 134 (round 32)
+- Player: 胡斐 (player-2), level 3, experience 77, at (5, 13), health 36, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=156.79999999999993/175, creature-nest-2=137.79999999999995/145, creature-nest-3=165.34999999999997/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-31-roamer-creature-2-508",
+      "round": 31,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-roamer-creature-3-509",
+      "round": 31,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-roamer-creature-4-510",
+      "round": 31,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-roamer-creature-5-511",
+      "round": 31,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-roamer-creature-6-512",
+      "round": 31,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-roamer-creature-8-513",
+      "round": 31,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-roamer-creature-9-514",
+      "round": 31,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-nest-creature-2-515",
+      "round": 31,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-nest-creature-1-516",
+      "round": 31,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 4,
+          "column": 8
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-nest-creature-3-517",
+      "round": 31,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-nest-creature-4-518",
+      "round": 31,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-nest-creature-5-519",
+      "round": 31,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-nest-creature-6-520",
+      "round": 31,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "resource-point-3",
+          "kind": "resource",
+          "position": {
+            "row": 6,
+            "column": 11
+          }
+        },
+        "reason": "與 耕田 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-nest-creature-7-521",
+      "round": 31,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-nest-creature-8-522",
+      "round": 31,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-31-nest-creature-9-523",
+      "round": 31,
+      "actor": {
+        "id": "nest-creature-9",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.5"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.768Z"
+    },
+    {
+      "id": "action-32-player-2-524",
+      "round": 32,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, construction=0.11:none, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, construction=0.11:none, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.769Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 135 (round 32)
+- Player: 胡斐 (player-2), level 3, experience 77, at (5, 13), health 36, stamina 7.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=156.79999999999993/175, creature-nest-2=137.79999999999995/145, creature-nest-3=165.34999999999997/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-32-player-2-525",
+      "round": 32,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.775Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 136 (round 32)
+- Player: 胡斐 (player-2), level 3, experience 77, at (5, 13), health 36, stamina 5.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=156.79999999999993/175, creature-nest-2=137.79999999999995/145, creature-nest-3=165.34999999999997/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-32-player-2-526",
+      "round": 32,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.780Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 137 (round 32)
+- Player: 胡斐 (player-2), level 3, experience 77, at (5, 13), health 36, stamina 3.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=156.79999999999993/175, creature-nest-2=137.79999999999995/145, creature-nest-3=165.34999999999997/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-32-player-2-527",
+      "round": 32,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.786Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 138 (round 32)
+- Player: 胡斐 (player-2), level 3, experience 77, at (5, 13), health 36, stamina 1.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=156.79999999999993/175, creature-nest-2=137.79999999999995/145, creature-nest-3=165.34999999999997/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-32-player-2-528",
+      "round": 32,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.792Z"
     }
   ],
   "creatureLogs": [],
@@ -15565,19 +14556,351 @@
 ```
 
 ### Turn 139 (round 33)
-- Player: 胡斐 (player-2), level 4, experience 179, at (12, 8), health 39, stamina 4
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +0
+- Player: 胡斐 (player-2), level 3, experience 80, at (5, 13), health 36, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=155.72999999999988/175, creature-nest-2=164.39999999999992/175, creature-nest-3=164.64/193
+- Nests: creature-nest-1=158.54999999999993/175, creature-nest-2=139.24999999999994/145, creature-nest-3=167.27999999999997/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-33-player-2-561",
+      "id": "action-32-roamer-creature-2-529",
+      "round": 32,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-roamer-creature-3-530",
+      "round": 32,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-roamer-creature-4-531",
+      "round": 32,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-roamer-creature-5-532",
+      "round": 32,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-roamer-creature-6-533",
+      "round": 32,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-roamer-creature-8-534",
+      "round": 32,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-roamer-creature-9-535",
+      "round": 32,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-nest-creature-2-536",
+      "round": 32,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-nest-creature-1-537",
+      "round": 32,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 4,
+          "column": 8
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-nest-creature-3-538",
+      "round": 32,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-nest-creature-4-539",
+      "round": 32,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-nest-creature-5-540",
+      "round": 32,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-nest-creature-6-541",
+      "round": 32,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "resource-point-1",
+          "kind": "resource",
+          "position": {
+            "row": 7,
+            "column": 13
+          }
+        },
+        "reason": "與 耕田 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-nest-creature-7-542",
+      "round": 32,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-nest-creature-8-543",
+      "round": 32,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-32-nest-creature-9-544",
+      "round": 32,
+      "actor": {
+        "id": "nest-creature-9",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.5"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.795Z"
+    },
+    {
+      "id": "action-33-player-2-545",
       "round": 33,
       "actor": {
         "id": "player-2",
@@ -15585,41 +14908,43 @@
         "name": "胡斐"
       },
       "action": {
-        "type": "move",
+        "type": "end-turn",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "destination": {
-          "row": 12,
-          "column": 8
-        },
-        "reason": "學招：移動到門派據點"
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
       },
       "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:52.019Z"
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.796Z"
     }
   ],
-  "creatureLogs": [],
+  "creatureLogs": [
+    {
+      "creatureId": "nest-creature-6",
+      "creatureName": "生物巢穴 3的怪物 Lv.4",
+      "message": "生物巢穴 3的怪物 Lv.4 攻擊耕田，造成 7 點傷害。"
+    }
+  ],
   "spawnedCreatures": []
 }
 ```
 
 ### Turn 140 (round 33)
-- Player: 胡斐 (player-2), level 4, experience 179, at (12, 7), health 39, stamina 2
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
+- Player: 胡斐 (player-2), level 3, experience 80, at (5, 13), health 36, stamina 7.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=155.72999999999988/175, creature-nest-2=164.39999999999992/175, creature-nest-3=164.64/193
+- Nests: creature-nest-1=158.54999999999993/175, creature-nest-2=139.24999999999994/145, creature-nest-3=167.27999999999997/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-33-player-2-562",
+      "id": "action-33-player-2-546",
       "round": 33,
       "actor": {
         "id": "player-2",
@@ -15627,20 +14952,18 @@
         "name": "胡斐"
       },
       "action": {
-        "type": "move",
+        "type": "use-facility",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "destination": {
-          "row": 12,
-          "column": 7
-        },
-        "reason": "學招：移動到門派據點"
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
       },
       "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:52.029Z"
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.803Z"
     }
   ],
   "creatureLogs": [],
@@ -15649,19 +14972,19 @@
 ```
 
 ### Turn 141 (round 33)
-- Player: 胡斐 (player-2), level 4, experience 179, at (12, 6), health 39, stamina 0
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
+- Player: 胡斐 (player-2), level 3, experience 80, at (5, 13), health 36, stamina 5.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=155.72999999999988/175, creature-nest-2=164.39999999999992/175, creature-nest-3=164.64/193
+- Nests: creature-nest-1=158.54999999999993/175, creature-nest-2=139.24999999999994/145, creature-nest-3=167.27999999999997/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-33-player-2-563",
+      "id": "action-33-player-2-547",
       "round": 33,
       "actor": {
         "id": "player-2",
@@ -15669,20 +14992,18 @@
         "name": "胡斐"
       },
       "action": {
-        "type": "move",
+        "type": "use-facility",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "destination": {
-          "row": 12,
-          "column": 6
-        },
-        "reason": "保命：逃離 生物巢穴 1的怪物 Lv.2（hitsSurvivable=4.333333333333333）"
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
       },
       "result": "succeeded",
-      "reason": "保命：逃離 生物巢穴 1的怪物 Lv.2（hitsSurvivable=4.333333333333333）",
-      "createdAt": "2026-09-02T15:47:52.033Z"
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.809Z"
     }
   ],
   "creatureLogs": [],
@@ -15690,329 +15011,39 @@
 }
 ```
 
-### Turn 142 (round 34)
-- Player: 胡斐 (player-2), level 4, experience 179, at (12, 6), health 39, stamina 11
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
+### Turn 142 (round 33)
+- Player: 胡斐 (player-2), level 3, experience 80, at (5, 13), health 36, stamina 3.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=157.47999999999988/175, creature-nest-2=166.14999999999992/175, creature-nest-3=166.57/193
+- Nests: creature-nest-1=158.54999999999993/175, creature-nest-2=139.24999999999994/145, creature-nest-3=167.27999999999997/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-33-roamer-creature-1-564",
+      "id": "action-33-player-2-548",
       "round": 33,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.033Z"
-    },
-    {
-      "id": "action-33-roamer-creature-2-565",
-      "round": 33,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.033Z"
-    },
-    {
-      "id": "action-33-roamer-creature-3-566",
-      "round": 33,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.033Z"
-    },
-    {
-      "id": "action-33-roamer-creature-4-567",
-      "round": 33,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.033Z"
-    },
-    {
-      "id": "action-33-roamer-creature-7-568",
-      "round": 33,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.033Z"
-    },
-    {
-      "id": "action-33-roamer-creature-8-569",
-      "round": 33,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.033Z"
-    },
-    {
-      "id": "action-33-nest-creature-3-570",
-      "round": 33,
-      "actor": {
-        "id": "nest-creature-3",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-3",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.034Z"
-    },
-    {
-      "id": "action-33-nest-creature-4-571",
-      "round": 33,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.034Z"
-    },
-    {
-      "id": "action-33-nest-creature-7-572",
-      "round": 33,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.034Z"
-    },
-    {
-      "id": "action-33-nest-creature-8-573",
-      "round": 33,
-      "actor": {
-        "id": "nest-creature-8",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.3"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-8",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 9,
-          "column": 6
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:52.034Z"
-    },
-    {
-      "id": "action-33-nest-creature-9-574",
-      "round": 33,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 11
-        },
-        "reason": "移動接近 襄陽。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 襄陽。",
-      "createdAt": "2026-09-02T15:47:52.034Z"
-    },
-    {
-      "id": "action-33-nest-creature-1-575",
-      "round": 33,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 12,
-          "column": 2
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:52.034Z"
-    },
-    {
-      "id": "action-33-nest-creature-2-576",
-      "round": 33,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.5"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 11,
-          "column": 7
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:52.034Z"
-    },
-    {
-      "id": "action-34-player-2-577",
-      "round": 34,
       "actor": {
         "id": "player-2",
         "kind": "player",
         "name": "胡斐"
       },
       "action": {
-        "type": "end-turn",
+        "type": "use-facility",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "reason": "模糊策略迴圈結束（0 步）"
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
       },
       "result": "succeeded",
-      "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-02T15:47:52.035Z"
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.815Z"
     }
   ],
   "creatureLogs": [],
@@ -16020,45 +15051,41 @@
 }
 ```
 
-### Turn 143 (round 34)
-- Player: 胡斐 (player-2), level 4, experience 199, at (12, 6), health 39, stamina 6
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +20
+### Turn 143 (round 33)
+- Player: 胡斐 (player-2), level 3, experience 80, at (4, 13), health 36, stamina 1.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=157.47999999999988/175, creature-nest-2=166.14999999999992/175, creature-nest-3=166.57/193
+- Nests: creature-nest-1=158.54999999999993/175, creature-nest-2=139.24999999999994/145, creature-nest-3=167.27999999999997/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-34-player-2-578",
-      "round": 34,
+      "id": "action-33-player-2-549",
+      "round": 33,
       "actor": {
         "id": "player-2",
         "kind": "player",
         "name": "胡斐"
       },
       "action": {
-        "type": "collect",
+        "type": "move",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "target": {
-          "id": "ruin-9",
-          "kind": "ruin",
-          "position": {
-            "row": 11,
-            "column": 6
-          }
+        "destination": {
+          "row": 4,
+          "column": 13
         },
-        "reason": "清障：清除廢墟 青石村"
+        "reason": "定位：前往出口 (4,13)"
       },
       "result": "succeeded",
-      "reason": "清障：清除廢墟 青石村",
-      "createdAt": "2026-09-02T15:47:52.042Z"
+      "reason": "定位：前往出口 (4,13)",
+      "createdAt": "2026-09-02T16:10:21.821Z"
     }
   ],
   "creatureLogs": [],
@@ -16067,19 +15094,351 @@
 ```
 
 ### Turn 144 (round 34)
-- Player: 胡斐 (player-2), level 4, experience 199, at (11, 6), health 39, stamina 4
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +0
+- Player: 胡斐 (player-2), level 3, experience 83, at (4, 13), health 36, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=157.47999999999988/175, creature-nest-2=166.14999999999992/175, creature-nest-3=166.57/193
+- Nests: creature-nest-1=160.29999999999993/175, creature-nest-2=140.69999999999993/145, creature-nest-3=169.20999999999998/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-34-player-2-579",
+      "id": "action-33-roamer-creature-2-550",
+      "round": 33,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-roamer-creature-3-551",
+      "round": 33,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-roamer-creature-4-552",
+      "round": 33,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-roamer-creature-5-553",
+      "round": 33,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-roamer-creature-6-554",
+      "round": 33,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-roamer-creature-8-555",
+      "round": 33,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-roamer-creature-9-556",
+      "round": 33,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-nest-creature-2-557",
+      "round": 33,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-nest-creature-1-558",
+      "round": 33,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 4,
+          "column": 8
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-nest-creature-3-559",
+      "round": 33,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-nest-creature-4-560",
+      "round": 33,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-nest-creature-5-561",
+      "round": 33,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-nest-creature-6-562",
+      "round": 33,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "resource-point-1",
+          "kind": "resource",
+          "position": {
+            "row": 7,
+            "column": 13
+          }
+        },
+        "reason": "與 耕田 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-nest-creature-7-563",
+      "round": 33,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-nest-creature-8-564",
+      "round": 33,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-33-nest-creature-9-565",
+      "round": 33,
+      "actor": {
+        "id": "nest-creature-9",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.5"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.824Z"
+    },
+    {
+      "id": "action-34-player-2-566",
       "round": 34,
       "actor": {
         "id": "player-2",
@@ -16087,20 +15446,16 @@
         "name": "胡斐"
       },
       "action": {
-        "type": "move",
+        "type": "end-turn",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "destination": {
-          "row": 11,
-          "column": 6
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
+        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
       },
       "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:52.052Z"
+      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.825Z"
     }
   ],
   "creatureLogs": [],
@@ -16109,19 +15464,19 @@
 ```
 
 ### Turn 145 (round 34)
-- Player: 胡斐 (player-2), level 4, experience 199, at (10, 6), health 39, stamina 2
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
+- Player: 胡斐 (player-2), level 3, experience 83, at (4, 12), health 36, stamina 7.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=157.47999999999988/175, creature-nest-2=166.14999999999992/175, creature-nest-3=166.57/193
+- Nests: creature-nest-1=160.29999999999993/175, creature-nest-2=140.69999999999993/145, creature-nest-3=169.20999999999998/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-34-player-2-580",
+      "id": "action-34-player-2-567",
       "round": 34,
       "actor": {
         "id": "player-2",
@@ -16135,14 +15490,14 @@
           "kind": "player"
         },
         "destination": {
-          "row": 10,
-          "column": 6
+          "row": 4,
+          "column": 12
         },
-        "reason": "探索：移動到未探索格 (6,13)"
+        "reason": "防禦建設：移動到據點"
       },
       "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:52.061Z"
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.834Z"
     }
   ],
   "creatureLogs": [],
@@ -16151,19 +15506,19 @@
 ```
 
 ### Turn 146 (round 34)
-- Player: 胡斐 (player-2), level 4, experience 199, at (10, 7), health 39, stamina 0
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
+- Player: 胡斐 (player-2), level 3, experience 83, at (5, 12), health 36, stamina 5.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=157.47999999999988/175, creature-nest-2=166.14999999999992/175, creature-nest-3=166.57/193
+- Nests: creature-nest-1=160.29999999999993/175, creature-nest-2=140.69999999999993/145, creature-nest-3=169.20999999999998/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-34-player-2-581",
+      "id": "action-34-player-2-568",
       "round": 34,
       "actor": {
         "id": "player-2",
@@ -16177,14 +15532,14 @@
           "kind": "player"
         },
         "destination": {
-          "row": 10,
-          "column": 7
+          "row": 5,
+          "column": 12
         },
-        "reason": "探索：移動到未探索格 (6,13)"
+        "reason": "防禦建設：移動到據點"
       },
       "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:52.067Z"
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.843Z"
     }
   ],
   "creatureLogs": [],
@@ -16192,40 +15547,62 @@
 }
 ```
 
-### Turn 147 (round 35)
-- Player: 胡斐 (player-2), level 4, experience 199, at (10, 7), health 29.95, stamina 11
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
+### Turn 147 (round 34)
+- Player: 胡斐 (player-2), level 3, experience 83, at (6, 12), health 36, stamina 1.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=159.22999999999988/175, creature-nest-2=167.89999999999992/175, creature-nest-3=168.5/193
+- Nests: creature-nest-1=160.29999999999993/175, creature-nest-2=140.69999999999993/145, creature-nest-3=169.20999999999998/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-34-roamer-creature-1-582",
+      "id": "action-34-player-2-569",
       "round": 34,
       "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
       },
       "action": {
-        "type": "hold",
+        "type": "move",
         "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
+          "id": "player-2",
+          "kind": "player"
         },
-        "reason": "沒有可執行的目標，原地待命。"
+        "destination": {
+          "row": 6,
+          "column": 12
+        },
+        "reason": "防禦建設：移動到據點"
       },
       "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.067Z"
-    },
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.852Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 148 (round 35)
+- Player: 胡斐 (player-2), level 3, experience 86, at (6, 12), health 36, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=162.04999999999993/175, creature-nest-2=142.14999999999992/145, creature-nest-3=171.14/193
+
+```json
+{
+  "actions": [
     {
-      "id": "action-34-roamer-creature-2-583",
+      "id": "action-34-roamer-creature-2-570",
       "round": 34,
       "actor": {
         "id": "roamer-creature-2",
@@ -16242,10 +15619,10 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.067Z"
+      "createdAt": "2026-09-02T16:10:21.855Z"
     },
     {
-      "id": "action-34-roamer-creature-3-584",
+      "id": "action-34-roamer-creature-3-571",
       "round": 34,
       "actor": {
         "id": "roamer-creature-3",
@@ -16262,10 +15639,10 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.067Z"
+      "createdAt": "2026-09-02T16:10:21.855Z"
     },
     {
-      "id": "action-34-roamer-creature-4-585",
+      "id": "action-34-roamer-creature-4-572",
       "round": 34,
       "actor": {
         "id": "roamer-creature-4",
@@ -16282,30 +15659,50 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.067Z"
+      "createdAt": "2026-09-02T16:10:21.855Z"
     },
     {
-      "id": "action-34-roamer-creature-7-586",
+      "id": "action-34-roamer-creature-5-573",
       "round": 34,
       "actor": {
-        "id": "roamer-creature-7",
+        "id": "roamer-creature-5",
         "kind": "creature",
         "name": "游蕩妖物"
       },
       "action": {
         "type": "hold",
         "actor": {
-          "id": "roamer-creature-7",
+          "id": "roamer-creature-5",
           "kind": "creature"
         },
         "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.067Z"
+      "createdAt": "2026-09-02T16:10:21.855Z"
     },
     {
-      "id": "action-34-roamer-creature-8-587",
+      "id": "action-34-roamer-creature-6-574",
+      "round": 34,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.855Z"
+    },
+    {
+      "id": "action-34-roamer-creature-8-575",
       "round": 34,
       "actor": {
         "id": "roamer-creature-8",
@@ -16322,147 +15719,55 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.067Z"
+      "createdAt": "2026-09-02T16:10:21.855Z"
     },
     {
-      "id": "action-34-nest-creature-3-588",
+      "id": "action-34-roamer-creature-9-576",
       "round": 34,
       "actor": {
-        "id": "nest-creature-3",
+        "id": "roamer-creature-9",
         "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.2"
+        "name": "游蕩妖物"
       },
       "action": {
-        "type": "move",
+        "type": "hold",
         "actor": {
-          "id": "nest-creature-3",
+          "id": "roamer-creature-9",
           "kind": "creature"
         },
-        "destination": {
-          "row": 12,
-          "column": 7
-        },
-        "reason": "移動接近 胡斐。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:52.067Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.855Z"
     },
     {
-      "id": "action-34-nest-creature-4-589",
+      "id": "action-34-nest-creature-2-577",
       "round": 34,
       "actor": {
-        "id": "nest-creature-4",
+        "id": "nest-creature-2",
         "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
+        "name": "生物巢穴 3的怪物 Lv.2"
       },
       "action": {
-        "type": "attack",
+        "type": "hold",
         "actor": {
-          "id": "nest-creature-4",
+          "id": "nest-creature-2",
           "kind": "creature"
         },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.068Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.855Z"
     },
     {
-      "id": "action-34-nest-creature-7-590",
-      "round": 34,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.068Z"
-    },
-    {
-      "id": "action-34-nest-creature-8-591",
-      "round": 34,
-      "actor": {
-        "id": "nest-creature-8",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-8",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 10,
-            "column": 7
-          }
-        },
-        "reason": "與 胡斐 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:52.068Z"
-    },
-    {
-      "id": "action-34-nest-creature-9-592",
-      "round": 34,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 11
-        },
-        "reason": "移動接近 襄陽。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 襄陽。",
-      "createdAt": "2026-09-02T15:47:52.068Z"
-    },
-    {
-      "id": "action-34-nest-creature-1-593",
+      "id": "action-34-nest-creature-1-578",
       "round": 34,
       "actor": {
         "id": "nest-creature-1",
         "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.4"
+        "name": "生物巢穴 2的怪物 Lv.1"
       },
       "action": {
         "type": "move",
@@ -16471,45 +15776,165 @@
           "kind": "creature"
         },
         "destination": {
-          "row": 10,
-          "column": 2
+          "row": 4,
+          "column": 8
         },
-        "reason": "移動接近 胡斐。"
+        "reason": "移動接近 耕田。"
       },
       "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:52.068Z"
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.855Z"
     },
     {
-      "id": "action-34-nest-creature-2-594",
+      "id": "action-34-nest-creature-3-579",
       "round": 34,
       "actor": {
-        "id": "nest-creature-2",
+        "id": "nest-creature-3",
         "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.5"
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.855Z"
+    },
+    {
+      "id": "action-34-nest-creature-4-580",
+      "round": 34,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.855Z"
+    },
+    {
+      "id": "action-34-nest-creature-5-581",
+      "round": 34,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.855Z"
+    },
+    {
+      "id": "action-34-nest-creature-6-582",
+      "round": 34,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
       },
       "action": {
         "type": "attack",
         "actor": {
-          "id": "nest-creature-2",
+          "id": "nest-creature-6",
           "kind": "creature"
         },
         "target": {
-          "id": "player-2",
-          "kind": "player",
+          "id": "resource-point-1",
+          "kind": "resource",
           "position": {
-            "row": 10,
-            "column": 7
+            "row": 7,
+            "column": 13
           }
         },
-        "reason": "與 胡斐 交戰。"
+        "reason": "與 耕田 交戰。"
       },
       "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:52.068Z"
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.855Z"
     },
     {
-      "id": "action-35-player-2-595",
+      "id": "action-34-nest-creature-7-583",
+      "round": 34,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.855Z"
+    },
+    {
+      "id": "action-34-nest-creature-8-584",
+      "round": 34,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.855Z"
+    },
+    {
+      "id": "action-34-nest-creature-9-585",
+      "round": 34,
+      "actor": {
+        "id": "nest-creature-9",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.5"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.855Z"
+    },
+    {
+      "id": "action-35-player-2-586",
       "round": 35,
       "actor": {
         "id": "player-2",
@@ -16522,68 +15947,11 @@
           "id": "player-2",
           "kind": "player"
         },
-        "reason": "模糊策略迴圈結束（0 步）"
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
       },
       "result": "succeeded",
-      "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-02T15:47:52.069Z"
-    }
-  ],
-  "creatureLogs": [
-    {
-      "creatureId": "nest-creature-8",
-      "creatureName": "生物巢穴 1的怪物 Lv.3",
-      "message": "生物巢穴 1的怪物 Lv.3 攻擊 胡斐，造成 5 點傷害（根骨減傷，暴擊）。"
-    },
-    {
-      "creatureId": "nest-creature-2",
-      "creatureName": "生物巢穴 3的怪物 Lv.5",
-      "message": "生物巢穴 3的怪物 Lv.5 攻擊 胡斐，造成 6 點傷害（根骨減傷，暴擊）。"
-    }
-  ],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 148 (round 35)
-- Player: 胡斐 (player-2), level 5, experience 2, at (10, 7), health 29.95, stamina 6
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: -197 (level up; stored experience reset by game rules)
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=159.22999999999988/175, creature-nest-2=167.89999999999992/175, creature-nest-3=168.5/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-35-player-2-596",
-      "round": 35,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-2",
-          "kind": "creature",
-          "position": {
-            "row": 11,
-            "column": 7
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.5"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.5",
-      "createdAt": "2026-09-02T15:47:52.080Z"
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.856Z"
     }
   ],
   "creatureLogs": [],
@@ -16592,20 +15960,580 @@
 ```
 
 ### Turn 149 (round 35)
-- Player: 胡斐 (player-2), level 5, experience 102, at (10, 7), health 29.95, stamina 1
-- Attributes: armStrength=13, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
-- Stored experience change: +100
+- Player: 胡斐 (player-2), level 3, experience 86, at (6, 11), health 36, stamina 7.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
 - Spawned creatures: 0
-- Defeated creatures: nest-creature-2
-- Nests: creature-nest-1=159.22999999999988/175, creature-nest-2=167.89999999999992/175, creature-nest-3=168.5/193
+- Defeated creatures: none
+- Nests: creature-nest-1=162.04999999999993/175, creature-nest-2=142.14999999999992/145, creature-nest-3=171.14/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-35-player-2-597",
+      "id": "action-35-player-2-587",
       "round": 35,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 6,
+          "column": 11
+        },
+        "reason": "練功：移動到門派據點"
+      },
+      "result": "succeeded",
+      "reason": "練功：移動到門派據點",
+      "createdAt": "2026-09-02T16:10:21.862Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 150 (round 35)
+- Player: 胡斐 (player-2), level 3, experience 86, at (5, 11), health 36, stamina 5.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=162.04999999999993/175, creature-nest-2=142.14999999999992/145, creature-nest-3=171.14/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-35-player-2-588",
+      "round": 35,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 11
+        },
+        "reason": "防禦建設：移動到據點"
+      },
+      "result": "succeeded",
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.870Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 151 (round 35)
+- Player: 胡斐 (player-2), level 3, experience 86, at (5, 10), health 36, stamina 3.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=162.04999999999993/175, creature-nest-2=142.14999999999992/145, creature-nest-3=171.14/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-35-player-2-589",
+      "round": 35,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 10
+        },
+        "reason": "防禦建設：移動到據點"
+      },
+      "result": "succeeded",
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.879Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 152 (round 35)
+- Player: 胡斐 (player-2), level 3, experience 86, at (5, 9), health 36, stamina 1.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=162.04999999999993/175, creature-nest-2=142.14999999999992/145, creature-nest-3=171.14/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-35-player-2-590",
+      "round": 35,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 9
+        },
+        "reason": "防禦建設：移動到據點"
+      },
+      "result": "succeeded",
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.886Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 153 (round 36)
+- Player: 胡斐 (player-2), level 3, experience 89, at (5, 9), health 32.8, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=163.79999999999993/175, creature-nest-2=143.5999999999999/145, creature-nest-3=173.07/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-35-roamer-creature-2-591",
+      "round": 35,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-roamer-creature-3-592",
+      "round": 35,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-roamer-creature-4-593",
+      "round": 35,
+      "actor": {
+        "id": "roamer-creature-4",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "roamer-creature-4",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "player-2",
+          "kind": "player",
+          "position": {
+            "row": 5,
+            "column": 9
+          }
+        },
+        "reason": "與 胡斐 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 胡斐 交戰。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-roamer-creature-5-594",
+      "round": 35,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 2,
+          "column": 9
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-roamer-creature-6-595",
+      "round": 35,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-roamer-creature-8-596",
+      "round": 35,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-roamer-creature-9-597",
+      "round": 35,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-nest-creature-2-598",
+      "round": 35,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-nest-creature-1-599",
+      "round": 35,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 4,
+          "column": 8
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-nest-creature-3-600",
+      "round": 35,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-nest-creature-4-601",
+      "round": 35,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-nest-creature-5-602",
+      "round": 35,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-nest-creature-6-603",
+      "round": 35,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "resource-point-1",
+          "kind": "resource",
+          "position": {
+            "row": 7,
+            "column": 13
+          }
+        },
+        "reason": "與 耕田 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-nest-creature-7-604",
+      "round": 35,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-nest-creature-8-605",
+      "round": 35,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 3,
+          "column": 9
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-35-nest-creature-9-606",
+      "round": 35,
+      "actor": {
+        "id": "nest-creature-9",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.5"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-9",
+          "kind": "creature"
+        },
+        "reason": "未能接近目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.889Z"
+    },
+    {
+      "id": "action-36-player-2-607",
+      "round": 36,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.890Z"
+    }
+  ],
+  "creatureLogs": [
+    {
+      "creatureId": "nest-creature-6",
+      "creatureName": "生物巢穴 3的怪物 Lv.4",
+      "message": "生物巢穴 3的怪物 Lv.4 攻擊耕田，造成 7 點傷害。"
+    }
+  ],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 154 (round 36)
+- Player: 胡斐 (player-2), level 3, experience 129, at (5, 9), health 32.8, stamina 4.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +40
+- Spawned creatures: 0
+- Defeated creatures: roamer-creature-4
+- Nests: creature-nest-1=163.79999999999993/175, creature-nest-2=143.5999999999999/145, creature-nest-3=173.07/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-36-player-2-608",
+      "round": 36,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -16618,18 +16546,18 @@
           "kind": "player"
         },
         "target": {
-          "id": "nest-creature-2",
+          "id": "roamer-creature-4",
           "kind": "creature",
           "position": {
-            "row": 11,
-            "column": 7
+            "row": 6,
+            "column": 9
           }
         },
-        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.5"
+        "reason": "交戰：攻擊 游蕩妖物"
       },
       "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.5",
-      "createdAt": "2026-09-02T15:47:52.092Z"
+      "reason": "交戰：攻擊 游蕩妖物",
+      "createdAt": "2026-09-02T16:10:21.897Z"
     }
   ],
   "creatureLogs": [],
@@ -16637,21 +16565,2028 @@
 }
 ```
 
-### Turn 150 (round 35)
-- Player: 胡斐 (player-2), level 5, experience 102, at (10, 7), health 29.95, stamina 1
-- Attributes: armStrength=14, constitution=13, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 26
+### Turn 155 (round 36)
+- Player: 胡斐 (player-2), level 3, experience 129, at (6, 9), health 32.8, stamina 2.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=159.22999999999988/175, creature-nest-2=167.89999999999992/175, creature-nest-3=168.5/193
+- Nests: creature-nest-1=163.79999999999993/175, creature-nest-2=143.5999999999999/145, creature-nest-3=173.07/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-35-player-2-598",
-      "round": 35,
+      "id": "action-36-player-2-609",
+      "round": 36,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 6,
+          "column": 9
+        },
+        "reason": "防禦建設：移動到據點"
+      },
+      "result": "succeeded",
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.903Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 156 (round 36)
+- Player: 胡斐 (player-2), level 3, experience 129, at (5, 9), health 32.8, stamina 0.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=163.79999999999993/175, creature-nest-2=143.5999999999999/145, creature-nest-3=173.07/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-36-player-2-610",
+      "round": 36,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 9
+        },
+        "reason": "定位：前往出口 (5,9)"
+      },
+      "result": "succeeded",
+      "reason": "定位：前往出口 (5,9)",
+      "createdAt": "2026-09-02T16:10:21.909Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 157 (round 37)
+- Player: 胡斐 (player-2), level 3, experience 130, at (5, 9), health 34.599999999999994, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=165.54999999999993/175, creature-nest-2=145/145, creature-nest-3=175/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-36-roamer-creature-2-611",
+      "round": 36,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-roamer-creature-3-612",
+      "round": 36,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-roamer-creature-5-613",
+      "round": 36,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-roamer-creature-6-614",
+      "round": 36,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-roamer-creature-8-615",
+      "round": 36,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-roamer-creature-9-616",
+      "round": 36,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-nest-creature-2-617",
+      "round": 36,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-nest-creature-1-618",
+      "round": 36,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 4,
+          "column": 8
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-nest-creature-3-619",
+      "round": 36,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-nest-creature-4-620",
+      "round": 36,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-nest-creature-5-621",
+      "round": 36,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-nest-creature-6-622",
+      "round": 36,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "resource-point-1",
+          "kind": "resource",
+          "position": {
+            "row": 7,
+            "column": 13
+          }
+        },
+        "reason": "與 耕田 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-nest-creature-7-623",
+      "round": 36,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 5,
+          "column": 5
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.911Z"
+    },
+    {
+      "id": "action-36-nest-creature-8-624",
+      "round": 36,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 3,
+          "column": 9
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.912Z"
+    },
+    {
+      "id": "action-36-nest-creature-9-625",
+      "round": 36,
+      "actor": {
+        "id": "nest-creature-9",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.5"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-9",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 5,
+          "column": 7
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.912Z"
+    },
+    {
+      "id": "action-37-player-2-626",
+      "round": 37,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.912Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 158 (round 37)
+- Player: 胡斐 (player-2), level 3, experience 130, at (5, 8), health 34.599999999999994, stamina 4.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=165.54999999999993/175, creature-nest-2=145/145, creature-nest-3=175/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-37-player-2-627",
+      "round": 37,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 8
+        },
+        "reason": "防禦建設：移動到據點"
+      },
+      "result": "succeeded",
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.918Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 159 (round 37)
+- Player: 胡斐 (player-2), level 3, experience 130, at (5, 9), health 34.599999999999994, stamina 2.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=165.54999999999993/175, creature-nest-2=145/145, creature-nest-3=175/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-37-player-2-628",
+      "round": 37,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 9
+        },
+        "reason": "防禦建設：移動到據點"
+      },
+      "result": "succeeded",
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.926Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 160 (round 37)
+- Player: 胡斐 (player-2), level 3, experience 130, at (5, 10), health 34.599999999999994, stamina 0.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=165.54999999999993/175, creature-nest-2=145/145, creature-nest-3=175/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-37-player-2-629",
+      "round": 37,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 10
+        },
+        "reason": "任務：移動到告示牌據點"
+      },
+      "result": "succeeded",
+      "reason": "任務：移動到告示牌據點",
+      "createdAt": "2026-09-02T16:10:21.932Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 161 (round 38)
+- Player: 胡斐 (player-2), level 3, experience 131, at (5, 10), health 36, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=167.29999999999993/175, creature-nest-2=145/145, creature-nest-3=176.93/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-37-roamer-creature-2-630",
+      "round": 37,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-roamer-creature-3-631",
+      "round": 37,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-roamer-creature-5-632",
+      "round": 37,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-roamer-creature-6-633",
+      "round": 37,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-roamer-creature-8-634",
+      "round": 37,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-roamer-creature-9-635",
+      "round": 37,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-nest-creature-2-636",
+      "round": 37,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-nest-creature-1-637",
+      "round": 37,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 4,
+          "column": 8
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-nest-creature-3-638",
+      "round": 37,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-nest-creature-4-639",
+      "round": 37,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-nest-creature-5-640",
+      "round": 37,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-nest-creature-6-641",
+      "round": 37,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "resource-point-2",
+          "kind": "resource",
+          "position": {
+            "row": 4,
+            "column": 12
+          }
+        },
+        "reason": "與 耕田 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-nest-creature-7-642",
+      "round": 37,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 6,
+          "column": 5
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-nest-creature-8-643",
+      "round": 37,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 3,
+          "column": 9
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-37-nest-creature-9-644",
+      "round": 37,
+      "actor": {
+        "id": "nest-creature-9",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.5"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-9",
+          "kind": "creature"
+        },
+        "reason": "未能接近目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "未能接近目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.934Z"
+    },
+    {
+      "id": "action-38-player-2-645",
+      "round": 38,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.935Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 162 (round 38)
+- Player: 胡斐 (player-2), level 3, experience 134, at (5, 10), health 36, stamina 4.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=167.29999999999993/175, creature-nest-2=145/145, creature-nest-3=176.93/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-38-player-2-646",
+      "round": 38,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "nest-creature-9",
+          "kind": "creature",
+          "position": {
+            "row": 5,
+            "column": 9
+          }
+        },
+        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.5"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.5",
+      "createdAt": "2026-09-02T16:10:21.942Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 163 (round 38)
+- Player: 胡斐 (player-2), level 3, experience 134, at (5, 11), health 36, stamina 2.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=167.29999999999993/175, creature-nest-2=145/145, creature-nest-3=176.93/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-38-player-2-647",
+      "round": 38,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 5,
+          "column": 11
+        },
+        "reason": "防禦建設：移動到據點"
+      },
+      "result": "succeeded",
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.949Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 164 (round 38)
+- Player: 胡斐 (player-2), level 3, experience 134, at (6, 11), health 36, stamina 0.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=167.29999999999993/175, creature-nest-2=145/145, creature-nest-3=176.93/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-38-player-2-648",
+      "round": 38,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 6,
+          "column": 11
+        },
+        "reason": "定位：前往出口 (6,11)"
+      },
+      "result": "succeeded",
+      "reason": "定位：前往出口 (6,11)",
+      "createdAt": "2026-09-02T16:10:21.955Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 165 (round 39)
+- Player: 胡斐 (player-2), level 3, experience 135, at (6, 11), health 36, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +1
+- Spawned creatures: 1
+- Defeated creatures: none
+- Nests: creature-nest-1=169.04999999999993/175, creature-nest-2=145/159, creature-nest-3=178.86/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-38-roamer-creature-2-649",
+      "round": 38,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-roamer-creature-3-650",
+      "round": 38,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-roamer-creature-5-651",
+      "round": 38,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-roamer-creature-6-652",
+      "round": 38,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-roamer-creature-8-653",
+      "round": 38,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-roamer-creature-9-654",
+      "round": 38,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-nest-creature-2-655",
+      "round": 38,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-nest-creature-1-656",
+      "round": 38,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 4,
+          "column": 8
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-nest-creature-3-657",
+      "round": 38,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-nest-creature-4-658",
+      "round": 38,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-nest-creature-5-659",
+      "round": 38,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-nest-creature-6-660",
+      "round": 38,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "resource-point-2",
+          "kind": "resource",
+          "position": {
+            "row": 4,
+            "column": 12
+          }
+        },
+        "reason": "與 耕田 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-nest-creature-7-661",
+      "round": 38,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 6,
+          "column": 7
+        },
+        "reason": "移動接近 胡斐。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 胡斐。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-nest-creature-8-662",
+      "round": 38,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 3,
+          "column": 9
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-38-nest-creature-9-663",
+      "round": 38,
+      "actor": {
+        "id": "nest-creature-9",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.5"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-9",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 5,
+          "column": 10
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.958Z"
+    },
+    {
+      "id": "action-39-player-2-664",
+      "round": 39,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.959Z"
+    }
+  ],
+  "creatureLogs": [
+    {
+      "creatureId": "creature-nest-2",
+      "creatureName": "生物巢穴 2",
+      "message": "生物巢穴 2 生成了 Lv.3 怪物。"
+    }
+  ],
+  "spawnedCreatures": [
+    {
+      "id": "nest-creature-10",
+      "name": "生物巢穴 2的怪物 Lv.3",
+      "innerSkillId": "yellow-earth-inner",
+      "externalSkillIds": [],
+      "equippedExternalSkillIds": [],
+      "position": {
+        "row": 3,
+        "column": 3
+      },
+      "attributes": {
+        "armStrength": 8,
+        "constitution": 11,
+        "agility": 8,
+        "innerEnergy": 8,
+        "insight": 5
+      },
+      "prestige": 0,
+      "money": 0,
+      "experience": 0,
+      "turnEnded": false,
+      "level": 3,
+      "behaviorType": "scavenger",
+      "schoolId": "yellow-earth",
+      "homePosition": {
+        "row": 4,
+        "column": 3
+      },
+      "homeNestId": "creature-nest-2",
+      "spawnedRound": 39,
+      "baseAttributes": {
+        "armStrength": 8.399999999999999,
+        "constitution": 9.799999999999999,
+        "agility": 7,
+        "innerEnergy": 8.399999999999999,
+        "insight": 5.6
+      },
+      "health": 33,
+      "maxHealth": 33,
+      "stamina": 8,
+      "maxStamina": 8,
+      "innerPower": 24,
+      "maxInnerPower": 24,
+      "availableAttributePoints": 0,
+      "governanceRank": 1,
+      "unlockedPolicyIds": [
+        "basic"
+      ],
+      "inventory": [],
+      "unlockedEquipmentDropIds": [],
+      "equipmentInventory": [],
+      "equipmentLoadout": {
+        "weaponInstanceId": null,
+        "armorInstanceId": null,
+        "accessoryInstanceId": null
+      },
+      "innerSkillIds": [
+        "tuna-gong"
+      ],
+      "skillProgression": {},
+      "buffs": []
+    }
+  ]
+}
+```
+
+### Turn 166 (round 39)
+- Player: 胡斐 (player-2), level 3, experience 135, at (6, 12), health 36, stamina 5.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=169.04999999999993/175, creature-nest-2=145/159, creature-nest-3=178.86/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-39-player-2-665",
+      "round": 39,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "destination": {
+          "row": 6,
+          "column": 12
+        },
+        "reason": "防禦建設：移動到據點"
+      },
+      "result": "succeeded",
+      "reason": "防禦建設：移動到據點",
+      "createdAt": "2026-09-02T16:10:21.966Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 167 (round 39)
+- Player: 胡斐 (player-2), level 3, experience 138, at (6, 12), health 36, stamina 0.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=169.04999999999993/175, creature-nest-2=145/159, creature-nest-3=178.86/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-39-player-2-666",
+      "round": 39,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "nest-creature-6",
+          "kind": "creature",
+          "position": {
+            "row": 5,
+            "column": 12
+          }
+        },
+        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.4"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.4",
+      "createdAt": "2026-09-02T16:10:21.971Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 168 (round 40)
+- Player: 胡斐 (player-2), level 3, experience 139, at (6, 12), health 36, stamina 9.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=170.79999999999993/175, creature-nest-2=146.59/159, creature-nest-3=180.79000000000002/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-39-roamer-creature-2-667",
+      "round": 39,
+      "actor": {
+        "id": "roamer-creature-2",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.973Z"
+    },
+    {
+      "id": "action-39-roamer-creature-3-668",
+      "round": 39,
+      "actor": {
+        "id": "roamer-creature-3",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.973Z"
+    },
+    {
+      "id": "action-39-roamer-creature-5-669",
+      "round": 39,
+      "actor": {
+        "id": "roamer-creature-5",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.973Z"
+    },
+    {
+      "id": "action-39-roamer-creature-6-670",
+      "round": 39,
+      "actor": {
+        "id": "roamer-creature-6",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.973Z"
+    },
+    {
+      "id": "action-39-roamer-creature-8-671",
+      "round": 39,
+      "actor": {
+        "id": "roamer-creature-8",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-8",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.973Z"
+    },
+    {
+      "id": "action-39-roamer-creature-9-672",
+      "round": 39,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.973Z"
+    },
+    {
+      "id": "action-39-nest-creature-2-673",
+      "round": 39,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.973Z"
+    },
+    {
+      "id": "action-39-nest-creature-1-674",
+      "round": 39,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 4,
+          "column": 8
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.973Z"
+    },
+    {
+      "id": "action-39-nest-creature-3-675",
+      "round": 39,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.973Z"
+    },
+    {
+      "id": "action-39-nest-creature-4-676",
+      "round": 39,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.973Z"
+    },
+    {
+      "id": "action-39-nest-creature-5-677",
+      "round": 39,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.973Z"
+    },
+    {
+      "id": "action-39-nest-creature-6-678",
+      "round": 39,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.4"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "resource-point-2",
+          "kind": "resource",
+          "position": {
+            "row": 4,
+            "column": 12
+          }
+        },
+        "reason": "與 耕田 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.974Z"
+    },
+    {
+      "id": "action-39-nest-creature-7-679",
+      "round": 39,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 6,
+          "column": 7
+        },
+        "reason": "移動接近 襄陽。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 襄陽。",
+      "createdAt": "2026-09-02T16:10:21.974Z"
+    },
+    {
+      "id": "action-39-nest-creature-8-680",
+      "round": 39,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 3,
+          "column": 9
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.974Z"
+    },
+    {
+      "id": "action-39-nest-creature-9-681",
+      "round": 39,
+      "actor": {
+        "id": "nest-creature-9",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.5"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-9",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 5,
+          "column": 11
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.974Z"
+    },
+    {
+      "id": "action-39-nest-creature-10-682",
+      "round": 39,
+      "actor": {
+        "id": "nest-creature-10",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-10",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.974Z"
+    },
+    {
+      "id": "action-40-player-2-683",
+      "round": 40,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "end-turn",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
+      },
+      "result": "succeeded",
+      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
+      "createdAt": "2026-09-02T16:10:21.974Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 169 (round 40)
+- Player: 胡斐 (player-2), level 4, experience 69, at (6, 12), health 36, stamina 4.5
+- Attributes: armStrength=11, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 16
+- Stored experience change: -70 (level up; stored experience reset by game rules)
+- Spawned creatures: 0
+- Defeated creatures: nest-creature-6
+- Nests: creature-nest-1=170.79999999999993/175, creature-nest-2=146.59/159, creature-nest-3=180.79000000000002/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-40-player-2-684",
+      "round": 40,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "target": {
+          "id": "nest-creature-6",
+          "kind": "creature",
+          "position": {
+            "row": 5,
+            "column": 12
+          }
+        },
+        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.4"
+      },
+      "result": "succeeded",
+      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.4",
+      "createdAt": "2026-09-02T16:10:21.979Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 170 (round 40)
+- Player: 胡斐 (player-2), level 4, experience 69, at (6, 12), health 36, stamina 4.5
+- Attributes: armStrength=12, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=170.79999999999993/175, creature-nest-2=146.59/159, creature-nest-3=180.79000000000002/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-40-player-2-685",
+      "round": 40,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -16668,7 +18603,7 @@
       },
       "result": "succeeded",
       "reason": "屬性分配：提升 armStrength",
-      "createdAt": "2026-09-02T15:47:52.096Z"
+      "createdAt": "2026-09-02T16:10:21.983Z"
     }
   ],
   "creatureLogs": [],
@@ -16676,21 +18611,21 @@
 }
 ```
 
-### Turn 151 (round 35)
-- Player: 胡斐 (player-2), level 5, experience 102, at (10, 7), health 29.95, stamina 1
-- Attributes: armStrength=14, constitution=14, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 28
+### Turn 171 (round 40)
+- Player: 胡斐 (player-2), level 4, experience 69, at (6, 12), health 36, stamina 4.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=159.22999999999988/175, creature-nest-2=167.89999999999992/175, creature-nest-3=168.5/193
+- Nests: creature-nest-1=170.79999999999993/175, creature-nest-2=146.59/159, creature-nest-3=180.79000000000002/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-35-player-2-599",
-      "round": 35,
+      "id": "action-40-player-2-686",
+      "round": 40,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -16702,12 +18637,12 @@
           "id": "player-2",
           "kind": "player"
         },
-        "attribute": "constitution",
-        "reason": "屬性分配：提升 constitution"
+        "attribute": "armStrength",
+        "reason": "屬性分配：提升 armStrength"
       },
       "result": "succeeded",
-      "reason": "屬性分配：提升 constitution",
-      "createdAt": "2026-09-02T15:47:52.100Z"
+      "reason": "屬性分配：提升 armStrength",
+      "createdAt": "2026-09-02T16:10:21.988Z"
     }
   ],
   "creatureLogs": [],
@@ -16715,41 +18650,101 @@
 }
 ```
 
-### Turn 152 (round 36)
-- Player: 胡斐 (player-2), level 5, experience 104, at (10, 7), health 25.05, stamina 11.5
-- Attributes: armStrength=14, constitution=14, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 28
-- Stored experience change: +2
+### Turn 172 (round 40)
+- Player: 胡斐 (player-2), level 4, experience 69, at (6, 12), health 36, stamina 2.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+- Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=160.97999999999988/175, creature-nest-2=169.64999999999992/175, creature-nest-3=170.43/193
+- Nests: creature-nest-1=170.79999999999993/175, creature-nest-2=146.59/159, creature-nest-3=180.79000000000002/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-35-roamer-creature-1-600",
-      "round": 35,
+      "id": "action-40-player-2-687",
+      "round": 40,
       "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
       },
       "action": {
-        "type": "hold",
+        "type": "use-facility",
         "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
+          "id": "player-2",
+          "kind": "player"
         },
-        "reason": "沒有可執行的目標，原地待命。"
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
       },
       "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.104Z"
-    },
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.992Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 173 (round 40)
+- Player: 胡斐 (player-2), level 4, experience 69, at (6, 12), health 36, stamina 0.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=170.79999999999993/175, creature-nest-2=146.59/159, creature-nest-3=180.79000000000002/193
+
+```json
+{
+  "actions": [
     {
-      "id": "action-35-roamer-creature-2-601",
-      "round": 35,
+      "id": "action-40-player-2-688",
+      "round": 40,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:21.996Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 174 (round 41)
+- Player: 胡斐 (player-2), level 4, experience 70, at (6, 12), health 36, stamina 10.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+- Stored experience change: +1
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=172.54999999999993/175, creature-nest-2=148.18/159, creature-nest-3=182.72000000000003/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-40-roamer-creature-2-689",
+      "round": 40,
       "actor": {
         "id": "roamer-creature-2",
         "kind": "creature",
@@ -16765,11 +18760,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.104Z"
+      "createdAt": "2026-09-02T16:10:21.998Z"
     },
     {
-      "id": "action-35-roamer-creature-3-602",
-      "round": 35,
+      "id": "action-40-roamer-creature-3-690",
+      "round": 40,
       "actor": {
         "id": "roamer-creature-3",
         "kind": "creature",
@@ -16785,51 +18780,51 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.104Z"
+      "createdAt": "2026-09-02T16:10:21.998Z"
     },
     {
-      "id": "action-35-roamer-creature-4-603",
-      "round": 35,
+      "id": "action-40-roamer-creature-5-691",
+      "round": 40,
       "actor": {
-        "id": "roamer-creature-4",
+        "id": "roamer-creature-5",
         "kind": "creature",
         "name": "游蕩妖物"
       },
       "action": {
         "type": "hold",
         "actor": {
-          "id": "roamer-creature-4",
+          "id": "roamer-creature-5",
           "kind": "creature"
         },
         "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.104Z"
+      "createdAt": "2026-09-02T16:10:21.998Z"
     },
     {
-      "id": "action-35-roamer-creature-7-604",
-      "round": 35,
+      "id": "action-40-roamer-creature-6-692",
+      "round": 40,
       "actor": {
-        "id": "roamer-creature-7",
+        "id": "roamer-creature-6",
         "kind": "creature",
         "name": "游蕩妖物"
       },
       "action": {
         "type": "hold",
         "actor": {
-          "id": "roamer-creature-7",
+          "id": "roamer-creature-6",
           "kind": "creature"
         },
         "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.104Z"
+      "createdAt": "2026-09-02T16:10:21.998Z"
     },
     {
-      "id": "action-35-roamer-creature-8-605",
-      "round": 35,
+      "id": "action-40-roamer-creature-8-693",
+      "round": 40,
       "actor": {
         "id": "roamer-creature-8",
         "kind": "creature",
@@ -16845,11 +18840,75 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.104Z"
+      "createdAt": "2026-09-02T16:10:21.998Z"
     },
     {
-      "id": "action-35-nest-creature-3-606",
-      "round": 35,
+      "id": "action-40-roamer-creature-9-694",
+      "round": 40,
+      "actor": {
+        "id": "roamer-creature-9",
+        "kind": "creature",
+        "name": "游蕩妖物"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "roamer-creature-9",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.998Z"
+    },
+    {
+      "id": "action-40-nest-creature-2-695",
+      "round": 40,
+      "actor": {
+        "id": "nest-creature-2",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-2",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.998Z"
+    },
+    {
+      "id": "action-40-nest-creature-1-696",
+      "round": 40,
+      "actor": {
+        "id": "nest-creature-1",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.1"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-1",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 4,
+          "column": 8
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.998Z"
+    },
+    {
+      "id": "action-40-nest-creature-3-697",
+      "round": 40,
       "actor": {
         "id": "nest-creature-3",
         "kind": "creature",
@@ -16861,147 +18920,151 @@
           "id": "nest-creature-3",
           "kind": "creature"
         },
-        "reason": "未能接近目標，原地待命。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.104Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.998Z"
     },
     {
-      "id": "action-35-nest-creature-4-607",
-      "round": 35,
+      "id": "action-40-nest-creature-4-698",
+      "round": 40,
       "actor": {
         "id": "nest-creature-4",
         "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
+        "name": "生物巢穴 3的怪物 Lv.3"
       },
       "action": {
-        "type": "attack",
+        "type": "hold",
         "actor": {
           "id": "nest-creature-4",
           "kind": "creature"
         },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.104Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.998Z"
     },
     {
-      "id": "action-35-nest-creature-7-608",
-      "round": 35,
+      "id": "action-40-nest-creature-5-699",
+      "round": 40,
       "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.104Z"
-    },
-    {
-      "id": "action-35-nest-creature-8-609",
-      "round": 35,
-      "actor": {
-        "id": "nest-creature-8",
+        "id": "nest-creature-5",
         "kind": "creature",
         "name": "生物巢穴 1的怪物 Lv.3"
       },
       "action": {
-        "type": "attack",
+        "type": "hold",
         "actor": {
-          "id": "nest-creature-8",
+          "id": "nest-creature-5",
           "kind": "creature"
         },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 10,
-            "column": 7
-          }
-        },
-        "reason": "與 胡斐 交戰。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:52.104Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.998Z"
     },
     {
-      "id": "action-35-nest-creature-9-610",
-      "round": 35,
+      "id": "action-40-nest-creature-7-700",
+      "round": 40,
       "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 11
-        },
-        "reason": "移動接近 襄陽。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 襄陽。",
-      "createdAt": "2026-09-02T15:47:52.104Z"
-    },
-    {
-      "id": "action-35-nest-creature-1-611",
-      "round": 35,
-      "actor": {
-        "id": "nest-creature-1",
+        "id": "nest-creature-7",
         "kind": "creature",
         "name": "生物巢穴 1的怪物 Lv.4"
       },
       "action": {
         "type": "move",
         "actor": {
-          "id": "nest-creature-1",
+          "id": "nest-creature-7",
           "kind": "creature"
         },
         "destination": {
-          "row": 10,
-          "column": 4
+          "row": 6,
+          "column": 7
         },
-        "reason": "移動接近 胡斐。"
+        "reason": "移動接近 襄陽。"
       },
       "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:52.104Z"
+      "reason": "移動接近 襄陽。",
+      "createdAt": "2026-09-02T16:10:21.998Z"
     },
     {
-      "id": "action-36-player-2-612",
-      "round": 36,
+      "id": "action-40-nest-creature-8-701",
+      "round": 40,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 3,
+          "column": 9
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:21.998Z"
+    },
+    {
+      "id": "action-40-nest-creature-9-702",
+      "round": 40,
+      "actor": {
+        "id": "nest-creature-9",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.5"
+      },
+      "action": {
+        "type": "attack",
+        "actor": {
+          "id": "nest-creature-9",
+          "kind": "creature"
+        },
+        "target": {
+          "id": "resource-point-2",
+          "kind": "resource",
+          "position": {
+            "row": 4,
+            "column": 12
+          }
+        },
+        "reason": "與 耕田 交戰。"
+      },
+      "result": "succeeded",
+      "reason": "與 耕田 交戰。",
+      "createdAt": "2026-09-02T16:10:21.998Z"
+    },
+    {
+      "id": "action-40-nest-creature-10-703",
+      "round": 40,
+      "actor": {
+        "id": "nest-creature-10",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-10",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:21.998Z"
+    },
+    {
+      "id": "action-41-player-2-704",
+      "round": 41,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -17017,7 +19080,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:52.105Z"
+      "createdAt": "2026-09-02T16:10:21.999Z"
     }
   ],
   "creatureLogs": [],
@@ -17025,21 +19088,21 @@
 }
 ```
 
-### Turn 153 (round 36)
-- Player: 胡斐 (player-2), level 5, experience 144, at (10, 7), health 25.05, stamina 6.5
-- Attributes: armStrength=14, constitution=14, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 28
-- Stored experience change: +40
+### Turn 175 (round 41)
+- Player: 胡斐 (player-2), level 4, experience 170, at (6, 12), health 36, stamina 5.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+- Stored experience change: +100
 - Spawned creatures: 0
-- Defeated creatures: nest-creature-3
-- Nests: creature-nest-1=160.97999999999988/175, creature-nest-2=169.64999999999992/175, creature-nest-3=170.43/193
+- Defeated creatures: nest-creature-9
+- Nests: creature-nest-1=172.54999999999993/175, creature-nest-2=148.18/159, creature-nest-3=182.72000000000003/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-36-player-2-613",
-      "round": 36,
+      "id": "action-41-player-2-705",
+      "round": 41,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -17052,18 +19115,18 @@
           "kind": "player"
         },
         "target": {
-          "id": "nest-creature-3",
+          "id": "nest-creature-9",
           "kind": "creature",
           "position": {
-            "row": 11,
-            "column": 7
+            "row": 5,
+            "column": 12
           }
         },
-        "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.2"
+        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.5"
       },
       "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.2",
-      "createdAt": "2026-09-02T15:47:52.116Z"
+      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.5",
+      "createdAt": "2026-09-02T16:10:22.005Z"
     }
   ],
   "creatureLogs": [],
@@ -17071,84 +19134,39 @@
 }
 ```
 
-### Turn 154 (round 36)
-- Player: 胡斐 (player-2), level 5, experience 204, at (10, 7), health 25.05, stamina 1.5
-- Attributes: armStrength=14, constitution=14, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 28
-- Stored experience change: +60
-- Spawned creatures: 0
-- Defeated creatures: nest-creature-8
-- Nests: creature-nest-1=160.97999999999988/175, creature-nest-2=169.64999999999992/175, creature-nest-3=170.43/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-36-player-2-614",
-      "round": 36,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-8",
-          "kind": "creature",
-          "position": {
-            "row": 10,
-            "column": 6
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.3"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.3",
-      "createdAt": "2026-09-02T15:47:52.127Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 155 (round 36)
-- Player: 胡斐 (player-2), level 5, experience 204, at (10, 7), health 25.05, stamina 1.5
-- Attributes: armStrength=14, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 28
+### Turn 176 (round 41)
+- Player: 胡斐 (player-2), level 4, experience 170, at (6, 12), health 36, stamina 2.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=160.97999999999988/175, creature-nest-2=169.64999999999992/175, creature-nest-3=170.43/193
+- Nests: creature-nest-1=172.54999999999993/175, creature-nest-2=148.18/159, creature-nest-3=182.72000000000003/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-36-player-2-615",
-      "round": 36,
+      "id": "action-41-player-2-706",
+      "round": 41,
       "actor": {
         "id": "player-2",
         "kind": "player",
         "name": "胡斐"
       },
       "action": {
-        "type": "use-item",
+        "type": "build",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "itemId": "extend-life-pill",
-        "reason": "使用道具：續命丹"
+        "baseId": "base-1",
+        "buildingType": "building-type-equipment-shop",
+        "reason": "建設：建造 裝備商店"
       },
       "result": "succeeded",
-      "reason": "使用道具：續命丹",
-      "createdAt": "2026-09-02T15:47:52.131Z"
+      "reason": "建設：建造 裝備商店",
+      "createdAt": "2026-09-02T16:10:22.008Z"
     }
   ],
   "creatureLogs": [],
@@ -17156,41 +19174,61 @@
 }
 ```
 
-### Turn 156 (round 37)
-- Player: 胡斐 (player-2), level 5, experience 207, at (10, 7), health 27.3, stamina 11.5
-- Attributes: armStrength=14, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 28
-- Stored experience change: +3
-- Spawned creatures: 1
+### Turn 177 (round 41)
+- Player: 胡斐 (player-2), level 4, experience 170, at (6, 12), health 36, stamina 0.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+- Stored experience change: +0
+- Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=162.72999999999988/193, creature-nest-2=171.39999999999992/175, creature-nest-3=172.36/193
+- Nests: creature-nest-1=172.54999999999993/175, creature-nest-2=148.18/159, creature-nest-3=182.72000000000003/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-36-roamer-creature-1-616",
-      "round": 36,
+      "id": "action-41-player-2-707",
+      "round": 41,
       "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
       },
       "action": {
-        "type": "hold",
+        "type": "use-facility",
         "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
+          "id": "player-2",
+          "kind": "player"
         },
-        "reason": "沒有可執行的目標，原地待命。"
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
       },
       "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.135Z"
-    },
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:22.011Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 178 (round 42)
+- Player: 胡斐 (player-2), level 4, experience 171, at (6, 12), health 36, stamina 10.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+- Stored experience change: +1
+- Spawned creatures: 1
+- Defeated creatures: none
+- Nests: creature-nest-1=174.29999999999993/193, creature-nest-2=149.77/159, creature-nest-3=184.65000000000003/193
+
+```json
+{
+  "actions": [
     {
-      "id": "action-36-roamer-creature-2-617",
-      "round": 36,
+      "id": "action-41-roamer-creature-2-708",
+      "round": 41,
       "actor": {
         "id": "roamer-creature-2",
         "kind": "creature",
@@ -17206,11 +19244,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.135Z"
+      "createdAt": "2026-09-02T16:10:22.012Z"
     },
     {
-      "id": "action-36-roamer-creature-3-618",
-      "round": 36,
+      "id": "action-41-roamer-creature-3-709",
+      "round": 41,
       "actor": {
         "id": "roamer-creature-3",
         "kind": "creature",
@@ -17226,51 +19264,51 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.135Z"
+      "createdAt": "2026-09-02T16:10:22.013Z"
     },
     {
-      "id": "action-36-roamer-creature-4-619",
-      "round": 36,
+      "id": "action-41-roamer-creature-5-710",
+      "round": 41,
       "actor": {
-        "id": "roamer-creature-4",
+        "id": "roamer-creature-5",
         "kind": "creature",
         "name": "游蕩妖物"
       },
       "action": {
         "type": "hold",
         "actor": {
-          "id": "roamer-creature-4",
+          "id": "roamer-creature-5",
           "kind": "creature"
         },
         "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.135Z"
+      "createdAt": "2026-09-02T16:10:22.013Z"
     },
     {
-      "id": "action-36-roamer-creature-7-620",
-      "round": 36,
+      "id": "action-41-roamer-creature-6-711",
+      "round": 41,
       "actor": {
-        "id": "roamer-creature-7",
+        "id": "roamer-creature-6",
         "kind": "creature",
         "name": "游蕩妖物"
       },
       "action": {
         "type": "hold",
         "actor": {
-          "id": "roamer-creature-7",
+          "id": "roamer-creature-6",
           "kind": "creature"
         },
         "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.135Z"
+      "createdAt": "2026-09-02T16:10:22.013Z"
     },
     {
-      "id": "action-36-roamer-creature-8-621",
-      "round": 36,
+      "id": "action-41-roamer-creature-8-712",
+      "round": 41,
       "actor": {
         "id": "roamer-creature-8",
         "kind": "creature",
@@ -17286,111 +19324,203 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.135Z"
+      "createdAt": "2026-09-02T16:10:22.013Z"
     },
     {
-      "id": "action-36-nest-creature-4-622",
-      "round": 36,
+      "id": "action-41-roamer-creature-9-713",
+      "round": 41,
       "actor": {
-        "id": "nest-creature-4",
+        "id": "roamer-creature-9",
         "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
+        "name": "游蕩妖物"
       },
       "action": {
-        "type": "attack",
+        "type": "hold",
         "actor": {
-          "id": "nest-creature-4",
+          "id": "roamer-creature-9",
           "kind": "creature"
         },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.135Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:22.013Z"
     },
     {
-      "id": "action-36-nest-creature-7-623",
-      "round": 36,
+      "id": "action-41-nest-creature-2-714",
+      "round": 41,
       "actor": {
-        "id": "nest-creature-7",
+        "id": "nest-creature-2",
         "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
+        "name": "生物巢穴 3的怪物 Lv.2"
       },
       "action": {
-        "type": "attack",
+        "type": "hold",
         "actor": {
-          "id": "nest-creature-7",
+          "id": "nest-creature-2",
           "kind": "creature"
         },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.135Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:22.013Z"
     },
     {
-      "id": "action-36-nest-creature-9-624",
-      "round": 36,
+      "id": "action-41-nest-creature-1-715",
+      "round": 41,
       "actor": {
-        "id": "nest-creature-9",
+        "id": "nest-creature-1",
         "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
+        "name": "生物巢穴 2的怪物 Lv.1"
       },
       "action": {
         "type": "move",
         "actor": {
-          "id": "nest-creature-9",
+          "id": "nest-creature-1",
           "kind": "creature"
         },
         "destination": {
-          "row": 5,
-          "column": 11
+          "row": 4,
+          "column": 8
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:22.013Z"
+    },
+    {
+      "id": "action-41-nest-creature-3-716",
+      "round": 41,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:22.013Z"
+    },
+    {
+      "id": "action-41-nest-creature-4-717",
+      "round": 41,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:22.013Z"
+    },
+    {
+      "id": "action-41-nest-creature-5-718",
+      "round": 41,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:22.013Z"
+    },
+    {
+      "id": "action-41-nest-creature-7-719",
+      "round": 41,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 6,
+          "column": 7
         },
         "reason": "移動接近 襄陽。"
       },
       "result": "succeeded",
       "reason": "移動接近 襄陽。",
-      "createdAt": "2026-09-02T15:47:52.135Z"
+      "createdAt": "2026-09-02T16:10:22.013Z"
     },
     {
-      "id": "action-36-nest-creature-1-625",
-      "round": 36,
+      "id": "action-41-nest-creature-8-720",
+      "round": 41,
       "actor": {
-        "id": "nest-creature-1",
+        "id": "nest-creature-8",
         "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.4"
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 3,
+          "column": 9
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:22.013Z"
+    },
+    {
+      "id": "action-41-nest-creature-10-721",
+      "round": 41,
+      "actor": {
+        "id": "nest-creature-10",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.3"
       },
       "action": {
         "type": "hold",
         "actor": {
-          "id": "nest-creature-1",
+          "id": "nest-creature-10",
           "kind": "creature"
         },
-        "reason": "未能接近目標，原地待命。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.135Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:22.013Z"
     },
     {
-      "id": "action-37-player-2-626",
-      "round": 37,
+      "id": "action-42-player-2-722",
+      "round": 42,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -17406,13 +19536,13 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:52.136Z"
+      "createdAt": "2026-09-02T16:10:22.014Z"
     }
   ],
   "creatureLogs": [],
   "spawnedCreatures": [
     {
-      "id": "nest-creature-2",
+      "id": "nest-creature-6",
       "name": "生物巢穴 1的怪物 Lv.5",
       "innerSkillId": "void-spirit-inner",
       "externalSkillIds": [
@@ -17444,7 +19574,7 @@
         "column": 2
       },
       "homeNestId": "creature-nest-1",
-      "spawnedRound": 37,
+      "spawnedRound": 42,
       "baseAttributes": {
         "armStrength": 9.799999999999999,
         "constitution": 9.799999999999999,
@@ -17481,130 +19611,39 @@
 }
 ```
 
-### Turn 157 (round 37)
-- Player: 胡斐 (player-2), level 5, experience 210, at (10, 7), health 27.3, stamina 6.5
-- Attributes: armStrength=14, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 28
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=162.72999999999988/193, creature-nest-2=171.39999999999992/175, creature-nest-3=172.36/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-37-player-2-627",
-      "round": 37,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-1",
-          "kind": "creature",
-          "position": {
-            "row": 10,
-            "column": 6
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.4"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.4",
-      "createdAt": "2026-09-02T15:47:52.146Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 158 (round 37)
-- Player: 胡斐 (player-2), level 6, experience 40, at (10, 7), health 27.3, stamina 1.5
-- Attributes: armStrength=14, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 28
-- Stored experience change: -170 (level up; stored experience reset by game rules)
-- Spawned creatures: 0
-- Defeated creatures: nest-creature-1
-- Nests: creature-nest-1=162.72999999999988/193, creature-nest-2=171.39999999999992/175, creature-nest-3=172.36/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-37-player-2-628",
-      "round": 37,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-1",
-          "kind": "creature",
-          "position": {
-            "row": 10,
-            "column": 6
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.4"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 1的怪物 Lv.4",
-      "createdAt": "2026-09-02T15:47:52.157Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 159 (round 37)
-- Player: 胡斐 (player-2), level 6, experience 40, at (10, 7), health 27.3, stamina 1.5
-- Attributes: armStrength=15, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
+### Turn 179 (round 42)
+- Player: 胡斐 (player-2), level 4, experience 171, at (6, 12), health 36, stamina 7.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=162.72999999999988/193, creature-nest-2=171.39999999999992/175, creature-nest-3=172.36/193
+- Nests: creature-nest-1=174.29999999999993/193, creature-nest-2=149.77/159, creature-nest-3=184.65000000000003/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-37-player-2-629",
-      "round": 37,
+      "id": "action-42-player-2-723",
+      "round": 42,
       "actor": {
         "id": "player-2",
         "kind": "player",
         "name": "胡斐"
       },
       "action": {
-        "type": "allocate-attribute",
+        "type": "upgrade",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "attribute": "armStrength",
-        "reason": "屬性分配：提升 armStrength"
+        "baseId": "base-1",
+        "buildingId": "base-1-equipment-shop-2",
+        "reason": "建設：升級 裝備商店 至 Lv.2"
       },
       "result": "succeeded",
-      "reason": "屬性分配：提升 armStrength",
-      "createdAt": "2026-09-02T15:47:52.161Z"
+      "reason": "建設：升級 裝備商店 至 Lv.2",
+      "createdAt": "2026-09-02T16:10:22.018Z"
     }
   ],
   "creatureLogs": [],
@@ -17612,38 +19651,39 @@
 }
 ```
 
-### Turn 160 (round 37)
-- Player: 胡斐 (player-2), level 6, experience 40, at (10, 7), health 27.3, stamina 1.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
+### Turn 180 (round 42)
+- Player: 胡斐 (player-2), level 4, experience 171, at (6, 12), health 36, stamina 7.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=162.72999999999988/193, creature-nest-2=171.39999999999992/175, creature-nest-3=172.36/193
+- Nests: creature-nest-1=174.29999999999993/193, creature-nest-2=149.77/159, creature-nest-3=184.65000000000003/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-37-player-2-630",
-      "round": 37,
+      "id": "action-42-player-2-724",
+      "round": 42,
       "actor": {
         "id": "player-2",
         "kind": "player",
         "name": "胡斐"
       },
       "action": {
-        "type": "allocate-attribute",
+        "type": "buy-equipment",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "attribute": "armStrength",
-        "reason": "屬性分配：提升 armStrength"
+        "baseId": "base-1",
+        "equipmentId": "iron-sword",
+        "reason": "購買裝備：購買 精鐵劍"
       },
       "result": "succeeded",
-      "reason": "屬性分配：提升 armStrength",
-      "createdAt": "2026-09-02T15:47:52.165Z"
+      "reason": "購買裝備：購買 精鐵劍",
+      "createdAt": "2026-09-02T16:10:22.021Z"
     }
   ],
   "creatureLogs": [],
@@ -17651,41 +19691,298 @@
 }
 ```
 
-### Turn 161 (round 38)
-- Player: 胡斐 (player-2), level 6, experience 43, at (10, 7), health 29.55, stamina 12.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +3
+### Turn 181 (round 42)
+- Player: 胡斐 (player-2), level 4, experience 171, at (6, 12), health 36, stamina 7.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+- Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=164.65999999999988/193, creature-nest-2=173.14999999999992/175, creature-nest-3=174.29000000000002/193
+- Nests: creature-nest-1=174.29999999999993/193, creature-nest-2=149.77/159, creature-nest-3=184.65000000000003/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-37-roamer-creature-1-631",
-      "round": 37,
+      "id": "action-42-player-2-725",
+      "round": 42,
       "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
       },
       "action": {
-        "type": "hold",
+        "type": "buy-equipment",
         "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
+          "id": "player-2",
+          "kind": "player"
         },
-        "reason": "沒有可執行的目標，原地待命。"
+        "baseId": "base-1",
+        "equipmentId": "traveling-robe",
+        "reason": "購買裝備：購買 行者護衣"
       },
       "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.168Z"
-    },
+      "reason": "購買裝備：購買 行者護衣",
+      "createdAt": "2026-09-02T16:10:22.025Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 182 (round 42)
+- Player: 胡斐 (player-2), level 4, experience 171, at (6, 12), health 36, stamina 7.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=174.29999999999993/193, creature-nest-2=149.77/159, creature-nest-3=184.65000000000003/193
+
+```json
+{
+  "actions": [
     {
-      "id": "action-37-roamer-creature-2-632",
-      "round": 37,
+      "id": "action-42-player-2-726",
+      "round": 42,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "buy-equipment",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "equipmentId": "jade-pendant",
+        "reason": "購買裝備：購買 溫玉佩"
+      },
+      "result": "succeeded",
+      "reason": "購買裝備：購買 溫玉佩",
+      "createdAt": "2026-09-02T16:10:22.028Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 183 (round 42)
+- Player: 胡斐 (player-2), level 4, experience 171, at (6, 12), health 36, stamina 4.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=174.29999999999993/193, creature-nest-2=149.77/159, creature-nest-3=184.65000000000003/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-42-player-2-727",
+      "round": 42,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "build",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "buildingType": "building-type-waystation",
+        "reason": "建設：建造 驛站"
+      },
+      "result": "succeeded",
+      "reason": "建設：建造 驛站",
+      "createdAt": "2026-09-02T16:10:22.031Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 184 (round 42)
+- Player: 胡斐 (player-2), level 4, experience 171, at (6, 12), health 36, stamina 1.5
+- Attributes: armStrength=13, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 18
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=174.29999999999993/193, creature-nest-2=149.77/159, creature-nest-3=184.65000000000003/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-42-player-2-728",
+      "round": 42,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "build",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "buildingType": "building-type-item-shop",
+        "reason": "建設：建造 道具商店"
+      },
+      "result": "succeeded",
+      "reason": "建設：建造 道具商店",
+      "createdAt": "2026-09-02T16:10:22.033Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 185 (round 42)
+- Player: 胡斐 (player-2), level 4, experience 171, at (6, 12), health 36, stamina 1.5
+- Attributes: armStrength=15, constitution=12, agility=8, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=174.29999999999993/193, creature-nest-2=149.77/159, creature-nest-3=184.65000000000003/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-42-player-2-729",
+      "round": 42,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "equip",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "instanceId": "player-2-iron-sword-1788365422021",
+        "reason": "裝備：精鐵劍（weapon）"
+      },
+      "result": "succeeded",
+      "reason": "裝備：精鐵劍（weapon）",
+      "createdAt": "2026-09-02T16:10:22.036Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 186 (round 42)
+- Player: 胡斐 (player-2), level 4, experience 171, at (6, 12), health 36, stamina 1.5
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=8, insight=8
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=174.29999999999993/193, creature-nest-2=149.77/159, creature-nest-3=184.65000000000003/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-42-player-2-730",
+      "round": 42,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "equip",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "instanceId": "player-2-traveling-robe-1788365422025",
+        "reason": "裝備：行者護衣（armor）"
+      },
+      "result": "succeeded",
+      "reason": "裝備：行者護衣（armor）",
+      "createdAt": "2026-09-02T16:10:22.039Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 187 (round 42)
+- Player: 胡斐 (player-2), level 4, experience 171, at (6, 12), health 36, stamina 1.5
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=174.29999999999993/193, creature-nest-2=149.77/159, creature-nest-3=184.65000000000003/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-42-player-2-731",
+      "round": 42,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "equip",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "instanceId": "player-2-jade-pendant-1788365422028",
+        "reason": "裝備：溫玉佩（accessory）"
+      },
+      "result": "succeeded",
+      "reason": "裝備：溫玉佩（accessory）",
+      "createdAt": "2026-09-02T16:10:22.041Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 188 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 12
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
+- Stored experience change: +3
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-42-roamer-creature-2-732",
+      "round": 42,
       "actor": {
         "id": "roamer-creature-2",
         "kind": "creature",
@@ -17701,11 +19998,11 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.168Z"
+      "createdAt": "2026-09-02T16:10:22.043Z"
     },
     {
-      "id": "action-37-roamer-creature-3-633",
-      "round": 37,
+      "id": "action-42-roamer-creature-3-733",
+      "round": 42,
       "actor": {
         "id": "roamer-creature-3",
         "kind": "creature",
@@ -17721,51 +20018,51 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.168Z"
+      "createdAt": "2026-09-02T16:10:22.043Z"
     },
     {
-      "id": "action-37-roamer-creature-4-634",
-      "round": 37,
+      "id": "action-42-roamer-creature-5-734",
+      "round": 42,
       "actor": {
-        "id": "roamer-creature-4",
+        "id": "roamer-creature-5",
         "kind": "creature",
         "name": "游蕩妖物"
       },
       "action": {
         "type": "hold",
         "actor": {
-          "id": "roamer-creature-4",
+          "id": "roamer-creature-5",
           "kind": "creature"
         },
         "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.168Z"
+      "createdAt": "2026-09-02T16:10:22.043Z"
     },
     {
-      "id": "action-37-roamer-creature-7-635",
-      "round": 37,
+      "id": "action-42-roamer-creature-6-735",
+      "round": 42,
       "actor": {
-        "id": "roamer-creature-7",
+        "id": "roamer-creature-6",
         "kind": "creature",
         "name": "游蕩妖物"
       },
       "action": {
         "type": "hold",
         "actor": {
-          "id": "roamer-creature-7",
+          "id": "roamer-creature-6",
           "kind": "creature"
         },
         "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.168Z"
+      "createdAt": "2026-09-02T16:10:22.043Z"
     },
     {
-      "id": "action-37-roamer-creature-8-636",
-      "round": 37,
+      "id": "action-42-roamer-creature-8-736",
+      "round": 42,
       "actor": {
         "id": "roamer-creature-8",
         "kind": "creature",
@@ -17781,1546 +20078,223 @@
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.168Z"
+      "createdAt": "2026-09-02T16:10:22.043Z"
     },
     {
-      "id": "action-37-nest-creature-4-637",
-      "round": 37,
+      "id": "action-42-roamer-creature-9-737",
+      "round": 42,
       "actor": {
-        "id": "nest-creature-4",
+        "id": "roamer-creature-9",
         "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
+        "name": "游蕩妖物"
       },
       "action": {
-        "type": "attack",
+        "type": "hold",
         "actor": {
-          "id": "nest-creature-4",
+          "id": "roamer-creature-9",
           "kind": "creature"
         },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
+        "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.168Z"
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:22.043Z"
     },
     {
-      "id": "action-37-nest-creature-7-638",
-      "round": 37,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.169Z"
-    },
-    {
-      "id": "action-37-nest-creature-9-639",
-      "round": 37,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 11
-        },
-        "reason": "移動接近 襄陽。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 襄陽。",
-      "createdAt": "2026-09-02T15:47:52.169Z"
-    },
-    {
-      "id": "action-37-nest-creature-2-640",
-      "round": 37,
+      "id": "action-42-nest-creature-2-738",
+      "round": 42,
       "actor": {
         "id": "nest-creature-2",
         "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.5"
+        "name": "生物巢穴 3的怪物 Lv.2"
       },
       "action": {
-        "type": "move",
+        "type": "hold",
         "actor": {
           "id": "nest-creature-2",
           "kind": "creature"
         },
-        "destination": {
-          "row": 10,
-          "column": 3
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:52.169Z"
-    },
-    {
-      "id": "action-38-player-2-641",
-      "round": 38,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:52.169Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 162 (round 38)
-- Player: 胡斐 (player-2), level 6, experience 43, at (11, 7), health 29.55, stamina 10.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=164.65999999999988/193, creature-nest-2=173.14999999999992/175, creature-nest-3=174.29000000000002/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-38-player-2-642",
-      "round": 38,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 11,
-          "column": 7
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:52.180Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 163 (round 38)
-- Player: 胡斐 (player-2), level 6, experience 43, at (11, 6), health 29.55, stamina 8.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=164.65999999999988/193, creature-nest-2=173.14999999999992/175, creature-nest-3=174.29000000000002/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-38-player-2-643",
-      "round": 38,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 11,
-          "column": 6
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:52.188Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 164 (round 38)
-- Player: 胡斐 (player-2), level 6, experience 43, at (11, 5), health 29.55, stamina 3.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=164.65999999999988/193, creature-nest-2=173.14999999999992/175, creature-nest-3=174.29000000000002/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-38-player-2-644",
-      "round": 38,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 11,
-          "column": 5
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:52.196Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 165 (round 38)
-- Player: 胡斐 (player-2), level 6, experience 43, at (11, 6), health 29.55, stamina 1.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=164.65999999999988/193, creature-nest-2=173.14999999999992/175, creature-nest-3=174.29000000000002/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-38-player-2-645",
-      "round": 38,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 11,
-          "column": 6
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:52.204Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 166 (round 39)
-- Player: 胡斐 (player-2), level 6, experience 46, at (11, 6), health 31.8, stamina 12.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=166.5899999999999/193, creature-nest-2=174.89999999999992/175, creature-nest-3=176.22000000000003/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-38-roamer-creature-1-646",
-      "round": 38,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
         "reason": "沒有可執行的目標，原地待命。"
       },
       "result": "succeeded",
       "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.206Z"
+      "createdAt": "2026-09-02T16:10:22.043Z"
     },
     {
-      "id": "action-38-roamer-creature-2-647",
-      "round": 38,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.206Z"
-    },
-    {
-      "id": "action-38-roamer-creature-3-648",
-      "round": 38,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.206Z"
-    },
-    {
-      "id": "action-38-roamer-creature-4-649",
-      "round": 38,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.206Z"
-    },
-    {
-      "id": "action-38-roamer-creature-7-650",
-      "round": 38,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.206Z"
-    },
-    {
-      "id": "action-38-roamer-creature-8-651",
-      "round": 38,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.206Z"
-    },
-    {
-      "id": "action-38-nest-creature-4-652",
-      "round": 38,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.206Z"
-    },
-    {
-      "id": "action-38-nest-creature-7-653",
-      "round": 38,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.206Z"
-    },
-    {
-      "id": "action-38-nest-creature-9-654",
-      "round": 38,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 11
-        },
-        "reason": "移動接近 襄陽。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 襄陽。",
-      "createdAt": "2026-09-02T15:47:52.206Z"
-    },
-    {
-      "id": "action-38-nest-creature-2-655",
-      "round": 38,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.5"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 9,
-          "column": 3
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:52.206Z"
-    },
-    {
-      "id": "action-39-player-2-656",
-      "round": 39,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:52.207Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 167 (round 39)
-- Player: 胡斐 (player-2), level 6, experience 46, at (12, 6), health 31.8, stamina 10.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=166.5899999999999/193, creature-nest-2=174.89999999999992/175, creature-nest-3=176.22000000000003/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-39-player-2-657",
-      "round": 39,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 12,
-          "column": 6
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:52.214Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 168 (round 39)
-- Player: 胡斐 (player-2), level 6, experience 46, at (12, 5), health 31.8, stamina 5.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=166.5899999999999/193, creature-nest-2=174.89999999999992/175, creature-nest-3=176.22000000000003/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-39-player-2-658",
-      "round": 39,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 12,
-          "column": 5
-        },
-        "reason": "學招：移動到門派據點"
-      },
-      "result": "succeeded",
-      "reason": "學招：移動到門派據點",
-      "createdAt": "2026-09-02T15:47:52.220Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 169 (round 39)
-- Player: 胡斐 (player-2), level 6, experience 46, at (12, 5), health 31.8, stamina 2.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=166.5899999999999/193, creature-nest-2=174.89999999999992/175, creature-nest-3=176.22000000000003/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-39-player-2-659",
-      "round": 39,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "learn-skill",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "gateId": "sect-gate-4",
-        "skillType": "external",
-        "skillId": "blazing-sun-external-damage",
-        "reason": "學招：學習門派功法 烈陽轟"
-      },
-      "result": "succeeded",
-      "reason": "學招：學習門派功法 烈陽轟",
-      "createdAt": "2026-09-02T15:47:52.227Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 170 (round 39)
-- Player: 胡斐 (player-2), level 6, experience 46, at (12, 5), health 31.8, stamina 2.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=166.5899999999999/193, creature-nest-2=174.89999999999992/175, creature-nest-3=176.22000000000003/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-39-player-2-660",
-      "round": 39,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "equip-external-skill",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "skillId": "blazing-sun-external-damage",
-        "reason": "啟用外功：烈陽轟"
-      },
-      "result": "succeeded",
-      "reason": "啟用外功：烈陽轟",
-      "createdAt": "2026-09-02T15:47:52.234Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 171 (round 39)
-- Player: 胡斐 (player-2), level 6, experience 46, at (13, 5), health 31.8, stamina 0.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=166.5899999999999/193, creature-nest-2=174.89999999999992/175, creature-nest-3=176.22000000000003/193
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-39-player-2-661",
-      "round": 39,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 13,
-          "column": 5
-        },
-        "reason": "打巢穴：移動到 生物巢穴 1 附近"
-      },
-      "result": "succeeded",
-      "reason": "打巢穴：移動到 生物巢穴 1 附近",
-      "createdAt": "2026-09-02T15:47:52.242Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 172 (round 40)
-- Player: 胡斐 (player-2), level 6, experience 47, at (13, 5), health 34.05, stamina 12.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +1
-- Spawned creatures: 1
-- Defeated creatures: none
-- Nests: creature-nest-1=168.5199999999999/193, creature-nest-2=175/175, creature-nest-3=178.15000000000003/212
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-39-roamer-creature-1-662",
-      "round": 39,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.246Z"
-    },
-    {
-      "id": "action-39-roamer-creature-2-663",
-      "round": 39,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.246Z"
-    },
-    {
-      "id": "action-39-roamer-creature-3-664",
-      "round": 39,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.246Z"
-    },
-    {
-      "id": "action-39-roamer-creature-4-665",
-      "round": 39,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.246Z"
-    },
-    {
-      "id": "action-39-roamer-creature-7-666",
-      "round": 39,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.246Z"
-    },
-    {
-      "id": "action-39-roamer-creature-8-667",
-      "round": 39,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.246Z"
-    },
-    {
-      "id": "action-39-nest-creature-4-668",
-      "round": 39,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.246Z"
-    },
-    {
-      "id": "action-39-nest-creature-7-669",
-      "round": 39,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.247Z"
-    },
-    {
-      "id": "action-39-nest-creature-9-670",
-      "round": 39,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 11
-        },
-        "reason": "移動接近 襄陽。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 襄陽。",
-      "createdAt": "2026-09-02T15:47:52.247Z"
-    },
-    {
-      "id": "action-39-nest-creature-2-671",
-      "round": 39,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.5"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 12,
-          "column": 3
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:52.247Z"
-    },
-    {
-      "id": "action-40-player-2-672",
-      "round": 40,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:52.248Z"
-    }
-  ],
-  "creatureLogs": [
-    {
-      "creatureId": "creature-nest-3",
-      "creatureName": "生物巢穴 3",
-      "message": "生物巢穴 3 生成了 Lv.6 怪物。"
-    }
-  ],
-  "spawnedCreatures": [
-    {
-      "id": "nest-creature-1",
-      "name": "生物巢穴 3的怪物 Lv.6",
-      "innerSkillId": "void-spirit-inner",
-      "externalSkillIds": [
-        "void-spirit-external-functional",
-        "void-spirit-external-functional-2"
-      ],
-      "equippedExternalSkillIds": [
-        "void-spirit-external-functional",
-        "void-spirit-external-functional-2"
-      ],
-      "position": {
-        "row": 10,
-        "column": 8
-      },
-      "attributes": {
-        "armStrength": 12,
-        "constitution": 12,
-        "agility": 11,
-        "innerEnergy": 11,
-        "insight": 12
-      },
-      "prestige": 0,
-      "money": 0,
-      "experience": 0,
-      "turnEnded": false,
-      "level": 6,
-      "behaviorType": "scavenger",
-      "schoolId": "void-spirit",
-      "homePosition": {
-        "row": 11,
-        "column": 8
-      },
-      "homeNestId": "creature-nest-3",
-      "spawnedRound": 40,
-      "baseAttributes": {
-        "armStrength": 11.2,
-        "constitution": 11.2,
-        "agility": 11.2,
-        "innerEnergy": 11.2,
-        "insight": 11.2
-      },
-      "health": 36,
-      "maxHealth": 36,
-      "stamina": 11.5,
-      "maxStamina": 11.5,
-      "innerPower": 33,
-      "maxInnerPower": 33,
-      "availableAttributePoints": 0,
-      "governanceRank": 1,
-      "unlockedPolicyIds": [
-        "basic"
-      ],
-      "inventory": [],
-      "unlockedEquipmentDropIds": [],
-      "equipmentInventory": [],
-      "equipmentLoadout": {
-        "weaponInstanceId": null,
-        "armorInstanceId": null,
-        "accessoryInstanceId": null
-      },
-      "innerSkillIds": [
-        "tuna-gong"
-      ],
-      "skillProgression": {},
-      "buffs": []
-    }
-  ]
-}
-```
-
-### Turn 173 (round 40)
-- Player: 胡斐 (player-2), level 6, experience 47, at (13, 6), health 34.05, stamina 7.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=168.5199999999999/193, creature-nest-2=175/175, creature-nest-3=178.15000000000003/212
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-40-player-2-673",
-      "round": 40,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 13,
-          "column": 6
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:52.261Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 174 (round 40)
-- Player: 胡斐 (player-2), level 6, experience 47, at (13, 7), health 34.05, stamina 5.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=168.5199999999999/193, creature-nest-2=175/175, creature-nest-3=178.15000000000003/212
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-40-player-2-674",
-      "round": 40,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 13,
-          "column": 7
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:52.268Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 175 (round 40)
-- Player: 胡斐 (player-2), level 6, experience 47, at (12, 7), health 34.05, stamina 3.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=168.5199999999999/193, creature-nest-2=175/175, creature-nest-3=178.15000000000003/212
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-40-player-2-675",
-      "round": 40,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 12,
-          "column": 7
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:52.279Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 176 (round 40)
-- Player: 胡斐 (player-2), level 6, experience 47, at (11, 7), health 34.05, stamina 1.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=168.5199999999999/193, creature-nest-2=175/175, creature-nest-3=178.15000000000003/212
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-40-player-2-676",
-      "round": 40,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 11,
-          "column": 7
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
-      },
-      "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:52.288Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 177 (round 41)
-- Player: 胡斐 (player-2), level 6, experience 50, at (11, 7), health 9.299999999999997, stamina 12.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=170.4499999999999/193, creature-nest-2=175/175, creature-nest-3=180.27000000000004/212
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-40-roamer-creature-1-677",
-      "round": 40,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.293Z"
-    },
-    {
-      "id": "action-40-roamer-creature-2-678",
-      "round": 40,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.293Z"
-    },
-    {
-      "id": "action-40-roamer-creature-3-679",
-      "round": 40,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.293Z"
-    },
-    {
-      "id": "action-40-roamer-creature-4-680",
-      "round": 40,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.293Z"
-    },
-    {
-      "id": "action-40-roamer-creature-7-681",
-      "round": 40,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.293Z"
-    },
-    {
-      "id": "action-40-roamer-creature-8-682",
-      "round": 40,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.293Z"
-    },
-    {
-      "id": "action-40-nest-creature-4-683",
-      "round": 40,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.293Z"
-    },
-    {
-      "id": "action-40-nest-creature-7-684",
-      "round": 40,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.293Z"
-    },
-    {
-      "id": "action-40-nest-creature-9-685",
-      "round": 40,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 11
-        },
-        "reason": "移動接近 襄陽。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 襄陽。",
-      "createdAt": "2026-09-02T15:47:52.294Z"
-    },
-    {
-      "id": "action-40-nest-creature-2-686",
-      "round": 40,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.5"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 9,
-          "column": 3
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:52.294Z"
-    },
-    {
-      "id": "action-40-nest-creature-1-687",
-      "round": 40,
+      "id": "action-42-nest-creature-1-739",
+      "round": 42,
       "actor": {
         "id": "nest-creature-1",
         "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.6"
+        "name": "生物巢穴 2的怪物 Lv.1"
       },
       "action": {
-        "type": "attack",
+        "type": "move",
         "actor": {
           "id": "nest-creature-1",
           "kind": "creature"
         },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 11,
-            "column": 7
-          }
+        "destination": {
+          "row": 4,
+          "column": 8
         },
-        "reason": "與 胡斐 交戰。"
+        "reason": "移動接近 耕田。"
       },
       "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:52.294Z"
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:22.043Z"
     },
     {
-      "id": "action-41-player-2-688",
-      "round": 41,
+      "id": "action-42-nest-creature-3-740",
+      "round": 42,
+      "actor": {
+        "id": "nest-creature-3",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.2"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-3",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:22.043Z"
+    },
+    {
+      "id": "action-42-nest-creature-4-741",
+      "round": 42,
+      "actor": {
+        "id": "nest-creature-4",
+        "kind": "creature",
+        "name": "生物巢穴 3的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-4",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:22.043Z"
+    },
+    {
+      "id": "action-42-nest-creature-5-742",
+      "round": 42,
+      "actor": {
+        "id": "nest-creature-5",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-5",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:22.043Z"
+    },
+    {
+      "id": "action-42-nest-creature-7-743",
+      "round": 42,
+      "actor": {
+        "id": "nest-creature-7",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.4"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-7",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 6,
+          "column": 7
+        },
+        "reason": "移動接近 襄陽。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 襄陽。",
+      "createdAt": "2026-09-02T16:10:22.043Z"
+    },
+    {
+      "id": "action-42-nest-creature-8-744",
+      "round": 42,
+      "actor": {
+        "id": "nest-creature-8",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.2"
+      },
+      "action": {
+        "type": "move",
+        "actor": {
+          "id": "nest-creature-8",
+          "kind": "creature"
+        },
+        "destination": {
+          "row": 3,
+          "column": 9
+        },
+        "reason": "移動接近 耕田。"
+      },
+      "result": "succeeded",
+      "reason": "移動接近 耕田。",
+      "createdAt": "2026-09-02T16:10:22.043Z"
+    },
+    {
+      "id": "action-42-nest-creature-10-745",
+      "round": 42,
+      "actor": {
+        "id": "nest-creature-10",
+        "kind": "creature",
+        "name": "生物巢穴 2的怪物 Lv.3"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-10",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:22.043Z"
+    },
+    {
+      "id": "action-42-nest-creature-6-746",
+      "round": 42,
+      "actor": {
+        "id": "nest-creature-6",
+        "kind": "creature",
+        "name": "生物巢穴 1的怪物 Lv.5"
+      },
+      "action": {
+        "type": "hold",
+        "actor": {
+          "id": "nest-creature-6",
+          "kind": "creature"
+        },
+        "reason": "沒有可執行的目標，原地待命。"
+      },
+      "result": "succeeded",
+      "reason": "沒有可執行的目標，原地待命。",
+      "createdAt": "2026-09-02T16:10:22.044Z"
+    },
+    {
+      "id": "action-43-player-2-747",
+      "round": 43,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -19336,60 +20310,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:52.295Z"
-    }
-  ],
-  "creatureLogs": [
-    {
-      "creatureId": "nest-creature-1",
-      "creatureName": "生物巢穴 3的怪物 Lv.6",
-      "message": "生物巢穴 3的怪物 Lv.6 攻擊 胡斐，造成 11 點傷害。"
-    },
-    {
-      "creatureId": "nest-creature-1",
-      "creatureName": "生物巢穴 3的怪物 Lv.6",
-      "message": "生物巢穴 3的怪物 Lv.6 連續攻擊 胡斐 2 次。"
-    }
-  ],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 178 (round 41)
-- Player: 胡斐 (player-2), level 6, experience 50, at (11, 6), health 9.299999999999997, stamina 10.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +0
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=170.4499999999999/193, creature-nest-2=175/175, creature-nest-3=180.27000000000004/212
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-41-player-2-689",
-      "round": 41,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "destination": {
-          "row": 11,
-          "column": 6
-        },
-        "reason": "保命：逃離 生物巢穴 3的怪物 Lv.6（hitsSurvivable=0.9299999999999997）"
-      },
-      "result": "succeeded",
-      "reason": "保命：逃離 生物巢穴 3的怪物 Lv.6（hitsSurvivable=0.9299999999999997）",
-      "createdAt": "2026-09-02T15:47:52.302Z"
+      "createdAt": "2026-09-02T16:10:22.044Z"
     }
   ],
   "creatureLogs": [],
@@ -19397,41 +20318,39 @@
 }
 ```
 
-### Turn 179 (round 41)
-- Player: 胡斐 (player-2), level 6, experience 50, at (11, 5), health 9.299999999999997, stamina 5.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
+### Turn 189 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 12
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=170.4499999999999/193, creature-nest-2=175/175, creature-nest-3=180.27000000000004/212
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-41-player-2-690",
-      "round": 41,
+      "id": "action-43-player-2-748",
+      "round": 43,
       "actor": {
         "id": "player-2",
         "kind": "player",
         "name": "胡斐"
       },
       "action": {
-        "type": "move",
+        "type": "buy-item",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "destination": {
-          "row": 11,
-          "column": 5
-        },
-        "reason": "保命：逃離 生物巢穴 3的怪物 Lv.6（hitsSurvivable=0.9299999999999997）"
+        "baseId": "base-1",
+        "itemId": "recover-qi-pill",
+        "reason": "購買道具：購買 回氣丹"
       },
       "result": "succeeded",
-      "reason": "保命：逃離 生物巢穴 3的怪物 Lv.6（hitsSurvivable=0.9299999999999997）",
-      "createdAt": "2026-09-02T15:47:52.311Z"
+      "reason": "購買道具：購買 回氣丹",
+      "createdAt": "2026-09-02T16:10:22.049Z"
     }
   ],
   "creatureLogs": [],
@@ -19439,41 +20358,39 @@
 }
 ```
 
-### Turn 180 (round 41)
-- Player: 胡斐 (player-2), level 6, experience 50, at (11, 4), health 9.299999999999997, stamina 0.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
+### Turn 190 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 12
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=170.4499999999999/193, creature-nest-2=175/175, creature-nest-3=180.27000000000004/212
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-41-player-2-691",
-      "round": 41,
+      "id": "action-43-player-2-749",
+      "round": 43,
       "actor": {
         "id": "player-2",
         "kind": "player",
         "name": "胡斐"
       },
       "action": {
-        "type": "move",
+        "type": "buy-item",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "destination": {
-          "row": 11,
-          "column": 4
-        },
-        "reason": "保命：逃離 生物巢穴 3的怪物 Lv.6（hitsSurvivable=0.9299999999999997）"
+        "baseId": "base-1",
+        "itemId": "great-strength-pill",
+        "reason": "購買道具：購買 大力丸"
       },
       "result": "succeeded",
-      "reason": "保命：逃離 生物巢穴 3的怪物 Lv.6（hitsSurvivable=0.9299999999999997）",
-      "createdAt": "2026-09-02T15:47:52.320Z"
+      "reason": "購買道具：購買 大力丸",
+      "createdAt": "2026-09-02T16:10:22.054Z"
     }
   ],
   "creatureLogs": [],
@@ -19481,21 +20398,221 @@
 }
 ```
 
-### Turn 181 (round 41)
-- Player: 胡斐 (player-2), level 6, experience 50, at (11, 4), health 29.299999999999997, stamina 0.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
+### Turn 191 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 10
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=170.4499999999999/193, creature-nest-2=175/175, creature-nest-3=180.27000000000004/212
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-41-player-2-692",
-      "round": 41,
+      "id": "action-43-player-2-750",
+      "round": 43,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:22.058Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 192 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 8
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-43-player-2-751",
+      "round": 43,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:22.061Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 193 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 6
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-43-player-2-752",
+      "round": 43,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:22.064Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 194 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 4
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-43-player-2-753",
+      "round": 43,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:22.067Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 195 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 2
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-43-player-2-754",
+      "round": 43,
+      "actor": {
+        "id": "player-2",
+        "kind": "player",
+        "name": "胡斐"
+      },
+      "action": {
+        "type": "use-facility",
+        "actor": {
+          "id": "player-2",
+          "kind": "player"
+        },
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
+      },
+      "result": "succeeded",
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:22.070Z"
+    }
+  ],
+  "creatureLogs": [],
+  "spawnedCreatures": []
+}
+```
+
+### Turn 196 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 8
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
+- Stored experience change: +0
+- Spawned creatures: 0
+- Defeated creatures: none
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
+
+```json
+{
+  "actions": [
+    {
+      "id": "action-43-player-2-755",
+      "round": 43,
       "actor": {
         "id": "player-2",
         "kind": "player",
@@ -19507,12 +20624,12 @@
           "id": "player-2",
           "kind": "player"
         },
-        "itemId": "heal-wound-medicine",
-        "reason": "使用道具：療傷藥"
+        "itemId": "recover-qi-pill",
+        "reason": "使用道具：回氣丹"
       },
       "result": "succeeded",
-      "reason": "使用道具：療傷藥",
-      "createdAt": "2026-09-02T15:47:52.324Z"
+      "reason": "使用道具：回氣丹",
+      "createdAt": "2026-09-02T16:10:22.072Z"
     }
   ],
   "creatureLogs": [],
@@ -19520,736 +20637,20 @@
 }
 ```
 
-### Turn 182 (round 42)
-- Player: 胡斐 (player-2), level 6, experience 51, at (11, 4), health 31.549999999999997, stamina 12.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +1
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=172.3799999999999/193, creature-nest-2=175/175, creature-nest-3=182.39000000000004/212
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-41-roamer-creature-1-693",
-      "round": 41,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.329Z"
-    },
-    {
-      "id": "action-41-roamer-creature-2-694",
-      "round": 41,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.329Z"
-    },
-    {
-      "id": "action-41-roamer-creature-3-695",
-      "round": 41,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.329Z"
-    },
-    {
-      "id": "action-41-roamer-creature-4-696",
-      "round": 41,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.329Z"
-    },
-    {
-      "id": "action-41-roamer-creature-7-697",
-      "round": 41,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.329Z"
-    },
-    {
-      "id": "action-41-roamer-creature-8-698",
-      "round": 41,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.329Z"
-    },
-    {
-      "id": "action-41-nest-creature-4-699",
-      "round": 41,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.329Z"
-    },
-    {
-      "id": "action-41-nest-creature-7-700",
-      "round": 41,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.329Z"
-    },
-    {
-      "id": "action-41-nest-creature-9-701",
-      "round": 41,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 11
-        },
-        "reason": "移動接近 襄陽。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 襄陽。",
-      "createdAt": "2026-09-02T15:47:52.329Z"
-    },
-    {
-      "id": "action-41-nest-creature-2-702",
-      "round": 41,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.5"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.329Z"
-    },
-    {
-      "id": "action-41-nest-creature-1-703",
-      "round": 41,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.6"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.329Z"
-    },
-    {
-      "id": "action-42-player-2-704",
-      "round": 42,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:52.330Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 183 (round 42)
-- Player: 胡斐 (player-2), level 6, experience 54, at (11, 4), health 31.549999999999997, stamina 7.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +3
-- Spawned creatures: 0
-- Defeated creatures: none
-- Nests: creature-nest-1=172.3799999999999/193, creature-nest-2=175/175, creature-nest-3=182.39000000000004/212
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-42-player-2-705",
-      "round": 42,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-1",
-          "kind": "creature",
-          "position": {
-            "row": 11,
-            "column": 5
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.6"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.6",
-      "createdAt": "2026-09-02T15:47:52.337Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 184 (round 42)
-- Player: 胡斐 (player-2), level 6, experience 174, at (11, 4), health 31.549999999999997, stamina 2.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +120
-- Spawned creatures: 0
-- Defeated creatures: nest-creature-1
-- Nests: creature-nest-1=172.3799999999999/193, creature-nest-2=175/175, creature-nest-3=182.39000000000004/212
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-42-player-2-706",
-      "round": 42,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "target": {
-          "id": "nest-creature-1",
-          "kind": "creature",
-          "position": {
-            "row": 11,
-            "column": 5
-          }
-        },
-        "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.6"
-      },
-      "result": "succeeded",
-      "reason": "交戰：攻擊 生物巢穴 3的怪物 Lv.6",
-      "createdAt": "2026-09-02T15:47:52.345Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": []
-}
-```
-
-### Turn 185 (round 43)
-- Player: 胡斐 (player-2), level 6, experience 179, at (11, 4), health 24.799999999999997, stamina 12.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +5
-- Spawned creatures: 1
-- Defeated creatures: none
-- Nests: creature-nest-1=174.30999999999992/212, creature-nest-2=175/175, creature-nest-3=184.51000000000005/212
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-42-roamer-creature-1-707",
-      "round": 42,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.349Z"
-    },
-    {
-      "id": "action-42-roamer-creature-2-708",
-      "round": 42,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.349Z"
-    },
-    {
-      "id": "action-42-roamer-creature-3-709",
-      "round": 42,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.349Z"
-    },
-    {
-      "id": "action-42-roamer-creature-4-710",
-      "round": 42,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.349Z"
-    },
-    {
-      "id": "action-42-roamer-creature-7-711",
-      "round": 42,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.349Z"
-    },
-    {
-      "id": "action-42-roamer-creature-8-712",
-      "round": 42,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.349Z"
-    },
-    {
-      "id": "action-42-nest-creature-4-713",
-      "round": 42,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.349Z"
-    },
-    {
-      "id": "action-42-nest-creature-7-714",
-      "round": 42,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.349Z"
-    },
-    {
-      "id": "action-42-nest-creature-9-715",
-      "round": 42,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 11
-        },
-        "reason": "移動接近 襄陽。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 襄陽。",
-      "createdAt": "2026-09-02T15:47:52.349Z"
-    },
-    {
-      "id": "action-42-nest-creature-2-716",
-      "round": 42,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.5"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "player-2",
-          "kind": "player",
-          "position": {
-            "row": 11,
-            "column": 4
-          }
-        },
-        "reason": "與 胡斐 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 胡斐 交戰。",
-      "createdAt": "2026-09-02T15:47:52.349Z"
-    },
-    {
-      "id": "action-43-player-2-717",
-      "round": 43,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：positioning 分數 0.33，但目前沒有可執行 action，結束回合。候選診斷：positioning=0.33:hold, selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:52.350Z"
-    }
-  ],
-  "creatureLogs": [
-    {
-      "creatureId": "nest-creature-2",
-      "creatureName": "生物巢穴 1的怪物 Lv.5",
-      "message": "生物巢穴 1的怪物 Lv.5 攻擊 胡斐，造成 9 點傷害。"
-    },
-    {
-      "creatureId": "creature-nest-1",
-      "creatureName": "生物巢穴 1",
-      "message": "生物巢穴 1 生成了 Lv.6 怪物。"
-    }
-  ],
-  "spawnedCreatures": [
-    {
-      "id": "nest-creature-1",
-      "name": "生物巢穴 1的怪物 Lv.6",
-      "innerSkillId": "void-spirit-inner",
-      "externalSkillIds": [
-        "void-spirit-external-functional",
-        "void-spirit-external-functional-2"
-      ],
-      "equippedExternalSkillIds": [
-        "void-spirit-external-functional",
-        "void-spirit-external-functional-2"
-      ],
-      "position": {
-        "row": 12,
-        "column": 2
-      },
-      "attributes": {
-        "armStrength": 12,
-        "constitution": 12,
-        "agility": 11,
-        "innerEnergy": 11,
-        "insight": 12
-      },
-      "prestige": 0,
-      "money": 0,
-      "experience": 0,
-      "turnEnded": false,
-      "level": 6,
-      "behaviorType": "sieger",
-      "schoolId": "void-spirit",
-      "homePosition": {
-        "row": 13,
-        "column": 2
-      },
-      "homeNestId": "creature-nest-1",
-      "spawnedRound": 43,
-      "baseAttributes": {
-        "armStrength": 11.2,
-        "constitution": 11.2,
-        "agility": 11.2,
-        "innerEnergy": 11.2,
-        "insight": 11.2
-      },
-      "health": 36,
-      "maxHealth": 36,
-      "stamina": 11.5,
-      "maxStamina": 11.5,
-      "innerPower": 33,
-      "maxInnerPower": 33,
-      "availableAttributePoints": 0,
-      "governanceRank": 1,
-      "unlockedPolicyIds": [
-        "basic"
-      ],
-      "inventory": [],
-      "unlockedEquipmentDropIds": [],
-      "equipmentInventory": [],
-      "equipmentLoadout": {
-        "weaponInstanceId": null,
-        "armorInstanceId": null,
-        "accessoryInstanceId": null
-      },
-      "innerSkillIds": [
-        "tuna-gong"
-      ],
-      "skillProgression": {},
-      "buffs": []
-    }
-  ]
-}
-```
-
-### Turn 186 (round 43)
-- Player: 胡斐 (player-2), level 6, experience 179, at (10, 4), health 24.799999999999997, stamina 7.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
+### Turn 197 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 6
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=174.30999999999992/212, creature-nest-2=175/175, creature-nest-3=184.51000000000005/212
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-43-player-2-718",
+      "id": "action-43-player-2-756",
       "round": 43,
       "actor": {
         "id": "player-2",
@@ -20257,20 +20658,18 @@
         "name": "胡斐"
       },
       "action": {
-        "type": "move",
+        "type": "use-facility",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "destination": {
-          "row": 10,
-          "column": 4
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
       },
       "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:52.360Z"
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:22.075Z"
     }
   ],
   "creatureLogs": [],
@@ -20278,20 +20677,20 @@
 }
 ```
 
-### Turn 187 (round 43)
-- Player: 胡斐 (player-2), level 6, experience 179, at (9, 4), health 24.799999999999997, stamina 5.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
+### Turn 198 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 4
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=174.30999999999992/212, creature-nest-2=175/175, creature-nest-3=184.51000000000005/212
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-43-player-2-719",
+      "id": "action-43-player-2-757",
       "round": 43,
       "actor": {
         "id": "player-2",
@@ -20299,20 +20698,18 @@
         "name": "胡斐"
       },
       "action": {
-        "type": "move",
+        "type": "use-facility",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "destination": {
-          "row": 9,
-          "column": 4
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
       },
       "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:52.371Z"
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:22.078Z"
     }
   ],
   "creatureLogs": [],
@@ -20320,20 +20717,20 @@
 }
 ```
 
-### Turn 188 (round 43)
-- Player: 胡斐 (player-2), level 6, experience 179, at (9, 5), health 24.799999999999997, stamina 3.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
+### Turn 199 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 2
+- Attributes: armStrength=15, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 19
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=174.30999999999992/212, creature-nest-2=175/175, creature-nest-3=184.51000000000005/212
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-43-player-2-720",
+      "id": "action-43-player-2-758",
       "round": 43,
       "actor": {
         "id": "player-2",
@@ -20341,20 +20738,18 @@
         "name": "胡斐"
       },
       "action": {
-        "type": "move",
+        "type": "use-facility",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "destination": {
-          "row": 9,
-          "column": 5
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
+        "baseId": "base-1",
+        "facilityType": "mission",
+        "reason": "任務：執行告示牌任務"
       },
       "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:52.384Z"
+      "reason": "任務：執行告示牌任務",
+      "createdAt": "2026-09-02T16:10:22.082Z"
     }
   ],
   "creatureLogs": [],
@@ -20362,20 +20757,20 @@
 }
 ```
 
-### Turn 189 (round 43)
-- Player: 胡斐 (player-2), level 6, experience 179, at (9, 6), health 24.799999999999997, stamina 1.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
+### Turn 200 (round 43)
+- Player: 胡斐 (player-2), level 4, experience 174, at (6, 12), health 37.95, stamina 2
+- Attributes: armStrength=16, constitution=13, agility=9, innerEnergy=9, insight=9
+- Inner skill: 烈陽戰體 (blazing-sun-inner), level 2, damage 21
 - Stored experience change: +0
 - Spawned creatures: 0
 - Defeated creatures: none
-- Nests: creature-nest-1=174.30999999999992/212, creature-nest-2=175/175, creature-nest-3=184.51000000000005/212
+- Nests: creature-nest-1=176.22999999999993/193, creature-nest-2=151.36/159, creature-nest-3=186.58000000000004/193
 
 ```json
 {
   "actions": [
     {
-      "id": "action-43-player-2-721",
+      "id": "action-43-player-2-759",
       "round": 43,
       "actor": {
         "id": "player-2",
@@ -20383,375 +20778,21 @@
         "name": "胡斐"
       },
       "action": {
-        "type": "move",
+        "type": "use-item",
         "actor": {
           "id": "player-2",
           "kind": "player"
         },
-        "destination": {
-          "row": 9,
-          "column": 6
-        },
-        "reason": "探索：移動到未探索格 (6,13)"
+        "itemId": "great-strength-pill",
+        "reason": "使用道具：大力丸"
       },
       "result": "succeeded",
-      "reason": "探索：移動到未探索格 (6,13)",
-      "createdAt": "2026-09-02T15:47:52.390Z"
+      "reason": "使用道具：大力丸",
+      "createdAt": "2026-09-02T16:10:22.084Z"
     }
   ],
   "creatureLogs": [],
   "spawnedCreatures": []
-}
-```
-
-### Turn 190 (round 44)
-- Player: 胡斐 (player-2), level 6, experience 182, at (9, 6), health 27.049999999999997, stamina 12.5
-- Attributes: armStrength=16, constitution=15, agility=9, innerEnergy=9, insight=9
-- Inner skill: 烈陽戰體 (blazing-sun-inner), level 3, damage 30
-- Stored experience change: +3
-- Spawned creatures: 1
-- Defeated creatures: none
-- Nests: creature-nest-1=176.42999999999992/212, creature-nest-2=175/175, creature-nest-3=186.63000000000005/233
-
-```json
-{
-  "actions": [
-    {
-      "id": "action-43-roamer-creature-1-722",
-      "round": 43,
-      "actor": {
-        "id": "roamer-creature-1",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-1",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.393Z"
-    },
-    {
-      "id": "action-43-roamer-creature-2-723",
-      "round": 43,
-      "actor": {
-        "id": "roamer-creature-2",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-2",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.394Z"
-    },
-    {
-      "id": "action-43-roamer-creature-3-724",
-      "round": 43,
-      "actor": {
-        "id": "roamer-creature-3",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-3",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.394Z"
-    },
-    {
-      "id": "action-43-roamer-creature-4-725",
-      "round": 43,
-      "actor": {
-        "id": "roamer-creature-4",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-4",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.394Z"
-    },
-    {
-      "id": "action-43-roamer-creature-7-726",
-      "round": 43,
-      "actor": {
-        "id": "roamer-creature-7",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-7",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.394Z"
-    },
-    {
-      "id": "action-43-roamer-creature-8-727",
-      "round": 43,
-      "actor": {
-        "id": "roamer-creature-8",
-        "kind": "creature",
-        "name": "游蕩妖物"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "roamer-creature-8",
-          "kind": "creature"
-        },
-        "reason": "沒有可執行的目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "沒有可執行的目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.394Z"
-    },
-    {
-      "id": "action-43-nest-creature-4-728",
-      "round": 43,
-      "actor": {
-        "id": "nest-creature-4",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.3"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-4",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.394Z"
-    },
-    {
-      "id": "action-43-nest-creature-7-729",
-      "round": 43,
-      "actor": {
-        "id": "nest-creature-7",
-        "kind": "creature",
-        "name": "生物巢穴 3的怪物 Lv.4"
-      },
-      "action": {
-        "type": "attack",
-        "actor": {
-          "id": "nest-creature-7",
-          "kind": "creature"
-        },
-        "target": {
-          "id": "base-1",
-          "kind": "base",
-          "position": {
-            "row": 6,
-            "column": 13
-          }
-        },
-        "reason": "與 襄陽 交戰。"
-      },
-      "result": "succeeded",
-      "reason": "與 襄陽 交戰。",
-      "createdAt": "2026-09-02T15:47:52.394Z"
-    },
-    {
-      "id": "action-43-nest-creature-9-730",
-      "round": 43,
-      "actor": {
-        "id": "nest-creature-9",
-        "kind": "creature",
-        "name": "生物巢穴 2的怪物 Lv.4"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-9",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 5,
-          "column": 11
-        },
-        "reason": "移動接近 襄陽。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 襄陽。",
-      "createdAt": "2026-09-02T15:47:52.394Z"
-    },
-    {
-      "id": "action-43-nest-creature-2-731",
-      "round": 43,
-      "actor": {
-        "id": "nest-creature-2",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.5"
-      },
-      "action": {
-        "type": "hold",
-        "actor": {
-          "id": "nest-creature-2",
-          "kind": "creature"
-        },
-        "reason": "未能接近目標，原地待命。"
-      },
-      "result": "succeeded",
-      "reason": "未能接近目標，原地待命。",
-      "createdAt": "2026-09-02T15:47:52.394Z"
-    },
-    {
-      "id": "action-43-nest-creature-1-732",
-      "round": 43,
-      "actor": {
-        "id": "nest-creature-1",
-        "kind": "creature",
-        "name": "生物巢穴 1的怪物 Lv.6"
-      },
-      "action": {
-        "type": "move",
-        "actor": {
-          "id": "nest-creature-1",
-          "kind": "creature"
-        },
-        "destination": {
-          "row": 9,
-          "column": 4
-        },
-        "reason": "移動接近 胡斐。"
-      },
-      "result": "succeeded",
-      "reason": "移動接近 胡斐。",
-      "createdAt": "2026-09-02T15:47:52.394Z"
-    },
-    {
-      "id": "action-44-player-2-733",
-      "round": 44,
-      "actor": {
-        "id": "player-2",
-        "kind": "player",
-        "name": "胡斐"
-      },
-      "action": {
-        "type": "end-turn",
-        "actor": {
-          "id": "player-2",
-          "kind": "player"
-        },
-        "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold"
-      },
-      "result": "succeeded",
-      "reason": "模糊策略：selfPreservation 分數 0.00，但目前沒有可執行 action，結束回合。候選診斷：selfPreservation=0.00:hold",
-      "createdAt": "2026-09-02T15:47:52.395Z"
-    }
-  ],
-  "creatureLogs": [],
-  "spawnedCreatures": [
-    {
-      "id": "nest-creature-3",
-      "name": "生物巢穴 3的怪物 Lv.7",
-      "innerSkillId": "void-spirit-inner",
-      "externalSkillIds": [
-        "void-spirit-external-functional",
-        "void-spirit-external-functional-2"
-      ],
-      "equippedExternalSkillIds": [
-        "void-spirit-external-functional",
-        "void-spirit-external-functional-2"
-      ],
-      "position": {
-        "row": 10,
-        "column": 8
-      },
-      "attributes": {
-        "armStrength": 13,
-        "constitution": 13,
-        "agility": 12,
-        "innerEnergy": 12,
-        "insight": 13
-      },
-      "prestige": 0,
-      "money": 0,
-      "experience": 0,
-      "turnEnded": false,
-      "level": 7,
-      "behaviorType": "scavenger",
-      "schoolId": "void-spirit",
-      "homePosition": {
-        "row": 11,
-        "column": 8
-      },
-      "homeNestId": "creature-nest-3",
-      "spawnedRound": 44,
-      "baseAttributes": {
-        "armStrength": 12.6,
-        "constitution": 12.6,
-        "agility": 12.6,
-        "innerEnergy": 12.6,
-        "insight": 12.6
-      },
-      "health": 39,
-      "maxHealth": 39,
-      "stamina": 12.5,
-      "maxStamina": 12.5,
-      "innerPower": 36,
-      "maxInnerPower": 36,
-      "availableAttributePoints": 0,
-      "governanceRank": 1,
-      "unlockedPolicyIds": [
-        "basic"
-      ],
-      "inventory": [],
-      "unlockedEquipmentDropIds": [],
-      "equipmentInventory": [],
-      "equipmentLoadout": {
-        "weaponInstanceId": null,
-        "armorInstanceId": null,
-        "accessoryInstanceId": null
-      },
-      "innerSkillIds": [
-        "tuna-gong"
-      ],
-      "skillProgression": {},
-      "buffs": []
-    }
-  ]
 }
 ```
 

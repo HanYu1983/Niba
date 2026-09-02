@@ -741,6 +741,29 @@ function evaluateExploration(
     && canTransportPlayer(state, player.id, nearestUndiscoveredBase.id).ok
 
   // 到這裡必存在未發現據點（無未發現據點已提前 return）：探索聚焦把據點納入視野。
+  // 距離門檻：據點太遠（超出體力可達範圍）時不鎖定，避免 AI 每回合只爬 1 格、體力耗盡目標仍遠，
+  // 產生大量無效 move 與 hold。太遠時改為探索附近的未探索格（若有）。
+  const distToBase = nearestUndiscoveredBase
+    ? manhattan(player.position, nearestUndiscoveredBase.position)
+    : Infinity
+  // 距離門檻：據點太遠（超出體力可達範圍）時不鎖定，避免 AI 每回合只爬 1 格、體力耗盡目標仍遠，
+  // 產生大量無效 move 與 hold。太遠時改為探索附近的未探索格（若有）。
+  const baseReachable = distToBase <= Math.max(6, player.stamina)
+  if (!baseReachable) {
+    if (unexploredReachableCount > 0 && nearestUnexploredPosition) {
+      const nearbyResult: GoalResult = {
+        score: 0.15,
+        target: { kind: 'explore', position: nearestUnexploredPosition },
+        context: { unexploredReachableCount, target: 'unexplored-cell-reachable' },
+      }
+      const nearbyActions = buildValidatedActionSequence('exploration', nearbyResult, state, player, dependencies)
+      if (nearbyActions.length > 0 && nearbyActions.some((action) => action.type !== 'hold')) {
+        return { ...nearbyResult, actions: nearbyActions }
+      }
+    }
+    return { score: 0 }
+  }
+
   const baseScore = canTransportToUndiscoveredBase ? 1 : 0.9
   const score = staminaRatio > 0.3 ? baseScore : baseScore * 0.5
 

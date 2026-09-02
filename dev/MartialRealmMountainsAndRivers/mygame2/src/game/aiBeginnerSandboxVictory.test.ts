@@ -11,6 +11,7 @@ import { getEffectiveAttributesForPlayer } from './rules/playerDerivedRules'
 import { itemCatalog } from './catalogs/itemCatalog'
 import { equipmentCatalog } from './catalogs/equipmentCatalog'
 import { clearMidTermGoals } from './ai/fuzzy/midTermGoal'
+import { seedGlobalRandom } from './rules/randomRules'
 
 declare const process: { cwd(): string }
 
@@ -99,6 +100,78 @@ function traceNestHealth(traces: AiTurnTrace[]): Record<string, number> {
   return map
 }
 
+/** 從 trace 的 action 事件中，依 reason 前綴推斷該步的「目標」；無法辨識回傳 null。 */
+function inferGoalFromAction(action: unknown): string | null {
+  const type = (action as { type?: string }).type
+  const reason = (action as { reason?: string }).reason ?? ''
+  if (type === 'move') {
+    if (reason.includes('探索')) return 'exploration'
+    if (reason.includes('交戰') || reason.includes('攻擊')) return 'combat'
+    if (reason.includes('建設') || reason.includes('建造')) return 'construction'
+    if (reason.includes('收集') || reason.includes('拾取')) return 'collect'
+    if (reason.includes('購買')) return 'buy'
+    if (reason.includes('學招') || reason.includes('練功')) return 'learn'
+    if (reason.includes('定位') || reason.includes('出口')) return 'positioning'
+    if (reason.includes('據點') || reason.includes('回')) return 'base'
+    return 'move-other'
+  }
+  if (type === 'attack' || type === 'use-external-skill') return 'combat'
+  if (type === 'collect') return 'collect'
+  if (type === 'build' || type === 'upgrade' || type === 'defense-build') return 'construction'
+  if (type === 'use-facility') {
+    if (reason.includes('任務')) return 'mission'
+    if (reason.includes('醫療') || reason.includes('回血')) return 'heal'
+    return 'facility'
+  }
+  if (type === 'buy-item' || type === 'buy-equipment') return 'buy'
+  if (type === 'learn-skill' || type === 'practice-skill') return 'learn'
+  if (type === 'use-item') return 'use-item'
+  if (type === 'equip' || type === 'equip-inner-skill' || type === 'equip-external-skill') return 'equip'
+  if (type === 'hold') return 'hold'
+  if (type === 'end-turn') return 'end-turn'
+  return null
+}
+
+/** 計算「目標切換次數」：相鄰兩步的推斷目標不同即算一次切換。 */
+function countGoalSwitches(traces: AiTurnTrace[]): number {
+  let switches = 0
+  let previous: string | null = null
+  for (const trace of traces) {
+    for (const event of trace.actions) {
+      const goal = inferGoalFromAction((event as { action?: unknown }).action)
+      if (goal === null) continue
+      if (previous !== null && goal !== previous) switches += 1
+      previous = goal
+    }
+  }
+  return switches
+}
+
+/** 計算「無效行動率」：hold + 原地 move 佔總 action 比例。 */
+function countIneffectiveActions(traces: AiTurnTrace[]): { total: number; ineffective: number } {
+  let total = 0
+  let ineffective = 0
+  for (const trace of traces) {
+    for (const event of trace.actions) {
+      const action = (event as { action?: { type?: string; destination?: { row: number; column: number } } }).action
+      if (!action?.type) continue
+      total += 1
+      if (action.type === 'hold') {
+        ineffective += 1
+        continue
+      }
+      if (action.type === 'move' && action.destination) {
+        const player = trace.player
+        if (action.destination.row === player.position.row && action.destination.column === player.position.column) {
+          ineffective += 1
+        }
+      }
+    }
+  }
+  return { total, ineffective }
+}
+
+
 function writeAiTraceReport(fileName: string, title: string, traces: AiTurnTrace[], finalState: GameState): void {
   const reportPath = resolve(process.cwd(), 'reports', 'analysis', fileName)
   mkdirSync(resolve(process.cwd(), 'reports', 'analysis'), { recursive: true })
@@ -136,6 +209,9 @@ function writeAiTraceReport(fileName: string, title: string, traces: AiTurnTrace
   const killCost = totalDefeated > 0 ? totalAttackActions / totalDefeated : 0
   const totalExperience = Math.max(0, player?.experience ?? 0)
   const xpPerTurn = traces.length > 0 ? totalExperience / traces.length : 0
+  const goalSwitches = countGoalSwitches(traces)
+  const { total: totalActionsForIneffective, ineffective: ineffectiveActions } = countIneffectiveActions(traces)
+  const ineffectiveRatio = totalActionsForIneffective > 0 ? ineffectiveActions / totalActionsForIneffective : 0
   const startNestHealth = traces
     .reduce<Record<string, number>>((map, trace) => {
       for (const nest of trace.nests) if (!(nest.id in map)) map[nest.id] = nest.health
@@ -166,6 +242,8 @@ function writeAiTraceReport(fileName: string, title: string, traces: AiTurnTrace
     `- 擊殺效率 (kill/generate): ${progressBar(killEfficiency)} ${killEfficiency.toFixed(2)} (${totalDefeated}/${totalSpawned || 0})`,
     `- 擊殺成本 (attack/kill): ${totalDefeated > 0 ? killCost.toFixed(2) : 'n/a'} (${totalAttackActions} 次攻擊 / ${totalDefeated} 擊殺)`,
     `- 經驗效率 (XP/turn): ${xpPerTurn.toFixed(2)} (${totalExperience} XP / ${traces.length} turns)`,
+    `- 目標切換次數 (goal switches): ${goalSwitches}`,
+    `- 無效行動率 (ineffective): ${progressBar(ineffectiveRatio)} ${(ineffectiveRatio * 100).toFixed(1)}% (${ineffectiveActions}/${totalActionsForIneffective})`,
     '',
     `- Nest health (start → end): ${Object.entries(endNestHealth).map(([id, health]) => `${id}=${startNestHealth[id] ?? '?'}→${health}`).join(', ') || 'none'}`,
     '',
@@ -458,6 +536,98 @@ describe('AI 玩家：入門沙盒地圖通關能力', () => {
     writeAiTraceReport('ai-beginner-sandbox-level5-trace-2026-09-02.md', 'AI Beginner Sandbox Level5 Trace', traces, finalState)
     expect(maxLevel).toBeGreaterThanOrEqual(5)
   })
+
+  // 多局驗收：固定 seed 跑 N 局，統計 Level 5 達成率與目標切換/無效行動中位數。
+  // 這是方案 C 的「可量測驗收」——不憑主觀判斷「AI 變聰明了」。
+  // 預設 skip（避免拖慢 CI）；需要驗收時以 -t "多局驗收" 執行。
+  // 20 局約需 36 秒，故設 120s timeout。
+  it.skip('多局驗收：固定 seed 統計 Level 5 達成率與行為 KPI', () => {
+    const template = BUILTIN_TEMPLATES.find((candidate) => candidate.id === 'standard')
+    if (!template) throw new Error('找不到入門地圖模板。')
+
+    const RUNS = 20
+    const MAX_ROUNDS = 80
+    const SEED_BASE = 20260910
+    let reachedLevel5 = 0
+    const goalSwitchCounts: number[] = []
+    const ineffectiveRates: number[] = []
+
+    for (let run = 0; run < RUNS; run++) {
+      gameStore.resetForTest()
+      clearMidTermGoals()
+      // 種子化全域隨機來源，讓巢穴 spawn / 掉落 / 暴擊在固定 seed 下可重現。
+      const restoreRandom = seedGlobalRandom(SEED_BASE + run)
+      gameStore.startGame({
+        ...template.settings,
+        rows: 15,
+        columns: 15,
+        seed: SEED_BASE + run,
+        nestCount: 1,
+        creatureCount: 0,
+        nestHealthRegenPercent: 0,
+        aiPlayerCount: 1,
+        explorationEventCount: 0,
+        explorationTriggerChance: 0,
+      })
+
+      const startedState = gameStore.getState()
+      const aiPlayer = startedState.players.find((player) => player.isAI)
+      if (!aiPlayer) throw new Error('多局驗收沒有建立 AI 玩家。')
+      gameStore.setStateForTest({
+        ...startedState,
+        players: [{ ...aiPlayer, level: 1, experience: 0 }],
+        activePlayerId: aiPlayer.id,
+      })
+
+      let aiTurns = 0
+      let maxLevel = 1
+      const traces: AiTurnTrace[] = []
+      while (!gameStore.getState().gameOver && gameStore.getState().round < MAX_ROUNDS) {
+        const state = gameStore.getState()
+        const activePlayer = state.players.find((player) => player.id === state.activePlayerId)
+        if (!activePlayer) throw new Error(`找不到當前玩家 ${state.activePlayerId}。`)
+        const result = gameStore.runFuzzyStep(activePlayer.id)
+        if (!result.ok) break
+        aiTurns++
+        maxLevel = Math.max(maxLevel, gameStore.getState().players[0].level ?? 1)
+        traces.push(recordAiTurn(state, gameStore.getState(), aiTurns))
+        if (maxLevel >= 5) break
+      }
+
+      if (maxLevel >= 5) reachedLevel5++
+      goalSwitchCounts.push(countGoalSwitches(traces))
+      const { total, ineffective } = countIneffectiveActions(traces)
+      ineffectiveRates.push(total > 0 ? ineffective / total : 0)
+      restoreRandom()
+    }
+
+    const median = (values: number[]): number => {
+      const sorted = [...values].sort((a, b) => a - b)
+      const mid = Math.floor(sorted.length / 2)
+      return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid]
+    }
+    const avg = (values: number[]): number => values.reduce((sum, v) => sum + v, 0) / values.length
+
+    // 驗收門檻（2026-09-03 種子化後實測基線：level5=25%、goalSwitchMedian=230、ineffectiveMedian=45.6%）。
+    // 門檻以「基線為起點、逐步收緊」：先要求不劣於基線，之後隨 AI 改善調高。
+    // - Level 5 達成率 ≥ 20%（基線 25%，留容錯）
+    // - 目標切換中位數 ≤ 250（基線 230，留容錯）
+    // - 無效行動率中位數 ≤ 50%（基線 45.6%，留容錯）
+    const level5Rate = reachedLevel5 / RUNS
+    const goalSwitchMedian = median(goalSwitchCounts)
+    const ineffectiveMedian = median(ineffectiveRates)
+
+    // eslint-disable-next-line no-console
+    console.log(
+      `[多局驗收] runs=${RUNS} level5=${reachedLevel5}/${RUNS} (${(level5Rate * 100).toFixed(0)}%) ` +
+      `goalSwitchMedian=${goalSwitchMedian} (avg ${avg(goalSwitchCounts).toFixed(1)}) ` +
+      `ineffectiveMedian=${(ineffectiveMedian * 100).toFixed(1)}% (avg ${(avg(ineffectiveRates) * 100).toFixed(1)}%)`,
+    )
+
+    expect(level5Rate).toBeGreaterThanOrEqual(0.2)
+    expect(goalSwitchMedian).toBeLessThanOrEqual(250)
+    expect(ineffectiveMedian).toBeLessThanOrEqual(0.5)
+  }, 120_000)
 
   it('1 級 AI 在相鄰支援據點可使用醫療室並購買回血道具', () => {
     const template = BUILTIN_TEMPLATES.find((candidate) => candidate.id === 'standard')
