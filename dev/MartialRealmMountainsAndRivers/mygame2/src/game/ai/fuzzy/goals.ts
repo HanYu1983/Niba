@@ -800,17 +800,6 @@ function evaluateExploration(
   }
 
   if (actions.length === 0 || actions.every((action) => action.type === 'hold')) {
-    // eslint-disable-next-line no-console
-    console.log('[exploration-stuck]', JSON.stringify({
-      player: player.position,
-      base: nearestUndiscoveredBase?.position,
-      distToBase,
-      baseReachable,
-      stamina: player.stamina,
-      unexploredReachableCount,
-      nearestUnexploredPosition,
-      actions: actions.map((a) => a.type),
-    }))
     return { score: 0 }
   }
   result.actions = actions

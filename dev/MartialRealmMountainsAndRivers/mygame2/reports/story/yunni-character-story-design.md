@@ -16,7 +16,7 @@
 | 核心動機 | 尋找失蹤的兄長 |
 | 與凌淵關係 | 目的相近而短暫同行 |
 | 劇本實體 id | `player-21-3-mtig1ye1` |
-| AI 指令 | `support-player`（貼身保護凌淵） |
+| AI 指令 | `fuzzy` + `cautious`（謹慎型完整模糊大腦，獨立自主作戰） |
 
 ---
 
@@ -78,24 +78,22 @@
 - 雲霓在第四章作為 **AI 同伴**，由 AI 系統控制，與凌淵並肩作戰。
 - 她的存在讓玩家體驗「同伴系統」，同時推進她的個人故事。
 
-### 4.2 AI 指令
+### 4.2 AI 設定
 
-- 第四章劇本（`blazing-ruins.json`）透過 `aiOrders` 指定雲霓的指令：
+- 第四章劇本（`blazing-ruins.json`）在玩家資料上設定雲霓的 AI：`isAI: true`、`aiPersonality: "cautious"`、`aiType: "fuzzy"`。編譯時依 `aiType` 自動生成 `fuzzy` 訂單並帶上 `cautious` 個性：
 
 ```json
 {
-  "id": "ai-order-yunni-follow-lingyuan",
-  "type": "support-player",
+  "id": "ai-order-fuzzy-player-21-3-mtig1ye1",
+  "type": "fuzzy",
   "aiPlayerId": "player-21-3-mtig1ye1",
-  "playerId": "player-1",
-  "maxDistance": 2,
-  "priority": 80,
-  "retreatHealthPercent": 30,
+  "personality": "cautious",
+  "priority": 50,
   "status": "active"
 }
 ```
 
-- 行為：雲霓會**貼身保護凌淵**——攻擊貼近凌淵的敵人、距離過遠時移動靠近。
+- 行為：雲霓使用**完整模糊大腦**（探索、收集、戰鬥、升級、裝備等目標皆會評估），但受 **謹慎型（cautious）** 個性影響——自保優先（`selfPreservation` 權重 1.5）、牴觸生命危險時會優先使用道具、戰鬥權重偏低（`engageCombat` 0.6），不會無腦暴衝，符合她「堅毅果決卻有分寸」的個性。
 
 ### 4.3 戰鬥配置
 
@@ -129,7 +127,8 @@
 
 ### 6.1 角色一致性
 
-- 雲霓的對話、行為與 AI 指令須符合「尋找兄長、貼身保護」的定位。
+- 雲霓的對話、行為與 AI 設定須符合「尋找兄長、獨立自主、有分寸」的定位。
+- 她作為 AI 同伴自行探索、戰鬥與成長，不會無腦貼身死守，但謹慎個性使她不至於暴衝送命。
 - 她的登場不應喧賓奪主，而是與凌淵的主線自然交織。
 
 ### 6.2 可調整性
@@ -142,7 +141,7 @@
 ## 七、驗收標準 / 拆分任務
 
 - [ ] 第四章劇本包含雲霓（`isAI: true`）。
-- [ ] 雲霓的 AI 指令為 `support-player`（貼身保護凌淵）。
+- [ ] 雲霓的 AI 為 `fuzzy` + `cautious`（完整模糊大腦、謹慎型個性）。
 - [ ] 開局對話包含雲霓與凌淵的初次相遇。
 - [ ] 雲霓的個人主線（尋找兄長）在第四章建立伏筆。
 - [ ] 手動驗收：雲霓作為 AI 同伴正常行動，且與凌淵的相遇對話流暢。

@@ -4123,7 +4123,7 @@
         "name": "雲霓",
         "isAI": true,
         "aiPersonality": "cautious",
-        "aiType": "support-player",
+        "aiType": "fuzzy",
         "money": 80,
         "innerSkillId": "tuna-gong",
         "innerSkillIds": [
