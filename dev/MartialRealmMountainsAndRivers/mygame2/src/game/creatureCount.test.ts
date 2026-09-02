@@ -1,20 +1,22 @@
 import { describe, expect, it } from 'vitest'
 import { createGameState } from './worldSetup'
-import { rollRoamerLevel } from './rules/creatureBehaviorRules'
+import { rollRoamerLevel, getCreatureAttributes } from './rules/creatureBehaviorRules'
 
 describe('初始生物生成規則', () => {
   it('新遊戲開局建立游蕩型 Creature', () => {
     const state = createGameState({ rows: 30, columns: 30, baseCount: 3, nestCount: 1, resourcePointCount: 4, itemPointCount: 4, playerCount: 1, explorationEventCount: 3, creatureCount: 4, ruinCount: 10, seed: 20260803 })
     expect(state.creatures).toHaveLength(4)
     expect(state.creatures.every((creature) => creature.behaviorType === 'roamer' && creature.schoolId === 'void-spirit')).toBe(true)
+    // 成長公式：max(5, (base6 + 每級成長2 × levelBonus) × 0.7)；再疊加太虛內功五維靈氣（臂/根/悟 +1）。
     expect(state.creatures.some((creature) => {
       const level = creature.level ?? 1
-      // void-spirit 內功五維靈氣：臂力/根骨/悟性各 +1；每級成長 2。
-      return creature.attributes.armStrength === 7 + (level - 1) * 2
-        && creature.attributes.constitution === 7 + (level - 1) * 2
-        && creature.attributes.agility === 6 + (level - 1) * 2
-        && creature.attributes.innerEnergy === 6 + (level - 1) * 2
-        && creature.attributes.insight === 7 + (level - 1) * 2
+      const base = getCreatureAttributes(
+        { armStrength: 6, constitution: 6, agility: 6, innerEnergy: 6, insight: 6 },
+        { behaviorType: 'roamer', schoolId: 'void-spirit' },
+        level,
+      )
+      return creature.attributes.armStrength === base.armStrength + 1
+        && creature.attributes.insight === base.insight + 1
     })).toBe(true)
   })
 

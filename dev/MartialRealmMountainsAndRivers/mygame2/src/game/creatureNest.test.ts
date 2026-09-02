@@ -323,8 +323,9 @@ describe('spawnCreaturesFromNests', () => {
 
     const creature = result.creatures[0] as CreatureState
     // 攻城化已移除；巢穴未指定流派時使用中性流派計算屬性成長。
-    // 基礎五維 6 起（與開局游蕩妖物一致），疊加太虛內功五維靈氣（臂力/根骨/悟性各 +1）。每級成長 2。
-    expect(creature.attributes).toEqual({ armStrength: 11, constitution: 11, agility: 10, innerEnergy: 10, insight: 11 })
+    // 基礎五維 6 起（與開局游蕩妖物一致），成長公式：max(5, (base + 成長2×levelBonus) × 0.7)。
+    // level 3（levelBonus=2）→ max(5, (6 + 4) × 0.7) = 7；再疊加內功五維靈氣（臂/根/悟 +1）。
+    expect(creature.attributes).toEqual({ armStrength: 8, constitution: 8, agility: 7, innerEnergy: 7, insight: 8 })
     expect(creature.name).toContain('Lv.3')
   })
 
