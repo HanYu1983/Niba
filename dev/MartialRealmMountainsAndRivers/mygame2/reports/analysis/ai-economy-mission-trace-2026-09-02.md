@@ -39,7 +39,7 @@
 {
   "actions": [
     {
-      "id": "action-1-player-2-1",
+      "id": "action-1-player-2-1287",
       "round": 1,
       "actor": {
         "id": "player-2",
@@ -58,7 +58,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.769Z"
+      "createdAt": "2026-09-02T15:47:30.192Z"
     }
   ],
   "creatureLogs": [],
@@ -79,7 +79,7 @@
 {
   "actions": [
     {
-      "id": "action-1-player-2-2",
+      "id": "action-1-player-2-1288",
       "round": 1,
       "actor": {
         "id": "player-2",
@@ -98,7 +98,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.774Z"
+      "createdAt": "2026-09-02T15:47:30.194Z"
     }
   ],
   "creatureLogs": [],
@@ -119,7 +119,7 @@
 {
   "actions": [
     {
-      "id": "action-1-player-2-3",
+      "id": "action-1-player-2-1289",
       "round": 1,
       "actor": {
         "id": "player-2",
@@ -138,7 +138,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.778Z"
+      "createdAt": "2026-09-02T15:47:30.196Z"
     }
   ],
   "creatureLogs": [],
@@ -159,7 +159,7 @@
 {
   "actions": [
     {
-      "id": "action-1-player-2-4",
+      "id": "action-1-player-2-1290",
       "round": 1,
       "actor": {
         "id": "player-2",
@@ -178,7 +178,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.781Z"
+      "createdAt": "2026-09-02T15:47:30.199Z"
     }
   ],
   "creatureLogs": [],
@@ -199,7 +199,7 @@
 {
   "actions": [
     {
-      "id": "action-2-player-2-5",
+      "id": "action-2-player-2-1291",
       "round": 2,
       "actor": {
         "id": "player-2",
@@ -216,7 +216,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-01T20:40:20.784Z"
+      "createdAt": "2026-09-02T15:47:30.199Z"
     }
   ],
   "creatureLogs": [],
@@ -237,7 +237,7 @@
 {
   "actions": [
     {
-      "id": "action-2-player-2-6",
+      "id": "action-2-player-2-1292",
       "round": 2,
       "actor": {
         "id": "player-2",
@@ -256,7 +256,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.792Z"
+      "createdAt": "2026-09-02T15:47:30.203Z"
     }
   ],
   "creatureLogs": [],
@@ -277,7 +277,7 @@
 {
   "actions": [
     {
-      "id": "action-2-player-2-7",
+      "id": "action-2-player-2-1293",
       "round": 2,
       "actor": {
         "id": "player-2",
@@ -296,7 +296,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.796Z"
+      "createdAt": "2026-09-02T15:47:30.205Z"
     }
   ],
   "creatureLogs": [],
@@ -317,7 +317,7 @@
 {
   "actions": [
     {
-      "id": "action-2-player-2-8",
+      "id": "action-2-player-2-1294",
       "round": 2,
       "actor": {
         "id": "player-2",
@@ -336,7 +336,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.798Z"
+      "createdAt": "2026-09-02T15:47:30.206Z"
     }
   ],
   "creatureLogs": [],
@@ -357,7 +357,7 @@
 {
   "actions": [
     {
-      "id": "action-2-player-2-9",
+      "id": "action-2-player-2-1295",
       "round": 2,
       "actor": {
         "id": "player-2",
@@ -376,7 +376,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.800Z"
+      "createdAt": "2026-09-02T15:47:30.208Z"
     }
   ],
   "creatureLogs": [],
@@ -397,7 +397,7 @@
 {
   "actions": [
     {
-      "id": "action-3-player-2-10",
+      "id": "action-3-player-2-1296",
       "round": 3,
       "actor": {
         "id": "player-2",
@@ -414,7 +414,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-01T20:40:20.800Z"
+      "createdAt": "2026-09-02T15:47:30.209Z"
     }
   ],
   "creatureLogs": [],
@@ -435,7 +435,7 @@
 {
   "actions": [
     {
-      "id": "action-3-player-2-11",
+      "id": "action-3-player-2-1297",
       "round": 3,
       "actor": {
         "id": "player-2",
@@ -454,7 +454,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.806Z"
+      "createdAt": "2026-09-02T15:47:30.212Z"
     }
   ],
   "creatureLogs": [],
@@ -475,7 +475,7 @@
 {
   "actions": [
     {
-      "id": "action-3-player-2-12",
+      "id": "action-3-player-2-1298",
       "round": 3,
       "actor": {
         "id": "player-2",
@@ -494,7 +494,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.808Z"
+      "createdAt": "2026-09-02T15:47:30.214Z"
     }
   ],
   "creatureLogs": [],
@@ -515,7 +515,7 @@
 {
   "actions": [
     {
-      "id": "action-3-player-2-13",
+      "id": "action-3-player-2-1299",
       "round": 3,
       "actor": {
         "id": "player-2",
@@ -534,7 +534,7 @@
       },
       "result": "succeeded",
       "reason": "購買道具：購買 回氣丹",
-      "createdAt": "2026-09-01T20:40:20.810Z"
+      "createdAt": "2026-09-02T15:47:30.216Z"
     }
   ],
   "creatureLogs": [],
@@ -555,7 +555,7 @@
 {
   "actions": [
     {
-      "id": "action-3-player-2-14",
+      "id": "action-3-player-2-1300",
       "round": 3,
       "actor": {
         "id": "player-2",
@@ -574,7 +574,7 @@
       },
       "result": "succeeded",
       "reason": "購買道具：購買 大力丸",
-      "createdAt": "2026-09-01T20:40:20.813Z"
+      "createdAt": "2026-09-02T15:47:30.217Z"
     }
   ],
   "creatureLogs": [],
@@ -595,7 +595,7 @@
 {
   "actions": [
     {
-      "id": "action-3-player-2-15",
+      "id": "action-3-player-2-1301",
       "round": 3,
       "actor": {
         "id": "player-2",
@@ -614,7 +614,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.815Z"
+      "createdAt": "2026-09-02T15:47:30.219Z"
     }
   ],
   "creatureLogs": [],
@@ -635,7 +635,7 @@
 {
   "actions": [
     {
-      "id": "action-3-player-2-16",
+      "id": "action-3-player-2-1302",
       "round": 3,
       "actor": {
         "id": "player-2",
@@ -654,7 +654,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.817Z"
+      "createdAt": "2026-09-02T15:47:30.220Z"
     }
   ],
   "creatureLogs": [],
@@ -675,7 +675,7 @@
 {
   "actions": [
     {
-      "id": "action-4-player-2-17",
+      "id": "action-4-player-2-1303",
       "round": 4,
       "actor": {
         "id": "player-2",
@@ -692,7 +692,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-01T20:40:20.817Z"
+      "createdAt": "2026-09-02T15:47:30.220Z"
     }
   ],
   "creatureLogs": [],
@@ -713,7 +713,7 @@
 {
   "actions": [
     {
-      "id": "action-4-player-2-18",
+      "id": "action-4-player-2-1304",
       "round": 4,
       "actor": {
         "id": "player-2",
@@ -732,7 +732,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.823Z"
+      "createdAt": "2026-09-02T15:47:30.225Z"
     }
   ],
   "creatureLogs": [],
@@ -753,7 +753,7 @@
 {
   "actions": [
     {
-      "id": "action-4-player-2-19",
+      "id": "action-4-player-2-1305",
       "round": 4,
       "actor": {
         "id": "player-2",
@@ -772,7 +772,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.825Z"
+      "createdAt": "2026-09-02T15:47:30.227Z"
     }
   ],
   "creatureLogs": [],
@@ -793,7 +793,7 @@
 {
   "actions": [
     {
-      "id": "action-4-player-2-20",
+      "id": "action-4-player-2-1306",
       "round": 4,
       "actor": {
         "id": "player-2",
@@ -812,7 +812,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.827Z"
+      "createdAt": "2026-09-02T15:47:30.228Z"
     }
   ],
   "creatureLogs": [],
@@ -833,7 +833,7 @@
 {
   "actions": [
     {
-      "id": "action-4-player-2-21",
+      "id": "action-4-player-2-1307",
       "round": 4,
       "actor": {
         "id": "player-2",
@@ -852,7 +852,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.828Z"
+      "createdAt": "2026-09-02T15:47:30.230Z"
     }
   ],
   "creatureLogs": [],
@@ -873,7 +873,7 @@
 {
   "actions": [
     {
-      "id": "action-5-player-2-22",
+      "id": "action-5-player-2-1308",
       "round": 5,
       "actor": {
         "id": "player-2",
@@ -890,7 +890,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-01T20:40:20.829Z"
+      "createdAt": "2026-09-02T15:47:30.230Z"
     }
   ],
   "creatureLogs": [],
@@ -911,7 +911,7 @@
 {
   "actions": [
     {
-      "id": "action-5-player-2-23",
+      "id": "action-5-player-2-1309",
       "round": 5,
       "actor": {
         "id": "player-2",
@@ -930,7 +930,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.833Z"
+      "createdAt": "2026-09-02T15:47:30.234Z"
     }
   ],
   "creatureLogs": [],
@@ -951,7 +951,7 @@
 {
   "actions": [
     {
-      "id": "action-5-player-2-24",
+      "id": "action-5-player-2-1310",
       "round": 5,
       "actor": {
         "id": "player-2",
@@ -970,7 +970,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.835Z"
+      "createdAt": "2026-09-02T15:47:30.235Z"
     }
   ],
   "creatureLogs": [],
@@ -991,7 +991,7 @@
 {
   "actions": [
     {
-      "id": "action-5-player-2-25",
+      "id": "action-5-player-2-1311",
       "round": 5,
       "actor": {
         "id": "player-2",
@@ -1010,7 +1010,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.837Z"
+      "createdAt": "2026-09-02T15:47:30.237Z"
     }
   ],
   "creatureLogs": [],
@@ -1031,7 +1031,7 @@
 {
   "actions": [
     {
-      "id": "action-5-player-2-26",
+      "id": "action-5-player-2-1312",
       "round": 5,
       "actor": {
         "id": "player-2",
@@ -1049,7 +1049,7 @@
       },
       "result": "succeeded",
       "reason": "使用道具：回氣丹",
-      "createdAt": "2026-09-01T20:40:20.839Z"
+      "createdAt": "2026-09-02T15:47:30.238Z"
     }
   ],
   "creatureLogs": [],
@@ -1070,7 +1070,7 @@
 {
   "actions": [
     {
-      "id": "action-5-player-2-27",
+      "id": "action-5-player-2-1313",
       "round": 5,
       "actor": {
         "id": "player-2",
@@ -1089,7 +1089,7 @@
       },
       "result": "succeeded",
       "reason": "購買道具：購買 回氣丹",
-      "createdAt": "2026-09-01T20:40:20.843Z"
+      "createdAt": "2026-09-02T15:47:30.243Z"
     }
   ],
   "creatureLogs": [],
@@ -1110,7 +1110,7 @@
 {
   "actions": [
     {
-      "id": "action-5-player-2-28",
+      "id": "action-5-player-2-1314",
       "round": 5,
       "actor": {
         "id": "player-2",
@@ -1129,7 +1129,7 @@
       },
       "result": "succeeded",
       "reason": "購買道具：購買 大力丸",
-      "createdAt": "2026-09-01T20:40:20.847Z"
+      "createdAt": "2026-09-02T15:47:30.247Z"
     }
   ],
   "creatureLogs": [],
@@ -1150,7 +1150,7 @@
 {
   "actions": [
     {
-      "id": "action-5-player-2-29",
+      "id": "action-5-player-2-1315",
       "round": 5,
       "actor": {
         "id": "player-2",
@@ -1169,7 +1169,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.850Z"
+      "createdAt": "2026-09-02T15:47:30.251Z"
     }
   ],
   "creatureLogs": [],
@@ -1190,7 +1190,7 @@
 {
   "actions": [
     {
-      "id": "action-5-player-2-30",
+      "id": "action-5-player-2-1316",
       "round": 5,
       "actor": {
         "id": "player-2",
@@ -1209,7 +1209,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.852Z"
+      "createdAt": "2026-09-02T15:47:30.252Z"
     }
   ],
   "creatureLogs": [],
@@ -1230,7 +1230,7 @@
 {
   "actions": [
     {
-      "id": "action-5-player-2-31",
+      "id": "action-5-player-2-1317",
       "round": 5,
       "actor": {
         "id": "player-2",
@@ -1249,7 +1249,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.853Z"
+      "createdAt": "2026-09-02T15:47:30.254Z"
     }
   ],
   "creatureLogs": [],
@@ -1270,7 +1270,7 @@
 {
   "actions": [
     {
-      "id": "action-5-player-2-32",
+      "id": "action-5-player-2-1318",
       "round": 5,
       "actor": {
         "id": "player-2",
@@ -1289,7 +1289,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.855Z"
+      "createdAt": "2026-09-02T15:47:30.255Z"
     }
   ],
   "creatureLogs": [],
@@ -1310,7 +1310,7 @@
 {
   "actions": [
     {
-      "id": "action-6-player-2-33",
+      "id": "action-6-player-2-1319",
       "round": 6,
       "actor": {
         "id": "player-2",
@@ -1327,7 +1327,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-01T20:40:20.856Z"
+      "createdAt": "2026-09-02T15:47:30.256Z"
     }
   ],
   "creatureLogs": [],
@@ -1348,7 +1348,7 @@
 {
   "actions": [
     {
-      "id": "action-6-player-2-34",
+      "id": "action-6-player-2-1320",
       "round": 6,
       "actor": {
         "id": "player-2",
@@ -1367,7 +1367,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.859Z"
+      "createdAt": "2026-09-02T15:47:30.261Z"
     }
   ],
   "creatureLogs": [],
@@ -1388,7 +1388,7 @@
 {
   "actions": [
     {
-      "id": "action-6-player-2-35",
+      "id": "action-6-player-2-1321",
       "round": 6,
       "actor": {
         "id": "player-2",
@@ -1407,7 +1407,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.861Z"
+      "createdAt": "2026-09-02T15:47:30.262Z"
     }
   ],
   "creatureLogs": [],
@@ -1428,7 +1428,7 @@
 {
   "actions": [
     {
-      "id": "action-6-player-2-36",
+      "id": "action-6-player-2-1322",
       "round": 6,
       "actor": {
         "id": "player-2",
@@ -1447,7 +1447,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.862Z"
+      "createdAt": "2026-09-02T15:47:30.264Z"
     }
   ],
   "creatureLogs": [],
@@ -1468,7 +1468,7 @@
 {
   "actions": [
     {
-      "id": "action-6-player-2-37",
+      "id": "action-6-player-2-1323",
       "round": 6,
       "actor": {
         "id": "player-2",
@@ -1487,7 +1487,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.864Z"
+      "createdAt": "2026-09-02T15:47:30.266Z"
     }
   ],
   "creatureLogs": [],
@@ -1508,7 +1508,7 @@
 {
   "actions": [
     {
-      "id": "action-7-player-2-38",
+      "id": "action-7-player-2-1324",
       "round": 7,
       "actor": {
         "id": "player-2",
@@ -1525,7 +1525,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-01T20:40:20.864Z"
+      "createdAt": "2026-09-02T15:47:30.266Z"
     }
   ],
   "creatureLogs": [],
@@ -1546,7 +1546,7 @@
 {
   "actions": [
     {
-      "id": "action-7-player-2-39",
+      "id": "action-7-player-2-1325",
       "round": 7,
       "actor": {
         "id": "player-2",
@@ -1565,7 +1565,7 @@
       },
       "result": "succeeded",
       "reason": "購買道具：購買 大力丸",
-      "createdAt": "2026-09-01T20:40:20.868Z"
+      "createdAt": "2026-09-02T15:47:30.270Z"
     }
   ],
   "creatureLogs": [],
@@ -1586,7 +1586,7 @@
 {
   "actions": [
     {
-      "id": "action-7-player-2-40",
+      "id": "action-7-player-2-1326",
       "round": 7,
       "actor": {
         "id": "player-2",
@@ -1605,7 +1605,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.871Z"
+      "createdAt": "2026-09-02T15:47:30.274Z"
     }
   ],
   "creatureLogs": [],
@@ -1626,7 +1626,7 @@
 {
   "actions": [
     {
-      "id": "action-7-player-2-41",
+      "id": "action-7-player-2-1327",
       "round": 7,
       "actor": {
         "id": "player-2",
@@ -1645,7 +1645,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.873Z"
+      "createdAt": "2026-09-02T15:47:30.276Z"
     }
   ],
   "creatureLogs": [],
@@ -1666,7 +1666,7 @@
 {
   "actions": [
     {
-      "id": "action-7-player-2-42",
+      "id": "action-7-player-2-1328",
       "round": 7,
       "actor": {
         "id": "player-2",
@@ -1685,7 +1685,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.875Z"
+      "createdAt": "2026-09-02T15:47:30.278Z"
     }
   ],
   "creatureLogs": [],
@@ -1706,7 +1706,7 @@
 {
   "actions": [
     {
-      "id": "action-7-player-2-43",
+      "id": "action-7-player-2-1329",
       "round": 7,
       "actor": {
         "id": "player-2",
@@ -1725,7 +1725,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.876Z"
+      "createdAt": "2026-09-02T15:47:30.280Z"
     }
   ],
   "creatureLogs": [],
@@ -1746,7 +1746,7 @@
 {
   "actions": [
     {
-      "id": "action-8-player-2-44",
+      "id": "action-8-player-2-1330",
       "round": 8,
       "actor": {
         "id": "player-2",
@@ -1763,7 +1763,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-01T20:40:20.877Z"
+      "createdAt": "2026-09-02T15:47:30.280Z"
     }
   ],
   "creatureLogs": [],
@@ -1784,7 +1784,7 @@
 {
   "actions": [
     {
-      "id": "action-8-player-2-45",
+      "id": "action-8-player-2-1331",
       "round": 8,
       "actor": {
         "id": "player-2",
@@ -1803,7 +1803,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.880Z"
+      "createdAt": "2026-09-02T15:47:30.283Z"
     }
   ],
   "creatureLogs": [],
@@ -1824,7 +1824,7 @@
 {
   "actions": [
     {
-      "id": "action-8-player-2-46",
+      "id": "action-8-player-2-1332",
       "round": 8,
       "actor": {
         "id": "player-2",
@@ -1843,7 +1843,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.882Z"
+      "createdAt": "2026-09-02T15:47:30.285Z"
     }
   ],
   "creatureLogs": [],
@@ -1864,7 +1864,7 @@
 {
   "actions": [
     {
-      "id": "action-8-player-2-47",
+      "id": "action-8-player-2-1333",
       "round": 8,
       "actor": {
         "id": "player-2",
@@ -1883,7 +1883,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.883Z"
+      "createdAt": "2026-09-02T15:47:30.287Z"
     }
   ],
   "creatureLogs": [],
@@ -1904,7 +1904,7 @@
 {
   "actions": [
     {
-      "id": "action-8-player-2-48",
+      "id": "action-8-player-2-1334",
       "round": 8,
       "actor": {
         "id": "player-2",
@@ -1922,7 +1922,7 @@
       },
       "result": "succeeded",
       "reason": "使用道具：回氣丹",
-      "createdAt": "2026-09-01T20:40:20.885Z"
+      "createdAt": "2026-09-02T15:47:30.288Z"
     }
   ],
   "creatureLogs": [],
@@ -1943,7 +1943,7 @@
 {
   "actions": [
     {
-      "id": "action-8-player-2-49",
+      "id": "action-8-player-2-1335",
       "round": 8,
       "actor": {
         "id": "player-2",
@@ -1962,7 +1962,7 @@
       },
       "result": "succeeded",
       "reason": "購買道具：購買 回氣丹",
-      "createdAt": "2026-09-01T20:40:20.888Z"
+      "createdAt": "2026-09-02T15:47:30.293Z"
     }
   ],
   "creatureLogs": [],
@@ -1983,7 +1983,7 @@
 {
   "actions": [
     {
-      "id": "action-8-player-2-50",
+      "id": "action-8-player-2-1336",
       "round": 8,
       "actor": {
         "id": "player-2",
@@ -2002,7 +2002,7 @@
       },
       "result": "succeeded",
       "reason": "購買道具：購買 大力丸",
-      "createdAt": "2026-09-01T20:40:20.892Z"
+      "createdAt": "2026-09-02T15:47:30.296Z"
     }
   ],
   "creatureLogs": [],
@@ -2023,7 +2023,7 @@
 {
   "actions": [
     {
-      "id": "action-8-player-2-51",
+      "id": "action-8-player-2-1337",
       "round": 8,
       "actor": {
         "id": "player-2",
@@ -2042,7 +2042,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.896Z"
+      "createdAt": "2026-09-02T15:47:30.299Z"
     }
   ],
   "creatureLogs": [],
@@ -2063,7 +2063,7 @@
 {
   "actions": [
     {
-      "id": "action-8-player-2-52",
+      "id": "action-8-player-2-1338",
       "round": 8,
       "actor": {
         "id": "player-2",
@@ -2082,7 +2082,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.897Z"
+      "createdAt": "2026-09-02T15:47:30.301Z"
     }
   ],
   "creatureLogs": [],
@@ -2103,7 +2103,7 @@
 {
   "actions": [
     {
-      "id": "action-8-player-2-53",
+      "id": "action-8-player-2-1339",
       "round": 8,
       "actor": {
         "id": "player-2",
@@ -2122,7 +2122,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.899Z"
+      "createdAt": "2026-09-02T15:47:30.302Z"
     }
   ],
   "creatureLogs": [],
@@ -2143,7 +2143,7 @@
 {
   "actions": [
     {
-      "id": "action-8-player-2-54",
+      "id": "action-8-player-2-1340",
       "round": 8,
       "actor": {
         "id": "player-2",
@@ -2162,7 +2162,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.900Z"
+      "createdAt": "2026-09-02T15:47:30.304Z"
     }
   ],
   "creatureLogs": [],
@@ -2183,7 +2183,7 @@
 {
   "actions": [
     {
-      "id": "action-9-player-2-55",
+      "id": "action-9-player-2-1341",
       "round": 9,
       "actor": {
         "id": "player-2",
@@ -2200,7 +2200,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-01T20:40:20.900Z"
+      "createdAt": "2026-09-02T15:47:30.304Z"
     }
   ],
   "creatureLogs": [],
@@ -2221,7 +2221,7 @@
 {
   "actions": [
     {
-      "id": "action-9-player-2-56",
+      "id": "action-9-player-2-1342",
       "round": 9,
       "actor": {
         "id": "player-2",
@@ -2240,7 +2240,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.904Z"
+      "createdAt": "2026-09-02T15:47:30.309Z"
     }
   ],
   "creatureLogs": [],
@@ -2261,7 +2261,7 @@
 {
   "actions": [
     {
-      "id": "action-9-player-2-57",
+      "id": "action-9-player-2-1343",
       "round": 9,
       "actor": {
         "id": "player-2",
@@ -2280,7 +2280,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.906Z"
+      "createdAt": "2026-09-02T15:47:30.310Z"
     }
   ],
   "creatureLogs": [],
@@ -2301,7 +2301,7 @@
 {
   "actions": [
     {
-      "id": "action-9-player-2-58",
+      "id": "action-9-player-2-1344",
       "round": 9,
       "actor": {
         "id": "player-2",
@@ -2320,7 +2320,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.908Z"
+      "createdAt": "2026-09-02T15:47:30.312Z"
     }
   ],
   "creatureLogs": [],
@@ -2341,7 +2341,7 @@
 {
   "actions": [
     {
-      "id": "action-9-player-2-59",
+      "id": "action-9-player-2-1345",
       "round": 9,
       "actor": {
         "id": "player-2",
@@ -2360,7 +2360,7 @@
       },
       "result": "succeeded",
       "reason": "任務：執行告示牌任務",
-      "createdAt": "2026-09-01T20:40:20.909Z"
+      "createdAt": "2026-09-02T15:47:30.313Z"
     }
   ],
   "creatureLogs": [],
@@ -2381,7 +2381,7 @@
 {
   "actions": [
     {
-      "id": "action-10-player-2-60",
+      "id": "action-10-player-2-1346",
       "round": 10,
       "actor": {
         "id": "player-2",
@@ -2398,7 +2398,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略迴圈結束（0 步）",
-      "createdAt": "2026-09-01T20:40:20.910Z"
+      "createdAt": "2026-09-02T15:47:30.313Z"
     }
   ],
   "creatureLogs": [],

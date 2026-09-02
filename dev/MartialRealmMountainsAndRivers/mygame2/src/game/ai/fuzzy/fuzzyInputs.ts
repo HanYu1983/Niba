@@ -155,6 +155,8 @@ export interface FuzzyInputs {
   bestItemToUse: { id: string; effect: string; name: string; effectValue: number } | undefined
   /** 建議裝備的裝備（部位空 or 耐久=0 需替換），無則 undefined */
   equipableEquipment: { instanceId: string; equipmentId: string; slot: string; name: string; durability: number } | undefined
+  /** 已學會但未啟用的外功（優先傷害型），供「啟用外功」目標使用 */
+  unequippedExternalSkill: { skillId: string; name: string; category: string } | undefined
   /** 所有可替換裝備候選，依價值由高到低排序 */
   equipmentCandidates: EquipmentCandidate[]
   /** 到最近巢穴的距離，無巢穴 = Infinity */
@@ -466,6 +468,8 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
   const equipableEquipment = equipmentCandidates[0]
   // 值得在商店購買的裝備（能改善配裝且買得起）
   const buyableEquipment = findBuyableEquipment(state, player)
+  // 已學會但未啟用的外功（供「啟用外功」目標）
+  const unequippedExternalSkill = findUnequippedExternalSkill(player)
 
   // 巢穴相關：最近巢穴
   const nests = state.creatureNests.filter((n) => n.health > 0)
@@ -651,6 +655,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     bestItemToUse,
     equipableEquipment,
     equipmentCandidates,
+    unequippedExternalSkill,
     distToNearestNest,
     nearestNestId: nearestNest?.id ?? '',
     visibleCreatureIds,
@@ -767,8 +772,14 @@ function findEquipmentCandidates(player: PlayerState, personality?: AiPersonalit
       if (candidate.instanceId === currentInstance?.instanceId || candidate.durability <= 0) continue
       const def = getDef(candidate.equipmentId)
       if (!def || def.slot !== slot) continue
-      const attributeGain = Object.entries(def.modifiers).reduce((total, [attribute, amount]) =>
-        total + (amount ?? 0) - (currentDef?.modifiers[attribute as keyof typeof def.modifiers] ?? 0), 0)
+      const modifierKeys = new Set([
+        ...Object.keys(def.modifiers),
+        ...Object.keys(currentDef?.modifiers ?? {}),
+      ])
+      const attributeGain = [...modifierKeys].reduce((total, attribute) =>
+        total
+        + (def.modifiers[attribute as keyof typeof def.modifiers] ?? 0)
+        - (currentDef?.modifiers[attribute as keyof typeof def.modifiers] ?? 0), 0)
       if (currentInstance && !replacesBroken && attributeGain <= 0) continue
       const evaluation = evaluateEquipmentCandidateValue({
         attributeGain,
@@ -789,6 +800,33 @@ function findEquipmentCandidates(player: PlayerState, personality?: AiPersonalit
   }
 
   return candidates.sort((first, second) => second.value - first.value)
+}
+
+/**
+ * 找到「已學會但未啟用」的外功：優先傷害型（target='target' 可打怪），
+ * 其次靈氣型。供「啟用外功」目標使用，讓學到的外功真正派上用場。
+ */
+function findUnequippedExternalSkill(
+  player: PlayerState,
+): { skillId: string; name: string; category: string } | undefined {
+  const learned = player.externalSkillIds ?? []
+  const equipped = new Set(player.equippedExternalSkillIds ?? [])
+  const unequipped = learned.filter((id) => !equipped.has(id))
+  if (unequipped.length === 0) return undefined
+
+  const rank = (skill: ReturnType<typeof getExternalSkill>): number => {
+    if (!skill) return 0
+    if (skill.category === 'damage' && skill.target === 'target') return 3
+    if (skill.category === 'damage') return 2
+    if (skill.category === 'aura') return 1
+    return 0
+  }
+
+  const best = unequipped
+    .map((id) => getExternalSkill(id))
+    .filter((skill): skill is NonNullable<typeof skill> => Boolean(skill))
+    .sort((a, b) => rank(b) - rank(a))[0]
+  return best ? { skillId: best.id, name: best.name, category: best.category ?? '' } : undefined
 }
 
 /**

@@ -85,6 +85,19 @@ trace 實證：買精鐵劍(weapon)→行者護衣(armor)→溫玉佩(accessory)
 ## 買道具/買裝經濟體系全貌（已打通）
 打工存錢 →（生存優先買回血/回內力/回體力道具）→ 買永久屬性丹 → 買三槽裝備各一 → 更強裝備靠道具點撿。
 
+## 啟用外功（2026-09-02，完成）
+AI 學了外功卻從不啟用（equippedExternalSkillIds 空）→ 白學。新增完整管線：
+- `skillRules.toggleExternalSkillAction` 純函數（從 gameStore 內聯邏輯抽出），gameStore.toggleExternalSkill 改用。
+- AI action `equip-external-skill` + 執行 + 輸入 `unequippedExternalSkill`(fuzzyInputs，優先 damage target='target') + goal `equipExternalSkill` + actionMapper + validation + cost(0) + labels + decision + personality。
+- trace 實證：`equip-external-skill=1` 出現，AI 學到外功後會啟用。
+
+## 清怪優先練功（2026-09-02）
+`evaluatePracticeSkill` baseScore 0.6/0.4 → 0.45/0.35。練功升功法等級非角色 Lv，不該壓過清怪(兩回殺0.55/一回殺0.85+)。調整後 level-5 成功率 0%→80%(4/5)，trace 中 practice-skill 消失、經驗效率 1.10 XP/turn。
+
+## level-5 成功率觀察（2026-09-02）
+- 清怪優先後：4/5 (80%)。
+- 加啟用外功後：2/6 (33%)。功能正確但成功率波動，可能外功啟用副作用(耗內力/改變打怪方式)或樣本小。待確認。
+
 ## 已回退的失敗調整（2026-09-02）
 嘗試「安全時靠據點打工賺錢買裝」但失敗，已全部回退：
 1. `goals.ts` 打工加 `f_moneyNeed` 動機 → 打工分數達 1.0 壓過磨血戰鬥，AI 不打怪。

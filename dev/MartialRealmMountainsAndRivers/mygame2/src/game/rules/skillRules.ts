@@ -202,3 +202,54 @@ export function equipInnerSkillAction(
     result: { ok: true },
   }
 }
+
+/**
+ * 啟用／停用外功（切換 equippedExternalSkillIds）。
+ * 啟用需：已學會 + 悟性容量足夠；啟用消耗 1% 內力，停用不消耗。
+ * 供 gameStore 與 AI 執行層共用。
+ */
+export function toggleExternalSkillAction(
+  state: GameState,
+  playerId: string,
+  skillId: string,
+): { state: GameState; result: ActionOutcome } {
+  const player = state.players.find((p) => p.id === playerId)
+  if (!player) {
+    return { state, result: { ok: false, reason: '玩家不存在' } }
+  }
+  const skill = getExternalSkill(skillId)
+  if (!skill || !player.externalSkillIds.includes(skillId)) {
+    return { state, result: { ok: false, reason: '未學會此外功' } }
+  }
+
+  const isEquipped = player.equippedExternalSkillIds.includes(skillId)
+  const usedCapacity = getPlayerTotalInsightCost(player) - (isEquipped ? skill.insightCost : 0)
+  if (!isEquipped && usedCapacity + skill.insightCost > getEffectiveAttributesForPlayer(player).insight) {
+    return { state, result: { ok: false, reason: '悟性容量不足' } }
+  }
+
+  const maxInnerPower = getMaxInnerPower(getEffectiveAttributesForPlayer(player))
+  const innerPowerCost = Math.max(1, maxInnerPower * 0.01)
+
+  const nextState: GameState = {
+    ...state,
+    players: state.players.map((currentPlayer) =>
+      currentPlayer.id === playerId
+        ? {
+            ...currentPlayer,
+            equippedExternalSkillIds: isEquipped
+              ? currentPlayer.equippedExternalSkillIds.filter((id) => id !== skillId)
+              : [...currentPlayer.equippedExternalSkillIds, skillId],
+            innerPower: isEquipped
+              ? currentPlayer.innerPower
+              : Math.max(0, currentPlayer.innerPower - innerPowerCost),
+          }
+        : currentPlayer,
+    ),
+  }
+
+  return {
+    state: applyBaseHealthBonuses(nextState),
+    result: { ok: true },
+  }
+}

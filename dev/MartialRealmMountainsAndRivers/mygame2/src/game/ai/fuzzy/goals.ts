@@ -10,7 +10,7 @@ import { canTransportPlayer } from '../../rules/transportRules'
 import { getInnerSkill, getSkillDamage, getSkillProgression } from '../../rules/skillRules'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
 
-export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'prepareNest' | 'equipInnerSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense' | 'buyConsumable' | 'buyEquipment'
+export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'prepareNest' | 'equipInnerSkill' | 'equipExternalSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense' | 'buyConsumable' | 'buyEquipment'
 
 export interface GoalResult {
   score: number
@@ -36,6 +36,7 @@ export type GoalTarget =
   | { kind: 'use-item'; itemId: string }
   | { kind: 'equip'; instanceId: string }
   | { kind: 'equip-inner-skill'; skillId: string }
+  | { kind: 'equip-external-skill'; skillId: string }
   | { kind: 'use-inner-skill-attack'; targetId: string; targetType: 'creature'; position: Position }
   | { kind: 'return-to-base-heal'; baseId: string; position: Position }
   | { kind: 'learn-skill'; baseId?: string; gateId?: string; skillType: 'inner' | 'external'; skillId: string }
@@ -455,6 +456,7 @@ export function evaluateAllGoals(
     attackNest: evaluateAttackNest(inputs, state, player, dependencies),
     prepareNest: evaluatePrepareNest(inputs, state, player, dependencies),
     equipInnerSkill: evaluateEquipInnerSkill(inputs, state, player, dependencies),
+    equipExternalSkill: evaluateEquipExternalSkill(inputs, state, player, dependencies),
     useInnerSkillAttack: evaluateUseInnerSkillAttack(inputs, state, player, dependencies),
     learnMartialSkill: evaluateLearnMartialSkill(inputs, state, player, dependencies),
     practiceSkill: evaluatePracticeSkill(inputs, state, player, dependencies),
@@ -902,6 +904,32 @@ export function evaluateEquipInnerSkill(
   if (!state || !player || !dependencies) return result
 
   const actions = buildValidatedActionSequence('equipInnerSkill', result, state, player, dependencies)
+  return actions.length > 0 ? { ...result, actions } : { score: 0 }
+}
+
+// ─── equipExternalSkill ────────────────────────────────────────
+// 有已學會但未啟用的外功 → 啟用它（讓學到的外功真正派上用場）
+
+function evaluateEquipExternalSkill(
+  inputs: FuzzyInputs,
+  state?: GameState,
+  player?: PlayerState,
+  dependencies?: ExecuteAiActionDependencies,
+): GoalResult {
+  const { unequippedExternalSkill, innerPowerRatio } = inputs
+  if (!unequippedExternalSkill) return { score: 0 }
+  // 啟用外功消耗 1% 內力，需有基本內力
+  const f_hasPower = trapezoid(innerPowerRatio, 0.1, 0.2, 1, 1)
+  const score = f_hasPower
+
+  const result: GoalResult = {
+    score,
+    target: { kind: 'equip-external-skill', skillId: unequippedExternalSkill.skillId },
+    context: { skillId: unequippedExternalSkill.skillId, skillName: unequippedExternalSkill.name, category: unequippedExternalSkill.category },
+  }
+  if (!state || !player || !dependencies) return result
+
+  const actions = buildValidatedActionSequence('equipExternalSkill', result, state, player, dependencies)
   return actions.length > 0 ? { ...result, actions } : { score: 0 }
 }
 

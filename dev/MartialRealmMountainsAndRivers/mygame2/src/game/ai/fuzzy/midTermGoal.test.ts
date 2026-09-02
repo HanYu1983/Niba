@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { applyMidTermGoalInputs, overrideScoreForMidTermGoal, clearMidTermGoals, isSavingMoney, getSaveMoneyTarget, SAVE_MONEY_TARGET, SAVE_MONEY_TRIGGER, applyKillGoalInputs, isKilling, getKillTargetId, KILL_DAMAGE_RATIO, type KillCandidate } from './midTermGoal'
+import { applyMidTermGoalInputs, overrideScoreForMidTermGoal, clearMidTermGoals, isSavingMoney, getSaveMoneyTarget, SAVE_MONEY_TARGET, SAVE_MONEY_TRIGGER, applyKillGoalInputs, isKilling, getKillTargetId, KILL_DAMAGE_RATIO, type KillCandidate, lockTravelGoal, invalidateTravelGoalIfUnavailable } from './midTermGoal'
 import type { GoalResult } from './goals'
 
 const missionResult: GoalResult = {
@@ -144,6 +144,26 @@ describe('midTermGoal 擊殺目標', () => {
     expect(isKilling('p1')).toBe(false)
   })
 
+  it('存錢中遇到相鄰一回殺機會 → 改鎖擊殺', () => {
+    applyMidTermGoalInputs('p1', 0, 0.8, true, 'base-1')
+    expect(isSavingMoney('p1')).toBe(true)
+
+    const goal = applyKillGoalInputs('p1', [killCandidate({ distance: 1, damageRatio: 0.8 })], 0.8)
+
+    expect(goal?.type).toBe('kill')
+    expect(isKilling('p1')).toBe(true)
+    expect(isSavingMoney('p1')).toBe(false)
+  })
+
+  it('存錢中只有普通追殺機會 → 保留存錢', () => {
+    applyMidTermGoalInputs('p1', 0, 0.8, true, 'base-1')
+
+    const goal = applyKillGoalInputs('p1', [killCandidate({ distance: 1, damageRatio: 0.6 })], 0.8)
+
+    expect(goal?.type).toBe('save-money')
+    expect(isSavingMoney('p1')).toBe(true)
+  })
+
   it('鎖定時把對應 engageCombat 抬到 1.0', () => {
     applyKillGoalInputs('p1', [killCandidate({})], 0.8)
     const overridden = overrideScoreForMidTermGoal('p1', 'engageCombat', killAgentResult)
@@ -154,5 +174,39 @@ describe('midTermGoal 擊殺目標', () => {
     applyKillGoalInputs('p1', [killCandidate({})], 0.8)
     const overridden = overrideScoreForMidTermGoal('p1', 'engageCombat', otherKillResult)
     expect(overridden.score).toBe(0.4)
+  })
+})
+
+describe('midTermGoal 移動目標', () => {
+  beforeEach(() => {
+    clearMidTermGoals()
+  })
+
+  it('鎖定目標仍可執行時保留', () => {
+    const result: GoalResult = {
+      score: 0.4,
+      target: { kind: 'explore', position: { row: 2, column: 3 } },
+      actions: [{ type: 'move', actor: { id: 'p1', kind: 'player' }, destination: { row: 2, column: 3 }, reason: '探索' }],
+    }
+    lockTravelGoal('p1', 'exploration', JSON.stringify(result.target))
+
+    invalidateTravelGoalIfUnavailable('p1', { exploration: result })
+
+    expect(overrideScoreForMidTermGoal('p1', 'exploration', result).score).toBe(1.0)
+  })
+
+  it('鎖定目標失效或只剩 hold 時清除', () => {
+    lockTravelGoal('p1', 'exploration', JSON.stringify({ kind: 'explore', position: { row: 2, column: 3 } }))
+    invalidateTravelGoalIfUnavailable('p1', {})
+    expect(overrideScoreForMidTermGoal('p1', 'exploration', { score: 0.4 }).score).toBe(0.4)
+
+    lockTravelGoal('p1', 'exploration', JSON.stringify({ kind: 'explore', position: { row: 2, column: 3 } }))
+    invalidateTravelGoalIfUnavailable('p1', {
+      exploration: {
+        ...holdResult,
+        target: { kind: 'explore', position: { row: 2, column: 3 } },
+      },
+    })
+    expect(overrideScoreForMidTermGoal('p1', 'exploration', { score: 0.4 }).score).toBe(0.4)
   })
 })

@@ -39,7 +39,7 @@
 {
   "actions": [
     {
-      "id": "action-1-player-2-1",
+      "id": "action-1-player-2-1347",
       "round": 1,
       "actor": {
         "id": "player-2",
@@ -58,7 +58,7 @@
       },
       "result": "succeeded",
       "reason": "購買裝備：購買 精鐵劍",
-      "createdAt": "2026-09-01T20:51:05.167Z"
+      "createdAt": "2026-09-02T15:47:30.325Z"
     }
   ],
   "creatureLogs": [],
@@ -79,7 +79,7 @@
 {
   "actions": [
     {
-      "id": "action-1-player-2-2",
+      "id": "action-1-player-2-1348",
       "round": 1,
       "actor": {
         "id": "player-2",
@@ -98,7 +98,7 @@
       },
       "result": "succeeded",
       "reason": "購買裝備：購買 行者護衣",
-      "createdAt": "2026-09-01T20:51:05.174Z"
+      "createdAt": "2026-09-02T15:47:30.328Z"
     }
   ],
   "creatureLogs": [],
@@ -119,7 +119,7 @@
 {
   "actions": [
     {
-      "id": "action-1-player-2-3",
+      "id": "action-1-player-2-1349",
       "round": 1,
       "actor": {
         "id": "player-2",
@@ -138,7 +138,7 @@
       },
       "result": "succeeded",
       "reason": "購買裝備：購買 溫玉佩",
-      "createdAt": "2026-09-01T20:51:05.178Z"
+      "createdAt": "2026-09-02T15:47:30.330Z"
     }
   ],
   "creatureLogs": [],
@@ -159,7 +159,7 @@
 {
   "actions": [
     {
-      "id": "action-1-player-2-4",
+      "id": "action-1-player-2-1350",
       "round": 1,
       "actor": {
         "id": "player-2",
@@ -177,7 +177,7 @@
       },
       "result": "succeeded",
       "reason": "使用道具：探地符",
-      "createdAt": "2026-09-01T20:51:05.182Z"
+      "createdAt": "2026-09-02T15:47:30.332Z"
     }
   ],
   "creatureLogs": [],
@@ -198,7 +198,7 @@
 {
   "actions": [
     {
-      "id": "action-1-player-2-5",
+      "id": "action-1-player-2-1351",
       "round": 1,
       "actor": {
         "id": "player-2",
@@ -211,12 +211,12 @@
           "id": "player-2",
           "kind": "player"
         },
-        "instanceId": "player-2-iron-sword-1788295865167",
+        "instanceId": "player-2-iron-sword-1788364050325",
         "reason": "裝備：精鐵劍（weapon）"
       },
       "result": "succeeded",
       "reason": "裝備：精鐵劍（weapon）",
-      "createdAt": "2026-09-01T20:51:05.185Z"
+      "createdAt": "2026-09-02T15:47:30.334Z"
     }
   ],
   "creatureLogs": [],
@@ -237,7 +237,7 @@
 {
   "actions": [
     {
-      "id": "action-1-player-2-6",
+      "id": "action-1-player-2-1352",
       "round": 1,
       "actor": {
         "id": "player-2",
@@ -250,12 +250,12 @@
           "id": "player-2",
           "kind": "player"
         },
-        "instanceId": "player-2-traveling-robe-1788295865174",
+        "instanceId": "player-2-traveling-robe-1788364050328",
         "reason": "裝備：行者護衣（armor）"
       },
       "result": "succeeded",
       "reason": "裝備：行者護衣（armor）",
-      "createdAt": "2026-09-01T20:51:05.189Z"
+      "createdAt": "2026-09-02T15:47:30.336Z"
     }
   ],
   "creatureLogs": [],
@@ -276,7 +276,7 @@
 {
   "actions": [
     {
-      "id": "action-1-player-2-7",
+      "id": "action-1-player-2-1353",
       "round": 1,
       "actor": {
         "id": "player-2",
@@ -289,12 +289,12 @@
           "id": "player-2",
           "kind": "player"
         },
-        "instanceId": "player-2-jade-pendant-1788295865178",
+        "instanceId": "player-2-jade-pendant-1788364050330",
         "reason": "裝備：溫玉佩（accessory）"
       },
       "result": "succeeded",
       "reason": "裝備：溫玉佩（accessory）",
-      "createdAt": "2026-09-01T20:51:05.191Z"
+      "createdAt": "2026-09-02T15:47:30.338Z"
     }
   ],
   "creatureLogs": [],
@@ -315,7 +315,7 @@
 {
   "actions": [
     {
-      "id": "action-2-player-2-8",
+      "id": "action-2-player-2-1354",
       "round": 2,
       "actor": {
         "id": "player-2",
@@ -332,7 +332,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.197Z"
+      "createdAt": "2026-09-02T15:47:30.340Z"
     }
   ],
   "creatureLogs": [],
@@ -353,7 +353,7 @@
 {
   "actions": [
     {
-      "id": "action-3-player-2-9",
+      "id": "action-3-player-2-1355",
       "round": 3,
       "actor": {
         "id": "player-2",
@@ -370,7 +370,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.202Z"
+      "createdAt": "2026-09-02T15:47:30.343Z"
     }
   ],
   "creatureLogs": [],
@@ -391,7 +391,7 @@
 {
   "actions": [
     {
-      "id": "action-4-player-2-10",
+      "id": "action-4-player-2-1356",
       "round": 4,
       "actor": {
         "id": "player-2",
@@ -408,7 +408,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.205Z"
+      "createdAt": "2026-09-02T15:47:30.345Z"
     }
   ],
   "creatureLogs": [],
@@ -429,7 +429,7 @@
 {
   "actions": [
     {
-      "id": "action-4-player-2-11",
+      "id": "action-4-player-2-1357",
       "round": 4,
       "actor": {
         "id": "player-2",
@@ -447,7 +447,7 @@
       },
       "result": "succeeded",
       "reason": "屬性分配：提升 armStrength",
-      "createdAt": "2026-09-01T20:51:05.208Z"
+      "createdAt": "2026-09-02T15:47:30.346Z"
     }
   ],
   "creatureLogs": [],
@@ -468,7 +468,7 @@
 {
   "actions": [
     {
-      "id": "action-4-player-2-12",
+      "id": "action-4-player-2-1358",
       "round": 4,
       "actor": {
         "id": "player-2",
@@ -486,7 +486,7 @@
       },
       "result": "succeeded",
       "reason": "屬性分配：提升 armStrength",
-      "createdAt": "2026-09-01T20:51:05.210Z"
+      "createdAt": "2026-09-02T15:47:30.348Z"
     }
   ],
   "creatureLogs": [],
@@ -507,7 +507,7 @@
 {
   "actions": [
     {
-      "id": "action-5-player-2-13",
+      "id": "action-5-player-2-1359",
       "round": 5,
       "actor": {
         "id": "player-2",
@@ -524,7 +524,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.214Z"
+      "createdAt": "2026-09-02T15:47:30.350Z"
     }
   ],
   "creatureLogs": [],
@@ -545,7 +545,7 @@
 {
   "actions": [
     {
-      "id": "action-6-player-2-14",
+      "id": "action-6-player-2-1360",
       "round": 6,
       "actor": {
         "id": "player-2",
@@ -562,7 +562,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.216Z"
+      "createdAt": "2026-09-02T15:47:30.352Z"
     }
   ],
   "creatureLogs": [],
@@ -583,7 +583,7 @@
 {
   "actions": [
     {
-      "id": "action-7-player-2-15",
+      "id": "action-7-player-2-1361",
       "round": 7,
       "actor": {
         "id": "player-2",
@@ -600,7 +600,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.218Z"
+      "createdAt": "2026-09-02T15:47:30.354Z"
     }
   ],
   "creatureLogs": [],
@@ -621,7 +621,7 @@
 {
   "actions": [
     {
-      "id": "action-8-player-2-16",
+      "id": "action-8-player-2-1362",
       "round": 8,
       "actor": {
         "id": "player-2",
@@ -638,7 +638,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.221Z"
+      "createdAt": "2026-09-02T15:47:30.356Z"
     }
   ],
   "creatureLogs": [],
@@ -659,7 +659,7 @@
 {
   "actions": [
     {
-      "id": "action-9-player-2-17",
+      "id": "action-9-player-2-1363",
       "round": 9,
       "actor": {
         "id": "player-2",
@@ -676,7 +676,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.223Z"
+      "createdAt": "2026-09-02T15:47:30.358Z"
     }
   ],
   "creatureLogs": [],
@@ -697,7 +697,7 @@
 {
   "actions": [
     {
-      "id": "action-9-player-2-18",
+      "id": "action-9-player-2-1364",
       "round": 9,
       "actor": {
         "id": "player-2",
@@ -715,7 +715,7 @@
       },
       "result": "succeeded",
       "reason": "屬性分配：提升 armStrength",
-      "createdAt": "2026-09-01T20:51:05.225Z"
+      "createdAt": "2026-09-02T15:47:30.360Z"
     }
   ],
   "creatureLogs": [],
@@ -736,7 +736,7 @@
 {
   "actions": [
     {
-      "id": "action-9-player-2-19",
+      "id": "action-9-player-2-1365",
       "round": 9,
       "actor": {
         "id": "player-2",
@@ -754,7 +754,7 @@
       },
       "result": "succeeded",
       "reason": "屬性分配：提升 armStrength",
-      "createdAt": "2026-09-01T20:51:05.229Z"
+      "createdAt": "2026-09-02T15:47:30.362Z"
     }
   ],
   "creatureLogs": [],
@@ -775,7 +775,7 @@
 {
   "actions": [
     {
-      "id": "action-10-player-2-20",
+      "id": "action-10-player-2-1366",
       "round": 10,
       "actor": {
         "id": "player-2",
@@ -792,7 +792,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.231Z"
+      "createdAt": "2026-09-02T15:47:30.364Z"
     }
   ],
   "creatureLogs": [],
@@ -813,7 +813,7 @@
 {
   "actions": [
     {
-      "id": "action-11-player-2-21",
+      "id": "action-11-player-2-1367",
       "round": 11,
       "actor": {
         "id": "player-2",
@@ -830,7 +830,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.234Z"
+      "createdAt": "2026-09-02T15:47:30.366Z"
     }
   ],
   "creatureLogs": [],
@@ -851,7 +851,7 @@
 {
   "actions": [
     {
-      "id": "action-12-player-2-22",
+      "id": "action-12-player-2-1368",
       "round": 12,
       "actor": {
         "id": "player-2",
@@ -868,7 +868,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.236Z"
+      "createdAt": "2026-09-02T15:47:30.367Z"
     }
   ],
   "creatureLogs": [],
@@ -889,7 +889,7 @@
 {
   "actions": [
     {
-      "id": "action-13-player-2-23",
+      "id": "action-13-player-2-1369",
       "round": 13,
       "actor": {
         "id": "player-2",
@@ -906,7 +906,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.238Z"
+      "createdAt": "2026-09-02T15:47:30.369Z"
     }
   ],
   "creatureLogs": [],
@@ -927,7 +927,7 @@
 {
   "actions": [
     {
-      "id": "action-14-player-2-24",
+      "id": "action-14-player-2-1370",
       "round": 14,
       "actor": {
         "id": "player-2",
@@ -944,7 +944,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.239Z"
+      "createdAt": "2026-09-02T15:47:30.371Z"
     }
   ],
   "creatureLogs": [],
@@ -965,7 +965,7 @@
 {
   "actions": [
     {
-      "id": "action-15-player-2-25",
+      "id": "action-15-player-2-1371",
       "round": 15,
       "actor": {
         "id": "player-2",
@@ -982,7 +982,7 @@
       },
       "result": "succeeded",
       "reason": "模糊策略：construction 分數 0.11，但目前沒有可執行 action，結束回合。候選診斷：construction=0.11:none, exploration=0.03:none",
-      "createdAt": "2026-09-01T20:51:05.241Z"
+      "createdAt": "2026-09-02T15:47:30.373Z"
     }
   ],
   "creatureLogs": [],

@@ -10,7 +10,7 @@ import { getPlayerAiEmergency } from './policy/aiPolicyRegistry'
 import { pickNextBuildCandidate, pickUpgradeCandidate } from './construction/constructionAi'
 import { computeFuzzyInputs } from './fuzzy/fuzzyInputs'
 import { evaluateAllGoals, type GoalName } from './fuzzy/goals'
-import { applyMidTermGoalInputs, overrideScoreForMidTermGoal, abortMidTermGoal, applyKillGoalInputs } from './fuzzy/midTermGoal'
+import { applyMidTermGoalInputs, overrideScoreForMidTermGoal, abortMidTermGoal, applyKillGoalInputs, lockTravelGoal, clearTravelGoal, invalidateTravelGoalIfUnavailable, isTravelGoalName } from './fuzzy/midTermGoal'
 import { MIN_THRESHOLD, rankGoals } from './fuzzy/decision'
 import { getAiGoalConstraints } from './fuzzy/personality'
 import { ACTION_STAMINA_COSTS, canPlayerPerformAction } from '../rules/actionCostRules'
@@ -781,6 +781,7 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
       })),
       inputs.staminaRatio,
     )
+    invalidateTravelGoalIfUnavailable(currentPlayer.id, goalResults)
     for (const goalName of Object.keys(goalResults) as GoalName[]) {
       goalResults[goalName] = overrideScoreForMidTermGoal(currentPlayer.id, goalName, goalResults[goalName])
     }
@@ -819,6 +820,10 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
       goalFound = actions.length > 0
       if (goalFound) {
         rememberMovementCommitment(playerId, order.id, selectedCandidate)
+        // 移動類目標：鎖定中期目標，避免繞圈（學招/任務/探索/清障/收集/防禦建設）
+        if (isTravelGoalName(selectedCandidate.goal)) {
+          lockTravelGoal(playerId, selectedCandidate.goal, getGoalTargetKey(selectedCandidate.result))
+        }
         const threshold = getAiGoalConstraints(order.personality).goalThresholds?.[selectedCandidate.goal] ?? MIN_THRESHOLD
         logAiDecision(deps.getState(), currentPlayer, order, inputs, goalResults, selectedCandidate.goal, threshold, actions)
       }
@@ -833,6 +838,7 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
         .map(([goal, result]) => `${goal}=${result.score.toFixed(2)}:${result.actions?.map((action) => action.type).join('|') || 'none'}`)
         .join(', ')
       movementCommitments.delete(playerId)
+      clearTravelGoal(playerId)
       return {
         endTurnReason: highest
             ? `模糊策略：${highest.goal} 分數 ${highest.result.score.toFixed(2)}，但目前沒有可執行 action，結束回合。候選診斷：${diagnostics || '所有 goal 分數與 action 都為 0'}`

@@ -11,7 +11,7 @@ import { validateAiAction } from '../validation/validateAiAction'
 import { executeAiAction, type ExecuteAiActionDependencies } from '../execution/executeAiAction'
 import { canTransportPlayer } from '../../rules/transportRules'
 import { elementBurstItems } from '../../catalogs/itemCatalog'
-import { getSchoolElement, getElementDamageMultiplier } from '../../rules/skillRules'
+import { getSchoolElement, getElementDamageMultiplier, getSkillInnerPowerCost, getSkillProgression } from '../../rules/skillRules'
 import { getAiActionStaminaCost } from '../../rules/actionCostRules'
 
 const previousMovePositions = new Map<string, Position>()
@@ -287,6 +287,8 @@ export function buildActionSequence(
       return buildBuyEquipmentActions(actor, result, state, player)
     case 'equipInnerSkill':
       return buildEquipInnerSkillActions(actor, result)
+    case 'equipExternalSkill':
+      return buildEquipExternalSkillActions(actor, result)
     case 'useInnerSkillAttack':
       return buildUseInnerSkillAttackActions(actor, result, state, player)
     case 'learnMartialSkill':
@@ -750,6 +752,16 @@ function buildEngageCombatActions(
 
   // 相鄰 → 直接攻擊
   if (dist <= 1) {
+    const externalSkill = findUsableDamageSkill(player)
+    if (externalSkill) {
+      return [{
+        type: 'use-external-skill',
+        actor,
+        target: { id: creature.id, kind: 'creature', position: targetPosition },
+        skillId: externalSkill.id,
+        reason: `交戰：施放外功 ${externalSkill.name}`,
+      }]
+    }
     return [{
       type: 'attack',
       actor,
@@ -774,6 +786,17 @@ function buildEngageCombatActions(
       reason: `交戰：攻擊 ${creature.name}`,
     },
   ]
+}
+
+function findUsableDamageSkill(player: PlayerState): { id: string; name: string } | undefined {
+  const usedThisTurn = new Set(player.externalSkillsUsedThisTurn ?? [])
+  return player.equippedExternalSkillIds
+    .map((skillId) => externalSkillCatalog.find((skill) => skill.id === skillId))
+    .find((skill) => skill
+      && skill.target === 'target'
+      && !skill.functionalEffect
+      && !usedThisTurn.has(skill.id)
+      && player.innerPower >= getSkillInnerPowerCost(skill.innerPowerCost, getSkillProgression(player, skill.id).level))
 }
 
 // ─── allocateAttributes ─────────────────────────────────────────
@@ -945,6 +968,24 @@ function buildEquipInnerSkillActions(
     actor,
     skillId: result.target.skillId,
     reason: `裝備功法：${result.context?.skillName ?? result.target.skillId}`,
+  }]
+}
+
+// ─── equipExternalSkill ─────────────────────────────────────
+
+function buildEquipExternalSkillActions(
+  actor: AiActorRef,
+  result: GoalResult,
+): AiAction[] {
+  if (!result.target || result.target.kind !== 'equip-external-skill') {
+    return [{ type: 'hold', actor, reason: '啟用外功：無可啟用外功' }]
+  }
+
+  return [{
+    type: 'equip-external-skill',
+    actor,
+    skillId: result.target.skillId,
+    reason: `啟用外功：${result.context?.skillName ?? result.target.skillId}`,
   }]
 }
 

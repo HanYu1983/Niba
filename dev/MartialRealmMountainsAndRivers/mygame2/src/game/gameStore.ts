@@ -42,7 +42,7 @@ import {
   getEquipmentInventory,
   getBuildingReputationBonus,
 } from './rules/playerDerivedRules'
-import { getExternalSkill, getPlayerTotalInsightCost, equipInnerSkillAction } from './rules/skillRules'
+import { getExternalSkill, equipInnerSkillAction, toggleExternalSkillAction } from './rules/skillRules'
 import {
   applyBaseHealthBonuses,
 } from './rules/baseRules'
@@ -60,7 +60,6 @@ import {
   applyExperienceAndLevelUp,
   restoreAfterAttributeChange,
 } from './characterFactory'
-import { getMaxInnerPower } from './rules/playerStatsRules'
 import {
   buyEquipment as buyEquipmentAction,
   buySectEquipment as buySectEquipmentAction,
@@ -788,40 +787,8 @@ export const gameStore = {
 
   toggleExternalSkill: (playerId: string, skillId: string) => {
     updateGameState((state) => {
-      const player = getActionablePlayer(state, playerId)
-      const skill = getExternalSkill(skillId)
-
-      if (!player || !skill || !player.externalSkillIds.includes(skillId)) {
-        return state
-      }
-
-      const isEquipped = player.equippedExternalSkillIds.includes(skillId)
-      const usedCapacity = getPlayerTotalInsightCost(player) - (isEquipped ? skill.insightCost : 0)
-
-      if (!isEquipped && usedCapacity + skill.insightCost > getEffectiveAttributesForPlayer(player).insight) {
-        return state
-      }
-
-      const maxInnerPower = getMaxInnerPower(getEffectiveAttributesForPlayer(player))
-      const innerPowerCost = Math.max(1, maxInnerPower * 0.01)
-
-      return applyBaseHealthBonuses({
-        ...state,
-        players: state.players.map((currentPlayer) =>
-          currentPlayer.id === playerId
-            ? {
-              ...currentPlayer,
-              equippedExternalSkillIds: isEquipped
-                ? currentPlayer.equippedExternalSkillIds.filter((id) => id !== skillId)
-                : [...currentPlayer.equippedExternalSkillIds, skillId],
-              // 開啟外功消耗 1% 內力；關閉不消耗
-              innerPower: isEquipped
-                ? currentPlayer.innerPower
-                : Math.max(0, currentPlayer.innerPower - innerPowerCost),
-            }
-            : currentPlayer,
-        ),
-      })
+      const result = toggleExternalSkillAction(state, playerId, skillId)
+      return result.state
     })
   },
 
