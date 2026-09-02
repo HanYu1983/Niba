@@ -63,6 +63,8 @@ export type PlayerState = {
   id: string
   name: string
   isAI?: boolean
+  /** 是否會觸發互動點（探索點／道具點／區域觸發等）。設為 false 時，該玩家在劇本模式中不會推進互動劇情。預設 true。 */
+  canTriggerInteraction?: boolean
   aiPersonality?: import('./ai').AiPersonalityId
   position: Position
   attributes: PlayerAttributes

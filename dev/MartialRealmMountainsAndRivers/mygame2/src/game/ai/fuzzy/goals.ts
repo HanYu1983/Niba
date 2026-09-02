@@ -166,6 +166,8 @@ export function evaluateCollectItems(
   dependencies?: ExecuteAiActionDependencies,
 ): GoalResult {
   if (!state || !player || !dependencies) return { score: 0 }
+  // 設定為不觸發互動（canTriggerInteraction === false）的玩家，不收集道具點。
+  if (player.canTriggerInteraction === false) return { score: 0 }
   const { reachableItemCount, staminaRatio, distToNearestItem } = inputs
 
   const f_manyItems = trapezoid(reachableItemCount, 0, 0, 3, 5)    // >=5 → 1.0, >=3 → 0.6

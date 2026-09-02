@@ -84,6 +84,24 @@ describe('buildGameStateFromScenario', () => {
     }])
   })
 
+  it('劇本玩家可設定 canTriggerInteraction（預設 true，可關閉互動觸發）', () => {
+    const scenario = makeScenario()
+    scenario.entities.push({
+      id: 'player-ai-1',
+      kind: 'player',
+      position: { row: 8, column: 1 },
+      data: { name: '同行弟子', isAI: true, canTriggerInteraction: false },
+    })
+
+    const state = buildGameStateFromScenario(scenario)
+
+    expect(state.players[0].canTriggerInteraction).toBe(true)
+    expect(state.players.find((player) => player.id === 'player-ai-1')).toMatchObject({
+      isAI: true,
+      canTriggerInteraction: false,
+    })
+  })
+
   it('劇本 aiOrders 可覆寫 AI 玩家預設策略（貼身保護）', () => {
     const scenario = makeScenario()
     scenario.entities.push({

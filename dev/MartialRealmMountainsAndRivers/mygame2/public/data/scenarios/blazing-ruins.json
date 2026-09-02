@@ -4122,6 +4122,7 @@
         },
         "name": "雲霓",
         "isAI": true,
+        "canTriggerInteraction": false,
         "aiPersonality": "guardian",
         "aiType": "fuzzy",
         "money": 80,

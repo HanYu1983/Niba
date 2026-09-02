@@ -97,6 +97,7 @@ function compilePlayers(placements: ScenarioEntityPlacement[]): PlayerState[] {
       id: placement.id,
       name: (data.name as string) ?? `玩家 ${index + 1}`,
       isAI: (data.isAI as boolean) ?? false,
+      canTriggerInteraction: (data.canTriggerInteraction as boolean | undefined) ?? true,
       aiPersonality: data.aiPersonality as PlayerState['aiPersonality'],
       innerSkillId: (data.innerSkillId as string) ?? 'tuna-gong',
       innerSkillIds: (data.innerSkillIds as string[]) ?? ['tuna-gong'],

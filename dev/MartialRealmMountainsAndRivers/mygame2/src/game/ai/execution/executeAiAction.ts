@@ -86,6 +86,9 @@ export function executeAiAction(
     case 'move': {
       const result = movePlayer(state, action.actor.id, action.destination.row, action.destination.column)
       if (!result.result.ok) return result
+      // 設定為不觸發互動（canTriggerInteraction === false）的 AI，移動後不自動解析探索事件。
+      const actorPlayer = result.state.players.find((candidate) => candidate.id === action.actor.id)
+      if (actorPlayer?.canTriggerInteraction === false) return result
       return { state: resolveAiExplorationEvent(result.state, action.actor.id), result: result.result }
     }
     case 'attack': {
@@ -97,6 +100,11 @@ export function executeAiAction(
       return { state: result.state, result: result.result }
     }
     case 'collect': {
+      const collectPlayer = state.players.find((candidate) => candidate.id === action.actor.id)
+      // 設定為不觸發互動（canTriggerInteraction === false）的 AI，不收集道具點／廢墟（探索獎勵）。
+      if (collectPlayer?.canTriggerInteraction === false) {
+        return { state, result: { ok: false, reason: '此角色不會觸發互動點。' } }
+      }
       if (action.target.kind === 'item') {
         const result = collectItemPointAction(state, action.actor.id, action.target.id)
         return { state: result.state, result: result.result }
