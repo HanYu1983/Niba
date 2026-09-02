@@ -7,7 +7,7 @@ import { buildValidatedActionSequence } from './goalActionMapper'
 import type { ExecuteAiActionDependencies } from '../execution/executeAiAction'
 import type { AiGoalConstraints } from './personality'
 import { canTransportPlayer } from '../../rules/transportRules'
-import { getInnerSkill, getSkillDamage, getSkillProgression } from '../../rules/skillRules'
+import { getInnerSkill, getSkillDamage, getSkillProgression, getPlayerInsightCapacityBreakdown } from '../../rules/skillRules'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
 import { getKillTargetId, KILL_MAX_DISTANCE } from './midTermGoal'
 
@@ -799,7 +799,20 @@ function evaluateExploration(
     if (fallbackActions.some((action) => action.type !== 'hold')) return { ...fallbackResult, actions: fallbackActions }
   }
 
-  if (actions.length === 0 || actions.every((action) => action.type === 'hold')) return { score: 0 }
+  if (actions.length === 0 || actions.every((action) => action.type === 'hold')) {
+    // eslint-disable-next-line no-console
+    console.log('[exploration-stuck]', JSON.stringify({
+      player: player.position,
+      base: nearestUndiscoveredBase?.position,
+      distToBase,
+      baseReachable,
+      stamina: player.stamina,
+      unexploredReachableCount,
+      nearestUnexploredPosition,
+      actions: actions.map((a) => a.type),
+    }))
+    return { score: 0 }
+  }
   result.actions = actions
   return result
 }
@@ -985,6 +998,11 @@ function evaluateLearnMartialSkill(
   if (!state || !player || !dependencies) return { score: 0 }
   const { learnableSkillAtHall, learnableSkillAtGate, staminaRatio, feasibility, combatDamageRatio } = inputs
 
+  // 悟性容量因子：已裝備功法超出悟性容量時，新學的功法裝備後效果會大幅衰減（getSkillEffectMultiplier → 0.1），
+  // 學了也無法有效運用 → 視為無效行為，大幅降低學招分數。
+  const capacityExceeded = getPlayerInsightCapacityBreakdown(player).exceeded
+  const f_capacity = capacityExceeded ? 0.1 : 1
+
   // 傷害不足因子：玩家目前一擊能打掉怪物多少血（0~1）。打不動時學招需求高；傷害足夠時學招權重降低，
   // 避免玩家傷害夠了仍被「學招」鎖在門派往返、不去實戰。
   const f_damageNeed = combatDamageRatio != null && combatDamageRatio > 0
@@ -995,7 +1013,7 @@ function evaluateLearnMartialSkill(
   // 學招是「先變強再打」的投資：傷害不足時高分，傷害足夠時分數降低讓位給實戰/清巢穴。
   if (learnableSkillAtGate && feasibility.canReachNearestGate && feasibility.canAffordGateLearn && staminaRatio > 0.3) {
     const result: GoalResult = {
-      score: 1 * (0.6 + 0.4 * f_damageNeed),
+      score: 1 * (0.6 + 0.4 * f_damageNeed) * f_capacity,
       target: { kind: 'learn-skill', gateId: learnableSkillAtGate.gateId, skillType: learnableSkillAtGate.skillType, skillId: learnableSkillAtGate.skillId },
       distanceToTarget: undefined,
       context: { source: 'gate', name: learnableSkillAtGate.name, cost: feasibility.learnGateCost, damageRatio: combatDamageRatio },
@@ -1009,7 +1027,7 @@ function evaluateLearnMartialSkill(
   // 武館學招：需要金錢夠
   if (learnableSkillAtHall && feasibility.canAffordHallLearn) {
     const result: GoalResult = {
-      score: 0.6,
+      score: 0.6 * f_capacity,
       target: { kind: 'learn-skill', baseId: learnableSkillAtHall.baseId, skillType: learnableSkillAtHall.skillType, skillId: learnableSkillAtHall.skillId },
       distanceToTarget: feasibility.distToNearestHallBase,
       context: { source: 'hall', name: learnableSkillAtHall.name, cost: feasibility.learnHallCost },
