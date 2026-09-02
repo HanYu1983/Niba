@@ -85,6 +85,15 @@ export function getKillTargetId(playerId: string): string {
   return goal?.type === 'kill' ? (goal as KillGoal).targetId : ''
 }
 
+/** 讀取目前中期目標摘要（供 trace 日誌／除錯用）。無目標回傳 undefined。 */
+export function getMidTermGoalSummary(playerId: string): { type: MidTermGoal['type']; goal?: GoalName; targetKey?: string; targetAmount?: number; targetId?: string } | undefined {
+  const goal = midTermGoals.get(playerId)
+  if (!goal) return undefined
+  if (goal.type === 'save-money') return { type: 'save-money', targetAmount: goal.targetAmount }
+  if (goal.type === 'kill') return { type: 'kill', targetId: goal.targetId }
+  return { type: 'travel', goal: goal.goal, targetKey: goal.targetKey }
+}
+
 /** 依玩家狀態決定存錢目標是否要「覆寫分數」。 */
 export function applyMidTermGoalInputs(
   playerId: string,
@@ -191,8 +200,9 @@ export function overrideScoreForMidTermGoal(
   }
   if (current.type === 'travel') {
     const travel = current as TravelGoal
-    // 鎖定的移動目標：分數抬到最高，確保持續執行
-    if (goal === travel.goal && getTargetKey(result) === travel.targetKey
+    // 鎖定的移動目標：分數抬到最高，確保持續執行。
+    // 不要求 targetKey 完全一致（位置型目標的 targetKey 會微變），只要 goal 相同且有合法 action。
+    if (goal === travel.goal
       && result.actions && result.actions.some((a) => a.type !== 'hold')) {
       return { ...result, score: 1.0 }
     }
@@ -227,8 +237,11 @@ export function invalidateTravelGoalIfUnavailable(
   if (current?.type !== 'travel') return
 
   const result = goalResults[current.goal]
+  // 只要鎖定目標的 goal 仍有合法（非 hold）action，就保留 lock。
+  // 不要求 targetKey 完全一致：位置型目標（collectItems/exploration）的 targetKey
+  // 會因 reachableInterests 排序或目標細節變化而微變，但玩家仍在往同類目標推進，
+  // 若因 targetKey 微變就清除，會造成目標在 1-2 步內頻繁切換。
   const remainsExecutable = result
-    && getTargetKey(result) === current.targetKey
     && result.actions?.some((action) => action.type !== 'hold')
   if (!remainsExecutable) midTermGoals.delete(playerId)
 }
@@ -244,11 +257,6 @@ export function isTravelGoalName(goal: GoalName): boolean {
     || goal === 'buildDefense'
     || goal === 'buyConsumable'
     || goal === 'buyEquipment'
-}
-
-/** 從 GoalResult 取得穩定目標鍵（與 aiStepRunner 的 getGoalTargetKey 一致）。 */
-function getTargetKey(result: GoalResult): string {
-  return result.target ? JSON.stringify(result.target) : ''
 }
 
 /** 高風險逃生時清除中期目標（由 stepRunner 在高威脅時呼叫）。 */

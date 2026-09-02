@@ -220,12 +220,93 @@ runs=20 level5=5/20 (25%) goalSwitchMedian=230 (avg 246.3) ineffectiveMedian=45.
 
 **目標切換偏高（230-270）是獨立問題**：AI 在探索、打工、學招、建設間頻繁切換，需後續以 mid-term goal 的 travel lock 機制（方案 C-3 分層 trace 可觀測）進一步收斂。
 
-### 5.5 尚未落地（需後續實作）
+### 5.5 已實作：分層 trace 日誌（方案 C-3）+ travel lock 放寬（2026-09-03）
 
-- **決策可解釋率**：需 C-3 的分層 trace 日誌（mid-term goal / momentum / score override 中間層）才能量測。
+**分層 trace 日誌**（`src/game/ai/aiStepRunner.ts` 的 `logAiDecision`）：
+
+- `[AI decision core]` 新增 `midTerm`（目前中期目標摘要）與 `momentum`（movement commitment）欄位
+- 新增 `getMidTermGoalSummary`（`midTermGoal.ts`）回傳目前中期目標摘要
+- 讓目標切換可觀測：trace 揭露 AI 在 `learnMartialSkill → practiceSkill → kill → collectItems → buildDefense` 間頻繁切換
+
+**travel lock 放寬**（`src/game/ai/fuzzy/midTermGoal.ts`）：
+
+- `invalidateTravelGoalIfUnavailable` 不再要求 targetKey 完全一致，只要鎖定 goal 仍有合法（非 hold）action 就保留 lock
+- `overrideScoreForMidTermGoal` 的 travel 分支同步放寬
+- 原因：位置型目標（collectItems/exploration）的 targetKey 會因 `reachableInterests` 排序或目標細節變化而微變，若因 targetKey 微變就清除，會造成目標在 1-2 步內頻繁切換
+
+**KPI 對比（20 局固定 seed）：**
+
+| KPI | 探索修正後 | travel lock 放寬後 | 變化 |
+|---|---|---|---|
+| Level 5 達成率 | 20% | 25% | +5%（回穩） |
+| 目標切換中位數 | 263.5 | 253.5 | -10（改善） |
+| 無效行動率中位數 | 40.7% | 42.4% | +1.7% |
+
+目標切換改善（263.5→253.5）、Level 5 回穩（25%）。無效行動率略升（travel lock 更持久，AI 可能在不可達目標停留更久）。
+
+**目標切換仍偏高（253.5）**：travel lock 只鎖定單一 goal，無法阻止跨類別切換（學招→練功→擊殺→收集→建設）。需更高層的「策略鎖定」（如鎖定成長策略：先學招練功、再清怪），這是後續方向。
+
+### 5.6 已實作：強制維持 N 回合（暴力解法，2026-09-03）
+
+`src/game/ai/aiStepRunner.ts` 的 momentum commitment 新增「強制維持回合數」：
+
+- `movementCommitments` 新增 `remainingTurns` 欄位
+- `rememberMovementCommitment` 建立承諾時設 `remainingTurns = MIN_COMMITMENT_TURNS`（3）
+- `selectFuzzyCandidateWithMomentum` 中，強制期內（`remainingTurns > 0`）即使新目標分數更高也維持原目標，直到歸零
+- 高風險逃生（`isHighThreat`）仍可中斷；原目標不可執行（`committed` 不存在）時立即釋放
+
+**KPI 對比（20 局固定 seed）：**
+
+| KPI | travel lock 放寬後 | 強制維持 3 回合 | 變化 |
+|---|---|---|---|
+| Level 5 達成率 | 25% | **30%** | +5%（最佳） |
+| 目標切換中位數 | 253.5 | **239** | -14.5（最佳） |
+| 無效行動率中位數 | 42.4% | **41.6%** | -0.8%（改善） |
+
+**三項 KPI 全部改善，且通過驗收門檻**。暴力解法有效：強制維持三回合讓 AI 專注完成目標，反而因減少無效切換而更快成長（Level 5 提升至 30%）。
+
+**設計考量**：
+- 三回合是「至少」不是「恰好」——目標完成或不可達時立即釋放，不會死鎖
+- 高風險逃生優先於強制維持，避免死撐
+- `MIN_COMMITMENT_TURNS` 可調（3 為目前最佳，可實驗 2/4/5）
+
+**回合數實驗（2026-09-03，20 局固定 seed）：**
+
+| MIN_COMMITMENT_TURNS | Level 5 | 目標切換中位數 | 無效行動率中位數 |
+|---|---|---|---|
+| 0（關閉強制） | 25% | 253.5 | 42.4% |
+| 1 | **30%** | **239** | **41.6%** |
+| 2 | 30% | 239 | 41.6% |
+| 3 | 30% | 239 | 41.6% |
+| 5 | 30% | 239 | 41.6% |
+
+**關鍵結論**：
+- `MIN_COMMITMENT_TURNS = 0`（關閉強制）回到 travel lock 放寬後的基線（Level 5 25%、切換 253.5）
+- `MIN_COMMITMENT_TURNS = 1` 就達到最佳效果（Level 5 30%、切換 239），2/3/5 無額外好處
+- 真正的改善來自「**至少維持 1 回合**」——即「新目標分數更高時先維持原目標一步」，而非維持多回合
+- 目標切換的瓶頸不在「分數波動切換」（強制維持處理的部分），而在「目標完成/不可達後的重新選擇」——後者需更高層的策略鎖定
+
+**採用 `MIN_COMMITMENT_TURNS = 1`**（最簡、效果等同 3/5）。
+
+### 5.7 已實作：擊殺目標追擊修正（2026-09-03）
+
+**問題**：AI 鎖定擊殺目標（midTerm kill goal）後，若目標距離 > 1，`evaluateEngageCombat` 的 `killable` 條件（`distance === 1`）不成立，`engageCombat` 分數為 0，AI 跑去建設/學招而不追擊。
+
+**修正**（`src/game/ai/fuzzy/goals.ts` + `goalActionMapper.ts`）：
+
+1. `evaluateEngageCombat`：當 `bestCandidate` 是擊殺目標（`getKillTargetId(player.id) === creatureId`）時，放寬 `killable` 為「距離 ≤ `KILL_MAX_DISTANCE`（6）」，允許追擊靠近。
+2. `buildEngageCombatActions`：距離 > 1 時只產生 `move`（不帶 `attack`）。因為 `runAiStepLoop` 一次只執行一個 action，移動後下一個 step 重新評估；若帶上 attack，`buildValidatedActionSequence` 驗證「移動後立即攻擊」會因移動 1 格後仍不在攻擊範圍而失敗、回傳空。
+
+**新增回歸測試**：`src/game/ai/fuzzy/killChase.test.ts`（重現 trace：擊殺目標距離 3、damageRatio 0.81，驗證 `engageCombat` 有分數且有追擊 action）。
+
+**KPI（20 局固定 seed）**：維持最佳水準（Level 5 30%、切換 239、無效 41.6%），不影響整體表現。
+
+### 5.8 尚未落地（需後續實作）
+
+- **決策可解釋率**：分層 trace 已加入 mid-term/momentum，但「score override 前後分數」尚未記錄，可再補強。
 - **暴擊 roll 種子化**：`combatActions.ts` 的暴擊已走 `dependencies.random ?? defaultRandomSource`，但 `gameStore` 的 combat deps 未注入種子化來源，仍走全域來源（已種子化）。若需更精細控制可再注入。
 
-### 5.6 驗收流程建議
+### 5.9 驗收流程建議
 
 1. ✅ 已完成 `Math.random()` 種子化（§5.3）。
 2. 跑 `npm test -- --run src/game/aiBeginnerSandboxVictory.test.ts -t "多局驗收"` 取得基線（已取得，見 §5.3）。

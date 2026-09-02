@@ -65,7 +65,7 @@ function buildCostMapFrom(
  * 從玩家的相鄰可達格中，找出沿最短路徑最接近目標的格子。
  * 使用 Dijkstra 從目標反向建最短路徑樹，取代 manhattan 距離。
  */
-function findClosestReachablePosition(
+export function findClosestReachablePosition(
   state: GameState,
   player: PlayerState,
   targetPosition: { row: number; column: number },
@@ -770,22 +770,17 @@ function buildEngageCombatActions(
     }]
   }
 
-  // 不相鄰 → 先移動再攻擊
+  // 不相鄰 → 先移動靠近（只產生 move，不帶 attack）。
+  // 因為 runAiStepLoop 一次只執行一個 action，移動後下一個 step 會重新評估；
+  // 若在此帶上 attack，buildValidatedActionSequence 會驗證「移動後立即攻擊」，
+  // 但移動 1 格後玩家通常仍不在攻擊範圍，導致整個序列驗證失敗、回傳空。
   const moveDest = findClosestReachablePosition(state, player, targetPosition)
-  return [
-    {
-      type: 'move',
-      actor,
-      destination: moveDest,
-      reason: `交戰：移動到 ${creature.name} 附近`,
-    },
-    {
-      type: 'attack',
-      actor,
-      target: { id: creature.id, kind: 'creature', position: targetPosition },
-      reason: `交戰：攻擊 ${creature.name}`,
-    },
-  ]
+  return [{
+    type: 'move',
+    actor,
+    destination: moveDest,
+    reason: `交戰：移動到 ${creature.name} 附近`,
+  }]
 }
 
 function findUsableDamageSkill(player: PlayerState): { id: string; name: string } | undefined {

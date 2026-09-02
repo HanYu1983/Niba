@@ -9,6 +9,7 @@ import type { AiGoalConstraints } from './personality'
 import { canTransportPlayer } from '../../rules/transportRules'
 import { getInnerSkill, getSkillDamage, getSkillProgression } from '../../rules/skillRules'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
+import { getKillTargetId, KILL_MAX_DISTANCE } from './midTermGoal'
 
 export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'prepareNest' | 'equipInnerSkill' | 'equipExternalSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense' | 'buyConsumable' | 'buyEquipment'
 
@@ -230,7 +231,11 @@ function evaluateEngageCombat(
 
   const { creatureId, position, distance, damageRatio } = bestCandidate
   const isNestThreat = nestThreat?.creatureId === creatureId
-  const killable = distance === 1 && hitsSurvivable >= 1 && player.stamina > 0
+  // 擊殺目標：AI 已鎖定追殺這隻怪（midTerm kill goal）。即使距離 > 1 也應追擊靠近，
+  // 否則距離 > 1 時 killable=false，engageCombat 分數為 0，擊殺目標永遠無法觸發追擊。
+  const isKillTarget = getKillTargetId(player.id) === creatureId
+  const killable = (distance === 1 || (isKillTarget && distance <= KILL_MAX_DISTANCE))
+    && hitsSurvivable >= 1 && player.stamina > 0
 
   // 傷害評估（damageRatio = 一回合總傷害（內功普攻 + 可用外功）/ 怪物血量）：
   // - canKillInOneTurn：一回合總傷≥75%，很可能一回合收 → 最高權重。

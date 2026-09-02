@@ -10,7 +10,7 @@ import { getPlayerAiEmergency } from './policy/aiPolicyRegistry'
 import { pickNextBuildCandidate, pickUpgradeCandidate } from './construction/constructionAi'
 import { computeFuzzyInputs } from './fuzzy/fuzzyInputs'
 import { evaluateAllGoals, type GoalName } from './fuzzy/goals'
-import { applyMidTermGoalInputs, overrideScoreForMidTermGoal, abortMidTermGoal, applyKillGoalInputs, lockTravelGoal, clearTravelGoal, invalidateTravelGoalIfUnavailable, isTravelGoalName } from './fuzzy/midTermGoal'
+import { applyMidTermGoalInputs, overrideScoreForMidTermGoal, abortMidTermGoal, applyKillGoalInputs, lockTravelGoal, clearTravelGoal, invalidateTravelGoalIfUnavailable, isTravelGoalName, getMidTermGoalSummary } from './fuzzy/midTermGoal'
 import { MIN_THRESHOLD, rankGoals } from './fuzzy/decision'
 import { getAiGoalConstraints } from './fuzzy/personality'
 import { ACTION_STAMINA_COSTS, canPlayerPerformAction } from '../rules/actionCostRules'
@@ -30,11 +30,15 @@ const MAX_LOOPS = 50
 
 /** 移動目標的決策衝量：避免相近分數的目標在相鄰 step 間來回切換。 */
 const AI_MOVEMENT_MOMENTUM_MARGIN = 0.2
+/** 移動目標的強制維持回合數：鎖定目標後至少維持 N 步才允許切換（暴力解法，避免目標頻繁切換）。 */
+const MIN_COMMITMENT_TURNS = 1
 const movementCommitments = new Map<string, {
   orderId: string
   goal: string
   targetKey: string
   score: number
+  /** 剩餘強制維持回合數；>0 時即使新目標分數更高也維持原目標。 */
+  remainingTurns: number
 }>()
 
 /** 圖搜索／模糊策略評估用的 stub combat deps（不實際結算掉落/升級）。 */
@@ -115,8 +119,15 @@ function selectFuzzyCandidateWithMomentum(
   }
   if (!normalCandidate || normalCandidate.goal === committed.goal && getGoalTargetKey(normalCandidate.result) === commitment.targetKey) {
     const c = committed
-    movementCommitments.set(playerId, { ...commitment, score: c.result.score })
+    movementCommitments.set(playerId, { ...commitment, score: c.result.score, remainingTurns: Math.max(0, commitment.remainingTurns - 1) })
     return c
+  }
+
+  // 強制維持期內：即使新目標分數更高也維持原目標，避免目標頻繁切換。
+  // 原目標仍可執行（committed 存在）時，強制維持直到 remainingTurns 歸零。
+  if (commitment.remainingTurns > 0) {
+    movementCommitments.set(playerId, { ...commitment, score: committed.result.score, remainingTurns: commitment.remainingTurns - 1 })
+    return committed
   }
 
   // 新目標必須顯著更好，否則沿用原路線/原攻擊目標，避免一步向左、一步向右。
@@ -124,7 +135,7 @@ function selectFuzzyCandidateWithMomentum(
     movementCommitments.delete(playerId)
     return normalCandidate
   }
-  movementCommitments.set(playerId, { ...commitment, score: committed.result.score })
+  movementCommitments.set(playerId, { ...commitment, score: committed.result.score, remainingTurns: 0 })
   return committed
 }
 
@@ -137,6 +148,7 @@ function rememberMovementCommitment(playerId: string, orderId: string, candidate
     goal: candidate.goal,
     targetKey: getGoalTargetKey(candidate.result),
     score: candidate.result.score,
+    remainingTurns: MIN_COMMITMENT_TURNS,
   })
 }
 
@@ -243,6 +255,8 @@ function logAiDecision(
       level: playerState?.level,
       turnEnded: playerState?.turnEnded,
     },
+    midTerm: getMidTermGoalSummary(player.id) ?? null,
+    momentum: movementCommitments.get(player.id) ?? null,
     perception: {
       staminaRatio: Number(inputs.staminaRatio.toFixed(3)),
       healthRatio: Number(inputs.healthRatio.toFixed(3)),
