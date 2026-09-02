@@ -11,13 +11,14 @@ import { elementBurstItems, itemCatalog } from '../../catalogs/itemCatalog'
 import { equipmentCatalog } from '../../catalogs/equipmentCatalog'
 import { allInnerSkillCatalog, getMartialHallSkills, martialHallInnerSkillCatalog, martialHallExternalSkillCatalog } from '../../catalogs/martialHallSkillCatalog'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
-import { getElementDamageMultiplier, getSchoolElement, getSkillDamage, getSkillProgression } from '../../rules/skillRules'
+import { getElementDamageMultiplier, getSchoolElement, getSkillDamage, getSkillProgression, getExternalSkill, getSkillInnerPowerCost } from '../../rules/skillRules'
 import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
 import { getSectGateSkills, getSectGateLearnCost } from '../../rules/sectGateRules'
 import { defenseStructureCatalog } from '../../catalogs/defenseStructureCatalog'
 import { getRepairSummary, hasBuilding } from '../../rules/buildingRules'
 import { getMartialHallSkillCost } from '../../actions/martialHallActions'
 import { canUpgradeBuildingType, getBuildingLevel, getBuildingUpgradeResult, getEffectiveBuildingUpgradeCost } from '../../rules/buildingProgressionRules'
+import { canBuyEquipment, getShopBaseId } from '../../rules/shopRules'
 import type { AiPersonalityId } from '../../types/ai'
 import { evaluateConstructionCandidateValue } from './constructionValue'
 import { evaluateCombatCandidateValue } from './combatValue'
@@ -154,6 +155,8 @@ export interface FuzzyInputs {
   bestItemToUse: { id: string; effect: string; name: string; effectValue: number } | undefined
   /** 建議裝備的裝備（部位空 or 耐久=0 需替換），無則 undefined */
   equipableEquipment: { instanceId: string; equipmentId: string; slot: string; name: string; durability: number } | undefined
+  /** 已學會但未啟用的外功（優先傷害型），供「啟用外功」目標使用 */
+  unequippedExternalSkill: { skillId: string; name: string; category: string } | undefined
   /** 所有可替換裝備候選，依價值由高到低排序 */
   equipmentCandidates: EquipmentCandidate[]
   /** 到最近巢穴的距離，無巢穴 = Infinity */
@@ -162,6 +165,8 @@ export interface FuzzyInputs {
   nearestNestId: string
   /** 視野範圍內的生物 id 陣列（近到遠排序） */
   visibleCreatureIds: string[]
+  /** 場上存活生物總數（含視野外）；越多代表囤怪壓力越大，應優先清怪避免被圍攻 */
+  totalCreatureCount: number
   /** 所有視野內生物的攻擊價值候選（高到低排序） */
   combatCandidates: CombatCandidate[]
   /** 建議裝備的內功（有更強的未裝備內功），無則 undefined */
@@ -196,6 +201,10 @@ export interface FuzzyInputs {
   needsLeveling: boolean
   /** 可在商店購買的回血道具（有商店 + 有錢 + 未買過） */
   buyableHealItem: { itemId: string; name: string; price: number } | undefined
+  /** 值得花錢買的實用道具（永久屬性丹優先，其次回血）+ 可達商店基地 */
+  buyableUsefulItem: { itemId: string; name: string; price: number; effect: string } | undefined
+  /** 值得在商店購買的裝備（能改善配裝 + 買得起）+ 可達商店基地 */
+  buyableEquipment: { baseId: string; equipmentId: string; name: string; price: number; slot: string } | undefined
   /** 為最近巢穴準備的可購買元素爆發道具 */
   buyableNestBurstItem: { itemId: string; name: string; price: number; damage: number } | undefined
   /** 可建造的防禦設施（材料夠 + rank 夠），取最近據點 */
@@ -210,6 +219,8 @@ export interface FuzzyInputs {
   isAdjacentToBase: boolean
   /** 是否有可擊殺的生物（相鄰 + 扛得住 + 體力夠） */
   killableCreature: boolean
+  /** 是否有可行「變強途徑」（可學招/練功/買裝/升內功/分配屬性）；打不死時據此決定是否放棄攻擊轉向經營 */
+  hasGrowthPath: boolean
   /** 各目標可行性資料 */
   feasibility: FeasibilityData
 }
@@ -429,6 +440,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
 
   // 戰鬥相關：視野內生物（近到遠）
   const visibleCreatureIds = visibleCreatures.map((c) => c.creature.id)
+  const totalCreatureCount = state.creatures.filter((c) => c.health > 0).length
   const distToNearestCreature = visibleCreatures.length > 0
     ? manhattan(player.position, visibleCreatures[0].creature.position)
     : Infinity
@@ -454,6 +466,10 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
   // 裝備相關：找出值得裝備的裝備
   const equipmentCandidates = findEquipmentCandidates(player, personality)
   const equipableEquipment = equipmentCandidates[0]
+  // 值得在商店購買的裝備（能改善配裝且買得起）
+  const buyableEquipment = findBuyableEquipment(state, player)
+  // 已學會但未啟用的外功（供「啟用外功」目標）
+  const unequippedExternalSkill = findUnequippedExternalSkill(player)
 
   // 巢穴相關：最近巢穴
   const nests = state.creatureNests.filter((n) => n.health > 0)
@@ -469,24 +485,30 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
   const innerPowerRatio = player.maxInnerPower > 0 ? player.innerPower / player.maxInnerPower : 0
   const currentInnerSkill = allInnerSkillCatalog.find((s) => s.id === player.innerSkillId)
   const hasDamageInnerSkill = currentInnerSkill != null && currentInnerSkill.calculateDamage != null
+  // 玩家一回合可用的傷害手段總和：內功普通攻擊 + 所有「已裝備、目標為敵人、非功能型、內力足夠」的傷害外功。
+  const innerAttackDamage = currentInnerSkill
+    ? getSkillDamage(effectiveAttributes, currentInnerSkill, getSkillProgression(player, currentInnerSkill.id).level)
+    : 0
+  const equippedDamageExternalSkills = (player.equippedExternalSkillIds ?? [])
+    .map((skillId) => getExternalSkill(skillId))
+    .filter((skill) =>
+      skill.target === 'target'
+      && !skill.functionalEffect
+      && (!skill.innerPowerCost || player.innerPower >= getSkillInnerPowerCost(skill.innerPowerCost, getSkillProgression(player, skill.id).level)),
+    )
+  const externalTurnDamage = equippedDamageExternalSkills.reduce(
+    (total, skill) => total + getSkillDamage(effectiveAttributes, skill, getSkillProgression(player, skill.id).level),
+    0,
+  )
+  const maxTurnDamage = innerAttackDamage + externalTurnDamage
   const nearestVisibleCreature = visibleCreatures[0]?.creature
-  const combatDamageRatio = currentInnerSkill && nearestVisibleCreature
-    ? Math.min(1, getSkillDamage(
-      effectiveAttributes,
-      currentInnerSkill,
-      getSkillProgression(player, currentInnerSkill.id).level,
-    ) / Math.max(1, nearestVisibleCreature.maxHealth))
+  const combatDamageRatio = nearestVisibleCreature
+    ? Math.min(1, maxTurnDamage / Math.max(1, nearestVisibleCreature.maxHealth))
     : 0
   const combatCandidates: CombatCandidate[] = visibleCreatures
     .map(({ creature }) => {
       const distance = manhattan(player.position, creature.position)
-      const damageRatio = currentInnerSkill
-        ? Math.min(1, getSkillDamage(
-          effectiveAttributes,
-          currentInnerSkill,
-          getSkillProgression(player, currentInnerSkill.id).level,
-        ) / Math.max(1, creature.maxHealth))
-        : 0
+      const damageRatio = Math.min(1, maxTurnDamage / Math.max(1, creature.maxHealth))
       const hitsAgainstCreature = creature.health / Math.max(1, Math.floor(creature.maxHealth * 0.3))
       const evaluation = evaluateCombatCandidateValue({
         distance,
@@ -540,6 +562,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
 
   // 商店買道具：附近有道具商店 + 有錢買回血道具
   const buyableHealItem = findBuyableHealItem(player, nearestBase, state)
+  const buyableUsefulItem = findBuyableUsefulItem(player, nearestBase)
   const buyableNestBurstItem = findBuyableNestBurstItem(player, nearestBase, nearestNest, state)
 
   // 防禦建設：找可建造的防禦設施
@@ -551,6 +574,16 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
 
   // 可擊殺：怪在相鄰格 + 扛得住 + 體力夠
   const killableCreature = distToNearestCreature === 1 && hitsSurvivable >= 1 && player.stamina > 0
+
+  // 可行變強途徑：能學招/練功/買裝/升內功/分配屬性。打不死時若有途徑應優先變強而非空轉或硬打。
+  const hasGrowthPath = Boolean(
+    learnableSkillAtHall
+    || learnableSkillAtGate
+    || practiceableSkillAtGate
+    || equipableEquipment
+    || innerSkillCandidates.length > 0
+    || availableAttributePoints > 0,
+  )
 
   // ── feasibility ────────────────────────────────────────────────
 
@@ -622,9 +655,11 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     bestItemToUse,
     equipableEquipment,
     equipmentCandidates,
+    unequippedExternalSkill,
     distToNearestNest,
     nearestNestId: nearestNest?.id ?? '',
     visibleCreatureIds,
+    totalCreatureCount,
     combatCandidates,
     betterInnerSkill: bestInnerSkill,
     innerSkillCandidates,
@@ -642,6 +677,8 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     expectedLevel,
     needsLeveling,
     buyableHealItem,
+    buyableUsefulItem,
+    buyableEquipment,
     buyableNestBurstItem,
     buildableDefenseStructure,
     defenseTowerCount,
@@ -649,6 +686,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState, person
     threatCountNearBase,
     isAdjacentToBase,
     killableCreature,
+    hasGrowthPath,
     feasibility: {
       learnGateCost,
       canAffordGateLearn,
@@ -734,8 +772,14 @@ function findEquipmentCandidates(player: PlayerState, personality?: AiPersonalit
       if (candidate.instanceId === currentInstance?.instanceId || candidate.durability <= 0) continue
       const def = getDef(candidate.equipmentId)
       if (!def || def.slot !== slot) continue
-      const attributeGain = Object.entries(def.modifiers).reduce((total, [attribute, amount]) =>
-        total + (amount ?? 0) - (currentDef?.modifiers[attribute as keyof typeof def.modifiers] ?? 0), 0)
+      const modifierKeys = new Set([
+        ...Object.keys(def.modifiers),
+        ...Object.keys(currentDef?.modifiers ?? {}),
+      ])
+      const attributeGain = [...modifierKeys].reduce((total, attribute) =>
+        total
+        + (def.modifiers[attribute as keyof typeof def.modifiers] ?? 0)
+        - (currentDef?.modifiers[attribute as keyof typeof def.modifiers] ?? 0), 0)
       if (currentInstance && !replacesBroken && attributeGain <= 0) continue
       const evaluation = evaluateEquipmentCandidateValue({
         attributeGain,
@@ -756,6 +800,86 @@ function findEquipmentCandidates(player: PlayerState, personality?: AiPersonalit
   }
 
   return candidates.sort((first, second) => second.value - first.value)
+}
+
+/**
+ * 找到「已學會但未啟用」的外功：優先傷害型（target='target' 可打怪），
+ * 其次靈氣型。供「啟用外功」目標使用，讓學到的外功真正派上用場。
+ */
+function findUnequippedExternalSkill(
+  player: PlayerState,
+): { skillId: string; name: string; category: string } | undefined {
+  const learned = player.externalSkillIds ?? []
+  const equipped = new Set(player.equippedExternalSkillIds ?? [])
+  const unequipped = learned.filter((id) => !equipped.has(id))
+  if (unequipped.length === 0) return undefined
+
+  const rank = (skill: ReturnType<typeof getExternalSkill>): number => {
+    if (!skill) return 0
+    if (skill.category === 'damage' && skill.target === 'target') return 3
+    if (skill.category === 'damage') return 2
+    if (skill.category === 'aura') return 1
+    return 0
+  }
+
+  const best = unequipped
+    .map((id) => getExternalSkill(id))
+    .filter((skill): skill is NonNullable<typeof skill> => Boolean(skill))
+    .sort((a, b) => rank(b) - rank(a))[0]
+  return best ? { skillId: best.id, name: best.name, category: best.category ?? '' } : undefined
+}
+
+/**
+ * 找到「值得買的裝備」：**武器/防具/配件三槽各補一件即可**。
+ *
+ * 持有邏輯：「有就停」——某一槽若已持有（已穿戴或背包有）任何裝備，
+ * 就不再花錢買該槽的更強裝備（更強裝備靠道具點/掉落取得，省下金錢）。
+ * 只有「完全空槽」時，才花錢買該槽的第一件。
+ */
+function findBuyableEquipment(
+  state: GameState,
+  player: PlayerState,
+): { baseId: string; equipmentId: string; name: string; price: number; slot: string } | undefined {
+  const baseId = getShopBaseId(state, player.id)
+  if (!baseId) return undefined
+  const base = state.bases.find((candidate) => candidate.id === baseId)
+  if (!base) return undefined
+  const money = player.money ?? 0
+  const loadout = player.equipmentLoadout
+  const inventory = player.equipmentInventory ?? []
+
+  const getDef = (equipmentId: string) => equipmentCatalog.find((e) => e.id === equipmentId)
+  const slotKeys: Array<{ slot: string; key: 'weaponInstanceId' | 'armorInstanceId' | 'accessoryInstanceId' }> = [
+    { slot: 'weapon', key: 'weaponInstanceId' },
+    { slot: 'armor', key: 'armorInstanceId' },
+    { slot: 'accessory', key: 'accessoryInstanceId' },
+  ]
+
+  // 該槽是否「已有任何裝備」（已穿戴或背包有）→ 有就停，不再買。
+  const slotHasEquipment = (slot: string): boolean => {
+    const equippedInstanceId = loadout?.[slotKeys.find((s) => s.slot === slot)?.key as keyof typeof loadout]
+    if (equippedInstanceId) return true
+    return inventory.some((inst) => {
+      const def = getDef(inst.equipmentId)
+      return def?.slot === slot && inst.durability > 0
+    })
+  }
+
+  let best: { baseId: string; equipmentId: string; name: string; price: number; slot: string } | undefined
+  // 先優先「完全空槽」的槽位（武器 > 防具 > 配件），買該槽最便宜的一件
+  for (const { slot } of slotKeys) {
+    if (slotHasEquipment(slot)) continue
+    const candidate = equipmentCatalog
+      .filter((equipment) => equipment.slot === slot && equipment.buyPrice > 0 && money >= equipment.buyPrice)
+      .sort((a, b) => a.buyPrice - b.buyPrice)[0]
+    if (!candidate) continue
+    const validation = canBuyEquipment(state, player.id, candidate.id)
+    if (!validation.ok) continue
+    if (best) continue // 一次只補一個空槽，依 slotKeys 優先序（武器優先）
+    best = { baseId, equipmentId: candidate.id, name: candidate.name, price: candidate.buyPrice, slot }
+  }
+
+  return best
 }
 
 function findInnerSkillCandidates(
@@ -815,15 +939,29 @@ function findLearnableSkillAtGate(
 ): { gateId: string; skillType: 'inner' | 'external'; skillId: string; name: string; position: Position } | undefined {
   if (!gate) return undefined
   const skills = getSectGateSkills(gate.schoolId)
-  const all = [...skills.inner, ...skills.damage, ...skills.aura]
-  const unlearned = all.find((s) => {
-    if ('insightRequirement' in s) {
-      return !player.innerSkillIds.includes(s.id) && (player.attributes?.insight ?? 0) >= s.insightRequirement
+  // 已在門派學過任一內功（排除初始吐納功）→ 有基本戰力，之後優先補外功。
+  const gateInnerIds = new Set(skills.inner.map((s) => s.id))
+  const hasLearnedGateInner = player.innerSkillIds.some((id) => gateInnerIds.has(id))
+  const unlearnedDamage = skills.damage.find((s) => !player.externalSkillIds.includes(s.id))
+  const unlearnedAura = skills.aura.find((s) => !player.externalSkillIds.includes(s.id))
+  const unlearnedInner = skills.inner.find((s) => !player.innerSkillIds.includes(s.id) && (player.attributes?.insight ?? 0) >= s.insightRequirement)
+
+  // 已學過門派內功後，優先補齊傷害外功與靈氣型外功，而非繼續堆疊內功。
+  if (hasLearnedGateInner) {
+    const damageCandidate = unlearnedDamage ?? unlearnedAura
+    if (damageCandidate) {
+      return { gateId: gate.id, skillType: 'external', skillId: damageCandidate.id, name: damageCandidate.name, position: gate.position }
     }
-    return !player.externalSkillIds.includes(s.id)
-  })
-  if (!unlearned) return undefined
-  return { gateId: gate.id, skillType: 'insightRequirement' in unlearned ? 'inner' : 'external', skillId: unlearned.id, name: unlearned.name, position: gate.position }
+  }
+
+  if (unlearnedInner) {
+    return { gateId: gate.id, skillType: 'inner', skillId: unlearnedInner.id, name: unlearnedInner.name, position: gate.position }
+  }
+  const remainingExternal = unlearnedDamage ?? unlearnedAura
+  if (remainingExternal) {
+    return { gateId: gate.id, skillType: 'external', skillId: remainingExternal.id, name: remainingExternal.name, position: gate.position }
+  }
+  return undefined
 }
 
 function findPracticeableSkillAtGate(
@@ -859,6 +997,60 @@ function findBuyableHealItem(
   if (affordable.length === 0) return undefined
   const best = affordable[0]
   return { itemId: best.id, name: best.name, price: best.buyPrice }
+}
+
+/**
+ * 找到「值得花錢買」的實用道具：優先確保生存，再談變強。
+ *
+ * 生存優先（第一層）：
+ * - 確保身上「回復氣血 / 回復內力 / 回復體力」三類道具各至少 1 個。
+ *   AI 需先有續航力，才不會在打鬥/練功途中資源枯竭暴斃。
+ *   （優先順序：回血 > 回內力 > 回體力，依生存關鍵程度。）
+ *
+ * 變強（第二層）：三類生存道具都有了，才買永久屬性丹。
+ */
+function findBuyableUsefulItem(
+  player: PlayerState,
+  base: BaseState | undefined,
+): { itemId: string; name: string; price: number; effect: string } | undefined {
+  if (!base) return undefined
+  if (!hasBuilding(base, 'item-shop')) return undefined
+  const money = player.money ?? 0
+  // 統計身上各效果道具的持有總量
+  const ownedCountByEffect = new Map<string, number>()
+  for (const entry of player.inventory ?? []) {
+    if (entry.quantity <= 0) continue
+    const def = itemCatalog.find((i) => i.id === entry.itemId)
+    if (def?.effect) {
+      ownedCountByEffect.set(def.effect, (ownedCountByEffect.get(def.effect) ?? 0) + entry.quantity)
+    }
+  }
+  const hasAtLeastOne = (effect: string): boolean => (ownedCountByEffect.get(effect) ?? 0) > 0
+
+  // 1. 正在用的生存效果：身上缺哪類就補哪類（回復效果類）
+  const survivalEffects: Array<{ effect: string; label: string }> = [
+    { effect: 'health', label: '回血' },
+    { effect: 'inner-power', label: '回內力' },
+    { effect: 'stamina', label: '回體力' },
+  ]
+  for (const { effect } of survivalEffects) {
+    if (!hasAtLeastOne(effect)) {
+      const recovery = itemCatalog
+        .filter((i) => i.effect === effect && i.buyPrice > 0 && i.buyPrice <= money)
+        .sort((a, b) => a.buyPrice - b.buyPrice)[0]
+      if (recovery) return { itemId: recovery.id, name: recovery.name, price: recovery.buyPrice, effect: recovery.effect }
+    }
+  }
+
+  // 2. 三類生存道具都齊 → 才買永久屬性丹（真正的變強投資）
+  const attrPill = itemCatalog
+    .filter((i) => i.effect === 'attribute-up' && i.buyPrice > 0 && i.buyPrice <= money)
+    .sort((a, b) => a.buyPrice - b.buyPrice)[0]
+  if (attrPill) {
+    return { itemId: attrPill.id, name: attrPill.name, price: attrPill.buyPrice, effect: 'attribute-up' }
+  }
+
+  return undefined
 }
 
 function findBuyableNestBurstItem(

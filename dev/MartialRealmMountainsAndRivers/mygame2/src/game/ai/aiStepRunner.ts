@@ -10,6 +10,7 @@ import { getPlayerAiEmergency } from './policy/aiPolicyRegistry'
 import { pickNextBuildCandidate, pickUpgradeCandidate } from './construction/constructionAi'
 import { computeFuzzyInputs } from './fuzzy/fuzzyInputs'
 import { evaluateAllGoals, type GoalName } from './fuzzy/goals'
+import { applyMidTermGoalInputs, overrideScoreForMidTermGoal, abortMidTermGoal, applyKillGoalInputs, lockTravelGoal, clearTravelGoal, invalidateTravelGoalIfUnavailable, isTravelGoalName, getMidTermGoalSummary } from './fuzzy/midTermGoal'
 import { MIN_THRESHOLD, rankGoals } from './fuzzy/decision'
 import { getAiGoalConstraints } from './fuzzy/personality'
 import { ACTION_STAMINA_COSTS, canPlayerPerformAction } from '../rules/actionCostRules'
@@ -29,11 +30,15 @@ const MAX_LOOPS = 50
 
 /** 移動目標的決策衝量：避免相近分數的目標在相鄰 step 間來回切換。 */
 const AI_MOVEMENT_MOMENTUM_MARGIN = 0.2
+/** 移動目標的強制維持回合數：鎖定目標後至少維持 N 步才允許切換（暴力解法，避免目標頻繁切換）。 */
+const MIN_COMMITMENT_TURNS = 1
 const movementCommitments = new Map<string, {
   orderId: string
   goal: string
   targetKey: string
   score: number
+  /** 剩餘強制維持回合數；>0 時即使新目標分數更高也維持原目標。 */
+  remainingTurns: number
 }>()
 
 /** 圖搜索／模糊策略評估用的 stub combat deps（不實際結算掉落/升級）。 */
@@ -62,7 +67,14 @@ export interface AiStepRunnerDeps {
 }
 
 function getGoalTargetKey(result: { target?: unknown }): string {
-  return result.target ? JSON.stringify(result.target) : ''
+  if (!result.target) return ''
+  const target = result.target as { kind?: string; targetId?: string; targetType?: string; position?: unknown }
+  // 攻擊目標以 targetId 為穩定鍵：怪物在 step 間可能移動（position 變化），
+  // 若含 position，承諾會因怪物移動而失配、無法集火同一個目標。
+  if (target.kind === 'attack' && target.targetId) {
+    return `attack:${target.targetType}:${target.targetId}`
+  }
+  return JSON.stringify(result.target)
 }
 
 function isMovementAction(action: AiAction): boolean {
@@ -90,34 +102,53 @@ function selectFuzzyCandidateWithMomentum(
   if (!commitment || commitment.orderId !== orderId) return normalCandidate
   if (isHighThreat(goalResults)) {
     movementCommitments.delete(playerId)
+    abortMidTermGoal(playerId)
     return normalCandidate
   }
 
+  // 尋找「承諾目標」：移動承諾匹配有 move 的候選；攻擊承諾匹配同樣「打同一個目標」的 engageCombat。
   const committed = eligible.find((candidate) =>
     candidate.goal === commitment.goal && getGoalTargetKey(candidate.result) === commitment.targetKey,
+  ) ?? rankedGoals.find((candidate) =>
+    candidate.result.actions?.some((action) => action.type === 'attack')
+      && getGoalTargetKey(candidate.result) === commitment.targetKey,
   )
   if (!committed) {
     movementCommitments.delete(playerId)
     return normalCandidate
   }
-  if (!normalCandidate || normalCandidate.goal === committed.goal && getGoalTargetKey(normalCandidate.result) === commitment.targetKey) return committed
+  if (!normalCandidate || normalCandidate.goal === committed.goal && getGoalTargetKey(normalCandidate.result) === commitment.targetKey) {
+    const c = committed
+    movementCommitments.set(playerId, { ...commitment, score: c.result.score, remainingTurns: Math.max(0, commitment.remainingTurns - 1) })
+    return c
+  }
 
-  // 新目標必須顯著更好，否則沿用原路線，避免一步向左、一步向右。
+  // 強制維持期內：即使新目標分數更高也維持原目標，避免目標頻繁切換。
+  // 原目標仍可執行（committed 存在）時，強制維持直到 remainingTurns 歸零。
+  if (commitment.remainingTurns > 0) {
+    movementCommitments.set(playerId, { ...commitment, score: committed.result.score, remainingTurns: commitment.remainingTurns - 1 })
+    return committed
+  }
+
+  // 新目標必須顯著更好，否則沿用原路線/原攻擊目標，避免一步向左、一步向右。
   if (normalCandidate.result.score >= committed.result.score + AI_MOVEMENT_MOMENTUM_MARGIN) {
     movementCommitments.delete(playerId)
     return normalCandidate
   }
+  movementCommitments.set(playerId, { ...commitment, score: committed.result.score, remainingTurns: 0 })
   return committed
 }
 
 function rememberMovementCommitment(playerId: string, orderId: string, candidate: { goal: string; result: { score: number; target?: unknown; actions?: AiAction[] } }): void {
   const action = candidate.result.actions?.[0]
-  if (!action || !isMovementAction(action)) return
+  // 承諾「移動到目標」或「攻擊既有目標」，讓玩家會持續推進/持續打同一目標，而不是打一下就轉移。
+  if (!action || (action.type !== 'move' && action.type !== 'transport' && action.type !== 'attack')) return
   movementCommitments.set(playerId, {
     orderId,
     goal: candidate.goal,
     targetKey: getGoalTargetKey(candidate.result),
     score: candidate.result.score,
+    remainingTurns: MIN_COMMITMENT_TURNS,
   })
 }
 
@@ -224,6 +255,8 @@ function logAiDecision(
       level: playerState?.level,
       turnEnded: playerState?.turnEnded,
     },
+    midTerm: getMidTermGoalSummary(player.id) ?? null,
+    momentum: movementCommitments.get(player.id) ?? null,
     perception: {
       staminaRatio: Number(inputs.staminaRatio.toFixed(3)),
       healthRatio: Number(inputs.healthRatio.toFixed(3)),
@@ -743,6 +776,30 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
       guardianConstraints,
     )
 
+    // 2.5 中期目標：決定是否鎖定「擊殺獵物 / 存錢打工」，並對目標分數覆寫（優先執行）。
+    applyMidTermGoalInputs(
+      currentPlayer.id,
+      currentPlayer.money ?? 0,
+      inputs.staminaRatio,
+      inputs.hasMissionBoard,
+      inputs.feasibility.missionBaseId,
+    )
+    applyKillGoalInputs(
+      currentPlayer.id,
+      inputs.combatCandidates.map((candidate) => ({
+        targetId: candidate.creatureId,
+        targetType: 'creature' as const,
+        distance: candidate.distance,
+        damageRatio: candidate.damageRatio,
+        canSurvive: inputs.hitsSurvivable >= 1,
+      })),
+      inputs.staminaRatio,
+    )
+    invalidateTravelGoalIfUnavailable(currentPlayer.id, goalResults)
+    for (const goalName of Object.keys(goalResults) as GoalName[]) {
+      goalResults[goalName] = overrideScoreForMidTermGoal(currentPlayer.id, goalName, goalResults[goalName])
+    }
+
     // 4. Select（result.actions 已由 evaluate 保證合法）
     const rankedGoals = rankGoals(goalResults)
     let actions: AiAction[] = []
@@ -777,6 +834,10 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
       goalFound = actions.length > 0
       if (goalFound) {
         rememberMovementCommitment(playerId, order.id, selectedCandidate)
+        // 移動類目標：鎖定中期目標，避免繞圈（學招/任務/探索/清障/收集/防禦建設）
+        if (isTravelGoalName(selectedCandidate.goal)) {
+          lockTravelGoal(playerId, selectedCandidate.goal, getGoalTargetKey(selectedCandidate.result))
+        }
         const threshold = getAiGoalConstraints(order.personality).goalThresholds?.[selectedCandidate.goal] ?? MIN_THRESHOLD
         logAiDecision(deps.getState(), currentPlayer, order, inputs, goalResults, selectedCandidate.goal, threshold, actions)
       }
@@ -791,6 +852,7 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
         .map(([goal, result]) => `${goal}=${result.score.toFixed(2)}:${result.actions?.map((action) => action.type).join('|') || 'none'}`)
         .join(', ')
       movementCommitments.delete(playerId)
+      clearTravelGoal(playerId)
       return {
         endTurnReason: highest
             ? `模糊策略：${highest.goal} 分數 ${highest.result.score.toFixed(2)}，但目前沒有可執行 action，結束回合。候選診斷：${diagnostics || '所有 goal 分數與 action 都為 0'}`

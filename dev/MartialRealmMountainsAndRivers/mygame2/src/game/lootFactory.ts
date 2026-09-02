@@ -12,6 +12,7 @@ import { createEquipmentInstance, getEquipment, getEquipmentInventory } from './
 import { addInventoryItem } from './actions/shopActions'
 import { terrainItemPointLootCatalog } from './catalogs/terrainLootCatalog'
 import type { TerrainType } from './types'
+import { defaultRandomSource } from './rules/randomRules'
 
 function createFallbackItem(): LootResult {
   const item = itemCatalog[0]
@@ -83,7 +84,7 @@ export function createLootForPlayer(player: PlayerState, creatureLevel = 1): Loo
   const totalWeight = availableLoot.reduce((total, loot) => total + loot.weight, 0)
   if (totalWeight <= 0) return undefined
 
-  let roll = Math.random() * totalWeight
+  let roll = defaultRandomSource() * totalWeight
   const loot = availableLoot.find((candidate) => {
     roll -= candidate.weight
     return roll < 0
@@ -128,7 +129,7 @@ export function createItemPointLootForPlayer(player: PlayerState, terrain?: Terr
     ]
     : genericLoot
   const totalWeight = availableLoot.reduce((total, loot) => total + loot.weight, 0)
-  let roll = Math.random() * totalWeight
+  let roll = defaultRandomSource() * totalWeight
   const loot = availableLoot.find((candidate) => {
     roll -= candidate.weight
     return roll < 0
@@ -176,6 +177,6 @@ export function createLootFromId(player: PlayerState, lootId: string): LootResul
 export function getLearnableSkill(player: PlayerState): LearnedSkillResult | undefined {
   const learned = new Set(player.externalSkillIds)
   const unlearned = jianghuExternalSkills.filter((skill) => !learned.has(skill.id))
-  const picked = unlearned[Math.floor(Math.random() * unlearned.length)]
+  const picked = unlearned[Math.floor(defaultRandomSource() * unlearned.length)]
   return picked ? { type: 'external', skill: picked } : undefined
 }

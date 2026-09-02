@@ -42,6 +42,13 @@ export type AiAction =
       reason: string
     }
   | {
+      type: 'use-external-skill'
+      actor: AiActorRef
+      target: AiTargetRef
+      skillId: string
+      reason: string
+    }
+  | {
       type: 'collect'
       actor: AiActorRef
       target: AiTargetRef
@@ -103,6 +110,12 @@ export type AiAction =
       reason: string
     }
   | {
+      type: 'equip-external-skill'
+      actor: AiActorRef
+      skillId: string
+      reason: string
+    }
+  | {
       type: 'learn-skill'
       actor: AiActorRef
       baseId?: string
@@ -138,6 +151,13 @@ export type AiAction =
       actor: AiActorRef
       baseId: string
       itemId: string
+      reason: string
+    }
+  | {
+      type: 'buy-equipment'
+      actor: AiActorRef
+      baseId: string
+      equipmentId: string
       reason: string
     }
 

@@ -95,6 +95,7 @@ export function getAiActionStaminaCost(state: GameState, action: AiAction): numb
     case 'upgrade':       return ACTION_STAMINA_COSTS.upgrade
     case 'defense-build': return ACTION_STAMINA_COSTS.defenseBuild
     case 'buy-item':      return ACTION_STAMINA_COSTS.shop
+    case 'buy-equipment': return ACTION_STAMINA_COSTS.shop
     case 'use-facility':
       switch (action.facilityType) {
         case 'heal':     return ACTION_STAMINA_COSTS.heal
@@ -107,8 +108,10 @@ export function getAiActionStaminaCost(state: GameState, action: AiAction): numb
     case 'allocate-attribute': return 0
     case 'use-item':           return 0
     case 'use-element-burst':  return 0
+    case 'use-external-skill': return ACTION_STAMINA_COSTS.externalSkill
     case 'equip':              return 0
     case 'equip-inner-skill':  return 0
+    case 'equip-external-skill': return 0
     case 'learn-skill':        return 0
     case 'practice-skill':     return 0
   }

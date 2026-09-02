@@ -50,6 +50,7 @@ const ACTION_TYPE_LABELS: Record<AiAction['type'], string> = {
   move: '移動',
   transport: '驛站傳送',
   attack: '攻擊',
+  'use-external-skill': '施放外功',
   collect: '採集',
   build: '建設',
   upgrade: '升級',
@@ -60,11 +61,13 @@ const ACTION_TYPE_LABELS: Record<AiAction['type'], string> = {
   'use-element-burst': '使用元素爆發',
   equip: '裝備',
   'equip-inner-skill': '裝備功法',
+  'equip-external-skill': '啟用外功',
   'learn-skill': '學習功法',
   'practice-skill': '練功',
   'use-facility': '使用設施',
   'defense-build': '建造防禦',
   'buy-item': '購買道具',
+  'buy-equipment': '購買裝備',
 }
 
 function formatActionDetail(action: AiAction): string {

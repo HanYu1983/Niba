@@ -11,7 +11,7 @@ import { validateAiAction } from '../validation/validateAiAction'
 import { executeAiAction, type ExecuteAiActionDependencies } from '../execution/executeAiAction'
 import { canTransportPlayer } from '../../rules/transportRules'
 import { elementBurstItems } from '../../catalogs/itemCatalog'
-import { getSchoolElement, getElementDamageMultiplier } from '../../rules/skillRules'
+import { getSchoolElement, getElementDamageMultiplier, getSkillInnerPowerCost, getSkillProgression } from '../../rules/skillRules'
 import { getAiActionStaminaCost } from '../../rules/actionCostRules'
 
 const previousMovePositions = new Map<string, Position>()
@@ -65,7 +65,7 @@ function buildCostMapFrom(
  * 從玩家的相鄰可達格中，找出沿最短路徑最接近目標的格子。
  * 使用 Dijkstra 從目標反向建最短路徑樹，取代 manhattan 距離。
  */
-function findClosestReachablePosition(
+export function findClosestReachablePosition(
   state: GameState,
   player: PlayerState,
   targetPosition: { row: number; column: number },
@@ -281,8 +281,14 @@ export function buildActionSequence(
       return buildAttackNestActions(actor, result, state, player)
     case 'prepareNest':
       return buildPrepareNestActions(actor, result, state, player)
+    case 'buyConsumable':
+      return buildBuyItemActions(actor, result, state, player)
+    case 'buyEquipment':
+      return buildBuyEquipmentActions(actor, result, state, player)
     case 'equipInnerSkill':
       return buildEquipInnerSkillActions(actor, result)
+    case 'equipExternalSkill':
+      return buildEquipExternalSkillActions(actor, result)
     case 'useInnerSkillAttack':
       return buildUseInnerSkillAttackActions(actor, result, state, player)
     case 'learnMartialSkill':
@@ -296,6 +302,38 @@ export function buildActionSequence(
     case 'buildDefense':
       return buildDefenseActions(actor, result, state, player)
   }
+}
+
+function buildBuyItemActions(
+  actor: AiActorRef,
+  result: GoalResult,
+  state: GameState,
+  player: PlayerState,
+): AiAction[] {
+  const target = result.target
+  if (!target || target.kind !== 'buy-item') return [{ type: 'hold', actor, reason: '購買道具：無購買目標' }]
+  const base = state.bases.find((candidate) => candidate.id === target.baseId)
+  if (!base) return [{ type: 'hold', actor, reason: '購買道具：據點不存在' }]
+  if (isSameOrAdjacent(player.position, base.position)) {
+    return [{ type: 'buy-item', actor, baseId: base.id, itemId: target.itemId, reason: `購買道具：購買 ${result.context?.itemName ?? target.itemId}` }]
+  }
+  return [{ type: 'move', actor, destination: findClosestReachablePosition(state, player, base.position), reason: `購買道具：前往 ${base.name} 購買` }]
+}
+
+function buildBuyEquipmentActions(
+  actor: AiActorRef,
+  result: GoalResult,
+  state: GameState,
+  player: PlayerState,
+): AiAction[] {
+  const target = result.target
+  if (!target || target.kind !== 'buy-equipment') return [{ type: 'hold', actor, reason: '購買裝備：無購買目標' }]
+  const base = state.bases.find((candidate) => candidate.id === target.baseId)
+  if (!base) return [{ type: 'hold', actor, reason: '購買裝備：據點不存在' }]
+  if (isSameOrAdjacent(player.position, base.position)) {
+    return [{ type: 'buy-equipment', actor, baseId: base.id, equipmentId: target.equipmentId, reason: `購買裝備：購買 ${result.context?.equipmentName ?? target.equipmentId}` }]
+  }
+  return [{ type: 'move', actor, destination: findClosestReachablePosition(state, player, base.position), reason: `購買裝備：前往 ${base.name} 購買` }]
 }
 
 function buildPrepareNestActions(
@@ -345,6 +383,15 @@ function buildRetreatActions(
     const healTarget = result.target
     const base = state.bases.find((b) => b.id === healTarget.baseId)
     if (!base) return [{ type: 'hold', actor, reason: '保命：據點不存在' }]
+    if (isSameOrAdjacent(player.position, base.position) && (player.position.row !== base.position.row || player.position.column !== base.position.column)) {
+      return [{
+        type: 'use-facility',
+        actor,
+        baseId: base.id,
+        facilityType: 'heal',
+        reason: `保命：使用醫療室就醫（血量比=${result.context?.healthRatio ?? '?'}）`,
+      }]
+    }
     const moveDest = findClosestReachablePosition(state, player, base.position)
     if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
       // 已在據點旁 → 使用醫療室
@@ -705,6 +752,16 @@ function buildEngageCombatActions(
 
   // 相鄰 → 直接攻擊
   if (dist <= 1) {
+    const externalSkill = findUsableDamageSkill(player)
+    if (externalSkill) {
+      return [{
+        type: 'use-external-skill',
+        actor,
+        target: { id: creature.id, kind: 'creature', position: targetPosition },
+        skillId: externalSkill.id,
+        reason: `交戰：施放外功 ${externalSkill.name}`,
+      }]
+    }
     return [{
       type: 'attack',
       actor,
@@ -713,22 +770,28 @@ function buildEngageCombatActions(
     }]
   }
 
-  // 不相鄰 → 先移動再攻擊
+  // 不相鄰 → 先移動靠近（只產生 move，不帶 attack）。
+  // 因為 runAiStepLoop 一次只執行一個 action，移動後下一個 step 會重新評估；
+  // 若在此帶上 attack，buildValidatedActionSequence 會驗證「移動後立即攻擊」，
+  // 但移動 1 格後玩家通常仍不在攻擊範圍，導致整個序列驗證失敗、回傳空。
   const moveDest = findClosestReachablePosition(state, player, targetPosition)
-  return [
-    {
-      type: 'move',
-      actor,
-      destination: moveDest,
-      reason: `交戰：移動到 ${creature.name} 附近`,
-    },
-    {
-      type: 'attack',
-      actor,
-      target: { id: creature.id, kind: 'creature', position: targetPosition },
-      reason: `交戰：攻擊 ${creature.name}`,
-    },
-  ]
+  return [{
+    type: 'move',
+    actor,
+    destination: moveDest,
+    reason: `交戰：移動到 ${creature.name} 附近`,
+  }]
+}
+
+function findUsableDamageSkill(player: PlayerState): { id: string; name: string } | undefined {
+  const usedThisTurn = new Set(player.externalSkillsUsedThisTurn ?? [])
+  return player.equippedExternalSkillIds
+    .map((skillId) => externalSkillCatalog.find((skill) => skill.id === skillId))
+    .find((skill) => skill
+      && skill.target === 'target'
+      && !skill.functionalEffect
+      && !usedThisTurn.has(skill.id)
+      && player.innerPower >= getSkillInnerPowerCost(skill.innerPowerCost, getSkillProgression(player, skill.id).level))
 }
 
 // ─── allocateAttributes ─────────────────────────────────────────
@@ -900,6 +963,24 @@ function buildEquipInnerSkillActions(
     actor,
     skillId: result.target.skillId,
     reason: `裝備功法：${result.context?.skillName ?? result.target.skillId}`,
+  }]
+}
+
+// ─── equipExternalSkill ─────────────────────────────────────
+
+function buildEquipExternalSkillActions(
+  actor: AiActorRef,
+  result: GoalResult,
+): AiAction[] {
+  if (!result.target || result.target.kind !== 'equip-external-skill') {
+    return [{ type: 'hold', actor, reason: '啟用外功：無可啟用外功' }]
+  }
+
+  return [{
+    type: 'equip-external-skill',
+    actor,
+    skillId: result.target.skillId,
+    reason: `啟用外功：${result.context?.skillName ?? result.target.skillId}`,
   }]
 }
 

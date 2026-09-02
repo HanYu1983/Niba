@@ -135,6 +135,8 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
     }
     case 'equip':
     case 'equip-inner-skill':
+    case 'equip-external-skill':
+    case 'use-external-skill':
       return { valid: true }
     case 'learn-skill': {
       const player = state.players.find((candidate) => candidate.id === action.actor.id)
@@ -162,6 +164,7 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
     case 'use-facility':
     case 'defense-build':
     case 'buy-item':
+    case 'buy-equipment':
       return { valid: true }
   }
 }

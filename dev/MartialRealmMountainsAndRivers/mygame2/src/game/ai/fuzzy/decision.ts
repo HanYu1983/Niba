@@ -11,6 +11,7 @@ const PRIORITY_ORDER: GoalName[] = [
   'selfPreservation',
   'allocateAttributes',
   'equipInnerSkill',
+  'equipExternalSkill',
   'equipEquipment',
   'learnMartialSkill',
   'practiceSkill',
@@ -25,6 +26,8 @@ const PRIORITY_ORDER: GoalName[] = [
   'construction',
   'buildDefense',
   'executeMission',
+  'buyConsumable',
+  'buyEquipment',
   'exploration',
 ]
 

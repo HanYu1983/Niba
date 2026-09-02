@@ -9,14 +9,14 @@ import { collectItemPointAction } from '../../actions/itemActions'
 import { useItemAction as executeItemAction } from '../../actions/itemActions'
 import { allocateAttributePointAction } from '../../rules/playerDerivedRules'
 import { equipEquipmentAction } from '../../rules/equipmentRules'
-import { equipInnerSkillAction } from '../../rules/skillRules'
+import { equipInnerSkillAction, toggleExternalSkillAction } from '../../rules/skillRules'
 import { learnSkillAtMartialHall } from '../../actions/martialHallActions'
 import { learnSkillAtSectGate, practiceSkillAtSectGate } from '../../actions/sectGateActions'
 import { useInfirmary as executeInfirmary, executeMission } from '../../actions/explorationActions'
 import { clearRuin } from '../../actions/ruinActions'
-import { buyItem } from '../../actions/shopActions'
+import { buyItem, buyEquipment } from '../../actions/shopActions'
 import { transportPlayerAction } from '../../actions/transportActions'
-import type { CombatActionDependencies } from '../../actions/combatActions'
+import { executeExternalDamage, type CombatActionDependencies } from '../../actions/combatActions'
 import { resolveExplorationEvent } from '../../actions/explorationActions'
 import { checkEventRequirements, getEventChoices } from '../../events/eventResolver'
 import { computeEventChoiceValue } from '../fuzzy/eventValue'
@@ -92,6 +92,10 @@ export function executeAiAction(
       const result = executeAiAttack(state, action.actor.id, action.target.kind as AttackTargetType, action.target.id, dependencies.combat)
       return { state: result.state, result: result.result }
     }
+    case 'use-external-skill': {
+      const result = executeExternalDamage(state, action.actor.id, action.target.kind as AttackTargetType, action.target.id, action.skillId, dependencies.combat)
+      return { state: result.state, result: result.result }
+    }
     case 'collect': {
       if (action.target.kind === 'item') {
         const result = collectItemPointAction(state, action.actor.id, action.target.id)
@@ -128,6 +132,8 @@ export function executeAiAction(
       return equipEquipmentAction(state, action.actor.id, action.instanceId)
     case 'equip-inner-skill':
       return equipInnerSkillAction(state, action.actor.id, action.skillId)
+    case 'equip-external-skill':
+      return toggleExternalSkillAction(state, action.actor.id, action.skillId)
     case 'learn-skill': {
       if (action.baseId) {
         const result = learnSkillAtMartialHall(state, action.actor.id, action.baseId, action.skillType, action.skillId)
@@ -160,6 +166,10 @@ export function executeAiAction(
     }
     case 'buy-item': {
       const result = buyItem(state, action.actor.id, action.itemId, 1)
+      return { state: result.state, result: result.result }
+    }
+    case 'buy-equipment': {
+      const result = buyEquipment(state, action.actor.id, action.equipmentId)
       return { state: result.state, result: result.result }
     }
     case 'hold':
