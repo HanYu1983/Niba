@@ -4122,7 +4122,7 @@
         },
         "name": "雲霓",
         "isAI": true,
-        "aiPersonality": "cautious",
+        "aiPersonality": "guardian",
         "aiType": "fuzzy",
         "money": 80,
         "innerSkillId": "tuna-gong",

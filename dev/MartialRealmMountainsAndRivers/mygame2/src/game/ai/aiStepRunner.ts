@@ -844,19 +844,10 @@ export function runFuzzyStep(deps: AiStepRunnerDeps, playerId: string): ActionOu
     }
 
     if (!goalFound) {
-      const highest = rankedGoals[0]
-      const diagnostics = Object.entries(goalResults)
-        .filter(([, result]) => result.score > 0 || (result.actions?.length ?? 0) > 0)
-        .sort((first, second) => second[1].score - first[1].score)
-        .slice(0, 4)
-        .map(([goal, result]) => `${goal}=${result.score.toFixed(2)}:${result.actions?.map((action) => action.type).join('|') || 'none'}`)
-        .join(', ')
       movementCommitments.delete(playerId)
       clearTravelGoal(playerId)
       return {
-        endTurnReason: highest
-            ? `模糊策略：${highest.goal} 分數 ${highest.result.score.toFixed(2)}，但目前沒有可執行 action，結束回合。候選診斷：${diagnostics || '所有 goal 分數與 action 都為 0'}`
-            : '模糊策略：沒有可執行 action，結束回合。',
+        endTurnReason: '模糊策略：目前沒有可執行的行動，結束回合。',
       }
     }
     return { actions }
