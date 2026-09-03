@@ -31,6 +31,8 @@ export type ExecuteAiActionDependencies = {
 function resolveAiExplorationEvent(state: GameState, playerId: string): GameState {
   const player = state.players.find((candidate) => candidate.id === playerId)
   if (!player?.isAI) return state
+  // 設定為不觸發互動（canTriggerInteraction === false）的 AI，不解析探索事件。
+  if (player.canTriggerInteraction === false) return state
 
   const event = (state.explorationEvents ?? []).find((candidate) =>
     candidate.status === 'available'

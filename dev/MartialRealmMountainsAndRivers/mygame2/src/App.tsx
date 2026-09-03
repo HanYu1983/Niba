@@ -180,6 +180,8 @@ function App() {
 
   useEffect(() => {
     if (!activePlayer || gameState.creatureTurnInProgress || gameState.blockingModal) return
+    // 設定為不觸發互動（canTriggerInteraction === false）的角色，不自動收集道具點、不彈出探索事件。
+    if (activePlayer.canTriggerInteraction === false) return
     const samePosition = (first: { row: number; column: number }, second: { row: number; column: number }) => first.row === second.row && first.column === second.column
     const itemPoint = gameState.itemPoints.find((point) => samePosition(point.position, activePlayer.position))
     if (itemPoint) {

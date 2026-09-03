@@ -294,6 +294,8 @@ function PlayerInspector({ entity, onUpdate }: { entity: ScenarioEntityPlacement
   const isAI = (data.isAI as boolean | undefined) ?? false
   const aiType = (data.aiType as string | undefined) ?? 'fuzzy'
   const aiPersonality = (data.aiPersonality as string | undefined) ?? 'balanced'
+  /** 是否觸發互動（探索點／道具點／區域觸發等）。預設 true。 */
+  const canTriggerInteraction = (data.canTriggerInteraction as boolean | undefined) ?? true
   const schoolId = (data.schoolId as MartialSchoolId) ?? 'void-spirit'
   const money = (data.money as number) ?? 30
   // 用預設值填補缺少的欄位，避免只調整部分欄位時，未調整欄位剩下 undefined。
@@ -355,6 +357,16 @@ function PlayerInspector({ entity, onUpdate }: { entity: ScenarioEntityPlacement
             options={AI_PERSONALITY_OPTIONS}
             onChange={(value) => onUpdate({ aiPersonality: value })}
           />
+        </Field>
+      )}
+      {isAI && (
+        <Field label="觸發互動">
+          <Checkbox
+            checked={canTriggerInteraction}
+            onChange={(e) => onUpdate({ canTriggerInteraction: e.target.checked })}
+          >
+            此角色會觸發探索／道具／區域互動
+          </Checkbox>
         </Field>
       )}
       </Field>
