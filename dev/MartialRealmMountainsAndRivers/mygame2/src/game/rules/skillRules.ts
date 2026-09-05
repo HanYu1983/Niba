@@ -38,18 +38,18 @@ export function getElementDamageMultiplier(attacker: SchoolElement | undefined, 
   return 1
 }
 
-/** 五行相生：generator 元素是否生成 generated 元素（金→土→水→木→火→金）。太虛流不參與相生。 */
+/** 五行相生：generator 元素是否生成 generated 元素（木→火→土→金→水→木）。太虛流不參與相生。 */
 export function isElementGenerating(
   generator: SchoolElement | undefined,
   generated: SchoolElement | undefined,
 ): boolean {
   if (!generator || !generated || generator === 'none' || generated === 'none') return false
   const generation: Record<Exclude<SchoolElement, 'none'>, Exclude<SchoolElement, 'none'>> = {
-    metal: 'earth',
-    earth: 'water',
-    water: 'wood',
     wood: 'fire',
-    fire: 'metal',
+    fire: 'earth',
+    earth: 'metal',
+    metal: 'water',
+    water: 'wood',
   }
   return generation[generator] === generated
 }

@@ -108,14 +108,14 @@ describe('createDebugGameState', () => {
     expect((state.sectGates ?? []).every((gate) => gate.level === 1 && gate.experience === 0)).toBe(true)
   })
 
-  it('提供可測試三重共振的便利配置（水生木：玩家站水域、內功土生外功水、水克火目標）', () => {
+  it('提供可測試三重共振的便利配置（玩家站水域並配置火系目標）', () => {
     const state = createDebugGameState()
     const player = state.players[0]
     const fireCreature = state.creatures.find((creature) => creature.schoolId === 'scarlet-flame')
     const playerTerrain = state.map.cells.find((cell) => cell.row === player.position.row && cell.column === player.position.column)?.terrain
     const fireTerrain = fireCreature ? state.map.cells.find((cell) => cell.row === fireCreature.position.row && cell.column === fireCreature.position.column)?.terrain : undefined
 
-    // 三重共振組合：內功土(earth-mountain-inner)生外功水(frost-water-external-damage)
+    // Debug 狀態包含完整功法清單，方便手動選擇符合相生循環的內功與外功。
     expect(state.players[0].innerSkillIds).toContain('earth-mountain-inner')
     expect(state.players[0].externalSkillIds).toContain('frost-water-external-damage')
     // 目標為火系生物（外功水克火）

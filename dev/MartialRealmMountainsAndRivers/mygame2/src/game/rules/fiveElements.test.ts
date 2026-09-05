@@ -2,15 +2,15 @@ import { describe, expect, it } from 'vitest'
 import { FIVE_ELEMENTS, FIVE_ELEMENTS_COUNTERS_CYCLE, FIVE_ELEMENT_BY_KEY, type FiveElementMeta } from './fiveElements'
 
 describe('五行展示資料（fiveElements）', () => {
-  it('包含五個非 none 元素，且順序為相生環（金→土→水→木→火→金）', () => {
-    expect(FIVE_ELEMENTS.map((e) => e.key)).toEqual(['metal', 'earth', 'water', 'wood', 'fire'])
+  it('包含五個非 none 元素，且順序為相生環（木→火→土→金→水→木）', () => {
+    expect(FIVE_ELEMENTS.map((e) => e.key)).toEqual(['wood', 'fire', 'earth', 'metal', 'water'])
     // 依序檢查：每個元素「生」下一個元素，最後一個「生」回第一個（金）
     for (let i = 0; i < FIVE_ELEMENTS.length; i++) {
       const current = FIVE_ELEMENTS[i]
       const next = FIVE_ELEMENTS[(i + 1) % FIVE_ELEMENTS.length]
       expect(current.generates).toBe(next.key)
     }
-    expect(FIVE_ELEMENTS[FIVE_ELEMENTS.length - 1].generates).toBe('metal')
+    expect(FIVE_ELEMENTS[FIVE_ELEMENTS.length - 1].generates).toBe('wood')
   })
 
   it('相剋對照正確：金屬克木、木克土、土克水、水克火、火克金', () => {
@@ -52,13 +52,13 @@ describe('五行展示資料（fiveElements）', () => {
   })
 
   it('與 skillRules 的相生/相剋邏輯一致（抽驗）', () => {
-    // 相生：金生土、水生木、木生火
+    // 相生：木生火、火生土、土生金、金生水、水生木
     for (const [generator, generated] of [
-      ['metal', 'earth'],
-      ['earth', 'water'],
-      ['water', 'wood'],
       ['wood', 'fire'],
-      ['fire', 'metal'],
+      ['fire', 'earth'],
+      ['earth', 'metal'],
+      ['metal', 'water'],
+      ['water', 'wood'],
     ] as const) {
       expect(FIVE_ELEMENT_BY_KEY[generator].generates).toBe(generated)
     }
