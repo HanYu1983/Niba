@@ -61,7 +61,7 @@ export function getTerrainResonanceLabel(
 
 /**
  * 三重共振：一次外功攻擊同時滿足「相生連攜（內功生外功）＋天地共鳴＋五行相剋」。
- * 觸發時對目標施加震懾，並播放地圖震動動畫。
+ * 觸發時對目標施加震懾，並使該次攻擊無視目標減傷與回避效果。
  */
 export function isTripleResonance(params: {
   innerElement: SchoolElement | undefined
