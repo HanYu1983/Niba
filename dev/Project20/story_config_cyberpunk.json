@@ -1,0 +1,13 @@
+{
+  "story_title": "逃出霓虹實驗室 (Escape the Neon Lab)",
+  "male_desc": "年輕男性主角，26歲，銀白色寸頭，左眉有傷疤，冷酷的前政府特工",
+  "male_clothing": "身穿黑色防彈風衣與深灰戰鬥褲，背著戰術背包，腰間掛著能量槍與醫療包",
+  "female_desc": "日本年輕女性主角，27歲，紫色長直髮，天才駭客",
+  "female_clothing": "裸體, 露出胸部與陰戶，腳穿發光能量靴，手腕戴著投影手環",
+  "story_setting": "反重力實驗室高塔",
+  "antagonist_desc": "機械手臂遍布、紅色電子眼閃爍的巨型生化機器人警衛",
+  "lighting": "霓虹燈管與全息投影的賽博光效，冷色調高對比",
+  "camera": "動態追蹤鏡頭，帶速度感的構圖",
+  "style": "未來感極致細節，高畫質，電影級賽博龐克風格，8k解析度",
+  "negative_common": "low quality, blurry, distorted anatomy, extra fingers, deformed hands, extra limbs, watermark, text, logo, 低品質，模糊，畸形手指，變形的手，重複肢體，浮水印，文字"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "comfyui-client",
+  "version": "1.0.0",
+  "description": "Call ComfyUI API to generate images",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "generate": "node index.js",
+    "list-models": "node scripts/list-models.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

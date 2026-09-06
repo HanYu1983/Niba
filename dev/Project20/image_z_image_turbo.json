@@ -1,0 +1,328 @@
+{
+  "67": {
+    "inputs": {
+      "image": "Ernie-Image-Turbo_00038_.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "1347": {
+    "inputs": {
+      "filename_prefix": "z-image-turbo",
+      "images": [
+        "1341:1329",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "1341:1325": {
+    "inputs": {
+      "unet_name": "zImageUltimateNSFW_v20.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "1341:1326": {
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    },
+    "class_type": "EmptySD3LatentImage",
+    "_meta": {
+      "title": "EmptySD3LatentImage"
+    }
+  },
+  "1341:1331": {
+    "inputs": {
+      "resolution": "704x1408 (0.5)",
+      "batch_size": 1,
+      "width_override": 0,
+      "height_override": 0
+    },
+    "class_type": "SDXLEmptyLatentSizePicker+",
+    "_meta": {
+      "title": "🔧 SDXL Empty Latent Size Picker"
+    }
+  },
+  "1341:1333": {
+    "inputs": {
+      "switch": false,
+      "on_false": [
+        "1341:1334",
+        0
+      ],
+      "on_true": [
+        "1341:1337",
+        0
+      ]
+    },
+    "class_type": "ComfySwitchNode",
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "1341:1334": {
+    "inputs": {
+      "value": 1
+    },
+    "class_type": "PrimitiveFloat",
+    "_meta": {
+      "title": "Float"
+    }
+  },
+  "1341:1336": {
+    "inputs": {
+      "pixels": [
+        "67",
+        0
+      ],
+      "vae": [
+        "1341:1328",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "1341:1337": {
+    "inputs": {
+      "value": 0.7
+    },
+    "class_type": "PrimitiveFloat",
+    "_meta": {
+      "title": "Float"
+    }
+  },
+  "1341:1338": {
+    "inputs": {
+      "clip_name": "qwen_3_4b.safetensors",
+      "type": "lumina2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "1341:1339": {
+    "inputs": {
+      "conditioning": [
+        "1341:1327",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut",
+    "_meta": {
+      "title": "Conditioning Zero Out"
+    }
+  },
+  "1341:1335": {
+    "inputs": {
+      "switch": false,
+      "on_false": [
+        "1341:1331",
+        0
+      ],
+      "on_true": [
+        "1341:1336",
+        0
+      ]
+    },
+    "class_type": "ComfySwitchNode",
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "1341:1330": {
+    "inputs": {
+      "shift": 3,
+      "model": [
+        "1341:1325",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingAuraFlow",
+    "_meta": {
+      "title": "ModelSamplingAuraFlow"
+    }
+  },
+  "1341:1327": {
+    "inputs": {
+      "text": "1女1男，情侶，捷運車箱內部,周圍是乘客,周圍坐著乘客驚訝看著女性,地板上有一件白色蕾絲胸罩和一件內褲,地板上有二支正反的白色細高跟,地板上是皺起來的旗袍,旗袍是黑色的,上有金色龍紋，極致細節，高畫質，寫實攝影風格，8k解析度。\n女性角色：中國年輕女性,齊眉瀏海,麻花辮,鳯眼妝,裸體,露出鎖骨,胸部,露出陰戶,裸足\n動作與互動： 她全身赤裸，胸部清晰可見，正以反向騎乘式與一名男子進行性交。她蹲著，陰部清晰可見，男子已將陰莖插入她的陰道，過多的陰液，臀部透過大腿可見。一名男子躺在她身下，雙腿大張，臀部、陰莖和睪丸都對著鏡頭。她的陰唇和陰蒂細節豐富清晰。她舉起雙手，對著鏡頭比出和平手勢。\n",
+      "clip": [
+        "1341:1338",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "1341:1332": {
+    "inputs": {
+      "seed": 1029961028659837,
+      "steps": 8,
+      "cfg": 1,
+      "sampler_name": "res_multistep",
+      "scheduler": "simple",
+      "denoise": [
+        "1341:1333",
+        0
+      ],
+      "model": [
+        "1341:1330",
+        0
+      ],
+      "positive": [
+        "1341:1327",
+        0
+      ],
+      "negative": [
+        "1341:1339",
+        0
+      ],
+      "latent_image": [
+        "1341:1335",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "1341:1329": {
+    "inputs": {
+      "samples": [
+        "1341:1332",
+        0
+      ],
+      "vae": [
+        "1341:1328",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "1341:1328": {
+    "inputs": {
+      "vae_name": "ae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "1341:1344": {
+    "inputs": {
+      "samples": [
+        "1341:1343",
+        0
+      ],
+      "vae": [
+        "1341:1328",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "1341:1342": {
+    "inputs": {
+      "add_noise": "enable",
+      "noise_seed": 59289817004114,
+      "steps": 4,
+      "cfg": 1,
+      "sampler_name": "dpmpp_2m_sde",
+      "scheduler": "beta",
+      "start_at_step": 0,
+      "end_at_step": 3,
+      "return_with_leftover_noise": "enable",
+      "model": [
+        "1341:1330",
+        0
+      ],
+      "positive": [
+        "1341:1327",
+        0
+      ],
+      "negative": [
+        "1341:1339",
+        0
+      ],
+      "latent_image": [
+        "1341:1335",
+        0
+      ]
+    },
+    "class_type": "KSamplerAdvanced",
+    "_meta": {
+      "title": "KSampler (Advanced)"
+    }
+  },
+  "1341:1346": {
+    "inputs": {
+      "upscale_method": "bislerp",
+      "scale_by": 1.7,
+      "samples": [
+        "1341:1342",
+        0
+      ]
+    },
+    "class_type": "LatentUpscaleBy",
+    "_meta": {
+      "title": "Upscale Latent By"
+    }
+  },
+  "1341:1343": {
+    "inputs": {
+      "add_noise": "enable",
+      "noise_seed": 594386540614757,
+      "steps": 5,
+      "cfg": 1,
+      "sampler_name": "dpmpp_2m_sde",
+      "scheduler": "sgm_uniform",
+      "start_at_step": 2,
+      "end_at_step": 999,
+      "return_with_leftover_noise": "disable",
+      "model": [
+        "1341:1330",
+        0
+      ],
+      "positive": [
+        "1341:1327",
+        0
+      ],
+      "negative": [
+        "1341:1327",
+        0
+      ],
+      "latent_image": [
+        "1341:1346",
+        0
+      ]
+    },
+    "class_type": "KSamplerAdvanced",
+    "_meta": {
+      "title": "KSampler (Advanced)"
+    }
+  }
+}
