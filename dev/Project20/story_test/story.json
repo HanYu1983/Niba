@@ -1,7 +1,7 @@
 {
   "title": "{{story_title}}",
   "sizes": [[1024, 1024], [832, 1216], [1216, 832]],
-  "prompt_template": "{{male_desc}}，{{male_clothing}}；{{female_desc}}，{{female_clothing}}。{{scene_part}} 環境與光線：{{lighting}}。鏡頭：{{camera}}。{{style}}",
+  "prompt_template": "{{person1_desc}}，{{person1_clothing}}；{{person2_desc}}，{{person2_clothing}}。{{scene_part}} 環境與光線：{{lighting}}。鏡頭：{{camera}}。{{style}}",
   "scenes": [
     {
       "n": 1,
