@@ -1,0 +1,12 @@
+{
+  "story_title": "窗外有光 (The Light Beyond the Window)",
+  "male_desc": "年輕男性主角，25歲，深棕色微亂短髮，戴著細框眼鏡，安靜內向的上班族",
+  "male_clothing": "身穿灰色家居T恤與黑色棉褲，腳穿室內拖鞋，手裡握著一杯冒著熱氣的馬克杯",
+  "female_desc": "女性幽靈主角，看起來約19歲，蒼白肌膚，柔順的黑色長直髮，可愛又帶幾份陰森的鬼魂",
+  "female_clothing": "身穿泛黃的白色連身洋裝，雙腳有些透明漂浮在半空中，周身環繞著淡淡綠光，偶爾飄散幾縷幽藍煙霧",
+  "story_setting": "都市高樓15樓的單人套房",
+  "lighting": "窗外幽綠鬼火光芒與室內溫暖昏黃燈光交織，明暗對比強烈，詭譎中帶溫馨",
+  "camera": "中景寫實構圖，主體清楚，氛圍奇幻",
+  "style": "極致細節，高畫質，寫實奇幻風格，介於恐怖與浪漫之間的空靈氛圍，8k解析度",
+  "negative_common": "low quality, blurry, distorted anatomy, extra fingers, deformed hands, extra limbs, watermark, text, logo, 低品質，模糊，畸形手指，變形的手，重複肢體，浮水印，文字"
+}
