@@ -42,6 +42,20 @@ function planItem(index: number): AiConstructionPlanItem | undefined {
 }
 
 describe('建設 AI：queue 狀態機', () => {
+  it('遠離目標據點 → 拒絕建造且不改變據點', () => {
+    const base = makeTestBase({ buildingMaterials: 100 })
+    load({
+      players: [makeTestPlayer({ position: { row: 8, column: 8 } }), makeTestHuman()],
+      bases: [base],
+    })
+
+    const result = gameStore.constructBuilding('base-1', 'building-type-wall', 'ai-1')
+
+    expect(result).toEqual({ ok: false, reason: '需位於據點旁才能建造。' })
+    expect(gameStore.getState().bases[0].buildings).toEqual([])
+    expect(gameStore.getState().bases[0].buildingMaterials).toBe(100)
+  })
+
   it('建料不足 → item 標記 blocked（含原因），材料不變', () => {
     load({
       aiConstructionPlans: [

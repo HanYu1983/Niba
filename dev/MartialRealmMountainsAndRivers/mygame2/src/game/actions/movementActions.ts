@@ -102,6 +102,14 @@ export function movePlayer(
   }
 
   const stateWithHealthBonus = applyBaseHealthBonuses(nextState)
+  // 玩家設定為不觸發互動（canTriggerInteraction === false）時，跳過互動／劇情觸發判定。
+  // 這樣 AI 或非主控玩家移動時不會推進探索、道具、區域與勝利目標。
+  if (player.canTriggerInteraction === false) {
+    return {
+      state: { ...stateWithHealthBonus, visibility: updatePlayerVisibility(stateWithHealthBonus, playerId) },
+      result: { ok: true },
+    }
+  }
   // 移動完成後推進 reach-position 目標並檢查勝利。
   const withObjectives = progressObjectives(stateWithHealthBonus, { type: 'reach-position', row, column })
   // 移動完成後檢查 on-enter-region 對話與觸發器（玩家進入指定座標時觸發，舊版相容）。

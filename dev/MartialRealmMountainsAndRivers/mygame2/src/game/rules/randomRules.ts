@@ -1,6 +1,21 @@
 export type RandomSource = () => number
 
-export const defaultRandomSource: RandomSource = () => Math.random()
+/** 全域隨機來源：預設為 Math.random()，測試可透過 setGlobalRandomSource 覆寫以取得決定性。 */
+let globalRandomSource: RandomSource = () => Math.random()
+
+export const defaultRandomSource: RandomSource = () => globalRandomSource()
+
+/** 覆寫全域隨機來源（測試用）。傳入 null 恢復為 Math.random()。 */
+export function setGlobalRandomSource(source: RandomSource | null): void {
+  globalRandomSource = source ?? (() => Math.random())
+}
+
+/** 以固定 seed 覆寫全域隨機來源，回傳可還原的還原函式。 */
+export function seedGlobalRandom(seed: number): () => void {
+  const previous = globalRandomSource
+  globalRandomSource = createSeededRandom(seed)
+  return () => { globalRandomSource = previous }
+}
 
 /**
  * MurmurHash3 的 finalizer（fmix32）：對輸入做雪崩攪拌，

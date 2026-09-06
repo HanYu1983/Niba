@@ -1,11 +1,14 @@
 import type { GameState, Position } from '../../types'
-import { isAdjacent } from '../../types'
+import { isAdjacent, isSameOrAdjacent } from '../../types'
 import { canPlayerPerformAction, getAiActionStaminaCost } from '../../rules/actionCostRules'
+import { canTransportPlayer } from '../../rules/transportRules'
 import { collectReachableCells, type CellUnreachableReason } from '../perception/reachablePositions'
 import { type AiAction, type AiTargetRef } from '../aiAction'
 import { defenseActionToAiAction } from '../defenseActionAdapter'
 import type { AiDefenseAction } from '../../aiDefenseRules'
 import { buildingCatalog } from '../../catalogs/buildingCatalog'
+import { elementBurstItems } from '../../catalogs/itemCatalog'
+import { getSectGateSkills, getSectGateLearnCost } from '../../rules/sectGateRules'
 
 export type AiValidationResult = { valid: true } | { valid: false; reason: string }
 
@@ -67,6 +70,10 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
   }
 
   switch (action.type) {
+    case 'transport': {
+      const transport = canTransportPlayer(state, action.actor.id, action.targetId)
+      return transport.ok ? { valid: true } : { valid: false, reason: transport.reason ?? '無法使用驛站。' }
+    }
     case 'move': {
       const reasons: CellUnreachableReason[] = []
       const reachableSet = collectReachableCells(state, actor, reasons)
@@ -97,19 +104,67 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
       if (!base) return { valid: false, reason: '建築目標據點不存在。' }
       const template = buildingCatalog.find((b) => b.id === action.buildingType)
       if (!template) return { valid: false, reason: `未知建築：${action.buildingType}` }
+      if (!isSameOrAdjacent(actor.position, base.position)) return { valid: false, reason: '需位於據點旁才能建造。' }
+      return { valid: true }
+    }
+    case 'upgrade': {
+      const base = state.bases.find((candidate) => candidate.id === action.baseId)
+      if (!base) return { valid: false, reason: '升級目標據點不存在。' }
+      if (!isSameOrAdjacent(actor.position, base.position)) return { valid: false, reason: '需位於據點旁才能升級建築。' }
+      if (!base.buildings.some((building) => building.id === action.buildingId)) {
+        return { valid: false, reason: '升級目標建築不存在。' }
+      }
       return { valid: true }
     }
     case 'hold':
     case 'end-turn':
     case 'allocate-attribute':
     case 'use-item':
+    case 'use-element-burst': {
+      if (action.type === 'use-element-burst') {
+        const player = state.players.find((candidate) => candidate.id === action.actor.id)
+        const item = player?.inventory.find((entry) => entry.itemId === action.itemId)
+        if (!item || item.quantity <= 0) return { valid: false, reason: '元素爆發道具不存在或數量不足。' }
+        if (!elementBurstItems.some((candidate) => candidate.id === action.itemId)) return { valid: false, reason: '指定道具不是元素爆發道具。' }
+        if (player?.itemEffectsUsedThisTurn?.includes('element-burst')) return { valid: false, reason: '本回合已使用過元素爆發道具。' }
+        const target = findTarget(state, action.target)
+        if (!target || target.health <= 0) return { valid: false, reason: '元素爆發目標不存在或已被擊敗。' }
+        if (!isAdjacent(actor.position, target.position)) return { valid: false, reason: '元素爆發目標不在攻擊距離內。' }
+      }
+      return { valid: true }
+    }
     case 'equip':
     case 'equip-inner-skill':
-    case 'learn-skill':
+    case 'equip-external-skill':
+    case 'use-external-skill':
+      return { valid: true }
+    case 'learn-skill': {
+      const player = state.players.find((candidate) => candidate.id === action.actor.id)
+      if (!player) return { valid: false, reason: '學招玩家不存在。' }
+      if (action.gateId) {
+        const gate = state.sectGates?.find((candidate) => candidate.id === action.gateId)
+        if (!gate) return { valid: false, reason: '門派據點不存在。' }
+        if (!isSameOrAdjacent(player.position, gate.position)) return { valid: false, reason: '需位於門派據點旁才能學習功法。' }
+        const skills = getSectGateSkills(gate.schoolId)
+        const skill = [...skills.inner, ...skills.damage, ...skills.aura].find((candidate) => candidate.id === action.skillId)
+        if (!skill) return { valid: false, reason: '門派據點沒有指定功法。' }
+        const isInner = skills.inner.some((candidate) => candidate.id === action.skillId)
+        if (action.skillType !== (isInner ? 'inner' : 'external')) return { valid: false, reason: '功法類型與門派功法不符。' }
+        if (isInner && (player.attributes?.insight ?? 0) < (skill as { insightRequirement: number }).insightRequirement) {
+          return { valid: false, reason: '悟性不足，無法學習此內功。' }
+        }
+        const learned = isInner ? player.innerSkillIds.includes(action.skillId) : player.externalSkillIds.includes(action.skillId)
+        if (learned) return { valid: false, reason: '玩家已學會此功法。' }
+        const cost = getSectGateLearnCost(gate.schoolId, action.skillId)
+        if ((player.money ?? 0) < cost) return { valid: false, reason: `金錢不足，需要 ${cost} 金錢。` }
+      }
+      return { valid: true }
+    }
     case 'practice-skill':
     case 'use-facility':
     case 'defense-build':
     case 'buy-item':
+    case 'buy-equipment':
       return { valid: true }
   }
 }

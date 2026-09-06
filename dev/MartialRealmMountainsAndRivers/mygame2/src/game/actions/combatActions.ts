@@ -412,9 +412,6 @@ export function executeExternalDamage(
   const creatureTargetTerrain = targetType === 'creature'
     ? getTerrainAtPosition(state.map.cells, target.target.position)
     : undefined
-  const targetDamageReduction = targetType === 'creature'
-    ? getCreatureDamageReductionPercent(target.target as CreatureState, creatureTargetTerrain)
-    : 0
   const resonanceMultiplier = getTerrainResonanceDamageMultiplier(skill.element, targetTerrain)
   const elementMultiplier = getElementDamageMultiplier(skill.element, getSchoolElement(target.target.schoolId))
   const innerElement = getInnerSkill(target.player.innerSkillId).element
@@ -427,6 +424,9 @@ export function executeExternalDamage(
     terrain: targetTerrain,
     targetSchoolId: target.target.schoolId,
   })
+  const targetDamageReduction = targetType === 'creature' && !tripleResonance
+    ? getCreatureDamageReductionPercent(target.target as CreatureState, creatureTargetTerrain)
+    : 0
   const baseDamage = skill.functionalEffect ? 0 : Math.max(1, Math.floor(getSkillDamage(getEffectiveAttributesForPlayer(target.player), skill, skillLevel) * getSkillEffectMultiplier(target.player) * elementMultiplier * resonanceMultiplier * synergyMultiplier))
   // 罡氣訣：外功造成的最終傷害 +%
   const damageBeforeTargetReduction = Math.max(1, Math.floor(baseDamage * (1 + getExternalSkillDamagePercent(target.player))))
@@ -440,7 +440,7 @@ export function executeExternalDamage(
   let damage = criticalHit ? Math.floor(damageBeforeCrit * 1.5) : damageBeforeCrit
   // 對稱防禦：生物作為被攻擊方時套用回避／根骨減傷（與玩家被生物攻擊時一致）。
   let targetDefense: 'evaded' | 'reduced' | undefined
-  if (targetType === 'creature') {
+  if (targetType === 'creature' && !tripleResonance) {
     const creature = target.target as CreatureState
     const avoided = rollChance(Math.min(1, getCreatureEvasionRate(creature, creatureTargetTerrain) / 100), random)
     const halved = !avoided && rollChance(Math.min(1, getCreatureRootReductionRate(creature, creatureTargetTerrain) / 100), random)

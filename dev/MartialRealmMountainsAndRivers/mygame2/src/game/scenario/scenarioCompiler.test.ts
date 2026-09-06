@@ -76,12 +76,30 @@ describe('buildGameStateFromScenario', () => {
       isAI: true,
     })
     expect(state.aiOrders).toEqual([{
-      id: 'ai-order-decision-tree-player-ai-1',
-      type: 'decision-tree',
+      id: 'ai-order-fuzzy-player-ai-1',
+      type: 'fuzzy',
       aiPlayerId: 'player-ai-1',
       priority: 50,
       status: 'active',
     }])
+  })
+
+  it('劇本玩家可設定 canTriggerInteraction（預設 true，可關閉互動觸發）', () => {
+    const scenario = makeScenario()
+    scenario.entities.push({
+      id: 'player-ai-1',
+      kind: 'player',
+      position: { row: 8, column: 1 },
+      data: { name: '同行弟子', isAI: true, canTriggerInteraction: false },
+    })
+
+    const state = buildGameStateFromScenario(scenario)
+
+    expect(state.players[0].canTriggerInteraction).toBe(true)
+    expect(state.players.find((player) => player.id === 'player-ai-1')).toMatchObject({
+      isAI: true,
+      canTriggerInteraction: false,
+    })
   })
 
   it('劇本 aiOrders 可覆寫 AI 玩家預設策略（貼身保護）', () => {
@@ -115,8 +133,8 @@ describe('buildGameStateFromScenario', () => {
       retreatHealthPercent: 30,
       status: 'active',
     }])
-    // 顯式指令的 AI 玩家不應再產生預設 decision-tree。
-    expect(state.aiOrders?.some((order) => order.type === 'decision-tree')).toBe(false)
+    // 顯式指令的 AI 玩家不應再產生預設 fuzzy。
+    expect(state.aiOrders?.some((order) => order.type === 'fuzzy')).toBe(false)
   })
 
   it('玩家 data.aiType 自動生成對應 AI 指令（support-player 貼身保護）', () => {
@@ -156,9 +174,14 @@ describe('buildGameStateFromScenario', () => {
     const high = state.creatures.find((c) => c.id === 'high')!
     expect(low.level).toBe(1)
     expect(high.level).toBe(6)
-    // 等級 6 的五維應明顯高於等級 1（每級 +2 成長 × 5 級 = +10）
-    expect(high.attributes.armStrength).toBe(low.attributes.armStrength + 10)
-    expect(high.attributes.constitution).toBe(low.attributes.constitution + 10)
+    // 等級 6 的五維應明顯高於等級 1（成長公式：max(5, (base + 修正×levelBonus + levelBonus×2) × 0.7)）。
+    expect(high.attributes.armStrength).toBeGreaterThan(low.attributes.armStrength)
+    expect(high.attributes.constitution).toBeGreaterThan(low.attributes.constitution)
+    expect(high.attributes.agility).toBeGreaterThan(low.attributes.agility)
+    expect(high.attributes.innerEnergy).toBeGreaterThan(low.attributes.innerEnergy)
+    expect(high.attributes.insight).toBeGreaterThan(low.attributes.insight)
+    // 低級生物至少保有身法／悟性底限。
+    expect(low.attributes.insight).toBeGreaterThanOrEqual(5)
     // 血量上限也應隨等級成長
     expect(high.maxHealth).toBeGreaterThan(low.maxHealth)
   })

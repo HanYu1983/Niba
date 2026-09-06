@@ -53,15 +53,15 @@ describe('五行相剋', () => {
 
 describe('五行相生連攜', () => {
   it('內功元素生外功元素時觸發連攜', () => {
-    expect(isElementGenerating('metal', 'earth')).toBe(true)
-    expect(isElementGenerating('earth', 'water')).toBe(true)
-    expect(isElementGenerating('water', 'wood')).toBe(true)
     expect(isElementGenerating('wood', 'fire')).toBe(true)
-    expect(isElementGenerating('fire', 'metal')).toBe(true)
+    expect(isElementGenerating('fire', 'earth')).toBe(true)
+    expect(isElementGenerating('earth', 'metal')).toBe(true)
+    expect(isElementGenerating('metal', 'water')).toBe(true)
+    expect(isElementGenerating('water', 'wood')).toBe(true)
   })
 
   it('反向（外功生內功）不觸發', () => {
-    expect(isElementGenerating('earth', 'metal')).toBe(false)
+    expect(isElementGenerating('fire', 'wood')).toBe(false)
     expect(isElementGenerating('metal', 'fire')).toBe(false)
   })
 
@@ -75,8 +75,8 @@ describe('五行相生連攜', () => {
   })
 
   it('連攜倍率 ×1.25，否則 ×1', () => {
-    expect(getGenerationSynergyMultiplier('metal', 'earth')).toBe(1.25)
-    expect(getGenerationSynergyMultiplier('earth', 'metal')).toBe(1)
+    expect(getGenerationSynergyMultiplier('wood', 'fire')).toBe(1.25)
+    expect(getGenerationSynergyMultiplier('fire', 'wood')).toBe(1)
     expect(getGenerationSynergyMultiplier('none', 'earth')).toBe(1)
   })
 })

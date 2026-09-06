@@ -1,6 +1,6 @@
 import { buildingCatalog } from '../catalogs/buildingCatalog'
 import { defenseStructureCatalog, type DefenseStructureType } from '../catalogs/defenseStructureCatalog'
-import type { ActionOutcome, BaseState, DefenseStructureState, GameState, Position, ResourcePointState } from '../types'
+import { isSameOrAdjacent, type ActionOutcome, type BaseState, type DefenseStructureState, type GameState, type Position, type ResourcePointState } from '../types'
 import { applyBaseHealthBonuses, BASE_RESOURCE_POINT_INCOME, getBaseMaxBuildingMaterials, getBaseMaxHealth, isBaseActive } from '../rules/baseRules'
 import { getBaseBuilding, getBuildingUpgradeResult, upgradeBuildingInBase, canPlayerBuildBuildingType } from '../rules/buildingProgressionRules'
 import { validateDefenseBuild } from '../rules/defenseRules'
@@ -25,6 +25,7 @@ export function constructBuilding(state: GameState, baseId: string, buildingId: 
     building.id === buildingId && (!base?.martialSchoolId || !building.schoolId || building.schoolId === base.martialSchoolId),
   )
   const player = playerId ? state.players.find((candidate) => candidate.id === playerId) : undefined
+  const playerNearBase = !playerId || Boolean(player && base && isSameOrAdjacent(player.position, base.position))
   const rankUnlocked = !player || canPlayerBuildBuildingType(player, buildingTemplate?.type ?? '')
   const actionCheck = playerId ? canPlayerPerformAction(state, playerId, ACTION_STAMINA_COSTS.build) : { ok: true as const }
   const schoolMismatch = base?.martialSchoolId !== undefined && buildingTemplate?.schoolId !== undefined && buildingTemplate.schoolId !== base.martialSchoolId
@@ -40,13 +41,15 @@ export function constructBuilding(state: GameState, baseId: string, buildingId: 
     ? Math.max(1, Math.floor((buildingTemplate?.constructionCost ?? 0) * (1 - getBuildingMaterialCostReduction(player))))
     : (buildingTemplate?.constructionCost ?? 0)
 
-  if (!base || !isBaseActive(base) || !buildingTemplate || !rankUnlocked || !actionCheck.ok || schoolMismatch || alreadyBuilt || !buildingAllowed || base.buildingMaterials < constructionCost) {
+  if (!base || !isBaseActive(base) || !buildingTemplate || !playerNearBase || !rankUnlocked || !actionCheck.ok || schoolMismatch || alreadyBuilt || !buildingAllowed || base.buildingMaterials < constructionCost) {
     const reason = !base
       ? '據點不存在。'
       : !isBaseActive(base)
         ? '據點已停用，無法使用建築功能。'
       : !buildingTemplate
         ? '未知建築。'
+        : !playerNearBase
+          ? '需位於據點旁才能建造。'
         : !actionCheck.ok
           ? actionCheck.reason ?? '目前無法行動。'
         : schoolMismatch
@@ -111,7 +114,7 @@ export function upgradeBuilding(state: GameState, playerId: string, baseId: stri
   const player = state.players.find((candidate) => candidate.id === playerId)
   const base = state.bases.find((candidate) => candidate.id === baseId)
   const actionCheck = canPlayerPerformAction(state, playerId, ACTION_STAMINA_COSTS.upgrade)
-  if (!player || !base || !isBaseActive(base) || !actionCheck.ok) {
+  if (!player || !base || !isBaseActive(base) || !isSameOrAdjacent(player.position, base.position) || !actionCheck.ok) {
     return { state, result: { ok: false, reason: '目前無法行動。' } }
   }
 

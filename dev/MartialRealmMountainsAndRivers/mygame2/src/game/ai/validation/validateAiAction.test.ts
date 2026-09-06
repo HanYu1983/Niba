@@ -144,6 +144,13 @@ describe('collect 與 build 的最小驗證', () => {
     expect(validateAiAction(state, missingBase)).toEqual({ valid: false, reason: '建築目標據點不存在。' })
   })
 
+  it('build：遠離據點 → 無效', () => {
+    const state = makeAiTestState({ players: [makeTestPlayer({ position: { row: 8, column: 8 } })] })
+    const buildAction = { type: 'build' as const, actor: { id: 'ai-1', kind: 'player' as const }, baseId: 'base-1', buildingType: 'building-type-board', reason: 'construction-plan' }
+
+    expect(validateAiAction(state, buildAction)).toEqual({ valid: false, reason: '需位於據點旁才能建造。' })
+  })
+
   it('collect：目標存活 → 有效；已死亡 → 無效', () => {
     const state = makeAiTestState({ players: [makeTestPlayer()], creatures: [makeTestCreature()] })
     const collect = { type: 'collect' as const, actor: { id: 'ai-1', kind: 'player' as const }, target: { id: 'creature-1', kind: 'creature' as const, position: { row: 5, column: 6 } }, reason: 'scavenge' }

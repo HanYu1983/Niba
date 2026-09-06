@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { executeAiAttack } from './executeAiAttack'
+import { executeAiAction } from './executeAiAction'
 import { getActionablePlayer } from '../../rules/actionCostRules'
 import { applyExperienceAndLevelUp } from '../../characterFactory'
 import type { CombatActionDependencies } from '../../actions/combatActions'
@@ -19,6 +20,47 @@ const dependencies: CombatActionDependencies = {
 }
 
 describe('executeAiAttack', () => {
+  it('AI 可直接使用元素爆發道具攻擊相鄰巢穴', () => {
+    const state = makeAiTestState({
+      players: [makeTestPlayer({
+        isAI: true,
+        inventory: [{ itemId: 'fire-thunder-talisman', quantity: 1 }],
+      })],
+      creatureNests: [{
+        id: 'nest-1',
+        name: '火焰巢穴',
+        position: { row: 5, column: 6 },
+        health: 40,
+        maxHealth: 40,
+        spawnChance: 0,
+        cooldownRounds: 0,
+        spawnLevel: 1,
+        behaviorType: 'scavenger',
+        schoolId: 'scarlet-flame',
+        dominantElement: 'fire',
+      }],
+    })
+
+    const outcome = executeAiAction(state, {
+      type: 'use-element-burst',
+      actor: { id: 'ai-1', kind: 'player' },
+      itemId: 'fire-thunder-talisman',
+      target: { id: 'nest-1', kind: 'nest', position: { row: 5, column: 6 } },
+      reason: '測試：使用元素爆發攻擊巢穴',
+    }, {
+      combat: dependencies,
+      turn: {
+        moveCreatures: (currentState) => ({ creatures: currentState.creatures, players: currentState.players, resourcePoints: currentState.resourcePoints, logs: [] }),
+        spawnCreaturesFromNests: (currentState) => ({ creatures: currentState.creatures, spawned: [], nests: currentState.creatureNests, logs: [] }),
+      },
+    })
+
+    expect(outcome.result.ok).toBe(true)
+    expect(outcome.state.creatureNests[0]?.health).toBeLessThan(40)
+    expect(outcome.state.players[0]?.inventory).toEqual([])
+    expect(outcome.state.itemBurstPreview).toBeNull()
+  })
+
   it('相鄰目標時直接結算傷害，不寫入 attackPreview', () => {
     const state = makeAiTestState({
       players: [makeTestPlayer({ isAI: true })],

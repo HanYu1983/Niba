@@ -16,8 +16,6 @@ describe('aiTurnScheduler', () => {
       supportSteps: [] as string[],
       constructionSteps: [] as string[],
       fuzzySteps: [] as string[],
-      decisionTreeSteps: [] as string[],
-      graphSearchSteps: [] as string[],
       endedTurns: [] as string[],
       stepFailures: [] as { actorId: string; reason: string }[],
     }
@@ -37,14 +35,6 @@ describe('aiTurnScheduler', () => {
       },
       runFuzzyStep: (actorId) => {
         calls.fuzzySteps.push(actorId)
-        return { ok: true }
-      },
-      runDecisionTreeStep: (actorId) => {
-        calls.decisionTreeSteps.push(actorId)
-        return { ok: true }
-      },
-      runGraphSearchStep: (actorId) => {
-        calls.graphSearchSteps.push(actorId)
         return { ok: true }
       },
       endTurn: (actorId) => {
@@ -107,30 +97,6 @@ describe('aiTurnScheduler', () => {
     expect(calls.defenseSteps).toEqual([])
     expect(calls.supportSteps).toEqual([])
     expect(calls.constructionSteps).toEqual([])
-  })
-
-  it('graph-search 訂單走圖搜索步驟', () => {
-    const { calls, deps } = createDeps()
-    const scheduler = createAiTurnScheduler(deps)
-
-    scheduler.requestStep('p1', 'graph-search')
-    vi.advanceTimersByTime(AI_TURN_STEP_DELAY_MS)
-
-    expect(calls.graphSearchSteps).toEqual(['p1'])
-    expect(calls.endedTurns).toEqual([])
-  })
-
-  it('graph-search step 回傳 ok:false 時由 scheduler 結束回合', () => {
-    const { calls, deps } = createDeps({
-      runGraphSearchStep: () => ({ ok: false, reason: '無可行動' }),
-    })
-    const scheduler = createAiTurnScheduler(deps)
-
-    scheduler.requestStep('p1', 'graph-search')
-    vi.advanceTimersByTime(AI_TURN_STEP_DELAY_MS)
-
-    expect(calls.stepFailures).toEqual([{ actorId: 'p1', reason: '無可行動' }])
-    expect(calls.endedTurns).toEqual(['p1'])
   })
 
   it('cancel 之後不得執行 stale timer', () => {

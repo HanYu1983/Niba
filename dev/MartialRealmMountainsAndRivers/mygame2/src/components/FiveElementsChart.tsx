@@ -13,8 +13,8 @@ function FiveElementsChart() {
         <Typography.Text className="world-status__divider-label">⚙️ 五行構築</Typography.Text>
       </Divider>
 
-      {/* 相生環：金→土→水→木→火→金 */}
-      <Tooltip title="相生連攜：裝備「內功元素」生「外功元素」時，該外功傷害 ×1.25（金→土→水→木→火→金）">
+      {/* 相生環：木→火→土→金→水→木 */}
+      <Tooltip title="相生連攜：裝備「內功元素」生「外功元素」時，該外功傷害 ×1.25（木→火→土→金→水→木）">
         <div className="world-status__row world-status__row--generation">
           <span className="world-status__row-title">相生</span>
           {FIVE_ELEMENTS.map((meta, index) => {

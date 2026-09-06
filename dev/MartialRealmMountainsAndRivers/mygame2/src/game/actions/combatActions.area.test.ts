@@ -84,6 +84,44 @@ function makeState(creatures: CreatureState[]): GameState {
 }
 
 describe('範圍攻擊（selectionMode = all）', () => {
+  it('三重共振時無視目標減傷、根骨減傷與回避率', () => {
+    const player = makePlayer({
+      innerSkillId: 'frost-water-inner',
+      innerSkillIds: ['frost-water-inner'],
+      externalSkillIds: ['swift-wind-external-damage'],
+      equippedExternalSkillIds: ['swift-wind-external-damage'],
+    })
+    const creature = makeCreature('c1', { row: 4, column: 5 })
+    creature.schoolId = 'earth-mountain'
+    creature.attributes = { armStrength: 4, constitution: 50, agility: 50, innerEnergy: 2, insight: 1 }
+    creature.buffs = [{ id: 'home-turf-mountain', definitionId: 'home-turf-mountain', sourceId: 'test', remainingRounds: null }]
+    const state = makeState([creature])
+    state.players = [player]
+    state.map.cells = state.map.cells.map((cell) =>
+      cell.row === 5 && cell.column === 5 ? { ...cell, terrain: 'forest' as const } :
+        cell.row === 4 && cell.column === 5 ? { ...cell, terrain: 'mountain' as const } : cell,
+    )
+
+    const withReduction = executeExternalDamage(state, 'player-1', 'creature', 'c1', 'swift-wind-external-damage', makeDeps())
+    const withoutReduction = executeExternalDamage(
+      { ...state, creatures: [{ ...creature, buffs: [] }] },
+      'player-1',
+      'creature',
+      'c1',
+      'swift-wind-external-damage',
+      makeDeps(),
+    )
+
+    expect(withReduction.result.ok).toBe(true)
+    expect(withoutReduction.result.ok).toBe(true)
+    if (withReduction.result.ok && withoutReduction.result.ok) {
+      expect(withReduction.result.data.tripleResonance).toBe(true)
+      expect(withReduction.result.data.targetDefense).toBeUndefined()
+      expect(withReduction.result.data.damage).toBeGreaterThan(0)
+      expect(withReduction.result.data.damage).toBe(withoutReduction.result.data.damage)
+    }
+  })
+
   it('烈陽轟對玩家周遭所有生物造成傷害', () => {
     // 兩隻生物位於玩家周遭
     const c1 = makeCreature('c1', { row: 4, column: 5 })

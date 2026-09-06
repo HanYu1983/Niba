@@ -131,7 +131,7 @@ export type ScenarioDefinition = {
   /**
    * 開局時套用的 AI 玩家指令（可覆寫編譯器自動生成的預設策略）。
    * `aiPlayerId` / `playerId` / `baseId` 皆為劇本內實體 id。
-   * 未涵蓋的 AI 玩家仍會套用預設 decision-tree 策略。
+  * 未涵蓋的 AI 玩家仍會套用預設 fuzzy 通用 AI。
    */
   aiOrders?: AiOrder[]
   customMetadata?: Record<string, unknown>

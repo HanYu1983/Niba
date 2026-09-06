@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { getGameSaveSlots, loadGameState, loadGameStateFromSlot, saveGameState, saveGameStateToSlot, scheduleAutoSave, flushAutoSave } from './gameSave'
+import { GAME_SAVE_STORAGE_KEY, getGameSaveSlots, loadGameState, loadGameStateFromSlot, saveGameState, saveGameStateToSlot, scheduleAutoSave, flushAutoSave } from './gameSave'
 import { markRunSettled } from './settledRuns'
 import type { GameState } from './types'
 
@@ -56,6 +56,30 @@ describe('gameSave', () => {
       expect(result.state.aiOrders).toEqual(stateWithAiData.aiOrders)
       expect(result.state.aiConstructionPlans).toEqual(stateWithAiData.aiConstructionPlans)
     }
+  })
+
+  it('讀取舊 AI 策略存檔時降級為 fuzzy', () => {
+    const legacyState = {
+      ...state,
+      aiOrders: [{
+        id: 'legacy-ai-order',
+        type: 'decision-tree',
+        aiPlayerId: 'ai-1',
+        priority: 50,
+        status: 'active',
+      }],
+    }
+    seedRawSave(GAME_SAVE_STORAGE_KEY, legacyState)
+
+    const result = loadGameState()
+    expect(result.ok).toBe(true)
+    if (result.ok) expect(result.state.aiOrders).toEqual([{
+      id: 'legacy-ai-order',
+      type: 'fuzzy',
+      aiPlayerId: 'ai-1',
+      priority: 50,
+      status: 'active',
+    }])
   })
 
   it('沒有存檔時回傳原因', () => {

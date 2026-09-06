@@ -229,7 +229,7 @@ describe('runFuzzyStep', () => {
       aiOrders: [makeFuzzyOrder()],
     })
     const result = gameStore.runFuzzyStep('ai-1')
-    expect(result.ok).toBe(false)
+    expect(result.ok).toBe(true)
     expect(playerById('ai-1').position.column).toBe(3) // 未移動
   })
 

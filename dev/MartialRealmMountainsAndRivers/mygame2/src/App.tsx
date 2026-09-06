@@ -21,7 +21,7 @@ import { ensureOfficialCharacters } from './game/characterRoster'
 import SkillTestPage from './components/SkillTestPage'
 import EditorApp from './editor/EditorApp'
 import { allExternalSkillCatalog } from './game/catalogs/martialHallSkillCatalog'
-import type { GameSettings } from './game/types'
+import type { AiPersonalityId, GameSettings } from './game/types'
 import { formatItemPointPickupResult } from './game/actionResultFormatters'
 import GameSaveModal from './components/GameSaveModal'
 import SystemCommandModal from './components/SystemCommandModal'
@@ -136,8 +136,6 @@ function App() {
       runSupportStep: (actorId) => gameStore.runAiSupportStep(actorId),
       runConstructionStep: (actorId) => gameStore.runAiConstructionStep(actorId),
       runFuzzyStep: (actorId) => gameStore.runFuzzyStep(actorId),
-      runDecisionTreeStep: (actorId) => gameStore.runDecisionTreeStep(actorId),
-      runGraphSearchStep: (actorId) => gameStore.runGraphSearchStep(actorId),
       endTurn: (actorId) => gameStore.endPlayerTurn(actorId),
       onStepFailed: (_actorId, reason) => { message.warning({ content: reason, duration: 10 }) },
     }),
@@ -182,11 +180,13 @@ function App() {
 
   useEffect(() => {
     if (!activePlayer || gameState.creatureTurnInProgress || gameState.blockingModal) return
+    // 設定為不觸發互動（canTriggerInteraction === false）的角色，不自動收集道具點、不彈出探索事件。
+    if (activePlayer.canTriggerInteraction === false) return
     const samePosition = (first: { row: number; column: number }, second: { row: number; column: number }) => first.row === second.row && first.column === second.column
     const itemPoint = gameState.itemPoints.find((point) => samePosition(point.position, activePlayer.position))
     if (itemPoint) {
       const result = gameStore.collectItemPoint(activePlayer.id, itemPoint.id)
-      if (result.ok) {
+      if (result.ok && !activePlayer.isAI) {
         const terrain = gameState.map.cells.find((cell) => cell.row === itemPoint.position.row && cell.column === itemPoint.position.column)?.terrain
         gameStore.showActionResult(formatItemPointPickupResult(result.data, terrain))
       }
@@ -381,14 +381,8 @@ function App() {
         <StrategicCommandModal
           open={strategicCommandModalOpen}
           aiPlayers={gameState.players.filter((player) => player.isAI === true)}
-          players={gameState.players}
-          bases={gameState.bases}
-          orders={gameState.aiOrders ?? []}
-          constructionPlans={gameState.aiConstructionPlans ?? []}
           onClose={() => setStrategicCommandModalOpen(false)}
-          onSaveOrder={(order) => gameStore.setAiOrder(order)}
-          onDeleteOrder={(aiPlayerId, orderId) => gameStore.removeAiOrder(aiPlayerId, orderId)}
-          onSaveConstructionPlan={(plan) => gameStore.setAiConstructionPlan(plan)}
+          onSavePersonality={(playerId, personality: AiPersonalityId) => gameStore.setAiPersonality(playerId, personality)}
         />
 
         <GameSaveModal

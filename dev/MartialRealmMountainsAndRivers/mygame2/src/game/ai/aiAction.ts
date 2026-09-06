@@ -30,9 +30,22 @@ export type AiAction =
       reason: string
     }
   | {
+      type: 'transport'
+      actor: AiActorRef
+      targetId: string
+      reason: string
+    }
+  | {
       type: 'attack'
       actor: AiActorRef
       target: AiTargetRef
+      reason: string
+    }
+  | {
+      type: 'use-external-skill'
+      actor: AiActorRef
+      target: AiTargetRef
+      skillId: string
       reason: string
     }
   | {
@@ -46,6 +59,13 @@ export type AiAction =
       actor: AiActorRef
       baseId: string
       buildingType: string
+      reason: string
+    }
+  | {
+      type: 'upgrade'
+      actor: AiActorRef
+      baseId: string
+      buildingId: string
       reason: string
     }
   | {
@@ -71,6 +91,13 @@ export type AiAction =
       reason: string
     }
   | {
+      type: 'use-element-burst'
+      actor: AiActorRef
+      itemId: string
+      target: AiTargetRef
+      reason: string
+    }
+  | {
       type: 'equip'
       actor: AiActorRef
       instanceId: string
@@ -78,6 +105,12 @@ export type AiAction =
     }
   | {
       type: 'equip-inner-skill'
+      actor: AiActorRef
+      skillId: string
+      reason: string
+    }
+  | {
+      type: 'equip-external-skill'
       actor: AiActorRef
       skillId: string
       reason: string
@@ -118,6 +151,13 @@ export type AiAction =
       actor: AiActorRef
       baseId: string
       itemId: string
+      reason: string
+    }
+  | {
+      type: 'buy-equipment'
+      actor: AiActorRef
+      baseId: string
+      equipmentId: string
       reason: string
     }
 

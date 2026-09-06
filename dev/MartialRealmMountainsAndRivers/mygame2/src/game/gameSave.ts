@@ -66,6 +66,36 @@ function isValidSlot(slot: number): boolean {
   return Number.isInteger(slot) && slot >= AUTO_SAVE_SLOT && slot <= GAME_SAVE_SLOT_COUNT
 }
 
+function normalizeAiOrders(state: GameState): GameState {
+  const existingOrders = Array.isArray(state.aiOrders) ? state.aiOrders : []
+  let migratedLegacyOrder = false
+  const normalizedOrders = existingOrders.map((order) => {
+    const legacyOrder = order as unknown as { type?: string }
+    if (legacyOrder.type === 'decision-tree' || legacyOrder.type === 'graph-search') {
+      migratedLegacyOrder = true
+      return { ...order, type: 'fuzzy' as const }
+    }
+    return order
+  })
+  const orderedPlayerIds = new Set(normalizedOrders.map((order) => order.aiPlayerId))
+  const recoveredOrders = (Array.isArray(state.players) ? state.players : [])
+    .filter((player) => player.isAI === true && !orderedPlayerIds.has(player.id))
+    .map((player) => ({
+      id: `ai-order-fuzzy-${player.id}`,
+      type: 'fuzzy' as const,
+      aiPlayerId: player.id,
+      ...(player.aiPersonality ? { personality: player.aiPersonality } : {}),
+      priority: 50,
+      status: 'active' as const,
+    }))
+
+  if (recoveredOrders.length === 0 && !migratedLegacyOrder) return state
+  return {
+    ...state,
+    aiOrders: [...normalizedOrders, ...recoveredOrders],
+  }
+}
+
 export function getGameSaveSlots(): GameSaveSlotSummary[] {
   return Array.from({ length: GAME_SAVE_SLOT_COUNT + 1 }, (_, index) => {
     const slot = index
@@ -110,11 +140,12 @@ export function loadGameStateFromSlot(slot: number): { ok: true; state: GameStat
     if (!raw) return { ok: false, reason: `存檔欄位 ${slot} 目前是空的。` }
     const payload = JSON.parse(raw) as Partial<GameSaveData>
     if (payload.version !== GAME_SAVE_VERSION || !payload.state || typeof payload.state !== 'object') return { ok: false, reason: '存檔版本不相容或資料損壞。' }
-    const validation = validateGameState(payload.state)
+    const state = normalizeAiOrders(payload.state)
+    const validation = validateGameState(state)
     if (!validation.valid) return { ok: false, reason: validation.reason ?? '存檔資料損壞，無法讀取。' }
     return {
       ok: true,
-      state: payload.state,
+      state,
       activeCharacterId: payload.activeCharacterId ?? null,
       isChallengeMode: payload.isChallengeMode === true,
       scenarioId: typeof payload.scenarioId === 'string' && payload.scenarioId ? payload.scenarioId : null,
@@ -190,11 +221,12 @@ export function loadGameState(): { ok: true; state: GameState; activeCharacterId
     if (payload.version !== GAME_SAVE_VERSION || !payload.state || typeof payload.state !== 'object') {
       return { ok: false, reason: '存檔版本不相容或資料損壞。' }
     }
-    const validation = validateGameState(payload.state)
+    const state = normalizeAiOrders(payload.state)
+    const validation = validateGameState(state)
     if (!validation.valid) return { ok: false, reason: validation.reason ?? '存檔資料損壞，無法讀取。' }
     return {
       ok: true,
-      state: payload.state,
+      state,
       activeCharacterId: payload.activeCharacterId ?? null,
       isChallengeMode: payload.isChallengeMode === true,
       scenarioId: typeof payload.scenarioId === 'string' && payload.scenarioId ? payload.scenarioId : null,
