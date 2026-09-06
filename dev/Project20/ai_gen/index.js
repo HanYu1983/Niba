@@ -8,7 +8,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const SERVER = process.env.SERVER_ADDRESS || "http://114.34.238.93:8188";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// 用法: node index.js "提示詞" [--seed N] [--workflow wf.json] [--out dir] [--width W] [--height H] [--image 檔名]
+// 用法: node index.js "提示詞" [--seed N] [--workflow wf.json] [--out dir] [--width W] [--height H] [--image 檔名] [--vars prompt.json]
 function parseArgs(argv) {
   const a = { pos: [], flags: {} };
   for (let i = 0; i < argv.length; i++) {
@@ -18,9 +18,21 @@ function parseArgs(argv) {
   return a;
 }
 
+// 讀入外部 JSON，替換提示詞中的 {{token}}
+function loadVars(file) {
+  if (!file) return {};
+  const vars = JSON.parse(readFileSync(resolve(file), "utf-8"));
+  console.log(`[gen] vars=${file} (${Object.keys(vars).filter((k) => k !== "prompt").join(", ")})`);
+  return vars;
+}
+
 const args = parseArgs(process.argv.slice(2));
-const prompt = args.flags.prompt ?? args.pos[0] ?? "";
-const seed = Number(args.flags.seed ?? Math.floor(Math.random() * 2 ** 32));
+const vars = loadVars(args.flags.vars);
+const prompt = (args.flags.prompt ?? args.pos[0] ?? vars.prompt ?? "").replace(
+  /\{\{(\w+)\}\}/g,
+  (m, k) => (k in vars ? String(vars[k]) : m)
+);
+const seed = Number(args.flags.seed ?? vars.seed ?? Math.floor(Math.random() * 2 ** 32));
 const outDir = resolve(HERE, args.flags.out || "output");
 const wfFile = args.flags.workflow || "z_t2i.json";
 const imageArg = args.flags.image;
