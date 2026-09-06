@@ -98,6 +98,18 @@ async function main() {
   const configFile = resolve(__dirname, process.argv[7] || "story_config.json");
   const scenesParam = process.argv[8]; // 指定場景，例如 "1,3,5"
   const sizesParam = process.argv[9]; // 尺寸 JSON，例如 "[[832,1216],[1216,832]]"
+  const baseSeedArg = process.argv[10]; // 基礎 seed；省略時隨機
+
+  let baseSeed;
+  if (baseSeedArg === undefined) {
+    baseSeed = Math.floor(Math.random() * 0xffffffff);
+  } else {
+    baseSeed = Number(baseSeedArg);
+    if (!Number.isInteger(baseSeed)) {
+      console.error(`基礎seed格式錯誤: ${baseSeedArg}`);
+      process.exit(1);
+    }
+  }
 
   const story = JSON.parse(readFileSync(storyFile, "utf-8"));
   const config = JSON.parse(readFileSync(configFile, "utf-8"));
@@ -135,6 +147,7 @@ async function main() {
   console.log(`故事: ${substitute(story.title, tokens)}`);
   console.log(`幕數: ${scenes.map((s) => s.n).join(",")} | 尺寸: ${sizes.map((s) => `${s[0]}x${s[1]}`).join(", ")}`);
   console.log(`伺服器: ${serverAddress}`);
+  console.log(`基礎Seed: ${baseSeed}${baseSeedArg === undefined ? " (隨機)" : ""}`);
 
   for (const scene of scenes) {
     const { title, prompt, negative, seed } = composePrompt(story, tokens, scene);
@@ -147,7 +160,7 @@ async function main() {
 
     for (let si = 0; si < sizes.length; si++) {
       const [w, h] = sizes[si];
-      const sceneSeed = seed + si;
+      const sceneSeed = (baseSeed + seed + si) >>> 0;
       sampler.node.inputs.seed = sceneSeed;
       if ("noise_seed" in sampler.node.inputs) sampler.node.inputs.noise_seed = sceneSeed;
       latentNode.node.inputs.width = w;
