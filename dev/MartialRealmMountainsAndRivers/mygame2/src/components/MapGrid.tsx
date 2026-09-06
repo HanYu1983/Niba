@@ -630,7 +630,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                   {resourcePointsHere.map((resourcePoint) => (
                     <div
                       key={resourcePoint.id}
-                      className={`resource-point-marker${isExplored ? ' resource-point-marker--explored' : ''}${playersHere.length > 0 ? ' resource-point-marker--overlapping' : ''}`}
+                      className={`resource-point-marker${resourcePoint.active === false ? ' resource-point-marker--inactive' : ''}${isExplored ? ' resource-point-marker--explored' : ''}${playersHere.length > 0 ? ' resource-point-marker--overlapping' : ''}`}
                       title={`${resourcePoint.name} · ${resourcePoint.active === false ? '已失活，請修復' : '可採集'} · 所屬：${bases.find((base) => base.id === resourcePoint.ownerBaseId)?.name ?? '未分配'}${isExplored ? ' · 已探索位置' : ''}`}
                       aria-label={`${resourcePoint.name}${resourcePoint.active === false ? '（已失活）' : ''}`}
                       role="button"
@@ -647,6 +647,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                       }}
                     >
                       {getResourcePointIcon(resourcePoint.name, cell.terrain)}
+                      {resourcePoint.active === false && <span className="resource-point-marker__warning" aria-hidden="true">!</span>}
                     </div>
                   ))}
                   {itemPointsHere.map((itemPoint) => (
