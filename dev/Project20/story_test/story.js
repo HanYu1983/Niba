@@ -144,6 +144,7 @@ async function main() {
       latentNode.node.inputs.height = h;
 
       console.log(`  => ${w}x${h} seed=${sceneSeed}`);
+      console.log(`  prompt: ${prompt}`);
 
       const ws = await openSocket(clientId);
       const queued = await queuePrompt(workflow, clientId);
