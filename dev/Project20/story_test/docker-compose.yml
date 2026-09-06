@@ -3,6 +3,12 @@ services:
   # docker compose run --rm comfy-client node story.js story_ocean.json story_t2i_hd.json output 1 10 story_config_ocean.json "4"
   # docker compose run --rm comfy-client node story.js story_dq.json story_t2i_hd.json story_dq_output 1 10 story_config_dq.json "4"
   # docker compose run --rm comfy-client node story.js story_ghost.json story_t2i_hd.json story_ghost_output 1 10 story_config_ghost.json "4"
+
+  # test
+  # docker compose run --rm comfy-client node story.js story_ghost.json story_t2i.json story_ghost_output 1 10 story_config_ghost.json "1" "[[832, 1216]]"
+  # prod
+  # docker compose run --rm comfy-client node story.js story_ghost.json story_t2i_hd.json story_ghost_output 1 10 story_config_ghost.json "1-10" "[[1024, 1024], [832, 1216], [1216, 832]]"
+  
   comfy-client:
     build: .
     image: comfy-client:latest
