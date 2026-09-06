@@ -45,6 +45,40 @@ function composePrompt(story, tokens, scene) {
   return { title, prompt, negative, seed: scene.seed };
 }
 
+// ---------------- 參數解析 ----------------
+
+// 指定場景: "1,3,5" 或 "2-4" 或 "7"
+function parseScenes(spec) {
+  const nums = new Set();
+  for (const part of spec.split(",")) {
+    const t = part.trim();
+    if (!t) continue;
+    const m = t.match(/^(\d+)\s*-\s*(\d+)$/);
+    if (m) {
+      for (let i = Number(m[1]); i <= Number(m[2]); i++) nums.add(i);
+    } else if (/^\d+$/.test(t)) {
+      nums.add(Number(t));
+    }
+  }
+  return nums;
+}
+
+// 尺寸: "[[1024,1024],[832,1216]]" -> [[1024,1024],[832,1216]]
+function parseSizes(spec, fallback) {
+  if (spec) {
+    try {
+      const arr = JSON.parse(spec);
+      if (Array.isArray(arr) && arr.length && arr.every((s) => Array.isArray(s) && s.length === 2)) {
+        return arr;
+      }
+      console.error(`尺寸格式錯誤: ${spec}`);
+    } catch {
+      console.error(`尺寸 JSON 解析失敗: ${spec}`);
+    }
+  }
+  return fallback;
+}
+
 // ---------------- 主流程 ----------------
 
 async function main() {
@@ -54,54 +88,79 @@ async function main() {
   const start = Number(process.argv[4] || "1");
   const end = Number(process.argv[5] || "999");
   const configFile = resolve(__dirname, process.argv[6] || "story_config.json");
+  const scenesParam = process.argv[7]; // 指定場景，例如 "1,3,5"
+  const sizesParam = process.argv[8]; // 尺寸 JSON，例如 "[[832,1216],[1216,832]]"
 
   const story = JSON.parse(readFileSync(storyFile, "utf-8"));
   const config = JSON.parse(readFileSync(configFile, "utf-8"));
   const workflow = JSON.parse(readFileSync(workflowFile, "utf-8"));
-  const { CLIPTextEncode, KSampler } = findNodes(workflow, ["CLIPTextEncode", "KSampler"]);
+
+  const sizes = parseSizes(sizesParam, story.sizes || [[1024, 1024]]);
+  const scenes = scenesParam
+    ? story.scenes.filter((s) => parseScenes(scenesParam).has(s.n))
+    : story.scenes.filter((s) => s.n >= start && s.n <= end);
+  const total = scenes.length * sizes.length;
+
+  const { CLIPTextEncode, KSampler, EmptySD3LatentImage } = findNodes(workflow, [
+    "CLIPTextEncode",
+    "KSampler",
+    "EmptySD3LatentImage",
+  ]);
   const posNode = (CLIPTextEncode || []).find((n) => !isNegativeNode(workflow, n.id));
   const negNode = (CLIPTextEncode || []).find((n) => isNegativeNode(workflow, n.id));
   const sampler = (KSampler || [])[0];
+  const latentNode = (EmptySD3LatentImage || [])[0];
 
   if (!posNode || !sampler) {
     console.error("workflow 缺少 CLIPTextEncode 或 KSampler 節點");
     process.exit(1);
   }
+  if (!latentNode) {
+    console.error("workflow 缺少 EmptySD3LatentImage 節點，無法設定尺寸");
+    process.exit(1);
+  }
 
   const tokens = flatten(config);
-  const scenes = story.scenes.filter((s) => s.n >= start && s.n <= end);
-  const total = scenes.length;
-
   const clientId = randomUUID();
   mkdirSync(outDir, { recursive: true });
-  console.log(`故事: ${substitute(story.title, tokens)} (${total} 幕) -> ${serverAddress}`);
+  console.log(`故事: ${substitute(story.title, tokens)}`);
+  console.log(`幕數: ${scenes.map((s) => s.n).join(",")} | 尺寸: ${sizes.map((s) => `${s[0]}x${s[1]}`).join(", ")}`);
+  console.log(`伺服器: ${serverAddress}`);
 
   for (const scene of scenes) {
     const { title, prompt, negative, seed } = composePrompt(story, tokens, scene);
 
     posNode.node.inputs.text = prompt;
     if (negNode) negNode.node.inputs.text = negative;
-    sampler.node.inputs.seed = seed;
 
-    console.log(`\n[第 ${scene.n} 幕] ${title}`);
-    console.log(`  seed=${seed}`);
-    console.log(`  prompt: ${prompt.slice(0, 120)}...`);
+    const sizesStrings = sizes.map((s) => `${s[0]}x${s[1]}`);
+    console.log(`\n[第 ${scene.n} 幕] ${title} | ${sizesStrings.join(" ")}`);
 
-    const ws = await openSocket(clientId);
-    const queued = await queuePrompt(workflow, clientId);
-    const record = await waitForCompletion(ws, queued.prompt_id);
+    for (let si = 0; si < sizes.length; si++) {
+      const [w, h] = sizes[si];
+      const sceneSeed = seed + si;
+      sampler.node.inputs.seed = sceneSeed;
+      latentNode.node.inputs.width = w;
+      latentNode.node.inputs.height = h;
 
-    let saved = 0;
-    for (const [nodeId, output] of Object.entries(record.outputs || {})) {
-      for (const img of output.images || []) {
-        const data = await getImage(img.filename, img.subfolder, img.type);
-        const file = join(outDir, `story_${String(scene.n).padStart(2, "0")}.png`);
-        writeFileSync(file, data);
-        console.log(`=> 已儲存: ${file}`);
-        saved++;
+      console.log(`  => ${w}x${h} seed=${sceneSeed}`);
+
+      const ws = await openSocket(clientId);
+      const queued = await queuePrompt(workflow, clientId);
+      const record = await waitForCompletion(ws, queued.prompt_id);
+
+      let saved = 0;
+      for (const [nodeId, output] of Object.entries(record.outputs || {})) {
+        for (const img of output.images || []) {
+          const data = await getImage(img.filename, img.subfolder, img.type);
+          const file = join(outDir, `story_${String(scene.n).padStart(2, "0")}_${w}x${h}.png`);
+          writeFileSync(file, data);
+          console.log(`=> 已儲存: ${file}`);
+          saved++;
+        }
       }
+      if (saved === 0) console.warn(`! ${w}x${h} 沒有輸出圖片`);
     }
-    if (saved === 0) console.warn(`! 第 ${scene.n} 幕沒有輸出圖片`);
   }
 
   console.log(`\n全部完成，共 ${total} 張圖片 -> ${outDir}`);
