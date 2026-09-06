@@ -14,7 +14,7 @@
       "title": "深夜獨處",
       "seed": 4001,
       "scene_context": "深夜的{{story_setting}}，書桌上堆滿辦公文件，窗外是萬家燈火的繁華都市夜景，獨自一人，房間只點著一盞昏黃的立燈。",
-      "scene_action": "{{person1_ref}}坐在電腦前揉著眼睛打呵欠。"
+      "scene_action": "{{person1_ref}}坐在電腦前揉著眼睛打呵欠，右手握著一杯冒著熱氣的馬克杯。"
     },
     {
       "n": 2,
