@@ -1,5 +1,11 @@
 {
-  "title": "{{story_title}}",
+  "title": "勇者鬥惡龍：近戰雙姬 (Dragon Quest: Twin Warrior Maidens)",
+  "story_setting": "洛克達爾村莊與其周邊的奇幻原野",
+  "antagonist_desc": "身穿漆黑重鎧甲、雙目燃燒紅光的魔王旗下墮落騎士",
+  "lighting": "明亮鮮豔的遊戲場景光照，陽光與魔法特效光交織，色彩飽和",
+  "camera": "中景動作構圖，主體清楚，戰鬥張力強",
+  "style": "極致細節，高畫質，日式奇幻RPG遊戲過場美術風格，角色對比鮮明，8k解析度",
+  "negative_common": "low quality, blurry, distorted anatomy, extra fingers, deformed hands, extra limbs, watermark, text, logo, 低品質，模糊，畸形手指，變形的手，重複肢體，浮水印，文字",
   "sizes": [[832, 1216]],
   "prompt_template": "場景：{{scene_context}}。環境與光線：{{lighting}}。角色1：{{person1_desc}}，{{person1_clothing}}。角色2：{{person2_desc}}，{{person2_clothing}}。動作與互動：{{scene_action}}。{{style}}",
   "scenes": [

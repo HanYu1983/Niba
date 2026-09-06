@@ -1,15 +1,8 @@
 {
-  "story_title": "奇幻深海冒險 (Deep Sea Adventure)",
   "person1_desc": "年輕男性主角，25歲，黑色及肩短髮，輪廓深邃，沉穩的潛水教練",
   "person1_clothing": "身穿深藍色潛水衣與輕便潛水背心，背著氧氣瓶，腰間掛著潛水刀與防水手電筒",
   "person2_desc": "年輕女性主角，24歲，金色長直髮綁成馬尾，好奇勇敢的海洋生物學家",
   "person2_clothing": "身穿暗紅色潛水衣與黑色防水背心，背著小型氧氣瓶，手腕戴著測量儀器與防水相機",
   "person1_ref": "角色1",
-  "person2_ref": "角色2",
-  "story_setting": "遼闊清澈的太平洋深海域",
-  "antagonist_desc": "頭頂垂著發光誘餌、滿口獠牙的深海燈籠魚(鮟鱇魚)",
-  "lighting": "陽光穿透海面的波光粼粼，越深處光線越漸暗藍，海底螢光生物發光",
-  "camera": "中景寫實構圖，主體清楚",
-  "style": "極致細節，高畫質，寫實水下攝影風格，8k解析度，水體通透，光線折射與浮游微粒",
-  "negative_common": "low quality, blurry, distorted anatomy, extra fingers, deformed hands, extra limbs, watermark, text, logo, 低品質，模糊，畸形手指，變形的手，重複肢體，浮水印，文字"
+  "person2_ref": "角色2"
 }

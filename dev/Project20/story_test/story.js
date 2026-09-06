@@ -129,7 +129,7 @@ async function main() {
     process.exit(1);
   }
 
-  const tokens = flatten(config);
+  const tokens = { ...flatten(config), ...flatten(story) };
   const clientId = randomUUID();
   mkdirSync(outDir, { recursive: true });
   console.log(`故事: ${substitute(story.title, tokens)}`);
