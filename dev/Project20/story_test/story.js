@@ -101,14 +101,15 @@ async function main() {
     : story.scenes.filter((s) => s.n >= start && s.n <= end);
   const total = scenes.length * sizes.length;
 
-  const { CLIPTextEncode, KSampler, EmptySD3LatentImage } = findNodes(workflow, [
+  const { CLIPTextEncode, KSampler, KSamplerAdvanced, EmptySD3LatentImage } = findNodes(workflow, [
     "CLIPTextEncode",
     "KSampler",
+    "KSamplerAdvanced",
     "EmptySD3LatentImage",
   ]);
   const posNode = (CLIPTextEncode || []).find((n) => !isNegativeNode(workflow, n.id));
   const negNode = (CLIPTextEncode || []).find((n) => isNegativeNode(workflow, n.id));
-  const sampler = (KSampler || [])[0];
+  const sampler = (KSampler || [])[0] || (KSamplerAdvanced || [])[0];
   const latentNode = (EmptySD3LatentImage || [])[0];
 
   if (!posNode || !sampler) {
@@ -140,6 +141,7 @@ async function main() {
       const [w, h] = sizes[si];
       const sceneSeed = seed + si;
       sampler.node.inputs.seed = sceneSeed;
+      if ("noise_seed" in sampler.node.inputs) sampler.node.inputs.noise_seed = sceneSeed;
       latentNode.node.inputs.width = w;
       latentNode.node.inputs.height = h;
 
