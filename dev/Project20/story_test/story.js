@@ -38,9 +38,17 @@ function substitute(template, tokens) {
 // 組出單一幕的完整提示詞
 function composePrompt(story, tokens, scene) {
   const local = { ...tokens, ...flatten(scene) };
+  const trim = (s) => String(s).replace(/[。！？!?]+$/, "");
   const title = substitute(scene.title, local);
+  const sceneContext = substitute(trim(scene.scene_context ?? ""), local);
+  const sceneAction = substitute(trim(scene.scene_action ?? ""), local);
   const scenePart = substitute(scene.scene_part, local);
-  const prompt = substitute(story.prompt_template, { ...local, scene_part: scenePart });
+  const prompt = substitute(story.prompt_template, {
+    ...local,
+    scene_part: scenePart,
+    scene_context: sceneContext,
+    scene_action: sceneAction,
+  });
   const negative = substitute(story.negative, local);
   return { title, prompt, negative, seed: scene.seed };
 }

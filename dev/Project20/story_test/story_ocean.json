@@ -1,67 +1,77 @@
 {
   "title": "{{story_title}}",
   "sizes": [[1024, 1024], [832, 1216], [1216, 832]],
-  "prompt_template": "畫面中有兩位角色。角色1：{{person1_desc}}，{{person1_clothing}}。角色2：{{person2_desc}}，{{person2_clothing}}。{{scene_part}} 環境與光線：{{lighting}}。鏡頭：{{camera}}。{{style}}",
+  "prompt_template": "場景：{{scene_context}}。環境與光線：{{lighting}}。角色1：{{person1_desc}}，{{person1_clothing}}。角色2：{{person2_desc}}，{{person2_clothing}}。動作與互動：{{scene_action}}。{{style}}",
   "scenes": [
     {
       "n": 1,
       "title": "啟航",
       "seed": 2001,
-      "scene_part": "陽光普照的蔚藍海面，潔白的遊艇停在{{story_setting}}，{{person1_ref}}站在甲板上調整潛水設備並檢查氧氣錶，{{person2_ref}}迎向海風撐在欄杆上遠眺海平線，海鷗盤旋，白浪在船艏翻滾。"
+      "scene_context": "陽光普照的蔚藍海面，潔白的遊艇停在{{story_setting}}，海鷗盤旋，白浪在船艏翻滾。",
+      "scene_action": "{{person1_ref}}站在甲板上調整潛水設備並檢查氧氣錶，{{person2_ref}}迎向海風撐在欄杆上遠眺海平線。"
     },
     {
       "n": 2,
       "title": "躍入深海",
       "seed": 2002,
-      "scene_part": "兩人在船尾並肩縱身躍入海面，激起晶瑩水花，身體被溫暖海水的氣泡包圍，陽光從頭頂水面灑下形成斑駁光柱，{{person1_ref}}回頭比出OK手勢，{{person2_ref}}興奮地吐著氣泡向下潛。"
+      "scene_context": "兩人在船尾並肩縱身躍入海面，激起晶瑩水花，身體被溫暖海水的氣泡包圍，陽光從頭頂水面灑下形成斑駁光柱。",
+      "scene_action": "{{person1_ref}}回頭比出OK手勢，{{person2_ref}}興奮地吐著氣泡向下潛。"
     },
     {
       "n": 3,
       "title": "珊瑚花園",
       "seed": 2003,
-      "scene_part": "色彩繽紛的珊瑚礁花園，各色小丑魚與彩色熱帶魚穿梭其間，巨大海葵隨水流擺動，{{person1_ref}}用探照燈照亮一片炫目的鹿角珊瑚，{{person2_ref}}舉著防水相機專注拍攝一只好奇游近的海龜。"
+      "scene_context": "色彩繽紛的珊瑚礁花園，各色小丑魚與彩色熱帶魚穿梭其間，巨大海葵隨水流擺動。",
+      "scene_action": "{{person1_ref}}用探照燈照亮一片炫目的鹿角珊瑚，{{person2_ref}}舉著防水相機專注拍攝一只好奇游近的海龜。"
     },
     {
       "n": 4,
       "title": "迷途鯨魚",
       "seed": 2004,
-      "scene_part": "幽藍澄淨的深水區，一頭巨大的藍鯨迎面緩緩游過，龐大的身影遮天蔽日，身上沾著藤壺，{{person1_ref}}與{{person2_ref}}停在水中仰頭驚嘆，體型的強烈對比帶來敬畏之感，海水因牠的游動而湧動。"
+      "scene_context": "幽藍澄淨的深水區，一頭巨大的藍鯨迎面緩緩游過，龐大的身影遮天蔽日，身上沾著藤壺，海水因牠的游動而湧動。",
+      "scene_action": "{{person1_ref}}與{{person2_ref}}停在水中仰頭驚嘆，體型的強烈對比帶來敬畏之感。"
     },
     {
       "n": 5,
       "title": "螢光深谷",
       "seed": 2005,
-      "scene_part": "光線漸暗的深邃海谷，成千上萬的發光水母如同點點星辰漂浮在黑暗中，螢光藍與粉紫色交織，{{person1_ref}}關掉手電筒讓螢光盡情綻放，{{person2_ref}}伸手輕輕觸碰一株叢集的水母觸鬚。"
+      "scene_context": "光線漸暗的深邃海谷，成千上萬的發光水母如同點點星辰漂浮在黑暗中，螢光藍與粉紫色交織。",
+      "scene_action": "{{person1_ref}}關掉手電筒讓螢光盡情綻放，{{person2_ref}}伸手輕輕觸碰一株叢集的水母觸鬚。"
     },
     {
       "n": 6,
       "title": "怪魚燈籠",
       "seed": 2006,
-      "scene_part": "伸手不見五指的深淵黑暗，一隻{{antagonist_desc}}懸浮在眼前，頭頂的發光誘餌在幽暗中閃爍，森然尖齒半張，{{person1_ref}}立刻拉起{{person2_ref}}的手臂悄然後退，兩人屏息保持靜止。"
+      "scene_context": "伸手不見五指的深淵黑暗，一隻{{antagonist_desc}}懸浮在眼前，頭頂的發光誘餌在幽暗中閃爍，森然尖齒半張。",
+      "scene_action": "{{person1_ref}}立刻拉起{{person2_ref}}的手臂悄然後退，兩人屏息保持靜止。"
     },
     {
       "n": 7,
       "title": "海溝裂縫",
       "seed": 2007,
-      "scene_part": "嶙峋的海底岩壁裂開一條深邃的巨大海溝裂縫，縫隙中透出不祥的紅光，滾燙的熱泉從地底湧出形成煙囪，{{person1_ref}}舉燈朝縫內探照，{{person2_ref}}抓緊{{person1_ref}}的肩指向前方被熱浪扭曲的水流。"
+      "scene_context": "嶙峋的海底岩壁裂開一條深邃的巨大海溝裂縫，縫隙中透出不祥的紅光，滾燙的熱泉從地底湧出形成煙囪。",
+      "scene_action": "{{person1_ref}}舉燈朝縫內探照，{{person2_ref}}抓緊{{person1_ref}}的肩指向前方被熱浪扭曲的水流。"
     },
     {
       "n": 8,
       "title": "沙丁魚風暴",
       "seed": 2008,
-      "scene_part": "數以萬計的銀色沙丁魚組成流動的龍卷風狀魚群風暴，在藍色水體中翻騰舞動，捲起一片銀光閃爍，{{person1_ref}}與{{person2_ref}}衝進魚群之中張開雙臂，被閃爍的銀海包圍，光線穿過重重魚身。"
+      "scene_context": "數以萬計的銀色沙丁魚組成流動的龍卷風狀魚群風暴，在藍色水體中翻騰舞動，捲起一片銀光閃爍，光線穿過重重魚身。",
+      "scene_action": "{{person1_ref}}與{{person2_ref}}衝進魚群之中張開雙臂，被閃爍的銀海包圍。"
     },
     {
       "n": 9,
       "title": "遠古沉船",
       "seed": 2009,
-      "scene_part": "籠罩在幽藍微光中的古老大帆船殘骸斜躺在海床上，船身爬滿藤壺與海葵，斷裂的桅杆橫倒，幾條銀魚從艙門游進游出，{{person1_ref}}用手電筒照亮船首雕刻的斑駁美人魚像，{{person2_ref}}從舷窗旁收回視線。"
+      "scene_context": "籠罩在幽藍微光中的古老大帆船殘骸斜躺在海床上，船身爬滿藤壺與海葵，斷裂的桅杆橫倒，幾條銀魚從艙門游進游出。",
+      "scene_action": "{{person1_ref}}用手電筒照亮船首雕刻的斑駁美人魚像，{{person2_ref}}從舷窗旁收回視線。"
     },
     {
       "n": 10,
       "title": "返航昇起",
       "seed": 2010,
-      "scene_part": "兩人雙手交握、側身悄然向上浮升，陽光逐漸穿透海面灑落點點金光，海面上隱約可見遊艇的剪影，{{person1_ref}}抬手指向光亮處，{{person2_ref}}笑著朝{{person1_ref}}點頭，一串串氣泡一路向著海面升去，迎向溫暖明亮的世界。"
+      "scene_context": "兩人雙手交握、側身悄然向上浮升，陽光逐漸穿透海面灑落點點金光，海面上隱約可見遊艇的剪影，一串串氣泡一路向著海面升去，迎向溫暖明亮的世界。",
+      "scene_action": "{{person1_ref}}抬手指向光亮處，{{person2_ref}}笑著朝{{person1_ref}}點頭。"
     }
   ],
   "negative": "{{negative_common}}"
