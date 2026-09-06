@@ -2,7 +2,7 @@
   "1": {
     "class_type": "UNETLoader",
     "inputs": {
-      "unet_name": "zImageUltimateNSFW_v20.safetensors",
+      "unet_name": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
       "weight_dtype": "default"
     }
   },
