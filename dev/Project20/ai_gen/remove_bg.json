@@ -1,0 +1,29 @@
+{
+  "67": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": ""
+    }
+  },
+  "201": {
+    "class_type": "RemBGSession+",
+    "inputs": {
+      "model": "u2net: general purpose",
+      "providers": "CUDA"
+    }
+  },
+  "202": {
+    "class_type": "ImageRemoveBackground+",
+    "inputs": {
+      "rembg_session": ["201", 0],
+      "image": ["67", 0]
+    }
+  },
+  "203": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "removebg",
+      "images": ["202", 0]
+    }
+  }
+}
