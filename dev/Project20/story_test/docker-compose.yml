@@ -1,4 +1,5 @@
 services:
+  # docker compose run --rm comfy-client node story.js story_ocean.json story_t2i.json story_ocean_output 1 10 story_config_ocean.json
   comfy-client:
     build: .
     image: comfy-client:latest

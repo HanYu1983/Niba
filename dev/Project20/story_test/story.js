@@ -82,14 +82,14 @@ function parseSizes(spec, fallback) {
 // ---------------- 主流程 ----------------
 
 async function main() {
-  const storyFile = resolve(__dirname, "story.json");
-  const workflowFile = resolve(__dirname, process.argv[2] || "story_t2i.json");
-  const outDir = resolve(__dirname, process.argv[3] || "story_output");
-  const start = Number(process.argv[4] || "1");
-  const end = Number(process.argv[5] || "999");
-  const configFile = resolve(__dirname, process.argv[6] || "story_config.json");
-  const scenesParam = process.argv[7]; // 指定場景，例如 "1,3,5"
-  const sizesParam = process.argv[8]; // 尺寸 JSON，例如 "[[832,1216],[1216,832]]"
+  const storyFile = resolve(__dirname, process.argv[2] || "story.json");
+  const workflowFile = resolve(__dirname, process.argv[3] || "story_t2i.json");
+  const outDir = resolve(__dirname, process.argv[4] || "story_output");
+  const start = Number(process.argv[5] || "1");
+  const end = Number(process.argv[6] || "999");
+  const configFile = resolve(__dirname, process.argv[7] || "story_config.json");
+  const scenesParam = process.argv[8]; // 指定場景，例如 "1,3,5"
+  const sizesParam = process.argv[9]; // 尺寸 JSON，例如 "[[832,1216],[1216,832]]"
 
   const story = JSON.parse(readFileSync(storyFile, "utf-8"));
   const config = JSON.parse(readFileSync(configFile, "utf-8"));
