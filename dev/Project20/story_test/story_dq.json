@@ -7,7 +7,7 @@
   "style": "極致細節，高畫質，日式奇幻RPG遊戲過場美術風格，角色對比鮮明，8k解析度",
   "negative_common": "low quality, blurry, distorted anatomy, extra fingers, deformed hands, extra limbs, watermark, text, logo, 低品質，模糊，畸形手指，變形的手，重複肢體，浮水印，文字",
   "sizes": [[832, 1216]],
-  "prompt_template": "場景：{{scene_context}}。環境與光線：{{lighting}}。角色1：{{person1_desc}}，{{person1_clothing}}。角色2：{{person2_desc}}，{{person2_clothing}}。動作與互動：{{scene_action}}。{{style}}",
+  "prompt_template": "2女，魔王討伐的奇幻冒險，{{scene_context}}，{{lighting}}，{{style}}。女性角色（{{person1_ref}}）： {{person1_desc}}，{{person1_clothing}}。女性角色（{{person2_ref}}）： {{person2_desc}}，{{person2_clothing}}。動作與互動： {{scene_action}}。",
   "scenes": [
     {
       "n": 1,
@@ -70,7 +70,7 @@
       "title": "攔截追兵",
       "seed": 3009,
       "scene_context": "晨曦中的荒野大路，追兵的馬蹄聲震響、揚起灰塵，{{antagonist_desc}}在路盡頭舉起長劍，身後是重新集結的魔物部隊，天空中飄著黑煙。",
-      "scene_action": "{{person1_ref}}與{{person2_ref}}回身並肩迎戰，{{person1_ref}}持盾架住墮落騎士的重斬、雙腳在地面犁出兩道痕，{{person2_ref}}低身掃腿絆翻對方，{{person1_ref}}趁隙斬斷其劍柄，眾人趁騎士失衡之際突圍奔逃。"
+      "scene_action": "{{person1_ref}}與{{person2_ref}}回身並肩迎戰：{{person1_ref}}左腳前跨半步、重心壓低，圓盾以約45度斜角迎向騎士斬擊的落點，劍刃重重敲在盾面上緣，衝擊由盾面延持盾手臂傳至肩胛，腳跟跟著下沉；{{person2_ref}}保持低蹲姿勢從{{person1_ref}}腋下的空隙側移而出，右拳貼著騎士右肋下方斜向上擊，正中其腰與胯之間的接縫處，騎士重心向右偏移、右腳離地失衡；{{person1_ref}}趁其腰軸側轉、胸前鎧甲露出縫隙之際，劍尖沿著劍柄與護手之間的連接點水平掃過，斷刃彈飛，騎士手肘向後甩開、身體後仰失衡。眾人沿騎士身側空出的通道突圍奔逃。"
     },
     {
       "n": 10,

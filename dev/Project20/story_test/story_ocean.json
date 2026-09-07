@@ -7,7 +7,7 @@
   "style": "極致細節，高畫質，寫實水下攝影風格，8k解析度，水體通透，光線折射與浮游微粒",
   "negative_common": "low quality, blurry, distorted anatomy, extra fingers, deformed hands, extra limbs, watermark, text, logo, 低品質，模糊，畸形手指，變形的手，重複肢體，浮水印，文字",
   "sizes": [[1024, 1024], [832, 1216], [1216, 832]],
-  "prompt_template": "場景：{{scene_context}}。環境與光線：{{lighting}}。角色1：{{person1_desc}}，{{person1_clothing}}。角色2：{{person2_desc}}，{{person2_clothing}}。動作與互動：{{scene_action}}。{{style}}",
+  "prompt_template": "1男1女，海底探索冒險，{{scene_context}}，{{lighting}}，{{style}}。男性角色（{{person1_ref}}）： {{person1_desc}}，{{person1_clothing}}。女性角色（{{person2_ref}}）： {{person2_desc}}，{{person2_clothing}}。動作與互動： {{scene_action}}。",
   "scenes": [
     {
       "n": 1,
