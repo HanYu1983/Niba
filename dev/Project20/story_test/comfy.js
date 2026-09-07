@@ -68,7 +68,7 @@ export function openSocket(clientId) {
 }
 
 export function waitForCompletion(ws, promptId) {
-  const timeoutMs = Number(env.TIMEOUT_MS || "120000");
+  const timeoutMs = Number(env.TIMEOUT_MS || "180000");
   const startedAt = Date.now();
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const progress = (msg) => process.stdout.write(`\r     ${msg}`);
