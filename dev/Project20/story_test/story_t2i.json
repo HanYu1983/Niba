@@ -2,7 +2,7 @@
   "1": {
     "class_type": "UNETLoader",
     "inputs": {
-      "unet_name": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+      "unet_name": "pornmasterZImage_turboV35Bf16.safetensors",
       "weight_dtype": "default"
     }
   },
