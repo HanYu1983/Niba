@@ -1,4 +1,5 @@
 services:
+  # $ docker compose run --rm comfy-client node index.js --vars waterpark22.json --seed 229913 --out waterpark --width 832 --height 1216
   comfy-client:
     build: .
     image: comfy-client:latest

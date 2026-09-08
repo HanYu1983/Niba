@@ -1,0 +1,11 @@
+{
+  "scene": "大型水上遊樂園的高跳台區，泳池上方聳立著三層鋼鐵跳台",
+  "light": "明亮的正午順光，池面碧藍通透",
+  "style": "寫實攝影風格，極致細節，高畫質，8k解析度",
+  "person1_ref": "小月",
+  "person1_desc": "19歲女孩，黑色長髮綁成高馬尾，雙臂張開",
+  "person1_clothing": "身穿白色與水藍拼接的運動泳衣",
+  "scene_action": "位於畫面最上方：小月張開雙臂站在最高層跳板的邊緣；鋼鐵跳台的支柱與樓梯從畫面最底部向上高聳、直伸到畫面頂端；湛藍池水平鋪在畫面最底部",
+  "seed": 445122,
+  "prompt": "extreme low-angle shot，worm\u2019s-eye view，dramatic vertical perspective，廣角鏡頭誇張透視。{{person1_ref}}是{{person1_desc}}，{{person1_clothing}}；{{scene_action}}。場景：{{scene}}，光線：{{light}}。{{style}}"
+}

@@ -2,7 +2,7 @@
   "1": {
     "class_type": "UNETLoader",
     "inputs": {
-      "unet_name": "pornmasterZImage_turboV35Bf16.safetensors",
+      "unet_name": "zImageUltimateNSFW_v20.safetensors",
       "weight_dtype": "default"
     }
   },

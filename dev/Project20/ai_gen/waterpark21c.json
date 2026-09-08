@@ -1,0 +1,11 @@
+{
+  "scene": "大型水上遊樂園的泳池近景，池水在鏡頭前展開，遠處的滑水道與陽傘沿著畫面邊緣彎曲",
+  "light": "明亮的正午陽光，水面波光反射",
+  "style": "寫實攝影風格，極致細節，高畫質，8k解析度",
+  "person1_ref": "小芸",
+  "person1_desc": "20歲女孩，栗棕色長髮濕漉漉貼在肩上，張嘴大笑",
+  "person1_clothing": "身穿鵝黃色連身泳衣，站在畫面中央的淺水裡、雙臂攤開潑水",
+  "scene_action": "位於畫面中央：小芸站在淺水區張臂潑水，池水面在她附近佔了前景大部分空間，畫面邊緣的泳池岸邊、躺椅與滑水道全都向畫面四角彎曲膨脹",
+  "seed": 556733,
+  "prompt": "(fisheye lens, barrel distortion, ultra wide angle:1.4)，誇張彎曲的廣角變形。{{person1_ref}}是{{person1_desc}}，{{person1_clothing}}；{{scene_action}}。場景：{{scene}}，光線：{{light}}。{{style}}"
+}

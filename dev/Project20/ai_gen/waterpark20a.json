@@ -1,0 +1,11 @@
+{
+  "scene": "大型水上遊樂園的高跳台區，泳池上方聳立著三層鋼鐵跳台",
+  "light": "明亮的正午順光，池面碧藍通透",
+  "style": "寫實攝影風格，極致細節，高畫質，8k解析度",
+  "person1_ref": "小月",
+  "person1_desc": "19歲女孩，黑色長髮綁成高馬尾，雙臂張開",
+  "person1_clothing": "身穿白色與水藍拼接的運動泳衣",
+  "scene_action": "位於畫面上方頂端：小月張開雙臂站在最高層跳板的邊緣；鋼鐵跳台的支柱與樓梯由畫面底部向高處聳立、高聳入雲；湛藍泳池水面鋪在畫面最底部",
+  "seed": 445122,
+  "prompt": "\u201CExtreme worm\u2019s-eye view, looking up from ground level. A 19-year-old Asian girl with a high ponytail, arms spread open, standing on the edge of the highest diving board at the top of the frame. Massive steel diving tower with pillars and stairs soaring upward from the bottom, blue swimming pool at the very bottom. Dramatic vertical perspective, ultra wide angle lens, bright sunny daylight, realistic photography, crisp details.\u201D {{{{style}}}}"
+}

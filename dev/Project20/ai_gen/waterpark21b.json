@@ -1,0 +1,11 @@
+{
+  "scene": "大型水上遊樂園的泳池水面，清澈碧綠的水面在下方無盡展開，池邊的躺椅與陽傘縮成小色塊",
+  "light": "明亮正午日光，從正上方照射，水面反光",
+  "style": "寫實攝影風格，極致細節，高畫質，8k解析度",
+  "person1_ref": "小月",
+  "person1_desc": "19歲女孩，黑色長髮在水中攤開成一大片扇形",
+  "person1_clothing": "身穿白色與水藍拼接的運動泳衣，仰躺在粉紅色彩虹泳圈上",
+  "scene_action": "位於畫面正中央：小月仰躺在圓形游泳圈上，頭髮順著水面攤平成一圈，四肢大字張開伸向泳圈邊緣，泳圈占畫面中央、四周全是碧綠池水波紋",
+  "seed": 556733,
+  "prompt": "(bird's eye view, top-down overhead shot:1.4)，垂直正上方的俯瞰平面。{{person1_ref}}是{{person1_desc}}，{{person1_clothing}}；{{scene_action}}。場景：{{scene}}，光線：{{light}}。{{style}}"
+}
