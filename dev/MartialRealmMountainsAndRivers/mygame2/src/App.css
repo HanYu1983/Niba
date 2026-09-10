@@ -1921,6 +1921,30 @@
   font-size: 20px;
 }
 
+.resource-point-marker--inactive {
+  background: rgba(71, 85, 105, 0.58);
+  filter: grayscale(0.7) drop-shadow(0 1px 2px rgba(10, 20, 30, 0.58));
+}
+
+.resource-point-marker__warning {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  display: grid;
+  place-items: center;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #fff7cc;
+  border-radius: 50%;
+  color: #451a03;
+  background: #facc15;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: none;
+  pointer-events: none;
+}
+
 /* 資源點與玩家重疊時：縮小並偏移到 cell 角落，避免 icon 被擠開，同時保留玩家主體與資源點可辨識度。 */
 .resource-point-marker--overlapping {
   position: absolute;
