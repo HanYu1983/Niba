@@ -1,0 +1,42 @@
+services:
+  # docker compose run --rm comfy-client node story.js story_ocean.json story_t2i.json ouptput 1 10 story_config_ocean.json
+  # docker compose run --rm comfy-client node story.js story_ocean.json story_t2i_hd.json output 1 10 story_config_ocean.json "4"
+  # docker compose run --rm comfy-client node story.js story_dq.json story_t2i_hd.json story_dq_output 1 10 story_config_dq.json "4"
+  # docker compose run --rm comfy-client node story.js story_ghost.json story_t2i_hd.json story_ghost_output 1 10 story_config_ghost.json "4"
+  # docker compose run --rm comfy-client node story.js story_coffee.json story_t2i.json story_coffee_output 1 10 story_config_coffee.json "1-10"
+
+  # test
+  # docker compose run --rm comfy-client node story.js story_ghost.json story_t2i.json story_ghost_output 1 10 story_config_ghost.json "1" "[[832, 1216]]"
+  # prod
+  # docker compose run --rm comfy-client node story.js story_ghost.json story_t2i_hd.json story_ghost_output 1 10 story_config_ghost.json "1-10" "[[1024, 1024], [832, 1216], [1216, 832]]"
+  
+  comfy-client:
+    build: .
+    image: comfy-client:latest
+    container_name: comfy-client
+    working_dir: /app
+    volumes:
+      # 掛載整個專案，讓輸出圖片直接寫回本機 output/
+      - .:/app
+      # 用匿名 volume 保留 image 內的 node_modules
+      - node_modules:/app/node_modules
+    # 預設指令: node index.js (docker compose run 可覆寫)
+
+  # 舊式動態網頁 UI：http://localhost:3000
+  # 列出 story/config/workflow 供選擇並叫用 story.js，全部輸出到 ./output
+  story-server:
+    build: .
+    image: comfy-client:latest
+    container_name: story-server
+    working_dir: /app
+    command: ["node", "server.js"]
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+
+volumes:
+  node_modules:

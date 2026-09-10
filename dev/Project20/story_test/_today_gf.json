@@ -1,0 +1,20 @@
+{
+  "title": "今日女友 (Today's Girlfriend)",
+  "story_setting": "台北信義區的網美咖啡廳",
+  "lighting": "窗邊溫暖的自然光，午後柔和光線，背景淺景深散景",
+  "camera": "中景半身寫真構圖，臉部清晰，主體清楚",
+  "style": "極致細節，高畫質，寫實攝影風格，膚質通透，8k解析度",
+  "negative_common": "low quality, blurry, distorted anatomy, extra fingers, deformed hands, extra limbs, watermark, text, logo, 低品質，模糊，畸形手指，變形的手，重複肢體，浮水印，文字",
+  "sizes": [[832, 1216]],
+  "prompt_template": "1女，今日女友的日常約會，{{scene_context}}，{{lighting}}，{{style}}。女性角色（{{person1_ref}}）： {{person1_desc}}，{{person1_clothing}}。動作與互動： {{scene_action}}。",
+  "scenes": [
+    {
+      "n": 1,
+      "title": "午後咖啡",
+      "seed": 9001,
+      "scene_context": "明亮的網美咖啡廳內部，義式咖啡機、玻璃甜點櫃、木質桌面與乾燥花裝飾，午後陽光斜照。",
+      "scene_action": "{{person1_ref}}雙手捧著一杯帶愛心拉花的拿鐵，微微歪頭、眼睛彎成月牙，對著鏡頭露出甜甜的笑容，白皙臉頰微微泛紅，陽光從側後方窗戶灑在她的髮絲上。"
+    }
+  ],
+  "negative": "{{negative_common}}"
+}

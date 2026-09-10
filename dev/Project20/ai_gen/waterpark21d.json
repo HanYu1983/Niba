@@ -1,0 +1,11 @@
+{
+  "scene": "深夜泳池邊，燈光照亮小晴的側臉，背景是深暗的池水與模糊的光點",
+  "light": "柔和燈光從側方照亮面孔，背景全暗成深色散景",
+  "style": "寫實攝影風格，極致細節，高畫質，8k解析度",
+  "person1_ref": "小晴",
+  "person1_desc": "18歲女孩，酒紅色短髮微濕，眼睛像鏡頭看、瞳孔清亮",
+  "person1_clothing": "身穿藍色白點比基尼泳裝肩帶，水珠停留在鎖骨與肩線",
+  "scene_action": "位於畫面上半部：小晴的特寫大頭佔滿整個畫面，額頭以下到鎖骨，雙眼直視鏡頭、微張嘴、表情帶一點俏皮，鼻子嘴巴清晰完整，背景全部虛化成深色光點",
+  "seed": 556733,
+  "prompt": "(extreme close-up, macro portrait, tight headshot:1.4)，面部佔滿畫面的近距特寫。{{person1_ref}}是{{person1_desc}}，{{person1_clothing}}；{{scene_action}}。場景：{{scene}}，光線：{{light}}。{{style}}"
+}

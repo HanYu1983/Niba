@@ -1,0 +1,84 @@
+{
+  "title": "逃出霓虹實驗室 (Escape the Neon Lab)",
+  "story_setting": "反重力實驗室高塔",
+  "antagonist_desc": "機械手臂遍布、紅色電子眼閃爍的巨型生化機器人警衛",
+  "lighting": "霓虹燈管與全息投影的賽博光效，冷色調高對比",
+  "camera": "動態追蹤鏡頭，帶速度感的構圖",
+  "style": "未來感極致細節，高畫質，電影級賽博龐克風格，8k解析度",
+  "negative_common": "low quality, blurry, distorted anatomy, extra fingers, deformed hands, extra limbs, watermark, text, logo, 低品質，模糊，畸形手指，變形的手，重複肢體，浮水印，文字",
+  "sizes": [[1024, 1024], [832, 1216], [1216, 832]],
+  "prompt_template": "1男1女，駭客與特工的脫逃任務，{{scene_context}}，{{lighting}}，{{style}}。男性角色（{{person1_ref}}）： {{person1_desc}}，{{person1_clothing}}。女性角色（{{person2_ref}}）： {{person2_desc}}，{{person2_clothing}}。動作與互動： {{scene_action}}。",
+  "scenes": [
+    {
+      "n": 1,
+      "title": "實驗室驚醒",
+      "seed": 5001,
+      "scene_context": "{{story_setting}}底層冷白燈光的生化實驗室，警報紅光不停旋轉，玻璃休眠艙泛著微光，冷霧從破裂的艙蓋縫隙洩出。",
+      "scene_action": "{{person1_ref}}從休眠艙猛然驚醒，額頭冷汗直流，強光下瞇著眼破開艙蓋翻身而出，回頭看向旁邊休眠艙，{{person2_ref}}正眨著惺忪眼睛坐起身。"
+    },
+    {
+      "n": 2,
+      "title": "數據中繼站",
+      "seed": 5002,
+      "scene_context": "實驗室深處的伺服器機房，整排黑色機櫃陣列亮著幽藍指示燈，冷風低聲轟鳴，通道盡頭綠色全息螢幕懸浮在半空。",
+      "scene_action": "{{person2_ref}}十指飛速在全息鍵盤上跳動，層層解開系統鎖定，{{person1_ref}}守在門口握著能量槍警戒，不時低頭向走廊張望。"
+    },
+    {
+      "n": 3,
+      "title": "傾斜電梯",
+      "seed": 5003,
+      "scene_context": "透明玻璃升降井，兩側霓虹管線飛速上掠，電梯轎廂在急速下墜中劇烈震動，玻璃出現龜裂紋路。",
+      "scene_action": "{{person1_ref}}單手緊握扶桿穩住重心，另一手拉住{{person2_ref}}的手臂；{{person2_ref}}用投影手環破解電梯控制板，試圖減緩墜速。"
+    },
+    {
+      "n": 4,
+      "title": "防禦無人機",
+      "seed": 5004,
+      "scene_context": "狹窄的不鏽鋼金屬走廊，冷色壁燈低閃，牆面佈滿雷射感應器，遠處紅光逐漸逼近。",
+      "scene_action": "{{person1_ref}}從腰間拔出能量槍，單膝跪地朝飛來的紅眼無人機連發兩發，無人機炸裂火花四濺；{{person2_ref}}按住無人機殘骸中的晶片，投影手環投射出逃生路線圖。"
+    },
+    {
+      "n": 5,
+      "title": "追擊警衛",
+      "seed": 5005,
+      "scene_context": "巨大的白色實驗大廳，地板光亮可鑑人，中央{{antagonist_desc}}從暗門踏出，沉重步伐在空間中迴盪，頭頂紅色電子眼閃爍著冰冷光芒。",
+      "scene_action": "兩人回身拔腿狂奔，{{person1_ref}}回頭朝巨人射出一發能量彈延緩腳步，{{person2_ref}}邊跑邊將剛截取的資料丟入隨身投影盤。"
+    },
+    {
+      "n": 6,
+      "title": "伺服器核心",
+      "seed": 5006,
+      "scene_context": "塔心的巨大圓柱形伺服器核心，黑色機櫃圍成一圈環繞著中央全息旋轉影像，冷風呼嘯，機器低吟不斷。",
+      "scene_action": "{{person2_ref}}將投影盤接上核心主機，資料高速湧入的同時{{person1_ref}}把醫療包當炸彈預埋在機櫃後方，用能量槍預設引信。"
+    },
+    {
+      "n": 7,
+      "title": "雷射網格",
+      "seed": 5007,
+      "scene_context": "地下通風管道與維修通道交界，天花板密佈紅色雷射網格，稍有觸碰便會觸發警報，橘紅光網在空氣中嗡嗡作響。",
+      "scene_action": "{{person1_ref}}率先以低姿滾翻穿越第一層雷射，伸手接住{{person2_ref}}跟隨穿越後因外套鉤住而一瞬踉蹌的身形，兩人在紅光縫隙間默契配合。"
+    },
+    {
+      "n": 8,
+      "title": "能源管道",
+      "seed": 5008,
+      "scene_context": "高溫橘紅光的巨型通風管道內部，管壁泛著灼熱光澤，熱風陣陣襲來，遠處盡頭隱約可見天光。",
+      "scene_action": "{{person1_ref}}在前以能量槍柄敲擊管壁測試結構，{{person2_ref}}緊抓著{{person1_ref}}的背包跟進，兩人沿著管壁逐段攀爬，汗水沿下顎滴落瞬間蒸發。"
+    },
+    {
+      "n": 9,
+      "title": "頂樓天台",
+      "seed": 5009,
+      "scene_context": "{{story_setting}}頂樓天台，暴雨傾瀉而下，四周高樓霓虹在雨幕中模糊成光斑，一架小型滑翔翼停在起降平台邊緣。",
+      "scene_action": "{{person1_ref}}一手扶住滑翔翼機翼、一手拉住{{person2_ref}}跳上起降平台，身後通道門被重型生化機器人警衛猛力撞開，金屬腳步震動地面。"
+    },
+    {
+      "n": 10,
+      "title": "霓虹逃亡",
+      "seed": 5010,
+      "scene_context": "城市夜空，暴雨後的雲層間隙露出霓虹色光柱，兩人身懸滑翔翼穿梭在摩天大樓之間，身後{{story_setting}}冒出橙紅爆炸火花，黑煙翻騰。",
+      "scene_action": "{{person1_ref}}握緊操縱桿修正方向，{{person2_ref}}回望爆炸火光後轉過頭微笑，投影手環上的資料圖標持續閃爍，城市霓虹在兩人翼尖倒映流動。"
+    }
+  ],
+  "negative": "{{negative_common}}"
+}

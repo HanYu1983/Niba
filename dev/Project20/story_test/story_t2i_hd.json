@@ -1,0 +1,109 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen_3_4b.safetensors",
+      "type": "lumina2",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "ModelSamplingAuraFlow",
+    "inputs": {
+      "shift": 3,
+      "model": ["1", 0]
+    }
+  },
+  "4": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "ae.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "EmptySD3LatentImage",
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["2", 0],
+      "text": ""
+    }
+  },
+  "7": {
+    "class_type": "ConditioningZeroOut",
+    "inputs": {
+      "conditioning": ["6", 0]
+    }
+  },
+  "8": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "add_noise": "enable",
+      "noise_seed": 0,
+      "steps": 4,
+      "cfg": 1,
+      "sampler_name": "dpmpp_2m_sde",
+      "scheduler": "beta",
+      "start_at_step": 0,
+      "end_at_step": 3,
+      "return_with_leftover_noise": "enable",
+      "model": ["3", 0],
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "latent_image": ["5", 0]
+    }
+  },
+  "9": {
+    "class_type": "LatentUpscaleBy",
+    "inputs": {
+      "upscale_method": "bislerp",
+      "scale_by": 1.7,
+      "samples": ["8", 0]
+    }
+  },
+  "10": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "add_noise": "enable",
+      "noise_seed": 1,
+      "steps": 5,
+      "cfg": 1,
+      "sampler_name": "dpmpp_2m_sde",
+      "scheduler": "sgm_uniform",
+      "start_at_step": 2,
+      "end_at_step": 999,
+      "return_with_leftover_noise": "disable",
+      "model": ["3", 0],
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "latent_image": ["9", 0]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["10", 0],
+      "vae": ["4", 0]
+    }
+  },
+  "12": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "story_hd",
+      "images": ["11", 0]
+    }
+  }
+}
