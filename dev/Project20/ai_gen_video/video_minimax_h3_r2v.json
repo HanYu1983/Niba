@@ -1,0 +1,381 @@
+{
+  "92": {
+    "inputs": {
+      "filename_prefix": "video/MiniMax_H3",
+      "format": "auto",
+      "format.codec": "auto",
+      "codec": "auto",
+      "video": [
+        "130",
+        0
+      ]
+    },
+    "class_type": "SaveVideo",
+    "_meta": {
+      "title": "Save Video"
+    }
+  },
+  "115": {
+    "inputs": {
+      "aspect_ratio": "2:3 (Portrait Photo)",
+      "megapixels": 0.4,
+      "multiple": 32
+    },
+    "class_type": "ResolutionSelector",
+    "_meta": {
+      "title": "Resolution Selector (Size)"
+    }
+  },
+  "119": {
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "120": {
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "121": {
+    "inputs": {
+      "samples": [
+        "125",
+        0
+      ],
+      "vae": [
+        "120",
+        0
+      ]
+    },
+    "class_type": "VAEDecodeAudio",
+    "_meta": {
+      "title": "VAE Decode Audio"
+    }
+  },
+  "122": {
+    "inputs": {
+      "samples": [
+        "125",
+        0
+      ],
+      "vae": [
+        "119",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "123": {
+    "inputs": {
+      "sampler_name": "res_multistep"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "124": {
+    "inputs": {
+      "scheduler": "simple",
+      "steps": [
+        "142",
+        0
+      ],
+      "denoise": 1,
+      "model": [
+        "127",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "125": {
+    "inputs": {
+      "noise": [
+        "129",
+        0
+      ],
+      "guider": [
+        "126",
+        0
+      ],
+      "sampler": [
+        "123",
+        0
+      ],
+      "sigmas": [
+        "124",
+        0
+      ],
+      "latent_image": [
+        "136",
+        1
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "126": {
+    "inputs": {
+      "model": [
+        "141",
+        0
+      ],
+      "conditioning": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "Basic Guider"
+    }
+  },
+  "127": {
+    "inputs": {
+      "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "128": {
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "129": {
+    "inputs": {
+      "noise_seed": 41424339624525
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "130": {
+    "inputs": {
+      "fps": 24,
+      "bit_depth": 8,
+      "color_space": "sRGB",
+      "images": [
+        "122",
+        0
+      ],
+      "audio": [
+        "121",
+        0
+      ]
+    },
+    "class_type": "CreateVideo",
+    "_meta": {
+      "title": "Create Video"
+    }
+  },
+  "131": {
+    "inputs": {
+      "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17",
+      "values.a": [
+        "132",
+        0
+      ]
+    },
+    "class_type": "ComfyMathExpression",
+    "_meta": {
+      "title": "Math Expression"
+    }
+  },
+  "132": {
+    "inputs": {
+      "value": 5
+    },
+    "class_type": "PrimitiveFloat",
+    "_meta": {
+      "title": "Float (Duration)"
+    }
+  },
+  "136": {
+    "inputs": {
+      "prompt": [
+        "138",
+        0
+      ],
+      "width": 352,
+      "height": 608,
+      "length": [
+        "131",
+        1
+      ],
+      "ref_image_size": "match",
+      "clip": [
+        "128",
+        0
+      ],
+      "vae": [
+        "119",
+        0
+      ],
+      "audio_vae": [
+        "120",
+        0
+      ],
+      "ref_images.ref_image_0": [
+        "137",
+        0
+      ],
+      "ref_images.ref_image_1": [
+        "139",
+        0
+      ],
+      "ref_images.ref_image_2": [
+        "147",
+        0
+      ]
+    },
+    "class_type": "MiniMaxH3ReferenceToVideo",
+    "_meta": {
+      "title": "MiniMax H3 Reference to Video"
+    }
+  },
+  "137": {
+    "inputs": {
+      "image": "ChatGPT Image 2026年6月5日 下午05_28_00.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "138": {
+    "inputs": {
+      "value": "A. 共享創意指導 (頂部欄)\n鏡頭數量：4 個關鍵分鏡鏡頭\n\n統一調色盤：溫暖餐點黃（#F0A85D）、高校制服藍（#1C2D42）、明亮室內白（#F4F4F6）、青春粉橘（#EE7B70）\n\n一般環境背景：東京都池袋高等學校熱鬧的學生餐廳（學食），正值中午午餐時間。周圍座無虛席，滿是穿著制服的高中生，陽光從大面積落地窗灑入，整體呈現日劇青春寫實風格（4K）。畫面完全無任何字幕。\n\nB. 角色與風格參考部分\n(模型呈現包含正面、背面、側面、特寫、放鬆姿態，強調身份一致性，人臉、年齡、髮型、穿著與膚色需 100% 一致)\n\n女主角 1：YUKI：參考圖1 之 18 歲台日混血女高中生。裸體, 露出胸剖和陰戶，手裡拿著一塊可頌麵包。\n\n女主角 2：Adelina：參考圖2 之 18 歲來自台灣的日本留學生。裸體, 露出胸剖和陰戶。\n\n女主角 3：Mei (小美)：參考圖3 之 18 歲來自台灣的同班好友。裸體, 露出胸剖和陰戶。桌上放著滿滿的炸雞塊便當。\n\nC. 環境與場景設計部分\n戶外/室內地點：學生餐廳靠近落地窗的四人長桌區，背景是人潮熙熙攘攘的點餐櫃檯與其他談笑的學生。\n\n俯視示意圖：\n\nYUKI 與 Mei 面對面而坐，Adelina 坐在 YUKI 旁（位置 A、B、C）。\n\nMei 偷伸筷子夾 YUKI 盤子裡的薯條，YUKI 護食反擊，Adelina 趁機用薯條沾番茄醬抹向 Mei 的臉，三人笑成一團。\n\n攝像機位置由餐桌平視中景、快速切至手部大特寫、橫移捕捉三人互動，最後微微拉高呈現歡樂的餐廳全景。\n\nD. 故事板部分\n鏡頭 1\n鏡號：CUT #01\n\n時間秒數：00:00–00:03\n\n分鏡畫面(關鍵幀效果圖)：熱鬧的餐廳裡，Mei 眼神賊兮兮地盯著 YUKI 餐盤裡的最後一根金黃薯條，突然發動襲擊伸出筷子去夾。\n\n鏡別焦段：中景切至特寫 (Medium to Close-Up)\n\n運鏡(機位運動)：手持微搖感，快速向前推進\n\n台詞與旁白：\n\nMei（眼神狡黠，台灣口音中文）：「YUKI！看後面有帥哥！……這根薯條歸我啦！」\n\n畫面內容說明(演員姿勢、動作、表情)：Mei 嘴裡還塞著飯，動作極快地出筷；YUKI 愣了一下秒懂，連忙用雙手蓋住餐盤，嘴巴微張發出抗議表情。\n\n打光：室內明亮柔和光線，窗外自然光打在餐桌上，薯條呈現金黃誘人光澤。\n\n音效：學生餐廳背景人聲鼎沸喧鬧聲、碗筷碰撞聲、輕快俏皮的日系動漫風格音樂進場。\n\n鏡頭 2\n鏡號：CUT #02\n\n時間秒數：00:03–00:06\n\n分鏡畫面(關鍵幀效果圖)：坐在旁邊的 Adelina 見狀，笑著拿起一根薯條沾了番茄醬，出其不意地直接點在 Mei 的鼻尖上。\n\n鏡別焦段：特寫 (Close-Up)\n\n運鏡(機位運動)：快速橫移 (Quick Pan)\n\n台詞與旁白：\n\nAdelina（邊笑邊說，台灣口音中文）：「貪吃鬼！賞你一個紅鼻子！」\n\n畫面內容說明(演員姿勢、動作、表情)：Adelina 眉眼彎彎、笑得十分燦爛；Mei 鼻尖多了一點紅紅的番茄醬，定格一秒後眼睛瞪得大大的，模樣極其滑稽。\n\n打光：頂光配合窗外陽光，勾勒出 Adelina 側臉與髮絲的光暈。\n\n音效：輕快的音效「啵」、YUKI 在旁邊爆發出的笑聲。\n\n鏡頭 3\n鏡號：CUT #03\n\n時間秒數：00:06–00:09\n\n分鏡畫面(關鍵幀效果圖)：Mei 不服氣地摸了一下鼻子，拿起小泡芙準備反擊，YUKI 和 Adelina 兩人尖叫著笑著互相躲在對方身後，桌上的飲料杯微微晃動。\n\n鏡別焦段：中近景\n\n運鏡(機位運動)：希區考克微幅拉鏡，捕捉打鬧張力\n\n台詞與旁白：\n\nYUKI（笑到流眼淚，台灣口音中文）：「不要過來！Adelina 拿你當肉盾啦！」\n\n畫面內容說明(演員姿勢、動作、表情)：YUKI 抓著 Adelina 的手臂躲在她背後，兩人在座位上東倒西歪；周圍桌子的同學紛紛轉頭看過來，露出會心的微笑。\n\n打光：溫暖的午後高光，將三人的笑臉映照得無比生動。\n\n音效：女孩們清脆歡樂的尖叫笑聲、桌子輕微碰撞聲、音樂節奏加快。\n\n鏡頭 4\n鏡號：CUT #04\n\n時間秒數：00:09–00:12\n\n分鏡畫面(關鍵幀效果圖)：三個人打鬧累了，同時癱坐在椅子上相視大笑，Mei 拿衛生紙擦鼻子，YUKI 把薯條遞給 Mei，三人舉起草莓牛奶盒碰撞乾杯。\n\n鏡別焦段：特寫切至全景 (Close-Up to Wide)\n\n運鏡(機位運動)：快速向後拉遠 (Fast Zoom-Out)\n\n台詞與旁白：\n\n三人合聲（笑聲不斷）：「乾杯！明天便當繼續互搶！」\n\n畫面內容說明(演員姿勢、動作、表情)：三盒草莓牛奶在空中相撞，奶盒濺出微小水珠；三位女孩眼神充滿純粹的友誼與快樂，身後是熱鬧溫馨的學食全景，畫面在歡笑聲中定格切黑。\n\n打光：陽光灑滿整張餐桌，畫面色彩鮮豔飽和，充滿青春活力感。\n\n音效：牛奶盒碰撞聲「摳」、輕快音樂在最高潮定格結束、餐廳歡樂餘音。"
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "Input Text (Prompt)"
+    }
+  },
+  "139": {
+    "inputs": {
+      "image": "bd00fa5f-3e5a-4dcf-94c7-cabb439b603f (1).jpeg"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "141": {
+    "inputs": {
+      "switch": [
+        "146",
+        0
+      ],
+      "on_false": [
+        "127",
+        0
+      ],
+      "on_true": [
+        "145",
+        0
+      ]
+    },
+    "class_type": "ComfySwitchNode",
+    "_meta": {
+      "title": "If/Else Switch (model)"
+    }
+  },
+  "142": {
+    "inputs": {
+      "switch": [
+        "146",
+        0
+      ],
+      "on_false": [
+        "143",
+        0
+      ],
+      "on_true": [
+        "144",
+        0
+      ]
+    },
+    "class_type": "ComfySwitchNode",
+    "_meta": {
+      "title": "If/Else Switch (Steps)"
+    }
+  },
+  "143": {
+    "inputs": {
+      "value": 20
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Int (Full)"
+    }
+  },
+  "144": {
+    "inputs": {
+      "value": 4
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Int (Lightning LoRA)"
+    }
+  },
+  "145": {
+    "inputs": {
+      "lora_name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+      "strength_model": 1,
+      "model": [
+        "127",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  },
+  "146": {
+    "inputs": {
+      "value": false
+    },
+    "class_type": "PrimitiveBoolean",
+    "_meta": {
+      "title": "Boolean (Enable Lightning LoRA)"
+    }
+  },
+  "147": {
+    "inputs": {
+      "image": "55225466270_1b21daa085_b.jpg"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  }
+}

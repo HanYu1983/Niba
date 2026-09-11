@@ -77,6 +77,17 @@ function buildVideoWorkflow({ prompt, seed, duration, firstFile, lastFile }) {
   return wf;
 }
 
+function buildR2vWorkflow({ prompt, seed, duration, ref0, ref1, ref2 }) {
+  const wf = JSON.parse(readFileSync(resolve(HERE, "video_minimax_h3_r2v.json"), "utf-8"));
+  if (prompt) wf["138"].inputs.value = prompt;
+  if (seed !== undefined) wf["129"].inputs.noise_seed = seed;
+  if (duration !== undefined) wf["132"].inputs.value = duration;
+  if (ref0) wf["137"].inputs.image = ref0;
+  if (ref1) wf["139"].inputs.image = ref1;
+  if (ref2) wf["147"].inputs.image = ref2;
+  return wf;
+}
+
 async function downloadAndSave(filename, subfolder, type, outDir, meta) {
   const params = new URLSearchParams({ filename, subfolder: subfolder || "", type: type || "output" });
   const res = await fetch(`${SERVER}/view?${params.toString()}`);
@@ -238,6 +249,40 @@ server.tool(
     const res = await comfyPost("/prompt", { prompt: wf, client_id: `mcp-${Date.now()}` });
     startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, duration, model: "minimax-h3-i2v" });
     return { content: [{ type: "text", text: JSON.stringify({ status: "已提交，背景自動下載中", prompt_id: res.prompt_id, seed, duration, first_frame: firstFile, last_frame: lastFile }, null, 2) }] };
+  }
+);
+
+// ---------------- Video: Reference-to-Video (MiniMax H3 r2v) ----------------
+server.tool(
+  "gen_r2v_video",
+  "Submit a reference-to-video job (MiniMax H3 ref2va). Up to 3 reference images establish characters/scene consistency. Prompt uses the structured A/B/C/D format. Returns prompt_id immediately; background auto-downloads when done.",
+  {
+    prompt: z.string().min(1).describe("structured prompt, sections A/B/C/D, referencing 參考圖1/2/3"),
+    ref_image_0: z.string().describe("local path to first reference image (參考圖1)"),
+    ref_image_1: z.string().optional().describe("local path to second reference image (參考圖2)"),
+    ref_image_2: z.string().optional().describe("local path to third reference image (參考圖3)"),
+    seed: z.number().int().nonnegative().optional(),
+    duration: z.number().min(1).max(60).default(5).optional(),
+    out: z.string().optional().describe("subdirectory under output/")
+  },
+  async (p) => {
+    const seed = p.seed ?? Math.floor(Math.random() * 2 ** 32);
+    const duration = p.duration ?? 5;
+    const up = async (file) => {
+      const name = basename(file);
+      await uploadImage(name, readFileSync(file));
+      return name;
+    };
+    const ref0 = await up(resolve(p.ref_image_0));
+    const ref1 = p.ref_image_1 ? await up(resolve(p.ref_image_1)) : undefined;
+    const ref2 = p.ref_image_2 ? await up(resolve(p.ref_image_2)) : undefined;
+    const wf = buildR2vWorkflow({ prompt: p.prompt, seed, duration, ref0, ref1, ref2 });
+    const res = await comfyPost("/prompt", { prompt: wf, client_id: `mcp-${Date.now()}` });
+    startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, duration, model: "minimax-h3-r2v" });
+    return { content: [{ type: "text", text: JSON.stringify({
+      status: "已提交，背景自動下載中", prompt_id: res.prompt_id, seed, duration,
+      ref_images: [ref0, ref1, ref2].filter(Boolean)
+    }, null, 2) }] };
   }
 );
 
