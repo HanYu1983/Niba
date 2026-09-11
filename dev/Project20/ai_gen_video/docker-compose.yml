@@ -1,0 +1,16 @@
+services:
+  # $ docker compose run --rm comfy-client node index.js --vars waterpark22.json --seed 229913 --out waterpark --width 832 --height 1216
+  comfy-client:
+    build: .
+    image: comfy-client:latest
+    container_name: comfy-client
+    working_dir: /app
+    volumes:
+      # 掛載整個專案，讓輸出圖片直接寫回本機 output/
+      - .:/app
+      # 用匿名 volume 保留 image 內的 node_modules
+      - node_modules:/app/node_modules
+    # 預設指令: node index.js (docker compose run 可覆寫)
+
+volumes:
+  node_modules:

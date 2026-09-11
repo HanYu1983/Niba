@@ -7,7 +7,7 @@ import WebSocket from "ws";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const env = loadDotEnv();
-export const serverAddress = process.env.SERVER_ADDRESS || env.SERVER_ADDRESS || "http://114.34.238.93:8188";
+export const serverAddress = process.env.SERVER_ADDRESS || env.SERVER_ADDRESS || "http://192.168.0.193:8000";
 
 // ---------------- ComfyUI API ----------------
 
