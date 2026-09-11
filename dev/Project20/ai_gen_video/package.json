@@ -5,6 +5,11 @@
   "description": "Call ComfyUI to generate video from a workflow",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "mcp": "node mcp_server.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.16.0",
+    "zod": "^3.25.0"
   }
 }

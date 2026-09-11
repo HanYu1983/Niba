@@ -32,7 +32,7 @@ const wf = JSON.parse(readFileSync(join(HERE, wfFile), "utf-8"));
 const nodes = Object.entries(wf);
 const posNode = nodes.find(([, n]) => n.class_type === "CLIPTextEncode");
 const sampler = nodes.find(([, n]) => n.class_type === "KSampler")?.[1];
-const latent = nodes.find(([, n]) => n.class_type === "EmptySD3LatentImage")?.[1];
+const latent = nodes.find(([, n]) => ["EmptySD3LatentImage", "EmptyLatentImage"].includes(n.class_type))?.[1];
 const saveNode = nodes.find(([, n]) => n.class_type === "SaveImage")?.[1];
 
 if (prompt && posNode) posNode[1].inputs.text = prompt;
@@ -73,15 +73,18 @@ while (Date.now() < deadline) {
 if (!rec) throw new Error("timeout");
 
 mkdirSync(outDir, { recursive: true });
-let count = 0;
+const files = [];
 for (const output of Object.values(rec.outputs || {})) {
   for (const img of output.images || []) {
     const params = new URLSearchParams({ filename: img.filename, subfolder: img.subfolder || "", type: img.type });
     const buf = await (await fetch(`${SERVER}/view?${params}`)).arrayBuffer();
-    const file = join(outDir, img.filename);
+    const destDir = join(outDir, img.subfolder || "");
+    mkdirSync(destDir, { recursive: true });
+    const file = join(destDir, img.filename);
     writeFileSync(file, Buffer.from(buf));
-    count++;
+    files.push(file);
     console.log(`[gen] saved : ${file} (${(buf.byteLength / 1024).toFixed(1)} KB)`);
   }
 }
-console.log(`[gen] done. ${count} image(s)`);
+console.log(`[gen] done. ${files.length} image(s)`);
+console.log(`[result] ${JSON.stringify(files)}`);

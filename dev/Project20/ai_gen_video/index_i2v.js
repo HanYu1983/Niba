@@ -237,6 +237,7 @@ async function main() {
 
   console.log(`[client] done. outputs:`)
   for (const f of files) console.log(`  - ${f}`)
+  console.log(`[result] ${JSON.stringify(files)}`)
 }
 
 main().catch((err) => {

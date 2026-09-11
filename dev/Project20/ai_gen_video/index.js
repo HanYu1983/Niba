@@ -54,7 +54,7 @@ async function getJSON(url) {
   return JSON.parse(text)
 }
 
-async function download(base, baseUrl, item, outDir) {
+async function download(base, item, outDir) {
   const params = new URLSearchParams({
     filename: item.filename,
     type: item.type || 'output',
@@ -67,7 +67,7 @@ async function download(base, baseUrl, item, outDir) {
   fs.mkdirSync(destDir, { recursive: true })
   const dest = path.join(destDir, path.basename(item.filename))
   fs.writeFileSync(dest, buf)
-  return path.relative(baseUrl, dest)
+  return dest
 }
 
 async function main() {
@@ -148,15 +148,15 @@ async function main() {
       if (!Array.isArray(value)) continue
       for (const item of value) {
         if (item && typeof item === 'object' && item.filename) {
-          files.push(await download(server, outDir, item, outDir))
+          files.push(await download(server, item, outDir))
         }
       }
     }
   }
 
-  console.log(`[client] done. outputs saved under ${outDir}:`)
+  console.log(`[client] done. outputs:`)
   for (const f of files) console.log(`  - ${f}`)
-  if (files.length === 0) console.log('  (no downloadable outputs found)')
+  console.log(`[result] ${JSON.stringify(files)}`)
 }
 
 main().catch((err) => {

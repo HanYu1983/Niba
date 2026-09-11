@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "comfy-video-gen": {
+      "type": "local",
+      "command": ["node", "ai_gen_video/mcp_server.mjs"],
+      "enabled": true,
+      "environment": {
+        "COMFY_SERVER": "http://192.168.0.193:8000"
+      }
+    }
+  }
+}
