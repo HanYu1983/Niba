@@ -275,6 +275,7 @@ non_diegetic_music:
 - 無對白的節拍在 `detailed_description` 內**完全不寫 `<d>`**，並在 `overall_soundscape` 只寫環境/動作聲。
 - 語言：六欄位全英文；只有 `<d>` 內對白與畫面可見文字保留原始語言（中文）。
 - 對白與旁白同屬 `detailed_description` 的 `<d>` 機制：角色直接講話寫 `<Subject N> (S1) says, <d>[中文] ...。</d>`；完全不要旁白就是**別放**任何 narrator 語音標記。
+- **腔調錨點（2026-09 驗證有效）**：`.fmt.minimax.h3.r2v` 的中文聲線常被 seed 耦合出方言腔（本片實測 100303→粵語腔）。別只靠改 `<d>` 語言標籤（`[中文]`→`[普通話]` 無效）；要在 `overall_soundscape` **逐字寫念腔**當錨點。本片標準定為台灣腔普通話（標準國語／無粵語），樣板：`All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.` 有對白的 beat 一律在 `overall_soundscape` 帶這行，並在六欄位最末補註「（語音錨點：台灣腔普通話）」。
 
 參照：官方 `skill/h3-prompt-writing/references/ref-en.txt`（八參考標籤、六欄位範例）。
 

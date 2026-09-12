@@ -530,7 +530,9 @@ towering judicial bench, and the cold stone architecture.
 
 detailed_description:
 The target video uses a composed courtroom documentary style with cold blue-grey grading, shafts of overhead
-light and deliberate, slow camera movement that gives the turning point a monumental weight.
+light and deliberate, slow camera movement that gives the turning point a monumental weight. All spoken lines are
+delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), neutral northern-accent spoken Chinese, no dialect,
+no Cantonese, accent held consistent across all spoken lines.
 [Shot 1] The scene opens at 00:00.000 with a wide group shot from a low aisle position: rows of seated spectators
 fill the grandstands, and among the defense seats off-center a man in a dark charcoal suit begins to stand,
 rising slowly into a single shaft of cold light that cuts across the bench. Camera: static wide group shot with a
@@ -545,20 +547,24 @@ the towering judicial bench and the constitutional wall, the courtroom dead stil
 slowly fades. Camera: static wide shot, slow fade.
 
 overall_soundscape:
-The cavernous hush of the courtroom, Lin Mo's light footsteps on cold marble, the soft clack of the laptop
-latch, a murmur spreading and dying across the grandstands, and the distant echo of the court hall, no crowd
-voice laid over the spoken lines.
+All spoken lines are read aloud in Taiwan-accented Standard Mandarin (台灣腔普通話), slow and even, line by
+line word for word, no Cantonese accent. The cavernous hush of the courtroom, Lin Mo's light footsteps on cold
+marble, the soft clack of the laptop latch, a murmur spreading and dying across the grandstands, and the distant
+echo of the court hall, no crowd voice laid over the spoken lines.
 
 non_diegetic_music:
 A restrained low cello line with a sparse piano note, steady and rising barely as he walks to the center,
 holding a quiet tension into the fade.
 ```
 
-參數：`ref_image_0=ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=ch2_court_ref/zimage_*.png, duration=15, seed=210303, out=ch2_beat23_video`
+參數：`ref_image_0=ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=ch2_court_ref/zimage_*.png, duration=15, seed=330303, out=ch2_beat23_video`
+
+> **2026-09-12 語音錨點驗證註記**：本文重出 beat2_3 時採用「音場錨點」而非改 `<d>` 標籤——`<d>[中文]` 不變，但在 `overall_soundscape` 開頭明寫「台灣腔普通話、逐字朗讀、無粵語」，seed 由 210303 換 330303。此寫法已驗證產生乾淨台灣腔普通話、無粵語殘留（方法論：對白腔調由音場錨定，非由 `<d>` 語言標籤決定）。
 
 **範例要點：**
 - **林墨圖跨章復用**：直接引用 5.7 的 `zimage_00008_.png`，不重出圖——這是方案 C 最大的成本節約。
 - 節拍表只列金句，實際 prompt 可依小說補充前一句「法官閣下，辯方要求傳喚…」；兩句皆逐字、兩句對白各放一個鏡頭。
+- **腔調錨點（2026-09 收斂，見 guide §5.2）**：H3 r2v 的中文聲線會隨 seed 浮動，實測 `[中文]` 標籤與改 `[普通話]` 標籤都壓不住粵語/腔調殘留。**正解**＝維持 `<d>[中文] ...。</d>` 原標籤**不改**，改在 `overall_soundscape`（六欄位音場）明寫台灣腔普通話逐字朗讀，並在全片音場層加一句「All spoken lines delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese; keep the accent consistent throughout.」。本 beat（beat2.3）即用此錨點重出，已確認為乾淨台灣腔普通話。先例：Ch1/Ch3 各秒段內含 `<d>` 的 beats 一律套用同一音場錨點句，避免混腔。
 - 「自下而上入鏡」用 Shot 1 的 `tilt-up following his rise` 兌現；「群像」用 Shot 1 的 group shot 落實。
 
 ---
