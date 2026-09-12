@@ -30,9 +30,9 @@ async function comfyPost(path, body, raw = false) {
   return json;
 }
 
-async function uploadImage(filename, buf) {
+async function uploadFile(filename, buf) {
   const form = new FormData();
-  form.append("image", new Blob([buf], { type: "image/png" }), filename);
+  form.append("image", new Blob([buf], { type: "application/octet-stream" }), filename);
   form.append("overwrite", "true");
   return comfyPost("/upload/image", form, true);
 }
@@ -82,6 +82,13 @@ function buildR2vWorkflow({ prompt, seed, duration, ref0, ref1, ref2 }) {
   if (ref0) wf["137"].inputs.image = ref0;
   if (ref1) wf["139"].inputs.image = ref1;
   if (ref2) wf["147"].inputs.image = ref2;
+  return wf;
+}
+
+function buildUpscaleWorkflow({ file, model }) {
+  const wf = JSON.parse(readFileSync(resolve(HERE, "utility-gan_upscaler.json"), "utf-8"));
+  wf["9"].inputs.file = file;
+  if (model) wf["1"].inputs.model_name = model;
   return wf;
 }
 
@@ -238,7 +245,7 @@ export function createMcpServer() {
       const duration = p.duration ?? 5;
       const up = async (file) => {
         const name = basename(file);
-        await uploadImage(name, readFileSync(file));
+        await uploadFile(name, readFileSync(file));
         return name;
       };
       const firstFile = await up(resolve(p.first_frame));
@@ -268,7 +275,7 @@ export function createMcpServer() {
       const duration = p.duration ?? 5;
       const up = async (file) => {
         const name = basename(file);
-        await uploadImage(name, readFileSync(file));
+        await uploadFile(name, readFileSync(file));
         return name;
       };
       const ref0 = await up(resolve(p.ref_image_0));
@@ -316,6 +323,25 @@ export function createMcpServer() {
         files: job.files.length ? job.files : undefined,
         error: job.error
       }, null, 2) }] };
+    }
+  );
+
+  // ---------------- Upscale: GAN video upscaler ----------------
+  server.tool(
+    "upscale_video",
+    "GAN-upscale a local mp4 with the RealESRGAN x4 model through ComfyUI (LoadVideo -> GetVideoComponents -> ImageUpscaleWithModel -> CreateVideo -> SaveVideo). Uploads the video to ComfyUI input, submits the upscale workflow, and background-downloads the enlarged video.",
+    {
+      file: z.string().describe("local path to the mp4 video to upscale"),
+      out: z.string().optional().describe("subdirectory under output/, e.g. 'upscaled'"),
+      model: z.string().optional().describe("UpscaleModelLoader model filename, default RealESRGAN_x4plus.safetensors")
+    },
+    async (p) => {
+      const name = `mcp_${Date.now()}_${basename(p.file)}`;
+      await uploadFile(name, readFileSync(resolve(p.file)));
+      const wf = buildUpscaleWorkflow({ file: name, model: p.model });
+      const res = await comfyPost("/prompt", { prompt: wf, client_id: `mcp-${Date.now()}` });
+      startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed: null, prompt: p.file, model: "GAN-upscale-x4" });
+      return { content: [{ type: "text", text: JSON.stringify({ status: "已提交，背景自動下載中", prompt_id: res.prompt_id, uploaded: name }, null, 2) }] };
     }
   );
 
