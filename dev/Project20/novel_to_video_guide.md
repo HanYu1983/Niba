@@ -309,6 +309,32 @@ non_diegetic_music:
 
 > **2026-09-12 記錄**：現行 r2v workflow 由節點 115 `ResolutionSelector`（2:3, 0.4MP）固定、寫入節點 136 `width:352 / height:608`。若未來在 workflow 內調整解析度，必須全書同步更動為同一組值。
 
+### 6.2 高清放大與合併：先放大、後合併
+
+成品需要高清（UHD）輸出時，固定採用 **「每段各自先高清放大 → 再合併」**（不先合併再放大）。
+
+| | 先放大後合併（採用） | 先合併後放大（不採用） |
+|--|--|--|
+| GPU 總量 | 相同（GAN 逐幀，總幀數一樣） | 相同 |
+| 任務大小 | 每段一個小任務（每 15s ≈ 8 分鐘），失敗只重跑該段 | 單一長任務（60s≈30+ 分鐘），失敗全片重來 |
+| 畫質 | 放大輸入是未經合併 re-encode 的原始 beat，最乾淨 | 多一道 concat 再壓縮才進 GAN |
+| 記憶體 | 每段幀數小，較不易碰 VRAM/時限 | 一口氣處理全片幀數，風險高（RTX 5060 Ti 尤甚） |
+
+**流水線：**
+
+```
+Step 1  每段 beat 各自 upscale_video（RealESRGAN x4）
+        └─ 352×608 → 1408×2432（每段獨立提交，背景自動下載）
+Step 2  以放大後的解析度合併
+        └─ merge_videos(resolution="1408:2432")
+```
+
+**要點：**
+- `merge_videos` 的 `resolution` 參數要改為放大後的尺寸（預設 `352:608` 是未放大版）；輸入一律同解析度時，scale+pad 是 no-op、直接併流。
+- 放大前先確認所有 beat 解析度一致（`352×608 / 24fps` 目前皆一致）。
+- upscale workflow 見 `utility-gan_upscaler.json`：LoadVideo → GetVideoComponents → ImageUpscaleWithModel(RealESRGAN_x4plus) → CreateVideo → SaveVideo，全程約 8 分/15s。
+- 放大工具 `upscale_video` 與 `merge_videos` 需重啟 opencode 才出現在 MCP 工具列，可控或可用對等 node 腳本。
+
 ---
 
 ## 七、產出前自檢清單
