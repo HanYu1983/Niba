@@ -6,7 +6,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "mcp": "node mcp_server.mjs"
+    "mcp": "node mcp_server_stdio.mjs",
+    "mcp:http": "node mcp_server_http.mjs",
+    "mcp:legacy": "node mcp_server.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.16.0",
