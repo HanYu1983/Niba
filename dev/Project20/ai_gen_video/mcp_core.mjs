@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { z } from "zod";
 import { dirname, resolve, join, basename } from "node:path";
 import { fileURLToPath } from "node:url";
+import { mergeVideos } from "./merge_service.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SERVER = process.env.COMFY_SERVER || "http://192.168.0.193:8000";
@@ -315,6 +316,21 @@ export function createMcpServer() {
         files: job.files.length ? job.files : undefined,
         error: job.error
       }, null, 2) }] };
+    }
+  );
+
+  // ---------------- Merge: concatenate local videos ----------------
+  server.tool(
+    "merge_videos",
+    "Concatenate multiple local mp4 videos into a single mp4 in the given order. All inputs are re-encoded to a uniform resolution (default 352x608, 2:3) so mixed sizes merge cleanly without black bars or stretching; audio tracks are mixed and re-encoded together.",
+    {
+      files: z.array(z.string()).min(2).describe("ordered absolute paths to the mp4 files to merge (first file plays first)"),
+      out: z.string().describe("subdirectory under output/, e.g. 'final', 'story1_ch1'"),
+      resolution: z.string().optional().describe("target W:H, default '352:608' (use one fixed resolution across the whole project for clean assembly)")
+    },
+    async (p) => {
+      const result = await mergeVideos({ files: p.files, out: outArg(p.out), resolution: p.resolution ?? "352:608" });
+      return { content: [{ type: "text", text: JSON.stringify({ status: "已合併完成", ...result }, null, 2) }] };
     }
   );
 
