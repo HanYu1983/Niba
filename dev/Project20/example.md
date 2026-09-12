@@ -1,237 +1,336 @@
-### 5.5 實作範例：Beat 1.1（i2v / 方案 B 完整流程）
+### 5.5 實作範例：Beat 1.1（Z-Image 雙參考圖 + r2v）
 
-以 Ch1 Beat 1.1（邊境拾起廢紙、中景風沙鐵絲網、無台詞）為例，示範 i2v（FL2VA 錨定）時的真實執行流程。若改用 r2v，則此範例等同於 Step 1（出定場圖）直接接 `gen_r2v_video`。
+以 Ch1 Beat 1.1（開場：林墨在邊境鐵絲網旁，從灰燼中拾起千萬面額鈔票｜中景，風沙，鐵絲網｜無台詞）為例，示範現行標準流水線：**Z-Image（`gen_zit_image`）出兩張參考圖（角色＋場景） → `gen_r2v_video` 六欄位提示詞**。
 
-**角色視覺錨點（全書每段重複使用）：**
-> 林墨：中年男子，黑色俐落短髮，瘦削方正臉型，深色西裝，皮鞋沾灰，神情嚴肅冷靜。
+**Step 1 — Z-Image 參考圖 ×2（`gen_zit_image`，832×1248 直式 2:3）：**
 
-**Step 1 — SDXL 定場圖（`gen_sdxl_image`）：**
-
+角色圖（`out=ch1_beat11_ref_char`）：
 ```
-prompt: cinematic film still, desolate desert border wasteland of the Aurora Federation, vast open sky,
-rusty barbed wire fence stretching to the horizon, strong sunlight, wind blowing dust and sand,
-scattered burned papers and ash piles on the ground. A middle-aged man in a dark suit, short black neat hair,
-thin lean serious face, dusty leather shoes, crouches beside the fence, holding up a colorful banknote
-he just picked from the ashes, examining it. Cold blue-grey color grading, photorealistic cinematic photography,
-24mm wide angle, character placed on the rule-of-thirds, wide negative space, gritty documentary look
+prompt: editorial portrait photograph of a middle-aged East Asian man, late 40s, thin lean serious face with
+sharp jaw, short neatly combed black hair with faint grey strands, light stubble, deep-set tired eyes, wearing
+a dusty dark charcoal suit with a rumpled white shirt and no tie, holding up a folded brightly-colored oversized
+banknote with one hand, wary intense expression looking slightly off-camera, cold blue-grey cinematic color
+grading, realistic skin texture, 85mm portrait lens, shallow depth of field, dark plain industrial background
 ```
 
-參數：`width=1216, height=768, seed=110101, out=ch1_beat1`
-產出：`ch1_beat1/sdxl_00009_.png`
-
-**Step 2 — I2VA 影片提示詞（`gen_i2v_video`，首=尾幀=定場圖）：**
-
+場景圖（`out=ch1_beat11_ref_scene`）：
 ```
-I2VA: For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.
-
-integrated_multimodal_description: [Shot 1] The desolate border wasteland with a rusty barbed wire fence
-and the middle-aged man in a dark suit (Lin Mo) crouching beside it, exactly preserved from the reference picture.
-Strong sunlight beats down as wind gusts sweep dust and sand across the ground. The man's fingers tighten
-slightly around the colorful banknote, its corner fluttering in the wind with ash drifting past. He squints
-against the sun, then slowly turns the bill between two fingers to examine its printed digits, a subtle,
-restrained gesture. The camera pushes in with small amplitude at slow speed. No dialogue.
-
-overall_soundscape: Dry desert wind howling continuously, sand grains scratching across the cracked ground,
-an occasional clank of loose barbed wire tapping the metal fence post, faint crows in the distance.
-
-non_diegetic_music: A sparse, somber low-string drone with a single mournful woodwind note, restrained and
-cold, barely rising, matching the desolate stillness.
+prompt: cinematic film still, desolate desert border wasteland of the Aurora Federation, vast open sky, rusty
+barbed wire fence stretching to the horizon, strong muted daylight, wind blowing dust and sand, scattered burned
+papers and ash piles on the ground, cold blue-grey color grading, photorealistic cinematic photography, 24mm wide
+angle, wide negative space, gritty documentary look, no people
 ```
 
-參數：`first_frame=last_frame=輸出定場圖路徑, duration=15, seed=112233, out=ch1_beat1_video`
-
-**範例要點：**
-- 開場 `I2VA:` 行是 H3 對首幀錨定模式的必要前綴，不可省略。
-- `[Shot 1]` 內首句「exactly preserved from the reference picture」鎖緊與定場圖的一致性。
-- 動作只用**微小、生活化**的變化（手指收緊、鈔票角飄動、轉瓶身式翻紙幣），符合「中景固定」節拍。
-- 無台詞時在時間軸內明寫 `No dialogue.`
-- `overall_soundscape` 只含環境與動作聲；`non_diegetic_music` 只含配樂，兩欄不重複。
-
-### 5.6 實作範例：Beat 1.2（r2v / 方案 C 完整流程）
-
-以 Ch1 Beat 1.2（象徵：難民用整疊鈔票換半瓶水、走私販拿廢紙墊火爐，中遠景烈日，無台詞）為例，示範 r2v 的真實執行流程。全程只用 **1 張場景參考圖**，提示詞採**官方 Ref2VA 六欄位**（含音訊欄，杜絕旁白）。
-
-**Step 1 — SDXL 場景參考圖（`gen_sdxl_image`）：**
-
-```
-prompt: cinematic film still, desolate sun-blasted border checkpoint wasteland in harsh noon sunlight,
-no shadow, dusty ground with scattered colorful banknotes and ash. A group of thin desperate refugees crouch
-in the shadow of rusted structures, clutching thick stacks of brightly colored banknotes. In the foreground
-a smuggler shrugs and turns away, ignoring the offered cash, while a small fire stove crackles beside him,
-fed with sheets of the same colorful paper banknotes. Medium-wide shot, documentary photojournalism style,
-cold harsh daylight, gritty realistic tones
-```
-
-參數：`width=1216, height=768, seed=120102, out=ch1_beat12_ref`
-產出：`ch1_beat12_ref/sdxl_00012_.png`
+產出：`ch1_beat11_ref_char/zimage_00011_.png`、`ch1_beat11_ref_scene/zimage_00012_.png`
 
 **Step 2 — r2v 影片提示詞（`gen_r2v_video`，官方 Ref2VA 六欄位）：**
 
 ```
 subject_definitions:
-<Subject 1> is the scene in <Picture 1>, a sun-blasted border checkpoint wasteland with a group of thin
-desperate refugees crouching in the shadow of rusted structures, clutching thick stacks of colorful banknotes,
-and a smuggler in the foreground turning away from the offered cash beside a small cracking fire stove fed
-with the same colorful paper banknotes.
+<Subject 1> is the border economist Lin Mo in <Picture 1>, a thin lean middle-aged East Asian man in his late 40s
+with short neatly combed black hair with faint grey strands, light stubble, deep-set tired eyes, wearing a dusty
+dark charcoal suit with a rumpled white shirt without tie, holding up a folded brightly-colored oversized banknote.
+<Subject 2> is the border wasteland in <Picture 2>, a desolate dusty expanse beside a rusty barbed-wire fence
+stretching to the horizon, wind-blown sand and dust, scattered ash piles and burned paper scraps on the ground,
+wide open grey sky, cold blue-grey grading.
 
 summary:
-[reference generation] The target video shows <Subject 1> as a suffering group of refugees being refused by a
-smuggler who burns their worthless colorful banknotes, capturing the human cost of hyperinflation at a
-border checkpoint.
+[reference generation] The target video is the opening beat at the barbed-wire border: Lin Mo crouches by the
+fence line in the windy wasteland, spots a vivid banknote of enormous denomination half-buried in the ash, picks
+it up and turns it between his dusty fingers, examining its glaring printed digits. Character and setting are
+preserved from <Picture 1> and <Picture 2>.
 
 retention_analysis:
-<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the refugees' thin bodies,
-their stacks of colorful banknotes, the smuggler, the fire stove, the rusty structures, and the harsh noon
-daylight from <Picture 1> are retained.
+<Subject 1> (appears in [Shot 1], [Shot 3], [Shot 4]): fully_preserved - his gaunt lean face, neat black hair
+with grey strands, dark charcoal suit with rumpled white shirt, dusty weary presence, and the vivid banknote he
+handles.
+<Subject 2> (appears in [Shot 1], [Shot 3], [Shot 4]): fully_preserved - the desolate wasteland, dusty ground,
+ash piles, burned paper scraps, rusty barbed-wire fence against the wide grey sky, and the cold blue-grey tones.
 
 detailed_description:
-The target video uses a desolate photojournalism style with sun-blasted colors and harsh, shadowless noon light.
-[Shot 1] A medium-wide shot establishes <Subject 1>, the border checkpoint wasteland, where a thin refugee
-trembles as he holds out a thick stack of colorful banknotes toward the smuggler, his eyes pleading on the
-half bottle of water in the man's hand. The camera stays static.
-[Shot 2] At 00:03.000, the shot cuts to a medium-close shot of the smuggler, who waves his hand dismissively
-without even counting the money, turns his back, crouches by the fire stove, and throws a stack of banknotes
-into the flames. The fire licks up the paper and colorful ash drifts away in the heat. The camera pushes in
-slightly with a small handheld amplitude.
-[Shot 3] At 00:08.000, the shot cuts to a medium shot of the same refugee, his eyes reddening as he withdraws
-the rejected banknotes and lowers his head. Behind him the fire stove keeps burning, and another refugee
-carefully pours a few drops of the half bottle of water for each person around. The camera holds static with a
-slight handheld sway.
-[Shot 4] At 00:13.000, the shot pulls out to a wide angle of the whole wasteland, colorful banknotes and ash
-scattered on the ground, the refugees' figures blurring in the heat shimmer, and the scene slowly fades out.
-The camera pulls back slowly with small amplitude.
+The target video uses a cold gritty documentary style with cold blue-grey color grading and stark natural
+daylight, medium framing among the wind, sand and barbed wire.
+[Shot 1] The scene opens at 00:00.000 with a medium shot of Lin Mo in his dusty dark suit crouched beside the
+barbed-wire fence in the windy wasteland; sand streams across the ground and his jacket, gusts flattening the dry
+grass, as his squinting eyes catch something vivid glinting in the ash pile by his feet. Camera: static medium
+shot with a subtle handheld sway. No dialogue.
+[Shot 2] At 00:04.500, a close-up cut on Lin Mo's dusty fingers sifting through the grey ash and retrieving a
+brightly-colored oversized banknote, its rainbow ink stark and almost crude against the burnt paper fragments
+around it; grains of sand fall from the bill as it lifts. Camera: close-up, shallow depth of field. No dialogue.
+[Shot 3] At 00:08.000, Lin Mo straightens up slightly and turns the banknote between two fingers, squinting at
+the printed digits of an enormous denomination while the bill's edge flutters in the wind; behind him the
+barbed-wire fence stretches toward the horizon under the huge grey sky, ashes drifting past. Camera: medium
+shot, slightly low, the character on the rule of thirds. No dialogue.
+[Shot 4] At 00:12.500, a slow push toward the banknote held against the desolate backdrop, sand and ash gusting
+across the frame, the fence lines receding into muted light, then a gentle fade. Camera: slow push-in, fade out.
+No dialogue.
 
 overall_soundscape:
-Continuous dry desert wind with low howling, crackling of the fire stove, soft rustling of paper banknotes,
-shuffling of refugees' footsteps on dusty ground, and faint heat-shimmer shimmer. No human voice of any kind.
+Dry wind howling continuously across the empty wasteland, sand grains scratching over cracked earth, the metallic
+rattle of loose barbed wire tapping the fence posts, faint distant crows, and the crisp rustle of paper as Lin Mo
+turns the banknote between his fingers.
 
 non_diegetic_music:
-N/A
+A sparse somber low-string drone with a single mournful woodwind note, cold and restrained, slowly swelling as
+the banknote comes into focus and thinning again into the final fade.
 ```
 
-參數（`gen_r2v_video`）：`ref_image_0=輸出場景參考圖路徑, duration=15, seed=120889, out=ch1_beat12_video`
+參數：`ref_image_0=ch1_beat11_ref_char/zimage_00011_.png, ref_image_1=ch1_beat11_ref_scene/zimage_00012_.png, duration=15, seed=110101, out=ch1_beat11_video`
 
 **範例要點：**
-- **六欄位依序出現**：`subject_definitions` → `summary` → `retention_analysis` → `detailed_description` → `overall_soundscape` → `non_diegetic_music`。
-- **「<Subject 1>」與「<Picture 1>」標籤**在 subject_definitions 定義一次，retention_analysis 用 `fully_preserved` 承諾一致性。
-- **無對白＝不寫任何 `<d>`**（舊 A/B/C/D 結構的「全程無對白」會被模型忽略）；音訊一律由 `overall_soundscape` / `non_diegetic_music` 控制，`non_diegetic_music: N/A` 明確關掉配樂。
-- `detailed_description` 以 350-500 英文詞描述 4 鏡（00:00 / 03 / 08 / 13），鏡頭時間戳嚴格遞增且 ≤ duration。
-- 前半段描述（構圖主體動作）放 `detailed_description`；「無任何語言」明確寫在 `overall_soundscape` 結尾防旁白。
-- seed 用 **120889**（與舊版 120888 分帳號，利於舊問題影片/新影片對比）。
+- **角色＋場景雙參考圖**是標準配置：`ref_image_0` 鎖人物、`ref_image_1` 鎖環境，`<Subject 1>`/`<Subject 2>` 各對應 `<Picture 1>`/`<Picture 2>`。
+- Z-Image 出圖直接 2:3（832×1248），符合指南 6.1 解析度規範，r2v `ref_image_size: match` 縮放時不切構圖重點。
+- 無對白＝六欄位中**完全不寫 `<d>`**，`overall_soundscape` 只給環境/動作聲，`non_diegetic_music` 給配樂輪廓。
+- 時間戳嚴格遞增且 ≤ duration：`00:00.000 / 04.500 / 08.000 / 12.500`。
 
-### 5.7 實作範例：Beat 1.3（Z-Image 生成參考圖 + r2v）
+---
 
-以 Ch1 Beat 1.3（對照：電子廣告牆文宣「警惕！數據是毒藥」；林墨對比口袋裡的廢紙，感到寒顫｜特寫→遠景、壁畫式構圖｜無台詞）為例，示範以 **Z-Image（`gen_zit_image`）** 出參考圖再接 r2v 的流程。此例只用 1 張參考圖承載「廣告牆 + 林墨」對照構圖。
+### 5.6 實作範例：Beat 1.2（Z-Image 雙場景參考圖 + r2v）
 
-**Step 1 — Z-Image 參考圖（`gen_zit_image`）：**
-Z-Image 適合出風格強烈、高反差的圖；prompt 集中描述廣告牆的內容與配色，人物擺入前景作大小對照。
+以 Ch1 Beat 1.2（象徵：難民用整疊鈔票換半瓶水，走私販拿廢紙墊火爐｜中遠景，烈日｜無台詞，無主角）為例。此例**無固定主角**，參考圖全部是場景/人物關係，仍用六欄位。
 
+**Step 1 — Z-Image 參考圖 ×2（`gen_zit_image`，832×1248）：**
+
+中遠景（`out=ch1_beat12_ref_zit`）：
 ```
-prompt: photo-realistic cinematic wide shot, a massive electronic propaganda billboard wall on a city street,
-screen glowing giant red Chinese text "警惕！數據是毒藥" with scrolling banner below and a colorful animated
-cartoon of a crow pecking a seedling. In front at the bottom, a small darkly dressed man in a suit seen from
-behind, looking up at the towering wall, feeling small and unsettled. High contrast between the bright neon
-billboard and the dark foreground figure. Cold night color grading, deep shadows, epic monumental composition
-```
-
-（可另加一段對照細節：`the billboard's font style and color scheme matches a colorful banknote in his pocket, symbolically identical`）
-
-參數（`gen_zit_image`）：`width=1216, height=768, seed=130103, out=ch1_beat13_ref`
-產出：`ch1_beat13_ref/xxxxx.png`（Z-Image 檔名以實際輸出為準）
-
-**Step 2 — r2v 影片提示詞（`gen_r2v_video`，A/B/C/D 結構）：**
-
-```
-A. Shared Creative Direction (top section)
-Color palette: electric neon red (#FF2F2F) propaganda screen, deep city-night blue (#0B1B3F), cold asphalt
-grey, warm golden billboard edge light. Overall mood: monumental propaganda wall towering over one small man,
-oppressive contrast. No subtitles besides the on-screen sign, no watermark.
-
-B. Character Definition Section
-主角: 參考圖1 前景底部一名穿深色西裝的中年男子（林墨），從背後拍攝，仰頭看向巨型廣告牆，
-身形在巨大的螢幕前顯得很渺小。人物外觀、衣物、構圖位置與參考圖 100% 一致。
-
-C. Environment and Scene Design Section
-Location: 夜晚城市街道，由參考圖1 定義。一座巨型電子廣告牆占據畫面大半，螢幕上滾動巨大紅字
-「警惕！數據是毒藥」與烏鴉啄幼苗的動畫；街燈與招牌燈稀疏，周遭寂靜。
-
-D. Storyboard Section
-鏡頭 1 (00:00–00:07)：
-從林墨背後特寫開始：他停步仰頭，螢幕的光與紅字在他外套上明滅。鏡頭上移，掠過他的肩頭，
-帶出整個巨型廣告牆。景別：特寫→中景。運鏡：手持緩慢上搖（tilt up）。
-
-鏡頭 2 (00:07–00:12)：
-廣告牆上的紅色標語「警惕！數據是毒藥」與烏鴉動畫占滿畫面，林墨徹底縮進畫框底部的小黑點。
-景別：遠景，壁畫式構圖。運鏡：固定鏡位。
-
-鏡頭 3 (00:12–00:15)：
-林墨低頭，右手隔著西裝口袋輕壓那張紙幣，停頓一拍，再抬起頭目光變冷。畫面漸隱。景別：近景。
-運鏡：靜止。
-
-全程無對白。
+prompt: cinematic film still, desolate sun-blasted border checkpoint wasteland in harsh noon sunlight, no
+shadows, dusty ground scattered with colorful banknotes and gray ash, a group of thin desperate refugees crouch
+in the shadow of rusted metal structures clutching thick stacks of brightly colored oversized banknotes, in the
+foreground a weathered smuggler in a dusty vest shrugs and turns away ignoring the offered cash while a small
+rusty fire stove crackles beside him being fed with sheets of the same rainbow paper banknotes, medium-wide shot,
+documentary photojournalism style, cold harsh daylight, gritty realistic tones
 ```
 
-參數（`gen_r2v_video`）：`ref_image_0=輸出Z-Image參考圖路徑, duration=15, seed=130888, out=ch1_beat13_video`
+兌換特寫（`out=ch1_beat12_ref_zit`）：
+```
+prompt: close-up cinematic still, a pair of grimy trembling hands extending a thick stack of brightly colored
+oversized banknotes toward a weathered smuggler who holds up a half bottle of drinking water, the exchange frozen
+mid-gesture, beside them a rusty small stove burning sheets of the same rainbow paper banknotes with orange
+flames and rising embers, harsh noon sunlight, dust motes in the air, gritty documentary photojournalism, cold
+harsh daylight
+```
+
+產出：`ch1_beat12_ref_zit/zimage_00013_.png`、`zimage_00014_.png`
+
+**Step 2 — r2v 影片提示詞（`gen_r2v_video`，六欄位）：**
+
+```
+subject_definitions:
+<Subject 1> is the group of desperate border refugees in <Picture 1>, thin ragged people crouching in the
+shadow of rusted metal structures, hollow exhausted faces, clutching thick stacks of brightly colored oversized
+banknotes.
+<Subject 2> is the weathered smuggler and his fire stove in <Picture 1> and <Picture 2>, a dust-covered man in
+a faded vest beside a small rusty stove fed with burning sheets of the same rainbow paper banknotes, holding up
+a half bottle of drinking water.
+
+summary:
+[reference generation] The target video is a symbolic scene at the sun-blasted border checkpoint: a family of
+refugees offers a whole stack of brightly colored banknotes for a half bottle of water, and the smuggler rejects
+the cash, feeding the colorful bills into the crackling fire stove while everyone watches the money burn. Scene
+and figures preserved from <Picture 1> and <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the thin ragged refugees, hollow faces,
+crouching poses, and the thick stacks of vivid oversized banknotes they clutch.
+<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the weathered smuggler in the faded
+vest, the half bottle of water in his hand, the small rusty stove, and the burning sheets of rainbow paper
+banknotes.
+
+detailed_description:
+The target video uses a harsh documentary photojournalism style with cold midday sunlight, no shadows,
+heat-haze distortion, and gritty realistic tones; medium-wide framing holds the whole exchange in frame.
+[Shot 1] The scene opens at 00:00.000 with a medium-wide shot of the sun-blasted checkpoint: thin refugees crouch
+in the shadow of rusted structures with stacks of colorful banknotes, while beside them the smuggler crouches at
+the small rusty stove whose fire is fed with bright paper bills; heat-haze shimmers over the dusty ground.
+Camera: static medium-wide shot. No dialogue.
+[Shot 2] At 00:05.000, the camera moves closer as grimy trembling hands extend a whole thick stack of vividly
+colored banknotes toward the smuggler; he glances at the cash with contempt, turns away with the half bottle of
+water still in his hand, then tosses the offered stack into the stove; orange flames lick up and the rainbow ink
+peels and chars as embers rise. Camera: slow push-in from medium to close, gritty handheld feel. No dialogue.
+[Shot 3] At 00:10.500, a wide shot: the refugee family watches the burning money, their hollow faces lit by the
+fire, while the half bottle of water remains in the smuggler's hand and ashes and blackened paper scraps drift
+in the heat-glazed air. Camera: slow pull-out to wide, ending with a gentle fade into the white-hot sky.
+No dialogue.
+
+overall_soundscape:
+Scorching dry wind over the empty wasteland, the crackle and hiss of the fire stove, the stiff crinkle of paper
+banknotes as the stack is handled and burns, grit and ash drifting, a faint distant ticking of hot rusted metal,
+no human voices.
+
+non_diegetic_music:
+A sparse, desolate low drone with a single repeated wooden clank, dry and hollow, barely rising and fading away
+with the final wide shot, restrained and bleak.
+```
+
+參數：`ref_image_0=ch1_beat12_ref_zit/zimage_00013_.png, ref_image_1=ch1_beat12_ref_zit/zimage_00014_.png, duration=15, seed=120202, out=ch1_beat12_video`
 
 **範例要點：**
-- **Z-Image 適合「單張圖承載強反差構圖」**（亮牆 vs 暗人、巨型 vs 渺小），一個節拍只需 1 張參考圖即可錨定。
-- 「壁畫式」構圖在 C 段已有整體描述，D 段鏡頭 2 再以「遠景」落實。
-- 對比細節（牆上字體色調與口袋紙幣相同）寫進 prompt 的風格段（可選補充句），讓模型隱約呈現「同源」感。
-- 三個鏡頭各安其序：**上搖揭示 → 遠景襯托 → 近景收束**，符合節拍表的「特寫→遠景」方向。
-- 此節拍無台詞，金句（1.4 的「閉嘴」宣言）留給下一段承接。
+- **沒有主角的節拍**用「場景＋人物關係」當 Subject，`retention_analysis` 仍逐 Subject 承諾 `fully_preserved`。
+- 兩張參考圖可以分角色職責：`<Picture 1>` 提供整體空間、`<Picture 2>` 提供關鍵動作特寫，`<Subject 2>` 同時引用兩張圖。
+- 舊版 Beat 1.2 曾因 A/B/C/D 結構、無音訊欄而**腦補旁白**；六欄位 + `overall_soundscape` 結尾明寫 `no human voices` 即可根絕。
+- 對白/旁白一律不放：`detailed_description` 內無任何 `<d>`，說話聲不得出現。
 
-### 5.8 實作範例：Beat 1.4（r2v + 台詞範例，車內收束鏡）
+---
 
-以 Ch1 Beat 1.4（收束：轎車內閉眼「回研究室，我要把草案序言重新寫一遍」；車窗掠過政治標語｜車內中景、窗外流動｜有台詞）為例，示範 **含對白的 r2v** 寫法，以及「車外流動標語」如何用單張參考圖 + 鏡頭敘事完成。
+### 5.7 實作範例：Beat 1.3（Z-Image 角色＋場景雙參考圖 + r2v）
 
-**Step 1 — Z-Image 參考圖（`gen_zit_image`）：**
+以 Ch1 Beat 1.3（對照：電子廣告牆文宣「警惕！數據是毒藥」；林墨對比口袋廢紙，感到寒顫｜特寫→遠景、壁畫式構圖｜無台詞）為例。**畫面可見中文**（廣告牆標語）可以是 Subject 特徵，但對白依然不寫 `<d>`。
 
+**Step 1 — Z-Image 參考圖 ×2（`gen_zit_image`，832×1248）：**
+
+角色圖（林墨，`out=ch1_beat13_ref_char`）：
 ```
-prompt: cinematic interior shot, the rear seat of a moving black sedan at dusk, a middle-aged man in a dark suit
-with short black hair leaning back with eyes closed, one hand resting near his chest pocket, city political
-slogan billboards blurring past through the side window, warm streetlight streaks, photorealistic film still,
-shallow depth of field focusing on the man's calm face
-```
-
-參數（`gen_zit_image`）：`width=1216, height=768, seed=140104, out=ch1_beat14_ref`
-產出：`ch1_beat14_ref/xxxxx.png`
-
-**Step 2 — r2v 影片提示詞（`gen_r2v_video`，A/B/C/D 含台詞）：**
-
-```
-A. Shared Creative Direction (top section)
-Color palette: warm amber streetlight (#E8A33D) streaks outside, deep charcoal car interior (#2A2A30),
-the man's dark suit (#1C1C22), faint slogan-neon reflections on glass. Overall mood: quiet resolve, a brief
-stillness before the fight begins. No watermark, no subtitles other than external signs.
-
-B. Character Definition Section
-主角: 參考圖1 穿深色西裝的中年男子（林墨），坐在行進中的黑色轎車後座，閉著眼睛，外形、衣著、
-神情與參考圖 100% 一致。
-
-C. Environment and Scene Design Section
-Location: 行進中的黑色轎車後座內部，由參考圖1 定義。車窗外城市傍晚光影流動，政治標語招牌
-由窗玻璃掠過、模糊成光帶；車內安靜，引擎低鳴。
-
-D. Storyboard Section
-鏡頭 1 (00:00–00:05)：
-林墨靠在後座閉眼，車窗外的城市標語與燈光在玻璃上流動。司機在前座聲音傳來。景別：中景。
-運鏡：固定鏡位。
-司機（畫外音）：「林立委，明天是《國安資訊增補案》的表決，要回議會嗎？」
-
-鏡頭 2 (00:05–00:11)：
-林墨沒有睜眼，嘴角微微動了一下：「不，回研究室。」他停頓，補充道：「我要把那份草案的序言
-重新寫一遍。」窗外標語繼續掠過。景別：近景──特寫過渡。運鏡：緩慢推近。
-
-鏡頭 3 (00:11–00:15)：
-司機問：「哪份草案？」林墨這才睜眼，瞳孔映著掠過的燈光，沉聲說：「一份關於如何讓政府閉嘴，
-讓數據說話的法案。」畫面漸隱。景別：特寫。運鏡：靜止收束。
+prompt: editorial portrait photograph of a middle-aged East Asian man, late 40s, thin lean serious face with
+sharp jaw, short neatly combed black hair with faint grey strands, light stubble, deep-set tired eyes, wearing a
+dark charcoal suit with a rumpled white shirt and no tie, holding a folded brightly-colored oversized banknote
+pressed tightly against his chest with both hands, wary tense expression looking slightly off-camera, cold
+blue-grey cinematic color grading, realistic skin texture, 85mm portrait lens, shallow depth of field, plain
+dark industrial warehouse background
 ```
 
-參數（`gen_r2v_video`）：`ref_image_0=輸出Z-Image參考圖路徑, duration=15, seed=140888, out=ch1_beat14_video`
+場景圖（`out=ch1_beat13_ref_scene`）：
+```
+prompt: cinematic film still, desolate border wasteland of the Aurora Federation at dusk, a towering giant
+electronic advertising wall with a huge LED screen glowing starkly, the screen surface displaying huge hot-red
+Chinese propaganda characters BaoJing ShuJu Shi DuYao and warning the public, colossal luminous billboard looming
+over a dusty empty road with scattered ashes and burned colorful paper scraps, cold blue-grey color grading, wind
+blowing dust and sand, dramatic monumental low-angle composition, photorealistic cinematic photography, gritty
+documentary look
+```
+
+產出：`ch1_beat13_ref_char/zimage_00008_.png`、`ch1_beat13_ref_scene/zimage_00009_.png`
+
+**Step 2 — r2v 影片提示詞（`gen_r2v_video`，六欄位，特寫→遠景）：**
+
+```
+subject_definitions:
+<Subject 1> is the border economist Lin Mo in <Picture 1>, a thin lean middle-aged East Asian man in his late
+40s with short neatly combed black hair with faint grey strands, light stubble, deep-set tired eyes, wearing a
+dark charcoal suit and a rumpled white shirt without tie, habitually holding a folded oversized colorful banknote.
+<Subject 2> is the towering electronic advertising wall in <Picture 2>, a colossal LED screen glowing with stark
+hot-red Chinese propaganda characters on a desolate border wasteland at dusk, dusty road, scattered ashes and
+burned colorful paper scraps, cold blue-grey grading.
+
+summary:
+[reference generation] The target video is a dramatic contrast sequence at the border: close-up of the giant red
+slogan wall, close-up of Lin Mo flinching as he pulls out the folded colorful banknote from his pocket and
+compares it with the warning above, ending on a wide mural-like shot of his small silhouette under the vast
+luminous wall. Composition, character and scene are preserved from <Picture 1> and <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 2], [Shot 3]): fully_preserved - his gaunt serious face, neat black hair with grey
+strands, dark charcoal suit with rumpled white shirt, and the folded vivid banknote he carries.
+<Subject 2> (appears in [Shot 1], [Shot 3]): fully_preserved - the colossal electronic wall with stark glowing
+red Chinese characters, the desolate wasteland and the cold blue-grey tones around it.
+
+detailed_description:
+The target video uses a cold documentary style with monumental, mural-like composition and cold blue-grey color
+grading throughout.
+[Shot 1] The scene opens at 00:00.000 with a close-up push toward the colossal electronic advertising wall; the
+huge screen flickers as the red Chinese characters glow, dust drifting across the beam of light with wind-bent
+power lines in the foreground. Camera: slow push-in with slight low angle. No dialogue.
+[Shot 2] At 00:04.000, cut to a close-up of Lin Mo's wary profile; the billboard light ripples across his thin
+tired face. His trembling fingers slowly pull the folded oversized colorful banknote from his suit pocket and
+hold it beside his cheek, comparing its vivid rainbow colors against the red slogan towering above; he shivers
+almost imperceptibly and swallows. Camera: static close-up, shallow depth of field, the red characters faintly
+reflected in his eyes. No dialogue.
+[Shot 3] At 00:08.500, the camera pulls far back into a mural-like wide shot: Lin Mo is a small dark silhouette
+in his suit standing on the dusty road facing the enormous wall of light, clutching the single bright banknote
+whose vivid colors echo the red screen; behind him the wasteland stretches into darkness, ashes and paper scraps
+drifting on the wind. Camera: slow pull-out to monumental wide composition, low angle. No dialogue.
+[Shot 4] At 00:13.000, slow tilt up along the glowing characters as the last flicker fades into cold grey dusk,
+the screen dimming until nearly dark before a gentle fade. No dialogue.
+
+overall_soundscape:
+Cold wind howling across the empty wasteland, sand scratching the cracked ground, the low electrical hum and
+faint intermittent crackle of the giant billboard screen, a distant metal pylon creaking, a few faint crows in
+the far distance.
+
+non_diegetic_music:
+A barely-there ominous low drone with sparse cold isolated piano notes, swelling very slowly then thinning to
+near silence in the final wide shot, restrained and unsettled.
+```
+
+參數：`ref_image_0=ch1_beat13_ref_char/zimage_00008_.png, ref_image_1=ch1_beat13_ref_scene/zimage_00009_.png, duration=15, seed=130302, out=ch1_beat13_video`
 
 **範例要點：**
-- **對白逐字寫入鏡頭段**，說話者標註（「司機（畫外音）：」「林墨：」），多句對白按時間順序放在對應鏡頭內。
-- 小說對話會比節拍表長——節拍表只列金句，實際 prompt 可依小說原文擴充，但**不可發明／改寫**（微調標點除外）。
-- 收束鏡的「閉嘴／讓數據說話」是本書母題第一次現身，此鏡承先（1.3 的口袋廢紙）啟後（後續各章法案），提示詞中保留原文逐字。
-- 「窗外流動標語」不另出圖：由 C 段環境描述 + 鏡頭文字（「模糊成光帶」）驅動，省一張參考圖。
-- 車窗光影（streetlight streaks）在 Step 1 就寫進參考圖，A 段再以 #HEX 鎖定，確保流動感延續到影片。
+- **壁畫式構圖靠「鏡頭運動」寫死**：Shot 3 明寫 `pulls far back into a mural-like wide shot`＋`monumental`，把節拍表的「特寫→遠景」方向用運鏡落實。
+- **畫面可見文字**（廣告牆標語）在 `subject_definitions`/`detailed_description` 描述為「紅字」即可，無需 `<d>`；`<d>` 只留給「角色說出口的話」。
+- 對比要素（鈔票 vs 標語）在 summary 就點出 `contrast sequence`，讓整體敘事意圖先行。
+- Google 出圖時畫面上的中文不一定要精準，影片 prompt 描述「hot-red Chinese propaganda characters」即可，字面精度由 r2v 自由呈現。
+
+---
+
+### 5.8 實作範例：Beat 1.4（重複使用角色參考圖 + r2v 含對白）
+
+以 Ch1 Beat 1.4（收束：轎車內閉眼「回研究室，我要把草案序言重新寫一遍」；車窗掠過政治標語｜車內中景、窗外流動｜**有台詞**）為例。示範**角色參考圖跨段重用**（指南 5.2 方案 C）＋六欄位內 `<d>` 對白寫法。
+
+**Step 1 — Z-Image 場景參考圖 ×1（`gen_zit_image`，832×1248；角色圖沿用 5.7 的 `zimage_00008_.png`）：**
+
+車內景（`out=ch1_beat14_ref_scene`）：
+```
+prompt: interior of a dark plain sedan car, rear cabin view from the side of a back-seat passenger, worn dark
+fabric seats with a rumpled seat belt, grey door panel, through the side window pass blurred red political
+propaganda billboards with glowing slogans along the roadside, overcast cold dusk light, cold blue-grey cinematic
+color grading, photorealistic film still, shallow depth of field, no people visible
+```
+
+產出：`ch1_beat14_ref_scene/zimage_00010_.png`（重複引用：`ch1_beat13_ref_char/zimage_00008_.png`）
+
+**Step 2 — r2v 影片提示詞（`gen_r2v_video`，六欄位 + `<d>` 對白）：**
+
+```
+subject_definitions:
+<Subject 1> is the border economist Lin Mo in <Picture 1>, a thin lean middle-aged East Asian man in his late
+40s with short neatly combed black hair with faint grey strands, light stubble, deep-set tired eyes, wearing a
+dark charcoal suit and rumpled white shirt without tie.
+<Subject 2> is the sedan rear cabin in <Picture 2>, a dark plain sedan interior with worn fabric seats and grey
+door panel, seen from beside a back-seat passenger, with cold dusk light through the window where blurred red
+political propaganda billboards glide past.
+
+summary:
+[reference generation] The target video is a quiet closing beat inside a moving sedan on the border road: Lin Mo
+settles into the back seat with his eyes closed after a draining day, the dark car interior rocking gently as
+political propaganda billboards stream past the window, and he softly voices his plan in a tired murmur. Character
+and car are preserved from <Picture 1> and <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - his thin gaunt face, neat black hair
+with grey strands, dark charcoal suit and rumpled white shirt, and the weary restrained manner.
+<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the dark sedan rear cabin, worn fabric
+seats, grey door panel, and the cold dusk window with passing red slogan billboards.
+
+detailed_description:
+The target video uses a quiet, intimate documentary style with cold blue-grey color grading and a lingering
+medium framing inside the moving sedan, the only color accents being the red slogans gliding past outside.
+[Shot 1] The scene opens at 00:00.000 with a medium interior shot of Lin Mo in the dark charcoal suit seated in
+the back of the sedan; the car rocks gently over the cracked border road while a continuous stream of red
+political propaganda billboards slides past the window, their reflections gliding across the glass. Camera:
+static medium shot with a subtle handheld sway matching the car. No dialogue.
+[Shot 2] At 00:04.000, Lin Mo slowly closes his eyes and lets out a long quiet breath, his tired face relaxing
+as the red slogan lights flicker past and drift across his features; he murmurs softly with his eyes still
+closed, <Subject 1> (S1) says, <d>[中文] 一份如何讓政府閉嘴、讓數據說話的法案。</d>. Camera: slow push-in to a
+medium-close frame.
+[Shot 3] At 00:08.500, the frame widens; Lin Mo sits motionless with eyes closed in the dim cabin, the billboards
+still streaming past outside, the last border signage receding into the dusk. Camera: static medium shot with the
+passing signs creating quiet motion in the window.
+[Shot 4] At 00:12.500, a slow tilt toward the window as the red slogans keep flowing past, the steady car hum
+continuing, and the image slowly fades toward darkness. Camera: slow tilt up with gentle fade out.
+
+overall_soundscape:
+The steady low hum of the sedan engine, faint gravel crunch of tires on the cracked road, wind rushing past the
+side window, muffled whooshes as each billboard passes, a soft rustle of fabric as Lin Mo shifts in his seat.
+
+non_diegetic_music:
+A slow contemplative low piano line over a deep ambient pad, warm-tinged but still restrained and cold-edged,
+gradually thinning until near silence in the final fade.
+```
+
+參數：`ref_image_0=ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=ch1_beat14_ref_scene/zimage_00010_.png, duration=15, seed=140401, out=ch1_beat14_video`
+
+**範例要點：**
+- **對白格式**：在對應鏡頭段寫 `<Subject 1> (S1) says, <d>[中文] 台詞。</d>`，對白保留中文原文、逐字不發明（節拍表只列金句，其他內容以小說原文為準）。
+- **角色參考圖跨段重用**：5.7 的林墨肖像圖在此直接當 `ref_image_0`，不必重出——這是方案 C 節省成本的核心。
+- **「車窗流動標語」不另出圖**：由場景圖（窗外帶標語）+ `detailed_description`（「a stream of red political propaganda billboards slides past」）共同驅動即可。
+- 默默無語的鏡頭（Shot 1/3/4）仍標 `No dialogue`，只有含 `<d>` 的 Shot 2 出聲。
+- `overall_soundscape` 不含人聲、`non_diegetic_music` 只給配樂，避免模型另創旁白。
