@@ -702,3 +702,299 @@ entirely during the close-up answer, and thinning to silence as he walks away.
 - 回答**逐字來自小說**（比節拍表長），一段落放單一 `<d>`；路人的追問只作聲＋動作，不幫記者加對白。
 - 結尾電視牆標題（《數據修正主義者的野心》）只入描述、不寫字幕，`TV wall scrolls a cold red headline` 即可。
 - Ch2 全章參考圖建置量：艾倫（2.1）、檢察官（2.2）、走廊（2.5）、法庭（2.1 共用）、林墨（Ch1 重用）——共 5 張圖支撐 5 個 beats。
+
+---
+
+### 5.14 實作範例：Beat 3.1（研究室＋網軍洗版螢幕，雙參考圖 + r2v）
+
+以 Ch3 Beat 3.1（開場：研究室，螢幕上網軍洗版留言｜特寫螢幕，滾動留言｜無台詞）為例。Ch3 新增三名參考（研究室、洗版螢幕、蘇菲），林墨沿用 Ch1 肖像。
+
+**Step 1 — Z-Image 參考圖 ×2（`gen_zit_image`，832×1248）：**
+
+研究室場景（`out=ch3_office_ref`）：
+```
+prompt: cinematic film still, interior of a political research office at night, a dim room lit only by a glowing
+desktop monitor and a small desk lamp, desk with a monitor and an open vintage offline laptop with worn plastic
+keys, stacks of paper reports and folders, at the back a night window showing a dark city with distant lights and
+below a few black administrative cars waiting along the street, cold blue-grey cinematic color grading,
+photorealistic film still, gritty documentary look, wide-angle interior, slightly low light level
+```
+
+洗版螢幕特寫（`out=ch3_screen_ref`）：
+```
+prompt: close-up cinematic still of a computer monitor screen, a social-media feed flooded with thousands of
+identical short Chinese attack comments scrolling downward, slogans about a data hound and a traitor destroying
+unity densely repeated, gray-blue interface with red warning badges and cold angry icons, one obviously fabricated
+photograph of a man in a suit standing under a foreign flag flickering among the posts, unread-message counters
+climbing into the tens of thousands, harsh blue monitor light, cold blue-grey grading, photorealistic screen
+photo, documentary style
+```
+
+產出：`ch3_office_ref/zimage_*.png`、`ch3_screen_ref/zimage_*.png`
+
+**Step 2 — r2v 影片提示詞（`gen_r2v_video`，六欄位，無台詞）：**
+
+```
+subject_definitions:
+<Subject 1> is Lin Mo at his work desk in <Picture 1>, a thin lean middle-aged East Asian man in his late 40s
+with short neatly combed black hair with faint grey strands, light stubble and deep-set tired eyes, dark charcoal
+suit and rumpled white shirt, sitting motionless in the dim research office before a glowing desktop monitor,
+blue light washing his face.
+<Subject 2> is the hostile comment storm on the monitor in <Picture 2>, a social-media feed flooded with
+thousands of identical short Chinese attack comments rolling down, gray-blue interface crowded with red warning
+badges and one fabricated photograph of a suited man under a foreign flag inside it.
+
+summary:
+[reference generation] The target video is the opening beat of the chapter: Lin Mo sits alone in the dim research
+office late at night, staring at a monitor flooded by an endless stream of identical hostile comments, a
+fabricated photo of him flashing among the bots, then quietly closes every communication window. Character and
+office are preserved from <Picture 1> and <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - his thin tired face, neat
+black hair with grey strands, dark charcoal suit with rumpled white shirt, sitting silhouette lit by blue screen
+glow in the dim office.
+<Subject 2> (appears in [Shot 1], [Shot 3], [Shot 4]): fully_preserved - the dense scrolling Chinese attack
+comments, red warning badges, and the single fabricated photo flickering among the posts.
+
+detailed_description:
+The target video uses a cold, quiet documentary style with blue-grey grading, a dark office and the only light
+source being the glowing monitor reflected on Lin Mo's face.
+[Shot 1] The scene opens at 00:00.000 with a close-up of the monitor: thousands of identical Chinese attack
+comments scroll downward in a dense grey-blue stream, red badges and unread counters climbing, a fabricated photo
+of a suited man under an enemy flag flickering among the rows. Camera: slow push-in to the screen, screen light
+dominant. No dialogue.
+[Shot 2] At 00:04.000, the camera pulls back to a medium shot of Lin Mo sitting alone in the dark office, the
+monitor light mapping across his thin tired face, his eyes fixed on the stream without blinking. Camera: static
+medium shot, subtle handheld sway. No dialogue.
+[Shot 3] At 00:08.000, a rack focus from Lin Mo's unreadable expression to the screen behind him, the comment
+flood still rolling, the fabricated photo looping among the bots in a cold loop. Camera: static, rack focus. No
+dialogue.
+[Shot 4] At 00:12.500, close-up of his hand moving the mouse: window after window closes with a soft click, the
+feed shrinking away until the desktop is bare, then the camera holds on his face in the dimming light, a long
+quiet before a gentle fade. Camera: static close-up, slow fade.
+
+overall_soundscape:
+The low hum of the desktop fan and the warm loop of the CPU, a soft tick of the cooling, faint notification
+chimes firing in a staccato rhythm, muted night traffic far below the window, the click of the mouse closing each
+window, no human voice.
+
+non_diegetic_music:
+A cold minimal electronic tone bed with sparse discordant ticks aligned to the message chimes, nervous and flat,
+thinning to near silence as the windows close and the screen goes bare.
+```
+
+參數：`ref_image_0=ch3_office_ref/zimage_*.png, ref_image_1=ch3_screen_ref/zimage_*.png, duration=15, seed=310101, out=ch3_beat31_video`
+
+**範例要點：**
+- **無對白情緒段**靠「光的指引」敘事：畫面只有螢幕光，`monitor light washing his face`/`blue screen glow` 貫穿主描述。
+- **洗版留言不精確字面化**：`short Chinese attack comments`＋意象（狗/逃亡者）即可，r2v 自由呈現；畫面可見文字不進 `<d>`。
+- 全段無 `<d>`，`overall_soundscape` 只有機器聲＋`no human voice`。
+
+---
+
+### 5.15 實作範例：Beat 3.2（離線筆電敲法案，重用林墨肖像 + r2v）
+
+以 Ch3 Beat 3.2（構思：林墨在離線筆電逐條敲下法案條文｜中景，鍵盤特寫｜無台詞）為例。林墨引用 5.7 肖像、場景沿用 5.14 研究室。
+
+**Step 1 — 重用現有參考圖（不重出圖）：**
+- `ref_image_0`＝林墨肖像：`ch1_beat13_ref_char/zimage_00008_.png`
+- `ref_image_1`＝研究室：`ch3_office_ref/zimage_*.png`（含復古離線筆電）
+
+**Step 2 — r2v 影片提示詞（`gen_r2v_video`，六欄位，無台詞）：**
+
+```
+subject_definitions:
+<Subject 1> is the border economist Lin Mo in <Picture 1>, a thin lean middle-aged East Asian man in his late 40s
+with short neatly combed black hair with faint grey strands, light stubble, deep-set tired eyes, wearing a dark
+charcoal suit and rumpled white shirt without tie.
+<Subject 2> is the research office desk in <Picture 2>, a dim political research office at night with a desk
+holding a closed desktop monitor and an open vintage offline laptop with worn plastic keys, stacks of paper
+reports, and a night window with distant city lights behind.
+
+summary:
+[reference generation] The target video is a quiet drafting beat in the research office: Lin Mo works alone on his
+vintage offline laptop, tapping out the clauses of the draft protocol line by line, screens showing the draft
+title and new articles, while the dark city rests outside the window. Character and office are preserved from
+<Picture 1> and <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - his thin serious face, neat
+black hair with grey strands, dark charcoal suit, rumpled white shirt, and his concentrated weary manner.
+<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the desk with the vintage
+offline laptop and its worn keys, the paper stacks, the closed desktop monitor and the night window behind.
+
+detailed_description:
+The target video uses a quiet intimate documentary style with cold blue-grey grading, one warm lamp pooling on the
+keyboard while the room stays dark, deliberate slow framing on the hands and the screen.
+[Shot 1] The scene opens at 00:00.000 with a medium shot of Lin Mo at the desk in the dim office, the open vintage
+laptop glowing before him, both hands resting at the keys, the desktop monitor dark beside it; the room is still
+and the night window shows distant lights. Camera: static medium shot, slightly low. No dialogue.
+[Shot 2] At 00:04.000, a close-up of his index finger striking the worn plastic keys as cursive letters cascade
+onto the screen: the draft title, then the article headings and clause lines marching down one by one. Camera:
+close-up on keyboard and screen, very shallow depth of field. No dialogue.
+[Shot 3] At 00:08.000, a rack pull to a medium-close of Lin Mo, his thin face lit by the pale laptop glow, eyes
+scanning the clause text he has just typed, a faint weariness and resolve passing across his features. Camera:
+static medium-close frame, slow rack. No dialogue.
+[Shot 4] At 00:12.500, a slow push toward the screen: the clause is finished and marked, a cold cursor blinking
+under the last line, and the rest of the dark office waits behind the frame as the image slowly fades. Camera:
+slow push-in, gentle fade.
+
+overall_soundscape:
+The soft rhythmic clatter of typing on worn plastic keys, the low whir of the vintage laptop fan, gentle
+background hum, a page of paper rustling under stacks, distant night traffic and a faint siren far away, no
+human voice.
+
+non_diegetic_music:
+A sparse, steady two-note ambient pulse under near silence, patient and mechanical, rising imperceptibly as the
+clauses stack up and fading with the final push-in.
+```
+
+參數：`ref_image_0=ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=ch3_office_ref/zimage_*.png, duration=15, seed=320202, out=ch3_beat32_video`
+
+**範例要點：**
+- **鍵盤特寫的「打字」動作**：Shot 2 用 `index finger striking`＋`letters cascade onto the screen`，法案內容以「標題/條文逐行」意象帶出，不把全文唸出。
+- 鏡頭弧線＝中景 → 鍵盤特寫 → 中近 → 螢幕推進，對應節拍表「中景、鍵盤特寫」。
+- 無台詞段照例全部 `No dialogue`＋音場無 `human voice`。
+
+---
+
+### 5.16 實作範例：Beat 3.3（蘇菲通報查封預算，三參考圖 + r2v 含對白）
+
+以 Ch3 Beat 3.3（干擾：助理蘇菲通報審計部要查封預算｜雙人中景，緊張｜**有台詞**）為例。蘇菲首度登場走肖像圖（新出 `ch3_sophie_ref`），與林墨（重用）、研究室（重用）構成分屏感雙人景。
+
+**Step 1 — Z-Image 蘇菲肖像（`gen_zit_image`，832×1248，`out=ch3_sophie_ref`）：**
+
+```
+prompt: editorial portrait photograph of a young East Asian female research assistant in her mid-20s standing
+just inside a dark office doorway, pale worried face, long straight black hair loosely tied back, plain dark
+cardigan over a white blouse, holding a stack of paper reports pressed against her chest, glancing toward a desk
+lamp across the room, harsh cold practical light from above, cold blue-grey cinematic color grading, realistic
+skin texture, 85mm portrait lens, shallow depth of field, blurred dark office and window background
+```
+
+**Step 2 — r2v 影片提示詞（`gen_r2v_video`，六欄位，含對白）：**
+
+```
+subject_definitions:
+<Subject 1> is the assistant Sophie in <Picture 1>, a young East Asian research assistant in her mid-20s, long
+straight black hair loosely tied back, plain dark cardigan over a white blouse, pale worried face, holding a
+stack of paper reports against her chest.
+<Subject 2> is Lin Mo in <Picture 2>, a thin lean middle-aged East Asian man in his late 40s in a dark charcoal
+suit with a rumpled white shirt, short black hair with grey strands, light stubble, deep-set tired eyes.
+<Subject 3> is the research office in <Picture 3>, the dim night office with the desk, the closed desktop
+monitor, the vintage offline laptop and a night window below which black administrative cars wait.
+
+summary:
+[reference generation] The target video is the interruption beat of the chapter: Lin Mo types the last clause of
+the protocol while the door quietly opens and Sophie steps in, pale, holding reports, delivering the news that the
+Audit Bureau will seal the office budget for the night, and the two exchange a tense quiet exchange about numbers
+and slogans. All three subjects are preserved from <Picture 1>, <Picture 2> and <Picture 3>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the young pale assistant with
+long black hair tied back, dark cardigan over white blouse, and the paper reports pressed to her chest.
+<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the thin tired man in the dark charcoal
+suit, rumpled white shirt, black hair with grey strands and his composed weary expression.
+<Subject 3> (appears in [Shot 3], [Shot 4]): fully_preserved - the dim research office, the desk, the dark
+monitor, and the night window over the waiting black cars.
+
+detailed_description:
+The target video uses a tense quiet documentary style with cold blue-grey grading, a two-shot framing that keeps
+Sophie at the door and Lin Mo at the desk facing each other, with the night window as a cold backdrop.
+[Shot 1] The scene opens at 00:00.000 with a medium two-sided shot: Sophie stands inside the doorway in the dark
+cardigan holding her reports, while Lin Mo remains seated at the desk in his charcoal suit, the open laptop
+glowing between them; she takes a breath before speaking. Camera: static medium two-shot, slight symmetry. No
+dialogue.
+[Shot 2] At 00:03.500, a close-up of Sophie as she steadies herself against the door frame, pale face in the
+cold overhead light; she speaks low and evenly, <Subject 1> (S1) says, <d>[中文] 我怕的是，如果我們這次輸了，以後歐若拉聯邦就再也沒有「數字」，只有「口號」了。</d>. Camera: static close-up, shallow depth of field. No other dialogue.
+[Shot 3] At 00:08.000, a medium shot of Lin Mo turning from the screen; he rises slightly, composure unbroken,
+then glances past her toward the window where the black administrative cars sit below, streetlight glinting off
+them. Camera: slow pan from the desk to the window. No dialogue.
+[Shot 4] At 00:12.500, back to the two-shot: Sophie stays by the door watching him, Lin Mo lowers himself back to
+the keyboard with a quiet decision hardening his face, the office settling back into its cold hum, and the image
+slowly fades. Camera: static medium two-shot, slow dim.
+
+overall_soundscape:
+The quiet click of the door latch, the rustle of paper reports, the low hum of the vintage laptop, distant
+footsteps of security officers in the corridor below, muffled street sounds through the window, and only the
+spoken lines above the hush.
+
+non_diegetic_music:
+A low restrained cello line with a sparse piano note under the tense calm, swelling softly at the window glimpse
+of the waiting cars and thinning to silence at the fade.
+```
+
+參數：`ref_image_0=ch3_sophie_ref/zimage_*.png, ref_image_1=ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_2=ch3_office_ref/zimage_*.png, duration=15, seed=330303, out=ch3_beat33_video`
+
+**範例要點：**
+- **新角色蘇菲**肖像圖描述帶動作（`holding a stack of paper reports`）直接服務本節「通報」情節。
+- 對白**逐字**：節拍表只列蘇菲金句，prompt 補足小說連接上下文（審計部查封預算已由 Shot 3 的窗外黑車＋門外腳步聲傳達），單一 `<d>` 只放蘇菲那句。
+- 窗外黑車＝開場鏡頭的伏筆（小說描述行政調查車待命），用 `overall_soundscape` 的 `footsteps of security officers` 補足。
+
+---
+
+### 5.17 實作範例：Beat 3.4（斷電、廣播搜索、抽隨身碟，重用林墨 + r2v 含對白）
+
+以 Ch3 Beat 3.4（高潮：斷電、廣播搜索，林墨闔蓋抽出隨身碟｜特寫，黑暗中的螢幕光｜**有台詞**）為例。收束鏡用「黑暗＋微弱螢幕光」與廣播人聲（背景，不進 `<d>`）對峙。
+
+**Step 1 — 重用現有參考圖（不重出圖）：**
+- `ref_image_0`＝林墨：`ch1_beat13_ref_char/zimage_00008_.png`
+- `ref_image_1`＝研究室：`ch3_office_ref/zimage_*.png`
+
+**Step 2 — r2v 影片提示詞（`gen_r2v_video`，六欄位，含對白）：**
+
+```
+subject_definitions:
+<Subject 1> is the border economist Lin Mo in <Picture 1>, a thin lean middle-aged East Asian man in his late 40s
+with short neatly combed black hair with faint grey strands, light stubble, deep-set tired eyes, wearing a dark
+charcoal suit and rumpled white shirt without tie.
+<Subject 2> is the research office in <Picture 2>, the dim night office with the desk, the closed desktop monitor
+and the open vintage laptop now dark, darkness swallowing the room except a cold glow from the window.
+
+summary:
+[reference generation] The target video is the climax beat of the chapter: the office power fails and the veteran
+laptop screen dies as its old battery drains, an amplified order from outside orders him to stop all work; Lin Mo
+closes the laptop calmly in the dark, draws a USB stick from his inner pocket, and speaks a quiet line to Sophie
+about the protocol needing no computer, only the rostrum of the parliament. Character and office are preserved
+from <Picture 1> and <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - his thin tired face, neat
+black hair with grey strands, dark charcoal suit, rumpled white shirt, and his unshaken calm in the dark.
+<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the dark office, the desk,
+the dead monitor, the closed vintage laptop, and the cold night window glow.
+
+detailed_description:
+The target video uses a stark dark-room documentary style with cold blue-grey grading, almost no light source
+except the dying laptop glow and the cold window light, and very still camera work punctuated by one red
+emergency glow from outside.
+[Shot 1] The scene opens at 00:00.000 with a medium shot: the office lights flicker once and die, plunging the
+room into darkness except for the pale glow of the vintage laptop screen; outside the window a red emergency
+light sweeps past. Camera: static medium shot with a tiny flicker effect. No dialogue.
+[Shot 2] At 00:04.000, a close-up of the laptop: the screen dims steadily as the aging battery drains, letters
+fading into grey, then Lin Mo's hand arrives and closes the lid with a soft click, sealing the dark. Camera:
+close-up on the screen and hand, very shallow depth of field. No dialogue.
+[Shot 3] At 00:08.000, a close-up of Lin Mo's fingers slipping inside his suit jacket and drawing out a slim USB
+stick, holding it in the dim red-swept light; he speaks low and evenly without looking up, <Subject 1> (S1) says,
+<d>[中文] 蘇菲，從後門走。這份協議不需要存在電腦裡，它只需要出現在國會的發言台上。</d>. Camera: static close-up on hand and USB, subtle red glow. No other dialogue.
+[Shot 4] At 00:12.500, a medium shot of Lin Mo standing, straightening his tie in the half-dark, the USB tucked
+into his palm, the red emergency light stroking across his silhouette, then the image slowly fades. Camera: static
+medium shot, gentle fade.
+
+overall_soundscape:
+The sharp pop of the power cut and the dying whine of the laptop fan dropping away, the loudspeaker order from
+outside in a distorted amplified voice demanding he stop all electronic operations (background, not a character
+line), the click of the lid closing, fabric rustling as he straightens his tie, distant sirens in the night city.
+
+non_diegetic_music:
+A low, ominous drone with a heartbeat-like pulse, tightening through the power cut and dead-softening during the
+USB close-up, holding a cold held tone until the final fade.
+```
+
+參數：`ref_image_0=ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=ch3_office_ref/zimage_*.png, duration=15, seed=340404, out=ch3_beat34_video`
+
+**範例要點：**
+- **廣播人聲（擴音器）只當場景聲**：`overall_soundscape` 描述「失真擴音命令」內容但不寫 `<d>`——`<d>` 只留給角色說出口的原文台詞。
+- 收束鏡的演員動作（闔蓋、抽隨身碟、撫平領帶）全部入 Shot 2/3/4，台詞只有林墨那句 `[中文]`。
+- Ch3 全章參考圖建置量：研究室（3.1）、洗版螢幕（3.1）、蘇菲（3.3）、林墨（Ch1 重用）、研究室/辦公室沿用——共 3 張新圖支撐 4 個 beats。
