@@ -56,11 +56,13 @@ function buildImageWorkflow(wfFile, { prompt, seed, width, height }) {
   return wf;
 }
 
-function buildVideoWorkflow({ prompt, seed, duration, firstFile, lastFile }) {
+function buildVideoWorkflow({ prompt, seed, duration, firstFile, lastFile, width, height }) {
   const wf = JSON.parse(readFileSync(resolve(HERE, "video_minimax_h3_t2v.json"), "utf-8"));
   wf["140:133"].inputs.value = duration;
   if (seed !== undefined) wf["140:129"].inputs.noise_seed = seed;
   if (prompt) wf["140:131"].inputs.prompt = prompt;
+  if (width !== undefined) wf["140:131"].inputs.width = width;
+  if (height !== undefined) wf["140:131"].inputs.height = height;
   if (firstFile) wf.load_first.inputs.image = firstFile;
   if (lastFile) wf.load_last.inputs.image = lastFile;
   if (!firstFile && !lastFile) {
@@ -70,11 +72,20 @@ function buildVideoWorkflow({ prompt, seed, duration, firstFile, lastFile }) {
     delete wf.scale_last;
     delete wf["140:131"].inputs.first_frame;
     delete wf["140:131"].inputs.last_frame;
+  } else {
+    if (width !== undefined) {
+      wf.scale_first.inputs.width = width;
+      wf.scale_last.inputs.width = width;
+    }
+    if (height !== undefined) {
+      wf.scale_first.inputs.height = height;
+      wf.scale_last.inputs.height = height;
+    }
   }
   return wf;
 }
 
-function buildR2vWorkflow({ prompt, seed, duration, ref0, ref1, ref2 }) {
+function buildR2vWorkflow({ prompt, seed, duration, ref0, ref1, ref2, width, height }) {
   const wf = JSON.parse(readFileSync(resolve(HERE, "video_minimax_h3_r2v.json"), "utf-8"));
   if (prompt) wf["138"].inputs.value = prompt;
   if (seed !== undefined) wf["129"].inputs.noise_seed = seed;
@@ -82,6 +93,8 @@ function buildR2vWorkflow({ prompt, seed, duration, ref0, ref1, ref2 }) {
   if (ref0) wf["137"].inputs.image = ref0;
   if (ref1) wf["139"].inputs.image = ref1;
   if (ref2) wf["147"].inputs.image = ref2;
+  if (width !== undefined) wf["136"].inputs.width = width;
+  if (height !== undefined) wf["136"].inputs.height = height;
   return wf;
 }
 
@@ -106,6 +119,8 @@ async function downloadAndSave(filename, subfolder, type, outDir, meta) {
       `prompt: ${meta.prompt}`,
       `seed: ${meta.seed ?? "n/a"}`,
       meta.duration !== undefined ? `duration: ${meta.duration}` : null,
+      meta.width !== undefined ? `width: ${meta.width}` : null,
+      meta.height !== undefined ? `height: ${meta.height}` : null,
       `model: ${meta.model}`,
       `date: ${new Date().toISOString()}`
     ].filter(Boolean);
@@ -141,7 +156,7 @@ function startBackgroundJob(promptId, meta) {
             if (!Array.isArray(value)) continue;
             for (const item of value) {
               if (item?.filename) {
-                const txtMeta = { prompt: meta.prompt, seed: meta.seed, duration: meta.duration, model: meta.model };
+                const txtMeta = { prompt: meta.prompt, seed: meta.seed, duration: meta.duration, model: meta.model, width: meta.width, height: meta.height };
                 job.files.push(await downloadAndSave(item.filename, item.subfolder, item.type, meta.out, txtMeta));
               }
             }
@@ -216,15 +231,17 @@ export function createMcpServer() {
       prompt: z.string().min(1),
       seed: z.number().int().nonnegative().optional(),
       duration: z.number().min(1).max(60).default(5).optional(),
+      width: z.number().int().min(64).max(4096).step(32).optional().describe("video width, default from workflow (e.g. 512)"),
+      height: z.number().int().min(64).max(4096).step(32).optional().describe("video height, default from workflow"),
       out: z.string().optional().describe("subdirectory under output/, e.g. 'fight'")
     },
     async (p) => {
       const seed = p.seed ?? Math.floor(Math.random() * 2 ** 32);
       const duration = p.duration ?? 5;
-      const wf = buildVideoWorkflow({ prompt: p.prompt, seed, duration });
+      const wf = buildVideoWorkflow({ prompt: p.prompt, seed, duration, width: p.width, height: p.height });
       const res = await comfyPost("/prompt", { prompt: wf, client_id: `mcp-${Date.now()}` });
-      startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, duration, model: "minimax-h3" });
-      return { content: [{ type: "text", text: JSON.stringify({ status: "已提交，背景自動下載中", prompt_id: res.prompt_id, seed, duration }, null, 2) }] };
+      startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, duration, model: "minimax-h3", width: p.width, height: p.height });
+      return { content: [{ type: "text", text: JSON.stringify({ status: "已提交，背景自動下載中", prompt_id: res.prompt_id, seed, duration, width: p.width ?? null, height: p.height ?? null }, null, 2) }] };
     }
   );
 
@@ -238,6 +255,8 @@ export function createMcpServer() {
       last_frame: z.string().describe("local path to last frame image"),
       seed: z.number().int().nonnegative().optional(),
       duration: z.number().min(1).max(60).default(5).optional(),
+      width: z.number().int().min(64).max(4096).step(32).optional().describe("video width, default from workflow (e.g. 512)"),
+      height: z.number().int().min(64).max(4096).step(32).optional().describe("video height, default from workflow"),
       out: z.string().optional().describe("subdirectory under output/")
     },
     async (p) => {
@@ -250,10 +269,10 @@ export function createMcpServer() {
       };
       const firstFile = await up(resolve(p.first_frame));
       const lastFile = await up(resolve(p.last_frame));
-      const wf = buildVideoWorkflow({ prompt: p.prompt, seed, duration, firstFile, lastFile });
+      const wf = buildVideoWorkflow({ prompt: p.prompt, seed, duration, firstFile, lastFile, width: p.width, height: p.height });
       const res = await comfyPost("/prompt", { prompt: wf, client_id: `mcp-${Date.now()}` });
-      startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, duration, model: "minimax-h3-i2v" });
-      return { content: [{ type: "text", text: JSON.stringify({ status: "已提交，背景自動下載中", prompt_id: res.prompt_id, seed, duration, first_frame: firstFile, last_frame: lastFile }, null, 2) }] };
+      startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, duration, model: "minimax-h3-i2v", width: p.width, height: p.height });
+      return { content: [{ type: "text", text: JSON.stringify({ status: "已提交，背景自動下載中", prompt_id: res.prompt_id, seed, duration, first_frame: firstFile, last_frame: lastFile, width: p.width ?? null, height: p.height ?? null }, null, 2) }] };
     }
   );
 
@@ -268,6 +287,8 @@ export function createMcpServer() {
       ref_image_2: z.string().optional().describe("local path to third reference image (參考圖3)"),
       seed: z.number().int().nonnegative().optional(),
       duration: z.number().min(1).max(60).default(5).optional(),
+      width: z.number().int().min(64).max(4096).step(32).optional().describe("video width, default from workflow (352)"),
+      height: z.number().int().min(64).max(4096).step(32).optional().describe("video height, default from workflow (608)"),
       out: z.string().optional().describe("subdirectory under output/")
     },
     async (p) => {
@@ -281,12 +302,13 @@ export function createMcpServer() {
       const ref0 = await up(resolve(p.ref_image_0));
       const ref1 = p.ref_image_1 ? await up(resolve(p.ref_image_1)) : undefined;
       const ref2 = p.ref_image_2 ? await up(resolve(p.ref_image_2)) : undefined;
-      const wf = buildR2vWorkflow({ prompt: p.prompt, seed, duration, ref0, ref1, ref2 });
+      const wf = buildR2vWorkflow({ prompt: p.prompt, seed, duration, ref0, ref1, ref2, width: p.width, height: p.height });
       const res = await comfyPost("/prompt", { prompt: wf, client_id: `mcp-${Date.now()}` });
-      startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, duration, model: "minimax-h3-r2v" });
+      startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, duration, model: "minimax-h3-r2v", width: p.width, height: p.height });
       return { content: [{ type: "text", text: JSON.stringify({
         status: "已提交，背景自動下載中", prompt_id: res.prompt_id, seed, duration,
-        ref_images: [ref0, ref1, ref2].filter(Boolean)
+        ref_images: [ref0, ref1, ref2].filter(Boolean),
+        width: p.width ?? null, height: p.height ?? null
       }, null, 2) }] };
     }
   );
