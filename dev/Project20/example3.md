@@ -377,35 +377,78 @@ non_diegetic_music:
 
 ## B5 — 檢察官冷笑定罪（對白，16 秒）
 
+> **格式說明（v5，2026-09 驗證成功）**：為避免 summary 等敘述欄污染台詞，
+> 對白區塊改用「極度去敘事化」格式：所有非 `<d>` 欄位一律英文名詞片語、
+> 禁止中文完整句；中文只存在於 `<d>` 內。
+
 ```
 subject_definitions:
-<Subject 1> 是 <Picture 1> 裡的檢察官：中年男性、削瘦、銳利眼神、深色法袍、胸前佩聯邦檢察徽章。
-<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭全景：圓頂大廳、分裂式旁聽席、左側紅衣支持者。
+<Subject 1> is the federal prosecutor from <Picture 1>:
+middle-aged male, thin face, sharp eyes, dark robe, federal prosecutor badge.
+
+<Subject 2> is the supreme court chamber from <Picture 2>:
+large domed hall, divided audience seating.
 
 summary:
-[reference generation] 目標影片是法庭對峙的定罪時刻：檢察官冷笑一聲轉向陪審團，將懷疑官方數字的
-行為上升為背叛，語氣從質問轉為宣判。畫面中只有檢察官一人開口說話，林墨不在此畫面中。
-人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+Reference-based courtroom scene.
+One visible speaker only.
+The prosecutor delivers a formal accusation.
+Preserve appearance and environment from references.
 
 retention_analysis:
-<Subject 1>（出現在 [Shot 1]）: fully_preserved - 削瘦面容、銳利眼神、深色法袍與檢察徽章。
-<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳與分裂旁聽席。
-說話者標記：<Subject 1> 是畫面中唯一開口的人；此畫面中不得出現任何其他會說話的角色。
+<Subject 1>: fully_preserved.
+<Subject 2>: fully_preserved.
+
+speaker_constraints:
+Only <Subject 1> speaks.
+No other character speaks.
+No narration.
+No voice-over.
+No off-screen voice.
 
 detailed_description:
-目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、快速切換。所有台詞以**台灣腔普通話**逐字、
-緩慢、由畫面內檢察官本人說出、非旁白、無粵語。鏡頭全程鎖定檢察官一人講話，嘴形與對白逐字同步。
-[Shot 1] 00:00.000（對白 16 秒）檢察官冷笑一聲轉向陪審團，<Subject 1>（S1）(S1) says,
-<d>[中文] 真實？在聯邦面臨外部壓力的特殊時期，任何與官方紀錄有出入的數字，都會影響我們內部的
-穩定！這不是科學，這是背叛。</d> 鏡頭：快速切換到陪審團方向的中景，主體始終是
-檢察官本人。
+
+Visual style:
+Cold blue-gray documentary courtroom footage.
+Medium shot.
+Natural courtroom lighting.
+
+[Shot 1]
+
+00:00-00:16
+
+Action:
+The prosecutor turns toward the jury and speaks calmly.
+Lip sync must follow dialogue exactly.
+Camera remains focused on the prosecutor.
+
+Dialogue:
+<Subject 1> says:
+
+<d>
+[中文]
+真實？
+
+在聯邦，面臨外部經濟封鎖的這段時期，
+
+任何偏離官方定調的數字，
+
+都是敵人用來瓦解我們內部的武器。
+
+這不是科學。
+
+這是背叛。
+</d>
 
 overall_soundscape:
-只有檢察官一個人在說話，其他角色完全沉默。所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）
-逐字緩慢朗讀、由畫面內檢察官本人說出、非旁白。其餘為法庭的龐大寂靜與大廳迴響。
+Only courtroom ambience.
+No additional speech.
+No crowd voices.
+No whispering.
 
 non_diegetic_music:
-一段低沉受限的大提琴線與稀疏鋼琴單音，平穩徐緩。
+Low cello.
+Sparse piano notes.
 ```
 
 **參數**：`ref_image_0=output/ch2_prosecutor_ref/zimage_00017_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=16, seed=310005, out=ch2_b5_video`
