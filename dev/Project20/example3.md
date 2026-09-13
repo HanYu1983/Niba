@@ -27,12 +27,12 @@
 | Ref-C1 | `output/ch1_beat13_ref_char/zimage_00008_.png` | 林墨肖像：瘦削中年男性、黑髮灰絲、淺鬍茬、深炭灰西裝、皺白襯衫 | 832×1248 (2:3) | 所有含林墨的區塊 |
 | Ref-C2 | `output/ch2_prosecutor_ref/zimage_00017_.png` | 檢察官肖像：中年男性、削瘦、銳利眼神、深色法袍、胸針 | 832×1248 | B3、B5 |
 | Ref-C3 | `output/ch2_allen_ref/zimage_00015_.png` | 艾倫肖像：19 歲少年、瘦弱、短髮、白色襯衫、恐懼表情 | 832×1248 | B4 |
-| Ref-C4 | `ch2_refs/char_judge.png` | 法官肖像：老年男性、銀髮、法袍、嚴肅 | 832×1248 | 後續 beat 如需特寫（B1–B5 未用到） |
+| Ref-C4 | `output/ch2_judge_ref/zimage_00032_.png` | 法官肖像：老年男性、銀髮、法袍、嚴肅 | 832×1248 | B10、B24（法官特寫） |
 | Ref-S1 | `output/ch2_court_ref/zimage_00016_.png` | 最高法院第三審判庭全景：圓頂大廳、分裂旁聽席、紅衣左/噤聲右、憲法石牆 | 832×1248 | B1、B2、B3、B5 等全景/坐席區塊 |
 | Ref-S2 | `ch2_refs/scene_court_defense.png` | 辯護席區域：木質桌椅、近法官席 | 832×1248 | B2、B8 等辯護席區塊（先用 Ref-S1 代用） |
-| Ref-S3 | `ch2_refs/scene_court_camerawall.png` | 法庭頂端直播攝影機與天花板結構 | 832×1248 | B20 |
-| Ref-S4 | `ch2_refs/scene_court_exit.png` | 法庭門外走廊：石柱、記者群 | 832×1248 | B26、B27、B28 |
-| Ref-S5 | `ch2_refs/scene_tvwall.png` | 法庭外電視牆：黑色標題滾動 | 832×1248 | B29 |
+| Ref-S3 | `output/ch2_camerawall_ref/zimage_00033_.png` | 法庭頂端直播攝影機與天花板結構 | 832×1248 | B20 |
+| Ref-S4 | `output/ch2_exit_ref/zimage_00034_.png` | 法庭門外走廊：石柱、記者群 | 832×1248 | B26、B27、B28 |
+| Ref-S5 | `output/ch2_tvwall_ref/zimage_00035_.png` | 法庭外電視牆：黑色標題滾動 | 832×1248 | B29 |
 
 > **建置方式**：每張以 `gen_zit_image`（Z-Image，832×1248 直式 2:3）生成，prompt 中明確指定角色外觀
 > 錨點（與 guide §5.3 一致）。Z-Image 出圖直接 2:3，r2v `ref_image_size: match` 縮放時不切構圖重點。
