@@ -147,41 +147,50 @@ function startBackgroundJob(promptId, meta) {
 
   (async () => {
     const deadline = Date.now() + POLL_TIMEOUT;
-    try {
-      while (Date.now() < deadline) {
-        const history = await comfyGet(`/api/history/${promptId}`);
-        if (!history[promptId]) { await sleep(POLL_INTERVAL); continue; }
-        const entry = history[promptId];
-        const s = entry.status || {};
-        if (s.status_str === "error" || s.completed === false) {
-          job.status = "error";
-          job.error = s.messages;
-          process.stderr.write(`[mcp] job ${promptId} failed: ${JSON.stringify(s.messages)}\n`);
-          return;
-        }
-        for (const nodeOutput of Object.values(entry.outputs || {})) {
-          for (const value of Object.values(nodeOutput)) {
-            if (!Array.isArray(value)) continue;
-            for (const item of value) {
-              if (item?.filename) {
+    while (Date.now() < deadline) {
+      let history;
+      try {
+        history = await comfyGet(`/api/history/${promptId}`);
+      } catch (e) {
+        process.stderr.write(`[mcp] job ${promptId} poll error: ${e.message}\n`);
+        await sleep(POLL_INTERVAL);
+        continue;
+      }
+      if (!history || !history[promptId]) { await sleep(POLL_INTERVAL); continue; }
+      const entry = history[promptId];
+      const s = entry.status || {};
+      if (s.status_str === "error" || s.completed === false) {
+        job.status = "error";
+        job.error = s.messages;
+        process.stderr.write(`[mcp] job ${promptId} failed: ${JSON.stringify(s.messages)}\n`);
+        return;
+      }
+      for (const nodeOutput of Object.values(entry.outputs || {})) {
+        for (const value of Object.values(nodeOutput)) {
+          if (!Array.isArray(value)) continue;
+          for (const item of value) {
+            if (item?.filename) {
+              try {
                 const txtMeta = { prompt: meta.prompt, seed: meta.seed, duration: meta.duration, model: meta.model, width: meta.width, height: meta.height };
                 job.files.push(await downloadAndSave(item.filename, item.subfolder, item.type, meta.out, txtMeta));
+              } catch (e) {
+                process.stderr.write(`[mcp] job ${promptId} download ${item.filename} error: ${e.message}\n`);
               }
             }
           }
         }
-        job.status = "completed";
-        process.stderr.write(`[mcp] job ${promptId} completed: ${job.files.length} file(s)\n`);
-        return;
       }
-      job.status = "timeout";
-      process.stderr.write(`[mcp] job ${promptId} timed out\n`);
-    } catch (e) {
-      job.status = "error";
-      job.error = e.message;
-      process.stderr.write(`[mcp] job ${promptId} error: ${e.message}\n`);
+      job.status = "completed";
+      process.stderr.write(`[mcp] job ${promptId} completed: ${job.files.length} file(s)\n`);
+      return;
     }
-  })();
+    job.status = "timeout";
+    process.stderr.write(`[mcp] job ${promptId} timed out\n`);
+  })().catch((e) => {
+    job.status = "error";
+    job.error = e.message;
+    process.stderr.write(`[mcp] job ${promptId} fatal error: ${e.message}\n`);
+  });
 
   return job;
 }

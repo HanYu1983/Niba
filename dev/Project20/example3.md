@@ -783,6 +783,7 @@ No other character speaks.
 No narration.
 No voice-over.
 No off-screen voice.
+Delivery accent: Taiwan-accented Standard Mandarin (台灣腔國語), never Cantonese (never 粵語/廣東話), never Hong Kong accent, never any regional dialect.
 
 detailed_description:
 
@@ -797,12 +798,12 @@ Natural courtroom lighting.
 00:00-00:04
 
 Action:
-Lin Mo faces the judge bench and speaks firmly.
+Lin Mo faces the judge bench and speaks firmly, enunciating calmly in Taiwan-accented Standard Mandarin (台灣腔國語), soft rounded tone, no Cantonese tones.
 Lip sync must follow dialogue exactly.
 Camera remains focused on Lin Mo.
 
 Dialogue:
-<Subject 1> says:
+<Subject 1> says (in Taiwan-accented Mandarin, not Cantonese):
 
 <d>
 [中文]
@@ -810,7 +811,7 @@ Dialogue:
 </d>
 
 overall_soundscape:
-Dialogue delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese; no Hong Kong accent, no accent slippage.
 Only courtroom ambience.
 No additional speech.
 No crowd voices.
@@ -819,7 +820,7 @@ non_diegetic_music:
 A low sustained cello note, almost still.
 ```
 
-**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=4, seed=310009, out=ch2_b9_video`
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=4, seed=310009（歪粵腔黑名單 → 改 310109）, out=ch2_b9_video`
 
 ---
 
@@ -1971,6 +1972,7 @@ A low sustained cello note, slightly sinking and closing.
   非角色對白、非畫面內發聲`，並搭配**旁白專用 seed 310000**（標定後鎖定）。
   全部旁白區塊（B0、B7、B22）只可有旁白、不可有畫面內角色開口。
 - 每支 r2v 獨立 seed；seed 需先查黑名單（guide §5.2），實測若歪粵腔即記入黑名單並換 seed。
+- **黑名單（實測歪粵腔 seed）**：`310009`（B9 首次跑出廣東腔，已改換 `310109`）。
 - B1 無對白，故 `overall_soundscape` 不含腔調錨點（無音訊需要錨定）。
 
 ---
@@ -1982,36 +1984,36 @@ A low sustained cello note, slightly sinking and closing.
 ```
 merge_videos(
   files = [
-    "ch2_b0_video/xxx.mp4",
-    "ch2_b1_video/xxx.mp4",
-    "ch2_b2_video/xxx.mp4",
-    "ch2_b3_video/xxx.mp4",
-    "ch2_b4_video/xxx.mp4",
-    "ch2_b5_video/xxx.mp4",
-    "ch2_b6_video/xxx.mp4",
-    "ch2_b7_video/xxx.mp4",
-    "ch2_b8_video/xxx.mp4",
-    "ch2_b9_video/xxx.mp4",
-    "ch2_b10_video/xxx.mp4",
-    "ch2_b11_video/xxx.mp4",
-    "ch2_b12_video/xxx.mp4",
-    "ch2_b13_video/xxx.mp4",
-    "ch2_b14_video/xxx.mp4",
-    "ch2_b15_video/xxx.mp4",
-    "ch2_b16_video/xxx.mp4",
-    "ch2_b17_video/xxx.mp4",
-    "ch2_b18_video/xxx.mp4",
-    "ch2_b19_video/xxx.mp4",
-    "ch2_b20_video/xxx.mp4",
-    "ch2_b21_video/xxx.mp4",
-    "ch2_b22_video/xxx.mp4",
-    "ch2_b23_video/xxx.mp4",
-    "ch2_b24_video/xxx.mp4",
-    "ch2_b25_video/xxx.mp4",
-    "ch2_b26_video/xxx.mp4",
-    "ch2_b27_video/xxx.mp4",
-    "ch2_b28_video/xxx.mp4",
-    "ch2_b29_video/xxx.mp4"
+    "ch2_b0/video/MiniMax_H3_00145_.mp4",
+    "ch2_b1/video/MiniMax_H3_00138_.mp4",
+    "ch2_b2/video/MiniMax_H3_00139_.mp4",
+    "ch2_b3/video/MiniMax_H3_00140_.mp4",
+    "ch2_b4/video/MiniMax_H3_00141_.mp4",
+    "ch2_b5_video/video/MiniMax_H3_00153_.mp4",
+    "ch2_b6_video/video/MiniMax_H3_00147_.mp4",
+    "ch2_b7_video/video/MiniMax_H3_00154_.mp4",
+    "ch2_b8_video/video/MiniMax_H3_00155_.mp4",
+    "ch2_b9_video/video/MiniMax_H3_00156_.mp4",
+    "ch2_b10_video/video/MiniMax_H3_00157_.mp4",
+    "ch2_b11_video/video/MiniMax_H3_00158_.mp4",
+    "ch2_b12_video/video/xxx.mp4",
+    "ch2_b13_video/video/xxx.mp4",
+    "ch2_b14_video/video/xxx.mp4",
+    "ch2_b15_video/video/xxx.mp4",
+    "ch2_b16_video/video/xxx.mp4",
+    "ch2_b17_video/video/xxx.mp4",
+    "ch2_b18_video/video/xxx.mp4",
+    "ch2_b19_video/video/xxx.mp4",
+    "ch2_b20_video/video/xxx.mp4",
+    "ch2_b21_video/video/xxx.mp4",
+    "ch2_b22_video/video/xxx.mp4",
+    "ch2_b23_video/video/xxx.mp4",
+    "ch2_b24_video/video/xxx.mp4",
+    "ch2_b25_video/video/xxx.mp4",
+    "ch2_b26_video/video/xxx.mp4",
+    "ch2_b27_video/video/xxx.mp4",
+    "ch2_b28_video/video/xxx.mp4",
+    "ch2_b29_video/video/xxx.mp4"
   ],
   resolution = "352:608",
   out = "ch2_full"
