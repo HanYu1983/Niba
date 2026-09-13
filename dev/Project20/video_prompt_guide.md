@@ -139,18 +139,102 @@ overall_soundscape: Soft cafe ambience with distant chatter and the low hum of a
 non_diegetic_music: A warm, tender acoustic score with a soft piano melody and gentle strings, slow and understated, swelling softly as the two characters smile at each other, then fading out quietly with the final scene.
 ```
 
+### 3.4 r2v 六欄位格式（Ref2VA，2026-09 正式採用）
+
+> r2v 的 `MiniMaxH3ReferenceToVideo` 使用與 T2V 不同的 **六欄位 schema**。
+> 早期自創的 A/B/C/D 結構沒有音訊欄位，會讓模型自動腦補旁白——**已全面棄用**。
+
+```text
+subject_definitions:
+<Subject 1> is {角色/場景} from <Picture 1>: {外觀關鍵特徵（全英文）}
+
+summary:
+{僅英文名詞片語/關鍵字，單句描述影片與參考關係}
+
+retention_analysis:
+<Subject 1>: fully_preserved.     <Subject 2>: fully_preserved.
+
+detailed_description:
+{風格 1-2 句}
+[Shot 1]
+00:00-00:0X
+Action: {逐鏡：構圖/主體/動作/鏡頭運動/表情}
+Dialogue:
+<Subject 1> says:
+<d>
+[中文]
+{逐字對白，每句獨立換行}
+</d>
+
+overall_soundscape:
+{環境音 + 腔調錨點句（見第 5 節）}
+
+non_diegetic_music:
+{配樂 1-3 句}
+```
+
+**可選但建議加入**的 `speaker_constraints` 欄位（放於 `retention_analysis` 與 `detailed_description` 之間）：
+
+```text
+speaker_constraints:
+Only <Subject 1> speaks.
+No narration. No voice-over.
+No off-screen voice.
+```
+
+### 3.5 四原則（對白與旁白區塊一律套用，源自實測 2026-09）
+
+| # | 原則 | 為什麼 |
+|---|------|--------|
+| 1 | `summary` 只寫英文名詞片語，**不寫任何中文完整句** | 模型會把 `<d>` 外的中文完整句當成可朗讀內容，覆蓋掉 `<d>` 內對白 |
+| 2 | `summary` 不出現台詞關鍵字 | 避免對白用詞（「背叛」「懷疑」等）被抓去唸 |
+| 3 | 除 `<d>` 外，任何欄位**不出現中文完整句**；中文只在 `<d>` 內 | 欄位分工徹底隔離，`<d>` 是唯一被朗讀的來源 |
+| 4 | 對白用 `<d>[中文] ...</d>` 逐字寫入，每句獨立換行 | TTS 逐句處理更穩，氣口自然 |
+
+### 3.6 `<d>` 與聲音控制要點
+
+- **無對白的區塊**（場景鏡）：`detailed_description` 內**完全不寫 `<d>`**；`overall_soundscape` 只寫環境音。
+- **`<d>` 內每句獨立換行**：製造氣口，TTS 逐句處理更穩定。
+- **`overall_soundscape` / `non_diegetic_music` 必須明寫**：不寫，模型會自行發明旁白或疊加無關聲音。
+
 ---
 
-## 四、實戰流程
+## 四、腔調錨點與 Seed 策略
+
+### 4.1 腔調錨點（2026-09 實測有效）
+
+MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→粵語腔）。處理：
+
+- 不要只靠改 `<d>` 語言標籤（`[中文]`→`[普通話]` 實測無效）。
+- 在 `overall_soundscape` **逐字寫念腔**當錨點，標準錨點句：
+  `All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.`
+- 加強版（歪腔發生時）：`speaker_constraints` 加負向排除（`never Cantonese / never Hong Kong accent / never any regional dialect`）、
+  `Action` 段補正向念腔描述、`<d>` 前一行聲明腔調——三點同時錨定。
+
+### 4.2 Seed 策略與黑名單
+
+- 每支區塊獨立 seed；**旁白區塊共用同一支旁白 seed**（實作採用 `310000`）。
+- **歪腔 seed 記入黑名單**：實測某 seed 固定輸出粵腔時，記入黑名單並換新 seed 重跑。
+- 修正腔調提示詞時**必須同時換 seed**——固定 seed = 固定腔調，只改文字不改 seed 不會生效。
+
+### 4.3 特殊符號唸法陷阱
+
+- `<d>` 內凡會被唸出的文字，一律避免符號與阿拉伯數字：`2%`→`百分之二`、`15%`→`百分之十五`。
+- 禁止混寫（`百分之2`）；實測 `%` 會被唸成「PiFen」怪音。
+- 畫面可見文字（圖表數字、電視牆標題）不被唸出，可保留原始符號；鏡頭描述中標明 `visible on-screen text`，與 `<d>` 分開。
+
+---
+
+## 五、實戰流程
 
 1. 依階段一模板蒐集：人物、風格、分鏡（含逐字台詞）、負面要求。
-2. 識別模式：T2VA（純文字）／ I2VA（第一幀）／ FL2VA（首尾幀）／ L2VA（結尾幀）。
+2. 識別模式：T2VA（純文字）／ I2VA（第一幀）／ FL2VA（首尾幀）／ L2VA（結尾幀）／ r2v 參考圖（Ref2VA 六欄位）。
 3. 依鏡號數決定 cut 時間戳（遞增、落在時長內）。
 4. 對白逐一轉成 `<d>[中文] ...。</d>`；可見文字用 `"..."`。
-5. 編寫 `overall_soundscape`（環境+動作聲）與 `non_diegetic_music`（配樂）。
-6. 送進 `gen_t2v_video` / `gen_i2v_video`（duration 參數設在工具參數，不寫進 prompt）。
+5. 編寫 `overall_soundscape`（環境+動作聲 + 腔調錨點）與 `non_diegetic_music`（配樂）。
+6. 送進 `gen_t2v_video` / `gen_i2v_video` / `gen_r2v_video`（duration 參數設在工具參數，不寫進 prompt）。
 
-## 五、產出前自檢
+## 六、產出前自檢
 
 - [ ] 是否為「創意規劃（中文）」→「H3 三欄位」的兩階段落？
 - [ ] 3 欄位名稱與順序是否正確？
@@ -160,3 +244,7 @@ non_diegetic_music: A warm, tender acoustic score with a soft piano melody and g
 - [ ] `overall_soundscape` 是環境/動作聲，未重複對白或配樂？
 - [ ] `non_diegetic_music` 只描述配樂，角色可聽音樂在時間軸內？
 - [ ] 使用 `(S1)`/`(S2)` 標記說話者，順序一致、全片不換人？
+- [ ] r2v：`subject_definitions`/`retention_analysis` 用 `<Subject N>`/`<Picture N>` 標籤指名？
+- [ ] r2v：`summary` 只含英文名詞片語，無中文完整句、無台詞關鍵字？
+- [ ] r2v：除 `<d>` 外無中文完整句？無對白的區塊完全不寫 `<d>`？
+- [ ] r2v：有對白的區塊帶腔調錨點句（台灣腔普通話）；seed 已查過黑名單？
