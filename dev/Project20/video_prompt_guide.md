@@ -1,4 +1,4 @@
-# T2V 生成視頻提示詞指導
+# MiniMax H3 生成視頻提示詞指導（T2V 三欄位 / r2v 六欄位）
 
 本文件結合 **玩家自訂創意模板**（人物一致性、拍攝風格、分鏡拆解）與 **MiniMax H3 官方提示詞規範**（[video-prompting-skill](https://github.com/Square-Zero-Labs/video-prompting-skill)），用於生成可直接餵給 ComfyUI MiniMax H3 的影片提示詞。
 
@@ -9,9 +9,11 @@
 | 階段 | 用途 | 語言 |
 |------|------|------|
 | **1. 創意規劃** | 用閱讀性模板整理人物、風格、分鏡、台詞、負面要求 | 中文 |
-| **2. H3 編譯** | 轉換成 MiniMax H3 官方要求的 3 欄位 schema | 英文 + `<d>` 內保留原文台詞 |
+| **2a. H3 編譯（T2V/i2v）** | 轉換成 MiniMax H3 官方要求的 3 欄位 schema | 英文 + `<d>` 內保留原文台詞 |
+| **2b. Ref2VA 編譯（r2v）** | 轉換成官方 6 欄位 schema，並以參考圖錨定角色/場景一致性（見 §3.4） | 英文 + `<d>` 內保留原文台詞 |
 
 > 玩家只需提供規劃階段的內容；編譯階段由 AI 依照本章後半規範完成。
+> r2v 模式需先備好參考圖（見 `novel_to_video_guide_v2.md`「參考圖建置」），以 `ref_image_0/1/2` 重複取用。
 
 ---
 
@@ -72,7 +74,9 @@ Yuki 聽到腳步聲抬頭，露出燦爛又帶點害羞的笑容，起身打招
 
 ## 三、階段二：MiniMax H3 最終輸出格式（重要）
 
-H3 對輸出 schema 有**嚴格要求**：必須是以下 3 個欄位、依序排列、欄位名不變。**此為單行還是多行依各欄位內容而定**（`integrated_multimodal_description` 依官方範例為單段文字）。
+> **本章 §3.1–§3.3 適用於 T2V/i2v**（3 欄位 schema）。**r2v 使用不同的 6 欄位 schema，見 §3.4。**
+
+H3 對 T2V/i2v 輸出 schema 有**嚴格要求**：必須是以下 3 個欄位、依序排列、欄位名不變。**此為單行還是多行依各欄位內容而定**（`integrated_multimodal_description` 依官方範例為單段文字）。
 
 ```text
 integrated_multimodal_description: [Shot 1] ...
@@ -86,7 +90,7 @@ non_diegetic_music: ...
 - `integrated_multimodal_description` 內：`[Shot 1]` 不用時間戳；後續鏡頭為 `[Shot 2] At 00:03.500, ...`（時間必須嚴格遞增且在時長內）。
 - 鏡頭內自然描述鏡頭運動：push/pull、zoom、pan、truck、tilt、pedestal、arc、tracking、static、shake、POV、roll，可加 `with small/large amplitude`、`at slow/fast speed`。
 - 只有當新主體/空間/狀態/視角/時間資訊出現時才使用 cut；小距離或角度變化用鏡頭運動而非 cut。
-- **對白格式**：`<d>[中文] 台詞逐字。</d>`。只能放語言標籤 + 使用者提供的逐字內容，**禁止發明或改寫**。角色首次發聲時建立穩定聲音/視覺特徵，用 `(S1)`、`(S2)` 依出場順序編號，全片一致。
+- **對白格式**：`<d>[中文] 台詞逐字。</d>`。只能放語言標籤 + 使用者提供的逐字內容，**禁止發明或改寫**。角色首次發聲時建立穩定聲音/視覺特徵，用 `(S1)`、`(S2)` 依出場順序編號，全片一致。> r2v 不使用 `(S1)`，改用 `<Subject N>` 標籤（見 §3.5）.
 - 畫面可見文字（小卡、招牌）用英文雙引號 `"..."` 逐字保留。
 
 ### 3.2 三個欄位寫法
@@ -117,7 +121,7 @@ non_diegetic_music: ...
 | 摸頭 | none (gesture), soft breathing |
 | 漸隱 | gentle fade of ambience |
 
-### 3.4 H3 格式完整範例（15 秒咖啡廳重逢）
+### 3.4 H3 三欄位完整範例（15 秒咖啡廳重逢，T2V）
 
 ```text
 integrated_multimodal_description: [Shot 1] A warm, wood-toned Taiwanese coffee shop, soft natural sunlight streaming through large windows, a young Taiwanese woman named Yuki, 27, with chin-length black hair, sits alone at a window table in a medium shot. She is casually dressed in a cream sweater, resting her chin on her hand and gazing out the window, two cups of black coffee and a half-finished business plan on the wooden table. The camera stays static with no movement.
@@ -139,7 +143,7 @@ overall_soundscape: Soft cafe ambience with distant chatter and the low hum of a
 non_diegetic_music: A warm, tender acoustic score with a soft piano melody and gentle strings, slow and understated, swelling softly as the two characters smile at each other, then fading out quietly with the final scene.
 ```
 
-### 3.4 r2v 六欄位格式（Ref2VA，2026-09 正式採用）
+### 3.5 r2v 六欄位格式（Ref2VA，2026-09 正式採用）
 
 > r2v 的 `MiniMaxH3ReferenceToVideo` 使用與 T2V 不同的 **六欄位 schema**。
 > 早期自創的 A/B/C/D 結構沒有音訊欄位，會讓模型自動腦補旁白——**已全面棄用**。
@@ -167,7 +171,7 @@ Dialogue:
 </d>
 
 overall_soundscape:
-{環境音 + 腔調錨點句（見第 5 節）}
+{環境音 + 腔調錨點句（見 4.1）}
 
 non_diegetic_music:
 {配樂 1-3 句}
@@ -182,7 +186,7 @@ No narration. No voice-over.
 No off-screen voice.
 ```
 
-### 3.5 四原則（對白與旁白區塊一律套用，源自實測 2026-09）
+### 3.6 四原則（對白與旁白區塊一律套用，源自實測 2026-09）
 
 | # | 原則 | 為什麼 |
 |---|------|--------|
@@ -191,7 +195,7 @@ No off-screen voice.
 | 3 | 除 `<d>` 外，任何欄位**不出現中文完整句**；中文只在 `<d>` 內 | 欄位分工徹底隔離，`<d>` 是唯一被朗讀的來源 |
 | 4 | 對白用 `<d>[中文] ...</d>` 逐字寫入，每句獨立換行 | TTS 逐句處理更穩，氣口自然 |
 
-### 3.6 `<d>` 與聲音控制要點
+### 3.7 `<d>` 與聲音控制要點
 
 - **無對白的區塊**（場景鏡）：`detailed_description` 內**完全不寫 `<d>`**；`overall_soundscape` 只寫環境音。
 - **`<d>` 內每句獨立換行**：製造氣口，TTS 逐句處理更穩定。
@@ -229,7 +233,7 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
 
 1. 依階段一模板蒐集：人物、風格、分鏡（含逐字台詞）、負面要求。
 2. 識別模式：T2VA（純文字）／ I2VA（第一幀）／ FL2VA（首尾幀）／ L2VA（結尾幀）／ r2v 參考圖（Ref2VA 六欄位）。
-3. 依鏡號數決定 cut 時間戳（遞增、落在時長內）。
+3. （T2V/i2v）依鏡號數決定 cut 時間戳（遞增、落在時長內）；r2v 用 `[Shot N]`＋區段時間（`00:00-00:0X`），無 `At` 時間戳寫法。
 4. 對白逐一轉成 `<d>[中文] ...。</d>`；可見文字用 `"..."`。
 5. 編寫 `overall_soundscape`（環境+動作聲 + 腔調錨點）與 `non_diegetic_music`（配樂）。
 6. 送進 `gen_t2v_video` / `gen_i2v_video` / `gen_r2v_video`（duration 參數設在工具參數，不寫進 prompt）。
@@ -243,7 +247,7 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
 - [ ] 每句台詞都逐字包在 `<d>[中文] ...。</d>`？沒有發明或改寫？
 - [ ] `overall_soundscape` 是環境/動作聲，未重複對白或配樂？
 - [ ] `non_diegetic_music` 只描述配樂，角色可聽音樂在時間軸內？
-- [ ] 使用 `(S1)`/`(S2)` 標記說話者，順序一致、全片不換人？
+- [ ] （T2V/i2v）使用 `(S1)`/`(S2)` 標記說話者，順序一致、全片不換人？（r2v 改用 `<Subject N>`）
 - [ ] r2v：`subject_definitions`/`retention_analysis` 用 `<Subject N>`/`<Picture N>` 標籤指名？
 - [ ] r2v：`summary` 只含英文名詞片語，無中文完整句、無台詞關鍵字？
 - [ ] r2v：除 `<d>` 外無中文完整句？無對白的區塊完全不寫 `<d>`？
