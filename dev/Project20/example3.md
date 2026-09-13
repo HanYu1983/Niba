@@ -171,34 +171,64 @@ non_diegetic_music:
 ## B7 — 林墨的等待（旁白，7 秒）
 
 > **旁白全文**：「林墨在辯護席後方坐了很久。他等的，就是讓檢察官把話全部說出來的那一刻。」
+>
+> **格式說明（v5，2026-09 驗證成功）**：對白/旁白區塊用「極度去敘事化」格式——
+> 非 `<d>` 欄位一律英文名詞片語、禁止中文完整句；中文只存在於 `<d>` 內。
 
 ```
 subject_definitions:
-<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
-短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
-<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席。
+<Subject 1> is the border economist Lin Mo from <Picture 1>:
+thin, middle-aged East Asian male, gray-flecked black hair, short stubble, tired eyes, dark charcoal suit and wrinkled white shirt, no tie.
+
+<Subject 2> is the supreme court chamber from <Picture 2>:
+large domed hall, divided audience seating, high judge bench.
 
 summary:
-[reference generation] 目標影片是法庭審判中的安靜段落：林墨坐在辯護席後方不動聲色，旁白以同一
-男聲說明他的等待，檢察官與群眾的掌聲迴盪在畫外。人物與場景保留自 <Picture 1> 與 <Picture 2>。
+Reference-based courtroom scene.
+Static medium shot.
+No on-screen character speaks.
+Narration only.
 
 retention_analysis:
-<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、深炭灰西裝與皺白襯衫。
-<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+<Subject 1>: fully_preserved.
+<Subject 2>: fully_preserved.
+
+speaker_constraints:
+No character speaks on screen.
+Narration by a calm low male voice only.
+No voice-over otherwise.
 
 detailed_description:
-目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、淺景深。旁白為**同一名低沉、冷靜、中年男聲**
-，以台灣腔普通話逐字平讀、非角色對白、非畫面內發聲，全程無粵語。
-[Shot 1] 00:00.000（旁白 7 秒）：林墨坐在辯護席後方，目光低垂、紋風不動，外圍的掌聲與騷動
-退成遙遠的畫外聲。鏡頭：靜止中景、淺景深。旁白：（<Narrator>）<d>[中文] 林墨在辯護席後方坐了很久。
-他等的，就是讓檢察官把話全部說出來的那一刻。</d>
+
+Visual style:
+Cold blue-gray documentary courtroom footage.
+Static medium shot.
+Shallow depth of field.
+Applause recedes into distant off-screen ambience.
+
+[Shot 1]
+
+00:00-00:07
+
+Action:
+Lin Mo sits motionless behind the defense table, gaze lowered, as faint applause and murmurs fade to distant off-screen sound.
+
+Dialogue:
+<Narrator> says:
+
+<d>
+[中文]
+林墨在辯護席後方坐了很久。
+
+他等的，就是讓檢察官把話全部說出來的那一刻。
+</d>
 
 overall_soundscape:
-所有旁白以台灣腔普通話（台灣腔、無粵語、無方言）由**同一名低沉、冷靜、中年男聲**逐字平讀、
-非角色對白、非畫面內發聲。畫面內無任何人物開口。其餘為遠方旁聽席掌聲與低語的畫外迴響。
+All narration is delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, by a calm low middle-aged male voice, off-screen, non-dialogue.
+No on-screen character speaks.
 
 non_diegetic_music:
-一段低沉受限的大提琴線與稀疏鋼琴單音，平穩徐緩。
+Low cello line with sparse piano notes, steady and slow.
 ```
 
 **參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=7, seed=310000（旁白專用）, out=ch2_b7_video`
@@ -491,32 +521,47 @@ N/A
 
 ```
 subject_definitions:
-<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
-短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
-<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席
-背靠憲法石牆。
+<Subject 1> is the border economist Lin Mo from <Picture 1>:
+thin, middle-aged East Asian male, gray-flecked black hair, short stubble, tired eyes, dark charcoal suit and wrinkled white shirt, no tie.
+
+<Subject 2> is the supreme court chamber from <Picture 2>:
+large domed hall, divided audience seating, high judge bench against a constitutional stone wall.
 
 summary:
-[reference generation] 目標影片是紅衣掌聲與法官破例容忍後的轉折：林墨在掌聲中緩緩站起，
-不看檢察官、也不看旁聽席，目光落在法官席後方憲法牆。人物與場景完整保留自 <Picture 1>
-與 <Picture 2>。
+Reference-based courtroom scene.
+Static medium shot.
+No dialogue.
+Lin Mo rises slowly amid fading applause.
 
 retention_analysis:
-<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、淺鬍茬、
-深陷疲憊眼神，與深炭灰西裝及皺白襯衫。
-<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+<Subject 1>: fully_preserved.
+<Subject 2>: fully_preserved.
+
+speaker_constraints:
+No one speaks.
+No narration.
+No voice-over.
 
 detailed_description:
-目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、淺景深，掌聲退後。
-[Shot 1] 00:00.000（場景 5 秒）林墨雙手撐桌、在辯護席上緩緩站起，動作沉穩，目光不看檢察官、
-不看旁聽席，直視法官席後方憲法石牆。鏡頭：靜止中景、淺景深、極輕微上升。無台詞。
+
+Visual style:
+Cold blue-gray documentary courtroom footage.
+Static medium shot.
+Shallow depth of field.
+Applause recedes to near silence.
+
+[Shot 1]
+
+00:00-00:05
+
+Action:
+Lin Mo places both hands on the defense table and slowly stands up, calm and deliberate, looking neither at the prosecutor nor the audience, gaze fixed on the constitutional stone wall behind the judge bench. Very slight camera rise.
 
 overall_soundscape:
-掌聲逐漸收束成偶爾零落的拍擊與低語；林墨撐桌起身時布料摩擦、椅子退後的輕響；法庭的
-龐大寂靜浮回。
+Applause fading to sparse claps and low murmurs; cloth friction and the chair sliding back as Lin Mo rises; courtroom silence returning.
 
 non_diegetic_music:
-一段低沉受限的大提琴單音，幾乎不動。
+A low sustained cello note, almost still.
 ```
 
 **參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=5, seed=310008, out=ch2_b8_video`
