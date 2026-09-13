@@ -8,8 +8,9 @@ const POLL_MS = 30000;
 const STATE = resolve(HERE, "output", "history_poller_state.json");
 
 const JOBS = [
-  { id: "6284d276-64e6-4e9e-9d4e-dc564516fad4", label: "B2", out: "ch2_b2_video" },
-  { id: "20c047f9-2075-44ee-9bf9-cce5fe0d65b7", label: "B20", out: "ch2_b20_video" },
+  { id: "2514d3da-0407-4088-8c3d-d532b296c308", label: "B2", out: "ch2_b2_video" },
+  { id: "d4cb3e6c-5a82-4f15-9b69-862a07f0b478", label: "B20", out: "ch2_b20_video" },
+  { id: "0249b0a2-eee0-4e9f-8f81-1ad18bd31cdc", label: "B9", out: "ch2_b9_video" },
   { id: "24c9302d-bc6f-4c73-9f66-5d046e59c5e4", label: "B12", out: "ch2_b12_video" },
   { id: "9057f53d-c86e-4f11-a6e0-332800a43267", label: "B21", out: "ch2_b21_video" },
   { id: "309b9bed-7b87-4567-90ec-4c1d6bd0cb13", label: "B22", out: "ch2_b22_video" },
