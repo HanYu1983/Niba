@@ -63,7 +63,7 @@
 | B12 | 場景 | 法庭陷入沉默，檢察官臉色微變 | 3 |
 | B13 | 對白 | 檢察官：「這涉及國家機密，官方數據的運算模型受《安全法》保護，無須公開。」（31字） | 8 |
 | B14 | 對白 | 林墨：「如果數據不能被質疑，那它就不是數據，而是教條。」（24字） | 5 |
-| B15 | 對白 | 林墨：「今天，你們以『不實資訊』起訴這名少年…那 2% 的通膨率，是否包含了房租、能源與進口糧食？」（66字） | 15 |
+| B15 | 對白 | 林墨：「今天，你們以『不實資訊』起訴這名少年…那百分之二的通膨率，是否包含了房租、能源與進口糧食？」（66字） | 15 |
 | B16 | 場景 | 林墨在原地站定，法庭寂靜 | 4 |
 | B17 | 對白 | 檢察官拍桌：「你這是在擾亂視聽！…你到底站在聯邦這邊？」（43字） | 10 |
 | B18 | 場景 | 紅衣群眾叫囂：「標籤他！他也是賣國賊！」（群聲，不蓋對白） | 7 |
@@ -413,6 +413,479 @@ non_diegetic_music:
 
 ---
 
+## B6 — 紅衣掌聲（場景，無對白，8 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡最高法院的第三審判庭全景：圓頂大廳、挑高穹頂、分裂式旁聽席、
+左側紅衣支持者與右側噤聲的年輕旁聽者、高聳法官席背靠憲法石牆。
+
+summary:
+[reference generation] 目標影片是檢察官定罪演說後萬眾寂靜中的反應鏡：旁聽席紅衣群眾鼓掌示好、
+聲浪漸湧，法官敲響法槌卻未真正制止。場景完整保留自 <Picture 1>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席、紅衣左側群眾、
+噤聲右側與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，中景與俯角切換、掌聲浪起。
+[Shot 1] 00:00.000（場景 4 秒）：旁聽席紅衣群眾鼓掌，掌聲由散而密。鏡頭：中景、輕微推近。
+[Shot 2] 00:04.000（場景 4 秒）：法官敲響法槌，喊聲被掌聲淹沒，紅衣群眾不減反增。
+鏡頭：俯角全景、沉穩不動。無台詞。
+
+overall_soundscape:
+法庭的龐大寂靜被掌聲打斷：零落掌聲湧成鼓掌與叫好的浪頭，風聲般的歡呼，法槌被淹沒的悶響。
+
+non_diegetic_music:
+N/A
+```
+
+**參數**：`ref_image_0=output/ch2_court_ref/zimage_00016_.png（重用）, duration=8, seed=310006, out=ch2_b6_video`
+
+---
+
+## B8 — 林墨起身（場景，無對白，5 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席
+背靠憲法石牆。
+
+summary:
+[reference generation] 目標影片是紅衣掌聲與法官破例容忍後的轉折：林墨在掌聲中緩緩站起，
+不看檢察官、也不看旁聽席，目光落在法官席後方憲法牆。人物與場景完整保留自 <Picture 1>
+與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、淺鬍茬、
+深陷疲憊眼神，與深炭灰西裝及皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、淺景深，掌聲退後。
+[Shot 1] 00:00.000（場景 5 秒）林墨雙手撐桌、在辯護席上緩緩站起，動作沉穩，目光不看檢察官、
+不看旁聽席，直視法官席後方憲法石牆。鏡頭：靜止中景、淺景深、極輕微上升。無台詞。
+
+overall_soundscape:
+掌聲逐漸收束成偶爾零落的拍擊與低語；林墨撐桌起身時布料摩擦、椅子退後的輕響；法庭的
+龐大寂靜浮回。
+
+non_diegetic_music:
+一段低沉受限的大提琴單音，幾乎不動。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=5, seed=310008, out=ch2_b8_video`
+
+---
+
+## B9 — 要求傳喚（對白，4 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席。
+
+summary:
+[reference generation] 目標影片是林墨起身後的第一句話：他提高聲量、語調沉穩地要求傳喚一名
+關鍵證人，法庭空氣重新凍結。人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、深炭灰西裝與皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、淺景深。所有台詞以**台灣腔普通話**逐字、
+緩慢、由畫面內本人說出、非旁白、無粵語。
+[Shot 1] 00:00.000（對白 4 秒）林墨面向法官席，沉聲開口，<Subject 1>（S1）(S1) says,
+<d>[中文] 法官閣下，辯方要求傳喚一名關鍵證人。</d> 鏡頭：靜止中景、淺景深。
+
+overall_soundscape:
+所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）逐字緩慢朗讀、由畫面內本人說出、非旁白。
+其餘為法庭的龐大寂靜與大廳迴響。
+
+non_diegetic_music:
+一段低沉受限的大提琴單音，幾乎不動。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=4, seed=310009, out=ch2_b9_video`
+
+---
+
+## B10 — 法官：「誰？」（對白，1 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡最高法院的第三審判庭全景：圓頂大廳、挑高穹頂、分裂式旁聽席、
+高聳法官席背靠憲法石牆，法官端坐其上。
+
+summary:
+[reference generation] 目標影片是緊湊的一擊：法官從高處簡短追問一個字，聲音不高，卻讓
+整個法庭貼在沉默上。場景完整保留自 <Picture 1>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席、高聳法官席與憲法石牆。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，靜止全景、方形鏡位。所有台詞以**台灣腔普通話**逐字、
+極慢、由畫面內高處法官本人說出、非旁白、無粵語。
+[Shot 1] 00:00.000（對白 1 秒）法官席上老年法官低頭看向林墨，只問一個字，<Subject 1>（S1）(S1) says,
+<d>[中文] 誰？</d> 鏡頭：靜止全景、方形鏡位。
+
+overall_soundscape:
+所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）逐字緩慢朗讀、由畫面內本人說出、非旁白。
+單字落下後法庭的龐大寂靜與大廳迴響。
+
+non_diegetic_music:
+N/A
+```
+
+**參數**：`ref_image_0=output/ch2_court_ref/zimage_00016_.png（重用）, duration=1, seed=310010, out=ch2_b10_video`
+
+---
+
+## B11 — 林墨點名統計局長（對白，7 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席
+背靠憲法石牆。
+
+summary:
+[reference generation] 目標影片是林墨接住法官追問、當庭點名的瞬間：他不多猶豫便點出「聯邦統計局
+局長」與「原始運算公式」，聲音平穩構成法庭張力的轉折。人物與場景完整保留自 <Picture 1>
+與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、淺鬍茬、
+深陷疲憊眼神，與深炭灰西裝及皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、淺景深。所有台詞以**台灣腔普通話**逐字、
+緩慢、由畫面內本人說出、非旁白、無粵語。
+[Shot 1] 00:00.000（對白 7 秒）林墨站在原地，望向法官席沉聲作答，<Subject 1>（S1）(S1) says,
+<d>[中文] 聯邦統計局局長。以及，這份訴狀中『官方核實數據』的原始運算公式。</d>
+鏡頭：靜止中景、淺景深。
+
+overall_soundscape:
+所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）逐字緩慢朗讀、由畫面內本人說出、非旁白。
+其餘為法庭的龐大寂靜與大廳迴響、線索將爆的前壓感。
+
+non_diegetic_music:
+一段低沉受限的大提琴單音，幾乎不動。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=7, seed=310011, out=ch2_b11_video`
+
+---
+
+## B12 — 法庭沉默（場景，無對白，3 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡最高法院的第三審判庭全景：圓頂大廳、挑高穹頂、分裂式旁聽席、
+左側紅衣支持者與右側噤聲的年輕旁聽者、高聳法官席背靠憲法石牆。
+
+summary:
+[reference generation] 目標影片是關鍵詞落地的真空：法庭陷入沉默，檢察官臉色微變、旁聽席人人
+屏住呼吸。場景完整保留自 <Picture 1>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席、紅衣左側群眾、
+噤聲右側與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，靜止全景、微緩推進。
+[Shot 1] 00:00.000（場景 3 秒）法庭全場沉默，檢察官在席上微微一僵、面色稍變，無人吭聲。
+鏡頭：靜止全景、微緩推進。無台詞。
+
+overall_soundscape:
+法庭的龐大寂靜被推到極致，只剩空調的低嗡與零星的座椅輕響；沒有掌聲、沒有叫囂。
+
+non_diegetic_music:
+N/A
+```
+
+**參數**：`ref_image_0=output/ch2_court_ref/zimage_00016_.png（重用）, duration=3, seed=310012, out=ch2_b12_video`
+
+---
+
+## B13 — 檢察官反制（對白，8 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的檢察官：中年男性、削瘦、銳利眼神、深色法袍、胸前佩聯邦檢察徽章。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席。
+
+summary:
+[reference generation] 目標影片是檢察官的閃電反制：他以《安全法》擋下交出運算模型的要求，
+語氣法律條文般冷硬。人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 削瘦面容、銳利眼神、深色法袍與檢察徽章。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、淺景深。所有台詞以**台灣腔普通話**逐字、
+緩慢、由畫面內本人說出、非旁白、無粵語。
+[Shot 1] 00:00.000（對白 8 秒）檢察官搶在林墨之前面向法官席開口，<Subject 1>（S1）(S1) says,
+<d>[中文] 這涉及國家機密，官方數據的運算模型受《安全法》保護，無須公開。</d>
+鏡頭：靜止中景、淺景深。
+
+overall_soundscape:
+所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）逐字緩慢朗讀、由畫面內本人說出、非旁白。
+其餘為法庭的龐大寂靜與大廳迴響。
+
+non_diegetic_music:
+一段低沉受限的大提琴線與稀疏鋼琴單音，平穩徐緩。
+```
+
+**參數**：`ref_image_0=output/ch2_prosecutor_ref/zimage_00017_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=8, seed=310013, out=ch2_b13_video`
+
+---
+
+## B14 — 數據與教條（對白，5 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席。
+
+summary:
+[reference generation] 目標影片是林墨一句話頂回法律檻：他聲音不高卻一字一字踩得很實，點破
+「不能質疑的就不是數據」。人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、深炭灰西裝與皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、淺景深。所有台詞以**台灣腔普通話**逐字、
+緩慢、由畫面內本人說出、非旁白、無粵語。
+[Shot 1] 00:00.000（對白 5 秒）林墨不追不趕，面向法官席徐徐回話，<Subject 1>（S1）(S1) says,
+<d>[中文] 如果數據不能被質疑，那它就不是數據，而是教條。</d> 鏡頭：靜止中景、淺景深。
+
+overall_soundscape:
+所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）逐字緩慢朗讀、由畫面內本人說出、非旁白。
+其餘為法庭的龐大寂靜與大廳迴響。
+
+non_diegetic_music:
+一段低沉受限的大提琴單音，幾乎不動。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=5, seed=310014, out=ch2_b14_video`
+
+---
+
+## B15 — 質問通膨率（對白，15 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席
+背靠憲法石牆。
+
+summary:
+[reference generation] 目標影片是林墨把矛盾拋回法庭的長句質問：他把被告少年與官方百分之二通膨率的
+因果攤開，聲音依然低平。人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、淺鬍茬、
+深陷疲憊眼神，與深炭灰西裝及皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、淺景深。所有台詞以**台灣腔普通話**逐字、
+緩慢、由畫面內本人說出、非旁白、無粵語。
+[Shot 1] 00:00.000（對白 15 秒）林墨將手指向被告席艾倫，話頭轉向法官席一字一字質問，
+<Subject 1>（S1）(S1) says, <d>[中文] 今天，你們以『不實資訊』起訴這名少年，那麼我想請問，
+那百分之二的通膨率，是否包含了房租、能源與進口糧食？</d> 鏡頭：靜止中景、淺景深，末段輕推。
+
+overall_soundscape:
+所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）逐字緩慢朗讀、由畫面內本人說出、非旁白。
+其餘為法庭的龐大寂靜與大廳迴響。
+
+non_diegetic_music:
+一段低沉受限的大提琴線與稀疏鋼琴單音，平穩徐緩。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=15, seed=310015, out=ch2_b15_video`
+
+---
+
+## B16 — 原地站定（場景，無對白，4 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席。
+
+summary:
+[reference generation] 目標影片是長句質問落下的停頓：林墨站在原地、胸膛起伏，全場跟著屏息。
+人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、深炭灰西裝與皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、微緩推近。
+[Shot 1] 00:00.000（場景 4 秒）林墨放下指向艾倫的手，在原地站定，胸膛輕輕起伏、目光平視法官席。
+鏡頭：靜止中景、微緩推近。無台詞。
+
+overall_soundscape:
+法庭的龐大寂靜；林墨短促的呼吸聲、布料拉緊的輕響與零落低語。
+
+non_diegetic_music:
+一段低沉受限的大提琴單音，幾乎不動。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=4, seed=310016, out=ch2_b16_video`
+
+---
+
+## B17 — 檢察官拍桌（對白，10 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的檢察官：中年男性、削瘦、銳利眼神、深色法袍、胸前佩聯邦檢察徽章。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席。
+
+summary:
+[reference generation] 目標影片是檢察官被戳中的爆點：他拍桌而起、指控林墨擾亂視聽，話鋒直指立場。
+人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 削瘦面容、銳利眼神、深色法袍與檢察徽章。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，動態中景、淺景深。所有台詞以**台灣腔普通話**逐字、
+緩慢、由畫面內本人說出、非旁白、無粵語。
+[Shot 1] 00:00.000（對白 10 秒）檢察官手掌重擊自己面前的桌案，起身開罵，<Subject 1>（S1）(S1) says,
+<d>[中文] 你這是在擾亂視聽！把戲演夠了沒有？你到底站在聯邦這邊，還是站在那邊？</d>
+鏡頭：動態中景、淺景深，輕微搖晃。
+
+overall_soundscape:
+所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）逐字緩慢朗讀、由畫面內本人說出、非旁白。
+其餘為拍桌的悶響、法庭的龐大寂靜與大廳迴響。
+
+non_diegetic_music:
+一段低沉受限的大提琴線與稀疏鋼琴單音，平穩徐緩。
+```
+
+**參數**：`ref_image_0=output/ch2_prosecutor_ref/zimage_00017_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=10, seed=310017, out=ch2_b17_video`
+
+---
+
+## B18 — 紅衣叫囂（場景，群聲，7 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡最高法院的第三審判庭全景：圓頂大廳、挑高穹頂、分裂式旁聽席、
+左側紅衣支持者與右側噤聲的年輕旁聽者、高聳法官席背靠憲法石牆。
+
+summary:
+[reference generation] 目標影片是旁聽席群情激憤的群戲：紅衣群眾起身叫囂、往林墨方向指手指，
+叫喊聲此起彼落卻不被聽清任何一句。場景完整保留自 <Picture 1>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席、紅衣左側群眾、
+噤聲右側與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，俯角與中景交錯、群體律動。
+[Shot 1] 00:00.000（場景 4 秒）：紅衣旁聽席群眾起身，手指林墨方向叫囂。鏡頭：俯角全景。
+[Shot 2] 00:04.000（場景 3 秒）：叫聲浪潮高漲，法警上前壓抑秩序。鏡頭：中景、快速橫移。
+無清晰台詞——群聲（畫外含糊喊叫，不蓋任何對白）。
+
+overall_soundscape:
+群眾的叫囂與口哨像浪潮般湧動，聽不清單獨字句的模糊喊叫、跺地板聲、法警的壓抑指令。
+
+non_diegetic_music:
+N/A
+```
+
+**參數**：`ref_image_0=output/ch2_court_ref/zimage_00016_.png（重用）, duration=7, seed=310018, out=ch2_b18_video`
+
+---
+
+## B19 — 別低頭（對白，3 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡被告席上的少年艾倫：19 歲、瘦弱、短髮、白色襯衫、恐懼表情。
+<Subject 3> 是 <Picture 3> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席。
+
+summary:
+[reference generation] 目標影片是喧囂中唯一的低語：林墨在叫囂裡轉過身，對被告席少年說了一句
+安撫的話。人物與場景完整保留自 <Picture 1>、<Picture 2> 與 <Picture 3>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、深炭灰西裝與皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 少年瘦弱身形、短髮、白襯衫、恐懼表情。
+<Subject 3>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，過肩中近景、淺景深。所有台詞以**台灣腔普通話**逐字、
+緩慢、由畫面內本人說出、非旁白、無粵語。
+[Shot 1] 00:00.000（對白 3 秒）林墨轉過身對被告席上的少年放低聲音，<Subject 1>（S1）(S1) says,
+<d>[中文] 別低頭，這不是你的審判。</d> 鏡頭：過肩中近景、淺景深。
+
+overall_soundscape:
+所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）逐字緩慢朗讀、由畫面內本人說出、非旁白。
+其餘為遠方叫囂退成畫外低浪、法庭的龐大寂靜。
+
+non_diegetic_music:
+一段低沉受限的大提琴單音，幾乎不動。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_allen_ref/zimage_00015_.png（重用）, ref_image_2=output/ch2_court_ref/zimage_00016_.png（重用）, duration=3, seed=310019, out=ch2_b19_video`
+
+---
+
+## B20 — 望向直播攝影機（場景，無對白，3 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡最高法院的第三審判庭全景：圓頂大廳、挑高穹頂、分裂式旁聽席、
+左側紅衣支持者與右側噤聲的年輕旁聽者、高聳法官席背靠憲法石牆。
+
+summary:
+[reference generation] 目標影片是觀眾與直播的連接點：林墨抬頭望向法庭頂端亮著紅點的大型直播
+攝影機，鏡頭跟著他的視線拉近到鏡頭本身。場景完整保留自 <Picture 1>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席、紅衣左側群眾、
+噤聲右側與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，仰角與俯角對切、紅點呼吸般亮著。
+[Shot 1] 00:00.000（場景 3 秒）林墨站在法庭中央，抬頭望向高處大型直播攝影機，紅燈一明一滅。
+鏡頭：仰角人物中景，視線導引後切至攝影機特寫。無台詞。
+
+overall_soundscape:
+法庭的龐大寂靜；攝影機鏡頭推近的高頻低嗡與伺服機構運作聲。
+
+non_diegetic_music:
+一段低沉受限的大提琴單音，幾乎不動。
+```
+
+**參數**：`ref_image_0=output/ch2_court_ref/zimage_00016_.png（重用）, duration=3, seed=310020, out=ch2_b20_video`
+
+---
+
 ## 腔調錨點（B0–B29 全部以此為準）
 
 - **`<d>` 語言標籤維持 `[中文]` 不改**；腔調不由標籤決定。
@@ -426,9 +899,9 @@ non_diegetic_music:
 
 ---
 
-## 已寫出提示詞的區塊（B0–B5、B7、B22）完成後：合併
+## 已寫出提示詞的區塊（B0–B20、B22）完成後：合併
 
-已寫出完整六欄位提示詞的區塊依序合併為 Ch2 前段（84 秒）：旁白身世 → 開庭 → 起身傳喚前的等待處：
+已寫出完整六欄位提示詞的區塊依序合併為 Ch2 前段：旁白身世 → 開庭 → 直播前的宣言（約 170 秒）：
 
 ```
 merge_videos(
@@ -439,12 +912,28 @@ merge_videos(
     "ch2_b3_video/xxx.mp4",
     "ch2_b4_video/xxx.mp4",
     "ch2_b5_video/xxx.mp4",
-    "ch2_b7_video/xxx.mp4"
+    "ch2_b6_video/xxx.mp4",
+    "ch2_b7_video/xxx.mp4",
+    "ch2_b8_video/xxx.mp4",
+    "ch2_b9_video/xxx.mp4",
+    "ch2_b10_video/xxx.mp4",
+    "ch2_b11_video/xxx.mp4",
+    "ch2_b12_video/xxx.mp4",
+    "ch2_b13_video/xxx.mp4",
+    "ch2_b14_video/xxx.mp4",
+    "ch2_b15_video/xxx.mp4",
+    "ch2_b16_video/xxx.mp4",
+    "ch2_b17_video/xxx.mp4",
+    "ch2_b18_video/xxx.mp4",
+    "ch2_b19_video/xxx.mp4",
+    "ch2_b20_video/xxx.mp4",
+    "ch2_b22_video/xxx.mp4"
   ],
   resolution = "352:608",
   out = "ch2_part1"
 )
 ```
 
-> B6、B8–B29 的提示詞沿用 example2.md 的六欄位對應內容（鏡頭/對白），B22 插入 B21 與 B23 之間；
+> B16–B20 已寫入提示詞；剩餘未寫出的區塊（B21、B23–B29）沿用 example2.md 的六欄位
+> 對應內容（鏡頭/對白）；B22 原屬插入 B21 與 B23 之間的旁白區塊，若影片暫未生成可先自合併清單移除。
 > 其餘旁白區塊以 B7/B22 的 `<Narrator>` + 聲線錨點樣板撰寫。

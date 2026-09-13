@@ -276,6 +276,7 @@ non_diegetic_music:
 - 語言：六欄位全英文；只有 `<d>` 內對白與畫面可見文字保留原始語言（中文）。
 - 對白與旁白同屬 `detailed_description` 的 `<d>` 機制：角色直接講話寫 `<Subject N> (S1) says, <d>[中文] ...。</d>`；完全不要旁白就是**別放**任何 narrator 語音標記。
 - **腔調錨點（2026-09 驗證有效）**：`.fmt.minimax.h3.r2v` 的中文聲線常被 seed 耦合出方言腔（本片實測 100303→粵語腔）。別只靠改 `<d>` 語言標籤（`[中文]`→`[普通話]` 無效）；要在 `overall_soundscape` **逐字寫念腔**當錨點。本片標準定為台灣腔普通話（標準國語／無粵語），樣板：`All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.` 有對白的 beat 一律在 `overall_soundscape` 帶這行，並在六欄位最末補註「（語音錨點：台灣腔普通話）」。
+- **特殊符號唸法陷阱（2026-09 實測）**：`<d>` 內只要是**會被唸出來的文字**，一律避免符號與阿拉伯數字——實測 `2%` 中的 `%` 會被模型唸成怪音「PiFen」。需以中文字寫出：`2%`→`百分之二`、`15%`→`百分之十五`（也避免 `百分之2` 這種漢字混阿拉伯數字）。**畫面可見文字**（圖表、標題、電視牆上顯示的數字）不唸出來，可保留原始符號，但 `detailed_description` 的鏡頭描述中也寫清楚那是「visible on-screen text」，與會發音的 `<d>` 內容分開。
 
 參照：官方 `skill/h3-prompt-writing/references/ref-en.txt`（八參考標籤、六欄位範例）。
 
@@ -343,6 +344,7 @@ Step 2  以放大後的解析度合併
 - [ ] 每個節拍是否只含「一個主要事件」？塞太多就再拆。
 - [ ] 每段是否都有獨立觀看價值（不是前後段拼接才懂）？
 - [ ] 金句台詞是否逐字保留（r2v 在 `<d>` 內、i2v/t2v 在 `<d>` 內）、未發明原文？
+- [ ] `<d>` 內會被唸出來的文字是否已將 `%`、`&`、阿拉伯數字等改為中文寫法（`百分之二`），避免怪音（如「PiFen」）？
 - [ ] r2v：`subject_definitions`/`retention_analysis` 是否用 `<Subject 1>`、`<Picture 1>` 標籤指名？無對白是否沒寫任何 `<d>`？
 - [ ] r2v：`overall_soundscape` / `non_diegetic_music` 是否明確控制（避免模型腦補旁白）？
 - [ ] i2v：首/尾幀是否確實對上節拍起止畫面？
