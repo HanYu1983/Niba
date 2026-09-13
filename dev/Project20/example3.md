@@ -1449,12 +1449,17 @@ A low sustained cello note, almost still.
 
 ## B20 — 望向直播攝影機（場景，無對白，3 秒）
 
+> 2026-09-13 修復：加入林墨參考圖（原版無人物參考，人物跑掉）。
+
 ```
 subject_definitions:
-<Subject 1> is the supreme court chamber from <Picture 1>:
+<Subject 1> is the border economist Lin Mo from <Picture 1>:
+thin, middle-aged East Asian male, gray-flecked black hair, short stubble, tired eyes, dark charcoal suit and wrinkled white shirt, no tie.
+
+<Subject 2> is the supreme court chamber from <Picture 2>:
 large domed hall, divided audience seating, red-clad supporters on the left, silent young spectators on the right, high judge bench against a constitutional stone wall.
 
-<Subject 2> is the large live broadcast camera in the courtroom ceiling from <Picture 2>:
+<Subject 3> is the large live broadcast camera in the courtroom ceiling from <Picture 3>:
 black body, long lens, small red indicator light glowing, suspended beneath the dome structure.
 
 summary:
@@ -1466,6 +1471,7 @@ Lin Mo looks up at the live camera.
 retention_analysis:
 <Subject 1>: fully_preserved.
 <Subject 2>: fully_preserved.
+<Subject 3>: fully_preserved.
 
 speaker_constraints:
 No one speaks.
@@ -1483,7 +1489,7 @@ Low angle followed by a cut to camera close-up, the red light breathing on and o
 00:00-00:03
 
 Action:
-Lin Mo stands in the middle of the courtroom, lifts his head to the large broadcast camera above; <Subject 2>'s red light blinks on and off.
+<Subject 1> stands in the middle of the courtroom, lifts his head to the large broadcast camera above; <Subject 3>'s red light blinks on and off.
 
 overall_soundscape:
 Vast courtroom silence; faint high-frequency hum of the camera mechanism and servo movement.
@@ -1492,7 +1498,7 @@ non_diegetic_music:
 A low sustained cello note, almost still.
 ```
 
-**參數**：`ref_image_0=output/ch2_court_ref/zimage_00016_.png（重用）, ref_image_1=output/ch2_camerawall_ref/zimage_00033_.png（重用）, duration=3, seed=310020, out=ch2_b20_video`
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（林墨）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, ref_image_2=output/ch2_camerawall_ref/zimage_00033_.png（重用）, duration=3, seed=310020, out=ch2_b20_video`
 
 ---
 
@@ -1986,39 +1992,42 @@ merge_videos(
   files = [
     "ch2_b0/video/MiniMax_H3_00145_.mp4",
     "ch2_b1/video/MiniMax_H3_00138_.mp4",
-    "ch2_b2/video/MiniMax_H3_00139_.mp4",
+    "ch2_b2_video/video/MiniMax_H3_00178_.mp4",
     "ch2_b3/video/MiniMax_H3_00140_.mp4",
     "ch2_b4/video/MiniMax_H3_00141_.mp4",
     "ch2_b5_video/video/MiniMax_H3_00153_.mp4",
     "ch2_b6_video/video/MiniMax_H3_00147_.mp4",
     "ch2_b7_video/video/MiniMax_H3_00154_.mp4",
     "ch2_b8_video/video/MiniMax_H3_00155_.mp4",
-    "ch2_b9_video/video/MiniMax_H3_00156_.mp4",
+    "ch2_b9_video/video/MiniMax_H3_00177_.mp4",
     "ch2_b10_video/video/MiniMax_H3_00157_.mp4",
     "ch2_b11_video/video/MiniMax_H3_00158_.mp4",
-    "ch2_b12_video/video/xxx.mp4",
-    "ch2_b13_video/video/xxx.mp4",
-    "ch2_b14_video/video/xxx.mp4",
-    "ch2_b15_video/video/xxx.mp4",
-    "ch2_b16_video/video/xxx.mp4",
-    "ch2_b17_video/video/xxx.mp4",
-    "ch2_b18_video/video/xxx.mp4",
-    "ch2_b19_video/video/xxx.mp4",
-    "ch2_b20_video/video/xxx.mp4",
-    "ch2_b21_video/video/xxx.mp4",
-    "ch2_b22_video/video/xxx.mp4",
-    "ch2_b23_video/video/xxx.mp4",
-    "ch2_b24_video/video/xxx.mp4",
-    "ch2_b25_video/video/xxx.mp4",
-    "ch2_b26_video/video/xxx.mp4",
-    "ch2_b27_video/video/xxx.mp4",
-    "ch2_b28_video/video/xxx.mp4",
-    "ch2_b29_video/video/xxx.mp4"
+    "ch2_b12_video/video/MiniMax_H3_00176_.mp4",
+    "ch2_b13_video/video/MiniMax_H3_00159_.mp4",
+    "ch2_b14_video/video/MiniMax_H3_00160_.mp4",
+    "ch2_b15_video/video/MiniMax_H3_00161_.mp4",
+    "ch2_b16_video/video/MiniMax_H3_00162_.mp4",
+    "ch2_b17_video/video/MiniMax_H3_00163_.mp4",
+    "ch2_b18_video/video/MiniMax_H3_00164_.mp4",
+    "ch2_b19_video/video/MiniMax_H3_00165_.mp4",
+    "ch2_b20_video/video/MiniMax_H3_00180_.mp4",
+    "ch2_b21_video/video/MiniMax_H3_00167_.mp4",
+    "ch2_b22_video/video/MiniMax_H3_00168_.mp4",
+    "ch2_b23_video/video/MiniMax_H3_00169_.mp4",
+    "ch2_b24_video/video/MiniMax_H3_00170_.mp4",
+    "ch2_b25_video/video/MiniMax_H3_00171_.mp4",
+    "ch2_b26_video/video/MiniMax_H3_00172_.mp4",
+    "ch2_b27_video/video/MiniMax_H3_00173_.mp4",
+    "ch2_b28_video/video/MiniMax_H3_00174_.mp4",
+    "ch2_b29_video/video/MiniMax_H3_00175_.mp4"
   ],
   resolution = "352:608",
   out = "ch2_full"
 )
 ```
+
+> 2026-09-13 更新：B2（00178）、B9（00177）、B20（00180）為重生成版本，取代舊檔 00139 / 00156 / 00166。
+> B12（00176）、B25–B29（00171–00175）已填入實際檔名，B13–B19 補上 00159–00165。
 
 > **B0–B29 全部區塊均已完成提示詞撰寫。** 對白皆逐字對照 `story1.md` 第二章（lines 67–113），
 > 無省略、無自創。
