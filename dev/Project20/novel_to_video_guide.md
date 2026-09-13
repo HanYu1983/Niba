@@ -270,6 +270,12 @@ non_diegetic_music:
 ```
 
 **要點：**
+- **敘事欄污染台詞（2026-09 實測，B5 根因）**：模型會把 `<d>` 以外的**中文完整句**當成可朗讀內容，進而覆蓋掉 `<d>` 內的對白——尤其 `summary` 若寫成一句完整中文描述（例如「檢察官冷笑一聲轉向陪審團，將懷疑官方數字上升為背叛……」），會直接被抓去唸成台詞。**四原則（對白區塊一律套用）**：
+  1. `summary` 不出現任何可能被朗讀的句子：只寫英文名詞片語/關鍵字（如 `Reference-based courtroom scene. One visible speaker only.`）。
+  2. `summary` 不出現台詞關鍵字：避免把對白用詞（「懷疑官方數字」「背叛」等）寫進 summary。
+  3. **shot 以外的區域（subject_definitions / summary / retention_analysis / soundscape）不出現中文完整句**；中文只存在於 `<d>` 內。
+  4. 所有需要說的內容只放進 `<d>`：對白是唯一被朗讀的來源，欄位分工徹底隔離。建議加一欄 `speaker_constraints:`（`Only <Subject 1> speaks. No narration. No voice-over. No off-screen voice.`）。
+  5. `<d>` 內每句獨立換行，製造氣口，TTS 逐句處理更穩。
 - **六欄位依序不可少**；參考圖用 `<Subject 1>` / `<Picture 1>` 標籤指名（見 `references/ref-en.txt`）。
 - **音訊靠 `overall_soundscape` / `non_diegetic_music` 兩欄控制**：不改動它們，模型就會自己發明旁白。
 - 無對白的節拍在 `detailed_description` 內**完全不寫 `<d>`**，並在 `overall_soundscape` 只寫環境/動作聲。
