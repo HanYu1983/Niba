@@ -380,36 +380,35 @@ non_diegetic_music:
 ```
 subject_definitions:
 <Subject 1> 是 <Picture 1> 裡的檢察官：中年男性、削瘦、銳利眼神、深色法袍、胸前佩聯邦檢察徽章。
-<Subject 2> 是 <Picture 2> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
-短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
-<Subject 3> 是 <Picture 3> 裡最高法院的第三審判庭全景：圓頂大廳、分裂式旁聽席、左側紅衣支持者。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭全景：圓頂大廳、分裂式旁聽席、左側紅衣支持者。
 
 summary:
 [reference generation] 目標影片是法庭對峙的定罪時刻：檢察官冷笑一聲轉向陪審團，將「懷疑官方
-數字」上升為「背叛」，語氣從質問轉為宣判。人物與場景完整保留自 <Picture 1>、<Picture 2>
-與 <Picture 3>。
+數字」上升為「背叛」，語氣從質問轉為宣判。畫面中只有檢察官一人開口說話，林墨不在此畫面中。
+人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
 
 retention_analysis:
 <Subject 1>（出現在 [Shot 1]）: fully_preserved - 削瘦面容、銳利眼神、深色法袍與檢察徽章。
-<Subject 2>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、深炭灰西裝。
-<Subject 3>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳與分裂旁聽席。
+說話者標記：<Subject 1> 是畫面中唯一開口的人；此畫面中不得出現任何其他會說話的角色。
 
 detailed_description:
 目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、快速切換。所有台詞以**台灣腔普通話**逐字、
-緩慢、由畫面內本人說出、非旁白、無粵語。
+緩慢、由畫面內檢察官本人說出、非旁白、無粵語。鏡頭全程鎖定檢察官一人講話，嘴形與對白逐字同步。
 [Shot 1] 00:00.000（對白 16 秒）檢察官冷笑一聲轉向陪審團，<Subject 1>（S1）(S1) says,
 <d>[中文] 真實？在聯邦面臨外部經濟封鎖的非常時期，任何偏離官方定調的『數字』，都是敵人用來瓦解
-我們內部的武器！這不是科學，這是背叛。</d> 鏡頭：快速切換到陪審團方向的中景。
+我們內部的武器！這不是科學，這是背叛。</d> 鏡頭：快速切換到陪審團方向的中景，主體始終是
+檢察官本人。
 
 overall_soundscape:
-所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）逐字緩慢朗讀、由畫面內本人說出、非旁白。
-其餘為法庭的龐大寂靜與大廳迴響。
+只有檢察官一個人在說話，其他角色完全沉默。所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）
+逐字緩慢朗讀、由畫面內檢察官本人說出、非旁白。其餘為法庭的龐大寂靜與大廳迴響。
 
 non_diegetic_music:
 一段低沉受限的大提琴線與稀疏鋼琴單音，平穩徐緩。
 ```
 
-**參數**：`ref_image_0=output/ch2_prosecutor_ref/zimage_00017_.png（重用）, ref_image_1=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_2=output/ch2_court_ref/zimage_00016_.png（重用）, duration=16, seed=310005, out=ch2_b5_video`
+**參數**：`ref_image_0=output/ch2_prosecutor_ref/zimage_00017_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=16, seed=310005, out=ch2_b5_video`
 
 ---
 
@@ -519,15 +518,18 @@ non_diegetic_music:
 
 ```
 subject_definitions:
-<Subject 1> 是 <Picture 1> 裡最高法院的第三審判庭全景：圓頂大廳、挑高穹頂、分裂式旁聽席、
-高聳法官席背靠憲法石牆，法官端坐其上。
+<Subject 1> 是 <Picture 1> 裡最高法院的老年法官肖像：東亞老年男性、銀白短髮、嚴肅冷峻面容、
+法令紋深陷、身穿深黑色法官長袍、佩聯邦司法徽章。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭全景：圓頂大廳、挑高穹頂、分裂式旁聽席、
+高聳法官席背靠憲法石牆。
 
 summary:
-[reference generation] 目標影片是緊湊的一擊：法官從高處簡短追問一個字，聲音不高，卻讓
-整個法庭貼在沉默上。場景完整保留自 <Picture 1>。
+[reference generation] 目標影片是緊湊的一擊：老年法官在高處法官席上簡短追問一個字，聲音不高，
+卻讓整個法庭貼在沉默上。人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
 
 retention_analysis:
-<Subject 1>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席、高聳法官席與憲法石牆。
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 老年銀髮面容、冷峻法令紋、深黑法官長袍與司法徽章。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席、高聳法官席與憲法石牆。
 
 detailed_description:
 目標影片使用冷藍灰色調的法庭紀錄式風格，靜止全景、方形鏡位。所有台詞以**台灣腔普通話**逐字、
@@ -543,7 +545,7 @@ non_diegetic_music:
 N/A
 ```
 
-**參數**：`ref_image_0=output/ch2_court_ref/zimage_00016_.png（重用）, duration=1, seed=310010, out=ch2_b10_video`
+**參數**：`ref_image_0=output/ch2_judge_ref/zimage_00032_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=1, seed=310010, out=ch2_b10_video`
 
 ---
 
@@ -863,19 +865,22 @@ non_diegetic_music:
 subject_definitions:
 <Subject 1> 是 <Picture 1> 裡最高法院的第三審判庭全景：圓頂大廳、挑高穹頂、分裂式旁聽席、
 左側紅衣支持者與右側噤聲的年輕旁聽者、高聳法官席背靠憲法石牆。
+<Subject 2> 是 <Picture 2> 裡法庭頂端的大型直播攝影機：黑色機身、長鏡頭、一旁的小紅燈亮著，
+吊掛在圓頂天花板結構下方。
 
 summary:
 [reference generation] 目標影片是觀眾與直播的連接點：林墨抬頭望向法庭頂端亮著紅點的大型直播
-攝影機，鏡頭跟著他的視線拉近到鏡頭本身。場景完整保留自 <Picture 1>。
+攝影機，鏡頭跟著他的視線拉近到鏡頭本身。場景與攝影機完整保留自 <Picture 1> 與 <Picture 2>。
 
 retention_analysis:
 <Subject 1>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席、紅衣左側群眾、
 噤聲右側與高聳法官席。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 黑色機身、長鏡頭、紅燈與天花板石紋。
 
 detailed_description:
 目標影片使用冷藍灰色調的法庭紀錄式風格，仰角與俯角對切、紅點呼吸般亮著。
-[Shot 1] 00:00.000（場景 3 秒）林墨站在法庭中央，抬頭望向高處大型直播攝影機，紅燈一明一滅。
-鏡頭：仰角人物中景，視線導引後切至攝影機特寫。無台詞。
+[Shot 1] 00:00.000（場景 3 秒）林墨站在法庭中央，抬頭望向高處大型直播攝影機，<Subject 2>
+（S2）紅燈一明一滅。鏡頭：仰角人物中景，視線導引後切至攝影機特寫。無台詞。
 
 overall_soundscape:
 法庭的龐大寂靜；攝影機鏡頭推近的高頻低嗡與伺服機構運作聲。
@@ -884,7 +889,7 @@ non_diegetic_music:
 一段低沉受限的大提琴單音，幾乎不動。
 ```
 
-**參數**：`ref_image_0=output/ch2_court_ref/zimage_00016_.png（重用）, duration=3, seed=310020, out=ch2_b20_video`
+**參數**：`ref_image_0=output/ch2_court_ref/zimage_00016_.png（重用）, ref_image_1=output/ch2_camerawall_ref/zimage_00033_.png（重用）, duration=3, seed=310020, out=ch2_b20_video`
 
 ---
 
