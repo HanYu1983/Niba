@@ -178,6 +178,36 @@ function startBackgroundJob(promptId, meta) {
   return job;
 }
 
+// ---- History helpers ----
+
+function summarizeHistoryEntry(id, entry) {
+  const s = entry.status || {};
+  const outputs = Object.values(entry.outputs || {})
+    .flatMap((no) => Object.values(no))
+    .flatMap((v) => (Array.isArray(v) ? v : []))
+    .filter((i) => i && i.filename)
+    .map((i) => ({ filename: i.filename, subfolder: i.subfolder || "", type: i.type || "output" }));
+  return {
+    prompt_id: id,
+    status: s.status_str || "?",
+    completed: s.completed ?? undefined,
+    outputsCount: outputs.length,
+    outputs
+  };
+}
+
+function extractMetaFromHistory(entry) {
+  const wf = entry.prompt || {};
+  let prompt, seed, duration;
+  for (const n of Object.values(wf)) {
+    const inp = n && n.inputs ? n.inputs : {};
+    if (prompt === undefined && (inp.prompt || inp.text)) prompt = inp.prompt || inp.text;
+    if (seed === undefined && inp.noise_seed !== undefined) seed = inp.noise_seed;
+    if (duration === undefined && typeof inp.value === "number" && inp.value >= 1 && inp.value <= 60) duration = inp.value;
+  }
+  return { prompt, seed, duration };
+}
+
 // ---- Tools ----
 
 export function createMcpServer() {
@@ -345,6 +375,63 @@ export function createMcpServer() {
         files: job.files.length ? job.files : undefined,
         error: job.error
       }, null, 2) }] };
+    }
+  );
+
+  // ---------------- Query: ComfyUI history ----------------
+  server.tool(
+    "query_history",
+    "Query the ComfyUI execution history. Without prompt_id, lists the most recent finished jobs (with their output filenames). With prompt_id, returns that job's status and output file list.",
+    {
+      prompt_id: z.string().optional().describe("A prompt_id returned by a generation tool; omit to list recent history"),
+      limit: z.number().int().min(1).max(500).optional().describe("max recent entries to list when prompt_id is omitted (default 40)")
+    },
+    async (p) => {
+      if (p.prompt_id) {
+        const h = await comfyGet(`/api/history/${p.prompt_id}`);
+        const entry = h[p.prompt_id];
+        if (!entry) {
+          return { content: [{ type: "text", text: JSON.stringify({ prompt_id: p.prompt_id, status: "not_found", message: "prompt_id 不在 history 中（可能仍未完成、被清除或從未執行）" }, null, 2) }] };
+        }
+        return { content: [{ type: "text", text: JSON.stringify(summarizeHistoryEntry(p.prompt_id, entry), null, 2) }] };
+      }
+      const h = await comfyGet(`/api/history?max_items=${(p.limit ?? 40) + 1}`);
+      const entries = Object.entries(h).slice(0, p.limit ?? 40)
+        .map(([id, e]) => summarizeHistoryEntry(id, e));
+      return { content: [{ type: "text", text: JSON.stringify({ count: entries.length, entries }, null, 2) }] };
+    }
+  );
+
+  // ---------------- Download: recover outputs from history ----------------
+  server.tool(
+    "download_from_history",
+    "Download finished output files for a prompt_id from the ComfyUI history into output/. Use this to recover jobs whose background auto-download was lost (timeout, server restart, or queue cancellation).",
+    {
+      prompt_id: z.string().min(1).describe("A finished prompt_id present in ComfyUI history"),
+      out: z.string().optional().describe("subdirectory under output/ (default 'recovered')"),
+      filename: z.string().optional().describe("only download outputs whose filename matches (basename, e.g. MiniMax_H3_00161_.mp4)")
+    },
+    async (p) => {
+      const h = await comfyGet(`/api/history/${p.prompt_id}`);
+      const entry = h[p.prompt_id];
+      if (!entry) {
+        return { content: [{ type: "text", text: JSON.stringify({ prompt_id: p.prompt_id, status: "not_found", message: "prompt_id 不在 history 中（無法下載）" }, null, 2) }] };
+      }
+      const items = Object.values(entry.outputs || {})
+        .flatMap((no) => Object.values(no))
+        .flatMap((v) => (Array.isArray(v) ? v : []))
+        .filter((i) => i && i.filename && (!p.filename || i.filename === p.filename))
+        .map((i) => ({ filename: i.filename, subfolder: i.subfolder || "", type: i.type || "output" }));
+      if (!items.length) {
+        return { content: [{ type: "text", text: JSON.stringify({ prompt_id: p.prompt_id, status: "no_outputs", message: "history 中此 job 沒有可下載的輸出檔" }, null, 2) }] };
+      }
+      const meta = extractMetaFromHistory(entry);
+      const saved = [];
+      for (const it of items) {
+        const dest = await downloadAndSave(it.filename, it.subfolder, it.type, outArg(p.out), meta);
+        saved.push(dest);
+      }
+      return { content: [{ type: "text", text: JSON.stringify({ prompt_id: p.prompt_id, status: "downloaded", files: saved }, null, 2) }] };
     }
   );
 
