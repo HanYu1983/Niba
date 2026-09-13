@@ -91,8 +91,16 @@ function buildR2vWorkflow({ prompt, seed, duration, ref0, ref1, ref2, width, hei
   if (seed !== undefined) wf["129"].inputs.noise_seed = seed;
   if (duration !== undefined) wf["132"].inputs.value = duration;
   if (ref0) wf["137"].inputs.image = ref0;
-  if (ref1) wf["139"].inputs.image = ref1;
-  if (ref2) wf["147"].inputs.image = ref2;
+  const optionalRef = (nodeId, refFile, inputKey) => {
+    if (refFile) {
+      wf[nodeId].inputs.image = refFile;
+      return;
+    }
+    delete wf[nodeId];
+    delete wf["136"].inputs[inputKey];
+  };
+  optionalRef("139", ref1, "ref_images.ref_image_1");
+  optionalRef("147", ref2, "ref_images.ref_image_2");
   if (width !== undefined) wf["136"].inputs.width = width;
   if (height !== undefined) wf["136"].inputs.height = height;
   return wf;

@@ -263,7 +263,7 @@
   },
   "137": {
     "inputs": {
-      "image": "ChatGPT Image 2026年6月5日 下午05_28_00.png"
+      "image": ""
     },
     "class_type": "LoadImage",
     "_meta": {
@@ -281,7 +281,7 @@
   },
   "139": {
     "inputs": {
-      "image": "bd00fa5f-3e5a-4dcf-94c7-cabb439b603f (1).jpeg"
+      "image": ""
     },
     "class_type": "LoadImage",
     "_meta": {
@@ -371,7 +371,7 @@
   },
   "147": {
     "inputs": {
-      "image": "55225466270_1b21daa085_b.jpg"
+      "image": ""
     },
     "class_type": "LoadImage",
     "_meta": {
