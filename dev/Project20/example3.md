@@ -69,14 +69,14 @@
 | B18 | 場景 | 紅衣群眾叫囂：「標籤他！他也是賣國賊！」（群聲，不蓋對白） | 7 |
 | B19 | 對白 | 林墨轉過身，對艾倫：「別低頭，這不是你的審判。」（11字） | 3 |
 | B20 | 場景 | 林墨望向法庭頂端直播攝影機 | 3 |
-| B21 | 對白 | 林墨（對全國直播）：104 字宣言 | 18 |
+| B21 | 對白 | 林墨（對全國直播）：104 字宣言 | 26 |
 | B22 | 旁白 | 「那張印著領袖頭像的千萬廢紙，在邊境連半瓶水都換不到。林墨把它帶到了法庭上。」（約34字） | 7 |
 | B23 | 場景 | 林墨掏出那張印著領袖頭像的千萬廢紙，高舉過頭 | 6 |
 | B24 | 場景 | 法官宣布休庭，艾倫被法警帶走 | 4 |
 | B25 | 對白 | 林墨：「我在南方的鄰居那學到一件事：標籤不能當飯吃…」（64字） | 15 |
 | B26 | 場景 | 走出法庭，麥克風包圍 | 3 |
-| B27 | 對白 | 記者：「你真的要在下週推動那個法案嗎？」（13字） | 3 |
-| B28 | 對白 | 林墨：「我沒收錢，我只是不想在未來的某一天…（47字）」 | 11 |
+| B27 | 對白 | 記者三問：「你真的要在下週推動那個法案嗎？」「你這是在公然挑釁司法權嗎？」「有人說你收了外國政府的錢，才要破壞聯邦的團結，你怎麼回應？」（62字） | 14 |
+| B28 | 對白 | 林墨：「我沒收錢，我只是不想在未來的某一天…（47字）」 | 12 |
 | B29 | 場景 | 電視牆滾動標題《數據修正主義者的野心：林墨與其背後的陰謀》 | 3 |
 
 > 全表共 **30 個區塊**（B0–B29），其中旁白區塊 3 個：**B0 / B7 / B22**，
@@ -888,6 +888,285 @@ non_diegetic_music:
 
 ---
 
+## B21 — 全國直播宣言（對白，26 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席
+背靠憲法石牆，頂端大型直播攝影機紅燈明滅。
+
+summary:
+[reference generation] 目標影片是林墨直接面對全國直播的宣言：他無視法官敲槌，直視攝影機逐字
+對觀眾演說，字句平穩、冷靜。人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、淺鬍茬、
+深陷疲憊眼神，與深炭灰西裝及皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、直視鏡頭。所有台詞以**台灣腔普通話**逐字、
+緩慢、由畫面內本人說出、非旁白、無粵語。
+[Shot 1] 00:00.000（對白 26 秒）林墨站定、微微抬頭直視法庭頂端的直播攝影機紅燈，<Subject 1>
+（S1）(S1) says, <d>[中文] 各位國民，今天政府告訴我們，懷疑數字就是背叛。但我要告訴各位，
+當一個政府開始用『立場』來代替『加減法』時，你們手中的積蓄、你們對未來的計畫，都將建立在
+沙灘上。如果我們容許政府提告一個說出超市價格的孩子，那麼明天，當政府說一加一等於五的時候，
+你們也只能點頭。</d> 鏡頭：靜止中景、淺景深、直視鏡頭。
+
+overall_soundscape:
+所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）逐字緩慢朗讀、由畫面內本人說出、非旁白。
+其餘為法官遠方憤怒的槌聲、法庭騷動的低語與直播攝影機的伺服聲。
+
+non_diegetic_music:
+一段低沉受限的大提琴線與稀疏鋼琴單音，對白中穩步上行、幾乎不動。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=26, seed=310021, out=ch2_b21_video`
+
+---
+
+## B23 — 高舉千萬廢紙（場景，無對白，6 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席。
+
+summary:
+[reference generation] 目標影片是宣言後的高潮動作：林墨從口袋掏出那張印著領袖頭像的千萬面額廢紙、
+高舉過頭，紅衣群眾與法官的反應凝住。人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、深炭灰西裝與皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，中景、緩慢上搖。
+[Shot 1] 00:00.000（場景 6 秒）林墨從外套口袋掏出那張印著領袖頭像的千萬面額廢紙、雙手高舉過頭，
+紙張微微在光下滑出一道弧。鏡頭：中景上搖至紙面。無台詞。
+
+overall_soundscape:
+法庭的龐大寂靜；廢紙抽出的紙張摩擦聲、林墨的呼吸聲與衣料聲，零落壓抑的騷動。
+
+non_diegetic_music:
+一段低沉受限的大提琴單音，微微上行、凝住。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=6, seed=310023, out=ch2_b23_video`
+
+---
+
+## B24 — 法官宣布休庭（場景，無對白，4 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡最高法院的第三審判庭全景：圓頂大廳、挑高穹頂、分裂式旁聽席、
+高聳法官席背靠憲法石牆，法官端坐其上。
+<Subject 2> 是 <Picture 2> 裡被告席上的少年艾倫：19 歲、瘦弱、短髮、白色襯衫、恐懼表情。
+
+summary:
+[reference generation] 目標影片是宣言瓦解後的法庭收尾：法官在一陣死寂後宣布休庭、艾倫被法警
+強行帶離被告席，旁聽席起身騷動。場景與人物完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 少年瘦弱身形、短髮、白襯衫、恐懼表情。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，寬景、中速橫移。
+[Shot 1] 00:00.000（場景 4 秒）法官敲下法槌、宣布休庭，艾倫被兩名法警自被告席帶走，旁聽席
+轟然騷動。鏡頭：寬景、中速橫移。無台詞。
+
+overall_soundscape:
+法庭的死寂被法槌敲響打破：休庭的騷動聲、法警拉動艾倫的衣料與腳步聲、旁聽席起身的座椅聲。
+
+non_diegetic_music:
+一段低沉受限的大提琴單音，幾乎不動。
+```
+
+**參數**：`ref_image_0=output/ch2_court_ref/zimage_00016_.png（重用）, ref_image_1=output/ch2_allen_ref/zimage_00015_.png（重用）, duration=4, seed=310024, out=ch2_b24_video`
+
+---
+
+## B25 — 標籤不能當飯吃（對白，15 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席。
+
+summary:
+[reference generation] 目標影片是林墨補完最後一擊的對白：在休庭的騷動中，他站在原地、平聲補上
+關於標籤與廢紙的論斷。人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、深炭灰西裝與皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、淺景深。所有台詞以**台灣腔普通話**逐字、
+緩慢、由畫面內本人說出、非旁白、無粵語。
+[Shot 1] 00:00.000（對白 15 秒）林墨站在原地、目光掃過法官席與旁聽席，平聲開口，
+<Subject 1>（S1）(S1) says, <d>[中文] 我在南方的鄰居那裡學到了一件事：標籤不能當飯吃，
+口號不能折抵債務。如果這座法庭今天判處真實有罪，那麼這張廢紙，就是歐若拉聯邦明天的樣子。</d>
+鏡頭：靜止中景、淺景深。
+
+overall_soundscape:
+所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）逐字緩慢朗讀、由畫面內本人說出、非旁白。
+其餘為休庭騷動的低浪、法警與艾倫遠去的腳步聲。
+
+non_diegetic_music:
+一段低沉受限的大提琴線與稀疏鋼琴單音，平穩徐緩。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=15, seed=310025, out=ch2_b25_video`
+
+---
+
+## B26 — 走出法庭（場景，無對白，3 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席，
+連接通往門外走廊的高低月台。
+
+summary:
+[reference generation] 目標影片是法庭收束後林墨走出門外的動線：他推開重重法警與人群，走向門口，
+無數支麥克風從走廊兩側湧上。人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、深炭灰西裝與皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與高聳法官席。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，中景、手持微晃。
+[Shot 1] 00:00.000（場景 3 秒）林墨自法庭內走出、穿過法警與湧上的記者群，走廊兩側麥克風如林。
+鏡頭：中景、手持微晃、跟拍走向。無台詞。
+
+overall_soundscape:
+走廊上的人群與麥克風雜訊底噪、法警維持秩序的指令、快步走動與相機快門的亂響。
+
+non_diegetic_music:
+一段低沉受限的大提琴單音，幾乎不動。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=3, seed=310026, out=ch2_b26_video`
+
+---
+
+## B27 — 記者群問（對白，14 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席，
+門外走廊湧入一群記者。
+
+summary:
+[reference generation] 目標影片是林墨走出法庭後被記者包圍質問的混亂片段：數名記者爭先提問，
+林墨停下腳步、沉默片刻。人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、深炭灰西裝與皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與走廊記者群。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，中景、手持微晃。所有台詞以**台灣腔普通話**逐字、
+緩慢、由畫面內記者在壓力下提出、非旁白、無粵語。
+[Shot 1] 00:00.000（對白 14 秒）林墨走出法庭大門即被麥克風包圍，一名記者搶先發問，
+<Subject 3>（S3）是 <Picture 2> 走廊裡的一名記者（<Subject 3>（S3）(S3) says,
+<d>[中文] 林委員，你真的要在下週推動那個法案嗎？</d>）另一名記者追問，
+<Subject 4>（S4）是 <Picture 2> 走廊裡的另一名記者（<Subject 4>（S4）(S4) says,
+<d>[中文] 你這是在公然挑釁司法權嗎？</d>）後排又有一人喊出，
+<Subject 5>（S5）是 <Picture 2> 走廊裡的一名記者（<Subject 5>（S5）(S5) says,
+<d>[中文] 有人說你收了外國政府的錢，才要破壞聯邦的團結，你怎麼回應？</d>）
+林墨停下腳步、沉默看向提問的記者。鏡頭：中景、手持微晃。
+
+overall_soundscape:
+所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）由畫面內記者逐字緩慢說出、非旁白。
+其餘為走廊上此起彼落的提問群聲、麥克風與人群的雜訊底噪、相機快門亂響。
+
+non_diegetic_music:
+一段低沉受限的大提琴單音，幾乎不動。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=14, seed=310027, out=ch2_b27_video`
+
+---
+
+## B28 — 我沒收錢（對白，12 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡的邊境經濟學家林墨：一名瘦削、中等身材的東亞中年男性，年近五十，
+短而整齊的黑髮夾雜灰白絲、淺鬍茬、深陷疲憊的眼神、穿深炭灰西裝與皺白襯衫不打領帶。
+<Subject 2> 是 <Picture 2> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席，
+門外走廊的石柱與記者群。
+
+summary:
+[reference generation] 目標影片是林墨對記者「收了多少錢」指控的回應：他停下腳步、直視提問者，
+語氣平淡卻堅定。人物與場景完整保留自 <Picture 1> 與 <Picture 2>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 瘦削嚴肅面容、黑髮灰絲、深炭灰西裝與皺白襯衫。
+<Subject 2>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席與走廊石柱。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，靜止中景、淺景深。所有台詞以**台灣腔普通話**逐字、
+緩慢、由畫面內本人說出、非旁白、無粵語。
+[Shot 1] 00:00.000（對白 12 秒）林墨停下腳步、直視問他收錢的記者，平聲開口，
+<Subject 1>（S1）(S1) says, <d>[中文] 我沒收錢，我只是不想在未來的某一天，我的孩子必須拿著
+幾億張印著我頭像的廢紙，去換一塊發霉的麵包。</d> 鏡頭：靜止中景、淺景深。
+
+overall_soundscape:
+所有台詞以台灣腔普通話（台灣腔、無粵語、無方言）逐字緩慢朗讀、由畫面內本人說出、非旁白。
+其餘為記者群被鎮住後收聲的雜訊低浪、偶爾相機快門聲。
+
+non_diegetic_music:
+一段低沉受限的大提琴線與稀疏鋼琴單音，平穩徐緩。
+```
+
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png（重用）, ref_image_1=output/ch2_court_ref/zimage_00016_.png（重用）, duration=12, seed=310028, out=ch2_b28_video`
+
+---
+
+## B29 — 電視牆標題（場景，無對白，3 秒）
+
+```
+subject_definitions:
+<Subject 1> 是 <Picture 1> 裡最高法院的第三審判庭法庭空間：圓頂大廳、分裂旁聽席、高聳法官席，
+法庭外的電視牆字幕：黑底白字滾動《數據修正主義者的野心：林墨與其背後的陰謀》。
+
+summary:
+[reference generation] 目標影片是法庭外的冷收束：林墨推開人群走向座車，身後的電視牆已開始滾動
+檄文一般的標題，黑字壓在冷灰底色上。場景完整保留自 <Picture 1>。
+
+retention_analysis:
+<Subject 1>（出現在 [Shot 1]）: fully_preserved - 圓頂大廳、分裂旁聽席、法庭外電視牆與黑色標題。
+
+detailed_description:
+目標影片使用冷藍灰色調的法庭紀錄式風格，上搖鏡頭、冷光。
+[Shot 1] 00:00.000（場景 3 秒）林墨的背影走向座車，鏡頭上搖帶到法庭外電視牆，
+黑色標題開始滾動：『數據修正主義者的野心：林墨與其背後的陰謀』。鏡頭：上搖至牆面。無台詞。
+
+overall_soundscape:
+走廊與馬路的環境底噪、車門關上的悶響，電視牆的冷光嗡嗡聲。
+
+non_diegetic_music:
+一段低沉受限的大提琴單音，微微下沉、收束。
+```
+
+**參數**：`ref_image_0=output/ch2_court_ref/zimage_00016_.png（重用）, duration=3, seed=310029, out=ch2_b29_video`
+
+---
+
 ## 腔調錨點（B0–B29 全部以此為準）
 
 - **`<d>` 語言標籤維持 `[中文]` 不改**；腔調不由標籤決定。
@@ -901,9 +1180,9 @@ non_diegetic_music:
 
 ---
 
-## 已寫出提示詞的區塊（B0–B20、B22）完成後：合併
+## 已寫出提示詞的區塊（B0–B29 全部）完成後：合併
 
-已寫出完整六欄位提示詞的區塊依序合併為 Ch2 前段：旁白身世 → 開庭 → 直播前的宣言（約 178 秒）：
+已寫出完整六欄位提示詞的區塊依序合併為 Ch2 全文：旁白身世 → 開庭 → 直播宣言 → 車前收束（約 259 秒）：
 
 ```
 merge_videos(
@@ -929,13 +1208,20 @@ merge_videos(
     "ch2_b18_video/xxx.mp4",
     "ch2_b19_video/xxx.mp4",
     "ch2_b20_video/xxx.mp4",
-    "ch2_b22_video/xxx.mp4"
+    "ch2_b21_video/xxx.mp4",
+    "ch2_b22_video/xxx.mp4",
+    "ch2_b23_video/xxx.mp4",
+    "ch2_b24_video/xxx.mp4",
+    "ch2_b25_video/xxx.mp4",
+    "ch2_b26_video/xxx.mp4",
+    "ch2_b27_video/xxx.mp4",
+    "ch2_b28_video/xxx.mp4",
+    "ch2_b29_video/xxx.mp4"
   ],
   resolution = "352:608",
-  out = "ch2_part1"
+  out = "ch2_full"
 )
 ```
 
-> B16–B20 已寫入提示詞；剩餘未寫出的區塊（B21、B23–B29）沿用 example2.md 的六欄位
-> 對應內容（鏡頭/對白）；B22 原屬插入 B21 與 B23 之間的旁白區塊，若影片暫未生成可先自合併清單移除。
-> 其餘旁白區塊以 B7/B22 的 `<Narrator>` + 聲線錨點樣板撰寫。
+> **B0–B29 全部區塊均已完成提示詞撰寫。** 對白皆逐字對照 `story1.md` 第二章（lines 67–113），
+> 無省略、無自創。
