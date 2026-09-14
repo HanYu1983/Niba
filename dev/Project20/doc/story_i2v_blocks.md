@@ -54,7 +54,7 @@
 ## 1. 區塊總表（區塊分割與計秒）
 
 - 型別計秒：**對白** 4 字/秒、**旁白** 5 字/秒、**場景** 依動作節拍（寧短勿長）。
-- 對白/旁白逐字以 `doc\story.md` 為準（不發明、不改寫）；日文臺詞照錄，朗讀以台灣腔普通話為錨。
+- 對白/旁白逐字以 `doc\story.md` 為準（不發明、不改寫）；全部臺詞為日文，朗讀以自然日文為錨。
 - 各區塊中的參考圖＝首尾幀本身；B37 為 **首幀-only**（尾幀缺省）。
 
 | 區塊 | 型別 | 首幀→尾幀 | 規劃秒 | 累積起點 | 內容標題 |
@@ -107,43 +107,43 @@
 
 | 區塊 | 型別 | 規劃秒 | 累積起點 | 字幕文字（逐字） | 斜體 |
 |------|------|--------|----------|-------------------|------|
-| B01 | 對白＋旁白 | 8s | 0s | 鬼退治のあとで……就是說、打完鬼以後囉。<br>勝ったけど、ちょっと疲れた。<br>新たな冒険は、まだ終わっていない——新·桃太娘。 | 末句 ✅ |
+| B01 | 對白＋旁白 | 8s | 0s | 鬼退治のあとで……つまり、鬼を倒したあとってことね。<br>勝ったけど、ちょっと疲れた。<br>新たな冒険は、まだ終わっていない——新·桃太娘。 | 末句 ✅ |
 | B02 | 場景 | 5s | 8s | （無字幕） | — |
-| B03 | 對白 | 7s | 13s | 大家都到齊了吧？<br>……那個球，可以寫「食」嗎。<br>寫著「旅」才有意義嘛。走吧——我們的旅行，才不是為了吃。 | — |
-| B04 | 對白 | 5s | 20s | 明天開始，就要去很多很多沒見過的地方了。 | — |
-| B05 | 對白 | 9s | 25s | 婆婆……那句話，我一直想說。<br>坐在桃樹下等我回來的孩子啊。<br>我會好好活著回來。活著回來，聽你罵我怎麼搞得到處都是泥。 | — |
-| B06 | 對白 | 6s | 34s | 衣服破了自己補！別忘了帶飯糰！<br>知道啦——！ | — |
-| B07 | 對白 | 7s | 40s | 接下來就是我們四個人的旅途了。寫一篇讓婆婆也看得懂的「旅の記録」吧。 | — |
-| B08 | 對白 | 7s | 47s | 啊——活過來了。ゴン，你為什麼每顆飯糰都要先偷咬一口。<br>……試毒。 | — |
-| B09 | 對白 | 7s | 54s | 走了一上午，在這裡歇一下吧。水是甜的，風也是甜的。<br>咕咕——！<br>你看，連ピーチ都說好。 | — |
-| B10 | 對白 | 8s | 61s | 婆婆說，我的「桃」和鬼島的那些人一樣，都是從「別的地方」來的。<br>汪。<br>……那就決定啦。先去鬼ヶ島，看看那些被關起來的人。然後——再回來。 | — |
-| B11 | 對白 | 6s | 69s | 出發！<br>（小小聲）……你連島長什麼樣都不知道。<br>所以才更要去看看啊！ | — |
-| B12 | 對白 | 9s | 75s | 哇——好舒服。這就是「いい湯、いい島」吧。<br>喂，前面就是鬼島了，你還有心情泡湯喔。<br>就是了鬼島才要泡。把力氣存好，明天好上路。 | — |
-| B13 | 對白 | 6s | 84s | 這是今天的收穫！一口咬下去，海的味道——<br>（帶著魚）你已經講第三遍了。 | — |
-| B14 | 對白 | 9s | 90s | 說好囉——去鬼ヶ島，把該救的人救回來，然後我們四個就一起去看更大的海。<br>汪。<br>要是鬼王很兇呢？<br>那就打贏他，再回來泡湯。 | — |
-| B15 | 對白 | 14s | 99s | 老夫年輕時跟著船朝北走，被浪打上鬼ヶ島。那島啊——根本不是島，是「城堡」。島中央有座山，山頂像顆骷髏。鬼王把山下的人都關進籠子裡，替他搬石頭。<br>那島上的人……都還在嗎？<br>只要你還活著一只，就都還在。老夫是游水回來的，全村只有老夫一個人回來。<br>這面旗，我借了。回來再還你。 | — |
-| B16 | 對白 | 7s | 113s | 小桃！就你們四個能幹嘛！<br>我們有五個！シロ、ゴン、ピーチ，還有我——加上婆婆在門口看著呢！ | — |
-| B17 | 對白 | 8s | 120s | ……真的好像鬼。<br>我知道。我們是去把那座城，拆下來的。 | — |
-| B18 | 對白 | 6s | 128s | 這些腳印……是那些被抓走的人留下的？不——太深了。這是鬼的腳印。 | — |
-| B19 | 對白 | 5s | 134s | 一進門就有哨位。我數到三—— | — |
-| B20 | 對白 | 6s | 139s | 牆內有人。兩個。<br>那就換邊走。我們是來救人的，不是來吵醒人的。 | — |
+| B03 | 對白 | 7s | 13s | みんな、そろってる？<br>……その球、「食」って書いてもいい？<br>「旅」って書いてこそ意味があるんだよ。行こう——俺たちの旅は、食べるためじゃないんだ。 | — |
+| B04 | 對白 | 5s | 20s | 明日から、まだ見たことのない場所を、たくさんたくさん訪れるんだ。 | — |
+| B05 | 對白 | 9s | 25s | おばあちゃん……ずっと言いたかったことがあるの。<br>桃の木の下で、帰りを待っていた子だよ。<br>ちゃんと生きて帰ってくるから。帰ってきたら、泥だらけで何してるんだって、おばあちゃんに叱ってもらいたいの。 | — |
+| B06 | 對白 | 6s | 34s | 服が破れたら自分で縫いなさい！おにぎり、忘れちゃダメよ！<br>はーい——！ | — |
+| B07 | 對白 | 7s | 40s | これからは俺たち四人の旅だ。ばあちゃんにも分かる「旅の記録」を、書いてみせよう。 | — |
+| B08 | 對白 | 7s | 47s | あー生き返った。ゴン、お前はどうして毎回最初に一口齧るんだよ。<br>……毒見だ。 | — |
+| B09 | 對白 | 7s | 54s | 半日歩いたし、ここで休もう。水も甘いし、風も甘い。<br>ぐっぐー！<br>ほら、ピーチだってそう言ってる。 | — |
+| B10 | 對白 | 8s | 61s | おばあちゃんが言ってたんだ。私の「桃」も、鬼ヶ島の人たちと同じで、よそから来たものなんだって。<br>ワン。<br>……よし、決めた。鬼ヶ島に行って、囚われている人たちを見てくる。それから——帰ってくる。 | — |
+| B11 | 對白 | 6s | 69s | 出発！<br>（小さな声）……島がどんな姿か知らないんだろ。<br>だからこそ、見に行くんだよ！ | — |
+| B12 | 對白 | 9s | 75s | いい湯、いい島。<br>おい、もうすぐ鬼島だぞ。のん気に湯なんか浸かってていいのかよ。<br>だからこそ浸かるんだよ。力をためて、明日に備える。 | — |
+| B13 | 對白 | 6s | 84s | 今日の収穫だよ！一口かじれば、海の味——<br>（魚を咥えて）もう三回目だぜ、その台詞。 | — |
+| B14 | 對白 | 9s | 90s | 約束だよ——鬼ヶ島で、助けるべき人を助けて、それから四人で、もっと更大的海を見に行くんだ。<br>ワン。<br>鬼王がすごく強い相手だったら？<br>そのときは勝ってから、温泉に戻ってくるさ。 | — |
+| B15 | 對白 | 14s | 99s | わしは若い頃、船で北へ向かって、鬼ヶ島へ流された。あの島は——島なんかじゃない、「城」だ。島の真ん中に山があって、てっぺんは髑髏みたいな形をしている。鬼王は麓の人々をみな檻に閉じ込めて、石を運ばせているんだ。<br>島の人たち……みんな、まだ生きてるの？<br>生きている者がひとりでもいれば、みんな生きているんだ。わしは泳いで戻ってきた。村で戻ってこられたのは、わし一人だけだった。<br>この旗、借りていくよ。帰ってきたら返すから。 | — |
+| B16 | 對白 | 7s | 113s | お桃！たった四人で何ができるんだ！<br>私たちは五人だよ！シロ、ゴン、ピーチ、それに私——それに、おばあちゃんが門で見てくれてるんだから！ | — |
+| B17 | 對白 | 8s | 120s | ……ほんとに、鬼みたいだ。<br>分かってる。私たちはあの城を、壊しに行くんだ。 | — |
+| B18 | 對白 | 6s | 128s | この足跡……連れて行かれた人たちのもの？いや——深すぎる。これは鬼の足跡だ。 | — |
+| B19 | 對白 | 5s | 134s | 門を入れば見張りがいる。三つ数えたら—— | — |
+| B20 | 對白 | 6s | 139s | 壁の中に人がいる。二人。<br>じゃあ、別の道を行こう。私たちは人を救いに来たんだ。起こしに来たんじゃない。 | — |
 | B21 | 場景 | 5s | 145s | （無字幕） | — |
-| B22 | 對白 | 5s | 150s | 再高一點……牆裡面就是城了。<br>汪。 | — |
-| B23 | 對白 | 6s | 155s | 等他們走過去——一個，兩個，三個—— | — |
-| B24 | 對白 | 7s | 161s | 給你。我們不打架，你讓路就好。<br>……走那條路。<br>你看，柿子比刀有用。 | — |
-| B25 | 對白 | 6s | 168s | 小娃娃也敢來拆牆？<br>對。我來帶牆裡的人回家。 | — |
-| B26 | 對白 | 6s | 174s | シロ——好感！ | — |
-| B27 | 對白 | 7s | 180s | 這是……婆婆說的，那間屋子？<br>那孩子在那裡！<br>總之——先保住這件東西。 | — |
-| B28 | 對白 | 8s | 187s | 那個人（婆婆）說，我是從桃樹下被撿到的。會不會，我家也跟這座城一樣，原本也是有屋簷的。<br>不管怎樣，先打完再說。明晚，我們就進去。 | — |
-| B29 | 對白 | 10s | 195s | 您是島另一頭的上老，是不是？我是從村子裡來的，我叫桃。<br>桃……你怎麼進得來。快走！鬼王會把你——<br>要走也是大家一起走。我先把牢門劈開，再往大殿去討個說法。<br>那大殿上……可是真的鬼王啊。<br>我知道。婆婆說過，鬼也是能講道理的——只要你先動手。 | — |
+| B22 | 對白 | 5s | 150s | もう少し……この壁の奥が城の中だ。<br>ワン。 | — |
+| B23 | 對白 | 6s | 155s | 向こうへ行くまで待つ——一、二、三—— | — |
+| B24 | 對白 | 7s | 161s | ほら、やるよ。戦わない。道を空けてくれればそれでいい。<br>……あっちの道を行け。<br>見ろよ、柿のほうが刀より役に立つんだ。 | — |
+| B25 | 對白 | 6s | 168s | 小娘風情が、壁を壊そうってか？<br>ああ。壁の向こうの人たちを、連れ帰りに来たんだ。 | — |
+| B26 | 對白 | 6s | 174s | シロ——行け！ | — |
+| B27 | 對白 | 7s | 180s | これ……ばあちゃんが話してた、あの家？<br>あの子はそこだ！<br>とにかく——これを守る。 | — |
+| B28 | 對白 | 8s | 187s | ばあちゃんが言ってた。俺は桃の木の下で拾われたって。もしかしたら俺の家も、この城みたいに、もともと屋根があったのかもしれない。<br>まあいい。まず戦いを終わらせる。明日の夜、中に入るぞ。 | — |
+| B29 | 對白 | 10s | 195s | あんたは島の向こう側の上老だろう？村から来たんだ。俺は桃だ。<br>桃……どうして入ってこられたんだ。早く逃げろ！鬼王に——<br>逃げるなら皆で逃げる。まず牢の扉を斬り開けて、それから大殿へ話をつけに行く。<br>あの大殿には……本物の鬼王がいるんだぞ。<br>分かってる。ばあちゃんも言ってた。鬼だって道理は通じる——こっちが先に手を出すならな。 | — |
 | B30 | 場景 | 5s | 205s | （無字幕） | — |
 | B31 | 場景 | 5s | 210s | （無字幕） | — |
 | B32 | 場景 | 5s | 215s | （無字幕） | — |
 | B33 | 場景 | 5s | 220s | （無字幕） | — |
-| B34 | 對白 | 7s | 225s | 鬼王——我要你做人。<br>……我負責帶人回去。你負責，睡一覺。 | — |
-| B35 | 對白 | 6s | 232s | 婆婆——我回來囉。 | — |
+| B34 | 對白 | 7s | 225s | 鬼王——お前を、人間に戻してみせる。<br>……俺は人を連れて帰る。お前は、眠ってろ。 | — |
+| B35 | 對白 | 6s | 232s | ばあちゃん——ただいま。 | — |
 | B36 | 場景 | 5s | 238s | （無字幕） | — |
-| B37 | 對白＋片尾字卡 | 16s | 243s | 你也想家吧。打完仗的人，都是要回家的。<br>那我們也回家吧。回去泡婆婆的湯，回去坐在桃樹下，把這趟「旅の記録」講成整整三天三夜都講不完的故事。<br>鬼退治のあとで。<br>勝ったけど、ちょっと疲れた。<br>まだ撮るの？收了啦——<br>また、どこかへ♡<br>新たな冒険は、まだ終わっていない。 | 末句 ✅ |
+| B37 | 對白＋片尾字卡 | 16s | 243s | お前も家に帰りたいんだろ。戦が終われば、みんな家に帰るんだ。<br>じゃあ俺たちも帰ろう。ばあちゃんの湯に入って、桃の木の下に座って、この「旅の記録」を、三日三晩話し尽くしても終わらない話にしよう。<br>鬼退治のあとで。<br>勝ったけど、ちょっと疲れた。<br>まだ撮るの？もう終わりでしょ——<br>また、どこかへ♡<br>新たな冒険は、まだ終わっていない。 | 末句 ✅ |
 
 ---
 
@@ -151,7 +151,7 @@
 
 - **格式**：i2v 三欄位 H3 schema：`integrated_multimodal_description` / `overall_soundscape` / `non_diegetic_music`。
 - **說話者**：`(S1)`＝桃（Momo）；其餘出場說話者依序 `(S2)`…。全片 `(S1)` 統一為桃。
-- **腔調錨點**（對白/旁白區塊必寫）：`All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.`（B05、B10–B37 例外＝日文對白＋日文發音錨點）
+- **腔調錨點**（對白區塊必寫）：`All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.`（B01–B37 全片日文；無對白塊不含錨點）
 - **畫面可見文字**：使用英文雙引號逐字保留（如 `"桃太郎"`、`"鬼ヶ島へ出発"`），與 `<d>` 分離。
 - **鏡頭時間戳**：`[Shot 1]` 不含時間戳；後續鏡頭 `[Shot N] At 00:MM.mmm, ...` 嚴格遞增且落在規劃秒內。
 - **參考圖**＝首尾幀本身，助攻架式以「首幀→尾幀」的動作連續性描述；B37 只有首幀，尾段以自然運鏡淡出。
@@ -162,18 +162,18 @@
 
 ### B01｜片頭口白 × 主視覺海報（圖01→02）
 
-- 型別：**對白＋片頭旁白** ｜ 規劃秒：**8s** ｜ 首幀：圖01 ／ 尾幀：圖02
+- 型別：**對白＋片頭旁白** ｜ 規劃秒：**8s** ｜ 首幀：圖01 ／ 尾幀：圖02 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖01", last_frame="圖02", duration=8, seed=110101, out="i2v_momotaro")`（例外：`width=832, height=1248` 2:3，已交付）
 
 integrated_multimodal_description:
 [Shot 1] The camera sits close and slightly handheld, framing a young Japanese woman (S1) with light brown hair in a loose, tired ponytail bound by a red ribbon, sitting on a weathered wooden railing edge; a fluffy Shiba Inu with its snout very close to the lens occupies the left foreground with shallow depth of field; warm dusk lamplight softens her slightly tired but smiling face as she holds a small rice ball snack near her lips and blinks playfully; soft banner silhouettes flicker out of focus behind her.
-(S1): 鬼退治のあとで……就是說、打完鬼以後囉。
+(S1): 鬼退治のあとで……つまり、鬼を倒したあとってことね。
 (S1): 勝ったけど、ちょっと疲れた。
 [Shot 2] At 00:03.500, the camera pulls back fast and tilts up as the frame transforms into a 90s retro poster: (S1) stands side-on, determined, hand pressing on the katana hilt at her hip, red ribbon and ponytail flowing in a light breeze; bold black calligraphy reads visible on-screen text "新·桃太娘" behind her with the subtitle "鬼退治のあとで。" in smaller print; golden key light, film grain and soft 90s print texture, the composition holds like a static title card.
 <i>新たな冒険は、まだ終わっていない——新·桃太娘。</i>
 
 overall_soundscape:
-Warm village ambience at dusk, wooden creak of the railing, a soft contented exhale and gentle munching from the girl, quiet panting from the dog; a faint film-projector hum fades in as the poster locks up. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Warm village ambience at dusk, wooden creak of the railing, a soft contented exhale and gentle munching from the girl, quiet panting from the dog; a faint film-projector hum fades in as the poster locks up. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Retro 90s synthwave cue with soft analog strings and a music-box pulse, playful and nostalgic, resolving into one heroic brass chord exactly at the poster lock-up, then holding a single sustained note.
@@ -199,18 +199,18 @@ Lighthearted 90s synth-pop rhythm with a whistled melody and warm marimba, upbea
 
 ### B03｜旅行之球（圖03→04）
 
-- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖03 ／ 尾幀：圖04
+- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖03 ／ 尾幀：圖04 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖03", last_frame="圖04", duration=7, seed=110103, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Same sunny dock moment: (S1) sits cross-legged with the white travel ball labeled "旅" in her hands; the Shiba Inu leans in panting, and a mischievous brown monkey (S2) with a red scarf peers over her ponytail from behind.
-(S1): 大家都到齊了吧？
-(S2): ……那個球，可以寫「食」嗎。
-(S1): 寫著「旅」才有意義嘛。走吧——我們的旅行，才不是為了吃。
+(S1): みんな、そろってる？
+(S2): ……その球、「食」って書いてもいい？
+(S1): 「旅」って書いてこそ意味があるんだよ。行こう——俺たちの旅は、食べるためじゃないんだ。
 [Shot 2] At 00:04.500, the camera cuts to the afternoon wooden veranda: (S1) now leans back relaxed, right arm raised high overhead in a long stretch, red ribbon swaying, eyes soft and half closed; warm sunlight rakes across the wooden slats. She speaks softly.
 
 overall_soundscape:
-Bright dock ambience with gentle waves and gulls fading as the scene shifts indoors, soft wood creak of the veranda, light rustle of clothing during the stretch. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Bright dock ambience with gentle waves and gulls fading as the scene shifts indoors, soft wood creak of the veranda, light rustle of clothing during the stretch. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Warm acoustic guitar with soft brushed drums, easygoing and hopeful, swelling gently at the stretch and trailing off.
@@ -219,16 +219,16 @@ Warm acoustic guitar with soft brushed drums, easygoing and hopeful, swelling ge
 
 ### B04｜伸展宣言（圖04→05）
 
-- 型別：**對白** ｜ 規劃秒：**5s** ｜ 首幀：圖04 ／ 尾幀：圖05
+- 型別：**對白** ｜ 規劃秒：**5s** ｜ 首幀：圖04 ／ 尾幀：圖05 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖04", last_frame="圖05", duration=5, seed=110104, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Afternoon on the wooden veranda: (S1), a young woman in a cream kimono-style top with a short reddish-brown peach-motif haori, stretches with her right arm high overhead, right wristband and wooden beads catching the light, eyes closed in contentment, gentle serene smile.
-(S1): 明天開始，就要去很多很多沒見過的地方了。
+(S1): 明日から、まだ見たことのない場所を、たくさんたくさん訪れるんだ。
 [Shot 2] At 00:02.500, the camera cuts to the village entrance at golden hour: (S1) kneels on one knee on packed dirt ground before an elderly woman in a dark kimono, head lowered; behind them a wooden staff flies a tall banner reading visible on-screen text "桃太郎" with a peach illustration; the light turns warm and tender as the farewell begins. No further dialogue in this shot.
 
 overall_soundscape:
-Quiet afternoon ambience, distant birdsong and leaves rustling, light cotton rustle, soft footsteps on dirt. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Quiet afternoon ambience, distant birdsong and leaves rustling, light cotton rustle, soft footsteps on dirt. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Gentle piano with soft flute, nostalgic and tender, quiet enough to let the voice carry.
@@ -257,17 +257,17 @@ Tender string section with delicate piano, sweetly melancholy but hopeful, build
 
 ### B06｜出發與呼喚（圖06→07）
 
-- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖06 ／ 尾幀：圖07
+- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖06 ／ 尾幀：圖07 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖06", last_frame="圖07", duration=6, seed=110106, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] The dirt mountain path: (S1) walks mid-stride carrying a bamboo gourd and small banner, turning to look back over her shoulder with a warm smile; the Shiba Inu with a small saddle walks at her feet; at the framed village gate the elderly grandma (S2) waves hard from the doorway, her call carried across the golden light.
-(S2)（喊）: 衣服破了自己補！別忘了帶飯糰！
-(S1)（回喊）: 知道啦——！
+(S2)（呼びかける）: 服が破れたら自分で縫いなさい！おにぎり、忘れちゃダメよ！
+(S1)（叫び返す）: はーい——！
 [Shot 2] At 00:03.000, the camera cuts low to (S1)'s feet: she pauses, looking down at the Shiba Inu (S2 has stopped speaking) whose eyes shine upward while it wears its blue saddlecloth; the bundle of peach-print luggage sits tied at her back, ribbon swaying. She kneels slightly to reach for the dog's head.
 
 overall_soundscape:
-Golden-hour countryside ambience, wind through paddy and bamboo, soft leaves, rising and falling voices between the gate and the path. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Golden-hour countryside ambience, wind through paddy and bamboo, soft leaves, rising and falling voices between the gate and the path. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Hopeful acoustic folk with a bright mandolin line, warm and brisk like the start of a journey.
@@ -276,16 +276,16 @@ Hopeful acoustic folk with a bright mandolin line, warm and brisk like the start
 
 ### B07｜背上行囊（圖07→08）
 
-- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖07 ／ 尾幀：圖08
+- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖07 ／ 尾幀：圖08 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖07", last_frame="圖08", duration=7, seed=110107, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Close on the mountain path: (S1) kneels by the Shiba Inu wearing a blue patterned saddlecloth with a peach emblem, patting its head gently, eyes warm and affectionate; her large travel bundle of peach-print cloth and bamboo sticks leans at her back, the "桃太郎" banner strapped on top, late-afternoon sun through the trees.
-(S1): 接下來就是我們四個人的旅途了。寫一篇讓婆婆也看得懂的「旅の記録」吧。
+(S1): これからは俺たち四人の旅だ。ばあちゃんにも分かる「旅の記録」を、書いてみせよう。
 [Shot 2] At 00:03.500, the camera cuts to a rustic shrine: (S1) sits on a stone ledge, tilting her head back to drink from a large brown gourd held in both hands, eyes closed, water beading at the edge of her lips; the dog lies resting to her left, a red-scarfed monkey gnaws a rice ball to her right, and a pheasant perches on a stone lantern keeping watch. Midday light, quiet.
 
 overall_soundscape:
-Forest path ambience shifting to a shrine hush, small flowing stone-basin water, cicadas, soft gulp of drinking, gentle crunch of the monkey's rice ball. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Forest path ambience shifting to a shrine hush, small flowing stone-basin water, cicadas, soft gulp of drinking, gentle crunch of the monkey's rice ball. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Light acoustic arrangement with soft percussion, comfortable and steady like walking companions.
@@ -294,17 +294,17 @@ Light acoustic arrangement with soft percussion, comfortable and steady like wal
 
 ### B08｜神社喝水（圖08→09）
 
-- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖08 ／ 尾幀：圖09
+- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖08 ／ 尾幀：圖09 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖08", last_frame="圖09", duration=7, seed=110108, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Shrine stone ledge at midday: (S1) lowers the big gourd from her lips with a long satisfied sigh, skin slightly dusty from travel; the Shiba Inu lies on her left in a blue harness, a brown monkey (S2) squats on a rock on her right holding a half-bitten rice ball with an innocent face; a pheasant stands sentry on a wooden post; a "桃太郎" banner and stone water basin complete the scene.
-(S1): 啊——活過來了。ゴン，你為什麼每顆飯糰都要先偷咬一口。
-(S2): ……試毒。
+(S1): あー生き返った。ゴン、お前はどうして毎回最初に一口齧るんだよ。
+(S2): ……毒見だ。
 [Shot 2] At 00:04.000, the camera cuts to a shallow mountain stream: (S1) crouches at the water's edge cupping clear water to wash her face, serene and looking slightly upward; the dog stands on mossy rocks sniffing near a woven bamboo basket of rice cakes, a pheasant perches on a large rock beyond; sun-dappled forest, gentle waterfall murmur.
 
 overall_soundscape:
-Shrine ambience with trickling stone-spout water and cicadas, then the stream; light splash of washing water, monkey's soft crunch, quiet bird chirp. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Shrine ambience with trickling stone-spout water and cicadas, then the stream; light splash of washing water, monkey's soft crunch, quiet bird chirp. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Playful plucked strings with light woodwind, airy and refreshing like mountain water.
@@ -313,18 +313,18 @@ Playful plucked strings with light woodwind, airy and refreshing like mountain w
 
 ### B09｜溪谷早餐（圖09→10）
 
-- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖09 ／ 尾幀：圖10
+- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖09 ／ 尾幀：圖10 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖09", last_frame="圖10", duration=7, seed=110109, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Mountain stream at midday: (S1) crouches at the shallow water, rinsing her hands, gentle serene expression; the Shiba Inu sniffs the woven rice-cake basket on the mossy rocks; the pheasant on a boulder utters its call.
-(S1): 走了一上午，在這裡歇一下吧。水是甜的，風也是甜的。
-(ピーチ): 咕咕——！
-(S1): 你看，連ピーチ都說好。
+(S1): 半日歩いたし、ここで休もう。水も甘いし、風も甘い。
+(ピーチ): ぐっぐー！
+(S1): ほら、ピーチだってそう言ってる。
 [Shot 2] At 00:04.500, the camera cuts to a low rustic inn veranda: (S1) crouches over an old parchment map spread on the wooden floor, fingertip tracing across the sea toward an island marked with a red cross; visible on-screen text on the map reads "鬼ヶ島"; a travel guide book titled "旅の手引" lies open beside her, and a wooden banner shows visible on-screen text "夢を、鬼ヶ島へ". Her playful expression turns focused.
 
 overall_soundscape:
-Stream ambience with small waterfall, water drips, soft fabric rustle; then wooden veranda with gentle wind and a distant crow. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese; the pheasant's "咕咕" is a bird call, not a voice.
+Stream ambience with small waterfall, water drips, soft fabric rustle; then wooden veranda with gentle wind and a distant crow. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift; the pheasant's "ぐっぐー" is a bird call, not a voice.
 
 non_diegetic_music:
 Warm acoustic guitar with subtle bells, peaceful then gradually leaning into a more determined undertone.
