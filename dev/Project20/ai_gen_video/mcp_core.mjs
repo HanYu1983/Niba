@@ -113,6 +113,16 @@ function buildUpscaleWorkflow({ file, model }) {
   return wf;
 }
 
+function buildTextGenWorkflow({ imageFile, prompt, maxLength, seed, temperature }) {
+  const wf = JSON.parse(readFileSync(resolve(HERE, "llm_qwen3_5_text_gen.json"), "utf-8"));
+  wf["2"].inputs.image = imageFile;
+  if (prompt !== undefined) wf["3"].inputs.prompt = prompt;
+  if (maxLength !== undefined) wf["3"].inputs.max_length = maxLength;
+  if (seed !== undefined) wf["3"].inputs["sampling_mode.seed"] = seed;
+  if (temperature !== undefined) wf["3"].inputs["sampling_mode.temperature"] = temperature;
+  return wf;
+}
+
 async function downloadAndSave(filename, subfolder, type, outDir, meta) {
   const params = new URLSearchParams({ filename, subfolder: subfolder || "", type: type || "output" });
   const res = await fetch(`${SERVER}/view?${params.toString()}`);
@@ -180,6 +190,19 @@ function startBackgroundJob(promptId, meta) {
           }
         }
       }
+      const text = extractTextFromHistory(entry);
+      if (text.length) {
+        job.text = text;
+        try {
+          mkdirSync(meta.out, { recursive: true });
+          const dest = join(meta.out, `llm_text_${promptId}.txt`);
+          writeFileSync(dest, text.join("\n\n") + "\n");
+          job.textFile = dest;
+          if (!job.files.includes(dest)) job.files.push(dest);
+        } catch (e) {
+          process.stderr.write(`[mcp] job ${promptId} save text error: ${e.message}\n`);
+        }
+      }
       job.status = "completed";
       process.stderr.write(`[mcp] job ${promptId} completed: ${job.files.length} file(s)\n`);
       return;
@@ -196,6 +219,26 @@ function startBackgroundJob(promptId, meta) {
 }
 
 // ---- History helpers ----
+
+function collectStrings(value, acc) {
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      if (typeof item === "string") { if (item.trim()) acc.push(item.trim()); }
+      else if (item && typeof item === "object" && !item.filename) collectStrings(item, acc);
+    }
+  } else if (value && typeof value === "object") {
+    for (const v of Object.values(value)) collectStrings(v, acc);
+  }
+  return acc;
+}
+
+function extractTextFromHistory(entry) {
+  const acc = [];
+  for (const nodeOutput of Object.values(entry.outputs || {})) {
+    collectStrings(nodeOutput, acc);
+  }
+  return [...new Set(acc)];
+}
 
 function summarizeHistoryEntry(id, entry) {
   const s = entry.status || {};
@@ -267,6 +310,28 @@ export function createMcpServer() {
       const res = await comfyPost("/prompt", { prompt: wf, client_id: `mcp-${Date.now()}` });
       startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, model: "z-image-turbo" });
       return { content: [{ type: "text", text: JSON.stringify({ status: "已提交，背景自動下載中", prompt_id: res.prompt_id, seed }, null, 2) }] };
+    }
+  );
+
+  // ---------------- LLM: Qwen3.5 4B image -> text prompt ----------------
+  server.tool(
+    "gen_txt_from_image",
+    "Extract an image-to-text description / prompt using the Qwen3.5 4B vision-text LLM (TextGenerate + PreviewAny workflow). Uploads the image, submits the job, and background-polls ComfyUI; the generated text is saved as a .txt under output/ and queryable via query_comfy_result.",
+    {
+      image: z.string().min(1).describe("local path to the image to describe"),
+      prompt: z.string().optional().describe("system prompt override (default from workflow: detailed image description suitable for AI image generation)"),
+      max_length: z.number().int().min(1).optional().describe("max generated tokens (default 256)"),
+      seed: z.number().int().nonnegative().optional().describe("sampling seed (default 0)"),
+      temperature: z.number().min(0).max(2).optional().describe("sampling temperature (default 0.7)"),
+      out: z.string().optional().describe("subdirectory under output/ to save the generated .txt")
+    },
+    async (p) => {
+      const name = `mcp_${Date.now()}_${basename(p.image)}`;
+      await uploadFile(name, readFileSync(resolve(p.image)));
+      const wf = buildTextGenWorkflow({ imageFile: name, prompt: p.prompt, maxLength: p.max_length, seed: p.seed, temperature: p.temperature });
+      const res = await comfyPost("/prompt", { prompt: wf, client_id: `mcp-${Date.now()}` });
+      startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed: p.seed, prompt: p.prompt || "(workflow default)", model: "qwen3.5-4b-textgen" });
+      return { content: [{ type: "text", text: JSON.stringify({ status: "已提交，背景自動生成中", prompt_id: res.prompt_id, image: name }, null, 2) }] };
     }
   );
 
@@ -390,6 +455,8 @@ export function createMcpServer() {
       return { content: [{ type: "text", text: JSON.stringify({
         status: job.status, prompt_id: p.prompt_id,
         files: job.files.length ? job.files : undefined,
+        text: job.text,
+        textFile: job.textFile,
         error: job.error
       }, null, 2) }] };
     }
