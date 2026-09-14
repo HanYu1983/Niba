@@ -15,8 +15,8 @@ non_diegetic_music:
 Retro 90s synthwave cue with soft analog strings and a music-box pulse, playful and nostalgic, resolving into one heroic brass chord exactly at the poster lock-up, then holding a single sustained note.`;
 
 const F = "D:/han/Niba/dev/Project20/doc/image_story";
-const FIRST = F + "/799279325_10165198413067376_6084801744728169900_n.jpg";
-const LAST = F + "/802821497_10165198414532376_8458038109672805895_n.jpg";
+const FIRST = F + "/frame01.jpg";
+const LAST = F + "/frame02.jpg";
 
 const transport = new StdioClientTransport({
   command: process.execPath,

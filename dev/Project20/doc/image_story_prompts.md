@@ -1,4 +1,4 @@
-﻿# 序列图片提示詞 (Image Story Prompts)
+# 序列图片提示詞 (Image Story Prompts)
 
 - 主题: **新·桃太娘 (New Momotaro girl)**
 - 图片數量: 37 張
@@ -7,8 +7,7 @@
 
 ---
 
-## 01. 799279325_10165198413067376_6084801744728169900_n.jpg
-
+## 01. frame01.jpg
 - prompt_id: `7ee18e46-23c9-4db7-83ef-5ab275410761`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_7ee18e46-23c9-4db7-83ef-5ab275410761.txt`
@@ -22,8 +21,7 @@ To her left, occupying the immediate foreground, is a large Shiba Inu dog with i
 
 ---
 
-## 02. 802821497_10165198414532376_8458038109672805895_n.jpg
-
+## 02. frame02.jpg
 - prompt_id: `986b2a12-f3fd-4ab8-b249-48ec90c62841`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_986b2a12-f3fd-4ab8-b249-48ec90c62841.txt`
@@ -46,8 +44,7 @@ A cinematic, photorealistic, 90s retro-tech aesthetic poster for a Japanese adve
 
 ---
 
-## 03. 799831424_10165198413637376_7116621751776862137_n.jpg
-
+## 03. frame03.jpg
 - prompt_id: `dab0c664-4a8b-42ad-9ae9-38beaff7ff85`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_dab0c664-4a8b-42ad-9ae9-38beaff7ff85.txt`
@@ -58,8 +55,7 @@ New Momotaro Girl, young Japanese woman with long brown hair tied in a loose low
 
 ---
 
-## 04. 803828299_10165198414117376_2027390180660065037_n.jpg
-
+## 04. frame04.jpg
 - prompt_id: `763895cd-17c9-496a-9c59-d85156cc2ca4`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_763895cd-17c9-496a-9c59-d85156cc2ca4.txt`
@@ -74,8 +70,7 @@ Pose: She is seated cross-legged on a wooden floor or low platform, leaning back
 
 ---
 
-## 05. 799849316_10165198414512376_2857418806827283782_n.jpg
-
+## 05. frame05.jpg
 - prompt_id: `2b943a39-7ce7-41d8-b11f-aba59dab3393`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_2b943a39-7ce7-41d8-b11f-aba59dab3393.txt`
@@ -95,8 +90,7 @@ The younger woman is in a low crouch, kneeling on her right knee while her left 
 
 ---
 
-## 06. 802033280_10165198413722376_5649535567457233442_n.jpg
-
+## 06. frame06.jpg
 - prompt_id: `44b35c53-55ff-43d9-90dd-4f3438f2bf13`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_44b35c53-55ff-43d9-90dd-4f3438f2bf13.txt`
@@ -109,8 +103,7 @@ In the foreground to the left, a Shiba Inu dog wearing a small saddle looks up a
 
 ---
 
-## 07. 802702635_10165198413702376_5680476693737976761_n.jpg
-
+## 07. frame07.jpg
 - prompt_id: `8169868f-02f1-4b9c-8ca3-27308a1bf30f`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_8169868f-02f1-4b9c-8ca3-27308a1bf30f.txt`
@@ -127,8 +120,7 @@ She wears a stylized, retro-modern samurai-inspired outfit reminiscent of 90s an
 
 ---
 
-## 08. 799830038_10165198414187376_8111274591058633242_n.jpg
-
+## 08. frame08.jpg
 - prompt_id: `ee378215-8d73-43bf-9a8d-0efb43730bc4`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_ee378215-8d73-43bf-9a8d-0efb43730bc4.txt`
@@ -143,8 +135,7 @@ The background features a traditional Japanese wooden structure with a hanging b
 
 ---
 
-## 09. 799983702_10165198413317376_8354572818682430123_n.jpg
-
+## 09. frame09.jpg
 - prompt_id: `9f376874-be50-40a4-9994-8940decfd21a`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_9f376874-be50-40a4-9994-8940decfd21a.txt`
@@ -159,8 +150,7 @@ The background consists of a lush, sun-dappled forest with large moss-covered bo
 
 ---
 
-## 10. 801587104_10165198413862376_2731028501321994798_n.jpg
-
+## 10. frame10.jpg
 - prompt_id: `14deacac-9426-41c2-a72b-83e8cfee7937`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_14deacac-9426-41c2-a72b-83e8cfee7937.txt`
@@ -171,8 +161,7 @@ High-resolution photorealistic image, 90s retro tech aesthetic, cinematic lighti
 
 ---
 
-## 11. 799856517_10165198413872376_6980399459030417919_n.jpg
-
+## 11. frame11.jpg
 - prompt_id: `8c2f5d3d-f088-450e-b7ae-2aceef2dbc58`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_8c2f5d3d-f088-450e-b7ae-2aceef2dbc58.txt`
@@ -183,8 +172,7 @@ A photorealistic, 90s retro-tech style vertical shot of a young East Asian woman
 
 ---
 
-## 12. 801756100_10165198414072376_6117669046407059140_n.jpg
-
+## 12. frame12.jpg
 - prompt_id: `1a8f2891-1c7b-4da8-b11e-e291b29e555d`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_1a8f2891-1c7b-4da8-b11e-e291b29e555d.txt`
@@ -197,8 +185,7 @@ To her left sits a brown monkey resting its chin on the wooden edge of the onsen
 
 ---
 
-## 13. 803476416_10165198413487376_1326618859830502340_n.jpg
-
+## 13. frame13.jpg
 - prompt_id: `4844c4bb-8085-4ab1-8fc6-5ad80d11e375`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_4844c4bb-8085-4ab1-8fc6-5ad80d11e375.txt`
@@ -215,8 +202,7 @@ In the foreground, to the left, sits a Shiba Inu dog with tan and white fur, loo
 
 ---
 
-## 14. 801670299_10165198413652376_2056345954264386423_n.jpg
-
+## 14. frame14.jpg
 - prompt_id: `d322202e-96bd-410f-ad89-60b5416b35fe`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_d322202e-96bd-410f-ad89-60b5416b35fe.txt`
@@ -236,8 +222,7 @@ In the immediate foreground, slightly out of focus, is a wooden table or low she
 
 ---
 
-## 15. 801965993_10165198413562376_2233569319765050119_n.jpg
-
+## 15. frame15.jpg
 - prompt_id: `6a7378e3-8f6b-47ae-809d-f8af3055a809`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_6a7378e3-8f6b-47ae-809d-f8af3055a809.txt`
@@ -251,8 +236,7 @@ A photorealistic, cinematic shot from a 90s retro-tech style Japanese fantasy fi
 
 ---
 
-## 16. 805784359_10165198413237376_7138173129358391733_n.jpg
-
+## 16. frame16.jpg
 - prompt_id: `457c78ed-0ca5-456a-aa41-4200a9168e6a`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_457c78ed-0ca5-456a-aa41-4200a9168e6a.txt`
@@ -263,8 +247,7 @@ A photorealistic, cinematic shot from a 90s retro-tech style Japanese fantasy fi
 
 ---
 
-## 17. 805854237_10165198414332376_7205927216940142205_n.jpg
-
+## 17. frame17.jpg
 - prompt_id: `8538a163-202b-467b-b275-e208f2ea6147`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_8538a163-202b-467b-b275-e208f2ea6147.txt`
@@ -279,8 +262,7 @@ The background features a dramatic seascape with choppy blue waves under bright 
 
 ---
 
-## 18. 799161036_10165198413197376_5691220327902227288_n.jpg
-
+## 18. frame18.jpg
 - prompt_id: `f5a99a4e-949c-43ce-b17f-9410a78734ff`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_f5a99a4e-949c-43ce-b17f-9410a78734ff.txt`
@@ -291,8 +273,7 @@ photorealistic, 90s retro tech aesthetic, cinematic lighting, a young Asian woma
 
 ---
 
-## 19. 805757276_10165198414172376_3187381992632259445_n.jpg
-
+## 19. frame19.jpg
 - prompt_id: `63d4c832-d8e3-432d-b6f3-68ebb15102d0`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_63d4c832-d8e3-432d-b6f3-68ebb15102d0.txt`
@@ -303,8 +284,7 @@ photorealistic, 90s retro tech aesthetic, cinematic lighting, a young Asian woma
 
 ---
 
-## 20. 798825816_10165198413142376_5109104791182724282_n.jpg
-
+## 20. frame20.jpg
 - prompt_id: `d090790b-8016-46e0-8d6d-25d1590a09f3`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_d090790b-8016-46e0-8d6d-25d1590a09f3.txt`
@@ -324,8 +304,7 @@ She is in a crouching, stealthy stance, leaning forward slightly with her knees 
 
 ---
 
-## 21. 799143612_10165198414012376_748451954547260033_n.jpg
-
+## 21. frame21.jpg
 - prompt_id: `7b821a1b-a461-4d67-b6b2-66f987f8a8a4`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_7b821a1b-a461-4d67-b6b2-66f987f8a8a4.txt`
@@ -340,8 +319,7 @@ Her pose is dynamic; she is crouching low to the ground, leaning forward as if c
 
 ---
 
-## 22. 801886850_10165198413822376_6354854724523861484_n.jpg
-
+## 22. frame22.jpg
 - prompt_id: `a6b7409b-d186-49f0-af91-d80c2449ac15`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_a6b7409b-d186-49f0-af91-d80c2449ac15.txt`
@@ -352,8 +330,7 @@ Her pose is dynamic; she is crouching low to the ground, leaning forward as if c
 
 ---
 
-## 23. 801878411_10165198413842376_5643761194822466170_n.jpg
-
+## 23. frame23.jpg
 - prompt_id: `b7fe2f9b-088f-45b9-be89-67c46b282f47`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_b7fe2f9b-088f-45b9-be89-67c46b282f47.txt`
@@ -364,8 +341,7 @@ A photorealistic, 90s retro-tech style anime film still featuring a young Japane
 
 ---
 
-## 24. 802717749_10165198413982376_2692125557299646453_n.jpg
-
+## 24. frame24.jpg
 - prompt_id: `a771ef13-b95a-4585-8e4a-aa93b690c505`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_a771ef13-b95a-4585-8e4a-aa93b690c505.txt`
@@ -385,8 +361,7 @@ She wears a rugged, retro-fantasy outfit reminiscent of 90s anime aesthetics. Th
 
 ---
 
-## 25. 802702632_10165198413302376_7122940492872957803_n.jpg
-
+## 25. frame25.jpg
 - prompt_id: `431205c9-e2f8-413d-a202-34e39723b039`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_431205c9-e2f8-413d-a202-34e39723b039.txt`
@@ -397,8 +372,7 @@ A photorealistic, 90s retro-tech style image depicting a young Japanese woman in
 
 ---
 
-## 26. 805732327_10165198413367376_5452340847878249845_n.jpg
-
+## 26. frame26.jpg
 - prompt_id: `39d37af5-5528-4bd5-b046-cb9961320e6b`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_39d37af5-5528-4bd5-b046-cb9961320e6b.txt`
@@ -411,8 +385,7 @@ To her left, slightly behind her legs, sits a large, realistic monkey wearing a 
 
 ---
 
-## 27. 800979681_10165198414472376_7295796620737844852_n.jpg
-
+## 27. frame27.jpg
 - prompt_id: `21eb66d7-30c2-449e-8a79-d55ca5fa2843`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_21eb66d7-30c2-449e-8a79-d55ca5fa2843.txt`
@@ -432,8 +405,7 @@ She is crouching or kneeling on the ground, leaning forward slightly to examine 
 
 ---
 
-## 28. 802821500_10165198414247376_2594354197559059290_n.jpg
-
+## 28. frame28.jpg
 - prompt_id: `d52dd3a9-6209-4807-82bb-c94e5e2eb22e`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_d52dd3a9-6209-4807-82bb-c94e5e2eb22e.txt`
@@ -453,8 +425,7 @@ Perched on her left shoulder is a realistic Common Pheasant, facing right. To he
 
 ---
 
-## 29. 803102973_10165198413127376_7561999455898969034_n.jpg
-
+## 29. frame29.jpg
 - prompt_id: `56336f79-c516-4901-9d0c-5794091ab21e`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_56336f79-c516-4901-9d0c-5794091ab21e.txt`
@@ -465,8 +436,7 @@ A photorealistic, cinematic close-up shot of a young East Asian woman in a muddy
 
 ---
 
-## 30. 799088149_10165198413572376_4786354351909969981_n.jpg
-
+## 30. frame30.jpg
 - prompt_id: `8c7cf222-9e5e-4600-8931-17a66177a753`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_8c7cf222-9e5e-4600-8931-17a66177a753.txt`
@@ -486,8 +456,7 @@ The character is captured mid-stride, running forward with high energy. Her righ
 
 ---
 
-## 31. 802717755_10165198414462376_8542107032698832133_n.jpg
-
+## 31. frame31.jpg
 - prompt_id: `083bceb4-b9d7-4fd4-8fe2-fab0dd224a68`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_083bceb4-b9d7-4fd4-8fe2-fab0dd224a68.txt`
@@ -507,8 +476,7 @@ The subject is captured
 
 ---
 
-## 32. 799783548_10165198413077376_7335021937940490693_n.jpg
-
+## 32. frame32.jpg
 - prompt_id: `8eb9cc2e-4280-49b3-b75a-0faf23451592`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_8eb9cc2e-4280-49b3-b75a-0faf23451592.txt`
@@ -528,8 +496,7 @@ She is in a dynamic, crouching pose, climbing or holding onto the rough wooden p
 
 ---
 
-## 33. 802702624_10165198413427376_4346874630083889718_n.jpg
-
+## 33. frame33.jpg
 - prompt_id: `b0d92844-c81b-4a9c-8504-c3a354eb4c00`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_b0d92844-c81b-4a9c-8504-c3a354eb4c00.txt`
@@ -546,8 +513,7 @@ The setting is a dark, gritty, feudal Japanese battlefield or village at night. 
 
 ---
 
-## 34. 802702625_10165198413447376_3132609953122167600_n.jpg
-
+## 34. frame34.jpg
 - prompt_id: `5cd20630-7183-4c63-b075-c514245e035d`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_5cd20630-7183-4c63-b075-c514245e035d.txt`
@@ -568,8 +534,7 @@ The setting is a dark, gritty, feudal Japanese battlefield or village at night. 
 
 ---
 
-## 35. 805732326_10165198414262376_4442905357622241464_n.jpg
-
+## 35. frame35.jpg
 - prompt_id: `d8405ad6-c3f7-440e-a469-ad141b55581d`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_d8405ad6-c3f7-440e-a469-ad141b55581d.txt`
@@ -580,8 +545,7 @@ Ultra-detailed, photorealistic, cinematic shot, 8k. A fierce young female warrio
 
 ---
 
-## 36. 802966602_10165198413382376_958835938983024899_n.jpg
-
+## 36. frame36.jpg
 - prompt_id: `53199381-116d-42ca-9490-c6f7df55f33e`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_53199381-116d-42ca-9490-c6f7df55f33e.txt`
@@ -592,8 +556,7 @@ A photorealistic, cinematic vertical shot from a 90s retro-tech style anime acti
 
 ---
 
-## 37. 801878411_10165198413512376_7237370717409650521_n.jpg
-
+## 37. frame37.jpg
 - prompt_id: `390c2a10-1284-4d93-ad1e-599536329d03`
 - 狀態: OK
 - 檔案: `D:\han\Niba\dev\Project20\ai_gen_video\output\image_story_prompts\llm_text_390c2a10-1284-4d93-ad1e-599536329d03.txt`
