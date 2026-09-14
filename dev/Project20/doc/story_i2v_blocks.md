@@ -151,7 +151,7 @@
 
 - **格式**：i2v 三欄位 H3 schema：`integrated_multimodal_description` / `overall_soundscape` / `non_diegetic_music`。
 - **說話者**：`(S1)`＝桃（Momo）；其餘出場說話者依序 `(S2)`…。全片 `(S1)` 統一為桃。
-- **腔調錨點**（對白/旁白區塊必寫）：`All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.`（B05、B10 例外＝日文對白＋日文發音錨點）
+- **腔調錨點**（對白/旁白區塊必寫）：`All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.`（B05、B10–B37 例外＝日文對白＋日文發音錨點）
 - **畫面可見文字**：使用英文雙引號逐字保留（如 `"桃太郎"`、`"鬼ヶ島へ出発"`），與 `<d>` 分離。
 - **鏡頭時間戳**：`[Shot 1]` 不含時間戳；後續鏡頭 `[Shot N] At 00:MM.mmm, ...` 嚴格遞增且落在規劃秒內。
 - **參考圖**＝首尾幀本身，助攻架式以「首幀→尾幀」的動作連續性描述；B37 只有首幀，尾段以自然運鏡淡出。
@@ -353,18 +353,18 @@ Growing 90s adventure theme, pulsing synth and drums with acoustic warmth, deter
 
 ### B11｜山徑指路（圖11→12）
 
-- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖11 ／ 尾幀：圖12
+- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖11 ／ 尾幀：圖12 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖11", last_frame="圖12", duration=6, seed=110111, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Mountain trailhead above the sea: (S1) leans on the signpost "鬼ヶ島 →", glancing back with a bright grin; the Shiba Inu with a woven pack and the monkey (S2) with a bundle walk past in a file; vibrant greens, browns and clear blues under bright sunlight.
-(S1): 出發！
-(S2)（小小聲）: ……你連島長什麼樣都不知道。
-(S1): 所以才更要去看看啊！
+(S1): 出発！
+(S2)（小さな声）: ……お前、島がどんな姿か知らないんだろ。
+(S1): だからこそ、見に行くんだよ！
 [Shot 2] At 00:03.500, the camera cuts to a steamy outdoor hot spring: wooden sign visible on-screen text "桃太郎の湯"; (S1) soaks in the water, knees drawn to her chest, head tilted back exhaling in bliss; the monkey rests its chin on the pool edge and the Shiba Inu naps in a small green vest; rustic bathhouse beams and rising steam in soft light.
 
 overall_soundscape:
-Mountain trail ambience with seabirds and wind, footsteps on gravel; the scene glides into a hot spring with gentle lapping water and rising steam. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Mountain trail ambience with seabirds and wind, footsteps on gravel; the scene glides into a hot spring with gentle lapping water and rising steam. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Breezy acoustic motif, playful, then melting into a warm, serene ambient wash at the hot spring.
@@ -373,18 +373,18 @@ Breezy acoustic motif, playful, then melting into a warm, serene ambient wash at
 
 ### B12｜桃太郎の湯（圖12→13）
 
-- 型別：**對白** ｜ 規劃秒：**9s** ｜ 首幀：圖12 ／ 尾幀：圖13
+- 型別：**對白** ｜ 規劃秒：**9s** ｜ 首幀：圖12 ／ 尾幀：圖13 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖12", last_frame="圖13", duration=9, seed=110112, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] The "桃太郎の湯" hot spring: (S1) floats in the steaming water with her ponytail slightly messy, eyes closed, wholly relaxed; the monkey (S2) rests its chin on the wooden pool edge, and the sleepy Shiba Inu wears a small green vest with its tongue out.
-(S1): 哇——好舒服。這就是「いい湯、いい島」吧。
-(S2): 喂，前面就是鬼島了，你還有心情泡湯喔。
-(S1): 就是了鬼島才要泡。把力氣存好，明天好上路。
+(S1): わあ——最高。これが「いい湯、いい島」ってやつだね。
+(S2): おい、もうすぐ鬼島だぞ。のん気に湯なんか浸かってていいのかよ。
+(S1): だからこそ浸かるんだよ。力をためて、明日に備える。
 [Shot 2] At 00:05.500, the camera cuts to the inn dining room at night: lanterns swaying, a table set with grilled fish visible on-screen text "地魚の炭火焼"; (S1) smiles playfully, winking at the camera as she lifts a grilled fish slice toward the lens with chopsticks; the Shiba Inu in a small bib sits at the table and the monkey's hand already reaches for the next dish.
 
 overall_soundscape:
-Gentle hot spring lapping and steam hush, then lantern-lit inn ambience with soft chatter, chopstick clinks, charcoal grill crackle. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Gentle hot spring lapping and steam hush, then lantern-lit inn ambience with soft chatter, chopstick clinks, charcoal grill crackle. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Warm and lazy synth lullaby at the bath, shifting into a cozy tavern tune with wooden flute and soft percussion at the feast.
@@ -393,17 +393,17 @@ Warm and lazy synth lullaby at the bath, shifting into a cozy tavern tune with w
 
 ### B13｜旅館夜宴（圖13→14）
 
-- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖13 ／ 尾幀：圖14
+- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖13 ／ 尾幀：圖14 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖13", last_frame="圖14", duration=6, seed=110113, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Lantern-lit inn table at night: (S1) in a cream yukata with red floral patterns winks playfully at the camera while offering a piece of grilled fish on chopsticks; the Shiba Inu with a small cloth bib looks delighted, the monkey (S2) reaches from the side, mouth full.
-(S1): 這是今天的收穫！一口咬下去，海的味道——
-(S2)（帶著魚）: 你已經講第三遍了。
+(S1): 今日の収穫だよ！一口かじれば、海の味——
+(S2)（魚を咥えて）: もう三回目だぜ、その台詞。
 [Shot 2] At 00:03.500, the camera cuts to the tatami bedroom: (S1) lies on her stomach on the futon, bare feet kicked up behind her, holding a peach-print playing card near her face and sticking out her tongue playfully; the Shiba Inu lies calmly on its side in a blue vest, and the monkey fans a hand of peach cards across from her; soft lantern glow over warm wood and paper walls.
 
 overall_soundscape:
-Cozy tavern ambience, chopstick clinks, soft laughter, warm lantern crackle; then a quieter tatami-room hush with paper-screen rustle. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Cozy tavern ambience, chopstick clinks, soft laughter, warm lantern crackle; then a quieter tatami-room hush with paper-screen rustle. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Cheerful tavern melody with shamisen and light drums, playful and tipsy, easing into a soft intimate room tone.
@@ -412,19 +412,19 @@ Cheerful tavern melody with shamisen and light drums, playful and tipsy, easing 
 
 ### B14｜牌局夜談（圖14→15）
 
-- 型別：**對白** ｜ 規劃秒：**9s** ｜ 首幀：圖14 ／ 尾幀：圖15
+- 型別：**對白** ｜ 規劃秒：**9s** ｜ 首幀：圖14 ／ 尾幀：圖15 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖14", last_frame="圖15", duration=9, seed=110114, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Tatami bedroom at night, warm lantern light: (S1) sprawls on her stomach, feet up, holding a peach card with a mischievous look; the Shiba Inu rests calmly on its side and the monkey (S2) holds its fan of cards across the futon.
-(S1): 說好囉——去鬼ヶ島，把該救的人救回來，然後我們四個就一起去看更大的海。
-(犬): 汪。
-(S2): 要是鬼王很兇呢？
-(S1): 那就打贏他，再回來泡湯。
+(S1): 約束だよ——鬼ヶ島で、助けるべき人を助けて、それから四人で、もっと大きな海を見に行くんだ。
+(犬): ワン。
+(S2): 鬼王がすごく強い相手だったら？
+(S1): そのときは勝ってから、温泉に戻ってくるさ。
 [Shot 2] At 00:05.500, the camera cuts to a dim warehouse at night: embers glow in a brazier as a mud-caked old fisherman (S2') shakes open a tattered banner embroidered with a fierce red oni face and dark dried blood at the edges, backlit by the fire that stretches long shadows; (S1) crouches before it, her playful face turning serious for the first time.
 
 overall_soundscape:
-Quiet ryokan hush with paper-screen rustle and distant night insects, then the cut to the warehouse brings brazier crackle and the heavy rustle of old cloth. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Quiet ryokan hush with paper-screen rustle and distant night insects, then the cut to the warehouse brings brazier crackle and the heavy rustle of old cloth. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Intimate soft piano over the card talk, tentatively; at the banner reveal the music drops to a low ominous drone with distant wooden percussion.
@@ -433,19 +433,19 @@ Intimate soft piano over the card talk, tentatively; at the banner reveal the mu
 
 ### B15｜染血的鬼旗（圖15→16）
 
-- 型別：**對白** ｜ 規劃秒：**14s** ｜ 首幀：圖15 ／ 尾幀：圖16
+- 型別：**對白** ｜ 規劃秒：**14s** ｜ 首幀：圖15 ／ 尾幀：圖16 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖15", last_frame="圖16", duration=14, seed=110115, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Night warehouse lit by a brazier: the weathered old fisherman Kiha (S2), wet-matting hair, headband, mud-covered, his face half in profile, points at the blood-stained red oni banner he holds up; (S1) sits cross-legged before it, focused and concerned; the Shiba Inu watches alertly, the monkey sits behind; hanging scroll visible on-screen text "鬼ヶ島" at the back.
-(S2): 老夫年輕時跟著船朝北走，被浪打上鬼ヶ島。那島啊——根本不是島，是「城堡」。島中央有座山，山頂像顆骷髏。鬼王把山下的人都關進籠子裡，替他搬石頭。
-(S1): 那島上的人……都還在嗎？
-(S2): 只要你還活著一只，就都還在。老夫是游水回來的，全村只有老夫一個人回來。
-(S1): 這面旗，我借了。回來再還你。
+(S2): わしは若い頃、船で北へ向かって、鬼ヶ島へ流された。あの島は——島なんかじゃない、「城」だ。島の真ん中に山があって、てっぺんは髑髏みたいな形をしている。鬼王は麓の人々をみな檻に閉じ込めて、石を運ばせているんだ。
+(S1): 島の人たち……みんな、まだ生きてるの？
+(S2): 生きている者がひとりでもいれば、みんな生きているんだ。わしは泳いで戻ってきた。村で戻ってこられたのは、わし一人だけだった。
+(S1): この旗、借りていくよ。帰ってきたら返すから。
 [Shot 2] At 00:10.000, the camera dissolves to a crowded harbor in bright daylight: paper curtain bunting reads visible on-screen text "鬼ヶ島へ出発"; (S1) sits on the wooden boat railing, leaning forward, arm extended, grinning back over her shoulder as the crowd cheers and the white sail with a large red oni face begins to rise. She speaks brightly into the wind.
 
 overall_soundscape:
-Brazier crackle, rough whisper of old cloth, heavy silence after Kiha's words; then the dissolve into a bustling harbor, lapping water, rowdy crowd, sail canvas snapping in the wind. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Brazier crackle, rough whisper of old cloth, heavy silence after Kiha's words; then the dissolve into a bustling harbor, lapping water, rowdy crowd, sail canvas snapping in the wind. All spoken lines are delivered in natural Japanese (日本語); the old fisherman uses rustic formal speech, no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Ominous low drumming and a grave cello line during the banner story, thinning to near-silence; then a sudden bright 90s pop-rock swell at the harbor departure.
@@ -454,17 +454,17 @@ Ominous low drumming and a grave cello line during the banner story, thinning to
 
 ### B16｜鬼ヶ島へ出発（圖16→17）
 
-- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖16 ／ 尾幀：圖17
+- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖16 ／ 尾幀：圖17 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖16", last_frame="圖17", duration=7, seed=110116, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Crowded sunlit harbor: (S1) perches on the boat railing, looking back over her shoulder with a bright smile, arms spread in a cheerful boast; a villager (S2) shouts up from the dock where men in hats work; the Shiba Inu in a colorful vest sits beside her and the monkey peers over the railing; large red oni face painted on the rising sail.
-(S2): 小桃！就你們四個能幹嘛！
-(S1): 我們有五個！シロ、ゴン、ピーチ，還有我——加上婆婆在門口看著呢！
+(S2): お桃！たった四人で何ができるんだ！
+(S1): 私たちは五人だよ！シロ、ゴン、ピーチ、それに私——それに、おばあちゃんが門で見てくれてるんだから！
 [Shot 2] At 00:04.500, the camera pushes out to sea: the boat noses into deep open water, choppy blue waves under bright sunlight; (S1) stands at the stern as wind whips hair across her face; far ahead, a towering mountain capped by a skull-shaped rock rise wears a dark ramshackle castle on its flank, smoke climbing from it like a bruise on the sky.
 
 overall_soundscape:
-Harbor crowd noise, villagers laughing as the sail rises, canvas snap; then the sea deepens to wind, waves, and the low groan of the hull. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Harbor crowd noise, villagers laughing as the sail rises, canvas snap; then the sea deepens to wind, waves, and the low groan of the hull. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Energetic nautical tune with accordion and drums at the dock, thinning into a tense ambient swell as the dark island grows on the horizon.
@@ -473,18 +473,18 @@ Energetic nautical tune with accordion and drums at the dock, thinning into a te
 
 ### B17｜海上·望見鬼島（圖17→18）
 
-- 型別：**對白** ｜ 規劃秒：**8s** ｜ 首幀：圖17 ／ 尾幀：圖18
+- 型別：**對白** ｜ 規劃秒：**8s** ｜ 首幀：圖17 ／ 尾幀：圖18 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖17", last_frame="圖18", duration=8, seed=110117, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Open sea, stern view: (S1) braced at the rail, the skull-topped black mountain and its smoking castle filling the background; her eyes hold a calm, slightly nervous wonder.
-(S1): ……真的好像鬼。
-(犬): （低低吼了一長聲）
-(S1): 我知道。我們是去把那座城，拆下來的。
+(S1): ……ほんとに、鬼みたいだ。
+(犬):（低く、長く、うなる）
+(S1): 分かってる。私たちはあの城を、壊しに行くんだ。
 [Shot 2] At 00:05.000, the camera cuts to the island shore the next morning: (S1) crouches in a jungle ruin of fallen stone pillars and vine-wrapped corridors, dappled shadow; her fingertips hover over faintly glowing red footprints in the dirt that trail deeper into the grove; a red-corded skull lies in the foreground; the Shiba Inu sniffs low at the earth. She whispers low.
 
 overall_soundscape:
-Open sea with wind, wave slap, one low threatening growl from the dog; then jungle hush, dripping leaves, distant insects, soft fabric and soil sounds as she crouches. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Open sea with wind, wave slap, one low threatening growl from the dog; then jungle hush, dripping leaves, distant insects, soft fabric and soil sounds as she crouches. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Deep uneasy synth drone with submerged percussion as the island looms; becoming a tense, creeping motif with sparse wooden hits in the jungle.
@@ -493,16 +493,16 @@ Deep uneasy synth drone with submerged percussion as the island looms; becoming 
 
 ### B18｜叢林遺跡（圖18→19）
 
-- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖18 ／ 尾幀：圖19
+- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖18 ／ 尾幀：圖19 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖18", last_frame="圖19", duration=6, seed=110118, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Jungle ruin in dappled light: (S1) crouches low, intense and slightly wary, fingers reaching toward the faint glowing red footprints in the dirt; the Shiba Inu sniffs at the earth beside her hand; a mossy skull with red cords rests in the foreground; weathered pillars hang demon-mask banners, faint red glow threading the path deeper.
-(S1): 這些腳印……是那些被抓走的人留下的？不——太深了。這是鬼的腳印。
+(S1): この足跡……連れて行かれた人たちのもの？いや——深すぎる。これは鬼の足跡だ。
 [Shot 2] At 00:03.500, the camera cuts low near the ground: (S1) and the dog move forward through the moss-covered gate of a wooden wall studded with sharp spikes, a black banner with a red oni face hanging above; dusty shafts of light and floating motes, upturned spikes, air thick with rot and the smell of old wood. She signals with her hand.
 
 overall_soundscape:
-Creeping jungle ambience, drip of leaves, insect buzz, faint snapping twigs, low breathing; a far-off heavy creak from the wooden gate. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Creeping jungle ambience, drip of leaves, insect buzz, faint snapping twigs, low breathing; a far-off heavy creak from the wooden gate. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Sparse eerie strings with a deep, slow pulse, menace building quietly toward the gate.
@@ -511,16 +511,16 @@ Sparse eerie strings with a deep, slow pulse, menace building quietly toward the
 
 ### B19｜荊棘木門（圖19→20）
 
-- 型別：**對白** ｜ 規劃秒：**5s** ｜ 首幀：圖19 ／ 尾幀：圖20
+- 型別：**對白** ｜ 規劃秒：**5s** ｜ 首幀：圖19 ／ 尾幀：圖20 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖19", last_frame="圖20", duration=5, seed=110119, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Before the spike-studded wooden gate draped with a red oni banner: (S1) crouches with the Shiba Inu, both pressed low to the ground as sunlight filters through the trees, dust hanging in the beams; her expression is alert, hand raised in a silent counting gesture.
-(S1): 一進門就有哨位。我數到三——
+(S1): 門を入れば見張りがいる。三つ数えたら——
 [Shot 2] At 00:02.500, the camera cuts inside the oni fortress: night, between huge wooden pillars; (S1) holds a torch low against a pillar, creeping in small soft steps, lips pressed tight, the flame carving her focused face out of darkness; a red-scarfed monkey clings to a crossbeam overhead peering down.
 
 overall_soundscape:
-Hush of the forest floor, creaking wood, muffled wind over spikes; inside, the low hiss of the torch flame and the soft pad of her steps, distant whistling of night air through rafters. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Hush of the forest floor, creaking wood, muffled wind over spikes; inside, the low hiss of the torch flame and the soft pad of her steps, distant whistling of night air through rafters. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Taut low strings and a ticking heartbeat pulse, stealthy, tension coiling.
@@ -529,17 +529,17 @@ Taut low strings and a ticking heartbeat pulse, stealthy, tension coiling.
 
 ### B20｜夜潛（圖20→21）
 
-- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖20 ／ 尾幀：圖21
+- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖20 ／ 尾幀：圖21 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖20", last_frame="圖21", duration=6, seed=110120, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Night inside the fortress pillars: (S1) holds the torch against a pillar in a stealthy crouch, wide alert eyes; the monkey (S2), up on a crossbeam, signals downward.
-(S2): 牆內有人。兩個。
-(S1): 那就換邊走。我們是來救人的，不是來吵醒人的。
+(S2): 壁の中に人がいる。二人。
+(S1): じゃあ、別の道を行こう。私たちは人を救いに来たんだ。起こしに来たんじゃない。
 [Shot 2] At 00:03.500, the camera cuts to the darkest hour before dawn: (S1) pulls herself up a steep stone wall along a crack, knuckles straining, shirt damp with sweat, the Shiba Inu in a small armored vest climbing the same rock face beside her, claws holding stone; dense green foliage frames an ancient weathered fortress wall behind, morning mist beginning to stir.
 
 overall_soundscape:
-Inner keep quiet, scuff of her stance, torch hiss, faint pigeon rustle in the rafters; the climb brings scraping claws on stone, heavy breaths, and distant birds waking. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Inner keep quiet, scuff of her stance, torch hiss, faint pigeon rustle in the rafters; the climb brings scraping claws on stone, heavy breaths, and distant birds waking. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Low suspenseful synth with scattered percussion during the whisper; then a rising, straining air as the climb begins.
@@ -565,17 +565,17 @@ Driving percussive build, primal and sweat-stained, accelerating with each handh
 
 ### B22｜攀牆（二）氣聲（圖22→23）
 
-- 型別：**對白** ｜ 規劃秒：**5s** ｜ 首幀：圖22 ／ 尾幀：圖23
+- 型別：**對白** ｜ 規劃秒：**5s** ｜ 首幀：圖22 ／ 尾幀：圖23 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖22", last_frame="圖23", duration=5, seed=110122, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] High on the fortress wall, climbing: (S1) hauls herself up the stone face, mouth slightly open with exertion, skin dirt-and-sweat streaked; the Shiba Inu claws up a parallel crack, eyes on the top.
-(S1)（喘著氣，近乎耳語）: 再高一點……牆裡面就是城了。
-(犬): 汪。
+(S1)（息を切らして、ほとんど囁くように）: もう少し……この壁の奥が城の中だ。
+(犬): ワン。
 [Shot 2] At 00:02.500, the camera cuts to a narrow wooden bridge between two watchtowers: (S1) lies flat and low on the bridge planks, barely breathing, the dog crouched still at her side; far below, two horned oni warriors cast long shadows that crawl across the deck; dappled early light filters through the trees. She waits, frozen.
 
 overall_soundscape:
-Strained breaths and scraping claws, then an abrupt hush on the bridge; the pad-pad of armored steps below echoing off the wood, the rustle of banner cloth. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Strained breaths and scraping claws, then an abrupt hush on the bridge; the pad-pad of armored steps below echoing off the wood, the rustle of banner cloth. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Near-silent suspended strings, then a soft ticking pulse that holds its breath at the bridge.
@@ -584,16 +584,16 @@ Near-silent suspended strings, then a soft ticking pulse that holds its breath a
 
 ### B23｜木橋上的影子（圖23→24）
 
-- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖23 ／ 尾幀：圖24
+- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖23 ／ 尾幀：圖24 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖23", last_frame="圖24", duration=6, seed=110123, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] On the narrow wooden bridge: (S1) crouches so low that her chin nearly touches the planks, eyes fixed forward at the long shadows of two oni samurai on a banner-walled corridor below; her voice is a stomach-whisper timed to their steps.
-(S1): 等他們走過去——一個，兩個，三個——
+(S1): 向こうへ行くまで待つ——一、二、三——
 [Shot 2] At 00:03.000, the camera cuts to the fortress wall base: the shadows have moved on; (S1) exhales in relief and glances down at her sweat-soaked palms, then turns; above her, on a watchtower, an armored oni cub (S2) with a spear leans over, sniffing—about to spot them. Morning light begins to warm the stone.
 
 overall_soundscape:
-The scrape of armored feet crossing the deck below, wood groaning, a held silence, then a long shaky exhale and rustle of cloth; a distant clink of a spear shaft. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+The scrape of armored feet crossing the deck below, wood groaning, a held silence, then a long shaky exhale and rustle of cloth; a distant clink of a spear shaft. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Thin high tremolo strings timed to the passing footsteps, releasing into a quiet lull, then a single low hit as the cub leans over.
@@ -602,18 +602,18 @@ Thin high tremolo strings timed to the passing footsteps, releasing into a quiet
 
 ### B24｜以果結緣（圖24→25）
 
-- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖24 ／ 尾幀：圖25
+- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖24 ／ 尾幀：圖25 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖24", last_frame="圖25", duration=7, seed=110124, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Fortress wall base, morning light: (S1) kneels on one knee and raises a brown fruit high over her head toward an armored oni cub (S2) perched on the watchtower, spear in hand, suspicion warring with hunger in its eyes.
-(S1): 給你。我們不打架，你讓路就好。
-(S2): ……走那條路。
-(S1): 你看，柿子比刀有用。
+(S1): ほら、やるよ。戦わない。道を空けてくれればそれでいい。
+(S2): ……あっちの道を行け。
+(S1): 見ろよ、柿のほうが刀より役に立つんだ。
 [Shot 2] At 00:04.500, the camera cuts to a corner gate: a huge armored warrior with twin horns and pillar-thick arms blocks the way; (S1) steps forward and draws her katana, eyes suddenly sharp; the Shiba Inu's red-scarfed neck ruffles in the breeze behind her, and the monkey crouches over a barrel; dappled, tense forest light.
 
 overall_soundscape:
-Morning still at the wall, the cub's spear clink, soft rustle of cloth; the cut brings a heavier tone—armored movement, gravel shifting, the metallic shimmer of a drawn blade. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese; the cub's voice is small and squeaky.
+Morning still at the wall, the cub's spear clink, soft rustle of cloth; the cut brings a heavier tone—armored movement, gravel shifting, the metallic shimmer of a drawn blade. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift; the cub's voice is small and squeaky.
 
 non_diegetic_music:
 Quirky lightness for the fruit standoff (plucked strings), then a jarring low horn as the gate guardian appears.
@@ -622,17 +622,17 @@ Quirky lightness for the fruit standoff (plucked strings), then a jarring low ho
 
 ### B25｜第一戰（圖25→26）
 
-- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖25 ／ 尾幀：圖26
+- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖25 ／ 尾幀：圖26 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖25", last_frame="圖26", duration=6, seed=110125, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Corner gate face-off: the horned oni guardian (S2) towers in heavy armor, arms like columns; (S1) squares off with her blade across her body, eyes steady, stance low; the Shiba Inu and the barrel-top monkey watch from behind, sunlight dappling the packed-earth yard.
-(S2): 小娃娃也敢來拆牆？
-(S1): 對。我來帶牆裡的人回家。
+(S2): 小娘風情が、壁を壊そうってか？
+(S1): ああ。壁の向こうの人たちを、連れ帰りに来たんだ。
 [Shot 2] At 00:03.500, the camera cuts to the gate mechanism: (S1) clings to the door frame, both arms hooked onto the crossbar as she heaves with all her weight, sweat running off her jaw; through the gap, rows of red-skinned oni soldiers surge with torches; behind her legs the Shiba Inu braces low, guarding the retreat stair.
 
 overall_soundscape:
-Tensed forest birds falling silent, gravel crunch, the swish of bladework, a single heavy breath; then wood groaning under strain, torches crackling, distant shouting from the gate gap. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese; the oni guardian's voice is a deep rumble.
+Tensed forest birds falling silent, gravel crunch, the swish of bladework, a single heavy breath; then wood groaning under strain, torches crackling, distant shouting from the gate gap. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift; the oni guardian's voice is a deep rumble.
 
 non_diegetic_music:
 Combat percussion with taiko drums and sharp strings, fierce and tight, rushing with the gate-breaking effort.
@@ -641,17 +641,17 @@ Combat percussion with taiko drums and sharp strings, fierce and tight, rushing 
 
 ### B26｜城門激戰（圖26→27）
 
-- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖26 ／ 尾幀：圖27
+- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖26 ／ 尾幀：圖27 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖26", last_frame="圖27", duration=6, seed=110126, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Gate frame mid-battle: (S1) strains against the crossbar, teeth gritted, sweat and grit on her skin; through the breach, oni soldiers flood with firelight; the Shiba Inu crouches below at the wooden stair, a low growl rising as she shouts.
-(S1)（咬牙）: シロ——好感！
-(犬): （低吼，死死把住退路的木階）
+(S1)（歯を食いしばって）: シロ——行け！
+(犬):（低く唸り、退路の木階段を死守する）
 [Shot 2] At 00:03.500, the camera cuts inside the now-open corridor: the gate has cracked open a sliver—darkness pierced by torchlight revealing a long passage toward a distant hall; the battle clamor fades behind; then a close shot of (S1) crouching by a blood-streaked stone lantern, noticing a small wooden box lying in the dirt, red tassel askew. Her expression shifts from battle-fury to stillness.
 
 overall_soundscape:
-Roaring chaos—torches, shouts, wood cracking—muffled as the corridor swallows it; then a sudden intimate quiet with a small breath, gravel settling, and the faint creak of the lifted box lid. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Roaring chaos—torches, shouts, wood cracking—muffled as the corridor swallows it; then a sudden intimate quiet with a small breath, gravel settling, and the faint creak of the lifted box lid. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Full-throttle battle score with taiko and brass, cutting abruptly to a fragile music-box melody as the box appears.
@@ -660,18 +660,18 @@ Full-throttle battle score with taiko and brass, cutting abruptly to a fragile m
 
 ### B27｜木匣（圖27→28）
 
-- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖27 ／ 尾幀：圖28
+- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖27 ／ 尾幀：圖28 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖27", last_frame="圖28", duration=7, seed=110127, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Inside the corridor by a blood-streaked stone lantern: (S1) kneels on the ground, cradling a small wooden box carved with the character "桃" and a red tassel, carefully opening the clasp; inside lies a cloth painted with a house under a peach tree—identical to her grandmother's home; her face goes through stunned recognition.
-(S1): 這是……婆婆說的，那間屋子？
-(S2)（鬼兵聲，由遠而近）: 那孩子在那裡！
-(S1): 總之——先保住這件東西。
+(S1): これ……ばあちゃんが話してた、あの家？
+(S2)（鬼の兵の声、遠くから近づく）: あの子はそこだ！
+(S1): とにかく——これを守る。
 [Shot 2] At 00:04.000, the camera cuts to night: (S1) leans against a wooden post of a broken tower, gazing up across the fortress at the highest tier burning with torchlight—the oni king's hall; the pheasant on her shoulder watches the rear; her hand presses the cloth to her chest, expression growing resolved.
 
 overall_soundscape:
-Dim corridor, distant drips, a rustle of cloth and the click of a wooden clasp, approaching coarse shouts far away; then night wind over the broken tower, wood creak, a low ember crackle. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Dim corridor, distant drips, a rustle of cloth and the click of a wooden clasp, approaching coarse shouts far away; then night wind over the broken tower, wood creak, a low ember crackle. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 A fragile music-box waltz, bittersweet and strange; the disturbance of shouting cuts it short; the tower scene brings a lone, somber cello with a rising resolve.
@@ -680,17 +680,17 @@ A fragile music-box waltz, bittersweet and strange; the disturbance of shouting 
 
 ### B28｜眺望鬼城自白（圖28→29）
 
-- 型別：**對白** ｜ 規劃秒：**8s** ｜ 首幀：圖28 ／ 尾幀：圖29
+- 型別：**對白** ｜ 規劃秒：**8s** ｜ 首幀：圖28 ／ 尾幀：圖29 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖28", last_frame="圖29", duration=8, seed=110128, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Night on the broken tower: (S1) rests against a weathered wooden post, gaze fixed on the oni king's hall burning at the fortress peak; the pheasant keeps watch on her shoulder; she murmurs to herself, hand pressed to the cloth hidden in her breast.
-(S1)（自言自語）: 那個人（婆婆）說，我是從桃樹下被撿到的。會不會，我家也跟這座城一樣，原本也是有屋簷的。
-(S1): 不管怎樣，先打完再說。明晚，我們就進去。
+(S1)（ひとりごと）: ばあちゃんが言ってた。俺は桃の木の下で拾われたって。もしかしたら俺の家も、この城みたいに、もともと屋根があったのかもしれない。
+(S1): まあいい。まず戦いを終わらせる。明日の夜、中に入るぞ。
 [Shot 2] At 00:05.000, the camera cuts deep into the fortress dungeons: (S1) kneels before a wall of wooden bars, hands reaching through to clasp the withered hands of an old man (S2) with gray hair and scarred hands; the Shiba Inu stands muddy at her side; candle shadows quiver across prison beams and bars.
 
 overall_soundscape:
-Night wind crossing the tower, creaking posts, distant torch crackle; then the cut into the dungeon brings humid silence, a single drip, and the rough whisper of dry old hands. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Night wind crossing the tower, creaking posts, distant torch crackle; then the cut into the dungeon brings humid silence, a single drip, and the rough whisper of dry old hands. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Lonely piano over night wind, contemplative; descending with the scene into a dark, warm chamber of muffled strings.
@@ -699,20 +699,20 @@ Lonely piano over night wind, contemplative; descending with the scene into a da
 
 ### B29｜天牢重逢（圖29→30）
 
-- 型別：**對白** ｜ 規劃秒：**10s** ｜ 首幀：圖29 ／ 尾幀：圖30
+- 型別：**對白** ｜ 規劃秒：**10s** ｜ 首幀：圖29 ／ 尾幀：圖30 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖29", last_frame="圖30", duration=10, seed=110129, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Dungeon before the wooden bars, torchlight swaying: (S1) kneels in mud and pressed close to the bars, her hands clasping the old island elder Genzo's (S2) weathered, trembling hands; he looks at her in desperate alarm; the muddy Shiba behind her watches forward.
-(S1): 您是島另一頭的上老，是不是？我是從村子裡來的，我叫桃。
-(S2)（顫著聲音）: 桃……你怎麼進得來。快走！鬼王會把你——
-(S1): 要走也是大家一起走。我先把牢門劈開，再往大殿去討個說法。
-(S2): 那大殿上……可是真的鬼王啊。
-(S1): 我知道。婆婆說過，鬼也是能講道理的——只要你先動手。
+(S1): あんたは島の向こう側の上老だろう？村から来たんだ。俺は桃だ。
+(S2)（声を震わせて）: 桃……どうして入ってこられたんだ。早く逃げろ！鬼王に——
+(S1): 逃げるなら皆で逃げる。まず牢の扉を斬り開けて、それから大殿へ話をつけに行く。
+(S2): あの大殿には……本物の鬼王がいるんだぞ。
+(S1): 分かってる。ばあちゃんも言ってた。鬼だって道理は通じる——こっちが先に手を出すならな。
 [Shot 2] At 00:07.000, the camera cuts to a torch-lit passage: (S1) sprints flat-out down the corridor, red ribbon streaming straight behind her, wind raking her face; the pack of pursuers' roars close at her back while a faint hall-light glows ahead—she does not turn around.
 
 overall_soundscape:
-Dungeon hush, whisper of breath, the rasp of old hands and faint rattling of the bars; then heavy boots, a thundering chase, shouts, and her tight breathing. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese; the elder's voice is old and trembling.
+Dungeon hush, whisper of breath, the rasp of old hands and faint rattling of the bars; then heavy boots, a thundering chase, shouts, and her tight breathing. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift; the elder's voice is old and trembling.
 
 non_diegetic_music:
 Chamber strings, reticent and warm for the reunion, tense at the exchange; erupting into a breakneck running pulse as she sprints.
@@ -789,18 +789,18 @@ A colossal sub-bass swell with a rising choir, then nearly silent—only a low v
 
 ### B34｜斬落（圖34→35）
 
-- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖34 ／ 尾幀：圖35
+- 型別：**對白** ｜ 規劃秒：**7s** ｜ 首幀：圖34 ／ 尾幀：圖35 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖34", last_frame="圖35", duration=7, seed=110134, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] The standoff at its peak: (S1) faces the towering oni king across inches of firelight, blade reflecting the flame; the Demon King's great sword begins its colossal swing down at her.
-(S1): 鬼王——我要你做人。
+(S1): 鬼王——お前を、人間に戻してみせる。
 [Shot 2] At 00:03.000, the camera cuts to the single instant of crossing: the giant's blade smashes down while (S1)'s katana meets it edge-to-edge and cuts upward against the momentum, a clean ascending arc slicing through the flash; the frame freezes for a heartbeat.
 [Shot 3] At 00:05.500, she lands on one knee on the ground, breathing hard, blade dripping, as the towering body behind her topples and the iron armor crashes echo through the hall.
-(S1): ……我負責帶人回去。你負責，睡一覺。
+(S1): ……俺は人を連れて帰る。お前は、眠ってろ。
 
 overall_soundscape:
-The weight of the giant's swing—a groaning rush of air—met by the shocking ring of steel; a heavy, rolling crash of armor hitting stone that booms and fades; then her ragged breathing in the sudden quiet. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+The weight of the giant's swing—a groaning rush of air—met by the shocking ring of steel; a heavy, rolling crash of armor hitting stone that booms and fades; then her ragged breathing in the sudden quiet. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 A percussive clash—gong, taiko, and held chord—striking at the blade-crossing like a thunderclap, then dissipating into a thin, ringing silence.
@@ -809,16 +809,16 @@ A percussive clash—gong, taiko, and held chord—striking at the blade-crossin
 
 ### B35｜勝利低語（圖35→36）
 
-- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖35 ／ 尾幀：圖36
+- 型別：**對白** ｜ 規劃秒：**6s** ｜ 首幀：圖35 ／ 尾幀：圖36 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖35", last_frame="圖36", duration=6, seed=110135, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Post-slash stillness, mid-hall: (S1) rises from the landing crouch, sword still in hand, the giant's body lying broken behind her; she straightens, lifts her head, and looks slowly across the stunned hall at the fallen king.
 [Shot 2] At 00:03.000, the camera cuts to the victory tableau: (S1) stands atop the slumped, armored body, katana dripping as she raises it; the standard falls around them—visible on-screen text "鬼王" flaring in torchlight; the Shiba Inu stands straight at her feet and lets out a long battle howl that rings through the whole fortress. She whispers, almost to herself.
-(S1)（低聲）: 婆婆——我回來囉。
+(S1)（小さく）: ばあちゃん——ただいま。
 
 overall_soundscape:
-Dead quiet after the crash—the long howl of the dog cutting through it, armor settling, embers popping, then a single, barely audible tender breath of a word. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Dead quiet after the crash—the long howl of the dog cutting through it, armor settling, embers popping, then a single, barely audible tender breath of a word. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Subsiding battle drones giving way to a clear, hopeful brass note as the howl lands, then one warm piano chord beneath her whisper.
@@ -844,24 +844,24 @@ Noble, exhausted strings with a fading war-drum heartbeat, bleeding into a clear
 
 ### B37｜戰後撫狗 → 片尾（圖37，首幀-only）
 
-- 型別：**對白＋片尾字卡** ｜ 規劃秒：**16s** ｜ 首幀：圖37（無尾幀，結尾自然淡出）
+- 型別：**對白＋片尾字卡** ｜ 規劃秒：**16s** ｜ 首幀：圖37（無尾幀，結尾自然淡出） ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖37", duration=16, seed=110137, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Before dawn, the fire still smoldering: (S1) crouches low, her skirt hem crusted with dried blood, cupping the chin of a large, fluffy Akita sitting before her, its fur matted with mud and blood; she strokes under its jaw, once, twice; her voice is soft and warm, nearly a whisper.
-(S1): ……你也想家吧。打完仗的人，都是要回家的。
-(S1): 那我們也回家吧。回去泡婆婆的湯，回去坐在桃樹下，把這趟「旅の記録」講成整整三天三夜都講不完的故事。
-(犬): （低低「嗚」了一長聲，靠進她的膝蓋）
+(S1): ……お前も家に帰りたいんだろ。戦が終われば、みんな家に帰るんだ。
+(S1): じゃあ俺たちも帰ろう。ばあちゃんの湯に入って、桃の木の下に座って、この「旅の記録」を、三日三晩話し尽くしても終わらない話にしよう。
+(犬):（低く長く「ウー」と鳴き、彼女の膝に寄り添う）
 [Shot 2] At 00:06.000, the camera pans up from the two of them to the spreading grey dawn over the burning-out fortress; the faint shape of a distant sea and homeward islands appears on the horizon.
 [Shot 3] At 00:09.500, the image dissolves to the opening railing shot: (S1), sitting on the wooden edge, chin resting on the rice ball, looking softly at the lens as through a conversation with someone off-camera; the Shiba Inu keeps its nose near the lens in the foreground.
 (S1): 鬼退治のあとで。
 (S1): 勝ったけど、ちょっと疲れた。
-(S1): まだ撮るの？收了啦——
+(S1): まだ撮るの？もう終わりでしょ——
 (S1): また、どこかへ♡
 [Shot 4] At 00:14.000, slow fade toward a dark card; end-card text visible on-screen reads "新たな冒険は、まだ終わっていない。" with "新·桃太娘" beneath it; the frame fades quietly to black.
 
 overall_soundscape:
-Ember crackle and her gentle stroke against fur, the dog's low long whine, morning wind; then a film-projector hum as the railing shot returns, her soft playful breaths; a final fade-out silence over the end card. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Ember crackle and her gentle stroke against fur, the dog's low long whine, morning wind; then a film-projector hum as the railing shot returns, her soft playful breaths; a final fade-out silence over the end card. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 A quiet, bittersweet theme—piano with faint strings—tender over the petting, opening up to a wide morning air; returning as a lighter, nostalgic reprise over the railing shot, then holding a single soft chord as the card fades to black.
