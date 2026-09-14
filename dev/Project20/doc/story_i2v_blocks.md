@@ -151,7 +151,7 @@
 
 - **格式**：i2v 三欄位 H3 schema：`integrated_multimodal_description` / `overall_soundscape` / `non_diegetic_music`。
 - **說話者**：`(S1)`＝桃（Momo）；其餘出場說話者依序 `(S2)`…。全片 `(S1)` 統一為桃。
-- **腔調錨點**（對白/旁白區塊必寫）：`All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.`
+- **腔調錨點**（對白/旁白區塊必寫）：`All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.`（B05、B10 例外＝日文對白＋日文發音錨點）
 - **畫面可見文字**：使用英文雙引號逐字保留（如 `"桃太郎"`、`"鬼ヶ島へ出発"`），與 `<d>` 分離。
 - **鏡頭時間戳**：`[Shot 1]` 不含時間戳；後續鏡頭 `[Shot N] At 00:MM.mmm, ...` 嚴格遞增且落在規劃秒內。
 - **參考圖**＝首尾幀本身，助攻架式以「首幀→尾幀」的動作連續性描述；B37 只有首幀，尾段以自然運鏡淡出。
@@ -237,18 +237,18 @@ Gentle piano with soft flute, nostalgic and tender, quiet enough to let the voic
 
 ### B05｜拜別婆婆（圖05→06）
 
-- 型別：**對白** ｜ 規劃秒：**9s** ｜ 首幀：圖05 ／ 尾幀：圖06
-- 提交建議：`gen_i2v_video(first_frame="圖05", last_frame="圖06", duration=9, seed=110105, out="i2v_momotaro")`
+- 型別：**對白** ｜ 規劃秒：**9s** ｜ 首幀：圖05 ／ 尾幀：圖06 ｜ **語音：日文**（原中文改編）
+- 提交建議：`gen_i2v_video(first_frame="圖05", last_frame="圖06", duration=9, seed=110105, out="i2v_momotaro")`（`width=1056, height=1408` 3:4；此後至 B37 同）
 
 integrated_multimodal_description:
 [Shot 1] Village entrance, golden hour: (S1) kneels on one knee before the elderly grandmother (S2) in a dark kimono, gently shy, looking up; the "桃太郎" banner waves behind them; (S2)'s hand rests on (S1)'s shoulder.
-(S1): 婆婆……那句話，我一直想說。
-(S2): 坐在桃樹下等我回來的孩子啊。
-(S1): 我會好好活著回來。活著回來，聽你罵我怎麼搞得到處都是泥。
+(S1): おばあちゃん……ずっと言いたかったことがあるの。
+(S2): 桃の木の下で、帰りを待っていた子だよ。
+(S1): ちゃんと生きて帰ってくるから。帰ってきたら、泥だらけで何してるんだって、おばあちゃんに叱ってもらいたいの。
 [Shot 2] At 00:05.500, the camera cuts to a wider view of the village gate: (S1) stands with her travel bundle, turning onto the dirt mountain path, glancing back with a tender smile; (S2) stands under the eaves waving warmly; stone steps, thatched roofs, distant green mountains washed in warm golden late-afternoon light.
 
 overall_soundscape:
-Rural village ambience, gentle wind through leaves, a banner flapping, distant dog bark, soft warm footsteps. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese; the grandmother's voice is aged and gentle.
+Rural village ambience, gentle wind through leaves, a banner flapping, distant dog bark, soft warm footsteps. All spoken lines are delivered in natural Japanese (日本語), a young woman and an aged gentle grandmother; no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Tender string section with delicate piano, sweetly melancholy but hopeful, building as the goodbye broadens into the wide shot.
@@ -333,18 +333,18 @@ Warm acoustic guitar with subtle bells, peaceful then gradually leaning into a m
 
 ### B10｜地圖決心（圖10→11）
 
-- 型別：**對白** ｜ 規劃秒：**8s** ｜ 首幀：圖10 ／ 尾幀：圖11
+- 型別：**對白** ｜ 規劃秒：**8s** ｜ 首幀：圖10 ／ 尾幀：圖11 ｜ **語音：日文**（原中文改編）
 - 提交建議：`gen_i2v_video(first_frame="圖10", last_frame="圖11", duration=8, seed=110110, out="i2v_momotaro")`
 
 integrated_multimodal_description:
 [Shot 1] Low inn veranda in bright sunlight: (S1) crouches over the old parchment map with a focused, serious expression, fingertip tracing the sea toward the red-crossed island labeled visible on-screen text "鬼ヶ島"; the Shiba Inu stands alert at her left in a blue patterned harness, the brown monkey watches from behind, the pheasant by her foot; strong sun casts long shadows.
-(S1): 婆婆說，我的「桃」和鬼島的那些人一樣，都是從「別的地方」來的。
-(犬): 汪。
-(S1): ……那就決定啦。先去鬼ヶ島，看看那些被關起來的人。然後——再回來。
+(S1): おばあちゃんが言ってたんだ。私の「桃」も、鬼ヶ島の人たちと同じで、よそから来たものなんだって。
+(犬): ワン。
+(S1): ……よし、決めた。鬼ヶ島に行って、囚われている人たちを見てくる。それから——帰ってくる。
 [Shot 2] At 00:05.000, the camera cuts to a rocky mountain trailhead: (S1) stands with her hand resting on a weathered wooden signpost pointing toward the sea, visible on-screen text "鬼ヶ島 →"; behind her the Shiba Inu carries a woven pack and the monkey shoulders a bundle, walking a sunlit trail high above a blue sea; her expression hopeful and determined, warm natural light.
 
 overall_soundscape:
-Inn veranda with wind and distant village sounds, then the mountain trail with seabirds and a light sea breeze; one short confident bark from the dog. All spoken Mandarin lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Inn veranda with wind and distant village sounds, then the mountain trail with seabirds and a light sea breeze; one short confident bark from the dog. All spoken lines are delivered in natural Japanese (日本語); no Mandarin, no Cantonese, no accent drift.
 
 non_diegetic_music:
 Growing 90s adventure theme, pulsing synth and drums with acoustic warmth, determined but bright like a decision made.
