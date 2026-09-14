@@ -72,6 +72,12 @@ function buildVideoWorkflow({ prompt, seed, duration, firstFile, lastFile, width
     delete wf.scale_last;
     delete wf["140:131"].inputs.first_frame;
     delete wf["140:131"].inputs.last_frame;
+  } else if (firstFile && !lastFile) {
+    delete wf.load_last;
+    delete wf.scale_last;
+    delete wf["140:131"].inputs.last_frame;
+    if (width !== undefined) wf.scale_first.inputs.width = width;
+    if (height !== undefined) wf.scale_first.inputs.height = height;
   } else {
     if (width !== undefined) {
       wf.scale_first.inputs.width = width;
@@ -360,11 +366,11 @@ export function createMcpServer() {
   // ---------------- Video: Image-to-Video (MiniMax H3) ----------------
   server.tool(
     "gen_i2v_video",
-    "Submit an image-to-video job (MiniMax H3). first_frame/last_frame are local image paths (auto-uploaded). Returns prompt_id immediately; background auto-downloads when done.",
+    "Submit an image-to-video job (MiniMax H3). first_frame is a local image path (auto-uploaded); last_frame is optional. Provide both frames to animate from first to last; omit last_frame for a first-frame-only animation. Returns prompt_id immediately; background auto-downloads when done.",
     {
       prompt: z.string().min(1),
       first_frame: z.string().describe("local path to first frame image"),
-      last_frame: z.string().describe("local path to last frame image"),
+      last_frame: z.string().optional().describe("local path to last frame image (optional; omit for first-frame-only animation)"),
       seed: z.number().int().nonnegative().optional(),
       duration: z.number().min(1).max(60).default(5).optional(),
       width: z.number().int().min(64).max(4096).step(32).optional().describe("video width, default from workflow (e.g. 512)"),
@@ -380,7 +386,7 @@ export function createMcpServer() {
         return name;
       };
       const firstFile = await up(resolve(p.first_frame));
-      const lastFile = await up(resolve(p.last_frame));
+      const lastFile = p.last_frame ? await up(resolve(p.last_frame)) : undefined;
       const wf = buildVideoWorkflow({ prompt: p.prompt, seed, duration, firstFile, lastFile, width: p.width, height: p.height });
       const res = await comfyPost("/prompt", { prompt: wf, client_id: `mcp-${Date.now()}` });
       startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, duration, model: "minimax-h3-i2v", width: p.width, height: p.height });
