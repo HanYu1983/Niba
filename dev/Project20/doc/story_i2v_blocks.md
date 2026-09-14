@@ -155,6 +155,7 @@
 - **畫面可見文字**：使用英文雙引號逐字保留（如 `"桃太郎"`、`"鬼ヶ島へ出発"`），與 `<d>` 分離。
 - **鏡頭時間戳**：`[Shot 1]` 不含時間戳；後續鏡頭 `[Shot N] At 00:MM.mmm, ...` 嚴格遞增且落在規劃秒內。
 - **參考圖**＝首尾幀本身，助攻架式以「首幀→尾幀」的動作連續性描述；B37 只有首幀，尾段以自然運鏡淡出。
+- **生圖尺寸**（全片統一）：`width=1056, height=1408`（SDXL 直式 3:4）。B01 例外＝已以 `832×1248`（2:3）交付；B02–B37 一律使用 3:4。
 - **負面**：prompt 內不寫 model 名、解析度、寬高比、時長（除鏡頭時間戳）；不加字幕/浮水印。
 
 ---
@@ -162,7 +163,7 @@
 ### B01｜片頭口白 × 主視覺海報（圖01→02）
 
 - 型別：**對白＋片頭旁白** ｜ 規劃秒：**8s** ｜ 首幀：圖01 ／ 尾幀：圖02
-- 提交建議：`gen_i2v_video(first_frame="圖01", last_frame="圖02", duration=8, seed=110101, out="i2v_momotaro")`
+- 提交建議：`gen_i2v_video(first_frame="圖01", last_frame="圖02", duration=8, seed=110101, out="i2v_momotaro")`（例外：`width=832, height=1248` 2:3，已交付）
 
 integrated_multimodal_description:
 [Shot 1] The camera sits close and slightly handheld, framing a young Japanese woman (S1) with light brown hair in a loose, tired ponytail bound by a red ribbon, sitting on a weathered wooden railing edge; a fluffy Shiba Inu with its snout very close to the lens occupies the left foreground with shallow depth of field; warm dusk lamplight softens her slightly tired but smiling face as she holds a small rice ball snack near her lips and blinks playfully; soft banner silhouettes flicker out of focus behind her.
@@ -182,7 +183,7 @@ Retro 90s synthwave cue with soft analog strings and a music-box pulse, playful 
 ### B02｜海報 → 碼頭齊聚（圖02→03）
 
 - 型別：**場景** ｜ 規劃秒：**5s** ｜ 首幀：圖02 ／ 尾幀：圖03
-- 提交建議：`gen_i2v_video(first_frame="圖02", last_frame="圖03", duration=5, seed=110102, out="i2v_momotaro")`
+- 提交建議：`gen_i2v_video(first_frame="圖02", last_frame="圖03", duration=5, seed=110102, out="i2v_momotaro")`（`width=1056, height=1408` 3:4；此後至 B37 同）
 
 integrated_multimodal_description:
 [Shot 1] A 90s retro poster of a young heroine (S1) with a high ponytail and red ribbon, hand on a katana, bold calligraphy "新·桃太娘" visible as on-screen text behind her; the camera slowly pulls back from the poster as it dissolves.
