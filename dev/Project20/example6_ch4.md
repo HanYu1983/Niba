@@ -1430,9 +1430,8 @@ Cold grey daylight, medium-wide from the crowd side, slight upward angle.
 00:00-00:13
 
 Action:
-On the steps before the congress door, Lin Mo turns back to the quiet crowd and states that at tomorrow's
-vote he asks nothing of their support — the government must produce the raw evidence behind the three
-notifications it just sent.
+On the steps before the congress door, Lin Mo turns back to the quiet crowd and delivers a single measured
+demand in a flat, firm tone.
 Lip sync must follow the line exactly.
 
 Dialogue:
@@ -1440,7 +1439,9 @@ Dialogue:
 
 <d>
 [中文]
-明天，當表決開始時，我不會要求你們支持我。我只要求政府做一件事：把你們剛才收到的那三條訊息的原始證據拿出來。
+明天，當表決開始時，我不會要求你們支持我。
+我只要求政府做一件事。
+把你們剛才收到的那三條訊息的原始證據拿出來。
 </d>
 
 overall_soundscape:
@@ -1452,7 +1453,7 @@ non_diegetic_music:
 A low restrained string line under the flat delivery.
 ```
 
-**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png, ref_image_1=output/ch4_hero_square_ref/zimage_*.png, duration=13, seed=450023, out=ch4_e24_video`
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png, ref_image_1=output/ch4_hero_square_ref/zimage_00038_.png, duration=13, seed=451023, out=ch4_e24_video_r2`
 
 ---
 
@@ -1538,8 +1539,8 @@ Cold grey daylight, close-up from below the steps.
 00:00-00:07
 
 Action:
-Standing at the top of the steps, Lin Mo looks back at the crowd one more time and delivers the consequence: if
-the government cannot produce the evidence, this rain of labels is the last breath of the nation.
+Standing at the top of the steps, Lin Mo faces the crowd one final time and delivers his closing warning,
+heavy and quiet.
 Lip sync must follow the line exactly.
 
 Dialogue:
@@ -1547,7 +1548,7 @@ Dialogue:
 
 <d>
 [中文]
-如果拿不出來，那麼這場「標籤之雨」，就是這個國家最後的氣數。
+如果拿不出來，那麼這場標籤之雨，就是這個國家最後的氣數。
 </d>
 
 overall_soundscape:
@@ -1559,7 +1560,7 @@ non_diegetic_music:
 A low rumbling drone deepening under the final words.
 ```
 
-**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png, ref_image_1=output/ch4_hero_square_ref/zimage_*.png, duration=7, seed=450025, out=ch4_e26_video`
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png, ref_image_1=output/ch4_hero_square_ref/zimage_00038_.png, duration=7, seed=451025, out=ch4_e26_video_r2`
 
 ---
 
@@ -1633,6 +1634,7 @@ retention_analysis:
 
 speaker_constraints:
 Only <Subject 1> speaks. No other character speaks. No narration. No voice-over.
+never English / no code-switching / no foreign language.
 
 detailed_description:
 
@@ -1644,8 +1646,8 @@ Cold marble interior, medium two-shot.
 00:00-00:14
 
 Action:
-A pro-government politician steps close and speaks low and cold, the lobby marble behind him: the votes of
-congress are not won by data but by colors, and the bill will not pass even first reading tomorrow.
+A pro-government politician steps close and speaks low and cold against the marble backdrop, contemptuous
+and unhurried.
 Lip sync must follow the line exactly.
 
 Dialogue:
@@ -1653,11 +1655,14 @@ Dialogue:
 
 <d>
 [中文]
-林墨，你剛才在外面玩的把戲很有趣。但你要知道，國會的票數是不看數據的，只看顏色。你的法案，明天連第一讀都過不了。
+林墨，你剛才在外面玩的把戲很有趣。
+但你要知道，國會的票數是不看數據的，只看顏色。
+你的法案，明天連第一讀都過不了。
 </d>
 
 overall_soundscape:
-Dialogue delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Dialogue delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no
+code-switching.
 The echoing hush of the marble lobby.
 No other speech.
 
@@ -1665,7 +1670,7 @@ non_diegetic_music:
 A low dark institutional drone with a distant tick, cold.
 ```
 
-**參數**：`ref_image_0=output/ch4_politician_ref/zimage_*.png, ref_image_1=output/ch1_beat13_ref_char/zimage_00008_.png, ref_image_2=output/ch4_lobby_ref/zimage_*.png, duration=14, seed=450027, out=ch4_e28_video`
+**參數**：`ref_image_0=output/ch4_politician_ref/zimage_00047_.png, ref_image_1=output/ch1_beat13_ref_char/zimage_00008_.png, ref_image_2=output/ch4_lobby_ref/zimage_00043_.png, duration=14, seed=451027, out=ch4_e28_video_r2`
 
 ---
 
@@ -1820,8 +1825,8 @@ Cold marble interior, medium shot walking turn.
 00:00-00:09
 
 Action:
-As Lin Mo reaches the far end of the lobby he half-turns and delivers the game the nation's youth are now
-playing: finding the code errors hidden inside the government's propaganda.
+As Lin Mo reaches the far end of the lobby he half-turns and delivers the closing line with wry confidence,
+pausing mid-lobby.
 Lip sync must follow the line exactly.
 
 Dialogue:
@@ -1829,7 +1834,8 @@ Dialogue:
 
 <d>
 [中文]
-現在，全歐若拉聯邦的年輕人都在玩一個遊戲：找出藏在政府宣傳裡的「代碼錯誤」。
+現在，全歐若拉聯邦的年輕人都在玩一個遊戲。
+找出藏在政府宣傳裡的代碼錯誤。
 </d>
 
 overall_soundscape:
@@ -1841,7 +1847,7 @@ non_diegetic_music:
 A low pulse snapping to a clean stop on the final word.
 ```
 
-**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png, ref_image_1=output/ch4_lobby_ref/zimage_*.png, duration=9, seed=450030, out=ch4_e30_video`
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png, ref_image_1=output/ch4_lobby_ref/zimage_00043_.png, duration=9, seed=451030, out=ch4_e30_video_r2`
 
 ---
 
@@ -2051,14 +2057,14 @@ A low cello line sinking to near silence with a single final piano note.
 | E19 | 對白 | 7 | 146s | 你們在拿著自己的稅金，買這場羞辱你們自己智商的表演。 | — |
 | E21 | 場景 | 5 | 153s | （無字幕） | — |
 | E22 | 對白 | 9 | 158s | 標籤是廉價的，因為它不需要大腦。但數據是昂貴的，因為它需要勇氣。 | — |
-| E24 | 對白 | 13 | 167s | 明天，當表決開始時，我不會要求你們支持我。我只要求政府做一件事：把你們剛才收到的那三條訊息的原始證據拿出來。 | — |
+| E24 | 對白 | 13 | 167s | 明天，當表決開始時，我不會要求你們支持我。我只要求政府做一件事。把你們剛才收到的那三條訊息的原始證據拿出來。 | — |
 | E25 | 場景 | 8 | 180s | （無字幕） | — |
-| E26 | 對白 | 7 | 188s | 如果拿不出來，那麼這場「標籤之雨」，就是這個國家最後的氣數。 | — |
+| E26 | 對白 | 7 | 188s | 如果拿不出來，那麼這場標籤之雨，就是這個國家最後的氣數。 | — |
 | E27 | 場景 | 4 | 195s | （無字幕） | — |
 | E28 | 對白 | 14 | 199s | 林墨，你剛才在外面玩的把戲很有趣。但你要知道，國會的票數是不看數據的，只看顏色。你的法案，明天連第一讀都過不了。 | — |
 | E29a | 對白 | 3 | 213s | 那可不一定。 | — |
 | E29b | 對白 | 12 | 216s | 因為我剛才在廣場上，不只是在說話。我把剛才那個伺服器的發信邏輯，即時同步到了全聯邦所有的開源論壇上。 | — |
-| E30 | 對白 | 9 | 228s | 現在，全歐若拉聯邦的年輕人都在玩一個遊戲：找出藏在政府宣傳裡的「代碼錯誤」。 | — |
+| E30 | 對白 | 9 | 228s | 現在，全歐若拉聯邦的年輕人都在玩一個遊戲。找出藏在政府宣傳裡的代碼錯誤。 | — |
 | E31 | 對白 | 4 | 237s | 老師，數據上線了。流量……爆炸了。 | — |
 | E32a | 場景 | 5 | 241s | （無字幕） | — |
 | E32b | 旁白 | 6 | 246s | 他知道，標籤的雨雖然很大，但只要有人開始低頭看路，泥濘就困不住所有人。 | ✅ |
