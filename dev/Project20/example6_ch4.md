@@ -1766,8 +1766,7 @@ Cold marble interior, tracking from behind.
 00:00-00:12
 
 Action:
-Still walking, Lin Mo speaks toward the lobby: he was not only talking in the square — he has synced that
-server's sending logic live to every open-source forum in the federation.
+Still walking through the lobby, Lin Mo continues his reply in a low confident tone without stopping.
 Lip sync must follow the line exactly.
 
 Dialogue:
@@ -1775,11 +1774,13 @@ Dialogue:
 
 <d>
 [中文]
-因為我剛才在廣場上，不只是在說話。我把剛才那個伺服器的發信邏輯，即時同步到了全聯邦所有的開源論壇上。
+因為我剛才在廣場上，不只是在說話。
+我把剛才那個伺服器的發信邏輯，即時同步到了全聯邦所有的開源論壇上。
 </d>
 
 overall_soundscape:
-Dialogue delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+Dialogue delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no
+code-switching.
 The echo of his steps on marble, distant lobby hush.
 No other speech.
 
@@ -1787,7 +1788,7 @@ non_diegetic_music:
 A low rising electronic line under the walk, mechanical.
 ```
 
-**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png, ref_image_1=output/ch4_lobby_ref/zimage_*.png, duration=12, seed=450029, out=ch4_e29b_video`
+**參數**：`ref_image_0=output/ch1_beat13_ref_char/zimage_00008_.png, ref_image_1=output/ch4_lobby_ref/zimage_00043_.png, duration=12, seed=451029, out=ch4_e29b_video_r2`
 
 ---
 
