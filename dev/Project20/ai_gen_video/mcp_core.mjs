@@ -41,18 +41,44 @@ function outArg(subdir) {
   return subdir ? resolve(HERE, "output", subdir) : resolve(HERE, "output");
 }
 
-function buildImageWorkflow(wfFile, { prompt, seed, width, height }) {
+function setIfSet(inputs, key, value) {
+  if (value !== undefined) inputs[key] = value;
+}
+
+function buildImageWorkflow(wfFile, { prompt, seed, width, height, negative_prompt, ckpt, unet, clip, weightDtype, shift, steps, cfg, samplerName, scheduler, denoise, batchSize }) {
   const wf = JSON.parse(readFileSync(resolve(HERE, wfFile), "utf-8"));
   const nodes = Object.entries(wf);
-  const posNode = nodes.find(([, n]) => n.class_type === "CLIPTextEncode")?.[1];
-  const sampler = nodes.find(([, n]) => n.class_type === "KSampler")?.[1];
-  const latent = nodes.find(([, n]) => ["EmptySD3LatentImage", "EmptyLatentImage"].includes(n.class_type))?.[1];
+  const nodeByClass = (cls) => nodes.find(([, n]) => n.class_type === cls)?.[1];
+  const posNode = nodeByClass("CLIPTextEncode");
+  const negNode = nodes.filter(([, n]) => n.class_type === "CLIPTextEncode")[1]?.[1];
+  const sampler = nodeByClass("KSampler");
+  const latent = nodeByClass("EmptySD3LatentImage") || nodeByClass("EmptyLatentImage");
+  const ckptLoader = nodeByClass("CheckpointLoaderSimple");
+  const unetLoader = nodeByClass("UNETLoader");
+  const clipLoader = nodeByClass("CLIPLoader");
+  const samplingNode = nodeByClass("ModelSamplingAuraFlow");
   if (posNode && prompt) posNode.inputs.text = prompt;
-  if (sampler) sampler.inputs.seed = seed;
-  if (latent) {
-    if (width) latent.inputs.width = width;
-    if (height) latent.inputs.height = height;
+  if (negNode && negative_prompt) negNode.inputs.text = negative_prompt;
+  if (sampler) {
+    setIfSet(sampler.inputs, "seed", seed);
+    setIfSet(sampler.inputs, "steps", steps);
+    setIfSet(sampler.inputs, "cfg", cfg);
+    setIfSet(sampler.inputs, "sampler_name", samplerName);
+    setIfSet(sampler.inputs, "scheduler", scheduler);
+    setIfSet(sampler.inputs, "denoise", denoise);
   }
+  if (latent) {
+    setIfSet(latent.inputs, "width", width);
+    setIfSet(latent.inputs, "height", height);
+    setIfSet(latent.inputs, "batch_size", batchSize);
+  }
+  if (ckptLoader) setIfSet(ckptLoader.inputs, "ckpt_name", ckpt);
+  if (unetLoader) {
+    setIfSet(unetLoader.inputs, "unet_name", unet);
+    setIfSet(unetLoader.inputs, "weight_dtype", weightDtype);
+  }
+  if (clipLoader) setIfSet(clipLoader.inputs, "clip_name", clip);
+  if (samplingNode) setIfSet(samplingNode.inputs, "shift", shift);
   return wf;
 }
 
@@ -146,6 +172,7 @@ async function downloadAndSave(filename, subfolder, type, outDir, meta) {
       meta.width !== undefined ? `width: ${meta.width}` : null,
       meta.height !== undefined ? `height: ${meta.height}` : null,
       `model: ${meta.model}`,
+      ...(meta.extra || []).map((e) => `${e.key}: ${e.value}`),
       `date: ${new Date().toISOString()}`
     ].filter(Boolean);
     writeFileSync(dest + ".txt", lines.join("\n") + "\n");
@@ -187,7 +214,7 @@ function startBackgroundJob(promptId, meta) {
           for (const item of value) {
             if (item?.filename) {
               try {
-                const txtMeta = { prompt: meta.prompt, seed: meta.seed, duration: meta.duration, model: meta.model, width: meta.width, height: meta.height };
+                const txtMeta = { prompt: meta.prompt, seed: meta.seed, duration: meta.duration, model: meta.model, width: meta.width, height: meta.height, extra: meta.extra };
                 job.files.push(await downloadAndSave(item.filename, item.subfolder, item.type, meta.out, txtMeta));
               } catch (e) {
                 process.stderr.write(`[mcp] job ${promptId} download ${item.filename} error: ${e.message}\n`);
@@ -288,13 +315,28 @@ export function createMcpServer() {
       seed: z.number().int().nonnegative().optional(),
       width: z.number().int().min(64).max(4096).step(32).optional(),
       height: z.number().int().min(64).max(4096).step(32).optional(),
+      ckpt: z.string().optional().describe("checkpoint model filename (CheckpointLoaderSimple ckpt_name), default 'nostrarealisticmix_v20SDXLVAE.safetensors'"),
+      steps: z.number().int().min(1).max(150).optional(),
+      cfg: z.number().min(0).max(30).optional(),
+      sampler_name: z.string().optional().describe("e.g. euler, euler_ancestral, dpmpp_2m, dpmpp_sde"),
+      scheduler: z.string().optional().describe("e.g. normal, karras, exponential, sgm_uniform"),
+      denoise: z.number().min(0).max(1).optional(),
+      batch_size: z.number().int().min(1).max(16).optional(),
+      negative_prompt: z.string().optional().describe("override the default negative prompt"),
       out: z.string().optional().describe("subdirectory under output/, e.g. 'car'")
     },
     async (p) => {
       const seed = p.seed ?? Math.floor(Math.random() * 2 ** 32);
-      const wf = buildImageWorkflow("workflow_sdxl_t2i.json", { prompt: p.prompt, seed, width: p.width, height: p.height });
+      const wf = buildImageWorkflow("workflow_sdxl_t2i.json", {
+        prompt: p.prompt, seed, width: p.width, height: p.height,
+        negative_prompt: p.negative_prompt, ckpt: p.ckpt, steps: p.steps, cfg: p.cfg, samplerName: p.sampler_name,
+        scheduler: p.scheduler, denoise: p.denoise, batchSize: p.batch_size
+      });
       const res = await comfyPost("/prompt", { prompt: wf, client_id: `mcp-${Date.now()}` });
-      startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, model: "sdxl" });
+      startBackgroundJob(res.prompt_id, {
+        out: outArg(p.out), seed, prompt: p.prompt, model: `sdxl:${p.ckpt ?? "nostrarealisticmix_v20SDXLVAE.safetensors"}`,
+        extra: [["ckpt", p.ckpt], ["steps", p.steps], ["cfg", p.cfg], ["sampler_name", p.sampler_name], ["scheduler", p.scheduler], ["denoise", p.denoise], ["batch_size", p.batch_size]].filter(([, v]) => v !== undefined).map(([k, v]) => ({ key: k, value: v }))
+      });
       return { content: [{ type: "text", text: JSON.stringify({ status: "已提交，背景自動下載中", prompt_id: res.prompt_id, seed }, null, 2) }] };
     }
   );
@@ -308,14 +350,67 @@ export function createMcpServer() {
       seed: z.number().int().nonnegative().optional(),
       width: z.number().int().min(64).max(4096).step(32).optional(),
       height: z.number().int().min(64).max(4096).step(32).optional(),
+      unet: z.string().optional().describe("UNET model filename (UNETLoader unet_name), default 'zImageUltimateNSFW_v20.safetensors'"),
+      clip: z.string().optional().describe("CLIP model filename (CLIPLoader clip_name), default 'qwen_3_4b.safetensors'"),
+      weight_dtype: z.enum(["default", "fp8_e4m3fn", "fp8_e4m3fn_fast", "fp8_e5m2", "fp16"]).optional(),
+      shift: z.number().optional().describe("ModelSamplingAuraFlow shift, default 3"),
+      steps: z.number().int().min(1).max(150).optional(),
+      cfg: z.number().min(0).max(8).optional(),
+      sampler_name: z.string().optional().describe("e.g. res_multistep (default), euler"),
+      scheduler: z.string().optional().describe("e.g. simple (default), karras, normal"),
+      denoise: z.number().min(0).max(1).optional(),
+      batch_size: z.number().int().min(1).max(16).optional(),
       out: z.string().optional().describe("subdirectory under output/, e.g. 'car'")
     },
     async (p) => {
       const seed = p.seed ?? Math.floor(Math.random() * 2 ** 32);
-      const wf = buildImageWorkflow("workflow_z_image_turbo.json", { prompt: p.prompt, seed, width: p.width, height: p.height });
+      const wf = buildImageWorkflow("workflow_z_image_turbo.json", {
+        prompt: p.prompt, seed, width: p.width, height: p.height,
+        unet: p.unet, clip: p.clip, weightDtype: p.weight_dtype, shift: p.shift,
+        steps: p.steps, cfg: p.cfg, samplerName: p.sampler_name,
+        scheduler: p.scheduler, denoise: p.denoise, batchSize: p.batch_size
+      });
       const res = await comfyPost("/prompt", { prompt: wf, client_id: `mcp-${Date.now()}` });
-      startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, model: "z-image-turbo" });
+      startBackgroundJob(res.prompt_id, {
+        out: outArg(p.out), seed, prompt: p.prompt, model: `z-image-turbo:${p.unet ?? "zImageUltimateNSFW_v20.safetensors"}`,
+        extra: [["unet", p.unet], ["clip", p.clip], ["weight_dtype", p.weight_dtype], ["shift", p.shift], ["steps", p.steps], ["cfg", p.cfg], ["sampler_name", p.sampler_name], ["scheduler", p.scheduler], ["denoise", p.denoise], ["batch_size", p.batch_size]].filter(([, v]) => v !== undefined).map(([k, v]) => ({ key: k, value: v }))
+      });
       return { content: [{ type: "text", text: JSON.stringify({ status: "已提交，背景自動下載中", prompt_id: res.prompt_id, seed }, null, 2) }] };
+    }
+  );
+
+  // ---------------- Misc: list available model files ----------------
+  server.tool(
+    "list_models",
+    "List the model filenames available on the ComfyUI server for the image generation loaders (checkpoints, UNETs, CLIP, VAE). Useful for picking valid values for gen_sdxl_image (ckpt) and gen_zit_image (unet/clip).",
+    {
+      kind: z.enum(["checkpoint", "unet", "clip", "vae"]).optional().describe("only list one kind; omit to list all")
+    },
+    async (p) => {
+      const info = await comfyGet("/object_info");
+      const collect = (cls) => {
+        const node = info[cls];
+        const req = node?.input?.required || {};
+        for (const [, spec] of Object.entries(req)) {
+          if (Array.isArray(spec) && Array.isArray(spec[0]) && spec[0].every((x) => typeof x === "string")) {
+            return spec[0];
+          }
+        }
+        return [];
+      };
+      const kinds = p.kind ? [p.kind] : ["checkpoint", "unet", "clip", "vae"];
+      const map = {
+        checkpoint: ["CheckpointLoaderSimple", "ckpt"],
+        unet: ["UNETLoader", "unet"],
+        clip: ["CLIPLoader", "clip"],
+        vae: ["VAELoader", "vae"]
+      };
+      const result = {};
+      for (const k of kinds) {
+        const [cls] = map[k];
+        result[k] = collect(cls);
+      }
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
     }
   );
 
