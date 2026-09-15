@@ -1,0 +1,84 @@
+{
+  "title": "電視機裡的戀人 (The Beloved from the TV)",
+  "story_setting": "台北深夜的一間出租套房，一台老舊映像管電視機的小客廳",
+  "antagonist_desc": "從電視螢幕深處滲出的漆黑詛咒，濃稠的黑色霧氣與扭曲的陰影手臂",
+  "lighting": "夜晚的室內昏暗照明，電視螢幕的冷白光與窗外的月光交織，陰影柔和，既詭異又曖昧的浪漫氛圍",
+  "camera": "中景寫實構圖，主體清楚",
+  "style": "極致細節，高畫質，寫實攝影風格，8k解析度",
+  "negative_common": "low quality, blurry, distorted anatomy, extra fingers, deformed hands, extra limbs, watermark, text, logo, 低品質，模糊，畸形手指，變形的手，重複肢體，浮水印，文字",
+  "sizes": [[832, 1216]],
+  "prompt_template": "1女1男，恐怖又溫柔的超自然愛情故事，{{scene_context}}，{{lighting}}，{{style}}。女性角色（{{person1_ref}}）： {{person1_desc}}，{{person1_clothing}}。男性角色（{{person2_ref}}）： {{person2_desc}}，{{person2_clothing}}。動作與互動： {{scene_action}}。",
+  "scenes": [
+    {
+      "n": 1,
+      "title": "深夜電視機",
+      "seed": 8501,
+      "scene_context": "深夜的{{story_setting}}，黑暗的客廳裡一台老舊的映像管電視機突然自動開啟，螢幕滿是黑白雜訊雪花，閃爍的冷光把{{person2_ref}}的輪廓拉長映在牆上。",
+      "scene_action": "{{person2_ref}}一個人坐在電視機前的地板上，握著抱枕，瞪大雙眼僵住身體，目光死死鎖在電視螢幕的雪花雜訊上。"
+    },
+    {
+      "n": 2,
+      "title": "從電視裡爬出來",
+      "seed": 8502,
+      "scene_context": "{{person1_ref}}正從電視螢幕的雜訊雪花中爬出，雙手撐在電視機前的木地板上，上半身已探出螢幕外，長髮如黑幕般垂落遮住整張臉，螢幕因她的穿行而向四周扭曲出白色的電光紋路。",
+      "scene_action": "{{person2_ref}}跌坐在地板上向後仰，一手撐地一手擋在身前；{{person1_ref}}上半身探出電視螢幕、雙手撐地、飄逸的白裙長髮垂落，兩人一遠一近僵在原地的瞬間。"
+    },
+    {
+      "n": 3,
+      "title": "長髮觸碰",
+      "seed": 8503,
+      "scene_context": "狹小的客廳，電視機的白光成為黑暗中唯一的光源，{{person1_ref}}低垂著頭，長髮如黑水流般沿著地面向前延伸，髮絲末端輕柔地拂上{{person2_ref}}的膝蓋。",
+      "scene_action": "{{person2_ref}}閉上眼睛微微後仰，不敢動彈地承受髮絲掃過；{{person1_ref}}跪坐在電視機前，長髮流瀉一地，畫面靜止而詭異。"
+    },
+    {
+      "n": 4,
+      "title": "同居的日常",
+      "seed": 8504,
+      "scene_context": "月光透過窗簾灑進客廳，電視機用舊布料罩著，茶几上擺著兩杯冒煙的熱茶，報紙折成紙鶴放在一旁，房間第一次有了生活的溫度。",
+      "scene_action": "{{person1_ref}}盤腿坐在地板上，長髮安靜地垂在兩側，微微側身專注地看著{{person2_ref}}；{{person2_ref}}坐在她對面，雙腳同樣盤腿，雙手捧著馬克杯，眼神溫柔地對她說話。"
+    },
+    {
+      "n": 5,
+      "title": "想觸碰的手",
+      "seed": 8505,
+      "scene_context": "深夜，客廳只留電視機微弱的螢光，兩人的距離近到幾乎沒有間隙，安靜的曖昧瀰漫在空氣中，窗外下著細雨。",
+      "scene_action": "{{person2_ref}}伸出手，指尖停在{{person1_ref}}的髮梢想觸碰又遲疑；{{person1_ref}}微微偏頭，怯生生地將臉頰靠向他的手，兩人的表情都帶著緊張與溫柔。"
+    },
+    {
+      "n": 6,
+      "title": "露出的容顏",
+      "seed": 8506,
+      "scene_context": "電視機的冷白光襯在身後，{{person1_ref}}第一次讓{{person2_ref}}看清楚她的整張臉：她的五官清秀蒼白，眼神深邃幽遠，卻不帶攻擊性，如同一個真正的少女。",
+      "scene_action": "{{person1_ref}}用雙手輕輕撥開遮住臉的長髮，靜靜凝視著{{person2_ref}}，神情小心翼翼；{{person2_ref}}沒有退縮，右手掌溫柔地貼上她的臉頰，目光充滿情感。"
+    },
+    {
+      "n": 7,
+      "title": "詛咒來臨",
+      "seed": 8507,
+      "scene_context": "電視機再度自動亮起，這次螢幕漆黑如深淵，陣陣陰風從電視裡吹出，{{antagonist_desc}}開始從螢幕滲進整個房間，黑暗吞沒牆角。",
+      "scene_action": "{{person2_ref}}把{{person1_ref}}護在身後，張開雙臂擋在她面前，神情堅定地面對電視機的方向；{{person1_ref}}在他背後，長髮被無聲的風吹起，緊張地抓著他的衣角。"
+    },
+    {
+      "n": 8,
+      "title": "面向白光",
+      "seed": 8508,
+      "scene_context": "整座房間被詛咒的黑暗吞噬，只剩電視機螢幕放射的刺眼白光，{{antagonist_desc}}的黑影手臂從四周的黑暗伸向兩人。",
+      "scene_action": "{{person1_ref}}與{{person2_ref}}並肩站在電視機前，兩人的手十指緊扣握在一起，身體微微靠向彼此，一起正面對抗那道光與逼近的黑影。"
+    },
+    {
+      "n": 9,
+      "title": "消散的少女",
+      "seed": 8509,
+      "scene_context": "白光籠罩室內，{{person1_ref}}的輪廓從邊緣開始化作銀白的光粒子向上飄散，像細雪又像星塵，她卻沒有驚慌，神色安靜地凝視著{{person2_ref}}。",
+      "scene_action": "{{person2_ref}}跪在地上雙手伸向她，眼眶泛紅；{{person1_ref}}俯身靠近他，長髮拂過他的臉頰，在消散之前輕輕吻上他的額頭。"
+    },
+    {
+      "n": 10,
+      "title": "清晨的雪花",
+      "seed": 8510,
+      "scene_context": "清晨，電視機螢幕恢復成一片溫柔的黑白雪花雜訊，窗外的天空泛起魚肚白，第一道晨光穿過紗簾照進房間，空氣中飄浮著細小的塵埃。",
+      "scene_action": "{{person2_ref}}跪坐在電視機前，左手貼著冰冷的螢幕，雜訊微微亮起、隱約浮現一條長髮飄動的溫柔剪影與一抹淡淡的微笑；晨光與塵埃在空氣中靜靜飄浮。"
+    }
+  ],
+  "negative": "{{negative_common}}"
+}
