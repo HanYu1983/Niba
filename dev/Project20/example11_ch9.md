@@ -846,35 +846,33 @@ A held low note.
 ```
 subject_definitions:
 <Subject 1> is a special-operations officer from <Picture 1>:
-middle-aged East Asian male, stern face, standing motionless, arms down, a desktop communicator lying on the desk at the edge of the frame.
+middle-aged East Asian male, stern face, holding a communicator to his ear.
 
 summary:
 Reference-based radio tirade.
-Off-screen device audio.
+Voice only, off-screen.
 
 retention_analysis:
 <Subject 1>: fully_preserved.
 
 speaker_constraints:
-Audio source: 100% off-screen communicator device audio.
-<Subject 1>: silent listener, zero speech, mouth completely closed throughout the entire shot, jaw tight.
-No other person appears in frame.
-All audio is Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching.
+Only the voice of the president from the communicator is heard, off-screen. No character speaks on camera. No narration. No voice-over. No on-screen mouth movement from any person. If any second person is visible in frame, their mouth also stays sealed throughout.
+never English / no code-switching / no foreign language.
 
 detailed_description:
 
 Visual style:
-Medium close-up on the officer standing still, communicator resting on the desk below the frame emphasis.
+Medium close-up on the officer holding the earpiece, jaw tight.
 
 [Shot 1]
 
 00:00-00:09
 
 Action:
-<Subject 1> stands completely motionless, eyes fixed forward, mouth shut with jaw tight. He stays completely silent while listening to the transmission from the desk communicator.
+A furious man's voice pours out of the communicator in the officer's ear; the officer listens with lips sealed, staring at Lin who also stays silent with lips sealed. The voice nearly cracks, insisting the footage is manufactured.
 
-Off-screen Transmission:
-Furious male voice emitted from the desk communicator: tinny, radio-filtered EQ, straining, insistent, Taiwan-accented Standard Mandarin. <Subject 1> does not speak; the voice belongs to the device.
+Dialogue:
+The one speaking is an off-screen voice through the communicator; <Subject 1> only listens, lips sealed. If Lin is visible, his lips also stay sealed.
 The off-screen voice says:
 
 <d>
@@ -886,13 +884,15 @@ The off-screen voice says:
 </d>
 
 overall_soundscape:
-Radio static, compressed electronic speaker effect, silent room tone, the officer's heavy breath, communicator crackle. The spoken lines are device audio in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching.
+Dialogue delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, heard through radio distortion, strained and furious.
+Communicator crackle, the officer's heavy breath.
+No other speech.
 
 non_diegetic_music:
 None, tension only.
 ```
 
-**參數**：`ref_image_0=output/ch9_officer_ref/zimage_00081_.png, duration=9, seed=495015, out=ch9_i15_video`
+**參數**：`ref_image_0=output/ch9_officer_ref/zimage_00081_.png, duration=9, seed=490015, out=ch9_i15_video`
 
 ---
 
@@ -1197,7 +1197,7 @@ A slow rising string resolve.
 - [ ] 說話鏡頭一律帶正向嘴部 cue（`mouth opening and closing clearly with every syllable`）（QA Q7）。
 - [ ] 對白含稱謂直呼（總統閣下／長官）時，非說話者不入前景或嘴唇緊閉；`Action` 以名字鎖死張嘴者；畫外音區塊（I2 擴音器／I15 通訊器）明寫 `off-screen voice`、畫面角色不張嘴（QA Q8）。
 - [ ] 畫面出現的角色一律配參考圖：I16 含軍官（對話稱謂＋背景身影），故修訂為 3 參考圖 `Ref-M+Ref-BROADCAST+Ref-OFFICER`（QA 畫面一致性）。
-- [ ] 畫外音區塊的 `Action` 不得以命名身分指向畫面外角色（如 `staring at Lin`），否則模型會虛構該人物並把畫外對白套到他身上：I15 移除 `staring at Lin`、改為「軍官單人構圖＋視線出畫外」並明寫 `No other person appears in frame`（I15 教訓，對照 I2 結構）。
+- [ ] 畫外音區塊（I15）保持構圖含第二人（`staring at Lin`），`speaker_constraints` 加 `No on-screen mouth movement from any person`＋`If any second person is visible in frame, their mouth also stays sealed throughout`；`Action`/`Dialogue` 同步聲明第二人嘴不動（QA Q9 成功模式：保留構圖緩衝＋所有人封嘴）。
 - [ ] 每支對白/旁白 `overall_soundscape` 帶台灣腔錨點句（含 `no English`）；seed 已對照黑名單，旁白用 310000；場景區塊無 `<d>`、無旁白暗示。
 - [ ] 合併後以實際總長 scale=`實際總秒/169` 換算 SRT；旁白字幕包 `<i>...</i>`。
 
