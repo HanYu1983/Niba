@@ -260,6 +260,7 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
 - [ ] （QA Q5）長對白已依句拆行且切點不落在借詞前；`Action` 未複述台詞語意；錨點句含 `no English`？
 - [ ] （QA Q6）句間以語法銜接為本：從屬連詞開頭的句子已併入前句語流，而非兩段獨立句相貼；句長分布均勻且總字數符合每秒口播量；句內無逗號切點；`Action` 無「聲音會被回應」的線索？
 - [ ] （QA Q7）說話鏡頭的人物：參考圖不是「閉唇＋緊繃表情」肖像？`Action` 未塞大幅身體動作（整裝／離場／回頭另有鏡頭）？已加「嘴部明顯張開、逐字咬字」的正向描述？鏡位非 wide（至少 medium close-up）？`Action`／`speaker_constraints` 無 `voice-over`／`off-screen` 暗示？
+- [ ] （QA Q8）對白內出現另一角色的稱謂直呼（法官閣下／林委員／老師…）時：非說話者**不在**說話鏡頭前景（或遠景散焦且 `mouth has to stay closed, lips sealed`）？`Action` 以「名字＋張嘴者身分」明寫 `only <Subject N>'s mouth moves; the other character's lips stay closed`？`Action` 無指代含糊的代名詞（him/her）連到非說話者？
 
 ---
 
@@ -358,3 +359,17 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
   4. **鏡位靠近臉**：說話鏡頭用 close-up／medium close-up，避免 wide 使口型不可辨。
   5. **雙向鉗制**：`speaker_constraints`／`Action` 明寫 `the mouth must move visibly while speaking`；同段落絕不放 `face away`、`turning`、`walking away`，也別出現 `voice-over`／`off-screen` 字眼。
   6. 修正後**換新 seed 重跑**（口型與 seed 亦有耦合）。
+
+### Q8：對白文本與稱謂都正確，卻由畫面前景的另一角色圖像「張嘴對白」（前半錯、後半才對）
+
+- **發生**：Ch7 G6——塔蘭的台詞「法律不討論詩意，林委員。／我們討論的是權力分立。」**文本與語音內容無誤**，但畫面上**張嘴對白的是前景的林墨圖像**（r2v 的口型動畫被套到林墨的參考圖），應該由塔蘭大法官張嘴；第三句「行政權有權保留其資訊處理的內部空間，否則國家將無法治理。」張嘴者才換成塔蘭。此案例 `speaker_constraints`（Only `<Subject 1>` speaks）、`Dialogue` 的 `<Subject 1> says:`、腔調錨點句全部在場，仍前半錯、後半對。
+- **原因**（r2v 是圖像驅動：模型把「正在張嘴對白的臉」指派給鏡頭裡**最顯眼（最快／最完整）的角色圖像**，尤其 reverse 鏡頭，而非黏死 `<Subject N>` 標籤）：
+  1. **對白前半段畫面上「被稱呼者在前景」**：G6 鏡位是中景塔蘭＋**林墨 soft foreground（前景、近端、臉部占畫面大片）**。模型把前段可見的口型動畫綁到前景那張臉——它嘴部資訊最多、最適合做 lip-sync，於是**林墨的參考圖替塔蘭張嘴**。
+  2. **承接句連鎖**：句 2 承接句 1 話輪，張嘴者隨句 1 綁在林墨；句 3 進入「行政權」命題後構圖/鏡頭焦點轉向塔蘭中景主體，張嘴者才切回塔蘭 → 前半錯、後半對，是**鏡位焦點切換**決定的、不是語音指派問題。
+  3. **（次要）`Action` 鏡頭主體指代含糊**：`Camera stays on him` 的 him 文法上最接近 Lin → 模型可依此把「鏡頭焦點＝張嘴者」綁到 Lin。
+- **處置**：
+  1. **不要讓「非說話者」占說話鏡頭前景**：最穩＝**single shot 只拍主講者**（G3 同以「林委員」開頭、塔蘭單人特寫，全段正確）；真要 reverse 構圖時，把非說話者放遠景散焦並明寫 `mouth has to stay closed, lips sealed`，且**主講者的臉占畫面主體**。
+  2. **鎖死「誰張嘴」**：`Action` 明寫 `only <Subject 1>'s mouth moves; the other character's lips stay closed`，並以名字直指 `Taran's lips articulate the line`。
+  3. **`Dialogue` 指派句加過濾**：`<Subject N> says:` 前加 `The following lines belong to <Subject 1> alone. <Subject 2> remains silent.`（壓住視覺張嘴者的指派）。
+  4. **`Action` 用名字、不用代名詞**：`Camera stays on him`→`Camera stays on Taran`（鏡頭焦點與張嘴者一致，消除 him/her 指代分歧）。
+  5. **R2 併原錯因**：換**新 seed** 重跑（視覺指派與 seed 耦合，固定 seed 只改文字未必生效）。

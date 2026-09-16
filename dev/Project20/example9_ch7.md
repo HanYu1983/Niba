@@ -2,7 +2,7 @@
 
 > 本文件承接 `novel_to_video_guide_v2.md` 與 `example8_ch6.md`（Ch6），
 > 完整產出**第七章「司法深淵」**的區塊分割、參考圖分配與全部 30 支 r2v 六欄位提示詞，
-> 並套用 `video_prompt_guide.md` QA Q1–Q7（外語混雜、特殊符號、長句插話、跳針重讀、句間填補、口型對嘴）。
+> 並套用 `video_prompt_guide.md` QA Q1–Q8（外語混雜、特殊符號、長句插話、跳針重讀、句間填補、口型對嘴、稱謂破題換講者）。
 >
 > **章節功能**：數據火種點燃後，行政機關在灰色石棺般的「憲法仲裁院」發動程序謀殺——塔蘭大法官質問林墨
 > 「新型態政變」，林墨以十年判決趨勢圖（百分之九十二傾向政府）與「數據＝國民財產」的會計師比喻反擊，
@@ -13,6 +13,7 @@
 > ⚠ **QA 應用**：對白一律移除 `「」『』`《》引號、冒號、刪節號、驚嘆號；阿拉伯數字改中文數字
 > （92%→百分之九十二、3.0→三點零）；借詞（逆向工程、演算法化、大數據等中文慣用）保持原文並避免切點落在借詞前；
 > 對白句間以語法銜接為本（Q6）；說話鏡頭一律帶正向嘴部 cue（`mouth articulates clearly with each syllable`，Q7）；
+> 對白含另一角色稱謂直呼的區塊，被稱呼者不入鏡頭前景且 `Action`/`Dialogue` 鎖死主講者（Q8）；
 > 每句獨立換行；錨點句一律含 `no English`；旁白 G20 用 seed 310000。
 
 ---
@@ -444,6 +445,10 @@ A single low cello note, calm and clear.
 
 **來源**：`story1.md` line 397。
 
+> **r2（修正）**：seed 470006 前兩句「法律不討論詩意，林委員。／我們討論的是權力分立。」**畫面上由前景的林墨圖像張嘴對白**（口型被套到 Ref-M），第三句才切回塔蘭張嘴（QA Q8）——
+> 文本與稱謂無誤，是 r2v 把前段口型綁到 soft foreground 的林墨。修正：改單人鏡只拍塔蘭、遠景散焦林墨＋`lips stay closed`、
+> `Action` 用名字鎖死張嘴者、`Dialogue` 指派句加過濾、換新 seed 471006（參見 `video_prompt_guide.md` Q8）。
+
 ```
 subject_definitions:
 <Subject 1> is the Chief Justice Taran from <Picture 1>:
@@ -469,18 +474,21 @@ never English / no code-switching / no foreign language.
 detailed_description:
 
 Visual style:
-Reverse on Taran's face mid-bench, Lin in soft foreground, sharp dialogue rhythm.
+Medium close-up on Taran alone at the bench, precise and cold. Lin is not in the foreground and stays in the
+far background, out of focus, a silent silhouette.
 
 [Shot 1]
 
 00:00-00:12
 
 Action:
-Taran cuts Lin off with hard precision, eyes narrowing. Camera stays on him; his mouth articulates clearly with
-each syllable.
+Taran addresses Lin by his committee title, spoken on camera by Taran alone; the person being addressed
+listens silently with lips closed and does not speak. Camera stays on Taran. His mouth articulates clearly
+with each syllable.
 Lip sync must follow the line exactly.
 
 Dialogue:
+The following lines belong to <Subject 1> alone. <Subject 2> remains silent.
 <Subject 1> says:
 
 <d>
@@ -500,7 +508,7 @@ non_diegetic_music:
 A low cello line, formal and cold.
 ```
 
-**參數**：`ref_image_0=output/ch7_judge_ref/zimage_00058_.png, ref_image_1=output/ch1_beat13_ref_char/zimage_00008_.png, duration=12, seed=470006, out=ch7_g6_video`
+**參數**：`ref_image_0=output/ch7_judge_ref/zimage_00058_.png, ref_image_1=output/ch1_beat13_ref_char/zimage_00008_.png, duration=12, seed=471006, out=ch7_g6_video`
 
 ---
 
@@ -1236,6 +1244,10 @@ A low electronic pulse ticking like a timer, ceremonial dread.
 
 **來源**：`story1.md` line 413。
 
+> **r2（修正）**：初版（seed 310000）只在 `detailed_description` 宣告 Narration，**漏放 `Narration:` 內容欄位**，旁白句無從生成。
+> 修正：新增 `Narration: <Narrator> says:`＋`<d>[中文]這就是民主三點零的力量。全時監督。</d>`，並把 `speaker_constraints` 改為
+> 「畫面角色不開口、僅固定旁白聲線」正規形（對照 Ch1 C4/C13、Ch4 E1/E32b）。seed 維持 310000（旁白全季共用、鎖聲線一致）。
+
 ```
 subject_definitions:
 <Subject 1> is the constitutional arbitration court hall from <Picture 1>:
@@ -1249,7 +1261,8 @@ retention_analysis:
 <Subject 1>: fully_preserved.
 
 speaker_constraints:
-No on-screen speech. Narration only.
+No character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement.
+No other speech.
 
 detailed_description:
 
@@ -1263,8 +1276,16 @@ Slow tilt from the shadowed bench to the dark ceiling, alone and immense.
 Action:
 The camera slowly tilts up from the empty bench to the dark vaulted ceiling. No person speaks on screen.
 
+Narration:
+<Narrator> says:
+
+<d>
+[中文]
+這就是民主三點零的力量。全時監督。
+</d>
+
 overall_soundscape:
-Narration delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English.
 Empty hall, soft wind of the vault.
 
 non_diegetic_music:
@@ -1769,7 +1790,9 @@ A deep single bass note plus faint high wind, dread opening.
 
 ## 七、字幕資料表（區塊順序、起始秒、逐字字幕）
 
-> 時間為規劃秒（合併後以實際總長 scale 換算）。旁白（G20）字幕包 `<i>…</i>`。
+> 時間為規劃秒（合併後以 scale=實際總長/209 換算，Ch7 實際 217.792s → scale ≈ 1.042067）。旁白（G20）字幕包 `<i>…</i>`。
+> 起始秒＝前序區塊累計時長（非手填），與 §二 總表累計一致：G3=16、G4=30、G5=45、G6=54、G7=66、G9=76、G10=88、
+> G11=96、G13=110、G14=114、G15=119、G16=128、G17=136、G20=155、G21=159、G23=167、G24=178、G25=181、G26=186。
 
 | # | 區塊 | 類型 | 秒 | 起始秒 | 字幕（逐字） |
 |---|------|------|----|--------|--------------|
@@ -1778,23 +1801,22 @@ A deep single bass note plus faint high wind, dread opening.
 | 3 | G5 | 對白 | 9 | 45s | 法官閣下，如果揭露事實就能癱瘓政府，那麼癱瘓政府的不是揭露者。而是事實本身。 |
 | 4 | G6 | 對白 | 12 | 54s | 法律不討論詩意，林委員。我們討論的是權力分立。行政權有權保留其資訊處理的內部空間，否則國家將無法治理。 |
 | 5 | G7 | 對白 | 5 | 66s | 那如果這個內部空間被用來製造假象呢。 |
-| 6 | G9 | 對白 | 12 | 71s | 根據大數據分析，這十年間，凡涉及行政機關資訊遮蔽的訴訟。本庭的判決有百分之九十二傾向政府。 |
-| 7 | G10 | 對白 | 8 | 83s | 而在這百分之九十二的案例中，後來有超過一半被證明與公帑貪腐有關。 |
-| 8 | G11 | 對白 | 9 | 91s | 司法權本應是民主的最後一道防線。但現在，這道防線似乎成了行政權的遮羞布。 |
-| 9 | G13 | 對白 | 4 | 100s | 林墨，注意你的言詞。你這是在蔑視法庭。 |
-| 10 | G14 | 對白 | 5 | 104s | 我蔑視的不是法庭，而是被標籤化後的法律。 |
-| 11 | G15 | 對白 | 9 | 109s | 政府提告我非法披露。但在民主三點零的邏輯下，政府的數據本質上是國民的財產。 |
-| 12 | G16 | 對白 | 8 | 118s | 這就像是委託人查閱會計帳本。會計師卻報警說委託人竊取機密。 |
-| 13 | G17 | 對白 | 9 | 126s | 法官閣下，你們現在要判決的。是這本帳本到底屬於會計師，還是屬於出錢的國民。 |
-| 14 | G20 | 旁白 | 4 | 135s | `<i>`這就是民主三點零的力量。全時監督。`</i>` |
-| 15 | G21 | 對白 | 3 | 139s | 我們需要評議。 |
-| 16 | G23 | 對白 | 11 | 142s | 老師，最新消息。憲法法庭雖然還沒裁決，但行政院已經以司法調查中為由，凍結了國會明天的表決程序。 |
-| 17 | G24 | 對白 | 3 | 153s | 他們在用法律拖時間。 |
-| 18 | G25 | 對白 | 5 | 156s | 他們不是在拖時間，他們是在試探人民的底線。 |
-| 19 | G26 | 對白 | 8 | 161s | 當法律不再追求真相，而只追求程序的合法性時，這座建築就成了廢墟。 |
-| 20 | G21b | 對白 | — | — | — |
+| 6 | G9 | 對白 | 12 | 76s | 根據大數據分析，這十年間，凡涉及行政機關資訊遮蔽的訴訟。本庭的判決有百分之九十二傾向政府。 |
+| 7 | G10 | 對白 | 8 | 88s | 而在這百分之九十二的案例中，後來有超過一半被證明與公帑貪腐有關。 |
+| 8 | G11 | 對白 | 9 | 96s | 司法權本應是民主的最後一道防線。但現在，這道防線似乎成了行政權的遮羞布。 |
+| 9 | G13 | 對白 | 4 | 110s | 林墨，注意你的言詞。你這是在蔑視法庭。 |
+| 10 | G14 | 對白 | 5 | 114s | 我蔑視的不是法庭，而是被標籤化後的法律。 |
+| 11 | G15 | 對白 | 9 | 119s | 政府提告我非法披露。但在民主三點零的邏輯下，政府的數據本質上是國民的財產。 |
+| 12 | G16 | 對白 | 8 | 128s | 這就像是委託人查閱會計帳本。會計師卻報警說委託人竊取機密。 |
+| 13 | G17 | 對白 | 9 | 136s | 法官閣下，你們現在要判決的。是這本帳本到底屬於會計師，還是屬於出錢的國民。 |
+| 14 | G20 | 旁白 | 4 | 155s | `<i>`這就是民主三點零的力量。全時監督。`</i>` |
+| 15 | G21 | 對白 | 3 | 159s | 我們需要評議。 |
+| 16 | G23 | 對白 | 11 | 167s | 老師，最新消息。憲法法庭雖然還沒裁決，但行政院已經以司法調查中為由，凍結了國會明天的表決程序。 |
+| 17 | G24 | 對白 | 3 | 178s | 他們在用法律拖時間。 |
+| 18 | G25 | 對白 | 5 | 181s | 他們不是在拖時間，他們是在試探人民的底線。 |
+| 19 | G26 | 對白 | 8 | 186s | 當法律不再追求真相，而只追求程序的合法性時，這座建築就成了廢墟。 |
 
-> 註：字幕序依「起始秒」排序。核對規劃連續弧線：G3 16s→G4 30s→G5 45s→G6 54s→G7 66s→G9 71s→G10 83s→G11 91s→G13 100s→G14 104s→G15 109s→G16 118s→G17 126s→G20 135s→G21 139s→G23 142s→G24 153s→G25 156s→G26 161s。
+> 字幕序即起始秒排序（19 條全部對白/旁白）。實際 SRT 時間樣本：G3 00:00:16,673→00:00:31,262（scale 導入）。
 
 ---
 
@@ -1802,8 +1824,9 @@ A deep single bass note plus faint high wind, dread opening.
 
 - [ ] 對白/旁白逐字對照 `story1.md` 第七章（lines 379–425），僅移除標點符號引號，無省略、無自創。
 - [ ] `<d>` 內被唸文字皆中文，無 `%`／阿拉伯數字／`「」『』《》`／冒號／刪節號／驚嘆號；每句獨立換行（QA Q2/Q3/Q4）。
-- [ ] 對白區塊指名 `Only <Subject N> speaks`、排除旁白；旁白區塊（G20）畫面角色不開口。
+- [ ] 對白區塊指名 `Only <Subject N> speaks`、排除旁白；旁白區塊（G20）畫面角色不開口，且**必須含 `Narration: <Narrator> says:`＋`<d>[中文]…</d>` 內容欄位**（G20 r2 修正）。
 - [ ] `speaker_constraints` 皆排除 English / code-switching；外語借詞已中文化（92%→百分之九十二、3.0→三點零）（QA Q1/Q5）；`Action` 未複述台詞全文（QA Q3）。
 - [ ] 說話鏡頭一律帶正向嘴部 cue（`mouth articulates clearly`）（QA Q7）；對白句間以語法銜接為本（QA Q6）。
+- [ ] 對白含另一角色稱謂直呼（林委員／法官閣下／老師）時，非說話者不在說話鏡頭前景（或遠景散焦、`mouth has to stay closed, lips sealed`）；`Action` 用「名字＋張嘴者」鎖死 only `<Subject N>`'s mouth moves；無指代含糊代名詞（QA Q8）。
 - [ ] 每支對白/旁白 `overall_soundscape` 帶台灣腔錨點句（含 `no English`）；seed 已對照黑名單，旁白用 310000。
 - [ ] 合併後以實際總長 scale 換算 SRT；旁白字幕包 `<i>...</i>`。
