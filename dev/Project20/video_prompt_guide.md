@@ -261,6 +261,7 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
 - [ ] （QA Q6）句間以語法銜接為本：從屬連詞開頭的句子已併入前句語流，而非兩段獨立句相貼；句長分布均勻且總字數符合每秒口播量；句內無逗號切點；`Action` 無「聲音會被回應」的線索？
 - [ ] （QA Q7）說話鏡頭的人物：參考圖不是「閉唇＋緊繃表情」肖像？`Action` 未塞大幅身體動作（整裝／離場／回頭另有鏡頭）？已加「嘴部明顯張開、逐字咬字」的正向描述？鏡位非 wide（至少 medium close-up）？`Action`／`speaker_constraints` 無 `voice-over`／`off-screen` 暗示？
 - [ ] （QA Q8）對白內出現另一角色的稱謂直呼（法官閣下／林委員／老師…）時：非說話者**不在**說話鏡頭前景（或遠景散焦且 `mouth has to stay closed, lips sealed`）？`Action` 以「名字＋張嘴者身分」明寫 `only <Subject N>'s mouth moves; the other character's lips stay closed`？`Action` 無指代含糊的代名詞（him/her）連到非說話者？
+- [ ] （QA Q9）畫外音區塊：聲源已「空間外部化」（門外／樓梯間／天花板喇叭）？畫內角色**未持有/貼近**任何可發聲設備（無 `to his ear`／`near his mouth`／`gripping`）？畫外音已在 `overall_soundscape` 描述成獨立環境音層（無線電/廣播 EQ）？`Action` 含 `mouth stays clamped shut, jaw clenched, teeth together` 且無 `staring at <人名>` 這類引出第二人的指涉？
 
 ---
 
@@ -373,3 +374,20 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
   3. **`Dialogue` 指派句加過濾**：`<Subject N> says:` 前加 `The following lines belong to <Subject 1> alone. <Subject 2> remains silent.`（壓住視覺張嘴者的指派）。
   4. **`Action` 用名字、不用代名詞**：`Camera stays on him`→`Camera stays on Taran`（鏡頭焦點與張嘴者一致，消除 him/her 指代分歧）。
   5. **R2 併原錯因**：換**新 seed** 重跑（視覺指派與 seed 耦合，固定 seed 只改文字未必生效）。
+
+### Q9：畫外音區塊（off-screen voice）卻變成「畫面唯一角色在張嘴唸對白」
+
+- **發生**：Ch9 I15 r2——赫德總統的通訊器咆哮（「關掉它。林墨，立刻關掉它。那是偽造的。那是人工智慧合成的。」）設定為 off-screen voice。第一版錯誤是 `Action` 寫 `staring at Lin` 導致模型多造出一個林墨、把畫外音套到他身上（見 Q8）；改成「軍官單人構圖、on-screen voice 來源是手中通訊器」後的第二版，**畫外音徹底消失，變成軍官自己張嘴唸這四句**。此案例 `speaker_constraints`（`Only the voice of the president from the communicator is heard, off-screen`＋`No on-screen mouth movement`）、`overall_soundscape` 腔調錨點句全在場，仍失敗。
+- **原因**（r2v 的音訊是「貼在畫面可見的嘴」產出的，無法表達「無主人的畫外聲軌」；畫外音一但沒有可附著的嘴，就被畫框中**唯一可見的角色**認領）：
+  1. **畫面唯一角色＝聲音唯一候選人**：修正版構圖只剩軍官一人。模型的 lip-sync 必須把可聽聲軌綁到某張**可見的嘴**；畫外音沒有自己的嘴，「唯一的臉」就接手整條聲軌。這是 Q8 同一機制（聲音貼給畫面最顯眼角色）的極端版：Q8 是多人中選錯人，Q9 是唯一人被迫接聲。
+  2. **手持設備＝最強「這張嘴在發聲」視覺觸發點**：`subject_definitions`／`Action` 寫了 `holding/gripping a communicator to his ear`。設備貼著頭部＝模型把「這台設備發出的聲音」判定為「持有它的角色自己的聲音」。設備越貼嘴／耳，越不可能保住 off-screen。
+  3. **對照 I2（畫外音成功案例）**：I2 擴音器警告之所以成立，是**聲源「空間外部化」**——`from the stairwell outside`／`through the iron door`，角色（林墨）**手上沒有任何設備**，模型把該聲音當環境音場（如 PA 廣播）而非角色台詞。I15 兩版的聲源都是**角色握在手裡、貼耳的通訊器**＝diegetic 物件，模型視「拿設備者＝話筒主人」。
+  4. **（次要）`lips sealed` 對 r2v 的約束力低於語音指派**：文字層的 `lips sealed` 攔不住圖像驅動的聲軌指派——模型優先「讓聲音有主人」，犧牲「嘴部封閉」指令。
+- **處置**（畫外音區塊的通用鐵律）：
+  1. **聲源必須「空間外部化」**：不要讓畫內角色持有/貼近任何可發聲設備。寫成 `an amplified man's voice booms from the stairwell beyond the door`／`a voice arrives from the ceiling speakers outside`——聲源在畫外空間，角色只是「聽見」，手上無設備。**I2 模式為正解**。
+  2. **若設備必須可見**：放離臉——腰間、桌面、地板（`the communicator lies on the desk`），或乾脆不入鏡；**絕不寫 `to his ear`／`near his mouth`／`gripping it`（貼頭）**。
+  3. **把畫外音當環境音場寫**：`overall_soundscape` 中將該聲音描述為**獨立於角色的環境層**、帶無線電/廣播 EQ 壓縮音色（`a tinny, compressed radio voice bleeds from off-screen, layered under the room tone`），與角色的「可能聲線」做出音色區隔。
+  4. **嘴部鎖死更生理化**：`mouth stays clamped shut, jaw clenched, teeth together`（比 `lips sealed` 強）；並維持 `No other person appears in frame` 防止模型再造人（Q8 舊錯因）。
+  5. **修正後換新 seed 重跑**（聲軌指派與 seed 耦合；固定 seed 只改文字未必生效）。
+
+---
