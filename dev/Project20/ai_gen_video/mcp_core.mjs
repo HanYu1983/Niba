@@ -1,9 +1,16 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { createRequire } from "node:module";
 import { z } from "zod";
-import { dirname, resolve, join, basename } from "node:path";
+import { dirname, resolve, join, basename, parse } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mergeVideos } from "./merge_service.mjs";
+
+const execFileAsync = promisify(execFile);
+const require = createRequire(import.meta.url);
+const FFMPEG = require("ffmpeg-static");
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SERVER = process.env.COMFY_SERVER || "http://192.168.0.193:8000";
@@ -651,6 +658,60 @@ export function createMcpServer() {
     async (p) => {
       const result = await mergeVideos({ files: p.files, out: outArg(p.out), resolution: p.resolution ?? "352:608" });
       return { content: [{ type: "text", text: JSON.stringify({ status: "已合併完成", ...result }, null, 2) }] };
+    }
+  );
+
+  // ---------------- FFmpeg: extract frames / last frame from video ----------------
+  server.tool(
+    "extract_frames",
+    "Extract every frame of a local mp4 video into PNG images using ffmpeg-static. Output files are written as <video>_f0001.png ... into the given out subdirectory. Use extract_last_frame instead when you only need the final frame (much faster).",
+    {
+      file: z.string().min(1).describe("local path to the mp4 video to split"),
+      out: z.string().optional().describe("subdirectory under output/, default 'frames'"),
+      name: z.string().optional().describe("output filename prefix, default = video filename without extension")
+    },
+    async (p) => {
+      const videoPath = resolve(p.file);
+      const prefix = p.name ?? parse(basename(videoPath)).name;
+      const outDir = outArg(p.out ?? "frames");
+      mkdirSync(outDir, { recursive: true });
+      const pattern = join(outDir, `${prefix}_f%04d.png`);
+      await execFileAsync(FFMPEG, ["-y", "-i", videoPath, pattern]);
+      return { content: [{ type: "text", text: JSON.stringify({ status: `已拆幀完成`, out_dir: outDir, pattern: `${prefix}_f%04d.png` }, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    "extract_last_frame",
+    "Extract the TRUE final frame of a local mp4 video as a single PNG using ffmpeg. It decodes the last ~2 seconds of the clip and keeps the last decoded frame, which is frame-accurate and still far faster than decoding the whole movie. (Note: a plain '-sseof -1 -frames:v 1' trusts the container duration and returns the first frame one second before the end, i.e. ~24 frames early at 24fps.) Useful for grabbing the last frame of an i2v clip to reuse as the next block's first frame or a reference image.",
+    {
+      file: z.string().min(1).describe("local path to the mp4 video"),
+      out: z.string().optional().describe("subdirectory under output/, default 'frames'"),
+      name: z.string().optional().describe("output file name without extension, default = video filename without extension + '_last'")
+    },
+    async (p) => {
+      const videoPath = resolve(p.file);
+      const name = p.name ?? `${parse(basename(videoPath)).name}_last`;
+      const outDir = outArg(p.out ?? "frames");
+      mkdirSync(outDir, { recursive: true });
+      const tmpDir = join(outDir, `.lastframe_${Date.now()}`);
+      mkdirSync(tmpDir, { recursive: true });
+      try {
+        const tailPattern = join(tmpDir, "tail_%04d.png");
+        await execFileAsync(FFMPEG, ["-y", "-sseof", "-2", "-i", videoPath, tailPattern]);
+        const { readdirSync, copyFileSync, rmSync } = await import("node:fs");
+        const files = readdirSync(tmpDir).filter((f) => /^tail_\d{4}\.png$/.test(f)).sort();
+        if (!files.length) throw new Error("no tail frames produced by ffmpeg");
+        const lastTail = files[files.length - 1];
+        const dest = join(outDir, `${name}.png`);
+        copyFileSync(join(tmpDir, lastTail), dest);
+        rmSync(tmpDir, { recursive: true, force: true });
+        return { content: [{ type: "text", text: JSON.stringify({ status: "已提取尾幀完成", file: dest, tail_frames: files.length, used: lastTail }, null, 2) }] };
+      } catch (e) {
+        const { rmSync } = await import("node:fs");
+        try { rmSync(tmpDir, { recursive: true, force: true }); } catch {}
+        throw e;
+      }
     }
   );
 
