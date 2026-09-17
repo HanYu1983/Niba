@@ -219,6 +219,7 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
 
 - 每支區塊獨立 seed；**旁白區塊共用同一支旁白 seed**（實作採用 `310000`）。
 - **歪腔 seed 記入黑名單**：實測某 seed 固定輸出粵腔時，記入黑名單並換新 seed 重跑。
+- **性別翻轉也記黑名單**：旁白 seed `310000` 於 Ch12 連續三支輸出女聲（l1/l23/l26）後已失效（QA Q12）；**旁白 seed 一經實測翻轉聲線性別即不可再用**，換新 seed（沿用 `310100`、`310101`、`310102` 跳號）。
 - 修正腔調提示詞時**必須同時換 seed**——固定 seed = 固定腔調，只改文字不改 seed 不會生效。
 
 ### 4.3 特殊符號唸法陷阱
@@ -263,6 +264,8 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
 - [ ] （QA Q8）對白內出現另一角色的稱謂直呼（法官閣下／林委員／老師…）時：非說話者**不在**說話鏡頭前景（或遠景散焦且 `mouth has to stay closed, lips sealed`）？`Action` 以「名字＋張嘴者身分」明寫 `only <Subject N>'s mouth moves; the other character's lips stay closed`？`Action` 無指代含糊的代名詞（him/her）連到非說話者？
 - [ ] （QA Q9）畫外音區塊：構圖保留了第二人（不移除）？`speaker_constraints` 含 `No on-screen mouth movement from any person`＋`If any second person is visible in frame, their mouth also stays sealed throughout`？`Action`/`Dialogue` 也同時聲明第二人嘴不動（如 `who also stays silent with lips sealed`）？
 - [ ] （QA Q10）人物入鏡的長鏡頭（>10 秒）：已拆成多個 `[Shot N]`？`Action` 至少含一個持續可動的小節點（鐘擺／光影／螢幕閃爍）或鏡頭運動（slow push-in）？是否已加 `No duplicated figure. No split or mirrored composition` 負向條款？「人物自撐整段時間」的純靜止構圖已避免？
+- [ ] （QA Q11）無對白／無旁白區塊（純場景、道具特寫）：`speaker_constraints` 已含「音訊空態」負向（`No whispering`／`No muttering`／`No off-screen speech`／`No device voice`）？畫面浮現文字已標 `visible on-screen text, never read aloud`？`Action` 無 `words`／`text`／`reads` 等 speech token？設備音效已定性「無語音」（`no voice`）？
+- [ ] （QA Q12）旁白區塊：`overall_soundscape` 錨點句為**完整版**（含 `low calm middle-aged male voice`，不得精簡成只剩腔調）？`speaker_constraints` 含 `The narrator is a fixed calm male voice, never female`？旁白鏡頭無可被聲軌認領的人形，或有路人已明寫 `silent and never the source of the narration`？
 
 ---
 
@@ -417,5 +420,36 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
   4. **明確禁止複製**：`speaker_constraints` 或 `Action` 加 `The president appears exactly once in frame. No duplicated figure. No split or mirrored composition.`（與嘴部封印同一性質：把常見失敗模式直接寫死成負向條款）。
 - **原理**：這是 Q4（跳針重讀）在**視覺軸**的對應物。模型對「長時間、無語音錨點、無動作節點」的鏡頭，會用「重複內容填充時長」來自救；在聽覺軸表現為重讀（Q4），在視覺軸表現為複製／分割人物。解法不是把時長縮到零，而是**拆鏡＋供給可動節點**，讓每個時間片段都有該被渲染的內容。
 - **鐵律**：人物入鏡的長鏡頭**必須給畫面持續的小動態**；純靜止不能再與「長於約 10 秒」並存。旁白想傳達「凝視／沉默」時，用場景或鏡頭運動（slow push-in）傳達，別讓「人物本身」獨自撐整段時間。
+
+### Q11：無對白／無旁白的場景區塊，出現「似英文卻非英文」的含糊語音
+
+- **發生**：Ch12 l13（林墨點開平板，純場景 5 秒，Ref-OFFICE 00089，seed=493010）。無對白、無旁白、`speaker_constraints` 已含 `No character speaks / No narration / No on-screen mouth movement`，影片卻冒出一段像英文又不像的含糊語音（聽起來像在喃喃唸一串拉丁文字）。
+- **原因**（三因子疊加，聲軌把「畫面上的可讀素材」當成該唸的內容）：
+  1. **畫面上浮現文字卻未定性「不唸」**：`Action` 寫 `…it lights up with a settlement summary…`——平板亮起結算摘要＝畫面浮現拉丁字形文字，但未依 Q2 規則 5 標 `visible on-screen text`，更未追加 `never read aloud`。TTS 對「它不認識的文字」會用近似外語音節硬唸（與 Q2 的 `%`→「PiFen」、引號怪音同源），唸出「像英文又不像」的音節雜訊。
+  2. **場景區塊缺「音訊空態」負向條款**：`No character speaks` 只擋「人物張嘴唸」，沒擋**畫外低語／murmur／設備音被實作成語音**。純道具特寫（手＋平板）畫面沒有可見的嘴，聲軌無處綁定；模型若要「讓聲音存在」，只能自行在畫外喃喃——Q4（聽覺重讀）與 Q10（視覺複製）都是「無內容就自行填補」，本案例是第三條軸：**聲軌自救填補**。
+  3. **`Action` 的 speech token 提供誘因**：`A small pause hangs in the air before the next words` 的 `words` 一詞暗示「文字／話語將要發聲」；`overall_soundscape` 的 `the waking tablet`（設備喚醒）也給「語音助理式發聲」留下實作空間。
+- **處置**：
+  1. **畫面任何浮現文字一律標 `visible on-screen text; it is never read aloud, never spoken`**（Q2 規則 5 的強化版：不只與 `<d>` 隔離，還要正向宣示「不唸」）。
+  2. **所有無對白／無旁白區塊（純場景、道具特寫）一律加上「音訊空態」**：`speaker_constraints` 追加 `No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice.`
+  3. **`Action` 移除 speech token**：`before the next words`→`a silent pause before the next beat`；`No one speaks` 可保留，或改 `silence fills the room`（視覺＋聽覺同時表態）。
+  4. **設備音效明確「無語音」**：`the waking tablet`→`the tablet wakes with a low electronic hum - no voice, no alert tones, no spoken sounds`。
+  5. **修正後換新 seed 重跑**。
+- **原理**：模型對「沒有對白、沒有旁白、畫面上卻有看起來『該被唸』的文字」的鏡頭，會把視覺文字當成 TTS 素材、以不存在的語音字典硬唸（外語近似音）。解法不是塞對白，而是**幫它定性「沒什麼要唸」**：可見文字標 `never read aloud`＋音訊區塊宣示為嚴格無語音。
+- **鐵律**：純場景／道具特寫的區塊（尤其畫面有螢幕、平板、標語、圖表時）**必加音訊空態負向條款**；畫面上任何可被唸出的文字，一律 `visible on-screen text, never read aloud`。
+
+### Q12：旁白聲線應為固定男聲，某支旁白卻輸出女聲（性別翻轉）
+
+- **發生**：Ch12 l1（安靜流行病，旁白 6 秒，Ref-COMM 00088，seed=310000）。全片其餘旁白（l3/l4/l23/l25/l26）維持男聲，唯獨開場這支翻轉成女聲。
+- **原因**（聲線從「顯式約束」退化成「seed 隱式慣例」＋畫面出現可被聲軌認領的人形）：
+  1. **主因：旁白錨點句漏掉「聲線釘定」**。Ch1–Ch11 的旁白 soundscape 一律是完整版 `Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English.`；ch12 六支旁白卻全部精簡成 `Narration delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.`——把 `low calm middle-aged male voice` 整段拿掉了。「性別／音質」不再是 prompt 的顯式約束，男聲只剩 seed 310000 的歷史關聯可依賴；該 seed 在（參考圖＋文字＋時長＋畫面人形）這個條件組合下讓隱式慣例失靈時，模型就自由選聲線→偏女性。
+  2. **次要：畫面有「可被聲軌認領的路人」**。l1 是街道空景旁白，`Action` 寫 `only a handful of people walking in the distance`，參考圖 COMM（稀疏行人街景）可能含女性行人。r2v 對畫面中可見人形有「聲軌認領」傾向（與 Q9 畫外音綁到畫面中唯一角色同一原理）；旁白缺「男聲」強錨點時，聲軌就指派給畫面中偏女性的路人。對照：l23/l25（NIGHT 空街、無路人）、l4（含林墨男性角色圖）未翻轉。
+  3. 次要：**黑名單只監控「歪腔」**——310000 不在黑名單，無機制攔截「性別翻轉」。
+- **處置**：
+  1. **旁白錨點句一律用完整版（含聲線釘定）**：`Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English.`（Ch11 及以前的標準版；禁止再精簡成只剩腔調的殘缺版）。
+  2. **`speaker_constraints` 加正向性別釘定**：`The narrator is a fixed calm male voice, never female.`（與錨點句雙保險，Q7 雙向鉗制同思維）。
+  3. **旁白鏡頭用空景，或明寫路人沉默**：`Action` 若有遠景路人，加 `the distant passersby are silent and never the source of the narration`；最穩＝旁白鏡頭不放可被聲軌認領的人形（Q9 鐵律同源）。
+  4. **修正後換新 seed 重跑**；若新 seed 仍翻轉性別，記入黑名單（擴充黑名單語義：不只歪腔，也記「性別翻轉」seed）。
+- **原理**：旁白男聲在以往章節是**顯式文字約束**（錨點句內含 `middle-aged male voice`），不是 seed 的隱式保證。移除文字約束後，聲線決定權交還給模型當下的條件組合（參考圖內容、畫面人形、文字、時長、seed），隨時可能翻轉。要長期掛住同一旁白聲線，必須讓「男聲」成為文字層的常數。
+- **鐵律**：旁白錨點句**必須含 `low calm middle-aged male voice` 的完整版**，禁止精簡成只剩腔調；旁白鏡頭優先空景（無人形），有人形就要明寫沉默。
 
 ---
