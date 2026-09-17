@@ -262,6 +262,7 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
 - [ ] （QA Q7）說話鏡頭的人物：參考圖不是「閉唇＋緊繃表情」肖像？`Action` 未塞大幅身體動作（整裝／離場／回頭另有鏡頭）？已加「嘴部明顯張開、逐字咬字」的正向描述？鏡位非 wide（至少 medium close-up）？`Action`／`speaker_constraints` 無 `voice-over`／`off-screen` 暗示？
 - [ ] （QA Q8）對白內出現另一角色的稱謂直呼（法官閣下／林委員／老師…）時：非說話者**不在**說話鏡頭前景（或遠景散焦且 `mouth has to stay closed, lips sealed`）？`Action` 以「名字＋張嘴者身分」明寫 `only <Subject N>'s mouth moves; the other character's lips stay closed`？`Action` 無指代含糊的代名詞（him/her）連到非說話者？
 - [ ] （QA Q9）畫外音區塊：構圖保留了第二人（不移除）？`speaker_constraints` 含 `No on-screen mouth movement from any person`＋`If any second person is visible in frame, their mouth also stays sealed throughout`？`Action`/`Dialogue` 也同時聲明第二人嘴不動（如 `who also stays silent with lips sealed`）？
+- [ ] （QA Q10）人物入鏡的長鏡頭（>10 秒）：已拆成多個 `[Shot N]`？`Action` 至少含一個持續可動的小節點（鐘擺／光影／螢幕閃爍）或鏡頭運動（slow push-in）？是否已加 `No duplicated figure. No split or mirrored composition` 負向條款？「人物自撐整段時間」的純靜止構圖已避免？
 
 ---
 
@@ -401,5 +402,20 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
   ```
 - **原理**：原始版（`staring at Lin`）成功引入第二人物，但模型把畫外聲軌綁到無嘴部指令的「額外人」上。只要補上「第二人嘴也不動」的指令，模型無處可綁聲軌，就被迫保留為「畫外設備音」。移除 Lin（單人構圖）反而消除這個緩衝，聲音只能綁到唯一可見的臉。
 - **鐵律**：畫外音區塊**不要移除第二人**，保留構圖緩衝；強化所有可見人物的嘴部封印即可（`No on-screen mouth movement from any person`＋`If any second person is visible, their mouth also stays sealed throughout`）。
+
+### Q10：長時間「無動作」的旁白區塊，畫面變成上下分割且內容相同（兩個總統複製填充）
+
+- **發生**：Ch10 J14——赫德辦公室旁白（72 字、15 秒、seed=310000）。輸出不只一位赫德：畫面被上下分割成兩半，兩半內容完全一樣（同一位總統重複出現）。旁白聲音正確、台詞正確，純視覺層出事。
+- **原因**（長時間靜止＋無語音視覺錨點＋單一人物肖像，三者疊加觸發「視覺複製填充」）：
+  1. **15 秒單鏡頭 `[Shot 1]` 內 `Action` 全是靜態描述**：`sits motionless`、`stares into the void`、`does not speak`，且 `speaker_constraints` 同時關掉畫面內說話、關掉 mouth movement——整段畫面沒有任何「可驅動的動態節點」，模型必須在 15 秒內讓這個鏡頭「活著」，唯一能做的就是把同一內容複製排滿畫面。
+  2. **單一人物肖像構圖＋畫面上沒有第二物體**：unit set 只有一位赫德，無景觀物件（監控牆是描述性背景、無獨立動作），無背景角色、無環境動態可分配給時間軸 → 複製的是「人」本身。
+  3. **與 J9／J16 的對照**：J9（監控牆旁白）、J16（夜街空景旁白）同樣是長旁白，但主體是**場景**，畫面有多個可動的物件層次（牆面、光影、車流）分散模型注意力，不會把「人物」複製。J14 是唯一「單一靜止人物肖像＋長時長」的旁白區塊，正中觸發條件。
+- **處置**（前瞻修正，下一篇不要再犯）：
+  1. **場景型旁白優先**：旁白區塊若無需人物入鏡，全部用場景畫面（J9/J16 模式），徹底避開「複製人」風險。
+  2. **迫使人像旁白時，拆短鏡頭**：把 15 秒拆成兩個 `[Shot 1]/[Shot 2]`（如 8+7s），每次切鏡時間軸 = 模型新的取樣起點，切斷「一個鏡頭要撐 N 秒」的複製需求。
+  3. **給靜止畫面注入「小型可動節點」**：即使是旁白，也在 `Action` 給畫面一個可驅動的動態（`the second hand of the clock on his desk keeps ticking`／`dust drifts through the light from the blank monitors`／`a single monitor in the wall flickers on, then dies`），讓時間由物件推進，而不是由「複製人物」推進。
+  4. **明確禁止複製**：`speaker_constraints` 或 `Action` 加 `The president appears exactly once in frame. No duplicated figure. No split or mirrored composition.`（與嘴部封印同一性質：把常見失敗模式直接寫死成負向條款）。
+- **原理**：這是 Q4（跳針重讀）在**視覺軸**的對應物。模型對「長時間、無語音錨點、無動作節點」的鏡頭，會用「重複內容填充時長」來自救；在聽覺軸表現為重讀（Q4），在視覺軸表現為複製／分割人物。解法不是把時長縮到零，而是**拆鏡＋供給可動節點**，讓每個時間片段都有該被渲染的內容。
+- **鐵律**：人物入鏡的長鏡頭**必須給畫面持續的小動態**；純靜止不能再與「長於約 10 秒」並存。旁白想傳達「凝視／沉默」時，用場景或鏡頭運動（slow push-in）傳達，別讓「人物本身」獨自撐整段時間。
 
 ---

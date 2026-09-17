@@ -738,6 +738,7 @@ retention_analysis:
 speaker_constraints:
 No character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The president remains silent.
 No other speech.
+The president appears exactly once in frame. No duplicated figure. No split or mirrored composition.
 
 detailed_description:
 
@@ -746,10 +747,10 @@ Wide shot of the president slumped at his desk, the wall of blank monitors behin
 
 [Shot 1]
 
-00:00-00:15
+00:00-00:07
 
 Action:
-The president sits motionless at his desk, surrounded by the dead monitor wall. The narrator delivers the closing observation while the president stares into the void. He does not speak.
+The president sits motionless at his desk, surrounded by the dead monitor wall. The second hand of the clock on his desk keeps ticking. Dust drifts through the pale light from the blank monitors. A single monitor in the wall flickers on, then dies. The narrator delivers the opening lines while the president stares into the void. He does not speak.
 
 Narration:
 <Narrator> says:
@@ -759,15 +760,22 @@ Narration:
 晨曦宮內的赫德總統看著完全靜默的網路監控牆，感到了前所未有的恐懼。他原本準備好了應對暴亂的武裝力量，準備好了應對罵戰的網軍。但他唯獨沒有準備好應對「被無視」。
 </d>
 
+[Shot 2]
+
+00:07-00:15
+
+Action:
+Slow push-in on the president's gaunt, unblinking face across the wide office desk. The clock keeps ticking. Behind him, the dead monitor wall dims into shadow. The narrator finishes the final line. He does not speak, does not blink away.
+
 overall_soundscape:
 Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English.
-Monitor hum, clock ticking, wind outside.
+Clock ticking, monitor hum failing into silence, wind outside.
 
 non_diegetic_music:
 A deep unresolved string.
 ```
 
-**參數**：`ref_image_0=output/ch5_president_ref/zimage_00048_.png, duration=15, seed=310000, out=ch10_j14_video`
+**參數**：`ref_image_0=output/ch5_president_ref/zimage_00048_.png, duration=15, seed=491014, out=ch10_j14_video`
 
 ---
 
@@ -916,7 +924,7 @@ A final held major chord, fading to silence.
 | 6 | J6 | 屏蔽形容詞：過濾插件自動屏蔽社交平台上的所有形容詞。人們看到的不再是惡毒的指控，而是某人對某事發布了三千字的陳述。 |
 | 7 | J8 | 起初，人們感到極度焦慮。沒有了標籤，他們不知道該恨誰、該支持誰。但到了第四天，奇蹟發生了。因為不再需要討論誰更愛國，社區居民開始討論如何更有效地分配這條街的水資源。 |
 | 8 | J9 | 數據是冰冷的，但它能讓發燒的人降溫。 |
-| 9 | J12 | 林墨。你正在把這群狼變成一群算盤。 |
+| 9 | J12 | 林墨……你正在把這群狼變成一群算盤。 |
 | 10 | J13 | 不，總統閣下。我是在把他們從你的戲劇裡領出來，讓他們回到自己的生活裡。 |
 | 11 | J14 | <i>晨曦宮內的赫德總統看著完全靜默的網路監控牆，感到了前所未有的恐懼。他原本準備好了應對暴亂的武裝力量，準備好了應對罵戰的網軍。但他唯獨沒有準備好應對「被無視」。</i> |
 | 12 | J16 | <i>林墨宣布他將正式向國會提交共識協議的最終修正案。這一次不再有紅衣軍，不再有標籤之雨。有的只是無數雙冷靜的眼睛，正透過數據接口盯著國會大廳裡的每一張票。民主三點零的第一場實戰測試，即將開始。</i> |
@@ -939,7 +947,7 @@ A final held major chord, fading to silence.
 - [ ] **J11**：Ref-PRESIDENT；場景無對白；seed=491011。OK。
 - [ ] **J12**：Ref-PRESIDENT；15字÷4=5秒；seed=491012。OK。
 - [ ] **J13**：Ref-PRESIDENT；30字÷4=8秒；赫德背對鏡頭不張嘴＋off-screen distant voice＋無設備（Q9）；seed=491013。OK。
-- [ ] **J14**：Ref-PRESIDENT；旁白；72字÷5=15秒；seed=310000。OK。
+- [ ] **J14**：Ref-PRESIDENT；旁白；72字÷5=15秒；seed=491014；拆 [Shot 1]/[Shot 2]＋注入可動節點＋負向條款（Q10）。OK。
 - [ ] **J15**：Ref-CATH + Ref-NIGHT；場景無對白；seed=491015。OK。
 - [ ] **J16**：Ref-NIGHT；旁白；87字÷5=18秒；seed=310000。OK。
 - [ ] **J20**：Ref-CATH + Ref-NIGHT；場景無對白；seed=491020。OK。
