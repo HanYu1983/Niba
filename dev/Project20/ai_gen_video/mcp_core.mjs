@@ -124,24 +124,53 @@ function buildVideoWorkflow({ prompt, seed, duration, firstFile, lastFile, width
   return wf;
 }
 
-function buildR2vWorkflow({ prompt, seed, duration, ref0, ref1, ref2, width, height }) {
+function buildR2vWorkflow({ prompt, seed, duration, refImages = [], refVideos = [], refAudios = [], width, height }) {
   const wf = JSON.parse(readFileSync(resolve(HERE, "video_minimax_h3_r2v.json"), "utf-8"));
   if (prompt) wf["138"].inputs.value = prompt;
   if (seed !== undefined) wf["129"].inputs.noise_seed = seed;
   if (duration !== undefined) wf["132"].inputs.value = duration;
-  if (ref0) wf["137"].inputs.image = ref0;
-  const optionalRef = (nodeId, refFile, inputKey) => {
-    if (refFile) {
-      wf[nodeId].inputs.image = refFile;
-      return;
+  const target = wf["136"];
+  const used = new Set(Object.keys(wf));
+  const nextId = () => { let n = 900; while (used.has(String(n))) n++; used.add(String(n)); return String(n); };
+
+  const clearRef = (prefix) => {
+    for (const k of Object.keys(target.inputs)) {
+      if (k.startsWith(prefix)) delete target.inputs[k];
     }
-    delete wf[nodeId];
-    delete wf["136"].inputs[inputKey];
   };
-  optionalRef("139", ref1, "ref_images.ref_image_1");
-  optionalRef("147", ref2, "ref_images.ref_image_2");
-  if (width !== undefined) wf["136"].inputs.width = width;
-  if (height !== undefined) wf["136"].inputs.height = height;
+  clearRef("ref_images.");
+  clearRef("ref_videos.");
+  clearRef("ref_video_audios.");
+  clearRef("ref_audios.");
+  for (const [id, node] of Object.entries(wf)) {
+    if (node.class_type === "LoadImage" && !Object.values(target.inputs).some((v) => Array.isArray(v) && v[0] === id)) {
+      delete wf[id];
+    }
+  }
+
+  refImages.forEach((file, i) => {
+    const id = nextId();
+    wf[id] = { inputs: { image: file }, class_type: "LoadImage" };
+    target.inputs[`ref_images.ref_image_${i}`] = [id, 0];
+  });
+
+  refVideos.forEach((file, i) => {
+    const vidId = nextId();
+    wf[vidId] = { inputs: { file }, class_type: "LoadVideo" };
+    const compId = nextId();
+    wf[compId] = { inputs: { video: [vidId, 0] }, class_type: "GetVideoComponents" };
+    target.inputs[`ref_videos.ref_video_${i}`] = [compId, 0];
+    target.inputs[`ref_video_audios.ref_video_audio_${i}`] = [compId, 1];
+  });
+
+  refAudios.forEach((file, i) => {
+    const id = nextId();
+    wf[id] = { inputs: { audio: file }, class_type: "LoadAudio" };
+    target.inputs[`ref_audios.ref_audio_${i}`] = [id, 0];
+  });
+
+  if (width !== undefined) target.inputs.width = width;
+  if (height !== undefined) target.inputs.height = height;
   return wf;
 }
 
@@ -499,12 +528,24 @@ export function createMcpServer() {
   // ---------------- Video: Reference-to-Video (MiniMax H3 r2v) ----------------
   server.tool(
     "gen_r2v_video",
-    "Submit a reference-to-video job (MiniMax H3 ref2va). Up to 3 reference images establish characters/scene consistency. Prompt uses the structured A/B/C/D format. Returns prompt_id immediately; background auto-downloads when done.",
+    "Submit a reference-to-video job (MiniMax H3 ref2va). Accepts up to 9 reference images, 3 reference videos, and 3 reference audios (total 12 files max). Reference images establish character/scene consistency. Prompt uses the structured A/B/C/D format. Returns prompt_id immediately; background auto-downloads when done.",
     {
-      prompt: z.string().min(1).describe("structured prompt, sections A/B/C/D, referencing 參考圖1/2/3"),
+      prompt: z.string().min(1).describe("structured prompt, sections A/B/C/D, referencing 參考圖1/2/3 etc."),
       ref_image_0: z.string().describe("local path to first reference image (參考圖1)"),
       ref_image_1: z.string().optional().describe("local path to second reference image (參考圖2)"),
       ref_image_2: z.string().optional().describe("local path to third reference image (參考圖3)"),
+      ref_image_3: z.string().optional().describe("local path to fourth reference image (參考圖4)"),
+      ref_image_4: z.string().optional().describe("local path to fifth reference image (參考圖5)"),
+      ref_image_5: z.string().optional().describe("local path to sixth reference image (參考圖6)"),
+      ref_image_6: z.string().optional().describe("local path to seventh reference image (參考圖7)"),
+      ref_image_7: z.string().optional().describe("local path to eighth reference image (參考圖8)"),
+      ref_image_8: z.string().optional().describe("local path to ninth reference image (參考圖9)"),
+      ref_video_0: z.string().optional().describe("local path to first reference video (mp4)"),
+      ref_video_1: z.string().optional().describe("local path to second reference video (mp4)"),
+      ref_video_2: z.string().optional().describe("local path to third reference video (mp4)"),
+      ref_audio_0: z.string().optional().describe("local path to first reference audio"),
+      ref_audio_1: z.string().optional().describe("local path to second reference audio"),
+      ref_audio_2: z.string().optional().describe("local path to third reference audio"),
       seed: z.number().int().nonnegative().optional(),
       duration: z.number().min(1).max(60).default(5).optional(),
       width: z.number().int().min(64).max(4096).step(32).optional().describe("video width, default from workflow (352)"),
@@ -512,6 +553,13 @@ export function createMcpServer() {
       out: z.string().optional().describe("subdirectory under output/")
     },
     async (p) => {
+      const images = [p.ref_image_0, p.ref_image_1, p.ref_image_2, p.ref_image_3, p.ref_image_4, p.ref_image_5, p.ref_image_6, p.ref_image_7, p.ref_image_8].filter(Boolean);
+      const videos = [p.ref_video_0, p.ref_video_1, p.ref_video_2].filter(Boolean);
+      const audios = [p.ref_audio_0, p.ref_audio_1, p.ref_audio_2].filter(Boolean);
+      if (!images.length) throw new Error("gen_r2v_video requires at least one reference image (ref_image_0)");
+      if (images.length > 9 || videos.length > 3 || audios.length > 3 || images.length + videos.length + audios.length > 12) {
+        throw new Error(`too many reference files: ${images.length} images, ${videos.length} videos, ${audios.length} audios (max 9 images, 3 videos, 3 audios, 12 total)`);
+      }
       const seed = p.seed ?? Math.floor(Math.random() * 2 ** 32);
       const duration = p.duration ?? 5;
       const up = async (file) => {
@@ -519,15 +567,21 @@ export function createMcpServer() {
         await uploadFile(name, readFileSync(file));
         return name;
       };
-      const ref0 = await up(resolve(p.ref_image_0));
-      const ref1 = p.ref_image_1 ? await up(resolve(p.ref_image_1)) : undefined;
-      const ref2 = p.ref_image_2 ? await up(resolve(p.ref_image_2)) : undefined;
-      const wf = buildR2vWorkflow({ prompt: p.prompt, seed, duration, ref0, ref1, ref2, width: p.width, height: p.height });
+      const refImages = [];
+      for (const f of images) refImages.push(await up(resolve(f)));
+      const refVideos = [];
+      for (const f of videos) refVideos.push(await up(resolve(f)));
+      const refAudios = [];
+      for (const f of audios) refAudios.push(await up(resolve(f)));
+      const wf = buildR2vWorkflow({ prompt: p.prompt, seed, duration, refImages, refVideos, refAudios, width: p.width, height: p.height });
       const res = await comfyPost("/prompt", { prompt: wf, client_id: `mcp-${Date.now()}` });
-      startBackgroundJob(res.prompt_id, { out: outArg(p.out), seed, prompt: p.prompt, duration, model: "minimax-h3-r2v", width: p.width, height: p.height });
+      startBackgroundJob(res.prompt_id, {
+        out: outArg(p.out), seed, prompt: p.prompt, duration, model: "minimax-h3-r2v", width: p.width, height: p.height,
+        extra: [["ref_images", refImages.length], ["ref_videos", refVideos.length], ["ref_audios", refAudios.length]].map(([k, v]) => ({ key: k, value: v }))
+      });
       return { content: [{ type: "text", text: JSON.stringify({
         status: "已提交，背景自動下載中", prompt_id: res.prompt_id, seed, duration,
-        ref_images: [ref0, ref1, ref2].filter(Boolean),
+        ref_images: refImages, ref_videos: refVideos, ref_audios: refAudios,
         width: p.width ?? null, height: p.height ?? null
       }, null, 2) }] };
     }
