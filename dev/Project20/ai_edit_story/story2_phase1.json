@@ -6,17 +6,24 @@
   "plan": [
     {
       "id": "c1_l0",
-      "description": "病房空鏡：空氣維持二十四點五度，慘白無菌，橘子靜置桌上",
-      "voice": "scene",
+      "description": "旁白：病房24.5度系統控溫",
+      "voice": "narration",
       "duration": 6,
-      "lines": []
+      "lines": [
+        "病房的空氣，精確維持在二十四點五度。",
+        "這是系統運算出的，最能安撫家屬情緒的溫度。"
+      ]
     },
     {
       "id": "c1_l1",
-      "description": "機械剥橘子：撕橘絡，手腕傳感器冰冷，衡監測四十二塊肌肉，嘴角不露不屑",
-      "voice": "scene",
-      "duration": 7,
-      "lines": []
+      "description": "旁白：衡系統監視面部肌肉震顫；剝橘時浮現手冊條文",
+      "voice": "narration",
+      "duration": 9,
+      "lines": [
+        "牆上的衡系統，正透過光學傳感器，分析他面部四十二塊肌肉的微小震顫。",
+        "腕上的隱形傳感器冰涼。",
+        "他剝下每一瓣橘子，腦中都浮現著手冊的條文：所謂人性，即是集體利益在個體神經中的回聲。"
+      ]
     },
     {
       "id": "c1_l2",
@@ -121,10 +128,13 @@
     },
     {
       "id": "c1_l12",
-      "description": "遞橘子：父親顫抖咬下，綠燈閃，牆面浮現零點五分",
-      "voice": "scene",
+      "description": "旁白：餵橘+0.5績效分",
+      "voice": "narration",
       "duration": 6,
-      "lines": []
+      "lines": [
+        "他顫抖著把橘子遞到父親嘴邊，父親咬了一口。",
+        "牆上的綠燈輕閃。績效分，加零點五。"
+      ]
     },
     {
       "id": "c1_l13",
@@ -147,17 +157,26 @@
     },
     {
       "id": "c2_l0",
-      "description": "離開病房：手錶震動，待處理異常數據包私密指令",
-      "voice": "scene",
+      "description": "旁白：離開病房，手錶收到異常數據包指令",
+      "voice": "narration",
       "duration": 6,
-      "lines": []
+      "lines": [
+        "陸誠離開父親的病房時，手錶傳來輕微震動。",
+        "那不是系統的日常推播，而是一則標記為「待處理：異常數據包」的私密指令。"
+      ]
     },
     {
       "id": "c2_l1",
-      "description": "灰會客室見林婉：導航員職責，高級技術員之母，極高適應性之子林小禾",
-      "voice": "scene",
-      "duration": 6,
-      "lines": []
+      "description": "旁白：系統導航員職務，及林婉/林小禾身份背景",
+      "voice": "narration",
+      "duration": 15,
+      "lines": [
+        "他的職位是「系統導航員」。",
+        "負責在冰冷的數據流中，尋找那些人性磨損的裂縫，並將其填平。",
+        "但他今天遇到的案例，卻像是一個無法解開的悖論。",
+        "會客室裡的母親叫林婉，一名普通的高級技術員。",
+        "她的兒子林小禾，在系統評估中被列為「極高適應性個體」，本該在下週進入星際動力學的進步齒輪。"
+      ]
     },
     {
       "id": "c2_l2",
@@ -183,10 +202,13 @@
     },
     {
       "id": "c2_l4",
-      "description": "心跳漏拍：偽造數據重罪，鐘錶撒沙",
-      "voice": "scene",
-      "duration": 5,
-      "lines": []
+      "description": "旁白：偽造數據在集體國是重罪",
+      "voice": "narration",
+      "duration": 6,
+      "lines": [
+        "陸誠的心跳漏了一拍。",
+        "偽造數據在集體國是重罪，這等同於在精密鐘錶裡撒入沙子。"
+      ]
     },
     {
       "id": "c2_l5",
@@ -306,10 +328,13 @@
     },
     {
       "id": "c2_l16",
-      "description": "提交按鈕：指尖輕壓即修正，探測光束掃過偵測猶豫",
-      "voice": "scene",
-      "duration": 5,
-      "lines": []
+      "description": "旁白：終端機提交按鈕與背後探測光束",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "他低頭看著終端機上的「提交」按鈕，只要指尖一壓，這個不穩定的個體就會被修正。",
+        "背後，衡的探測光束緩緩掃過，系統正在偵測他的猶豫。"
+      ]
     },
     {
       "id": "c2_l17",
@@ -323,10 +348,13 @@
     },
     {
       "id": "c2_l18",
-      "description": "編織假數據：底層邏輯，創造力溢出型觀察對象灰色地帶",
-      "voice": "scene",
-      "duration": 6,
-      "lines": []
+      "description": "旁白：編織假數據，貼上曠青地帶標籤",
+      "voice": "narration",
+      "duration": 9,
+      "lines": [
+        "他沒有按下提交，而是進入底層邏輯，利用導航員權限，編織了一段更完美的假數據。",
+        "他給林小禾貼上了「創造力溢出型觀察對象」的標籤——一個模糊的、暫時不會被碾碎的灰色地帶。"
+      ]
     },
     {
       "id": "c2_l19",
@@ -351,17 +379,23 @@
     },
     {
       "id": "c3_l0",
-      "description": "績效曲線詭異平穩：篡改數據，齒輪撥快，特異點藏影",
-      "voice": "scene",
+      "description": "旁白：篡改數據後績效曲線詭異平穩",
+      "voice": "narration",
       "duration": 6,
-      "lines": []
+      "lines": [
+        "回到辦公位，績效曲線呈現一種詭異的平穩。",
+        "他剛剛篡改了林小禾的數據，把一個齒輪撥快了三秒，又將一個特異點藏進了陰影。"
+      ]
     },
     {
       "id": "c3_l1",
-      "description": "免疫系統：細胞代謝異常，抗體隨之而來",
-      "voice": "scene",
+      "description": "旁白：系統有免疫系統，異常細胞會引來抗體",
+      "voice": "narration",
       "duration": 5,
-      "lines": []
+      "lines": [
+        "在集體國，系統是有免疫系統的。",
+        "當一個細胞表現出不尋常的代謝，抗體就會隨之而來。"
+      ]
     },
     {
       "id": "c3_l2",
@@ -455,10 +489,14 @@
     },
     {
       "id": "c3_l11",
-      "description": "共鳴室：強制社交，感測器，老張滿分集體人",
-      "voice": "scene",
+      "description": "旁白：集體共鳴室的強制社交與老張",
+      "voice": "narration",
       "duration": 6,
-      "lines": []
+      "lines": [
+        "下班後的強制社交時間，他走進了集體共鳴室。",
+        "這裡每個人都戴著感測器，分享今日的成就感。",
+        "他的同事老張走了過來，老張的評分一直是滿分，是最純粹的集體人。"
+      ]
     },
     {
       "id": "c3_l12",
@@ -493,10 +531,14 @@
     },
     {
       "id": "c3_l15",
-      "description": "眼底震顫：原始本能一秒，恢復平靜憐憫",
-      "voice": "scene",
-      "duration": 5,
-      "lines": []
+      "description": "旁白：老張眼底一閃而過的震顫",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "那一瞬間，陸誠在老張的眼底捕捉到了一絲極其微小的震顫。",
+        "那是系統試圖壓制的、被深埋的原始本能。",
+        "但不到一秒，老張的眼神又恢復了平靜，甚至帶了一絲憐憫。"
+      ]
     },
     {
       "id": "c3_l16",
@@ -510,10 +552,14 @@
     },
     {
       "id": "c3_l17",
-      "description": "領航員勳章：家中榮譽，手錶通知前",
-      "voice": "scene",
-      "duration": 5,
-      "lines": []
+      "description": "旁白：回到家，領航員勳章與熱水分額通知",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "回到家，桌上放著那枚象徵榮譽的領航員勳章。",
+        "暖氣停止了，房間迅速變冷。",
+        "這就是集體國的教導：脫離了集體，你的自私將無處安放。"
+      ]
     },
     {
       "id": "c3_l18",
@@ -527,10 +573,13 @@
     },
     {
       "id": "c3_l19",
-      "description": "暖氣停止：房間變冷，特異點黑白影像火光",
-      "voice": "scene",
+      "description": "旁白：特異點保留區黑白影像",
+      "voice": "narration",
       "duration": 6,
-      "lines": []
+      "lines": [
+        "他顫抖著縮在沙發上，面前螢幕亮起特異點保留區的黑白影像。",
+        "那裡沒有暖氣，沒有人工智能助手，只有混亂的火光，和那些被齒輪拋棄的人。"
+      ]
     },
     {
       "id": "c3_l20",
@@ -544,17 +593,23 @@
     },
     {
       "id": "c4_l0",
-      "description": "十二度房間：白氣消散，低溫物理壓制發炎細胞",
-      "voice": "scene",
-      "duration": 6,
-      "lines": []
+      "description": "旁白：房間降到12度，系統低溫壓制",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "房間裡的溫度降到了十二度。",
+        "呼出的白氣在冷冽的空氣中消散。",
+        "這不是故障，是系統在對一個發炎的細胞，進行低溫物理壓制。"
+      ]
     },
     {
       "id": "c4_l1",
-      "description": "純白進度條：取代溫柔的衡，巨大系統訊息",
-      "voice": "scene",
+      "description": "旁白：螢幕亮起巨大的純白進度條",
+      "voice": "narration",
       "duration": 6,
-      "lines": []
+      "lines": [
+        "螢幕亮起，不再是溫柔的衡，而是一個巨大的、純白色的進度條。"
+      ]
     },
     {
       "id": "c4_l2",
@@ -676,17 +731,25 @@
     },
     {
       "id": "c4_l13",
-      "description": "最後六十秒：窗邊能源塔藍光，荒原陰影",
-      "voice": "scene",
-      "duration": 5,
-      "lines": []
+      "description": "旁白：能源塔藍光與荒原",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "他站起身，走到窗邊。",
+        "遠處，集體國的巨大能源塔散發著神聖的藍光，那是無數個利他的螺絲釘共同編織的奇蹟。",
+        "而在能源塔的陰影下，是他從未踏足的荒原。"
+      ]
     },
     {
       "id": "c4_l14",
-      "description": "深藍與雙鍵：林小禾畫面，舉報與註銷間懸停",
-      "voice": "scene",
-      "duration": 5,
-      "lines": []
+      "description": "旁白：想起小禾的深藍，手指在舉報與註銷之間",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "他想起了林小禾畫中的那片深藍。",
+        "那種顏色在能源塔的光輝下，顯得多麼不合時宜，卻又那麼奪目。",
+        "他的手指，在舉報鍵與自願註銷鍵之間，懸停著。"
+      ]
     },
     {
       "id": "c4_l15",
@@ -723,10 +786,15 @@
     },
     {
       "id": "c4_l18",
-      "description": "倒數歸零：燈滅，拔數據接頭，臍帶斷",
-      "voice": "scene",
+      "description": "旁白：燈光熄滅，拔掉數據接頭",
+      "voice": "narration",
       "duration": 6,
-      "lines": []
+      "lines": [
+        "倒數計時歸零。",
+        "房間的燈光熄滅了，陸誠最後的動作，被定格在黑暗中。",
+        "他沒有按下舉報，也沒有按下註銷。",
+        "他只是拔掉了手腕上的數據接頭——那是聯結他與集體的唯一臍帶。"
+      ]
     },
     {
       "id": "c4_l19",
@@ -985,9 +1053,9 @@
     },
     {
       "id": "c1_l0",
-      "description": "c1_l0 病房空鏡場景：靜態廣角，Q11靜音全套",
+      "description": "c1_l0 旁白：病房24.5度系統控溫",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is the empty ward from <Picture 1>:\na sterile pale ward with no person in frame, vacant bed with white blanket, bedside table with fresh oranges, wall sensor panel with a small green light, cold even light with faint haze.\n\nsummary:\nReference-based empty ward establishing shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice.\n\ndetailed_description:\n\nVisual style:\nStatic wide shot of the empty ward, cold and clean.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nThe camera stays static on the vacant ward. Silence fills the room. Oranges rest untouched on the table. The wall panel blinks its green light once, no voice.\n\noverall_soundscape:\nLow ventilation hum, distant monitor beep with no voice, faint air flow. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is the empty ward from <Picture 1>:\na sterile pale ward with no person in frame, vacant bed with white blanket, bedside table with fresh oranges, wall sensor panel with a small green light, cold even light with faint haze.\n\nsummary:\nReference-based empty ward narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese.\n\ndetailed_description:\n\nVisual style:\nStatic wide shot of the empty ward, cold and clean.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nThe camera stays static on the vacant ward. Silence fills the room. Oranges rest untouched on the table. The wall panel blinks its green light once. The narrator speaks over the cold stillness.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No one is on screen to speak.\n<d>\n[中文]\n病房的空氣，精確維持在二十四點五度。\n這是系統運算出的，最能安撫家屬情緒的溫度。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Low ventilation hum, distant monitor beep, faint air flow under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-WARD"
       ],
@@ -995,16 +1063,16 @@
       "out": "s2_c1_l0_video",
       "output": "output/s2_c1_l0_video",
       "extra": {
-        "prompt_id": "bad1203b-bcd7-4dd7-bdbb-7122d781ab7c",
+        "prompt_id": "3f86973d-6629-439f-b1e7-62b9ede20e38",
         "v2_width": 512,
         "v2_height": 288
       }
     },
     {
       "id": "c1_l1",
-      "description": "c1_l1 剥橘子場景：手部特寫，環帶，嘴唇緊閉",
+      "description": "c1_l1 旁白：衡系統監視面部肌肉，剝橘浮現手冊條文",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, short black hair, grey system navigator uniform, dark sensor band on wrist, seated, lips sealed.\n\n<Subject 2> is the empty ward from <Picture 2>:\nsterile pale room with no person in frame, bedside table, wall sensor panel.\n\nsummary:\nReference-based orange-peeling hand close-up\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nClose-up on hands over the bedside table, shallow depth of field.\n\n[Shot 1]\n\n00:00-00:07\n\nAction:\nLu Cheng sits by the bed and mechanically tears the pith off an orange, strip by strip. The sensor band on his wrist catches the cold light. His face stays blank, jaw tight, eyes lowered, silent. No one speaks.\n\noverall_soundscape:\nSoft tearing of peel, faint juice hiss, ventilation hum with no voice. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, short black hair, grey system navigator uniform, dark sensor band on wrist, seated by the bed, lips sealed.\n\n<Subject 2> is the empty ward from <Picture 2>:\nsterile pale room with no person in frame, bedside table, wall sensor panel.\n\nsummary:\nReference-based orange-peeling narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nClose-up on hands over the bedside table, shallow depth of field.\n\n[Shot 1]\n\n00:00-00:09\n\nAction:\nLu Cheng sits by the bed and mechanically tears the pith off an orange, strip by strip. The sensor band on his wrist catches the cold light. His face stays blank, jaw tight, eyes lowered, silent. The narrator speaks over the peeling.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n牆上的衡系統，正透過光學傳感器，分析他面部四十二塊肌肉的微小震顫。\n腕上的隱形傳感器冰涼。\n他剝下每一瓣橘子，腦中都浮現著手冊的條文：所謂人性，即是集體利益在個體神經中的回聲。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Soft tearing of peel, faint juice hiss, ventilation hum under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-LC",
         "Ref-WARD"
@@ -1013,7 +1081,7 @@
       "out": "s2_c1_l1_video",
       "output": "",
       "extra": {
-        "prompt_id": "1aa7c637-51d1-496a-b72e-8c6a8ebb15f7",
+        "prompt_id": "3d1a8092-5351-4cb1-93f0-973ef85e22c0",
         "v2_width": 512,
         "v2_height": 288
       }
@@ -1200,9 +1268,9 @@
     },
     {
       "id": "c1_l12",
-      "description": "c1_l12 遞橘子場景：顫抖咬下，綠燈，零點五分可見文字",
+      "description": "c1_l12 旁白：餵橘+0.5績效分",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is the old father from <Picture 1>:\ngaunt elderly East Asian man in a hospital bed, white blanket to the chest, weak gentle eyes.\n\n<Subject 2> is the empty ward from <Picture 2>:\nsterile pale room with no person in frame, wall sensor panel with a small green light.\n\n<Subject 3> is Lu Cheng's hand from <Picture 3>:\nthe hand of an East Asian man around thirty in a grey uniform sleeve, holding an orange segment.\n\nsummary:\nReference-based orange hand-off insert shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: partially_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No speech, chewing only with mouth closed, no voice. No whispering. No muttering. No off-screen speech. No device voice. Strict silence of any human voice.\n\ndetailed_description:\n\nVisual style:\nOver-the-shoulder insert of the orange meeting trembling lips.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLu Cheng's hand holds the orange segment to the old father's mouth. The old father bites down with a tremor, juice glistening, chewing with mouth closed. On the wall the green light blinks once with a faint click, no voice, and a small readout shows visible on-screen text \"+0.5\", never read aloud, never spoken. Silence fills the room.\n\noverall_soundscape:\nA soft bite with mouth closed, shallow breathing, faint click of the indicator with no voice. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is the old father from <Picture 1>:\ngaunt elderly East Asian man in a hospital bed, white blanket to the chest, weak gentle eyes.\n\n<Subject 2> is the empty ward from <Picture 2>:\nsterile pale room with no person in frame, wall sensor panel with a small green light.\n\n<Subject 3> is Lu Cheng's hand from <Picture 3>:\nthe hand of an East Asian man around thirty in a grey uniform sleeve, holding an orange segment.\n\nsummary:\nReference-based orange hand-off narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: partially_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese.\n\ndetailed_description:\n\nVisual style:\nOver-the-shoulder insert of the orange meeting trembling lips.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLu Cheng's hand holds the orange segment to the old father's mouth. The old father bites down with a tremor, juice glistening, chewing with mouth closed. On the wall the green light blinks once with a faint click, and a small readout shows visible on-screen text \"+0.5\", never read aloud. The narrator speaks over the feeding.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. The old father chews with mouth closed, no speech.\n<d>\n[中文]\n他顫抖著把橘子遞到父親嘴邊，父親咬了一口。\n牆上的綠燈輕閃。績效分，加零點五。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. A soft bite with mouth closed, shallow breathing, faint click of the indicator under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-FATHER",
         "Ref-WARD",
@@ -1212,7 +1280,7 @@
       "out": "s2_c1_l12_video",
       "output": "",
       "extra": {
-        "prompt_id": "1b2c5a5e-c07f-4a59-8970-0c62385d8c91",
+        "prompt_id": "7188f38c-8902-45ce-b1b5-52300be0b90b",
         "v2_width": 512,
         "v2_height": 288
       }
@@ -1255,9 +1323,9 @@
     },
     {
       "id": "c2_l0",
-      "description": "c2_l0 離開病房場景：走廊，手錶震動，異常數據包",
+      "description": "c2_l0 旁白：離開病房，手錶收到異常數據包指令",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, short black hair, grey system navigator uniform, walking, wrist device blinking.\n<Subject 2> is the empty ward from <Picture 2>:\na sterile pale ward with no person in frame, cold even light.\n\nsummary:\nReference-based corridor exit tracking shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\n\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice.\n\ndetailed_description:\n\nVisual style:\nMedium tracking shot down a cold corridor.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLu Cheng strides down the pale corridor. The device on his wrist vibrates once with a soft tremor, no voice. He glances down, jaw tightening, and keeps walking. No one speaks.\n\noverall_soundscape:\nFootsteps on hard floor, a single soft vibration with no voice, ventilation hum. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, short black hair, grey system navigator uniform, walking, wrist device blinking.\n<Subject 2> is the empty ward from <Picture 2>:\na sterile pale ward with no person in frame, cold even light.\n\nsummary:\nReference-based corridor exit narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\n\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nMedium tracking shot down a cold corridor.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLu Cheng strides down the pale corridor. The device on his wrist vibrates once with a soft tremor. He glances down, jaw tightening, and keeps walking. The narrator speaks over the stride.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n陸誠離開父親的病房時，手錶傳來輕微震動。\n那不是系統的日常推播，而是一則標記為「待處理：異常數據包」的私密指令。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Footsteps on hard floor, a single soft vibration, ventilation hum under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-LC",
         "Ref-WARD"
@@ -1266,16 +1334,16 @@
       "out": "s2_c2_l0_video",
       "output": "",
       "extra": {
-        "prompt_id": "23cee7ad-ae18-4b0e-99fe-0d7994625b5a",
+        "prompt_id": "278365cb-cb03-4363-8123-a6080faffc6d",
         "v2_width": 512,
         "v2_height": 288
       }
     },
     {
       "id": "c2_l1",
-      "description": "c2_l1 會客室場景：灰室長桌，林婉絞手指等待",
+      "description": "c2_l1 旁白：系統導航員職務，及林婉/林小禾身份背景",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is the grey meeting room from <Picture 1>:\na narrow grey room, long table with glowing terminal screen, cold even light.\n\n<Subject 2> is Lin Wan from <Picture 2>:\nEast Asian woman around forty, dark hair tucked behind ears, haggard face, dark grey technician uniform, seated.\n\nsummary:\nReference-based meeting room waiting shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Lin Wan's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nWide two-shot across the long table, both ends empty between them.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLin Wan sits alone at the long table, fingers twisting together, eyes fixed on the door. The terminal screen glows quietly, no voice. No one speaks.\n\noverall_soundscape:\nTerminal hum with no voice, faint fabric rustle, room tone. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is the grey meeting room from <Picture 1>:\na narrow grey room, long table with glowing terminal screen, cold even light.\n\n<Subject 2> is Lin Wan from <Picture 2>:\nEast Asian woman around forty, dark hair tucked behind ears, haggard face, dark grey technician uniform, seated.\n\nsummary:\nReference-based meeting room narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lin Wan's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nWide two-shot across the long table, both ends empty between them.\n\n[Shot 1]\n\n00:00-00:15\n\nAction:\nLin Wan sits alone at the long table, fingers twisting together, eyes fixed on the door. The terminal screen glows quietly. The narrator speaks over the waiting.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 2> remains silent, lips sealed.\n<d>\n[中文]\n他的職位是「系統導航員」。\n負責在冰冷的數據流中，尋找那些人性磨損的裂縫，並將其填平。\n但他今天遇到的案例，卻像是一個無法解開的悖論。\n會客室裡的母親叫林婉，一名普通的高級技術員。\n她的兒子林小禾，在系統評估中被列為「極高適應性個體」，本該在下週進入星際動力學的進步齒輪。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Terminal hum, faint fabric rustle, room tone under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-MEET",
         "Ref-林婉"
@@ -1327,9 +1395,9 @@
     },
     {
       "id": "c2_l4",
-      "description": "c2_l4 心跳漏拍場景：重罪，鐘錶沙子，僵住",
+      "description": "c2_l4 旁白：偽造數據在集體國是重罪",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, suddenly frozen mid-breath.\n\n<Subject 2> is the grey meeting room from <Picture 2>:\na narrow grey room, long table, cold light.\n\nsummary:\nReference-based frozen-reaction insert shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nTight close-up as his breath catches.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLu Cheng freezes, breath caught, eyes widening a fraction at the confession. His heartbeat skips under the silence. No one speaks.\n\noverall_soundscape:\nA caught breath, one skipped heartbeat, terminal hum with no voice. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, suddenly frozen mid-breath.\n\n<Subject 2> is the grey meeting room from <Picture 2>:\na narrow grey room, long table, cold light.\n\nsummary:\nReference-based frozen-reaction narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nTight close-up as his breath catches.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLu Cheng freezes, breath caught, eyes widening a fraction at the confession. His heartbeat skips under the silence. The narrator speaks over the frozen moment.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n陸誠的心跳漏了一拍。\n偽造數據在集體國是重罪，這等同於在精密鐘錶裡撒入沙子。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. A caught breath, one skipped heartbeat, terminal hum under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-LC",
         "Ref-MEET"
@@ -1545,9 +1613,9 @@
     },
     {
       "id": "c2_l16",
-      "description": "c2_l16 提交按鈕場景：指尖懸停，探測光束掃猶豫",
+      "description": "c2_l16 旁白：終端機提交按鈕與背後探測光束",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, fingertip hovering.\n\n<Subject 2> is the grey meeting room from <Picture 2>:\na narrow grey room, a pale scan beam sweeping slowly behind him.\n\nsummary:\nReference-based hovering-finger insert shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nInsert close-up of the fingertip over the glowing submit key.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLu Cheng's fingertip hovers over the glowing submit key, trembling faintly. Behind him a pale scan beam sweeps the room, tasting his hesitation, no voice. No one speaks.\n\noverall_soundscape:\nA faint fingertip tremor on glass, the soft sweep of the beam with no voice. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, fingertip hovering.\n\n<Subject 2> is the grey meeting room from <Picture 2>:\na narrow grey room, a pale scan beam sweeping slowly behind him.\n\nsummary:\nReference-based hovering-finger narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nInsert close-up of the fingertip over the glowing submit key.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nLu Cheng's fingertip hovers over the glowing submit key, trembling faintly. Behind him a pale scan beam sweeps the room, tasting his hesitation. The narrator speaks over the hover.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n他低頭看著終端機上的「提交」按鈕，只要指尖一壓，這個不穩定的個體就會被修正。\n背後，衡的探測光束緩緩掃過，系統正在偵測他的猶豫。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. A faint fingertip tremor on glass, the soft sweep of the beam under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-LC",
         "Ref-MEET"
@@ -1581,9 +1649,9 @@
     },
     {
       "id": "c2_l18",
-      "description": "c2_l18 編織假數據場景：底層邏輯，灰色地帶標籤可見文字",
+      "description": "c2_l18 旁白：編織假數據，貼上灰色地帶標籤",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, fingers flying across the screen.\n\n<Subject 2> is the grey meeting room from <Picture 2>:\na narrow grey room, terminal screen flaring with code.\n\nsummary:\nReference-based code-weaving insert shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nInsert close-up of fingers dancing over the glowing screen.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLu Cheng inhales sharply and his fingers fly across the screen, weaving denser false data. A new tag blooms on the display as visible on-screen text, never read aloud, never spoken. No one speaks.\n\noverall_soundscape:\nRapid glass taps, a low electronic hum with no voice. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, fingers flying across the screen.\n\n<Subject 2> is the grey meeting room from <Picture 2>:\na narrow grey room, terminal screen flaring with code.\n\nsummary:\nReference-based code-weaving narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nInsert close-up of fingers dancing over the glowing screen.\n\n[Shot 1]\n\n00:00-00:09\n\nAction:\nLu Cheng inhales sharply and his fingers fly across the screen, weaving denser false data. A new tag blooms on the display as visible on-screen text, never read aloud. The narrator speaks over the weaving.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n他沒有按下提交，而是進入底層邏輯，利用導航員權限，編織了一段更完美的假數據。\n他給林小禾貼上了「創造力溢出型觀察對象」的標籤——一個模糊的、暫時不會被碾碎的灰色地帶。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Rapid glass taps, a low electronic hum under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-LC",
         "Ref-MEET"
@@ -1635,9 +1703,9 @@
     },
     {
       "id": "c3_l0",
-      "description": "c3_l0 績效曲線場景：詭異平穩，齒輪撥快陰影",
+      "description": "c3_l0 旁白：篡改數據後績效曲線詭異平穩",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, back at his desk.\n\n<Subject 2> is the office cubicle from <Picture 2>:\na grey cubicle, large screen showing an eerily flat performance curve.\n\nsummary:\nReference-based flat-curve office shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nWide shot of the desk, the flat curve glowing.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLu Cheng returns to his desk. The performance curve on the screen holds an eerie, unnatural flatness. He stares at it, lips sealed. No one speaks.\n\noverall_soundscape:\nScreen hum with no voice, distant office murmur kept wordless, ventilation. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, back at his desk.\n\n<Subject 2> is the office cubicle from <Picture 2>:\na grey cubicle, large screen showing an eerily flat performance curve.\n\nsummary:\nReference-based flat-curve narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nWide shot of the desk, the flat curve glowing.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLu Cheng returns to his desk. The performance curve on the screen holds an eerie, unnatural flatness. He stares at it, lips sealed. The narrator speaks over the flat line.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n回到辦公位，績效曲線呈現一種詭異的平穩。\n他剛剛篡改了林小禾的數據，把一個齒輪撥快了三秒，又將一個特異點藏進了陰影。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Screen hum, distant office murmur kept wordless, ventilation under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-LC",
         "Ref-OFFICE"
@@ -1653,9 +1721,9 @@
     },
     {
       "id": "c3_l1",
-      "description": "c3_l1 免疫系統場景：終端機紅點警告，抗體將至",
+      "description": "c3_l1 旁白：系統有免疫系統，異常細胞引來抗體",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is the office cubicle from <Picture 1>:\na grey cubicle, terminal flashing a small red warning dot.\n\nsummary:\nReference-based warning-dot insert shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice.\n\ndetailed_description:\n\nVisual style:\nInsert close-up of the blinking red dot.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nA small red warning dot pulses on the terminal, patient as an antibody approaching its target, no voice. Silence fills the cubicle.\n\noverall_soundscape:\nA soft electronic pulse with no voice, screen hum. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is the office cubicle from <Picture 1>:\na grey cubicle, terminal flashing a small red warning dot.\n\nsummary:\nReference-based warning-dot narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese.\n\ndetailed_description:\n\nVisual style:\nInsert close-up of the blinking red dot.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nA small red warning dot pulses on the terminal, patient as an antibody approaching its target. The narrator speaks over the pulse. Silence fills the cubicle.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No one is on screen to speak.\n<d>\n[中文]\n在集體國，系統是有免疫系統的。\n當一個細胞表現出不尋常的代謝，抗體就會隨之而來。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. A soft electronic pulse, screen hum under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-OFFICE"
       ],
@@ -1832,9 +1900,9 @@
     },
     {
       "id": "c3_l11",
-      "description": "c3_l11 共鳴室場景：強制社交，感測頭環，成就分享",
+      "description": "c3_l11 旁白：集體共鳴室的強制社交與老張",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is the resonance chamber from <Picture 1>:\na warm white circular chamber, ring seats with sensor headbands, clean reflective floor.\n\n<Subject 2> is Lao Zhang from <Picture 2>:\nEast Asian man around fifty, greying short hair, gentle face, dark coordinator uniform, approaching.\n\nsummary:\nReference-based resonance chamber wide shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice.\n\ndetailed_description:\n\nVisual style:\nWide shot of the circle, members sharing in wordless calm.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLu Cheng steps into the warm circle where sensored members share the day's quiet satisfaction. Lao Zhang approaches through the ring, smiling faintly. No one speaks.\n\noverall_soundscape:\nSoft room warmth, faint sensor chimes with no voice, breathing circle. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is the resonance chamber from <Picture 1>:\na warm white circular chamber, ring seats with sensor headbands, clean reflective floor.\n\n<Subject 2> is Lao Zhang from <Picture 2>:\nEast Asian man around fifty, greying short hair, gentle face, dark coordinator uniform, approaching.\n\nsummary:\nReference-based resonance chamber narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot of the circle, members sharing in wordless calm.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLu Cheng steps into the warm circle where sensored members share the day's quiet satisfaction. Lao Zhang approaches through the ring, smiling faintly. The narrator speaks over the chamber.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. All mouths stay sealed, no speech.\n<d>\n[中文]\n下班後的強制社交時間，他走進了集體共鳴室。\n這裡每個人都戴著感測器，分享今日的成就感。\n他的同事老張走了過來，老張的評分一直是滿分，是最純粹的集體人。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Soft room warmth, faint sensor chimes, breathing circle under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-RESON",
         "Ref-老張"
@@ -1905,9 +1973,9 @@
     },
     {
       "id": "c3_l15",
-      "description": "c3_l15 震顫場景：本能一秒，憐憫恢復",
+      "description": "c3_l15 旁白：老張眼底一閃而過的震顫",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lao Zhang from <Picture 1>:\nEast Asian man around fifty, greying short hair, a buried instinct surfacing for one second.\n\n<Subject 2> is Lu Cheng from <Picture 2>:\nEast Asian man around thirty, grey uniform, catching the tremor.\n<Subject 3> is the collective resonance room from <Picture 3>:\na warm round room with ring seats, each with a sensor headband, warm even light.\n\nsummary:\nReference-based one-second tremor macro shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\n\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Both mouths stay sealed.\n\ndetailed_description:\n\nVisual style:\nExtreme close-up on Lao Zhang's eye, Lu Cheng blurred beyond.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nIn the depths of Lao Zhang's eye a violent tremor of buried instinct flashes for one second, then stills into calm pity. Both mouths stay sealed. No one speaks.\n\noverall_soundscape:\nA held breath between them, sensor chimes with no voice. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is Lao Zhang from <Picture 1>:\nEast Asian man around fifty, greying short hair, a buried instinct surfacing for one second.\n\n<Subject 2> is Lu Cheng from <Picture 2>:\nEast Asian man around thirty, grey uniform, catching the tremor.\n<Subject 3> is the collective resonance room from <Picture 3>:\na warm round room with ring seats, each with a sensor headband, warm even light.\n\nsummary:\nReference-based one-second tremor narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\n\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Both mouths stay sealed.\n\ndetailed_description:\n\nVisual style:\nExtreme close-up on Lao Zhang's eye, Lu Cheng blurred beyond.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nIn the depths of Lao Zhang's eye a violent tremor of buried instinct flashes for one second, then stills into calm pity. Both mouths stay sealed. The narrator speaks over the tremor.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. Both mouths stay sealed, no speech.\n<d>\n[中文]\n那一瞬間，陸誠在老張的眼底捕捉到了一絲極其微小的震顫。\n那是系統試圖壓制的、被深埋的原始本能。\n但不到一秒，老張的眼神又恢復了平靜，甚至帶了一絲憐憫。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. A held breath between them, sensor chimes under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-老張",
         "Ref-LC",
@@ -1942,9 +2010,9 @@
     },
     {
       "id": "c3_l17",
-      "description": "c3_l17 勳章場景：家中桌上榮譽，通知前靜默",
+      "description": "c3_l17 旁白：領航員勳章與暖氣停",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, home, staring at his honor.\n\n<Subject 2> is the small apartment from <Picture 2>:\na cold narrow flat, an honor medal gleaming on the table.\n\nsummary:\nReference-based medal-gazing insert shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nInsert close-up of the gleaming medal, his blurred face beyond.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLu Cheng stares at the navigator medal gleaming on the home table. The room holds its breath, no voice. He does not speak.\n\noverall_soundscape:\nA faint medal glint in silence, home hush, night beyond glass. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, home, staring at his honor.\n\n<Subject 2> is the small apartment from <Picture 2>:\na cold narrow flat, an honor medal gleaming on the table.\n\nsummary:\nReference-based medal-gazing narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nInsert close-up of the gleaming medal, his blurred face beyond.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nLu Cheng stares at the navigator medal gleaming on the home table. The heating dies and the room turns cold around him. He does not speak. The narrator speaks over the chill.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n回到家，桌上放著那枚象徵榮譽的領航員勳章。\n暖氣停止了，房間迅速變冷。\n這就是集體國的教導：脫離了集體，你的自私將無處安放。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. A faint medal glint, the dying sigh of warm air, night beyond glass under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-LC",
         "Ref-HOME"
@@ -1978,9 +2046,9 @@
     },
     {
       "id": "c3_l19",
-      "description": "c3_l19 暖氣停場景：房間變冷，特異點火光黑白影像",
+      "description": "c3_l19 旁白：特異點保留區黑白影像",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is the small apartment from <Picture 1>:\na cold narrow flat falling dark, a small screen showing black-and-white footage of chaotic firelight.\n\n<Subject 2> is Lu Cheng from <Picture 2>:\nEast Asian man around thirty, grey uniform, shivering on the sofa.\n\nsummary:\nReference-based heating-cut wide shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nWide shot of the darkening flat, breath fogging.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nThe heating dies. The room falls cold and dark around the shivering figure on the sofa. The small screen flickers with black-and-white firelight, no voice. No one speaks.\n\noverall_soundscape:\nThe dying sigh of vents, a shiver, screen crackle with no voice. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is the small apartment from <Picture 1>:\na cold narrow flat falling dark, a small screen showing black-and-white footage of chaotic firelight.\n\n<Subject 2> is Lu Cheng from <Picture 2>:\nEast Asian man around thirty, grey uniform, shivering on the sofa.\n\nsummary:\nReference-based heating-cut narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nWide shot of the darkening flat, breath fogging.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nThe heating dies. The room falls cold and dark around the shivering figure on the sofa. The small screen flickers with black-and-white firelight. The narrator speaks over the dark.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 2> remains silent, lips sealed.\n<d>\n[中文]\n他顫抖著縮在沙發上，面前螢幕亮起特異點保留區的黑白影像。\n那裡沒有暖氣，沒有人工智能助手，只有混亂的火光，和那些被齒輪拋棄的人。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. The dying sigh of vents, a shiver, faint screen crackle under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-HOME",
         "Ref-LC"
@@ -2014,9 +2082,9 @@
     },
     {
       "id": "c4_l0",
-      "description": "c4_l0 十二度房間場景：白氣，低溫壓制",
+      "description": "c4_l0 旁白：房間降到12度，系統低溫壓制",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, breath fogging.\n\n<Subject 2> is the chilled room from <Picture 2>:\na frigid small room, breath-white air, window facing the blue tower glow.\n\nsummary:\nReference-based white-breath cold room shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nClose on the white breath dissolving in cold air.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLu Cheng breathes out white vapor that dissolves into the frigid air. The cold presses in from every wall, no voice. He does not speak.\n\noverall_soundscape:\nShallow breathing fogging, the deep tick of cold, still air. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, breath fogging.\n\n<Subject 2> is the chilled room from <Picture 2>:\na frigid small room, breath-white air, window facing the blue tower glow.\n\nsummary:\nReference-based white-breath cold room narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nClose on the white breath dissolving in cold air.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nLu Cheng breathes out white vapor that dissolves into the frigid air. The cold presses in from every wall. He does not speak. The narrator speaks over the frost.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n房間裡的溫度降到了十二度。\n呼出的白氣在冷冽的空氣中消散。\n這不是故障，是系統在對一個發炎的細胞，進行低溫物理壓制。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Shallow breathing fogging, the deep tick of cold, still air under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-LC",
         "Ref-ROOM4"
@@ -2032,9 +2100,9 @@
     },
     {
       "id": "c4_l1",
-      "description": "c4_l1 純白進度條場景：取代衡，巨大系統訊息",
+      "description": "c4_l1 旁白：螢幕亮起巨大的純白進度條",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is the chilled room from <Picture 1>:\na frigid small room, wall screen filled by a giant pure-white progress bar.\n\nsummary:\nReference-based white progress bar screen shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice.\n\ndetailed_description:\n\nVisual style:\nThe white bar floods the room with cold light.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nThe wall screen ignites with a giant pure-white progress bar, washing the cold room in flat light, no voice. Silence fills the chill.\n\noverall_soundscape:\nA low screen ignition hum with no voice, cold tick. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is the chilled room from <Picture 1>:\na frigid small room, wall screen filled by a giant pure-white progress bar.\n\nsummary:\nReference-based white progress bar narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese.\n\ndetailed_description:\n\nVisual style:\nThe white bar floods the room with cold light.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nThe wall screen ignites with a giant pure-white progress bar, washing the cold room in flat light. The narrator speaks over the glow.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No one is on screen to speak.\n<d>\n[中文]\n螢幕亮起，不再是溫柔的衡，而是一個巨大的、純白色的進度條。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. A low screen ignition hum, cold tick under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-ROOM4"
       ],
@@ -2245,9 +2313,9 @@
     },
     {
       "id": "c4_l13",
-      "description": "c4_l13 六十秒場景：窗邊能源塔藍光，荒原",
+      "description": "c4_l13 旁白：能源塔藍光與荒原",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, risen to the window.\n\n<Subject 2> is the chilled room from <Picture 2>:\na frigid small room, great window facing the sacred blue tower glow and the wasteland shadow.\n\nsummary:\nReference-based tower-window wide shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nWide shot of the small figure against the vast blue glow.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLu Cheng rises and stands at the window. Far off, the collective's energy tower burns sacred blue while the untrodden wasteland pools in its shadow. He does not speak.\n\noverall_soundscape:\nCold glass tick, distant tower hum with no voice, night air. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, risen to the window.\n\n<Subject 2> is the chilled room from <Picture 2>:\na frigid small room, great window facing the sacred blue tower glow and the wasteland shadow.\n\nsummary:\nReference-based tower-window narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nWide shot of the small figure against the vast blue glow.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nLu Cheng rises and stands at the window. Far off, the collective's energy tower burns sacred blue while the untrodden wasteland pools in its shadow. He does not speak. The narrator speaks over the glow.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n他站起身，走到窗邊。\n遠處，集體國的巨大能源塔散發著神聖的藍光，那是無數個利他的螺絲釘共同編織的奇蹟。\n而在能源塔的陰影下，是他從未踏足的荒原。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Cold glass tick, distant tower hum, night air under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-LC",
         "Ref-ROOM4"
@@ -2263,9 +2331,9 @@
     },
     {
       "id": "c4_l14",
-      "description": "c4_l14 深藍雙鍵場景：手指懸停舉報與註銷間",
+      "description": "c4_l14 旁白：想起小禾的深藍，手指在舉報與註銷之間",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, finger suspended between two fates.\n\n<Subject 2> is the chilled room from <Picture 2>:\na frigid small room, two glowing keys waiting.\n\nsummary:\nReference-based hovering-finger macro shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nMacro shot of the fingertip trembling between the keys.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLu Cheng's finger hovers over the report key, then drifts toward the deregistration key, trembling between them, no voice. The deep blue of memory ghosts across his face. He presses nothing.\n\noverall_soundscape:\nA trembling fingertip over glass, two keys humming with no voice. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, finger suspended between two fates.\n\n<Subject 2> is the chilled room from <Picture 2>:\na frigid small room, two glowing keys waiting.\n\nsummary:\nReference-based hovering-finger narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nMacro shot of the fingertip trembling between the keys.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nLu Cheng's finger hovers over the report key, then drifts toward the deregistration key, trembling between them. The deep blue of memory ghosts across his face. He presses nothing. The narrator speaks over the hover.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n他想起了林小禾畫中的那片深藍。\n那種顏色在能源塔的光輝下，顯得多麼不合時宜，卻又那麼奪目。\n他的手指，在舉報鍵與自願註銷鍵之間，懸停著。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. A trembling fingertip over glass, two keys humming under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-LC",
         "Ref-ROOM4"
@@ -2338,9 +2406,9 @@
     },
     {
       "id": "c4_l18",
-      "description": "c4_l18 歸零場景：燈滅，拔接頭，臍帶斷",
+      "description": "c4_l18 旁白：燈光熄滅，拔掉數據接頭",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is the chilled room from <Picture 1>:\na frigid small room falling dark as the countdown zeroes.\n\n<Subject 2> is Lu Cheng's hand from <Picture 2>:\nthe hand of an East Asian man around thirty in a grey uniform sleeve, tearing free the wrist link.\n\nsummary:\nReference-based link-tearing darkness shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: partially_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice.\n\ndetailed_description:\n\nVisual style:\nThe light dies frame by frame into darkness.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nThe countdown zeroes and the room lights die. In the dark, Lu Cheng's hand rips the data link from his wrist, severing the single cord between him and the collective, no voice. Darkness holds.\n\noverall_soundscape:\nThe dying click of lights, a rip of the link with no voice, absolute dark hush. Strict silence of any human voice.\n\nnon_diegetic_music:\nN/A",
+      "prompt": "subject_definitions:\n<Subject 1> is the chilled room from <Picture 1>:\na frigid small room falling dark as the countdown zeroes.\n\n<Subject 2> is Lu Cheng's hand from <Picture 2>:\nthe hand of an East Asian man around thirty in a grey uniform sleeve, tearing free the wrist link.\n\nsummary:\nReference-based link-tearing darkness narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: partially_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese.\n\ndetailed_description:\n\nVisual style:\nThe light dies frame by frame into darkness.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nThe countdown zeroes and the room lights die. In the dark, Lu Cheng's hand rips the data link from his wrist, severing the single cord between him and the collective. Darkness holds. The narrator speaks over the dark.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No one is on screen to speak.\n<d>\n[中文]\n倒數計時歸零。\n房間的燈光熄滅了，陸誠最後的動作，被定格在黑暗中。\n他沒有按下舉報，也沒有按下註銷。\n他只是拔掉了手腕上的數據接頭——那是聯結他與集體的唯一臍帶。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. The dying click of lights, a rip of the link, absolute dark hush under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
       "refs": [
         "Ref-ROOM4",
         "Ref-LC"
