@@ -1,7 +1,7 @@
 {
   "description": "分級的黃昏全書 phase2完成：plan78塊共655秒＋story89元素（11張t2i素材＋78支r2v）。旁白seed統一311000，場景對白seed 494100起獨立。<d>與plan lines逐字鏡像。",
-  "width": 1216,
-  "height": 832,
+  "width": 768,
+  "height": 432,
   "phase": 2,
   "plan": [
     {
@@ -758,17 +758,19 @@
       "type": "t2i",
       "prompt": "1男，恆溫病房人物參考，場景：慘白無菌病房一角，牆面乾淨無雜物，光線：冷白均勻病房燈，柔和無陰影。角色1（陸誠Lu Cheng）：30歲上下東亞男性，黑色短髮，眼神壓抑疲憊，面無表情嘴唇緊閉，身穿灰色系統導航員制服，手腕戴深灰感測環帶；位於畫面中央，正面面對鏡頭，半身入鏡上半身直立。動作與互動：靜止端坐，雙手自然交疊放腿上，直視鏡頭無多餘動作。寫實攝影風格，電影柔光",
       "refs": [],
-      "out": "s2_lc_ref",
-      "output": "output/s2_lc_ref",
+      "out": "s2_lc_ref_h",
+      "output": "output/s2_lc_ref_h",
       "extra": {
         "cfg": 1,
-        "engine": "zit",
+        "engine": "sdxl",
         "height": 1248,
         "seed": 1001,
         "steps": 8,
         "width": 832,
-        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "prompt_id": "9713d628-3ec6-474a-96a8-d6b7bf822f02"
+        "prompt_id": "9713d628-3ec6-474a-96a8-d6b7bf822f02",
+        "gen16x9": true,
+        "sdxl_prompt": "photorealistic half-body portrait of a 30-year-old East Asian man Lu Cheng, short black hair, exhausted suppressed eyes, expressionless lips tightly closed, grey system navigator uniform, dark grey sensor band on his wrist, seated upright facing camera, hands folded on lap, in a sterile pale hospital ward corner, clean bare walls, cold even white ward lighting, soft no-shadow light, cinematic soft light, photorealistic photography",
+        "sdxl_prompt_id": "0aabb1b9-56a4-4e71-bc11-89a2f2993cfd"
       }
     },
     {
@@ -777,17 +779,19 @@
       "type": "t2i",
       "prompt": "無人物，恆溫病房空景參考，場景：慘白無菌恆溫病房，單人病床鋪白毯，床頭桌放幾顆新鮮橘子，牆上掛衡系統感測面板亮一顆小綠燈，光線：冷白均勻燈加淡淡晨霧，畫面乾淨無人。動作與互動：無，靜止空鏡，鏡頭正對病房全貌，床在左、桌在右、面板在牆上，位置分明不重疊。寫實攝影風格，電影柔光",
       "refs": [],
-      "out": "s2_ward_ref",
-      "output": "output/s2_ward_ref",
+      "out": "s2_ward_ref_h",
+      "output": "output/s2_ward_ref_h",
       "extra": {
         "cfg": 1,
-        "engine": "zit",
+        "engine": "sdxl",
         "height": 1248,
         "prompt_id": "d42e0cb4-15e2-49ea-9c58-1e3104f290ba",
         "seed": 1002,
         "steps": 8,
-        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "width": 832
+        "width": 832,
+        "gen16x9": true,
+        "sdxl_prompt": "empty sterile constant-temperature hospital ward, single hospital bed covered with white blanket, bedside table with fresh oranges, wall system sensor panel glowing a small green light, cold even white lighting with faint morning haze, clean unoccupied room, static wide shot facing the whole ward, bed on the left, table on the right, panel on the wall, photorealistic photography, cinematic soft light",
+        "sdxl_prompt_id": "ff875132-33e1-47ea-a7b4-7083dc2dcf10"
       }
     },
     {
@@ -796,17 +800,19 @@
       "type": "t2i",
       "prompt": "1男，病床人物參考，場景：慘白恆溫病房病床上，光線：冷白柔光照臉。角色1（老父親）：70歲上下東亞男性，瘦削蒼白，灰白稀疏短髮貼頭皮，眼神虛弱但溫和，嘴唇輕閉，白色被毯蓋到胸口，雙手露被外放被面上；位於畫面中央，正面面對鏡頭，半身入鏡頭到胸口。動作與互動：靜止仰躺，頭在上腳在下，全身放鬆無多餘動作。寫實攝影風格，電影柔光",
       "refs": [],
-      "out": "s2_father_ref",
-      "output": "output/s2_father_ref",
+      "out": "s2_father_ref_h",
+      "output": "output/s2_father_ref_h",
       "extra": {
         "cfg": 1,
-        "engine": "zit",
+        "engine": "sdxl",
         "height": 1248,
         "seed": 1003,
         "steps": 8,
         "width": 832,
-        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "prompt_id": "f03f391c-352f-4e4c-ba93-2cd61bb78b6c"
+        "prompt_id": "f03f391c-352f-4e4c-ba93-2cd61bb78b6c",
+        "gen16x9": true,
+        "sdxl_prompt": "photorealistic half-body portrait of a gaunt pale 70-year-old East Asian man, sparse grey short hair, weak but gentle eyes, lips gently closed, white blanket covering to his chest, hands resting on the blanket over the covers, lying on a hospital bed facing camera, centered, cold soft light on face, cinematic soft light, photorealistic photography",
+        "sdxl_prompt_id": "afb85a76-6fe4-403c-9c5d-a754c528c4d0"
       }
     },
     {
@@ -815,17 +821,19 @@
       "type": "t2i",
       "prompt": "1女，會客室人物參考，場景：灰色會客室長桌一角，背景乾淨模糊，光線：冷白均勻室內燈，柔和無陰影。角色1（林婉Lin Wan）：40歲上下東亞女性，深色過肩長髮整齊攏耳後，面容憔悴但眼神堅定，嘴唇輕閉，身穿深灰高級技術員制服；位於畫面中央，正面面對鏡頭，半身入鏡上半身直立。動作與互動：靜止端坐，手指不安地交疊放桌上，直視鏡頭無多餘動作。寫實攝影風格，電影柔光",
       "refs": [],
-      "out": "s2_linwan_ref",
-      "output": "output/s2_linwan_ref",
+      "out": "s2_linwan_ref_h",
+      "output": "output/s2_linwan_ref_h",
       "extra": {
         "cfg": 1,
-        "engine": "zit",
+        "engine": "sdxl",
         "height": 1248,
         "seed": 1004,
         "steps": 8,
         "width": 832,
-        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "prompt_id": "ce67beb0-5be0-4a55-a21a-ad94c8d4c591"
+        "prompt_id": "ce67beb0-5be0-4a55-a21a-ad94c8d4c591",
+        "gen16x9": true,
+        "sdxl_prompt": "photorealistic half-body portrait of a 40-year-old East Asian woman Lin Wan, dark shoulder-length hair neatly tucked behind ears, haggard face but determined eyes, lips gently closed, dark grey senior technician uniform, seated upright facing camera in a grey meeting room beside a long table, clean blurred background, cold even indoor lighting, soft no-shadow light, cinematic soft light, photorealistic photography",
+        "sdxl_prompt_id": "1c9d19e2-d8a8-4229-81b2-1d0bc87c3c89"
       }
     },
     {
@@ -834,17 +842,19 @@
       "type": "t2i",
       "prompt": "1男，少年人物參考，場景：昏暗房間一角，身後一幅發光的虛擬畫布滿是深藍色線條，光線：畫布藍光映臉，背景昏暗。角色1（林小禾Lin Xiaohe）：10歲上下東亞男孩，黑色短髮，眼神專注明亮，嘴唇輕閉，身穿素色便服；位於畫面中央，側身面對畫布，半身入鏡。動作與互動：靜止握筆，筆尖停在深藍線條上，凝視畫布無多餘動作。寫實攝影風格，電影柔光",
       "refs": [],
-      "out": "s2_xiaohe_ref",
-      "output": "output/s2_xiaohe_ref",
+      "out": "s2_xiaohe_ref_h",
+      "output": "output/s2_xiaohe_ref_h",
       "extra": {
         "cfg": 1,
-        "engine": "zit",
+        "engine": "sdxl",
         "height": 1248,
         "seed": 1005,
         "steps": 8,
         "width": 832,
-        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "prompt_id": "e97c8453-cac0-4e60-a11a-00fa2f0d5bca"
+        "prompt_id": "e97c8453-cac0-4e60-a11a-00fa2f0d5bca",
+        "gen16x9": true,
+        "sdxl_prompt": "photorealistic half-body portrait of a 10-year-old East Asian boy Lin Xiaohe, short black hair, focused bright eyes, lips gently closed, plain casual clothes, holding a stylus, standing sideways facing a glowing virtual canvas filled with deep blue line strokes, blue canvas glow on his face, dim room, cinematic soft light, photorealistic photography",
+        "sdxl_prompt_id": "121ff42a-e5c1-498f-843e-26c9560a169b"
       }
     },
     {
@@ -853,17 +863,19 @@
       "type": "t2i",
       "prompt": "無人物，灰色會客室空景參考，場景：狹長灰色會客室，長桌配兩張椅，桌上嵌著發光終端機螢幕，牆面乾淨無窗，光線：冷白均勻室內燈，畫面乾淨無人。動作與互動：無，靜止空鏡，鏡頭正對長桌全貌，桌在中、椅分兩側、螢幕在桌上，位置分明不重疊。寫實攝影風格，電影柔光",
       "refs": [],
-      "out": "s2_meet_ref",
-      "output": "output/s2_meet_ref",
+      "out": "s2_meet_ref_h",
+      "output": "output/s2_meet_ref_h",
       "extra": {
         "cfg": 1,
-        "engine": "zit",
+        "engine": "sdxl",
         "height": 1248,
         "seed": 1006,
         "steps": 8,
         "width": 832,
-        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "prompt_id": "543ce568-535f-4f54-bb56-11e1733f72e5"
+        "prompt_id": "543ce568-535f-4f54-bb56-11e1733f72e5",
+        "gen16x9": true,
+        "sdxl_prompt": "empty narrow grey meeting room, long table with two chairs, glowing terminal screen embedded in the table, clean windowless walls, cold even indoor lighting, unoccupied, static wide shot facing the whole table, table centered, chairs on each side, screen on the table, photorealistic photography, cinematic soft light",
+        "sdxl_prompt_id": "a34b4381-ad68-49be-8cad-0cad6e7f4608"
       }
     },
     {
@@ -872,17 +884,19 @@
       "type": "t2i",
       "prompt": "1男，共鳴室人物參考，場景：暖白共鳴室一角，背景圓形座椅模糊，光線：暖白柔光，柔和無陰影。角色1（老張Lao Zhang）：50歲上下東亞男性，灰白短髮，面容溫和，眼神清澈，嘴角帶淡淡微笑嘴唇輕閉，身穿深色系統協調員制服；位於畫面中央，正面面對鏡頭，半身入鏡上半身直立。動作與互動：靜止端坐，雙手自然放膝上，直視鏡頭無多餘動作。寫實攝影風格，電影柔光",
       "refs": [],
-      "out": "s2_zhang_ref",
-      "output": "output/s2_zhang_ref",
+      "out": "s2_zhang_ref_h",
+      "output": "output/s2_zhang_ref_h",
       "extra": {
         "cfg": 1,
-        "engine": "zit",
+        "engine": "sdxl",
         "height": 1248,
         "seed": 1007,
         "steps": 8,
         "width": 832,
-        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "prompt_id": "6578c7dd-6aa3-4b05-a83b-86e7c6840788"
+        "prompt_id": "6578c7dd-6aa3-4b05-a83b-86e7c6840788",
+        "gen16x9": true,
+        "sdxl_prompt": "photorealistic half-body portrait of a 50-year-old East Asian man Lao Zhang, grey-white short hair, gentle face, clear calm eyes, slight warm smile with lips gently closed, dark system coordinator uniform, seated upright facing camera in a warm white resonance room, blurred round seats background, warm soft no-shadow lighting, cinematic soft light, photorealistic photography",
+        "sdxl_prompt_id": "40ea43e5-f661-4cc7-9c81-fc01a6962823"
       }
     },
     {
@@ -891,17 +905,19 @@
       "type": "t2i",
       "prompt": "無人物，辦公隔間空景參考，場景：灰調系統導航員辦公隔間，桌面大螢幕顯示平穩績效曲線，旁置發光終端機，牆面乾淨無雜物，光線：冷白均勻室內燈，畫面乾淨無人。動作與互動：無，靜止空鏡，鏡頭正對桌面全貌，螢幕在中、終端機在右，位置分明不重疊。寫實攝影風格，電影柔光",
       "refs": [],
-      "out": "s2_office_ref",
-      "output": "output/s2_office_ref",
+      "out": "s2_office_ref_h",
+      "output": "output/s2_office_ref_h",
       "extra": {
         "cfg": 1,
-        "engine": "zit",
+        "engine": "sdxl",
         "height": 1248,
         "seed": 1008,
         "steps": 8,
         "width": 832,
-        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "prompt_id": "2e96df37-5a62-485b-b5ce-aba2f1eb7661"
+        "prompt_id": "2e96df37-5a62-485b-b5ce-aba2f1eb7661",
+        "gen16x9": true,
+        "sdxl_prompt": "empty grey system navigator office cubicle, large desk screen showing a steady performance curve, glowing terminal beside it, clean bare walls, cold even indoor lighting, unoccupied, static wide shot facing the desk, screen centered, terminal on the right, photorealistic photography, cinematic soft light",
+        "sdxl_prompt_id": "2deff608-82d5-4aa9-8595-d0da6f7e2cd2"
       }
     },
     {
@@ -910,17 +926,19 @@
       "type": "t2i",
       "prompt": "無人物，集體共鳴室空景參考，場景：暖白圓形共鳴室，環形座椅圍成一圈，每座配感測頭環，地面乾淨反光，光線：暖白均勻燈，柔和寧靜，畫面乾淨無人。動作與互動：無，靜止空鏡，鏡頭正對圓心全貌，座椅環列間距均勻互不重疊。寫實攝影風格，電影柔光",
       "refs": [],
-      "out": "s2_reson_ref",
-      "output": "output/s2_reson_ref",
+      "out": "s2_reson_ref_h",
+      "output": "output/s2_reson_ref_h",
       "extra": {
         "cfg": 1,
-        "engine": "zit",
+        "engine": "sdxl",
         "height": 1248,
         "seed": 1009,
         "steps": 8,
         "width": 832,
-        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "prompt_id": "b6b109ba-6d7a-4493-8c79-51b5a2793641"
+        "prompt_id": "b6b109ba-6d7a-4493-8c79-51b5a2793641",
+        "gen16x9": true,
+        "sdxl_prompt": "empty warm white round collective resonance room, ring seats arranged in a circle, each seat with a sensor headband, clean reflective floor, warm even calm lighting, unoccupied, static wide shot facing the center, seats evenly spaced, photorealistic photography, cinematic soft light",
+        "sdxl_prompt_id": "6459a9d0-0d6c-4a22-8ba2-9685d6a32f62"
       }
     },
     {
@@ -929,17 +947,19 @@
       "type": "t2i",
       "prompt": "無人物，狹小公寓空景參考，場景：冷調狹小公寓，舊沙發面對小螢幕，桌上放一枚領航員勳章，窗外是夜色街道與暖色路燈，光線：室內冷白燈混窗外暖光，畫面乾淨無人。動作與互動：無，靜止空鏡，鏡頭正對房間全貌，沙發在中、桌在右、窗在後，位置分明不重疊。寫實攝影風格，電影柔光",
       "refs": [],
-      "out": "s2_home_ref",
-      "output": "output/s2_home_ref",
+      "out": "s2_home_ref_h",
+      "output": "output/s2_home_ref_h",
       "extra": {
         "cfg": 1,
-        "engine": "zit",
+        "engine": "sdxl",
         "height": 1248,
         "seed": 1010,
         "steps": 8,
         "width": 832,
-        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "prompt_id": "7a70fc8e-88d9-4b0c-bdc3-092cc3425912"
+        "prompt_id": "7a70fc8e-88d9-4b0c-bdc3-092cc3425912",
+        "gen16x9": true,
+        "sdxl_prompt": "empty cold narrow apartment, old sofa facing a small screen, a navigator medal on the table, night street with warm streetlights outside the window, cold indoor white light mixed with warm window light, unoccupied, static wide shot facing the room, sofa in center, table at right, window in back, photorealistic photography, cinematic soft light",
+        "sdxl_prompt_id": "63bcbbec-e638-4460-9a6b-ef46a9c5f1a5"
       }
     },
     {
@@ -948,17 +968,19 @@
       "type": "t2i",
       "prompt": "無人物，寒冷公寓房間空景參考，場景：冷冽小房間，牆掛大螢幕，一扇大窗正對遠方巨大能源塔的藍色光輝，塔影下是黑暗荒原，光線：螢幕冷光混窗外藍光，呼出白氣的寒意，畫面乾淨無人。動作與互動：無，靜止空鏡，鏡頭正對窗與塔，窗在中、塔在遠、荒原在下，位置分明不重疊。寫實攝影風格，電影柔光",
       "refs": [],
-      "out": "s2_room4_ref",
-      "output": "output/s2_room4_ref",
+      "out": "s2_room4_ref_h",
+      "output": "output/s2_room4_ref_h",
       "extra": {
         "cfg": 1,
-        "engine": "zit",
+        "engine": "sdxl",
         "height": 1248,
         "seed": 1011,
         "steps": 8,
         "width": 832,
-        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "prompt_id": "376d3c35-64d0-4708-9cc5-d00482811021"
+        "prompt_id": "376d3c35-64d0-4708-9cc5-d00482811021",
+        "gen16x9": true,
+        "sdxl_prompt": "empty cold small apartment room, large screen on the wall, big window facing a distant giant energy tower with blue glow, dark wasteland under the tower shadow, cold screen light mixed with blue window light, chill in the air, unoccupied, static wide shot facing the window and tower, window in center, tower far, wasteland below, photorealistic photography, cinematic soft light",
+        "sdxl_prompt_id": "bb0967ae-6120-448b-869e-13ab6eda2e4f"
       }
     },
     {
@@ -1265,7 +1287,11 @@
       "out": "s2_c2_l3_video",
       "output": "",
       "extra": {
-        "speaker": "林婉"
+        "prompt_id": "369a03f2-c011-47d9-b2d9-863b79f03984",
+        "speaker": "林婉",
+        "v1_width": 512,
+        "v1_height": 288,
+        "ref_h_noted": true
       }
     },
     {
@@ -1312,7 +1338,10 @@
       "out": "s2_c2_l6_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "2427e248-57fe-428f-9f4c-7665a95020a1",
+        "voice": "narrator-male",
+        "v1_width": 1536,
+        "v1_height": 864
       }
     },
     {
