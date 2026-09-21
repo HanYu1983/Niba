@@ -4,7 +4,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { createRequire } from "node:module";
 import { z } from "zod";
-import { dirname, resolve, join, basename, parse } from "node:path";
+import { dirname, resolve, join, basename, parse, isAbsolute } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mergeVideos } from "./merge_service.mjs";
 
@@ -45,7 +45,8 @@ async function uploadFile(filename, buf) {
 }
 
 function outArg(subdir) {
-  return subdir ? resolve(HERE, "output", subdir) : resolve(HERE, "output");
+  if (!subdir) return resolve(HERE, "output");
+  return isAbsolute(subdir) ? subdir : resolve(HERE, "output", subdir);
 }
 
 function setIfSet(inputs, key, value) {
@@ -359,7 +360,7 @@ export function createMcpServer() {
       denoise: z.number().min(0).max(1).optional(),
       batch_size: z.number().int().min(1).max(16).optional(),
       negative_prompt: z.string().optional().describe("override the default negative prompt"),
-      out: z.string().optional().describe("subdirectory under output/, e.g. 'car'")
+      out: z.string().optional().describe("output directory: subdirectory under output/ (e.g. 'car') or an absolute path")
     },
     async (p) => {
       const seed = p.seed ?? Math.floor(Math.random() * 2 ** 32);
@@ -396,7 +397,7 @@ export function createMcpServer() {
       scheduler: z.string().optional().describe("e.g. simple (default), karras, normal"),
       denoise: z.number().min(0).max(1).optional(),
       batch_size: z.number().int().min(1).max(16).optional(),
-      out: z.string().optional().describe("subdirectory under output/, e.g. 'car'")
+      out: z.string().optional().describe("output directory: subdirectory under output/ (e.g. 'car') or an absolute path")
     },
     async (p) => {
       const seed = p.seed ?? Math.floor(Math.random() * 2 ** 32);
@@ -460,7 +461,7 @@ export function createMcpServer() {
       max_length: z.number().int().min(1).optional().describe("max generated tokens (default 256)"),
       seed: z.number().int().nonnegative().optional().describe("sampling seed (default 0)"),
       temperature: z.number().min(0).max(2).optional().describe("sampling temperature (default 0.7)"),
-      out: z.string().optional().describe("subdirectory under output/ to save the generated .txt")
+      out: z.string().optional().describe("output directory for the generated .txt: subdirectory under output/ or an absolute path")
     },
     async (p) => {
       const name = `mcp_${Date.now()}_${basename(p.image)}`;
@@ -482,7 +483,7 @@ export function createMcpServer() {
       duration: z.number().min(1).max(60).default(5).optional(),
       width: z.number().int().min(64).max(4096).step(32).optional().describe("video width, default from workflow (e.g. 512)"),
       height: z.number().int().min(64).max(4096).step(32).optional().describe("video height, default from workflow"),
-      out: z.string().optional().describe("subdirectory under output/, e.g. 'fight'")
+      out: z.string().optional().describe("output directory: subdirectory under output/ (e.g. 'fight') or an absolute path")
     },
     async (p) => {
       const seed = p.seed ?? Math.floor(Math.random() * 2 ** 32);
@@ -506,7 +507,7 @@ export function createMcpServer() {
       duration: z.number().min(1).max(60).default(5).optional(),
       width: z.number().int().min(64).max(4096).step(32).optional().describe("video width, default from workflow (e.g. 512)"),
       height: z.number().int().min(64).max(4096).step(32).optional().describe("video height, default from workflow"),
-      out: z.string().optional().describe("subdirectory under output/")
+      out: z.string().optional().describe("output directory: subdirectory under output/ or an absolute path")
     },
     async (p) => {
       const seed = p.seed ?? Math.floor(Math.random() * 2 ** 32);
@@ -550,7 +551,7 @@ export function createMcpServer() {
       duration: z.number().min(1).max(60).default(5).optional(),
       width: z.number().int().min(64).max(4096).step(32).optional().describe("video width, default from workflow (352)"),
       height: z.number().int().min(64).max(4096).step(32).optional().describe("video height, default from workflow (608)"),
-      out: z.string().optional().describe("subdirectory under output/")
+      out: z.string().optional().describe("output directory: subdirectory under output/ or an absolute path")
     },
     async (p) => {
       const images = [p.ref_image_0, p.ref_image_1, p.ref_image_2, p.ref_image_3, p.ref_image_4, p.ref_image_5, p.ref_image_6, p.ref_image_7, p.ref_image_8].filter(Boolean);
@@ -654,7 +655,7 @@ export function createMcpServer() {
     "Download finished output files for a prompt_id from the ComfyUI history into output/. Use this to recover jobs whose background auto-download was lost (timeout, server restart, or queue cancellation).",
     {
       prompt_id: z.string().min(1).describe("A finished prompt_id present in ComfyUI history"),
-      out: z.string().optional().describe("subdirectory under output/ (default 'recovered')"),
+      out: z.string().optional().describe("output directory: subdirectory under output/ (default 'recovered') or an absolute path"),
       filename: z.string().optional().describe("only download outputs whose filename matches (basename, e.g. MiniMax_H3_00161_.mp4)")
     },
     async (p) => {
@@ -687,7 +688,7 @@ export function createMcpServer() {
     "GAN-upscale a local mp4 with the RealESRGAN x4 model through ComfyUI (LoadVideo -> GetVideoComponents -> ImageUpscaleWithModel -> CreateVideo -> SaveVideo). Uploads the video to ComfyUI input, submits the upscale workflow, and background-downloads the enlarged video.",
     {
       file: z.string().describe("local path to the mp4 video to upscale"),
-      out: z.string().optional().describe("subdirectory under output/, e.g. 'upscaled'"),
+      out: z.string().optional().describe("output directory: subdirectory under output/ (e.g. 'upscaled') or an absolute path"),
       model: z.string().optional().describe("UpscaleModelLoader model filename, default RealESRGAN_x4plus.safetensors")
     },
     async (p) => {
@@ -706,7 +707,7 @@ export function createMcpServer() {
     "Concatenate multiple local mp4 videos into a single mp4 in the given order. All inputs are re-encoded to a uniform resolution (default 352x608, 2:3) so mixed sizes merge cleanly without black bars or stretching; audio tracks are mixed and re-encoded together.",
     {
       files: z.array(z.string()).min(2).describe("ordered absolute paths to the mp4 files to merge (first file plays first)"),
-      out: z.string().describe("subdirectory under output/, e.g. 'final', 'story1_ch1'"),
+      out: z.string().describe("output directory: subdirectory under output/ (e.g. 'final', 'story1_ch1') or an absolute path"),
       resolution: z.string().optional().describe("target W:H, default '352:608' (use one fixed resolution across the whole project for clean assembly)")
     },
     async (p) => {
@@ -721,7 +722,7 @@ export function createMcpServer() {
     "Extract every frame of a local mp4 video into PNG images using ffmpeg-static. Output files are written as <video>_f0001.png ... into the given out subdirectory. Use extract_last_frame instead when you only need the final frame (much faster).",
     {
       file: z.string().min(1).describe("local path to the mp4 video to split"),
-      out: z.string().optional().describe("subdirectory under output/, default 'frames'"),
+      out: z.string().optional().describe("output directory: subdirectory under output/ (default 'frames') or an absolute path"),
       name: z.string().optional().describe("output filename prefix, default = video filename without extension")
     },
     async (p) => {
@@ -740,7 +741,7 @@ export function createMcpServer() {
     "Extract the TRUE final frame of a local mp4 video as a single PNG using ffmpeg. It decodes the last ~2 seconds of the clip and keeps the last decoded frame, which is frame-accurate and still far faster than decoding the whole movie. (Note: a plain '-sseof -1 -frames:v 1' trusts the container duration and returns the first frame one second before the end, i.e. ~24 frames early at 24fps.) Useful for grabbing the last frame of an i2v clip to reuse as the next block's first frame or a reference image.",
     {
       file: z.string().min(1).describe("local path to the mp4 video"),
-      out: z.string().optional().describe("subdirectory under output/, default 'frames'"),
+      out: z.string().optional().describe("output directory: subdirectory under output/ (default 'frames') or an absolute path"),
       name: z.string().optional().describe("output file name without extension, default = video filename without extension + '_last'")
     },
     async (p) => {

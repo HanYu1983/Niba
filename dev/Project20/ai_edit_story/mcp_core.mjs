@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { readFileSync, writeFileSync, mkdirSync, existsSync, renameSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, renameSync, readdirSync, statSync } from "node:fs";
 import { z } from "zod";
-import { dirname, resolve, isAbsolute } from "node:path";
+import { dirname, resolve, isAbsolute, join, extname, basename } from "node:path";
 
 const TYPES = ["t2i", "t2v", "i2v", "r2v"];
 const VOICES = ["scene", "dialogue", "narration"]; // 場景 / 對白 / 旁白
@@ -40,7 +40,7 @@ function loadStory(inAbs) {
 
 function saveStory(outAbs, data) {
   mkdirSync(dirname(outAbs), { recursive: true });
-  const tmp = outAbs + `.tmp_${Date.now()}`;
+  const tmp = outAbs + `.tmp_${Date.now()}_${process.pid}_${Math.floor(Math.random() * 1e9)}`;
   writeFileSync(tmp, JSON.stringify(data, null, 2) + "\n", "utf-8");
   renameSync(tmp, outAbs);
 }
@@ -159,25 +159,63 @@ function collectChain(story, startId) {
   return { order, missing, cycles };
 }
 
-function checkOutputExists(jsonDir, baseDir, output) {
-  if (!output || (typeof output === "string" && output.trim() === "")) {
-    return { exists: false, reason: "no output field", checked: [] };
+const IMG_EXTS = new Set([".png", ".jpg", ".jpeg", ".webp"]);
+const VID_EXTS = new Set([".mp4", ".webm", ".mov", ".m4v"]);
+const extsFor = (type) => (type === "t2i" ? IMG_EXTS : VID_EXTS);
+
+function walkFiles(dir, acc = []) {
+  let ents;
+  try { ents = readdirSync(dir, { withFileTypes: true }); } catch { return acc; }
+  for (const e of ents) {
+    const p = join(dir, e.name);
+    if (e.isDirectory()) walkFiles(p, acc);
+    else if (e.isFile()) acc.push(p);
   }
-  const candidates = [];
-  if (isAbsolute(output)) {
-    candidates.push(output);
-  } else {
-    if (baseDir) candidates.push(resolve(baseDir, output));
-    candidates.push(resolve(jsonDir, output));
-    candidates.push(resolve(output));
+  return acc;
+}
+
+function trailingNumber(file) {
+  const m = basename(file).replace(/\.[^.]+$/, "").match(/(\d+)\D*$/);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+// 從資料夾挑檔：號碼最大者；都無號碼則取排序第一個（.txt 旁注一律忽略）
+function pickMediaFile(dir, exts) {
+  const files = walkFiles(dir)
+    .filter((p) => exts.has(extname(p).toLowerCase()))
+    .sort();
+  if (!files.length) return null;
+  let best = null, bestNum = -1, scored = false;
+  for (const f of files) {
+    const n = trailingNumber(f);
+    if (n !== null) { scored = true; if (n > bestNum) { bestNum = n; best = f; } }
   }
-  const checked = [];
-  for (const c of candidates) {
-    const ok = existsSync(c);
-    checked.push(c);
-    if (ok) return { exists: true, matched: c, checked };
+  return scored ? best : files[0];
+}
+
+// ref 輸出解析：output 可為檔案或資料夾（資料夾自動挑號碼最大者）；output 為空則退回 out 目錄
+function resolveRefPath(el, jsonDir, baseDir) {
+  const sources = [];
+  if (el.output && String(el.output).trim()) sources.push(["output", String(el.output).trim()]);
+  if (el.out && String(el.out).trim()) sources.push(["out", String(el.out).trim()]);
+  const tried = [];
+  for (const [key, raw] of sources) {
+    const paths = isAbsolute(raw) ? [raw] : [resolve(baseDir, raw), resolve(baseDir, "output", raw), resolve(jsonDir, raw)];
+    for (const c of paths) {
+      tried.push(c);
+      let st = null;
+      try { st = statSync(c); } catch { continue; }
+      if (st.isFile()) {
+        if (!extsFor(el.type).has(extname(c).toLowerCase())) continue;
+        return { path: c, via: key, kind: "file", tried };
+      }
+      if (st.isDirectory()) {
+        const pick = pickMediaFile(c, extsFor(el.type));
+        if (pick) return { path: pick, via: key, kind: "dir-pick", tried };
+      }
+    }
   }
-  return { exists: false, checked };
+  return { path: null, tried };
 }
 
 // ---------- SRT ----------
@@ -280,7 +318,7 @@ const ok = (obj) => ({ content: [{ type: "text", text: JSON.stringify(obj, null,
 // ---------- server ----------
 
 export function createMcpServer() {
-  const server = new McpServer({ name: "story-editor", version: "2.0.0" });
+  const server = new McpServer({ name: "story-editor", version: "2.4.0" });
 
   server.tool(
     "story_init",
@@ -654,11 +692,55 @@ export function createMcpServer() {
       const baseDir = p.base_dir ? resolve(p.base_dir) : process.cwd();
       const rows = order.map((id) => {
         const el = byId.get(id);
-        const r = checkOutputExists(jsonDir, baseDir, el.output);
-        return { id, type: el.type, output: el.output ?? null, exists: r.exists, matched: r.matched ?? null, checked: r.checked, reason: r.reason ?? null };
+        const r = resolveRefPath(el, jsonDir, baseDir);
+        return { id, type: el.type, output: el.output ?? null, resolved: r.path, via: r.path ? `${r.via}:${r.kind}` : null, exists: !!r.path };
       });
       const allExist = rows.every((r) => r.exists);
       return ok({ start: p.id, all_exist: allExist, ready: allExist && !missing.length && !cycles.length, missing_refs: missing, cycles, rows });
+    }
+  );
+
+  server.tool(
+    "story_submit_bundle",
+    "Build the ComfyUI submission bundle for one element: top-level width/height, plan duration/voice, seed/out/type/prompt, and refs resolved to existing files (output is folder-level; the max-numbered file is auto-picked, first file if unnumbered). Unready refs error out with guidance instead of returning a half bundle.",
+    {
+      file: z.string().describe("Story JSON path"),
+      id: z.string().min(1).describe("element id to submit to ComfyUI"),
+      base_dir: z.string().optional().describe("base dir that relative ref-output paths resolve against (e.g. ai_gen_video dir); default = cwd")
+    },
+    async (p) => {
+      const abs = resolve(p.file);
+      const data = loadStory(abs);
+      const el = findById(data.story, p.id);
+      if (!el) throw new Error(`story id not found: "${p.id}"`);
+      const plan = findById(data.plan, p.id);
+      const jsonDir = dirname(abs);
+      const baseDir = p.base_dir ? resolve(p.base_dir) : process.cwd();
+      const missing = [];
+      const refs = [];
+      for (const r of normalizeRefs(el.refs)) {
+        const rel = findById(data.story, r);
+        if (!rel) { missing.push(`${r}（元素不存在）`); continue; }
+        const hit = resolveRefPath(rel, jsonDir, baseDir);
+        if (!hit.path) { missing.push(`${r}（找不到可用檔案：先生成該參考，輸出目錄已有檔會自動挑號碼最大者）`); continue; }
+        refs.push({ id: r, type: rel.type, path: hit.path, via: `${hit.via}:${hit.kind}` });
+      }
+      if (missing.length) {
+        throw new Error(`"${p.id}" 的提交包組不起來，ref 輸出未就緒：\n- ${missing.join("\n- ")}\n先把缺的 refs 生成出來（輸出進其 out 目錄即可，取包時自動挑號碼最大者）後重試。`);
+      }
+      return ok({
+        id: p.id,
+        type: el.type,
+        width: data.width ?? null,
+        height: data.height ?? null,
+        duration: plan ? plan.duration : null,
+        voice: plan ? plan.voice : null,
+        seed: el.seed ?? null,
+        out: el.out ?? null,
+        prompt: el.prompt,
+        refs,
+        ...(el.extra !== undefined ? { extra: el.extra } : {})
+      });
     }
   );
 

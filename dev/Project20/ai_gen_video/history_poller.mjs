@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
-import { resolve, dirname, join, basename } from "node:path";
+import { resolve, dirname, join, basename, isAbsolute } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -88,7 +88,7 @@ async function pollOnce(state) {
 
 async function downAndRecord(state, job, it) {
   const rec = state[job.id] || {};
-  const base = join(resolve(HERE, "output"), job.out);
+  const base = job.out && isAbsolute(job.out) ? job.out : join(resolve(HERE, "output"), job.out || "");
   const prev = rec.files || [];
   const items = [it];
   for (const item of items) {
