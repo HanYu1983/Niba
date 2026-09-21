@@ -4,6 +4,7 @@ import { z } from "zod";
 import { dirname, resolve, isAbsolute } from "node:path";
 
 const TYPES = ["t2i", "t2v", "i2v", "r2v"];
+const VOICES = ["scene", "dialogue", "narration"]; // 場景 / 對白 / 旁白
 
 // ---------- JSON IO (input/output path, same => overwrite) ----------
 
@@ -22,12 +23,17 @@ function loadStory(inAbs) {
     throw new Error(`invalid JSON in ${inAbs}: ${e.message}`);
   }
   if (typeof data !== "object" || data === null || Array.isArray(data)) {
-    throw new Error(`story JSON must be a JSON object with {description, story}, got: ${typeof data}`);
+    throw new Error(`story JSON must be a JSON object, got: ${typeof data}`);
   }
-  if (data.story !== undefined && (typeof data.story !== "object" || data.story === null || Array.isArray(data.story))) {
-    throw new Error(`story JSON field "story" must be dict[key,object], got: ${typeof data.story}`);
+  if (data.story !== undefined && !Array.isArray(data.story)) {
+    throw new Error(`story JSON field "story" must be an array of {id,...} (dict format retired in v2; migrate keys to id fields)`);
   }
-  if (!data.story) data.story = {};
+  if (data.plan !== undefined && !Array.isArray(data.plan)) {
+    throw new Error(`story JSON field "plan" must be an array of {id, voice, duration, lines}`);
+  }
+  if (!data.story) data.story = [];
+  if (!data.plan) data.plan = [];
+  if (data.phase === undefined) data.phase = 1;
   if (data.description === undefined) data.description = "";
   return data;
 }
@@ -39,7 +45,20 @@ function saveStory(outAbs, data) {
   renameSync(tmp, outAbs);
 }
 
-// ---------- element helpers ----------
+// ---------- array helpers ----------
+
+function findById(arr, id) {
+  return arr.find((e) => e && e.id === id);
+}
+
+function requireUnique(arr, label) {
+  const seen = new Set();
+  for (const e of arr) {
+    if (!e || typeof e.id !== "string" || !e.id) throw new Error(`${label} has an element with missing/empty id`);
+    if (seen.has(e.id)) throw new Error(`${label} has duplicate id: "${e.id}"`);
+    seen.add(e.id);
+  }
+}
 
 function normalizeRefs(refs) {
   if (refs === undefined || refs === null) return [];
@@ -48,34 +67,96 @@ function normalizeRefs(refs) {
   throw new Error(`refs must be string | string[], got: ${typeof refs}`);
 }
 
-function getElement(data, key) {
-  const el = data.story[key];
-  if (!el) throw new Error(`element not found: "${key}" (available: ${Object.keys(data.story).join(", ") || "(empty)"})`);
-  return el;
+// ---------- phase gates ----------
+
+function requirePhase(data, want) {
+  if (data.phase !== want) {
+    if (want === 2) {
+      const missing = planProblems(data.plan);
+      throw new Error(
+        `phase1 規劃階段：story 尚未開放填寫。請先用 plan_add_element 建立分鏡（每塊需 id／voice／duration，dialogue／narration 另需 lines），` +
+        `用 plan_get 檢查字幕表與累積秒數，完成後 story_set_phase → 2 再填 story 元素。` +
+        (missing.length ? `目前 plan 問題：${missing.join("；")}` : `目前 plan 為空。`)
+      );
+    } else {
+      throw new Error(
+        `phase2 已鎖定規劃：plan 不可再改。如需修改 plan，先 story_set_phase → 1 解鎖（注意：既有 story 保留，但可能與 plan 脫鉤，story_validate 會標 warnings）。`
+      );
+    }
+  }
 }
 
-// dependency closure, deps-first order; throws on cycle
-function collectChain(story, startKey) {
+function planProblems(plan) {
+  const problems = [];
+  if (!plan.length) return ["plan 為空"];
+  const seen = new Set();
+  for (const p of plan) {
+    if (!p || typeof p.id !== "string" || !p.id) { problems.push("plan 有缺 id 的項目"); continue; }
+    if (seen.has(p.id)) problems.push(`plan id 重複："${p.id}"`);
+    seen.add(p.id);
+    if (!VOICES.includes(p.voice)) problems.push(`"${p.id}" voice 非法（須為 ${VOICES.join("/")})`);
+    if (typeof p.duration !== "number" || !(p.duration >= 1 && p.duration <= 60)) problems.push(`"${p.id}" duration 須為 1~60 秒`);
+    const lines = Array.isArray(p.lines) ? p.lines : [];
+    if ((p.voice === "dialogue" || p.voice === "narration") && !lines.filter((l) => typeof l === "string" && l.trim()).length) {
+      problems.push(`"${p.id}"（${p.voice}）缺 lines 對白／旁白逐句`);
+    }
+    if (p.voice === "scene" && lines.filter((l) => typeof l === "string" && l.trim()).length) {
+      problems.push(`"${p.id}"（scene）不應有 lines`);
+    }
+  }
+  return problems;
+}
+
+// 累積起點表（規劃秒）：跟 6.5 字幕表的累積起點同義
+function planTable(plan) {
+  let acc = 0;
+  const rows = plan.map((p) => {
+    const lines = (Array.isArray(p.lines) ? p.lines : []).filter((l) => typeof l === "string" && l.trim());
+    const row = {
+      id: p.id,
+      voice: p.voice,
+      duration: p.duration,
+      start: acc,
+      italic: p.voice === "narration",
+      lines
+    };
+    acc += p.duration;
+    return row;
+  });
+  return { rows, total: acc };
+}
+
+// ---------- <d> mirror ----------
+
+function extractDLines(prompt) {
+  const m = typeof prompt === "string" ? prompt.match(/<d>([\s\S]*?)<\/d>/) : null;
+  if (!m) return null;
+  return m[1].split("\n").map((s) => s.trim()).filter((s) => s && s !== "[中文]");
+}
+
+const normLines = (ls) => (ls || []).map((s) => String(s).trim()).filter(Boolean);
+
+// ---------- dependency chain (array-based, deps-first) ----------
+
+function collectChain(story, startId) {
+  const byId = new Map(story.map((e) => [e.id, e]));
   const visited = new Set();
   const order = [];
   const missing = [];
-  const cyclePath = [];
-  const dfs = (key, path) => {
-    if (visited.has(key)) return;
-    const el = story[key];
-    if (!el) { if (!missing.includes(key)) missing.push(key); return; }
-    if (path.includes(key)) {
-      cyclePath.push([...path, key].join(" -> "));
-      return;
-    }
-    path.push(key);
+  const cycles = [];
+  const dfs = (id, path) => {
+    if (visited.has(id)) return;
+    const el = byId.get(id);
+    if (!el) { if (!missing.includes(id)) missing.push(id); return; }
+    if (path.includes(id)) { cycles.push([...path, id].join(" -> ")); return; }
+    path.push(id);
     for (const r of normalizeRefs(el.refs)) dfs(r, path);
     path.pop();
-    visited.add(key);
-    order.push(key);
+    visited.add(id);
+    order.push(id);
   };
-  dfs(startKey, []);
-  return { order, missing, cycles: cyclePath };
+  dfs(startId, []);
+  return { order, missing, cycles };
 }
 
 function checkOutputExists(jsonDir, baseDir, output) {
@@ -99,16 +180,82 @@ function checkOutputExists(jsonDir, baseDir, output) {
   return { exists: false, checked };
 }
 
+// ---------- SRT ----------
+
+function fmtSrtTime(sec) {
+  const ms = Math.max(0, Math.round(sec * 1000));
+  const h = String(Math.floor(ms / 3600000)).padStart(2, "0");
+  const m = String(Math.floor((ms % 3600000) / 60000)).padStart(2, "0");
+  const s = String(Math.floor((ms % 60000) / 1000)).padStart(2, "0");
+  const r = String(ms % 1000).padStart(3, "0");
+  return `${h}:${m}:${s},${r}`;
+}
+
+// plan + 實際總秒 → SRT cues（6.5：scale 換算；短句置中偏前；長句均分；旁白包 <i>）
+function buildSrtCues(plan, totalSeconds) {
+  const { rows, total } = planTable(plan);
+  if (!total) throw new Error("plan 為空或總規劃秒為 0，無法產 SRT");
+  const scale = totalSeconds / total;
+  const cues = [];
+  for (const r of rows) {
+    if (r.voice === "scene" || !r.lines.length) continue;
+    const rate = r.voice === "dialogue" ? 4 : 5; // 字／秒
+    const est = r.lines.map((l) => Math.max(0.5, [...l].length / rate));
+    const sumEst = est.reduce((a, b) => a + b, 0);
+    const fit = sumEst > r.duration ? r.duration / sumEst : 1;
+    let t = r.start;
+    if (r.lines.length === 1) {
+      const d = Math.min(est[0] * fit, r.duration);
+      const lead = (r.duration - d) * 0.4; // 短句置中偏前
+      const s = (t + lead) * scale, e = (t + lead + d) * scale;
+      cues.push({ start: s, end: e, text: r.voice === "narration" ? `<i>${r.lines[0]}</i>` : r.lines[0] });
+    } else {
+      const slot = r.duration / r.lines.length;
+      r.lines.forEach((line, i) => {
+        const d = Math.min(est[i] * fit, slot);
+        const lead = (slot - d) * 0.3;
+        const s = (t + slot * i + lead) * scale, e = (t + slot * i + lead + d) * scale;
+        cues.push({ start: s, end: e, text: r.voice === "narration" ? `<i>${line}</i>` : line });
+      });
+    }
+  }
+  cues.sort((a, b) => a.start - b.start);
+  return { cues, scale, plannedTotal: total, actualTotal: totalSeconds };
+}
+
+function cuesToSrt(cues) {
+  return cues.map((c, i) => `${i + 1}\n${fmtSrtTime(c.start)} --> ${fmtSrtTime(c.end)}\n${c.text}`).join("\n\n") + "\n";
+}
+
+// ---------- schemas ----------
+
+const EXTRA_DESC = "AI自由運用的額外資訊欄（object）：提交 ComfyUI 生成時參考用，可放 engine、ckpt/unet、negative_prompt、ref_videos/ref_audios、字幕文字、QA備註、v2重試紀錄等；不參與依賴鏈與 output 檢查";
+
+const PlanInput = z.object({
+  id: z.string().min(1).describe("block id, referenced by story elements of the same id"),
+  description: z.string().optional().describe("AI-facing note for this block"),
+  voice: z.enum(["scene", "dialogue", "narration"]).describe("scene=無字幕場景；dialogue=對白；narration=旁白（匯出斜體）"),
+  duration: z.number().min(1).max(60).describe("planned seconds for this block"),
+  lines: z.array(z.string()).optional().describe("dialogue/narration verbatim lines (one subtitle cue per line); omit for scene")
+});
+
+const PlanPatch = z.object({
+  description: z.string().optional().nullable(),
+  voice: z.enum(["scene", "dialogue", "narration"]).optional(),
+  duration: z.number().min(1).max(60).optional(),
+  lines: z.array(z.string()).optional().nullable()
+});
+
 const ElementInput = z.object({
+  id: z.string().min(1).describe("element id; must match a plan id, except t2i assets which stand alone"),
   description: z.string().optional().describe("AI-facing note for this element (each level has description)"),
   type: z.enum(["t2i", "t2v", "i2v", "r2v"]).describe("element type"),
   prompt: z.string().min(1).describe("prompt text for this element"),
-  refs: z.union([z.string(), z.array(z.string())]).optional().describe('keys of other elements this one depends on, e.g. ["ref1"] or "ref1"'),
+  refs: z.union([z.string(), z.array(z.string())]).optional().describe('ids of other elements this one depends on, e.g. ["ref1"] or "ref1"'),
   seed: z.number().int().nonnegative().optional(),
-  duration: z.number().min(1).max(60).optional(),
   out: z.string().optional().describe("output subdir name, e.g. ch12_l0_video"),
   output: z.string().optional().describe("produced file path after generation, used for dependency output check"),
-  extra: z.record(z.any()).optional().describe("AI自由運用的額外資訊欄（object）：提交 ComfyUI 生成時參考用，可放 engine、ckpt/unet、negative_prompt、ref_videos/ref_audios、字幕文字、QA備註、v2重試紀錄等；不參與依賴鏈與 output 檢查")
+  extra: z.record(z.any()).optional().describe(EXTRA_DESC)
 }).passthrough();
 
 const ElementPatch = z.object({
@@ -117,10 +264,9 @@ const ElementPatch = z.object({
   prompt: z.string().min(1).optional(),
   refs: z.union([z.string(), z.array(z.string())]).optional(),
   seed: z.number().int().nonnegative().optional().nullable(),
-  duration: z.number().min(1).max(60).optional().nullable(),
   out: z.string().optional().nullable(),
   output: z.string().optional().nullable(),
-  extra: z.record(z.any()).optional().nullable().describe("AI自由運用的額外資訊欄（object）：提交 ComfyUI 生成時參考用，可放 engine、ckpt/unet、negative_prompt、ref_videos/ref_audios、字幕文字、QA備註、v2重試紀錄等；不參與依賴鏈與 output 檢查")
+  extra: z.record(z.any()).optional().nullable().describe(EXTRA_DESC)
 }).passthrough();
 
 const MetaPatch = z.object({
@@ -134,11 +280,11 @@ const ok = (obj) => ({ content: [{ type: "text", text: JSON.stringify(obj, null,
 // ---------- server ----------
 
 export function createMcpServer() {
-  const server = new McpServer({ name: "story-editor", version: "1.1.0" });
+  const server = new McpServer({ name: "story-editor", version: "2.0.0" });
 
   server.tool(
     "story_init",
-    "Create an empty Story JSON file {description, width, height, story:{}}. story is dict[key,object]; every level has a description field for AI. width/height live at project level and apply to all elements.",
+    "Create an empty Story JSON file {description, width, height, phase:1, plan:[], story:[]}. Arrays carry {id,...}; array order = merge/subtitle order.",
     {
       file: z.string().describe("path of JSON file to create"),
       description: z.string().optional().describe("project-level description for AI"),
@@ -155,15 +301,17 @@ export function createMcpServer() {
         description: p.description ?? "",
         ...(p.width !== undefined ? { width: p.width } : {}),
         ...(p.height !== undefined ? { height: p.height } : {}),
-        story: {}
+        phase: 1,
+        plan: [],
+        story: []
       });
-      return ok({ status: "created", file: abs });
+      return ok({ status: "created", file: abs, phase: 1 });
     }
   );
 
   server.tool(
     "story_edit_meta",
-    "Edit top-level project fields (description/width/height). Reads input JSON, writes to output JSON (omit output or same path = overwrite). width/height live here, not inside elements.",
+    "Edit top-level project fields (description/width/height). Reads input JSON, writes to output JSON (omit output or same path = overwrite).",
     {
       input: z.string().describe("input Story JSON path"),
       output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
@@ -183,103 +331,261 @@ export function createMcpServer() {
   );
 
   server.tool(
-    "story_add_element",
-    "Add a new element into story dict. Reads input JSON, writes to output JSON (omit output or same path = overwrite). Fails if key exists unless overwrite=true.",
+    "story_set_phase",
+    "Switch creation phase. 1→2 requires a complete plan (every block has id/voice/duration; dialogue/narration have lines) and locks planning. 2→1 unlocks planning (story kept, may drift).",
     {
       input: z.string().describe("input Story JSON path"),
       output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
-      key: z.string().min(1).describe('element key, e.g. "ref1", "scene1"'),
-      element: ElementInput,
-      overwrite: z.boolean().optional().describe("overwrite existing key (default false)")
+      phase: z.enum(["1", "2"]).describe("target phase").transform((v) => Number(v))
     },
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
       const data = loadStory(inAbs);
-      if (data.story[p.key] && !p.overwrite) {
-        throw new Error(`key exists: "${p.key}" (pass overwrite=true to replace)`);
+      if (p.phase === 2) {
+        const problems = planProblems(data.plan);
+        if (problems.length) {
+          throw new Error(`cannot enter phase2, plan incomplete:\n- ${problems.join("\n- ")}\nFix with plan_add_element / plan_edit_element first.`);
+        }
       }
-      data.story[p.key] = {
+      data.phase = p.phase;
+      saveStory(outAbs, data);
+      return ok({
+        status: "phase-set", phase: p.phase, input: inAbs, output: outAbs,
+        ...(p.phase === 2 ? { next: "fill story elements one by one with story_add_element (ids must match plan, except t2i assets)" } : { warning: "planning unlocked; existing story kept but may drift from plan (see story_validate warnings)" })
+      });
+    }
+  );
+
+  // ----- phase1: plan -----
+
+  server.tool(
+    "plan_add_element",
+    "Phase1 only: add a plan block {id, voice, duration, lines}. This is the subtitle table (§6.5): id/voice/duration/lines are enough to export YT subtitles before any video exists.",
+    {
+      input: z.string().describe("input Story JSON path"),
+      output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
+      item: PlanInput,
+      overwrite: z.boolean().optional().describe("overwrite existing plan id (default false)")
+    },
+    async (p) => {
+      const { inAbs, outAbs } = resolveIO(p.input, p.output);
+      const data = loadStory(inAbs);
+      requirePhase(data, 1);
+      if (findById(data.plan, p.item.id) && !p.overwrite) {
+        throw new Error(`plan id exists: "${p.item.id}" (pass overwrite=true to replace)`);
+      }
+      const lines = p.item.voice === "scene" ? [] : normLines(p.item.lines);
+      const entry = {
+        id: p.item.id,
+        ...(p.item.description !== undefined ? { description: p.item.description } : {}),
+        voice: p.item.voice,
+        duration: p.item.duration,
+        lines
+      };
+      const at = data.plan.findIndex((e) => e.id === p.item.id);
+      if (at >= 0) data.plan[at] = entry; else data.plan.push(entry);
+      saveStory(outAbs, data);
+      const { total } = planTable(data.plan);
+      return ok({ status: "plan-added", id: p.item.id, blocks: data.plan.length, planned_total_sec: total, input: inAbs, output: outAbs });
+    }
+  );
+
+  server.tool(
+    "plan_edit_element",
+    "Phase1 only: edit a plan block (partial patch).",
+    {
+      input: z.string().describe("input Story JSON path"),
+      output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
+      id: z.string().min(1),
+      patch: PlanPatch
+    },
+    async (p) => {
+      const { inAbs, outAbs } = resolveIO(p.input, p.output);
+      const data = loadStory(inAbs);
+      requirePhase(data, 1);
+      const el = findById(data.plan, p.id);
+      if (!el) throw new Error(`plan id not found: "${p.id}"`);
+      const next = { ...el };
+      for (const [k, v] of Object.entries(p.patch)) {
+        if (v === undefined) continue;
+        if (v === null) { if (k === "lines" || k === "description") next[k] = k === "lines" ? [] : ""; continue; }
+        next[k] = v;
+      }
+      if (next.voice === "scene") next.lines = [];
+      else if (next.lines !== undefined) next.lines = normLines(next.lines);
+      Object.assign(el, next);
+      saveStory(outAbs, data);
+      const { total } = planTable(data.plan);
+      return ok({ status: "plan-edited", id: p.id, planned_total_sec: total, block: el });
+    }
+  );
+
+  server.tool(
+    "plan_delete_element",
+    "Phase1 only: delete a plan block by id.",
+    {
+      input: z.string().describe("input Story JSON path"),
+      output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
+      id: z.string().min(1)
+    },
+    async (p) => {
+      const { inAbs, outAbs } = resolveIO(p.input, p.output);
+      const data = loadStory(inAbs);
+      requirePhase(data, 1);
+      const at = data.plan.findIndex((e) => e.id === p.id);
+      if (at < 0) throw new Error(`plan id not found: "${p.id}"`);
+      data.plan.splice(at, 1);
+      saveStory(outAbs, data);
+      return ok({ status: "plan-deleted", id: p.id, blocks: data.plan.length });
+    }
+  );
+
+  server.tool(
+    "plan_get",
+    "Phase1 getter: read the subtitle table (§6.5) with computed cumulative starts, per-line cues, italic flags and planned total. Works in any phase; needs no videos.",
+    {
+      file: z.string().describe("Story JSON path")
+    },
+    async (p) => {
+      const abs = resolve(p.file);
+      const data = loadStory(abs);
+      const { rows, total } = planTable(data.plan);
+      return ok({ file: abs, phase: data.phase, blocks: rows.length, planned_total_sec: total, table: rows });
+    }
+  );
+
+  // ----- phase2: story -----
+
+  function checkStoryGate(data, id, type) {
+    requirePhase(data, 2);
+    if (type !== "t2i" && !findById(data.plan, id)) {
+      throw new Error(
+        `id "${id}" 不在 plan 內。phase2 的 story 元素須對應 plan 分鏡（t2i 素材除外）。` +
+        `請回 phase1 用 plan_add_element 先規劃該分鏡，或確認 id 拼寫。plan 現有：${data.plan.map((e) => e.id).join(", ") || "(空)"}`
+      );
+    }
+  }
+
+  server.tool(
+    "story_add_element",
+    "Phase2 only: add a story element {id, type, prompt, refs, seed, out, output, extra}. Duration/width/height come from plan/top-level, not here. Non-t2i ids must match a plan id.",
+    {
+      input: z.string().describe("input Story JSON path"),
+      output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
+      element: ElementInput,
+      overwrite: z.boolean().optional().describe("overwrite existing story id (default false)")
+    },
+    async (p) => {
+      const { inAbs, outAbs } = resolveIO(p.input, p.output);
+      const data = loadStory(inAbs);
+      checkStoryGate(data, p.element.id, p.element.type);
+      if (findById(data.story, p.element.id) && !p.overwrite) {
+        throw new Error(`story id exists: "${p.element.id}" (pass overwrite=true to replace)`);
+      }
+      for (const r of normalizeRefs(p.element.refs)) {
+        if (!findById(data.story, r)) {
+          throw new Error(`ref "${r}" 不存在於 story。先加入被參照元素（素材 t2i 或同 plan 元素），現有：${data.story.map((e) => e.id).join(", ") || "(空)"}`);
+        }
+      }
+      const entry = {
+        id: p.element.id,
         description: p.element.description ?? "",
         type: p.element.type,
         prompt: p.element.prompt,
         refs: normalizeRefs(p.element.refs),
         ...(p.element.seed !== undefined ? { seed: p.element.seed } : {}),
-        ...(p.element.duration !== undefined ? { duration: p.element.duration } : {}),
         ...(p.element.out !== undefined ? { out: p.element.out } : {}),
         ...(p.element.output !== undefined ? { output: p.element.output } : {}),
         ...(p.element.extra !== undefined ? { extra: p.element.extra } : {})
       };
+      const at = data.story.findIndex((e) => e.id === p.element.id);
+      if (at >= 0) data.story[at] = entry; else data.story.push(entry);
       saveStory(outAbs, data);
-      return ok({ status: "added", key: p.key, input: inAbs, output: outAbs, count: Object.keys(data.story).length });
+      return ok({ status: "added", id: p.element.id, input: inAbs, output: outAbs, count: data.story.length });
     }
   );
 
   server.tool(
     "story_edit_element",
-    "Edit an existing element (partial patch merge). Reads input JSON, writes to output JSON (omit output or same path = overwrite). Patch fields replace old values; refs replaced wholesale.",
+    "Phase2 only: edit a story element (partial patch merge). duration/width/height live in plan/top-level: passing them errors with guidance.",
     {
       input: z.string().describe("input Story JSON path"),
       output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
-      key: z.string().min(1),
+      id: z.string().min(1),
       patch: ElementPatch.describe("partial fields to merge into the element")
     },
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
       const data = loadStory(inAbs);
-      const el = getElement(data, p.key);
+      requirePhase(data, 2);
+      const el = findById(data.story, p.id);
+      if (!el) throw new Error(`story id not found: "${p.id}" (available: ${data.story.map((e) => e.id).join(", ") || "(empty)"})`);
+      for (const k of Object.keys(p.patch)) {
+        if (k === "width" || k === "height" || k === "duration") {
+          throw new Error(`"${k}" 不在元素內：duration 由 plan 擁有，width/height 在頂層（改 plan 或 story_edit_meta）。`);
+        }
+      }
       const next = { ...el };
       for (const [k, v] of Object.entries(p.patch)) {
         if (v === undefined) continue;
-        if (k === "width" || k === "height") {
-          throw new Error(`"${k}" lives at project top-level now, not inside elements (use story_edit_meta)`);
+        if (k === "refs") {
+          const rs = normalizeRefs(v);
+          for (const r of rs) {
+            if (!findById(data.story, r)) throw new Error(`ref "${r}" 不存在於 story`);
+          }
+          next.refs = rs;
         }
-        if (k === "refs") next.refs = normalizeRefs(v);
         else if (v === null) delete next[k];
         else next[k] = v;
       }
       if (next.type !== undefined && !TYPES.includes(next.type)) {
         throw new Error(`invalid type "${next.type}", must be one of ${TYPES.join(",")}`);
       }
-      data.story[p.key] = next;
+      Object.assign(el, next);
       saveStory(outAbs, data);
-      return ok({ status: "edited", key: p.key, input: inAbs, output: outAbs, element: next });
+      return ok({ status: "edited", id: p.id, input: inAbs, output: outAbs, element: el });
     }
   );
 
   server.tool(
     "story_delete_element",
-    "Delete an element by key. Reads input JSON, writes to output JSON (omit output or same path = overwrite).",
+    "Phase2 only: delete a story element by id (array order preserved).",
     {
       input: z.string().describe("input Story JSON path"),
       output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
-      key: z.string().min(1)
+      id: z.string().min(1)
     },
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
       const data = loadStory(inAbs);
-      getElement(data, p.key);
-      delete data.story[p.key];
+      requirePhase(data, 2);
+      const at = data.story.findIndex((e) => e.id === p.id);
+      if (at < 0) throw new Error(`story id not found: "${p.id}"`);
+      data.story.splice(at, 1);
       saveStory(outAbs, data);
-      return ok({ status: "deleted", key: p.key, input: inAbs, output: outAbs, count: Object.keys(data.story).length });
+      return ok({ status: "deleted", id: p.id, input: inAbs, output: outAbs, count: data.story.length });
     }
   );
 
   server.tool(
     "story_get_element",
-    "Read a single element by key.",
+    "Read a single element by id.",
     {
       file: z.string().describe("Story JSON path"),
-      key: z.string().min(1)
+      id: z.string().min(1)
     },
     async (p) => {
       const data = loadStory(resolve(p.file));
-      return ok({ key: p.key, element: getElement(data, p.key) });
+      const el = findById(data.story, p.id);
+      if (!el) throw new Error(`story id not found: "${p.id}"`);
+      const plan = findById(data.plan, p.id);
+      return ok({ id: p.id, element: el, ...(plan ? { plan } : {}) });
     }
   );
 
   server.tool(
     "story_list_elements",
-    "Read all elements (keys + summary). Filter by type; summary mode truncates prompt/description.",
+    "Read all elements in array order (= merge/subtitle order). Filter by type; summary mode truncates prompt/description. Includes plan voice/duration per id.",
     {
       file: z.string().describe("Story JSON path"),
       type: z.enum(["t2i", "t2v", "i2v", "r2v"]).optional().describe("filter by type"),
@@ -288,39 +594,45 @@ export function createMcpServer() {
       offset: z.number().int().min(0).optional()
     },
     async (p) => {
-      const data = loadStory(resolve(p.file));
+      const abs = resolve(p.file);
+      const data = loadStory(abs);
       const sum = p.summary ?? true;
       const trunc = (s, n = 120) => (typeof s === "string" && s.length > n ? s.slice(0, n) + "…" : s);
-      let entries = Object.entries(data.story).map(([key, el]) => ({
-        key,
-        type: el.type,
-        description: sum ? trunc(el.description) : el.description,
-        prompt: sum ? trunc(el.prompt) : el.prompt,
-        refs: normalizeRefs(el.refs),
-        seed: el.seed, duration: el.duration, out: el.out, output: el.output
-      }));
+      let entries = data.story.map((el) => {
+        const plan = findById(data.plan, el.id);
+        return {
+          id: el.id,
+          type: el.type,
+          description: sum ? trunc(el.description) : el.description,
+          prompt: sum ? trunc(el.prompt) : el.prompt,
+          refs: normalizeRefs(el.refs),
+          seed: el.seed, out: el.out, output: el.output,
+          ...(plan ? { voice: plan.voice, duration: plan.duration } : {})
+        };
+      });
       if (p.type) entries = entries.filter((e) => e.type === p.type);
       const total = entries.length;
       if (p.offset) entries = entries.slice(p.offset);
       if (p.limit) entries = entries.slice(0, p.limit);
-      return ok({ file: resolve(p.file), project_description: data.description, project_width: data.width ?? null, project_height: data.height ?? null, total, count: entries.length, entries });
+      return ok({ file: abs, phase: data.phase, project_description: data.description, project_width: data.width ?? null, project_height: data.height ?? null, total, count: entries.length, entries });
     }
   );
 
   server.tool(
     "story_get_chain",
-    "Read all elements in the dependency chain of a key (recursive via refs, deps-first order). Reports missing refs and cycles.",
+    "Read all elements in the dependency chain of an id (recursive via refs, deps-first order). Reports missing refs and cycles.",
     {
       file: z.string().describe("Story JSON path"),
-      key: z.string().min(1).describe("start element key, chain includes itself last")
+      id: z.string().min(1).describe("start element id, chain includes itself last")
     },
     async (p) => {
       const abs = resolve(p.file);
       const data = loadStory(abs);
-      getElement(data, p.key);
-      const { order, missing, cycles } = collectChain(data.story, p.key);
-      const chain = order.map((k) => ({ key: k, element: data.story[k] }));
-      return ok({ start: p.key, depth: chain.length, chain, missing_refs: missing, cycles });
+      if (!findById(data.story, p.id)) throw new Error(`story id not found: "${p.id}"`);
+      const { order, missing, cycles } = collectChain(data.story, p.id);
+      const byId = new Map(data.story.map((e) => [e.id, e]));
+      const chain = order.map((id) => ({ id, element: byId.get(id) }));
+      return ok({ start: p.id, depth: chain.length, chain, missing_refs: missing, cycles });
     }
   );
 
@@ -329,29 +641,30 @@ export function createMcpServer() {
     "Check whether each ref-output in the dependency chain exists on disk. Uses each element's output field; resolves relative paths against base_dir then the JSON dir.",
     {
       file: z.string().describe("Story JSON path"),
-      key: z.string().min(1).describe("start element key"),
+      id: z.string().min(1).describe("start element id"),
       base_dir: z.string().optional().describe("base dir for relative output paths (e.g. ai_gen_video dir); default = cwd")
     },
     async (p) => {
       const abs = resolve(p.file);
       const data = loadStory(abs);
-      getElement(data, p.key);
-      const { order, missing, cycles } = collectChain(data.story, p.key);
+      if (!findById(data.story, p.id)) throw new Error(`story id not found: "${p.id}"`);
+      const { order, missing, cycles } = collectChain(data.story, p.id);
+      const byId = new Map(data.story.map((e) => [e.id, e]));
       const jsonDir = dirname(abs);
       const baseDir = p.base_dir ? resolve(p.base_dir) : process.cwd();
-      const rows = order.map((k) => {
-        const el = data.story[k];
+      const rows = order.map((id) => {
+        const el = byId.get(id);
         const r = checkOutputExists(jsonDir, baseDir, el.output);
-        return { key: k, type: el.type, output: el.output ?? null, exists: r.exists, matched: r.matched ?? null, checked: r.checked, reason: r.reason ?? null };
+        return { id, type: el.type, output: el.output ?? null, exists: r.exists, matched: r.matched ?? null, checked: r.checked, reason: r.reason ?? null };
       });
       const allExist = rows.every((r) => r.exists);
-      return ok({ start: p.key, all_exist: allExist, ready: allExist && !missing.length && !cycles.length, missing_refs: missing, cycles, rows });
+      return ok({ start: p.id, all_exist: allExist, ready: allExist && !missing.length && !cycles.length, missing_refs: missing, cycles, rows });
     }
   );
 
   server.tool(
     "story_validate",
-    "Validate the whole Story JSON: unknown types, missing refs, self-refs, cycles, empty prompts, per-type ref limits (r2v<=9, i2v<=2).",
+    "Validate the whole Story JSON: unique ids, unknown types/voices, missing refs, self-refs, cycles, empty prompts, per-type ref limits (r2v<=9, i2v<=2), phase2 plan coverage, and <d>-vs-plan-lines mirror warnings.",
     {
       file: z.string().describe("Story JSON path")
     },
@@ -359,24 +672,70 @@ export function createMcpServer() {
       const abs = resolve(p.file);
       const data = loadStory(abs);
       const issues = [];
-      for (const [key, el] of Object.entries(data.story)) {
-        if (!TYPES.includes(el?.type)) issues.push({ key, issue: `unknown type "${el?.type}"` });
-        if (typeof el?.prompt !== "string" || !el.prompt.trim()) issues.push({ key, issue: "empty prompt" });
+      const warnings = [];
+      try { requireUnique(data.plan, "plan"); } catch (e) { issues.push(e.message); }
+      try { requireUnique(data.story, "story"); } catch (e) { issues.push(e.message); }
+      const planById = new Map(data.plan.map((e) => [e.id, e]));
+      const storyById = new Map(data.story.map((e) => [e.id, e]));
+      for (const pl of data.plan) {
+        if (!pl || typeof pl.id !== "string" || !pl.id) continue;
+        if (!VOICES.includes(pl?.voice)) issues.push({ id: pl.id, issue: `unknown voice "${pl?.voice}"` });
+        if (typeof pl?.duration !== "number" || !(pl.duration >= 1 && pl.duration <= 60)) issues.push({ id: pl.id, issue: "plan duration must be 1~60" });
+      }
+      for (const [id, el] of storyById) {
+        if (!TYPES.includes(el?.type)) issues.push({ id, issue: `unknown type "${el?.type}"` });
+        if (typeof el?.prompt !== "string" || !el.prompt.trim()) issues.push({ id, issue: "empty prompt" });
         const refs = normalizeRefs(el?.refs);
         for (const r of refs) {
-          if (r === key) issues.push({ key, issue: "self-ref" });
-          else if (!data.story[r]) issues.push({ key, issue: `missing ref "${r}"` });
+          if (r === id) issues.push({ id, issue: "self-ref" });
+          else if (!storyById.has(r)) issues.push({ id, issue: `missing ref "${r}"` });
         }
-        if (el?.type === "r2v" && refs.length > 9) issues.push({ key, issue: `r2v refs=${refs.length} exceeds 9` });
-        if (el?.type === "i2v" && refs.length > 2) issues.push({ key, issue: `i2v refs=${refs.length} exceeds 2 (first/last frame)` });
+        if (el?.type === "r2v" && refs.length > 9) issues.push({ id, issue: `r2v refs=${refs.length} exceeds 9` });
+        if (el?.type === "i2v" && refs.length > 2) issues.push({ id, issue: `i2v refs=${refs.length} exceeds 2 (first/last frame)` });
+        if (el?.type !== "t2i" && !planById.has(id)) issues.push({ id, issue: `no plan block for non-asset element (add plan in phase1)` });
+        if (["width", "height", "duration"].some((k) => k in (el || {}))) issues.push({ id, issue: "duration/width/height must not live inside elements (plan / top-level own them)" });
+        // <d> mirror vs plan lines
+        const pl = planById.get(id);
+        const dLines = extractDLines(el?.prompt);
+        if (pl && (pl.voice === "dialogue" || pl.voice === "narration")) {
+          if (!dLines) issues.push({ id, issue: `plan voice is ${pl.voice} but prompt has no <d> block` });
+          else if (JSON.stringify(dLines) !== JSON.stringify(normLines(pl.lines))) {
+            warnings.push({ id, issue: "<d> lines differ from plan lines (plan is source of truth for subtitles)", plan_lines: normLines(pl.lines), prompt_d_lines: dLines });
+          }
+          if (dLines && dLines.some((l) => /[0-9a-zA-Z]/.test(l))) warnings.push({ id, issue: "<d> contains digits/latin letters (QA: use Chinese numerals, avoid English)" });
+        }
+        if (pl && pl.voice === "scene" && dLines) issues.push({ id, issue: "scene block must not contain <d>" });
       }
-      // cycle scan across all keys
+      if (data.phase === 2) {
+        for (const pl of data.plan) {
+          if (pl && pl.id && !storyById.has(pl.id)) issues.push({ id: pl.id, issue: "plan block has no story element yet (phase2 coverage)" });
+        }
+      }
       const cycles = [];
-      for (const key of Object.keys(data.story)) {
-        const { cycles: c } = collectChain(data.story, key);
+      for (const id of storyById.keys()) {
+        const { cycles: c } = collectChain(data.story, id);
         for (const s of c) if (!cycles.includes(s)) cycles.push(s);
       }
-      return ok({ file: abs, count: Object.keys(data.story).length, valid: !issues.length && !cycles.length, issues, cycles });
+      return ok({ file: abs, phase: data.phase, plan_blocks: data.plan.length, story_count: data.story.length, valid: !issues.length && !cycles.length, issues, warnings, cycles });
+    }
+  );
+
+  server.tool(
+    "story_export_srt",
+    "Export YouTube SRT (§6.5) from the plan table: scale = total_seconds / planned_total, per-line cues (short lines front-weighted, long blocks split evenly), narration wrapped in <i>. Needs no videos.",
+    {
+      file: z.string().describe("Story JSON path"),
+      total_seconds: z.number().positive().describe("actual merged total seconds (merge_videos回傳的 total_seconds)"),
+      out: z.string().optional().describe("SRT output path (default: same dir, same basename + .srt)")
+    },
+    async (p) => {
+      const abs = resolve(p.file);
+      const data = loadStory(abs);
+      const { cues, scale, plannedTotal, actualTotal } = buildSrtCues(data.plan, p.total_seconds);
+      const dest = p.out ? resolve(p.out) : abs.replace(/\.json$/i, "") + ".srt";
+      mkdirSync(dirname(dest), { recursive: true });
+      writeFileSync(dest, cuesToSrt(cues), "utf-8");
+      return ok({ srt: dest, cues: cues.length, scale: Number(scale.toFixed(4)), planned_total_sec: plannedTotal, actual_total_sec: actualTotal });
     }
   );
 
