@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { readFileSync, writeFileSync, mkdirSync, existsSync, renameSync, readdirSync, statSync } from "node:fs";
 import { z } from "zod";
 import { dirname, resolve, isAbsolute, join, extname } from "node:path";
+import { callComfyTool } from "./comfy_bridge.mjs";
 
 const TYPES = ["t2i", "t2v", "i2v", "r2v"];
 const VOICES = ["scene", "dialogue", "narration"]; // 場景 / 對白 / 旁白
@@ -319,10 +320,145 @@ const MetaPatch = z.object({
 
 const ok = (obj) => ({ content: [{ type: "text", text: JSON.stringify(obj, null, 2) }] });
 
+// ---------- ComfyUI submit helpers ----------
+
+function buildSubmitBundle(data, id, jsonDir, baseDir) {
+  const el = findById(data.story, id);
+  if (!el) throw new Error(`story id not found: "${id}"`);
+  const plan = findById(data.plan, id);
+  const missing = [];
+  const refs = [];
+  for (const r of normalizeRefs(el.refs)) {
+    const rel = findById(data.story, r);
+    if (!rel) { missing.push(`${r}（元素不存在）`); continue; }
+    const hit = resolveRefPath(rel, jsonDir, baseDir);
+    if (!hit.path) { missing.push(`${r}（找不到可用檔案：先生成該參考，輸出目錄已有檔會自動挑建立時間最晚者）`); continue; }
+    refs.push({ id: r, type: rel.type, path: hit.path, via: `${hit.via}:${hit.kind}` });
+  }
+  if (missing.length) {
+    throw new Error(`"${id}" 的提交包組不起來，ref 輸出未就緒：\n- ${missing.join("\n- ")}\n先把缺的 refs 生成出來（輸出進其 out 目錄即可，取包時自動挑建立時間最晚者）後重試。`);
+  }
+  return {
+    id,
+    type: el.type,
+    width: data.width ?? null,
+    height: data.height ?? null,
+    duration: plan ? plan.duration : null,
+    voice: plan ? plan.voice : null,
+    seed: el.seed ?? null,
+    out: el.out ?? null,
+    prompt: el.prompt,
+    refs,
+    ...(el.extra !== undefined ? { extra: el.extra } : {}),
+    _element: el,
+    _plan: plan
+  };
+}
+
+/**
+ * Map a story submit bundle → comfy-video-gen tool name + arguments.
+ * Optional overrides: seed, width, height, duration, out, engine, extra comfy fields via overrides.comfy
+ */
+function mapBundleToComfyCall(bundle, overrides = {}) {
+  const extra = bundle.extra && typeof bundle.extra === "object" ? bundle.extra : {};
+  const seed = overrides.seed !== undefined ? overrides.seed : (bundle.seed ?? undefined);
+  const out = overrides.out !== undefined ? overrides.out : (bundle.out ?? undefined);
+  const width = overrides.width !== undefined ? overrides.width : (bundle.width ?? undefined);
+  const height = overrides.height !== undefined ? overrides.height : (bundle.height ?? undefined);
+  const duration = overrides.duration !== undefined ? overrides.duration : (bundle.duration ?? undefined);
+  const comfyExtra = overrides.comfy && typeof overrides.comfy === "object" ? overrides.comfy : {};
+
+  const type = bundle.type;
+  if (type === "r2v") {
+    if (!bundle.refs.length) throw new Error(`"${bundle.id}" r2v 需要至少一張參考圖（refs）`);
+    const args = {
+      prompt: bundle.prompt,
+      ...(seed !== undefined && seed !== null ? { seed } : {}),
+      ...(duration != null ? { duration } : {}),
+      ...(width != null ? { width } : {}),
+      ...(height != null ? { height } : {}),
+      ...(out ? { out } : {}),
+      ...comfyExtra
+    };
+    bundle.refs.slice(0, 9).forEach((r, i) => { args[`ref_image_${i}`] = r.path; });
+    // optional video/audio refs via extra.ref_videos / extra.ref_audios (absolute paths)
+    const vids = Array.isArray(extra.ref_videos) ? extra.ref_videos : [];
+    const auds = Array.isArray(extra.ref_audios) ? extra.ref_audios : [];
+    vids.slice(0, 3).forEach((p, i) => { if (p) args[`ref_video_${i}`] = p; });
+    auds.slice(0, 3).forEach((p, i) => { if (p) args[`ref_audio_${i}`] = p; });
+    return { tool: "gen_r2v_video", args };
+  }
+
+  if (type === "i2v") {
+    if (!bundle.refs.length) throw new Error(`"${bundle.id}" i2v 需要 first_frame（refs[0]）`);
+    return {
+      tool: "gen_i2v_video",
+      args: {
+        prompt: bundle.prompt,
+        first_frame: bundle.refs[0].path,
+        ...(bundle.refs[1] ? { last_frame: bundle.refs[1].path } : {}),
+        ...(seed !== undefined && seed !== null ? { seed } : {}),
+        ...(duration != null ? { duration } : {}),
+        ...(width != null ? { width } : {}),
+        ...(height != null ? { height } : {}),
+        ...(out ? { out } : {}),
+        ...comfyExtra
+      }
+    };
+  }
+
+  if (type === "t2v") {
+    return {
+      tool: "gen_t2v_video",
+      args: {
+        prompt: bundle.prompt,
+        ...(seed !== undefined && seed !== null ? { seed } : {}),
+        ...(duration != null ? { duration } : {}),
+        ...(width != null ? { width } : {}),
+        ...(height != null ? { height } : {}),
+        ...(out ? { out } : {}),
+        ...comfyExtra
+      }
+    };
+  }
+
+  if (type === "t2i") {
+    const engine = String(overrides.engine || extra.engine || "sdxl").toLowerCase();
+    const imgPrompt = (typeof extra.sdxl_prompt === "string" && extra.sdxl_prompt.trim())
+      ? extra.sdxl_prompt
+      : bundle.prompt;
+    const imgW = overrides.width !== undefined ? overrides.width : (extra.width ?? width ?? undefined);
+    const imgH = overrides.height !== undefined ? overrides.height : (extra.height ?? height ?? undefined);
+    const imgSeed = overrides.seed !== undefined ? overrides.seed : (extra.seed ?? seed ?? undefined);
+    const base = {
+      prompt: imgPrompt,
+      ...(imgSeed !== undefined && imgSeed !== null ? { seed: imgSeed } : {}),
+      ...(imgW != null ? { width: imgW } : {}),
+      ...(imgH != null ? { height: imgH } : {}),
+      ...(out ? { out } : {}),
+      ...(extra.steps != null ? { steps: extra.steps } : {}),
+      ...(extra.cfg != null ? { cfg: extra.cfg } : {}),
+      ...(extra.negative_prompt ? { negative_prompt: extra.negative_prompt } : {}),
+      ...(extra.ckpt ? { ckpt: extra.ckpt } : {}),
+      ...(extra.unet ? { unet: extra.unet } : {}),
+      ...(extra.clip ? { clip: extra.clip } : {}),
+      ...(extra.sampler_name ? { sampler_name: extra.sampler_name } : {}),
+      ...(extra.scheduler ? { scheduler: extra.scheduler } : {}),
+      ...comfyExtra
+    };
+    if (engine === "zit" || engine === "z-image" || engine === "zimage") {
+      return { tool: "gen_zit_image", args: base };
+    }
+    return { tool: "gen_sdxl_image", args: base };
+  }
+
+  throw new Error(`unsupported element type for Comfy submit: "${type}"`);
+}
+
 // ---------- server ----------
 
 export function createMcpServer() {
-  const server = new McpServer({ name: "story-editor", version: "2.4.0" });
+  const server = new McpServer({ name: "story-editor", version: "2.6.0" });
 
   server.registerTool(
     "story_init",
@@ -757,36 +893,239 @@ export function createMcpServer() {
     async (p) => {
       const abs = resolve(p.file);
       const data = loadStory(abs);
-      const el = findById(data.story, p.id);
-      if (!el) throw new Error(`story id not found: "${p.id}"`);
-      const plan = findById(data.plan, p.id);
       const jsonDir = dirname(abs);
       const baseDir = p.base_dir ? resolve(p.base_dir) : process.cwd();
-      const missing = [];
-      const refs = [];
-      for (const r of normalizeRefs(el.refs)) {
-        const rel = findById(data.story, r);
-        if (!rel) { missing.push(`${r}（元素不存在）`); continue; }
-        const hit = resolveRefPath(rel, jsonDir, baseDir);
-        if (!hit.path) { missing.push(`${r}（找不到可用檔案：先生成該參考，輸出目錄已有檔會自動挑建立時間最晚者）`); continue; }
-        refs.push({ id: r, type: rel.type, path: hit.path, via: `${hit.via}:${hit.kind}` });
+      const bundle = buildSubmitBundle(data, p.id, jsonDir, baseDir);
+      const { _element, _plan, ...publicBundle } = bundle;
+      return ok(publicBundle);
+    }
+  );
+
+  /**
+   * Submit one element (mutates data in memory when save_prompt_id). Caller may saveStory.
+   */
+  async function submitOneComfy(data, id, jsonDir, baseDir, opts = {}) {
+    const bundle = buildSubmitBundle(data, id, jsonDir, baseDir);
+    let seedOverride = opts.seed;
+    if (seedOverride === undefined && opts.bump_seed) {
+      const cur = bundle.seed ?? bundle.extra?.seed ?? 0;
+      seedOverride = Number(cur) + 1;
+    }
+    const { tool, args } = mapBundleToComfyCall(bundle, {
+      seed: seedOverride,
+      engine: opts.engine,
+      comfy: opts.comfy
+    });
+    const { _element, _plan, ...publicBundle } = bundle;
+
+    if (opts.dry_run) {
+      return {
+        ok: true,
+        dry_run: true,
+        id,
+        comfy_tool: tool,
+        comfy_args: args,
+        bundle: {
+          type: publicBundle.type,
+          duration: publicBundle.duration,
+          voice: publicBundle.voice,
+          width: publicBundle.width,
+          height: publicBundle.height,
+          out: args.out ?? publicBundle.out,
+          refs: publicBundle.refs.map((r) => ({ id: r.id, path: r.path }))
+        }
+      };
+    }
+
+    const comfyResult = await callComfyTool(tool, args);
+    const promptId = comfyResult?.prompt_id ?? null;
+    const usedSeed = comfyResult?.seed ?? args.seed ?? null;
+    const save = opts.save_prompt_id !== false;
+    if (save && promptId) {
+      const el = findById(data.story, id);
+      const prevExtra = el.extra && typeof el.extra === "object" ? { ...el.extra } : {};
+      el.extra = {
+        ...prevExtra,
+        prompt_id: promptId,
+        ...(data.width != null ? { v2_width: data.width } : {}),
+        ...(data.height != null ? { v2_height: data.height } : {})
+      };
+      if (usedSeed != null) el.seed = usedSeed;
+      if (args.out && !el.out) el.out = args.out;
+      if (el.out && !el.output) el.output = el.out.startsWith("output/") ? el.out : `output/${el.out}`;
+    }
+    return {
+      ok: true,
+      dry_run: false,
+      id,
+      status: comfyResult?.status || "submitted",
+      comfy_tool: tool,
+      prompt_id: promptId,
+      seed: usedSeed,
+      saved_to_story: !!(save && promptId),
+      comfy: comfyResult,
+      bundle: {
+        type: publicBundle.type,
+        duration: publicBundle.duration,
+        voice: publicBundle.voice,
+        width: publicBundle.width,
+        height: publicBundle.height,
+        out: args.out ?? publicBundle.out,
+        refs: publicBundle.refs.map((r) => ({ id: r.id, path: r.path }))
       }
-      if (missing.length) {
-        throw new Error(`"${p.id}" 的提交包組不起來，ref 輸出未就緒：\n- ${missing.join("\n- ")}\n先把缺的 refs 生成出來（輸出進其 out 目錄即可，取包時自動挑建立時間最晚者）後重試。`);
+    };
+  }
+
+  server.registerTool(
+    "story_submit_comfy",
+    {
+      title: "story_submit_comfy",
+      description:
+        "Build the submit bundle for one story element, map params, and call comfy-video-gen MCP " +
+        "(gen_r2v_video / gen_i2v_video / gen_t2v_video / gen_sdxl_image / gen_zit_image). " +
+        "Auto-fills prompt, seed, duration, width/height, out, and resolved ref file paths. " +
+        "By default writes prompt_id (and seed) back into the element's extra/seed. " +
+        "Requires ai_gen_video MCP entry (COMFY_MCP_STDIO) and COMFY_SERVER.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path"),
+        id: z.string().min(1).describe("element id to submit"),
+        base_dir: z.string().optional().describe("base dir for relative out/ref paths; default = cwd (use ai_gen_video dir)"),
+        seed: z.number().int().nonnegative().optional().describe("override seed (else element.seed / t2i extra.seed)"),
+        bump_seed: z.boolean().optional().describe("if true and no seed override, use (seed|0)+1 and persist"),
+        engine: z.string().optional().describe("t2i only: sdxl | zit (default from extra.engine or sdxl)"),
+        save_prompt_id: z.boolean().optional().describe("write prompt_id back to extra (default true)"),
+        dry_run: z.boolean().optional().describe("only build mapped comfy args, do not call ComfyUI"),
+        comfy: z.record(z.any()).optional().describe("extra fields merged into the comfy tool arguments")
       }
-      return ok({
-        id: p.id,
-        type: el.type,
-        width: data.width ?? null,
-        height: data.height ?? null,
-        duration: plan ? plan.duration : null,
-        voice: plan ? plan.voice : null,
-        seed: el.seed ?? null,
-        out: el.out ?? null,
-        prompt: el.prompt,
-        refs,
-        ...(el.extra !== undefined ? { extra: el.extra } : {})
+    },
+    async (p) => {
+      const abs = resolve(p.file);
+      const data = loadStory(abs);
+      const jsonDir = dirname(abs);
+      const baseDir = p.base_dir ? resolve(p.base_dir) : process.cwd();
+      const row = await submitOneComfy(data, p.id, jsonDir, baseDir, p);
+      if (!p.dry_run && row.saved_to_story) saveStory(abs, data);
+      return ok(row);
+    }
+  );
+
+  server.registerTool(
+    "story_submit_comfy_all",
+    {
+      title: "story_submit_comfy_all",
+      description:
+        "Submit many / all story elements to ComfyUI via comfy-video-gen, in story array order (sequential, " +
+        "to avoid JSON RMW races). Default types=['r2v'] (skips t2i assets). Use types=['t2i','r2v'] for everything. " +
+        "continue_on_error defaults true. Writes prompt_id after each success when save_prompt_id is true.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path"),
+        base_dir: z.string().optional().describe("base dir for relative out/ref paths; default = cwd (use ai_gen_video dir)"),
+        types: z.array(z.enum(["t2i", "t2v", "i2v", "r2v"])).optional()
+          .describe("element types to submit (default: ['r2v'])"),
+        ids: z.array(z.string()).optional().describe("if set, only these ids (still filtered by types)"),
+        skip_ids: z.array(z.string()).optional().describe("ids to skip"),
+        bump_seed: z.boolean().optional().describe("bump each element's seed by 1 before submit"),
+        engine: z.string().optional().describe("t2i only: sdxl | zit"),
+        save_prompt_id: z.boolean().optional().describe("write prompt_id back after each success (default true)"),
+        continue_on_error: z.boolean().optional().describe("continue after a failure (default true)"),
+        dry_run: z.boolean().optional().describe("map args only, do not call ComfyUI"),
+        limit: z.number().int().min(1).optional().describe("max number of elements to submit (after filters)"),
+        offset: z.number().int().min(0).optional().describe("skip first N matched elements"),
+        comfy: z.record(z.any()).optional().describe("extra fields merged into every comfy tool call")
+      }
+    },
+    async (p) => {
+      const abs = resolve(p.file);
+      const data = loadStory(abs);
+      const jsonDir = dirname(abs);
+      const baseDir = p.base_dir ? resolve(p.base_dir) : process.cwd();
+      const typeSet = new Set(p.types?.length ? p.types : ["r2v"]);
+      const idSet = p.ids?.length ? new Set(p.ids) : null;
+      const skipSet = new Set(p.skip_ids || []);
+      let matched = data.story.filter((el) => {
+        if (!el || !el.id) return false;
+        if (!typeSet.has(el.type)) return false;
+        if (idSet && !idSet.has(el.id)) return false;
+        if (skipSet.has(el.id)) return false;
+        return true;
       });
+      const offset = p.offset || 0;
+      if (offset) matched = matched.slice(offset);
+      if (p.limit) matched = matched.slice(0, p.limit);
+
+      const results = [];
+      let okCount = 0;
+      let failCount = 0;
+      const continueOnError = p.continue_on_error !== false;
+      const save = p.save_prompt_id !== false && !p.dry_run;
+
+      for (let i = 0; i < matched.length; i++) {
+        const el = matched[i];
+        try {
+          const row = await submitOneComfy(data, el.id, jsonDir, baseDir, {
+            bump_seed: p.bump_seed,
+            engine: p.engine,
+            save_prompt_id: save,
+            dry_run: p.dry_run,
+            comfy: p.comfy
+          });
+          if (save && row.saved_to_story) saveStory(abs, data);
+          okCount++;
+          results.push({ index: i, ...row });
+          process.stderr.write(
+            `[mcp] story_submit_comfy_all ${i + 1}/${matched.length} OK ${el.id}` +
+              (row.prompt_id ? ` → ${row.prompt_id}` : "") +
+              "\n"
+          );
+        } catch (e) {
+          failCount++;
+          const err = String(e?.message || e);
+          results.push({ index: i, ok: false, id: el.id, type: el.type, error: err });
+          process.stderr.write(
+            `[mcp] story_submit_comfy_all ${i + 1}/${matched.length} FAIL ${el.id}: ${err}\n`
+          );
+          if (!continueOnError) {
+            return ok({
+              status: "aborted",
+              file: abs,
+              total: matched.length,
+              submitted: okCount,
+              failed: failCount,
+              remaining: matched.length - i - 1,
+              results
+            });
+          }
+        }
+      }
+
+      return ok({
+        status: failCount ? (okCount ? "partial" : "failed") : "ok",
+        file: abs,
+        types: [...typeSet],
+        total: matched.length,
+        submitted: okCount,
+        failed: failCount,
+        dry_run: !!p.dry_run,
+        results
+      });
+    }
+  );
+
+  server.registerTool(
+    "story_comfy_tool",
+    {
+      title: "story_comfy_tool",
+      description:
+        "Passthrough: call any comfy-video-gen MCP tool by name (e.g. query_comfy_queue, query_history, " +
+        "download_from_history, cancel_comfy_jobs, merge_videos, list_models). Arguments are forwarded as-is.",
+      inputSchema: {
+        tool: z.string().min(1).describe("comfy-video-gen tool name"),
+        args: z.record(z.any()).optional().describe("arguments object for that tool")
+      }
+    },
+    async (p) => {
+      const result = await callComfyTool(p.tool, p.args || {});
+      return ok({ comfy_tool: p.tool, result });
     }
   );
 

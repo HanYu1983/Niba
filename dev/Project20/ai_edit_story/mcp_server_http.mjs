@@ -30,5 +30,5 @@ app.delete("/mcp", async (req, res) => {
 });
 
 app.listen(PORT, "127.0.0.1", () => {
-  process.stderr.write(`[mcp] story-editor v2.4.0 HTTP server listening on http://127.0.0.1:${PORT}/mcp\n`);
+  process.stderr.write(`[mcp] story-editor v2.6.0 HTTP server listening on http://127.0.0.1:${PORT}/mcp\n`);
 });

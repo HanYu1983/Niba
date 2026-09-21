@@ -54,6 +54,9 @@
 | `story_get_chain` | 任一 | 讀依賴鏈（refs 遞迴，依賴先序） |
 | `story_check_chain_outputs` | 任一 | 檢查依賴鏈的 output 是否已在磁碟上 |
 | `story_submit_bundle` | 任一 | 組 ComfyUI 提交包（含 refs 解析成檔案） |
+| `story_submit_comfy` | 任一 | 組包並轉呼叫 comfy-video-gen（自動代入參數，寫回 prompt_id） |
+| `story_submit_comfy_all` | 任一 | 依 story 陣列順序列提交（預設全部 r2v；可篩 types／ids） |
+| `story_comfy_tool` | 任一 | 透傳呼叫任意 comfy-video-gen 工具（queue／history／merge…） |
 | `story_get_all_video_paths` | 任一 | 依合併順序列出每格影片路徑＋就緒旗標 |
 | `story_validate` | 任一 | 全 JSON 驗證（唯一 id、缺 ref、型別、phase2 覆蓋、`<d>` 鏡像） |
 | `story_export_srt` | 任一 | 從 plan 匯出 YouTube SRT（scale 換算、旁白斜體） |
@@ -97,7 +100,8 @@
 ⑤story_validate 確認全綠（特別注意 dialogue/narration 的 <d> 是否與 plan lines 鏡像）
    │
    ▼
-⑥story_submit_bundle + gen_r2v_video 提交生成（refs 自動解析為檔案路徑）
+⑥story_submit_comfy／story_submit_comfy_all 提交生成
+   │      （refs 自動解析並轉呼叫 comfy-video-gen；prompt_id 寫回 extra）
    │
    ▼
 ⑦合併：story_get_all_video_paths → 依序 merge_videos → story_export_srt
@@ -277,12 +281,22 @@ non_diegetic_music:      配樂（有對白/旁白可寫 "A clean, open string l
 2. **`story_submit_bundle`**：取一格提交包，確認 `refs` 的 `via` 都解析成實際檔案
    （`output:dir-pick` = 取資料夾內建立時間最晚者）。缺 ref 會報錯並標明缺誰。
    生成順序：先讓 refs（t2i 素材）有輸出，再提交依賴它們的 r2v。
-3. 送 ComfyUI `gen_r2v_video`（width/height 取頂層，duration 取 plan，seed 獨立；
-   旁白共用旁白 seed）。回傳 prompt_id 可寫回 `extra.prompt_id` 供追蹤。
-4. **合併**：`story_get_all_video_paths` 依 story 陣列順序（= 合併順序）拿全部路徑，
-   確認 `ready` 全 true 後 `merge_videos`（全片固定同一 resolution）。
+3. **`story_submit_comfy`**（單格）／**`story_submit_comfy_all`**（多格／全部）：
+   組包後**直接轉呼叫** `comfy-video-gen` MCP，依元素 type 自動對應並代入參數：
+   - `r2v` → `gen_r2v_video`（prompt／seed／duration／width／height／out／`ref_image_0..N`）
+   - `i2v` → `gen_i2v_video`（refs[0]=first_frame，refs[1]=last_frame）
+   - `t2v` → `gen_t2v_video`
+   - `t2i` → `gen_sdxl_image` 或 `gen_zit_image`（看 `extra.engine`，prompt 優先用 `extra.sdxl_prompt`）
+   預設把回傳的 `prompt_id`（與實際 seed）寫回元素 `extra`／`seed`。
+   `story_submit_comfy_all`：**依 story 陣列順序循序提交**（避免 JSON 競態）；預設 `types:["r2v"]`；
+   可用 `types:["t2i","r2v"]`、`ids`／`skip_ids`、`limit`／`offset`、`continue_on_error`、`dry_run`、`bump_seed`。
+   通用透傳：`story_comfy_tool`（如 `query_comfy_queue`／`download_from_history`／`merge_videos`）。
+4. 送 ComfyUI 後回傳 prompt_id 可追蹤；背景下載在 **comfy-video-gen 子行程**內執行
+   （story-editor 會長駐該 MCP 子行程，勿手動殺）。
+5. **合併**：`story_get_all_video_paths` 依 story 陣列順序（= 合併順序）拿全部路徑，
+   確認 `ready` 全 true 後 `merge_videos`（可用 `story_comfy_tool` 轉呼叫，全片固定同一 resolution）。
    合併前確認每支影片解析度/幀率一致。
-5. **`story_export_srt`**：用 merge 回傳的 `total_seconds` 匯出。
+6. **`story_export_srt`**：用 merge 回傳的 `total_seconds` 匯出。
    `scale = 實際總秒數 / 規劃總秒數` 自動換算、旁白自動 `<i>` 斜體、scene 自動跳過。
 
 ### 下載與追蹤

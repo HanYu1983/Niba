@@ -1,8 +1,8 @@
 {
   "name": "story-editor",
-  "version": "2.4.0",
+  "version": "2.6.0",
   "private": true,
-  "description": "Edit Story JSON (example14_ch12 editable) via MCP",
+  "description": "Edit Story JSON via MCP; can submit jobs to comfy-video-gen MCP",
   "type": "module",
   "scripts": {
     "mcp": "node mcp_server_stdio.mjs",

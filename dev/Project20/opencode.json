@@ -12,6 +12,10 @@
     "story-editor": {
       "type": "local",
       "command": ["node", "D:\\han\\Niba\\dev\\Project20\\ai_edit_story\\mcp_server_stdio.mjs"],
+      "environment": {
+        "COMFY_SERVER": "http://192.168.0.193:8000",
+        "COMFY_MCP_STDIO": "D:\\han\\Niba\\dev\\Project20\\ai_gen_video\\mcp_server_stdio.mjs"
+      },
       "enabled": true
     }
   },
