@@ -1,7 +1,7 @@
 {
   "description": "分級的黃昏全書 phase2完成：plan78塊共655秒＋story89元素（11張t2i素材＋78支r2v）。旁白seed統一311000，場景對白seed 494100起獨立。<d>與plan lines逐字鏡像。",
-  "width": 768,
-  "height": 432,
+  "width": 512,
+  "height": 288,
   "phase": 2,
   "plan": [
     {
@@ -995,8 +995,9 @@
       "out": "s2_c1_l0_video",
       "output": "output/s2_c1_l0_video",
       "extra": {
-        "prompt_id": "d36d9ee3-8080-441c-b6db-301d2497cc3a",
-        "shot": "static establishing"
+        "prompt_id": "bad1203b-bcd7-4dd7-bdbb-7122d781ab7c",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1012,7 +1013,9 @@
       "out": "s2_c1_l1_video",
       "output": "",
       "extra": {
-        "shot": "close-up hands"
+        "prompt_id": "1aa7c637-51d1-496a-b72e-8c6a8ebb15f7",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1028,7 +1031,9 @@
       "out": "s2_c1_l2_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "30632744-38ae-4821-86fc-7ac637e1e422",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1044,7 +1049,9 @@
       "out": "s2_c1_l3_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "78191481-b4bd-4174-ad50-bcff4da2c3f1",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1060,7 +1067,9 @@
       "out": "s2_c1_l4_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "b2af6887-2849-4934-9c4b-861ef8fe46b0",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1076,7 +1085,9 @@
       "out": "s2_c1_l5_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "06fd310c-181d-42cd-b94d-5b12e7811131",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1092,7 +1103,9 @@
       "out": "s2_c1_l6_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "ecd67e2e-c7ec-4e9a-a427-929892d9c4de",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1108,7 +1121,9 @@
       "out": "s2_c1_l7_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "0ae5515a-7833-4b96-9d9d-74d7d940aaf7",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1124,7 +1139,9 @@
       "out": "s2_c1_l8_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "fdc4480d-7ff5-41a8-ba62-dc85ba5c21cc",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1140,7 +1157,9 @@
       "out": "s2_c1_l9_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "254b02de-5c7a-4f99-8b97-c05cc69e6bef",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1156,7 +1175,9 @@
       "out": "s2_c1_l10_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "00a99b0c-666b-4e56-a6e4-a9b066977066",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1172,7 +1193,9 @@
       "out": "s2_c1_l11_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "2d14df21-2f98-4677-9c89-f12e3cd4944e",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1189,7 +1212,9 @@
       "out": "s2_c1_l12_video",
       "output": "",
       "extra": {
-        "shot": "over-shoulder insert"
+        "prompt_id": "1b2c5a5e-c07f-4a59-8970-0c62385d8c91",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1205,7 +1230,9 @@
       "out": "s2_c1_l13_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "fbe257f9-1058-42b9-9ee4-5dbb015f74ca",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1221,7 +1248,9 @@
       "out": "s2_c1_l14_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "0c44f5bb-d21a-48b6-9af7-700638f6e4ac",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1237,7 +1266,9 @@
       "out": "s2_c2_l0_video",
       "output": "",
       "extra": {
-        "shot": "tracking"
+        "prompt_id": "23cee7ad-ae18-4b0e-99fe-0d7994625b5a",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1253,8 +1284,9 @@
       "out": "s2_c2_l1_video",
       "output": "",
       "extra": {
-        "prompt_id": "9d139735-71b3-4973-898b-59422dd547d7",
-        "shot": "wide two-shot"
+        "prompt_id": "125b6ba4-64bf-4516-b943-e778f1a74387",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1270,8 +1302,9 @@
       "out": "s2_c2_l2_video",
       "output": "",
       "extra": {
-        "prompt_id": "1e1ac59d-5bb4-4c0e-81c1-b065f81d60e3",
-        "speaker": "林婉"
+        "prompt_id": "95b82329-08d7-498d-a072-af7715d65342",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1287,11 +1320,9 @@
       "out": "s2_c2_l3_video",
       "output": "",
       "extra": {
-        "prompt_id": "369a03f2-c011-47d9-b2d9-863b79f03984",
-        "speaker": "林婉",
-        "v1_width": 512,
-        "v1_height": 288,
-        "ref_h_noted": true
+        "prompt_id": "df592523-f41c-434c-8153-4d5c61337512",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1307,7 +1338,9 @@
       "out": "s2_c2_l4_video",
       "output": "",
       "extra": {
-        "shot": "frozen close-up"
+        "prompt_id": "6779d14a-2426-4169-aa09-cd332112868d",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1322,7 +1355,9 @@
       "out": "s2_c2_l5_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "20ed3f90-fb35-4467-8cce-9743f7e40cf1",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1338,10 +1373,9 @@
       "out": "s2_c2_l6_video",
       "output": "",
       "extra": {
-        "prompt_id": "2427e248-57fe-428f-9f4c-7665a95020a1",
-        "voice": "narrator-male",
-        "v1_width": 1536,
-        "v1_height": 864
+        "prompt_id": "54035913-76f2-4288-bc3d-ba4d7500cb11",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1357,7 +1391,9 @@
       "out": "s2_c2_l7_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "47b30bcf-4545-4cee-b4ec-d84e557241cd",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1373,7 +1409,9 @@
       "out": "s2_c2_l8_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "0ebf3915-e461-478a-ae57-63b6fa082a9d",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1390,23 +1428,28 @@
       "out": "s2_c2_l9_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "510dc3d4-cedb-45e0-a144-bf999a2611d8",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
       "id": "c2_l10",
       "description": "c2_l10 旁白：炸彈人人工具，那我們是什麼",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, reeling inwardly.\n\n<Subject 2> is the grey meeting room from <Picture 2>:\na narrow grey room closing in around him.\n\nsummary:\nReference-based reeling narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nSlow push-in as the room seems to tighten around him.\n\n[Shot 1]\n\n00:00-00:15\n\nAction:\nLu Cheng sits rigid as the words detonate inside him, the grey walls pressing closer, lips sealed, silent and never the source of the narration. No duplicated figure. No split or mirrored composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n這句話像是一枚炸彈。\n在集體國，我們每個人都是工具。\n我也是，這套官僚制服也是，甚至連我對父親的孝順也是。\n如果我們承認自己不是工具，那我們是什麼。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. A low room groan, still air.\n\nnon_diegetic_music:\nA low, precise pulse.",
+      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, reeling inwardly.\n\n<Subject 2> is the grey meeting room from <Picture 2>:\na narrow grey room closing in around him.\n\n<Subject 3> is the old father from <Picture 3>:\ngaunt elderly East Asian man in a hospital bed, white blanket to the chest, thin grey hair, weak gentle eyes.\n\nsummary:\nReference-based reeling narration shot with a silent father memory.\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed. The father is a silent memory, mouth closed, making no speech and no sound.\n\ndetailed_description:\n\nVisual style:\nSlow push-in on Lu Cheng; the father memory breathes at the edge of frame.\n\n[Shot 1]\n\n00:00-00:15\n\nAction:\nLu Cheng sits rigid as the words detonate inside him, the grey walls pressing closer, lips sealed. At the edge of the frame the memory of the old father in his hospital bed wavers like a thought and then dissolves. The father is a separate old man, gaunt and clearly different from Lu Cheng, never duplicated, never mirrored. No split or mirrored composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n這句話像是一枚炸彈。\n在集體國，我們每個人都是工具。\n我也是，這套官僚制服也是，甚至連我對父親的孝順也是。\n如果我們承認自己不是工具，那我們是什麼。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. A low room groan, still air.\n\nnon_diegetic_music:\nA low, precise pulse.",
       "refs": [
         "Ref-LC",
-        "Ref-MEET"
+        "Ref-MEET",
+        "Ref-FATHER"
       ],
       "seed": 311000,
       "out": "s2_c2_l10_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "1f21c983-ef67-41c8-b698-f62c98f27729",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1422,7 +1465,9 @@
       "out": "s2_c2_l11_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "67bd9a43-f223-489f-bb12-b81e62611a72",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1438,7 +1483,9 @@
       "out": "s2_c2_l12_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "ecde2e95-6585-4525-b285-e77c0d3ee394",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1454,7 +1501,9 @@
       "out": "s2_c2_l13_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "5379d26d-b405-48b1-918e-001866d76236",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1471,7 +1520,9 @@
       "out": "s2_c2_l14_video",
       "output": "",
       "extra": {
-        "speaker": "陸誠"
+        "prompt_id": "7806b4ad-faeb-4ecf-85c7-f12dd77f1207",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1487,7 +1538,9 @@
       "out": "s2_c2_l15_video",
       "output": "",
       "extra": {
-        "speaker": "林婉"
+        "prompt_id": "4c3cf3f4-45ba-4405-938b-48fa6a73d0df",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1503,7 +1556,9 @@
       "out": "s2_c2_l16_video",
       "output": "",
       "extra": {
-        "shot": "button insert"
+        "prompt_id": "d077235c-80e3-4762-ba19-9582e88a2932",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1519,7 +1574,9 @@
       "out": "s2_c2_l17_video",
       "output": "",
       "extra": {
-        "speaker": "衡AI（畫外音）"
+        "prompt_id": "a568028d-7a69-4885-a0b5-4ee0830cf8b2",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1535,7 +1592,9 @@
       "out": "s2_c2_l18_video",
       "output": "",
       "extra": {
-        "shot": "screen insert"
+        "prompt_id": "80b4aca9-5fad-4d0d-a6a7-ad0afc7e45ed",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1551,7 +1610,9 @@
       "out": "s2_c2_l19_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "52db10bb-ef73-4e7d-8581-5e9e9ab2c9f3",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1567,7 +1628,9 @@
       "out": "s2_c2_l20_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "174432a6-628e-428e-8b8b-b482cdd2a5de",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1583,7 +1646,9 @@
       "out": "s2_c3_l0_video",
       "output": "",
       "extra": {
-        "shot": "screen wide"
+        "prompt_id": "a3bcf167-61bb-4c3a-94af-992e742703ca",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1598,7 +1663,9 @@
       "out": "s2_c3_l1_video",
       "output": "",
       "extra": {
-        "shot": "warning insert"
+        "prompt_id": "41376696-254e-4fb1-a2fb-56161d4707a0",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1614,7 +1681,9 @@
       "out": "s2_c3_l2_video",
       "output": "",
       "extra": {
-        "speaker": "衡AI（畫外音）"
+        "prompt_id": "8aa37a41-9b8f-42e6-8f58-b20b9943b9db",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1630,7 +1699,9 @@
       "out": "s2_c3_l3_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "0b76eb26-7e88-40b2-a5d0-6f759441624c",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1646,7 +1717,9 @@
       "out": "s2_c3_l4_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "92d5190e-6e73-4c2e-b90c-86b57cc26360",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1662,7 +1735,9 @@
       "out": "s2_c3_l5_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "23576fa5-256c-4c3e-aef2-d12beed0c68d",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1678,7 +1753,9 @@
       "out": "s2_c3_l6_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "d2b1f56b-2747-40a2-a9d9-89d69accda18",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1694,7 +1771,9 @@
       "out": "s2_c3_l7_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "e74af267-b74c-4671-9fea-00effa394507",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1710,7 +1789,9 @@
       "out": "s2_c3_l8_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "dfa95342-2e7b-46ff-827c-0859b6feda7c",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1726,7 +1807,9 @@
       "out": "s2_c3_l9_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "4836a8d5-2071-49d9-afff-4245777d9484",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1742,7 +1825,9 @@
       "out": "s2_c3_l10_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "e4844497-eefc-463c-82cd-812f1d8b01fd",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1758,7 +1843,9 @@
       "out": "s2_c3_l11_video",
       "output": "",
       "extra": {
-        "shot": "wide circle"
+        "prompt_id": "f5097011-a282-4502-adf9-64fc9ce6ab22",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1774,7 +1861,9 @@
       "out": "s2_c3_l12_video",
       "output": "",
       "extra": {
-        "speaker": "老張"
+        "prompt_id": "efc37e54-2510-4062-8f4a-6d0a01bfd938",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1790,7 +1879,9 @@
       "out": "s2_c3_l13_video",
       "output": "",
       "extra": {
-        "speaker": "老張"
+        "prompt_id": "171e42e1-6107-4bea-b4c9-d093302244d4",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1807,7 +1898,9 @@
       "out": "s2_c3_l14_video",
       "output": "",
       "extra": {
-        "speaker": "陸誠"
+        "prompt_id": "3f9b9cf7-9e9b-4acf-84a2-5020e3831bbd",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1824,7 +1917,9 @@
       "out": "s2_c3_l15_video",
       "output": "",
       "extra": {
-        "shot": "eye tremor macro"
+        "prompt_id": "c2d24704-758a-4766-973c-6dddcda25d49",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1840,7 +1935,9 @@
       "out": "s2_c3_l16_video",
       "output": "",
       "extra": {
-        "speaker": "老張"
+        "prompt_id": "f4b68a28-b682-4d5d-adfd-d76aa71f08f5",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1856,7 +1953,9 @@
       "out": "s2_c3_l17_video",
       "output": "",
       "extra": {
-        "shot": "medal insert"
+        "prompt_id": "7dd5d6e4-749e-4eb1-a3cb-afb635bf9f93",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1872,7 +1971,9 @@
       "out": "s2_c3_l18_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "cecb3c11-7a15-4e31-a14d-627044a51fde",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1888,7 +1989,9 @@
       "out": "s2_c3_l19_video",
       "output": "",
       "extra": {
-        "shot": "cold wide"
+        "prompt_id": "d05182d9-4804-4e33-b19c-fe8732733fd3",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1904,7 +2007,9 @@
       "out": "s2_c3_l20_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "7ecc6c78-ab08-4704-a360-d1061c8748c0",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1920,7 +2025,9 @@
       "out": "s2_c4_l0_video",
       "output": "",
       "extra": {
-        "shot": "cold breath macro"
+        "prompt_id": "fac31d98-9792-4c98-89de-801a58b753e7",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1935,7 +2042,9 @@
       "out": "s2_c4_l1_video",
       "output": "",
       "extra": {
-        "shot": "screen fill"
+        "prompt_id": "ef25aa40-42c6-4ea0-8fb7-5f3cf59cd5eb",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1951,7 +2060,9 @@
       "out": "s2_c4_l2_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "751a3f0c-2f3a-4b1a-b6af-3f6243b266b3",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1966,7 +2077,9 @@
       "out": "s2_c4_l3_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "fc6905bb-b1fb-4b5d-891c-9ef43fc144aa",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1981,7 +2094,9 @@
       "out": "s2_c4_l4_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "b25337d4-0811-4fb0-8999-619dafc541b0",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -1996,7 +2111,9 @@
       "out": "s2_c4_l5_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "f5a9c7a3-95bb-4bda-8ec8-22fb142f6ffd",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -2012,7 +2129,9 @@
       "out": "s2_c4_l6_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "dc952429-232d-4521-bf74-252f88f9f50b",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -2028,7 +2147,9 @@
       "out": "s2_c4_l7_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "a7fd6db0-efd6-444c-9437-054ed5bc1511",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -2044,23 +2165,28 @@
       "out": "s2_c4_l8_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "a0be48a8-df2d-41f4-af03-d54c0838c777",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
       "id": "c4_l9",
       "description": "c4_l9 旁白：選懲罰自私自由，雙shot",
       "type": "r2v",
-      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, turning toward the cold instead.\n\n<Subject 2> is the chilled room from <Picture 2>:\na frigid small room, the window's wasteland dark.\n\nsummary:\nReference-based cold-turn narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nTurn toward the window dark, then hold.\n\n[Shot 1]\n\n00:00-00:07\n\nAction:\nLu Cheng turns toward the window's wasteland dark, weighing the useless freedom, lips sealed, silent and never the source of the narration.\n\n[Shot 2]\n\n00:07-00:14\n\nAction:\nThe camera holds on his back against the blue dark. No duplicated figure. No split or mirrored composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n如果我選懲罰，我是利己的嗎。\n因為我滿足了那虛無飄渺的真理尊嚴。\n但我也是自私的，因為我拋棄了父親，拋棄了社會責任，去追求一種無用的自由。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Wasteland hush with no voice.\n\nnon_diegetic_music:\nA spare, cool ambient bed, city-as-machine hum.",
+      "prompt": "subject_definitions:\n<Subject 1> is Lu Cheng from <Picture 1>:\nEast Asian man around thirty, grey system navigator uniform, turning toward the cold instead.\n\n<Subject 2> is the chilled room from <Picture 2>:\na frigid small room, the window's wasteland dark.\n\n<Subject 3> is the old father from <Picture 3>:\ngaunt elderly East Asian man in a hospital bed, white blanket to the chest, thin grey hair, weak gentle eyes.\n\nsummary:\nReference-based cold-turn narration shot with a father memory.\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Lu Cheng's lips stay sealed. The father is a silent memory, mouth closed, making no speech and no sound.\n\ndetailed_description:\n\nVisual style:\nTurn toward the window dark, the father memory rising like a shadow.\n\n[Shot 1]\n\n00:00-00:07\n\nAction:\nLu Cheng turns toward the window's wasteland dark, weighing the useless freedom. In the glass the faint reflection-memory of the old father in his hospital bed rises and fades, a quiet ghost of what he abandons, lips sealed. The father is a separate old man, gaunt and clearly different from Lu Cheng, never duplicated, never mirrored.\n\n[Shot 2]\n\n00:07-00:14\n\nAction:\nThe camera holds on his back against the blue dark. No duplicated figure. No split or mirrored composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n如果我選懲罰，我是利己的嗎。\n因為我滿足了那虛無飄渺的真理尊嚴。\n但我也是自私的，因為我拋棄了父親，拋棄了社會責任，去追求一種無用的自由。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Wasteland hush with no voice.\n\nnon_diegetic_music:\nA spare, cool ambient bed, city-as-machine hum.",
       "refs": [
         "Ref-LC",
-        "Ref-ROOM4"
+        "Ref-ROOM4",
+        "Ref-FATHER"
       ],
       "seed": 311000,
       "out": "s2_c4_l9_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "685c9506-8955-4f62-beb5-48db0fbe8fcf",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -2076,7 +2202,9 @@
       "out": "s2_c4_l10_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "f9ff4639-1256-4d26-b5f4-3da1cc57d603",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -2092,7 +2220,9 @@
       "out": "s2_c4_l11_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "6532cf72-a93d-4f61-945f-e0ce4202c836",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -2108,7 +2238,9 @@
       "out": "s2_c4_l12_video",
       "output": "",
       "extra": {
-        "voice": "narrator-male"
+        "prompt_id": "17a8b09d-8aeb-47a3-afe5-4984e8fbb54e",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -2124,7 +2256,9 @@
       "out": "s2_c4_l13_video",
       "output": "",
       "extra": {
-        "shot": "window wide"
+        "prompt_id": "affbaa4b-967b-4ca7-9011-7321c88b764d",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -2140,7 +2274,9 @@
       "out": "s2_c4_l14_video",
       "output": "",
       "extra": {
-        "shot": "finger hover macro"
+        "prompt_id": "9026e77f-10f9-45b1-a68c-585d441d40bb",
+        "v2_width": 512,
+        "v2_height": 288
       }
     },
     {
@@ -2156,6 +2292,9 @@
       "out": "s2_c4_l15_video",
       "output": "",
       "extra": {
+        "prompt_id": "2bafedc4-27da-4459-a457-f061a9cbb5a4",
+        "v2_width": 512,
+        "v2_height": 288,
         "speaker": "系統（畫外音）"
       }
     },
@@ -2172,6 +2311,9 @@
       "out": "s2_c4_l16_video",
       "output": "",
       "extra": {
+        "prompt_id": "1d814856-d231-4ecf-8188-3554af9dff68",
+        "v2_width": 512,
+        "v2_height": 288,
         "voice": "narrator-male"
       }
     },
@@ -2188,6 +2330,9 @@
       "out": "s2_c4_l17_video",
       "output": "",
       "extra": {
+        "prompt_id": "0ec11435-d5cf-4711-b1a4-0d9c8b11e874",
+        "v2_width": 512,
+        "v2_height": 288,
         "voice": "narrator-male"
       }
     },
@@ -2204,6 +2349,9 @@
       "out": "s2_c4_l18_video",
       "output": "",
       "extra": {
+        "prompt_id": "04447e5a-c8b9-47fa-bba4-47030ffabf5b",
+        "v2_width": 512,
+        "v2_height": 288,
         "shot": "darkness insert"
       }
     },
@@ -2219,6 +2367,9 @@
       "out": "s2_c4_l19_video",
       "output": "",
       "extra": {
+        "prompt_id": "79dcea57-3c35-4f0f-b118-b2853ebb891c",
+        "v2_width": 512,
+        "v2_height": 288,
         "voice": "narrator-male"
       }
     },
@@ -2235,6 +2386,9 @@
       "out": "s2_c4_l20_video",
       "output": "",
       "extra": {
+        "prompt_id": "9f904f77-4ce3-4e32-a8f2-0e61fadabea0",
+        "v2_width": 512,
+        "v2_height": 288,
         "voice": "narrator-male"
       }
     }

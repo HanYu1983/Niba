@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { readFileSync, writeFileSync, mkdirSync, existsSync, renameSync, readdirSync, statSync } from "node:fs";
 import { z } from "zod";
-import { dirname, resolve, isAbsolute, join, extname, basename } from "node:path";
+import { dirname, resolve, isAbsolute, join, extname } from "node:path";
 
 const TYPES = ["t2i", "t2v", "i2v", "r2v"];
 const VOICES = ["scene", "dialogue", "narration"]; // 場景 / 對白 / 旁白
@@ -174,26 +174,30 @@ function walkFiles(dir, acc = []) {
   return acc;
 }
 
-function trailingNumber(file) {
-  const m = basename(file).replace(/\.[^.]+$/, "").match(/(\d+)\D*$/);
-  return m ? parseInt(m[1], 10) : null;
-}
-
-// 從資料夾挑檔：號碼最大者；都無號碼則取排序第一個（.txt 旁注一律忽略）
+// 從資料夾挑檔：建立時間最晚者（均無則取排序第一個；.txt 旁注一律忽略）
 function pickMediaFile(dir, exts) {
-  const files = walkFiles(dir)
-    .filter((p) => exts.has(extname(p).toLowerCase()))
-    .sort();
+  const files = walkFiles(dir).filter((p) => exts.has(extname(p).toLowerCase()));
   if (!files.length) return null;
-  let best = null, bestNum = -1, scored = false;
+  let best = null, bestT = -1;
   for (const f of files) {
-    const n = trailingNumber(f);
-    if (n !== null) { scored = true; if (n > bestNum) { bestNum = n; best = f; } }
+    const t = fileTime(f);
+    if (t >= bestT) { bestT = t; best = f; }
   }
-  return scored ? best : files[0];
+  return best;
 }
 
-// ref 輸出解析：output 可為檔案或資料夾（資料夾自動挑號碼最大者）；output 為空則退回 out 目錄
+// 建立時間（birthtime 不可得時退回修改時間），無再退回 -1
+function fileTime(file) {
+  try {
+    const st = statSync(file);
+    if (st.birthtimeMs && st.birthtimeMs > 0) return st.birthtimeMs;
+    if (st.ctimeMs && st.ctimeMs > 0) return st.ctimeMs;
+    if (st.mtimeMs && st.mtimeMs > 0) return st.mtimeMs;
+  } catch {}
+  return -1;
+}
+
+// ref 輸出解析：output 可為檔案或資料夾（資料夾自動挑建立時間最晚的媒體）；output 為空則退回 out 目錄
 function resolveRefPath(el, jsonDir, baseDir) {
   const sources = [];
   if (el.output && String(el.output).trim()) sources.push(["output", String(el.output).trim()]);
@@ -702,7 +706,7 @@ export function createMcpServer() {
 
   server.tool(
     "story_submit_bundle",
-    "Build the ComfyUI submission bundle for one element: top-level width/height, plan duration/voice, seed/out/type/prompt, and refs resolved to existing files (output is folder-level; the max-numbered file is auto-picked, first file if unnumbered). Unready refs error out with guidance instead of returning a half bundle.",
+    "Build the ComfyUI submission bundle for one element: top-level width/height, plan duration/voice, seed/out/type/prompt, and refs resolved to existing files (output is folder-level; the newest-created media file is auto-picked, first file if undated). Unready refs error out with guidance instead of returning a half bundle.",
     {
       file: z.string().describe("Story JSON path"),
       id: z.string().min(1).describe("element id to submit to ComfyUI"),
@@ -722,11 +726,11 @@ export function createMcpServer() {
         const rel = findById(data.story, r);
         if (!rel) { missing.push(`${r}（元素不存在）`); continue; }
         const hit = resolveRefPath(rel, jsonDir, baseDir);
-        if (!hit.path) { missing.push(`${r}（找不到可用檔案：先生成該參考，輸出目錄已有檔會自動挑號碼最大者）`); continue; }
+        if (!hit.path) { missing.push(`${r}（找不到可用檔案：先生成該參考，輸出目錄已有檔會自動挑建立時間最晚者）`); continue; }
         refs.push({ id: r, type: rel.type, path: hit.path, via: `${hit.via}:${hit.kind}` });
       }
       if (missing.length) {
-        throw new Error(`"${p.id}" 的提交包組不起來，ref 輸出未就緒：\n- ${missing.join("\n- ")}\n先把缺的 refs 生成出來（輸出進其 out 目錄即可，取包時自動挑號碼最大者）後重試。`);
+        throw new Error(`"${p.id}" 的提交包組不起來，ref 輸出未就緒：\n- ${missing.join("\n- ")}\n先把缺的 refs 生成出來（輸出進其 out 目錄即可，取包時自動挑建立時間最晚者）後重試。`);
       }
       return ok({
         id: p.id,
@@ -740,6 +744,44 @@ export function createMcpServer() {
         prompt: el.prompt,
         refs,
         ...(el.extra !== undefined ? { extra: el.extra } : {})
+      });
+    }
+  );
+
+  server.tool(
+    "story_get_all_video_paths",
+    "Get the merged-video file path of every video element in story array order (= merge order). Each path resolves to the newest-created media file inside its out/output folder, same rule as submit_bundle refs. Includes the plan voice/duration and a ready flag per element.",
+    {
+      file: z.string().describe("Story JSON path"),
+      base_dir: z.string().optional().describe("base dir that relative output paths resolve against (e.g. ai_gen_video dir); default = cwd")
+    },
+    async (p) => {
+      const abs = resolve(p.file);
+      const data = loadStory(abs);
+      const jsonDir = dirname(abs);
+      const baseDir = p.base_dir ? resolve(p.base_dir) : process.cwd();
+      const rows = data.story.map((el) => {
+        if (el.type !== "r2v" && el.type !== "i2v" && el.type !== "t2v") return { id: el.id, type: el.type, video: null, ready: false, skipped: "not a video element" };
+        const r = resolveRefPath(el, jsonDir, baseDir);
+        const plan = findById(data.plan, el.id);
+        return {
+          id: el.id,
+          type: el.type,
+          video: r.path,
+          via: r.path ? `${r.via}:${r.kind}` : null,
+          ready: !!r.path,
+          ...(plan ? { voice: plan.voice, duration: plan.duration } : {})
+        };
+      });
+      const ready = rows.filter((x) => x.ready).map((x) => x.video);
+      return ok({
+        file: abs,
+        base_dir: baseDir,
+        total: data.story.length,
+        video_count: ready.length,
+        missing: rows.filter((x) => !x.ready).map((x) => x.id),
+        order: rows.map((x) => x.video).filter(Boolean),
+        rows
       });
     }
   );
