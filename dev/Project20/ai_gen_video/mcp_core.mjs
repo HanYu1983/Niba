@@ -341,7 +341,7 @@ function extractMetaFromHistory(entry) {
 // ---- Tools ----
 
 export function createMcpServer() {
-  const server = new McpServer({ name: "comfy-video-gen", version: "4.0.0" });
+  const server = new McpServer({ name: "comfy-video-gen", version: "4.1.0" });
 
   // ---------------- Image: SDXL ----------------
   server.tool(
@@ -597,6 +597,45 @@ export function createMcpServer() {
       const q = await comfyGet("/queue");
       const fmt = (list) => (list || []).map(([n, id]) => ({ number: n, prompt_id: id }));
       return { content: [{ type: "text", text: JSON.stringify({ running: fmt(q.queue_running), pending: fmt(q.queue_pending) }, null, 2) }] };
+    }
+  );
+
+  // ---------------- Queue: cancel jobs ----------------
+  server.tool(
+    "cancel_comfy_jobs",
+    "Cancel ComfyUI queue jobs. prompt_ids deletes specific PENDING jobs from the queue; all=true clears the whole queue; running_ids stops specific RUNNING jobs; interrupt_running=true stops whatever is currently running (POST /interrupt). Always returns the queue state after the operation.",
+    {
+      prompt_ids: z.array(z.string()).optional().describe("prompt_ids of pending jobs to cancel (removed from the queue); a job already started still finishes unless you also pass interrupt_running or running_ids"),
+      all: z.boolean().optional().describe("clear the entire queue (all pending jobs)"),
+      running_ids: z.array(z.string()).optional().describe("prompt_ids of running jobs to stop (delete_running + interrupt)"),
+      interrupt_running: z.boolean().optional().describe("stop whatever is currently running by interrupting execution (default false)")
+    },
+    async (p) => {
+      const body = {};
+      if (p.all) body.clear = true;
+      if (p.prompt_ids && p.prompt_ids.length) body.delete = [...new Set(p.prompt_ids)];
+      const runIds = new Set(p.running_ids || []);
+      if (p.interrupt_running) {
+        const q = await comfyGet("/queue");
+        for (const [, id] of q.queue_running || []) runIds.add(id);
+      }
+      if (runIds.size) {
+        await comfyPost("/interrupt", {}).catch((e) => process.stderr.write(`[mcp] /interrupt failed: ${e.message}\n`));
+        body.delete_running = [...runIds];
+      }
+      if (Object.keys(body).length) await comfyPost("/queue", body);
+      const q = await comfyGet("/queue");
+      const fmt = (list) => (list || []).map(([, id]) => id);
+      return { content: [{ type: "text", text: JSON.stringify({
+        status: "done",
+        requested: {
+          clear_queue: !!p.all,
+          deleted_pending: p.prompt_ids || [],
+          delete_running: [...runIds]
+        },
+        remaining_running: fmt(q.queue_running),
+        remaining_pending: fmt(q.queue_pending)
+      }, null, 2) }] };
     }
   );
 

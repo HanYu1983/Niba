@@ -407,13 +407,13 @@ export function createMcpServer() {
     }
   );
 
-  // ----- phase1: plan -----
+// ----- plan (editable in any phase; phase2 drift handled by validate) -----
 
   server.registerTool(
     "plan_add_element",
     {
       title: "plan_add_element",
-      description: "Phase1 only: add a plan block {id, voice, duration, lines}. This is the subtitle table (§6.5): id/voice/duration/lines are enough to export YT subtitles before any video exists.",
+      description: "Add a plan block {id, voice, duration, lines} (works in any phase). This is the subtitle table (§6.5): id/voice/duration/lines are enough to export YT subtitles before any video exists. Adding in phase2 leaves a plan block without a story element until one is added.",
       inputSchema: {
         input: z.string().describe("input Story JSON path"),
         output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
@@ -424,7 +424,6 @@ export function createMcpServer() {
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
       const data = loadStory(inAbs);
-      requirePhase(data, 1);
       if (findById(data.plan, p.item.id) && !p.overwrite) {
         throw new Error(`plan id exists: "${p.item.id}" (pass overwrite=true to replace)`);
       }
@@ -448,7 +447,7 @@ export function createMcpServer() {
     "plan_edit_element",
     {
       title: "plan_edit_element",
-      description: "Phase1 only: edit a plan block (partial patch).",
+      description: "Edit a plan block (partial patch; works in any phase).",
       inputSchema: {
         input: z.string().describe("input Story JSON path"),
         output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
@@ -459,7 +458,6 @@ export function createMcpServer() {
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
       const data = loadStory(inAbs);
-      requirePhase(data, 1);
       const el = findById(data.plan, p.id);
       if (!el) throw new Error(`plan id not found: "${p.id}"`);
       const next = { ...el };
@@ -481,7 +479,7 @@ export function createMcpServer() {
     "plan_delete_element",
     {
       title: "plan_delete_element",
-      description: "Phase1 only: delete a plan block by id.",
+      description: "Delete a plan block by id (works in any phase).",
       inputSchema: {
         input: z.string().describe("input Story JSON path"),
         output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
@@ -491,7 +489,6 @@ export function createMcpServer() {
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
       const data = loadStory(inAbs);
-      requirePhase(data, 1);
       const at = data.plan.findIndex((e) => e.id === p.id);
       if (at < 0) throw new Error(`plan id not found: "${p.id}"`);
       data.plan.splice(at, 1);
