@@ -8,6 +8,11 @@
         "COMFY_SERVER": "http://192.168.0.193:8000"
       },
       "enabled": true
+    },
+    "story-editor": {
+      "type": "local",
+      "command": ["node", "D:\\han\\Niba\\dev\\Project20\\ai_edit_story\\mcp_server_stdio.mjs"],
+      "enabled": true
     }
   },
   "experimental": {
