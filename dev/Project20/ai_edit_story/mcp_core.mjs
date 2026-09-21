@@ -324,15 +324,18 @@ const ok = (obj) => ({ content: [{ type: "text", text: JSON.stringify(obj, null,
 export function createMcpServer() {
   const server = new McpServer({ name: "story-editor", version: "2.4.0" });
 
-  server.tool(
+  server.registerTool(
     "story_init",
-    "Create an empty Story JSON file {description, width, height, phase:1, plan:[], story:[]}. Arrays carry {id,...}; array order = merge/subtitle order.",
     {
-      file: z.string().describe("path of JSON file to create"),
-      description: z.string().optional().describe("project-level description for AI"),
-      width: z.number().int().min(64).max(4096).optional().describe("project-level width"),
-      height: z.number().int().min(64).max(4096).optional().describe("project-level height"),
-      overwrite: z.boolean().optional().describe("overwrite if file exists (default false)")
+      title: "story_init",
+      description: "Create an empty Story JSON file {description, width, height, phase:1, plan:[], story:[]}. Arrays carry {id,...}; array order = merge/subtitle order.",
+      inputSchema: {
+        file: z.string().describe("path of JSON file to create"),
+        description: z.string().optional().describe("project-level description for AI"),
+        width: z.number().int().min(64).max(4096).optional().describe("project-level width"),
+        height: z.number().int().min(64).max(4096).optional().describe("project-level height"),
+        overwrite: z.boolean().optional().describe("overwrite if file exists (default false)")
+      }
     },
     async (p) => {
       const abs = resolve(p.file);
@@ -351,13 +354,16 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "story_edit_meta",
-    "Edit top-level project fields (description/width/height). Reads input JSON, writes to output JSON (omit output or same path = overwrite).",
     {
-      input: z.string().describe("input Story JSON path"),
-      output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
-      patch: MetaPatch.describe("partial top-level fields to merge (null deletes the field)")
+      title: "story_edit_meta",
+      description: "Edit top-level project fields (description/width/height). Reads input JSON, writes to output JSON (omit output or same path = overwrite).",
+      inputSchema: {
+        input: z.string().describe("input Story JSON path"),
+        output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
+        patch: MetaPatch.describe("partial top-level fields to merge (null deletes the field)")
+      }
     },
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
@@ -372,13 +378,16 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "story_set_phase",
-    "Switch creation phase. 1→2 requires a complete plan (every block has id/voice/duration; dialogue/narration have lines) and locks planning. 2→1 unlocks planning (story kept, may drift).",
     {
-      input: z.string().describe("input Story JSON path"),
-      output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
-      phase: z.enum(["1", "2"]).describe("target phase").transform((v) => Number(v))
+      title: "story_set_phase",
+      description: "Switch creation phase. 1→2 requires a complete plan (every block has id/voice/duration; dialogue/narration have lines) and locks planning. 2→1 unlocks planning (story kept, may drift).",
+      inputSchema: {
+        input: z.string().describe("input Story JSON path"),
+        output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
+        phase: z.enum(["1", "2"]).describe("target phase").transform((v) => Number(v))
+      }
     },
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
@@ -400,14 +409,17 @@ export function createMcpServer() {
 
   // ----- phase1: plan -----
 
-  server.tool(
+  server.registerTool(
     "plan_add_element",
-    "Phase1 only: add a plan block {id, voice, duration, lines}. This is the subtitle table (§6.5): id/voice/duration/lines are enough to export YT subtitles before any video exists.",
     {
-      input: z.string().describe("input Story JSON path"),
-      output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
-      item: PlanInput,
-      overwrite: z.boolean().optional().describe("overwrite existing plan id (default false)")
+      title: "plan_add_element",
+      description: "Phase1 only: add a plan block {id, voice, duration, lines}. This is the subtitle table (§6.5): id/voice/duration/lines are enough to export YT subtitles before any video exists.",
+      inputSchema: {
+        input: z.string().describe("input Story JSON path"),
+        output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
+        item: PlanInput,
+        overwrite: z.boolean().optional().describe("overwrite existing plan id (default false)")
+      }
     },
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
@@ -432,14 +444,17 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "plan_edit_element",
-    "Phase1 only: edit a plan block (partial patch).",
     {
-      input: z.string().describe("input Story JSON path"),
-      output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
-      id: z.string().min(1),
-      patch: PlanPatch
+      title: "plan_edit_element",
+      description: "Phase1 only: edit a plan block (partial patch).",
+      inputSchema: {
+        input: z.string().describe("input Story JSON path"),
+        output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
+        id: z.string().min(1),
+        patch: PlanPatch
+      }
     },
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
@@ -462,13 +477,16 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "plan_delete_element",
-    "Phase1 only: delete a plan block by id.",
     {
-      input: z.string().describe("input Story JSON path"),
-      output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
-      id: z.string().min(1)
+      title: "plan_delete_element",
+      description: "Phase1 only: delete a plan block by id.",
+      inputSchema: {
+        input: z.string().describe("input Story JSON path"),
+        output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
+        id: z.string().min(1)
+      }
     },
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
@@ -482,11 +500,14 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "plan_get",
-    "Phase1 getter: read the subtitle table (§6.5) with computed cumulative starts, per-line cues, italic flags and planned total. Works in any phase; needs no videos.",
     {
-      file: z.string().describe("Story JSON path")
+      title: "plan_get",
+      description: "Phase1 getter: read the subtitle table (§6.5) with computed cumulative starts, per-line cues, italic flags and planned total. Works in any phase; needs no videos.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path")
+      }
     },
     async (p) => {
       const abs = resolve(p.file);
@@ -508,14 +529,17 @@ export function createMcpServer() {
     }
   }
 
-  server.tool(
+  server.registerTool(
     "story_add_element",
-    "Phase2 only: add a story element {id, type, prompt, refs, seed, out, output, extra}. Duration/width/height come from plan/top-level, not here. Non-t2i ids must match a plan id.",
     {
-      input: z.string().describe("input Story JSON path"),
-      output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
-      element: ElementInput,
-      overwrite: z.boolean().optional().describe("overwrite existing story id (default false)")
+      title: "story_add_element",
+      description: "Phase2 only: add a story element {id, type, prompt, refs, seed, out, output, extra}. Duration/width/height come from plan/top-level, not here. Non-t2i ids must match a plan id.",
+      inputSchema: {
+        input: z.string().describe("input Story JSON path"),
+        output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
+        element: ElementInput,
+        overwrite: z.boolean().optional().describe("overwrite existing story id (default false)")
+      }
     },
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
@@ -547,14 +571,17 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "story_edit_element",
-    "Phase2 only: edit a story element (partial patch merge). duration/width/height live in plan/top-level: passing them errors with guidance.",
     {
-      input: z.string().describe("input Story JSON path"),
-      output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
-      id: z.string().min(1),
-      patch: ElementPatch.describe("partial fields to merge into the element")
+      title: "story_edit_element",
+      description: "Phase2 only: edit a story element (partial patch merge). duration/width/height live in plan/top-level: passing them errors with guidance.",
+      inputSchema: {
+        input: z.string().describe("input Story JSON path"),
+        output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
+        id: z.string().min(1),
+        patch: ElementPatch.describe("partial fields to merge into the element")
+      }
     },
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
@@ -589,13 +616,16 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "story_delete_element",
-    "Phase2 only: delete a story element by id (array order preserved).",
     {
-      input: z.string().describe("input Story JSON path"),
-      output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
-      id: z.string().min(1)
+      title: "story_delete_element",
+      description: "Phase2 only: delete a story element by id (array order preserved).",
+      inputSchema: {
+        input: z.string().describe("input Story JSON path"),
+        output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
+        id: z.string().min(1)
+      }
     },
     async (p) => {
       const { inAbs, outAbs } = resolveIO(p.input, p.output);
@@ -609,12 +639,15 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "story_get_element",
-    "Read a single element by id.",
     {
-      file: z.string().describe("Story JSON path"),
-      id: z.string().min(1)
+      title: "story_get_element",
+      description: "Read a single element by id.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path"),
+        id: z.string().min(1)
+      }
     },
     async (p) => {
       const data = loadStory(resolve(p.file));
@@ -625,15 +658,18 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "story_list_elements",
-    "Read all elements in array order (= merge/subtitle order). Filter by type; summary mode truncates prompt/description. Includes plan voice/duration per id.",
     {
-      file: z.string().describe("Story JSON path"),
-      type: z.enum(["t2i", "t2v", "i2v", "r2v"]).optional().describe("filter by type"),
-      summary: z.boolean().optional().describe("truncate prompt/description to 120 chars (default true)"),
-      limit: z.number().int().min(1).max(1000).optional(),
-      offset: z.number().int().min(0).optional()
+      title: "story_list_elements",
+      description: "Read all elements in array order (= merge/subtitle order). Filter by type; summary mode truncates prompt/description. Includes plan voice/duration per id.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path"),
+        type: z.enum(["t2i", "t2v", "i2v", "r2v"]).optional().describe("filter by type"),
+        summary: z.boolean().optional().describe("truncate prompt/description to 120 chars (default true)"),
+        limit: z.number().int().min(1).max(1000).optional(),
+        offset: z.number().int().min(0).optional()
+      }
     },
     async (p) => {
       const abs = resolve(p.file);
@@ -660,12 +696,15 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "story_get_chain",
-    "Read all elements in the dependency chain of an id (recursive via refs, deps-first order). Reports missing refs and cycles.",
     {
-      file: z.string().describe("Story JSON path"),
-      id: z.string().min(1).describe("start element id, chain includes itself last")
+      title: "story_get_chain",
+      description: "Read all elements in the dependency chain of an id (recursive via refs, deps-first order). Reports missing refs and cycles.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path"),
+        id: z.string().min(1).describe("start element id, chain includes itself last")
+      }
     },
     async (p) => {
       const abs = resolve(p.file);
@@ -678,13 +717,16 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "story_check_chain_outputs",
-    "Check whether each ref-output in the dependency chain exists on disk. Uses each element's output field; resolves relative paths against base_dir then the JSON dir.",
     {
-      file: z.string().describe("Story JSON path"),
-      id: z.string().min(1).describe("start element id"),
-      base_dir: z.string().optional().describe("base dir for relative output paths (e.g. ai_gen_video dir); default = cwd")
+      title: "story_check_chain_outputs",
+      description: "Check whether each ref-output in the dependency chain exists on disk. Uses each element's output field; resolves relative paths against base_dir then the JSON dir.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path"),
+        id: z.string().min(1).describe("start element id"),
+        base_dir: z.string().optional().describe("base dir for relative output paths (e.g. ai_gen_video dir); default = cwd")
+      }
     },
     async (p) => {
       const abs = resolve(p.file);
@@ -704,13 +746,16 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "story_submit_bundle",
-    "Build the ComfyUI submission bundle for one element: top-level width/height, plan duration/voice, seed/out/type/prompt, and refs resolved to existing files (output is folder-level; the newest-created media file is auto-picked, first file if undated). Unready refs error out with guidance instead of returning a half bundle.",
     {
-      file: z.string().describe("Story JSON path"),
-      id: z.string().min(1).describe("element id to submit to ComfyUI"),
-      base_dir: z.string().optional().describe("base dir that relative ref-output paths resolve against (e.g. ai_gen_video dir); default = cwd")
+      title: "story_submit_bundle",
+      description: "Build the ComfyUI submission bundle for one element: top-level width/height, plan duration/voice, seed/out/type/prompt, and refs resolved to existing files (output is folder-level; the newest-created media file is auto-picked, first file if undated). Unready refs error out with guidance instead of returning a half bundle.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path"),
+        id: z.string().min(1).describe("element id to submit to ComfyUI"),
+        base_dir: z.string().optional().describe("base dir that relative ref-output paths resolve against (e.g. ai_gen_video dir); default = cwd")
+      }
     },
     async (p) => {
       const abs = resolve(p.file);
@@ -748,12 +793,15 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "story_get_all_video_paths",
-    "Get the merged-video file path of every video element in story array order (= merge order). Each path resolves to the newest-created media file inside its out/output folder, same rule as submit_bundle refs. Includes the plan voice/duration and a ready flag per element.",
     {
-      file: z.string().describe("Story JSON path"),
-      base_dir: z.string().optional().describe("base dir that relative output paths resolve against (e.g. ai_gen_video dir); default = cwd")
+      title: "story_get_all_video_paths",
+      description: "Get the merged-video file path of every video element in story array order (= merge order). Each path resolves to the newest-created media file inside its out/output folder, same rule as submit_bundle refs. Includes the plan voice/duration and a ready flag per element.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path"),
+        base_dir: z.string().optional().describe("base dir that relative output paths resolve against (e.g. ai_gen_video dir); default = cwd")
+      }
     },
     async (p) => {
       const abs = resolve(p.file);
@@ -761,7 +809,7 @@ export function createMcpServer() {
       const jsonDir = dirname(abs);
       const baseDir = p.base_dir ? resolve(p.base_dir) : process.cwd();
       const rows = data.story.map((el) => {
-        if (el.type !== "r2v" && el.type !== "i2v" && el.type !== "t2v") return { id: el.id, type: el.type, video: null, ready: false, skipped: "not a video element" };
+        if (el.type !== "r2v" && el.type !== "i2v" && el.type !== "t2v") return { id: el.id, type: el.type, video: null, ready: false, skipped: true };
         const r = resolveRefPath(el, jsonDir, baseDir);
         const plan = findById(data.plan, el.id);
         return {
@@ -773,24 +821,29 @@ export function createMcpServer() {
           ...(plan ? { voice: plan.voice, duration: plan.duration } : {})
         };
       });
-      const ready = rows.filter((x) => x.ready).map((x) => x.video);
+      const readyRows = rows.filter((x) => x.ready && !x.skipped);
+      const missingRows = rows.filter((x) => !x.ready && !x.skipped);
       return ok({
         file: abs,
         base_dir: baseDir,
         total: data.story.length,
-        video_count: ready.length,
-        missing: rows.filter((x) => !x.ready).map((x) => x.id),
-        order: rows.map((x) => x.video).filter(Boolean),
+        video_total: rows.filter((x) => !x.skipped).length,
+        video_ready: readyRows.length,
+        missing: missingRows.map((x) => x.id),
+        order: readyRows.map((x) => x.video),
         rows
       });
     }
   );
 
-  server.tool(
+  server.registerTool(
     "story_validate",
-    "Validate the whole Story JSON: unique ids, unknown types/voices, missing refs, self-refs, cycles, empty prompts, per-type ref limits (r2v<=9, i2v<=2), phase2 plan coverage, and <d>-vs-plan-lines mirror warnings.",
     {
-      file: z.string().describe("Story JSON path")
+      title: "story_validate",
+      description: "Validate the whole Story JSON: unique ids, unknown types/voices, missing refs, self-refs, cycles, empty prompts, per-type ref limits (r2v<=9, i2v<=2), phase2 plan coverage, and <d>-vs-plan-lines mirror warnings.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path")
+      }
     },
     async (p) => {
       const abs = resolve(p.file);
@@ -844,13 +897,16 @@ export function createMcpServer() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "story_export_srt",
-    "Export YouTube SRT (§6.5) from the plan table: scale = total_seconds / planned_total, per-line cues (short lines front-weighted, long blocks split evenly), narration wrapped in <i>. Needs no videos.",
     {
-      file: z.string().describe("Story JSON path"),
-      total_seconds: z.number().positive().describe("actual merged total seconds (merge_videos回傳的 total_seconds)"),
-      out: z.string().optional().describe("SRT output path (default: same dir, same basename + .srt)")
+      title: "story_export_srt",
+      description: "Export YouTube SRT (§6.5) from the plan table: scale = total_seconds / planned_total, per-line cues (short lines front-weighted, long blocks split evenly), narration wrapped in <i>. Needs no videos.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path"),
+        total_seconds: z.number().positive().describe("actual merged total seconds (merge_videos回傳的 total_seconds)"),
+        out: z.string().optional().describe("SRT output path (default: same dir, same basename + .srt)")
+      }
     },
     async (p) => {
       const abs = resolve(p.file);
