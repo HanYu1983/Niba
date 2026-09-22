@@ -2475,5 +2475,6 @@
         "voice": "narrator-male"
       }
     }
-  ]
+  ],
+  "story_md": "../story2.md"
 }

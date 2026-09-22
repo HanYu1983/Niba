@@ -36,6 +36,7 @@ function loadStory(inAbs) {
   if (!data.plan) data.plan = [];
   if (data.phase === undefined) data.phase = 1;
   if (data.description === undefined) data.description = "";
+  if (data.story_md === undefined) data.story_md = "";
   return data;
 }
 
@@ -314,6 +315,7 @@ const ElementPatch = z.object({
 
 const MetaPatch = z.object({
   description: z.string().optional().describe("project-level description for AI"),
+  story_md: z.string().optional().nullable().describe("path (relative or absolute) of the story md this project adapts from"),
   width: z.number().int().min(64).max(4096).optional().nullable().describe("project-level width, applies to all elements"),
   height: z.number().int().min(64).max(4096).optional().nullable().describe("project-level height, applies to all elements")
 }).passthrough();
@@ -464,10 +466,11 @@ export function createMcpServer() {
     "story_init",
     {
       title: "story_init",
-      description: "Create an empty Story JSON file {description, width, height, phase:1, plan:[], story:[]}. Arrays carry {id,...}; array order = merge/subtitle order.",
+      description: "Create an empty Story JSON file {description, story_md, width, height, phase:1, plan:[], story:[]}. Arrays carry {id,...}; array order = merge/subtitle order.",
       inputSchema: {
         file: z.string().describe("path of JSON file to create"),
         description: z.string().optional().describe("project-level description for AI"),
+        story_md: z.string().optional().describe("path (relative or absolute) of the story md this project adapts from"),
         width: z.number().int().min(64).max(4096).optional().describe("project-level width"),
         height: z.number().int().min(64).max(4096).optional().describe("project-level height"),
         overwrite: z.boolean().optional().describe("overwrite if file exists (default false)")
@@ -480,6 +483,7 @@ export function createMcpServer() {
       }
       saveStory(abs, {
         description: p.description ?? "",
+        story_md: p.story_md ?? "",
         ...(p.width !== undefined ? { width: p.width } : {}),
         ...(p.height !== undefined ? { height: p.height } : {}),
         phase: 1,
@@ -494,7 +498,7 @@ export function createMcpServer() {
     "story_edit_meta",
     {
       title: "story_edit_meta",
-      description: "Edit top-level project fields (description/width/height). Reads input JSON, writes to output JSON (omit output or same path = overwrite).",
+      description: "Edit top-level project fields (description/story_md/width/height). Reads input JSON, writes to output JSON (omit output or same path = overwrite).",
       inputSchema: {
         input: z.string().describe("input Story JSON path"),
         output: z.string().optional().describe("output Story JSON path (default = overwrite input)"),
@@ -510,7 +514,7 @@ export function createMcpServer() {
         else data[k] = v;
       }
       saveStory(outAbs, data);
-      return ok({ status: "meta-edited", input: inAbs, output: outAbs, description: data.description, width: data.width ?? null, height: data.height ?? null });
+      return ok({ status: "meta-edited", input: inAbs, output: outAbs, description: data.description, story_md: data.story_md ?? null, width: data.width ?? null, height: data.height ?? null });
     }
   );
 
@@ -825,7 +829,7 @@ export function createMcpServer() {
       const total = entries.length;
       if (p.offset) entries = entries.slice(p.offset);
       if (p.limit) entries = entries.slice(0, p.limit);
-      return ok({ file: abs, phase: data.phase, project_description: data.description, project_width: data.width ?? null, project_height: data.height ?? null, total, count: entries.length, entries });
+      return ok({ file: abs, phase: data.phase, project_description: data.description, project_story_md: data.story_md ?? null, project_width: data.width ?? null, project_height: data.height ?? null, total, count: entries.length, entries });
     }
   );
 
