@@ -42,10 +42,10 @@
 | `story_init` | 前置 | 建立空 Story JSON（phase:1, plan:[], story:[]） |
 | `story_edit_meta` | 任一 | 改頂層 description / width / height |
 | `story_set_phase` | 任一 | 1→2（鎖 plan，開 story）／2→1（解鎖 plan） |
-| `plan_add_element` | **phase1** | 加一塊分鏡 {id, voice, duration, lines} |
-| `plan_edit_element` | **phase1** | 改分鏡（partial patch） |
+| `plan_add_element` | **phase1** | 加一塊分鏡 {id, voice, duration, lines, source}；可先只填 id+source 切段，後續用 plan_edit_element 補 voice/duration/lines |
+| `plan_edit_element` | **phase1** | 改分鏡（partial patch；可用來「先切段填 source，再逐段補分類與秒數」的兩階段填法） |
 | `plan_delete_element` | **phase1** | 刪分鏡 |
-| `plan_get` | 任一 | 讀字幕表：累積起點、逐句 cue、斜體、規劃總秒 |
+| `plan_get` | 任一 | 讀字幕表：累積起點、逐句 cue、斜體、原文、規劃總秒 |
 | `story_add_element` | **phase2** | 加一格 {id, type, prompt, refs, seed, out, extra} |
 | `story_edit_element` | **phase2** | 改一格（partial merge） |
 | `story_delete_element` | **phase2** | 刪一格 |
@@ -57,6 +57,8 @@
 | `story_submit_comfy` | 任一 | 組包並轉呼叫 comfy-video-gen（自動代入參數，寫回 prompt_id） |
 | `story_submit_comfy_all` | 任一 | 依 story 陣列順序列提交（預設全部 r2v；可篩 types／ids） |
 | `story_comfy_tool` | 任一 | 透傳呼叫任意 comfy-video-gen 工具（queue／history／merge…） |
+| `story_download_videos` | 任一 | 逐格把 comfy history 成品下載回元素資料夾（自動代入 prompt_id＋out） |
+| `story_merge_videos` | 任一 | 依 story 陣列順序合併全部 ready 影片（自動代入 files＋resolution） |
 | `story_get_all_video_paths` | 任一 | 依合併順序列出每格影片路徑＋就緒旗標 |
 | `story_validate` | 任一 | 全 JSON 驗證（唯一 id、缺 ref、型別、phase2 覆蓋、`<d>` 鏡像） |
 | `story_export_srt` | 任一 | 從 plan 匯出 YouTube SRT（scale 換算、旁白斜體） |
@@ -75,10 +77,16 @@
 ①story_init → 建立 Story JSON（寫入 description 故事摘要、寬高）
    │
    ▼
-②PHASE 1（規劃）  區塊分割 → plan_add_element 一格一格建立分鏡
-   ├─ 決定每格該用 場景 / 對白 / 旁白（見 §三 使用場合）
-   ├─ 對白／旁白：lines 必須逐字寫好（這是未來的字幕文字）
-   └─ 每格 duration（對白 4字/秒、旁白 5字/秒、場景依鏡頭節奏）
+②PHASE 1（規劃）  分層填入：先切段填 source，再逐段分類與計秒
+   ├─ 第 1 步（必先）：腦中先有 場景 / 對白 / 旁白 的概念，但「先不管分類」，
+   │    把 story_md 的故事適當截斷後，逐字填入每一格的 source（原文欄位）。
+   │    理想的截法：所有 source 依 plan 順序串接，能大致拼回原故事。
+   ├─ 第 2 步（逐段）：回到每一段 source，判斷它屬於 場景 / 對白 / 旁白（見 §三），
+   │    設定該段的 voice、duration 與 lines：
+   │    ├─ voice：scene / dialogue / narration 三選一
+   │    ├─ 對白／旁白：lines 必須逐字寫好（這是未來的字幕文字）
+   │    └─ duration（對白 4字/秒、旁白 5字/秒、場景依鏡頭節奏）
+   └─ 亦即每格填寫順序：source → voice → duration → lines
    │
    ▼
   plan_get 檢查字幕表與總秒 → 確認無誤
@@ -88,7 +96,7 @@
    │
    ▼
 ④PHASE 2（畫面）  For 每一格 plan 分鏡，依 order：
-   ├─ 回想故事情節＋參考 phase1 該格設定（voice/duration/lines）
+   ├─ 回想故事情節＋參考 phase1 該格設定（voice/duration/lines/source 原文）
    ├─ 參考上一格已寫好的 prompt（連貫性：角色、地點、光影、情緒）
    ├─ 寫出生動的六欄位 r2v 提示詞（見 §四）
    ├─ 若此分鏡會用到參考圖素材，把對應 t2i 元素 id 放進 refs
@@ -111,18 +119,22 @@
 
 ```
 第 1 層  全書 → 章節圖        （列出各章功能與情緒走向）
-第 2 層  章節 → 三型別區塊    （逐一標示 場景 / 對白 / 旁白 + 計秒）＝ plan
-第 3 層  區塊 → 參考圖分配    （對照參考圖表填 refs）＝ story 元素的 refs
+第 2 層  章節 → 原文切段      （把故事適當截斷、可拼回全書，逐字填進 source）＝ plan.source
+第 3 層  段落 → 三型別區塊    （逐一標示 場景 / 對白 / 旁白 + 計秒 + lines）＝ plan 的 voice/duration/lines
 第 3.5層 區塊 → 字幕資料表    （同步產出：順序、起始秒、逐字文字、斜體）＝ plan lines + plan_get
-第 4 層  區塊 → 六欄位提示詞  （見 §四）
+第 4 層  區塊 → 參考圖分配    （對照參考圖表填 refs）＝ story 元素的 refs
+第 4.5層 區塊 → 六欄位提示詞  （見 §四）
 ```
 
 **切割判斷**：
 
 - **進區塊的**：氛圍鏡頭、象徵鏡頭、強動作、金句台詞、節拍三連（質問→數據登場→對方語塞）。
 - **跳過/濃縮的**：純政策論述、運算細節、哲學長對話（只留 1–2 句金句）、純過場、冗長內心獨白。
+- **先切段、後分類**：切段時只關心「把故事切成段落、每段放一格、串起來可以還原原文」；
+  分完段才逐段決定 voice／duration／lines。**不要一面切段一面急著分類**。
 - 對白每格最多承載 1–2 句（字數對應秒數），句子別太長。
 - **切割時就同步把 `<d>` 的逐字文字定進 plan lines**（字幕源頭），
+  也把該分鏡對應的**原文段落逐字截進 plan source**（phase2 寫 prompt 的參考依據），
   省得影片上線前再回來逐檔反查——`story_validate` 會檢查 `<d>` 與 plan lines 是否鏡像。
 - 單支 ≥ 20s 的對白區塊風險高（語音易漂移），能拆就拆。
 
@@ -137,6 +149,10 @@
 每塊分鏡只能選一種 `voice`：`scene`（場景）／`dialogue`（對白）／`narration`（旁白）。
 三種各有合適的使用場合，判斷基準是：**「這一段，觀看者需不需要文字才懂？」**
 以及**「文字該由誰發出？」**。
+
+> **plan 填寫順序提醒**：先有「場景／對白／旁白」的型別概念，把故事適當截段填進
+> `source`（理想上可拼回原文），**再**依每個段落逐一決定它屬於哪一型別、配幾秒、
+> 對白／旁白要唸哪些 lines。
 
 | 型別 | 字幕 | 誰發聲 | 計秒 | 提示詞處理 | 什麼時候用 |
 |------|------|--------|------|-----------|-----------|
@@ -217,7 +233,8 @@
 
 1. **回想故事情節**：這一段劇情在講什麼、前後發生什麼。
 2. **參考 phase1 該格設定**：`voice`（決定音訊寫法）、`duration`（決定一個 Shot 的長度）、
-   `lines`（決定 `<d>` 內逐字內容，不得發明或改寫）。
+   `lines`（決定 `<d>` 內逐字內容，不得發明或改寫）、`source`（該格對應的原文段落，
+   畫面情緒與細節以此為準，不要偏離原意）。
 3. **參考上一格已寫好的 prompt**：角色外觀錨點、地點、光線、情緒色調要連貫
    （用 `story_get_element` 抓前一格，或 `story_get_chain` / `story_list_elements` 看脈絡）。
 4. **用好參考圖**：這格分鏡中出現的每一個角色／場景，若已有對應 t2i 素材元素，
@@ -293,8 +310,13 @@ non_diegetic_music:      配樂（有對白/旁白可寫 "A clean, open string l
    通用透傳：`story_comfy_tool`（如 `query_comfy_queue`／`download_from_history`／`merge_videos`）。
 4. 送 ComfyUI 後回傳 prompt_id 可追蹤；背景下載在 **comfy-video-gen 子行程**內執行
    （story-editor 會長駐該 MCP 子行程，勿手動殺）。
-5. **合併**：`story_get_all_video_paths` 依 story 陣列順序（= 合併順序）拿全部路徑，
-   確認 `ready` 全 true 後 `merge_videos`（可用 `story_comfy_tool` 轉呼叫，全片固定同一 resolution）。
+   若背景自動下載遺失（逾時／重啟／取消佇列）：
+   `story_download_videos` 依 story 陣列順序逐格轉呼叫 `download_from_history`
+   （自動代入元素 `extra.prompt_id`＋解析後的 out 資料夾；可 filter `ids`／`skip_ids`／`types`；
+   用 `dry_run` 先看解析結果，缺 prompt_id 或不在 history 會逐格回報不 abort）。
+5. **合併**：`story_merge_videos`（依 story 陣列順序＝合併順序，自動代入全部 ready 影片的
+   最新媒體檔＋專案 `width:height` resolution，輸出到 `base_dir/final`；有缺檔會先報錯不 merge；
+   可覆寫 `out`／`resolution`）。也可用 `story_comfy_tool` 手動 `merge_videos`，全片固定同一 resolution。
    合併前確認每支影片解析度/幀率一致。
 6. **`story_export_srt`**：用 merge 回傳的 `total_seconds` 匯出。
    `scale = 實際總秒數 / 規劃總秒數` 自動換算、旁白自動 `<i>` 斜體、scene 自動跳過。

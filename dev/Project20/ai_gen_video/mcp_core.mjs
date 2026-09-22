@@ -202,17 +202,7 @@ async function downloadAndSave(filename, subfolder, type, outDir, meta) {
   const dest = join(destDir, basename(filename));
   writeFileSync(dest, buf);
   if (meta) {
-    const lines = [
-      `prompt: ${meta.prompt}`,
-      `seed: ${meta.seed ?? "n/a"}`,
-      meta.duration !== undefined ? `duration: ${meta.duration}` : null,
-      meta.width !== undefined ? `width: ${meta.width}` : null,
-      meta.height !== undefined ? `height: ${meta.height}` : null,
-      `model: ${meta.model}`,
-      ...(meta.extra || []).map((e) => `${e.key}: ${e.value}`),
-      `date: ${new Date().toISOString()}`
-    ].filter(Boolean);
-    writeFileSync(dest + ".txt", lines.join("\n") + "\n");
+    writePromptTxt(destDir, meta.prompt_id ?? null, meta, basename(filename).replace(/\.mp4$/, ""));
   }
   return dest;
 }
@@ -221,9 +211,33 @@ async function downloadAndSave(filename, subfolder, type, outDir, meta) {
 
 const jobs = new Map();
 
+function writePromptTxt(outDir, promptId, meta, filename) {
+  const lines = [
+    `prompt: ${meta.prompt ?? ""}`,
+    `seed: ${meta.seed ?? "n/a"}`,
+    meta.duration !== undefined ? `duration: ${meta.duration}` : null,
+    meta.width !== undefined ? `width: ${meta.width}` : null,
+    meta.height !== undefined ? `height: ${meta.height}` : null,
+    `model: ${meta.model}`,
+    ...(meta.extra || []).map((e) => `${e.key}: ${e.value}`),
+    filename ? `filename: ${filename}` : null,
+    promptId ? `prompt_id: ${promptId}` : null,
+    `date: ${new Date().toISOString()}`
+  ].filter(Boolean);
+  mkdirSync(outDir, { recursive: true });
+  const dest = join(outDir, filename ? `${filename}.txt` : `submit_${promptId}.txt`);
+  writeFileSync(dest, lines.join("\n") + "\n");
+  return dest;
+}
+
 function startBackgroundJob(promptId, meta) {
   const job = { status: "processing", files: [], error: null };
   jobs.set(promptId, job);
+  try {
+    job.promptTxt = writePromptTxt(meta.out, promptId, meta);
+  } catch (e) {
+    process.stderr.write(`[mcp] job ${promptId} write prompt txt error: ${e.message}\n`);
+  }
 
   (async () => {
     const deadline = Date.now() + POLL_TIMEOUT;
@@ -251,7 +265,7 @@ function startBackgroundJob(promptId, meta) {
           for (const item of value) {
             if (item?.filename) {
               try {
-                const txtMeta = { prompt: meta.prompt, seed: meta.seed, duration: meta.duration, model: meta.model, width: meta.width, height: meta.height, extra: meta.extra };
+                const txtMeta = { prompt: meta.prompt, seed: meta.seed, duration: meta.duration, model: meta.model, width: meta.width, height: meta.height, extra: meta.extra, prompt_id: promptId };
                 job.files.push(await downloadAndSave(item.filename, item.subfolder, item.type, meta.out, txtMeta));
               } catch (e) {
                 process.stderr.write(`[mcp] job ${promptId} download ${item.filename} error: ${e.message}\n`);

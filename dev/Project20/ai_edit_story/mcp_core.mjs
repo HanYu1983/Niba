@@ -120,6 +120,7 @@ function planTable(plan) {
       duration: p.duration,
       start: acc,
       italic: p.voice === "narration",
+      ...(typeof p.source === "string" && p.source.trim() ? { source: p.source } : {}),
       lines
     };
     acc += p.duration;
@@ -224,6 +225,23 @@ function resolveRefPath(el, jsonDir, baseDir) {
   return { path: null, tried };
 }
 
+// 從 output/out 欄位解析「輸出資料夾」的絕對路徑（供下載/合併計算目標資料夾）
+function resolveOutDir(el, jsonDir, baseDir) {
+  const raws = [];
+  if (el?.output && String(el.output).trim()) raws.push(String(el.output).trim());
+  if (el?.out && String(el.out).trim()) raws.push(String(el.out).trim());
+  for (const raw of raws) {
+    const paths = isAbsolute(raw) ? [raw] : [resolve(baseDir, raw), resolve(baseDir, "output", raw), resolve(jsonDir, raw)];
+    for (const c of paths) {
+      try {
+        if (statSync(c).isDirectory()) return c;
+      } catch {}
+    }
+  }
+  const raw = raws[0] || "";
+  return raw ? (isAbsolute(raw) ? raw : resolve(baseDir, "output", raw)) : resolve(baseDir, "output");
+}
+
 // ---------- SRT ----------
 
 function fmtSrtTime(sec) {
@@ -280,14 +298,16 @@ const PlanInput = z.object({
   description: z.string().optional().describe("AI-facing note for this block"),
   voice: z.enum(["scene", "dialogue", "narration"]).describe("scene=無字幕場景；dialogue=對白；narration=旁白（匯出斜體）"),
   duration: z.number().min(1).max(60).describe("planned seconds for this block"),
-  lines: z.array(z.string()).optional().describe("dialogue/narration verbatim lines (one subtitle cue per line); omit for scene")
+  lines: z.array(z.string()).optional().describe("dialogue/narration verbatim lines (one subtitle cue per line); omit for scene"),
+  source: z.string().optional().describe("原文欄位：新增時把 story_md 中該分鏡對應的原文段落截下，供 phase2 寫 prompt 參考 (verbatim excerpt from the original story)")
 });
 
 const PlanPatch = z.object({
   description: z.string().optional().nullable(),
   voice: z.enum(["scene", "dialogue", "narration"]).optional(),
   duration: z.number().min(1).max(60).optional(),
-  lines: z.array(z.string()).optional().nullable()
+  lines: z.array(z.string()).optional().nullable(),
+  source: z.string().optional().nullable().describe("原文欄位 (verbatim excerpt from the original story); null clears it")
 });
 
 const ElementInput = z.object({
@@ -460,7 +480,7 @@ function mapBundleToComfyCall(bundle, overrides = {}) {
 // ---------- server ----------
 
 export function createMcpServer() {
-  const server = new McpServer({ name: "story-editor", version: "2.6.0" });
+  const server = new McpServer({ name: "story-editor", version: "2.8.0" });
 
   server.registerTool(
     "story_init",
@@ -571,6 +591,7 @@ export function createMcpServer() {
       const entry = {
         id: p.item.id,
         ...(p.item.description !== undefined ? { description: p.item.description } : {}),
+        ...(p.item.source !== undefined ? { source: p.item.source } : {}),
         voice: p.item.voice,
         duration: p.item.duration,
         lines
@@ -603,7 +624,7 @@ export function createMcpServer() {
       const next = { ...el };
       for (const [k, v] of Object.entries(p.patch)) {
         if (v === undefined) continue;
-        if (v === null) { if (k === "lines" || k === "description") next[k] = k === "lines" ? [] : ""; continue; }
+        if (v === null) { if (k === "lines" || k === "description" || k === "source") next[k] = k === "lines" ? [] : ""; continue; }
         next[k] = v;
       }
       if (next.voice === "scene") next.lines = [];
@@ -822,7 +843,13 @@ export function createMcpServer() {
           prompt: sum ? trunc(el.prompt) : el.prompt,
           refs: normalizeRefs(el.refs),
           seed: el.seed, out: el.out, output: el.output,
-          ...(plan ? { voice: plan.voice, duration: plan.duration } : {})
+          ...(plan
+            ? {
+                voice: plan.voice,
+                duration: plan.duration,
+                ...(typeof plan.source === "string" && plan.source.trim() ? { source: plan.source } : {})
+              }
+            : {})
         };
       });
       if (p.type) entries = entries.filter((e) => e.type === p.type);
@@ -1130,6 +1157,142 @@ export function createMcpServer() {
     async (p) => {
       const result = await callComfyTool(p.tool, p.args || {});
       return ok({ comfy_tool: p.tool, result });
+    }
+  );
+
+  server.registerTool(
+    "story_download_videos",
+    {
+      title: "story_download_videos",
+      description:
+        "Download the finished ComfyUI outputs of story video elements by forwarding to comfy-video-gen " +
+        "download_from_history per element. Auto-fills prompt_id (from element.extra.prompt_id) and out " +
+        "(resolved output folder) for each element; order follows story array order. Elements without a " +
+        "prompt_id or with a not-in-history job are reported per-element instead of aborting.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path"),
+        base_dir: z.string().optional().describe("base dir that relative output paths resolve against (e.g. ai_gen_video dir); default = cwd"),
+        ids: z.array(z.string()).optional().describe("if set, only these element ids (still filtered by types)"),
+        skip_ids: z.array(z.string()).optional().describe("ids to skip"),
+        types: z.array(z.enum(["t2v", "i2v", "r2v"])).optional().describe("element types to download (default r2v/i2v/t2v)"),
+        dry_run: z.boolean().optional().describe("resolve prompt_id+out per element only, do not call ComfyUI")
+      }
+    },
+    async (p) => {
+      const abs = resolve(p.file);
+      const data = loadStory(abs);
+      const jsonDir = dirname(abs);
+      const baseDir = p.base_dir ? resolve(p.base_dir) : process.cwd();
+      const typeSet = new Set(p.types?.length ? p.types : ["r2v", "i2v", "t2v"]);
+      const idSet = p.ids?.length ? new Set(p.ids) : null;
+      const skipSet = new Set(p.skip_ids || []);
+      const matched = data.story.filter((el) => {
+        if (!el || !el.id) return false;
+        if (!typeSet.has(el.type)) return false;
+        if (idSet && !idSet.has(el.id)) return false;
+        if (skipSet.has(el.id)) return false;
+        return true;
+      });
+
+      const results = [];
+      let okCount = 0;
+      let failCount = 0;
+      for (const el of matched) {
+        const pid = el.extra && typeof el.extra === "object" ? el.extra.prompt_id : null;
+        const outDir = resolveOutDir(el, jsonDir, baseDir);
+        if (!pid) {
+          failCount++;
+          results.push({ id: el.id, type: el.type, status: "no_prompt_id", note: "元素沒有 extra.prompt_id，無法下載" });
+          continue;
+        }
+        if (p.dry_run) {
+          results.push({ id: el.id, type: el.type, status: "dry_run", prompt_id: pid, out: outDir });
+          continue;
+        }
+        try {
+          const res = await callComfyTool("download_from_history", { prompt_id: pid, out: outDir });
+          okCount++;
+          results.push({
+            id: el.id,
+            type: el.type,
+            prompt_id: pid,
+            out: outDir,
+            status: res?.status ?? "done",
+            files: Array.isArray(res?.files) ? res.files : []
+          });
+          process.stderr.write(
+            `[mcp] story_download_videos ${el.id} → ${res?.status ?? "done"} ${Array.isArray(res?.files) ? res.files.length : 0} file(s)\n`
+          );
+        } catch (e) {
+          failCount++;
+          results.push({ id: el.id, type: el.type, prompt_id: pid, status: "error", error: String(e?.message || e) });
+        }
+      }
+      return ok({
+        status: failCount ? (okCount ? "partial" : "failed") : "ok",
+        file: abs,
+        base_dir: baseDir,
+        total: matched.length,
+        downloaded: okCount,
+        failed: failCount,
+        dry_run: !!p.dry_run,
+        results
+      });
+    }
+  );
+
+  server.registerTool(
+    "story_merge_videos",
+    {
+      title: "story_merge_videos",
+      description:
+        "Merge all ready story videos in story array order by forwarding to comfy-video-gen merge_videos. " +
+        "Auto-fills files (every video element's newest media file, same rule as submit_bundle refs), out " +
+        "(base_dir now), and resolution (project width:height, e.g. 512:288). Errors early if any video " +
+        "element lacks a ready file so the merge never silently drops a block.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path"),
+        base_dir: z.string().optional().describe("base dir that relative output paths resolve against (e.g. ai_gen_video dir); default = cwd"),
+        out: z.string().optional().describe("merge output dir: subdirectory under base_dir (default 'final') or an absolute path"),
+        resolution: z.string().optional().describe("target W:H (default = project width:height)"),
+        dry_run: z.boolean().optional().describe("resolve files list only, do not call ComfyUI")
+      }
+    },
+    async (p) => {
+      const abs = resolve(p.file);
+      const data = loadStory(abs);
+      const jsonDir = dirname(abs);
+      const baseDir = p.base_dir ? resolve(p.base_dir) : process.cwd();
+      const rows = data.story.map((el) => {
+        if (!el || (el.type !== "r2v" && el.type !== "i2v" && el.type !== "t2v")) return { id: el?.id, type: el?.type, video: null, ready: false, skipped: true };
+        const r = resolveRefPath(el, jsonDir, baseDir);
+        return {
+          id: el.id,
+          type: el.type,
+          video: r.path,
+          via: r.path ? `${r.via}:${r.kind}` : null,
+          ready: !!r.path,
+          skipped: false
+        };
+      });
+      const readyRows = rows.filter((x) => x.ready && !x.skipped);
+      const missingRows = rows.filter((x) => !x.ready && !x.skipped);
+      if (missingRows.length) {
+        throw new Error(`merge aborted: ${missingRows.length} 個 video 元素沒有 ready 檔（${missingRows.slice(0, 8).map((x) => x.id).join("、")}${missingRows.length > 8 ? "…" : ""}）。先下載/生成這些格再 merge。`);
+      }
+      const files = readyRows.map((x) => x.video);
+      if (files.length < 2) throw new Error(`merge needs at least 2 videos, got ${files.length}`);
+      const outDir = p.out ? (isAbsolute(p.out) ? p.out : resolve(baseDir, p.out)) : resolve(baseDir, "final");
+      const resolution = p.resolution || (data.width && data.height ? `${data.width}:${data.height}` : undefined);
+      if (p.dry_run) {
+        return ok({ status: "dry_run", file: abs, base_dir: baseDir, files, out: outDir, resolution: resolution ?? null, count: files.length });
+      }
+      const res = await callComfyTool("merge_videos", {
+        files,
+        out: outDir,
+        ...(resolution ? { resolution } : {})
+      });
+      return ok({ status: "merged", file: abs, base_dir: baseDir, out: outDir, resolution: resolution ?? null, files, count: files.length, result: res });
     }
   );
 
