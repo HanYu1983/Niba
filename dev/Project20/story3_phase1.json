@@ -1,8 +1,8 @@
 {
-  "description": "修辭防線全書第一章【修辭拆解課】phase2：plan21＋story28。參考圖全部依新規一律用 Z-Image (zit) 生成（extra.engine=zit，不用 SDXL）。旁白 seed 311000；<d> 與 plan 鏡像，所有數字都轉中文，無英數。",
+  "description": "修辭防線全書第二～四章【地下共振／感性的邏輯逆向工程／真實的動員】phase2：plan100（c1 21＋c2 24＋c3 23＋c4 32）＋story 34（c1 28 元素＋新 t2i 場景 refs×6）。c1 已合併上傳。第二～四章皆 r2v：沿用 Ref-LEO/Ref-ALICE/Ref-PROF 人物＋新場景 refs（Ref-BUNKER 地下防空洞、Ref-POD 研究艙、Ref-CORRIDOR 走廊、Ref-EXAM 期末考教室、Ref-GATE 校門夕陽接駁艙、Ref-LEAF 枯葉）。t2i 一律 Z-Image (zit, extra.engine=zit)。旁白 seed 311000；對白/旁白 <d> 與 plan 鏡像、數字全轉中文、無英數、台灣腔普通話、無粵語；對白角色嘴動、旁白無嘴動；r2v prompt 用 A/B/C/D 結構參考圖1/2/3；512×288、352×608 合併。",
   "width": 512,
   "height": 288,
-  "phase": 1,
+  "phase": 2,
   "plan": [
     {
       "id": "c1_l0",
@@ -1063,7 +1063,7 @@
         "seed": 494301,
         "v2_width": 512,
         "v2_height": 288,
-        "prompt_id": "7629a57b-d24c-4921-befe-5f8cbab56108"
+        "prompt_id": "d0418257-6185-4cd6-bd1c-c9023a7f3274"
       },
       "seed": 494301
     },
@@ -1089,7 +1089,7 @@
         "seed": 494302,
         "v2_width": 512,
         "v2_height": 288,
-        "prompt_id": "1d2e87a0-5fdb-40a7-8436-b12ac261b82e"
+        "prompt_id": "2c6aaf4b-2861-4326-a88e-9a0bcca5401a"
       },
       "seed": 494302
     },
@@ -1115,7 +1115,7 @@
         "seed": 494303,
         "v2_width": 512,
         "v2_height": 288,
-        "prompt_id": "2cf2e76c-19dc-49f7-905c-2411879fe603"
+        "prompt_id": "933b1e44-f970-4f21-9513-8fb7a2acbdc4"
       },
       "seed": 494303
     },
@@ -1141,7 +1141,7 @@
         "seed": 494304,
         "v2_width": 512,
         "v2_height": 288,
-        "prompt_id": "2773a546-703d-4f75-94a5-ab8cadc71845"
+        "prompt_id": "2ac18a15-3d70-4b60-b4a9-a4a39209e2c5"
       },
       "seed": 494304
     },
@@ -1167,7 +1167,7 @@
         "seed": 494305,
         "v2_width": 512,
         "v2_height": 288,
-        "prompt_id": "f479f38f-edb7-40ef-817f-9fbca04759bf"
+        "prompt_id": "2dc26b1f-6773-4a91-8383-2ac74715eae1"
       },
       "seed": 494305
     },
@@ -1193,7 +1193,7 @@
         "seed": 494306,
         "v2_width": 512,
         "v2_height": 288,
-        "prompt_id": "ca131ce0-144d-4cef-852f-397311c556f0"
+        "prompt_id": "70ff6ba2-087b-4ad4-9ed8-8c35113f6bc6"
       },
       "seed": 494306
     },
@@ -1219,7 +1219,7 @@
         "seed": 494307,
         "v2_width": 512,
         "v2_height": 288,
-        "prompt_id": "941b8451-ed9e-4423-8a58-b46c7c0e5162"
+        "prompt_id": "78b28dee-9961-448b-b161-1e7e029f8991"
       },
       "seed": 494307
     },
@@ -1613,6 +1613,1300 @@
         "v2_height": 288,
         "prompt_id": "c69c584a-bde3-46b1-a0dc-3e4d714d54c0"
       }
+    },
+    {
+      "id": "Ref-BUNKER",
+      "description": "素材：地下防空洞集會空間空景無人物（紅光、鐵門、中央平台麥克風）",
+      "type": "t2i",
+      "prompt": "無人物，地下防空洞集會空間空景參考，場景：地下防空洞內部，厚重鉛層鐵門半開，中央有一座簡約小平台與直立麥克風，地面泥土塵埃，舊紙張散落，空間被閃爍的紅光照明，牆面粗獷混凝土，光線：紅色警示燈閃爍，昏黃混雜，畫面無人。動作與互動：無，靜止空鏡，鏡頭正對中央平台，鐵門在後方、平台與麥克風在中央、牆面在兩側，位置分明不重疊。寫實攝影風格，電影柔光",
+      "refs": [],
+      "seed": 494330,
+      "out": "s3_bunker_ref_h",
+      "output": "output/s3_bunker_ref_h",
+      "extra": {
+        "engine": "zit",
+        "prompt_id": "37269be1-539a-48d5-8d54-50d67e5dab75",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "Ref-POD",
+      "description": "素材：圖書館個人研究艙空景無人物（數據流頻譜螢幕）",
+      "type": "t2i",
+      "prompt": "無人物，圖書館個人研究艙空景參考，場景：極簡風格的個人研究艙，隔音玻璃半透明隔間，中央是一張桌面，桌面上方懸浮半透明虛擬螢幕顯示著語意頻譜與數據流曲線，冷白燈光，畫面無人。動作與互動：無，靜止空鏡，研究艙在中央，螢幕浮在桌面正上方，隔間玻璃在兩側，位置分明不重疊。寫實攝影風格，電影柔光",
+      "refs": [],
+      "seed": 494331,
+      "out": "s3_pod_ref_h",
+      "output": "output/s3_pod_ref_h",
+      "extra": {
+        "engine": "zit",
+        "prompt_id": "63406482-a9d3-4dd3-b744-2d0722f7d574",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "Ref-CORRIDOR",
+      "description": "素材：昏暗走廊空景無人物（集會後走廊）",
+      "type": "t2i",
+      "prompt": "無人物，昏暗走廊空景參考，場景：地下防空洞延伸的昏暗走廊，牆面粗獷混凝土與舊鐵管，盡頭微弱的警示紅燈，地面潮濕反光，側邊幾個舊門洞，光線：昏暗中混雜紅色光暈，畫面無人。動作與互動：無，靜止空鏡，鏡頭沿走廊中線，走廊盡頭在遠端、門洞在兩側、紅燈在盡頭，位置分明不重疊。寫實攝影風格，電影柔光",
+      "refs": [],
+      "seed": 494332,
+      "out": "s3_corridor_ref_h",
+      "output": "output/s3_corridor_ref_h",
+      "extra": {
+        "engine": "zit",
+        "prompt_id": "321b4899-3181-41eb-a4d4-0ea731689d9a",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "Ref-EXAM",
+      "description": "素材：期末考教室空景無人物（中央大螢幕、投票板）",
+      "type": "t2i",
+      "prompt": "無人物，期末考教室空景參考，場景：極簡教室，整面牆的中央大螢幕顯示文字考題，整齊的課桌排排坐，教室後方有一面模擬投票板螢幕，冷白均勻燈光，白色簡約牆面無裝飾，畫面無人。動作與互動：無，靜止空鏡，大螢幕在講台後方牆面、課桌在下方排排、投票板在教室後方，位置分明不重疊。寫實攝影風格，電影柔光",
+      "refs": [],
+      "seed": 494333,
+      "out": "s3_exam_ref_h",
+      "output": "output/s3_exam_ref_h",
+      "extra": {
+        "engine": "zit",
+        "prompt_id": "2a9a2c9b-06d4-42cf-ae7f-9dd11b210da5",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "Ref-GATE",
+      "description": "素材：校門口夕陽、接駁艙、行李箱（送別場景）",
+      "type": "t2i",
+      "prompt": "無人物，校門口送別場景空景參考，場景：素色簡約校門，金色夕陽低垂將影子拉長，路旁停著一台銀灰色小型接駁艙（圓潤流線型，艙門打開），地上一只行李箱，畫面無人但有人即將乘艙離開的氛圍，光線：夕陽暖光。動作與互動：無，靜止空鏡，校門在後方、接駁艙在側邊、行李箱在接駁艙旁地面，位置分明不重疊。寫實攝影風格，電影柔光",
+      "refs": [],
+      "seed": 494334,
+      "out": "s3_gate_ref_h",
+      "output": "output/s3_gate_ref_h",
+      "extra": {
+        "engine": "zit",
+        "prompt_id": "a0207837-2040-4486-8428-db16b4f7fa48",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "Ref-LEAF",
+      "description": "素材：舊時代乾枯樹葉特寫無人物（掌中的枯葉）",
+      "type": "t2i",
+      "prompt": "無人物，舊時代乾枯樹葉特寫參考，場景：攤開的手掌中央放著一片乾枯發脆的落葉，葉脈分明、邊緣捲曲、枯黃褐色，背景模糊的素色衣衫與夕陽暖光，光線：柔和側光。動作與互動：無，靜止特寫，枯葉在掌心中央，手掌在畫面中央、背景模糊，位置分明。寫實攝影風格，電影柔光，畫面無人無臉",
+      "refs": [],
+      "seed": 494335,
+      "out": "s3_leaf_ref_h",
+      "output": "output/s3_leaf_ref_h",
+      "extra": {
+        "engine": "zit",
+        "prompt_id": "6e9377cc-5576-40f3-ab37-32adf97f2bab",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l0",
+      "description": "s3 c2_l0 場景：艾莉絲帶里歐穿過舊圖書館進地下防空洞",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the underground bunker from <Picture 1>:\nan old converted bomb shelter, exposed concrete, thick iron door ajar, dim red emergency light, dust in the air.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, short neat black hair, calm guarded eyes, lips sealed.\n\n<Subject 3> is Alice from <Picture 3>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, leading the way with quiet purpose.\n\nsummary:\nReference-based descent into the bunker\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. No whisper. No lip-flap. All lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese. No human voice of any kind.\n\ndetailed_description:\n\nVisual style:\nA tracking shot following Alice and Leo deeper into the dim bunker; the surroundings transition from abandoned library shelving into sealed concrete and red light.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nAlice leads through a passage of old library shelving, then through a heavy iron doorway into the concrete bunker; red emergency light flickers on the walls. Leo follows close, scanning the space, lips sealed. Alice appears exactly once, Leo appears exactly once, no duplicates, no split or mirrored composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: muffled footsteps on concrete, distant low hum, a soft metal creak of the iron door. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA low, brooding pad with a faint uneasy pulse.",
+      "refs": [
+        "Ref-BUNKER",
+        "Ref-LEO",
+        "Ref-ALICE"
+      ],
+      "seed": 494400,
+      "out": "s3_c2_l0_video",
+      "output": "output/s3_c2_l0_video",
+      "extra": {
+        "prompt_id": "2671891b-f027-43a4-b3bf-4afbc6456b02",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l1",
+      "description": "s3 c2_l1 旁白：監控與傳感器失訊，法律的盲區",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the underground bunker from <Picture 1>:\nan old converted bomb shelter, exposed concrete, thick iron door, dim red emergency light, dust and old paper smell.\n\nsummary:\nReference-based dead-zone narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration only by the fixed narrator voice. No on-screen mouth movement. Narrator is a calm middle-aged male voice, never female, never Cantonese. No English.\n\ndetailed_description:\n\nVisual style:\nSlow dolly deeper into the bunker, red light pulsing on concrete; an empty, sealed, watched-by-nobody space.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nCamera drifts alone through the concrete corridor; iron door, cables, old paper scraps on the floor, the red glow flickering like a failing heartbeat. The space stays empty; no figure appears. No duplicated elements. No split composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No on-screen mouth movement.\n<d>\n[中文]\n在這裡，所有的語意分析監控，與社會信用傳感器，都失去了訊號。\n這是一個法律的盲區。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), unhurried, not dialogue, no Cantonese, no English.\nLow electrical hum, distant drips, faint red-light buzz.\n\nnon_diegetic_music:\nA sparse, withheld tone, almost silent.",
+      "refs": [
+        "Ref-BUNKER"
+      ],
+      "seed": 311000,
+      "out": "s3_c2_l1_video",
+      "output": "output/s3_c2_l1_video",
+      "extra": {
+        "prompt_id": "9e19f70a-94b4-45ec-b3f9-a428e2420ec3",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l2",
+      "description": "s3 c2_l2 場景：推開鐵門，紅光雜訊土味舊紙",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the underground bunker from <Picture 1>:\nan old converted bomb shelter, exposed concrete, thick iron door, dim red emergency light, dust, earthy smell.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, standing at the doorway, struck by the atmosphere, lips sealed.\n\nsummary:\nReference-based heavy-door reveal shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. No lip-flap. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nPush-in on the heavy iron door swinging open into a cloud of dust and red flicker; Leo framed small before the overwhelming space.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nThe iron door swings with a heavy groan; dust lifts and swirls in the red light. Leo steps through the threshold, shoulders tensing at the thick, clingy air—the smell of earth and old paper. He appears exactly once, no duplicate, no split composition. The bunker swallows the light around him.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: iron groan, dust rustle, a hollow red-lit hum, distant metallic drip. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA deep, swelling drone.",
+      "refs": [
+        "Ref-BUNKER",
+        "Ref-LEO"
+      ],
+      "seed": 494401,
+      "out": "s3_c2_l2_video",
+      "output": "output/s3_c2_l2_video",
+      "extra": {
+        "prompt_id": "eae32f7b-2d78-4fb4-beae-7a8ba051814f",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l3",
+      "description": "s3 c2_l3 場景：中央平台，學生閉眼對麥克風朗誦",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the underground bunker from <Picture 1>:\nan old converted bomb shelter, exposed concrete, central low platform with a standing microphone, dim red light surrounding it.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, standing at the edge of the gathering, watching.\n\n<Subject 3> is a reciting student:\nEast Asian young man around twenty, dark plain clothes, standing on the platform, eyes closed, lips moving to recite into the microphone.\n\nsummary:\nReference-based underground recitation shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks yet in this beat except the reciter on stage, whose lips form words without audible source here (recitation voice follows in next block). No narration. No other character's mouth moves. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot of the bunker's central platform under the red glow; a lone student recites with closed eyes into the microphone, a small ring of listeners dimly around.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nThe student on the platform stands with eyes closed, mouth moving softly as he recites into the standing microphone; red light flickers over his face. A sparse cluster of listeners stands in the half-dark. Leo watches from the edge, appearing exactly once, distinct and unduplicated. No split or mirrored composition. The reciter appears exactly once.\n\noverall_soundscape:\nNo audible dialogue in this beat; the reciter's lips move while his voice enters at the next cue. Environment only: room hum, shuffling feet, red-light buzz. No English, no Cantonese.\n\nnon_diegetic_music:\nA low, gathering tension drone.",
+      "refs": [
+        "Ref-BUNKER",
+        "Ref-LEO"
+      ],
+      "seed": 494402,
+      "out": "s3_c2_l3_video",
+      "output": "output/s3_c2_l3_video",
+      "extra": {
+        "prompt_id": "0ac19ff4-0522-431f-8674-cb3c842fc9c4",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l4",
+      "description": "s3 c2_l4 對白（朗誦者）：火的詩，問星辰同歸",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is a reciting student:\nEast Asian young man around twenty, dark plain clothes, standing on the low platform, eyes closed, one hand raised, lips moving strongly to recite.\n\n<Subject 2> is the underground bunker from <Picture 1>:\nan old converted bomb shelter, central platform with a standing microphone, dim red glow, a small ring of dim listeners.\n\nsummary:\nReference-based fiery recitation dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks, with a rousing, reverent, fervent recitation voice. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on the reciting student, voice rising with fervor; the red-lit bunker flares subtly with each line, listeners swaying slightly.\n\n[Shot 1]\n\n00:00-00:11\n\nAction:\nThe reciter appears exactly once as the speaking figure. No duplicated figure. Eyes still closed, he recites with growing intensity, one hand rising and falling in cadence; lips clearly form every syllable. The red light pulses faintly. Only his mouth moves; the listening ring stays still, faces upturned, none mouthing along.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n那火，在血液中燃燒。\n那旗幟，在廢墟中飛揚。\n我們不問代價，我們只問：何時能與星辰同歸？\n</d>\n\noverall_soundscape:\nDialogue delivered by a rousing, reverent male recitation, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nBunker resonance, a low crowd breath, hum.\n\nnon_diegetic_music:\nA slow, stirring choir pad beneath.",
+      "refs": [
+        "Ref-BUNKER"
+      ],
+      "seed": 494403,
+      "out": "s3_c2_l4_video",
+      "output": "output/s3_c2_l4_video",
+      "extra": {
+        "prompt_id": "0504c10e-0803-4b91-b289-4b4d8f734cc9",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l5",
+      "description": "s3 c2_l5 場景：里歐劇痛，視網膜刷出紅色警告",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, handsome face contorting with sudden pain, lips pressed.\n\n<Subject 2> is the underground bunker from <Picture 2>:\nan old concrete bunker, red emergency light, platform in the background.\n\nsummary:\nReference-based system-feedback pain shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed (he winces, may gasp silently). No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nTight insert on Leo's face as a knife-stab of pain hits; faint red warning glyphs flicker at the edge of frame like retinal overlays.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nLeo recoils sharply, forehead tensing, eyes squeezing shut for a heartbeat as the sharp pain spikes through his skull. Two or three red warning glyphs flicker in the dark corners of frame—like interface alerts overlaid on his vision. He appears exactly once, no duplicate, no split composition. Around him the red-lit bunker pulses.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: a sharp electronic alert shimmer, Leo's quickened breath, bunker hum. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA single sharp, stabbing tone, then withheld silence.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-BUNKER"
+      ],
+      "seed": 494404,
+      "out": "s3_c2_l5_video",
+      "output": "output/s3_c2_l5_video",
+      "extra": {
+        "prompt_id": "67a65ba3-9c08-49fb-bc82-ae7d73a56f4f",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l6",
+      "description": "s3 c2_l6 旁白：系統警告降熵口號邏輯缺失百分之百",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, face bathed in a red alert glow, eyes wide, lips sealed.\n\nsummary:\nReference-based system-warning narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration only by the fixed narrator voice (here the flat system-alert voice). No on-screen mouth movement. The alert voice is a flat, sterile machine voice; never female, never Cantonese, no English.\n\ndetailed_description:\n\nVisual style:\nSlow push toward Leo's red-lit face; the retinal warning glyphs glitch and reform as each alert is read.\n\n[Shot 1]\n\n00:00-00:10\n\nAction:\nFresh red warning panels flicker across the edges of the frame, aligning with Leo's line of sight: pure entropic-slogan alert stamping in. His lips stay sealed; he only breathes faster. The glyphs snap like an automated system. Leo appears exactly once, no duplicate, no split composition.\n\nDialogue:\nThe following narration is an off-screen system-alert voice; no on-screen mouth movement.\n<d>\n[中文]\n警告，偵測到極高純度降熵口號。\n警告，邏輯缺失率百分之百。\n建議，立即離開，並進行四十八小時邏輯重啟訓練。\n</d>\n\noverall_soundscape:\nNarration delivered as a flat, sterile machine alert voice in Taiwan-accented Standard Mandarin (台灣腔普通話), clipped and mechanical, no Cantonese, no English.\nElectronic buzz, alert pings between lines.\n\nnon_diegetic_music:\nA thin, urgent alarm motif.",
+      "refs": [
+        "Ref-LEO"
+      ],
+      "seed": 311000,
+      "out": "s3_c2_l6_video",
+      "output": "output/s3_c2_l6_video",
+      "extra": {
+        "prompt_id": "72d2db75-95c9-415e-b381-7cba0fe874c5",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l7",
+      "description": "s3 c2_l7 對白·里歐：關掉它，認知強姦，沒給燃料消耗率",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, pressing his temple, grimacing, lips moving to speak.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, watching him with concern.\n\n<Subject 3> is the underground bunker from <Picture 3>:\nan old concrete bunker, red emergency light.\n\nsummary:\nReference-based sharp rebuttal dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium close-up on Leo, pained but reasoning through the recoil; Alice a watchful presence at frame's edge.\n\n[Shot 1]\n\n00:00-00:13\n\nAction:\nLeo presses his temple hard, voice strained but sharpening into clinical disgust as he tears the speech apart. He appears exactly once as the speaking figure; no duplicate. Only his mouth moves; Alice listens without interrupting, her lips sealed, her concern turning watchful. The red light shifts as he speaks.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n關掉它，這簡直是認知強姦。\n他根本沒有給出，星辰同歸的具體燃料消耗率。\n也沒有說明那面旗幟的，織物來源與環境影響。\n</d>\n\noverall_soundscape:\nDialogue delivered by a strained-then-flat male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nBunker hum, the alert's dying whine beneath.\n\nnon_diegetic_music:\nA tight, wired string line.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-BUNKER"
+      ],
+      "seed": 494405,
+      "out": "s3_c2_l7_video",
+      "output": "output/s3_c2_l7_video",
+      "extra": {
+        "prompt_id": "4314217f-8081-45eb-974e-fa2867670902",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l8",
+      "description": "s3 c2_l8 場景：黑暗中艾莉絲拉住里歐的手，觸覺放大",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, reaching out, gentle reassurance in the dark, lips sealed.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, startled and still as she takes his hand.\n\nsummary:\nReference-based hand-in-dark close shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Both lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nExtreme close on the meeting of their hands in near-darkness; texture and presence amplified as the sense of touch heightens.\n\n[Shot 1]\n\n00:00-00:03\n\nAction:\nIn the dark, Alice's hand finds Leo's; fingers interlace slowly, the texture of silk and cloth and skin reading large in the close shot. Their faces hover just outside frame or in shallow shadow. A faint warmth passes. Neither's lips move. No duplicated figures, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: slow breathing, fabric shift, the bunker's low hum sinking quieter. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA soft, warm and fragile note.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO"
+      ],
+      "seed": 494406,
+      "out": "s3_c2_l8_video",
+      "output": "output/s3_c2_l8_video",
+      "extra": {
+        "prompt_id": "0b964ae1-3458-4b9b-bb8c-f151ae408d6a",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l9",
+      "description": "s3 c2_l9 對白·艾莉絲：別分析它，用邊緣系統接收",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, leaning close to his ear, voice warm and low, lips moving.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, still and quiet, listening, lips sealed.\n\nsummary:\nReference-based conspiratorial whisper dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her tone is warm, low, intimate.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium-close two-shot in the dim red light; Alice close to Leo's ear, her words carrying a strange heat.\n\n[Shot 1]\n\n00:00-00:13\n\nAction:\nAlice leans in, lips near his ear, speaking in a warm low tone as her words ask him to feel rather than analyze. Leo stays rigid then softens a fraction, listening; his lips stay sealed. Alice appears exactly once as the speaker; Leo once; no duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n別分析它，里歐。\n試著用你的邊緣系統去接收，而不是用你的前額葉。\n這就是我們先祖活著的感覺，盲從的狂喜。\n</d>\n\noverall_soundscape:\nDialogue delivered by a warm low female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), intimate and slow, no Cantonese, no English.\nClose breathing, low bunker hum, faint rhythm of the distant recitation.\n\nnon_diegetic_music:\nA slow, hypnotic pulse begins.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO"
+      ],
+      "seed": 494407,
+      "out": "s3_c2_l9_video",
+      "output": "output/s3_c2_l9_video",
+      "extra": {
+        "prompt_id": "ae7a1048-8ddb-4b96-853c-33df54770773",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l10",
+      "description": "s3 c2_l10 場景：里歐放鬆，旋律繞過審核，心率失控",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, eyes half-closed, muscles loosening, entering an unexpected trance, lips sealed.\n\n<Subject 2> is the underground bunker from <Picture 2>:\nan old concrete bunker, red light pulsing slowly, rhythmic atmosphere.\n\nsummary:\nReference-based surrender-to-rhythm shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nSlow push toward Leo's face as the guard drops; the red light pulses in a voice-like rhythm he starts to join with his body.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLeo's shoulders let go inch by inch; his eyes fall half-closed, breath syncing to the recitation's pulse. His heart visibly pounds at his neck and wrist as the rhythm bypasses his usual scrutiny. He appears exactly once, no duplicate, no split composition. Red light throbs in time.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: the distant recitation's cadence, Lee's quickened heartbeat audible as a low percussion, bunker hum. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA swelling, pulsing rhythm beneath the scene.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-BUNKER"
+      ],
+      "seed": 494408,
+      "out": "s3_c2_l10_video",
+      "output": "output/s3_c2_l10_video",
+      "extra": {
+        "prompt_id": "ae30e7d4-6d02-4818-a74b-eb82d943bd46",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l11",
+      "description": "s3 c2_l11 旁白：極其危險的快感，代餐者咬到非法蛋糕",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, unaware of his own flushed, intoxicated expression, lips sealed.\n\n<Subject 2> is the underground bunker from <Picture 2>:\nan old concrete bunker, deep red light, a taste of dangerous sweetness in the air.\n\nsummary:\nReference-based dangerous-pleasure narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration only by the fixed narrator voice. No on-screen mouth movement. Narrator: a calm middle-aged male voice, never female, never Cantonese. No English.\n\ndetailed_description:\n\nVisual style:\nHolding close on Leo's flushed face, part-transfixed, as the narrator names the danger too late.\n\n[Shot 1]\n\n00:00-00:09\n\nAction:\nLeo's features carry a dangerous rush—eyes glazed with warmth, a faint smile he would never indulge. The red light laps around him like heat. No on-screen mouth movement; his lips stay sealed even in this. He appears exactly once, no duplicate, no split composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No on-screen mouth movement.\n<d>\n[中文]\n那是一種極其危險的快感。\n就像一個長期吃營養代餐的人，突然咬到了一口，充滿脂肪與糖分的非法蛋糕。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), unhurried, not dialogue, no Cantonese, no English.\nBunker hum, slow pulse, distant recitation cadence.\n\nnon_diegetic_music:\nA bittersweet, uneasy swell.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-BUNKER"
+      ],
+      "seed": 311000,
+      "out": "s3_c2_l11_video",
+      "output": "output/s3_c2_l11_video",
+      "extra": {
+        "prompt_id": "6f35220b-6d35-41ad-a5c9-3e0b233becc3",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l12",
+      "description": "s3 c2_l12 場景：職業本能反撲，開始對集會屍檢",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, eyes snapping open, cold professionalism flooding back, lips sealed.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, watching the shift in him, wary.\n\n<Subject 3> is the underground bunker from <Picture 3>:\nan old concrete bunker, red light, the gathering behind.\n\nsummary:\nReference-based instinct-recovery beat\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Both lips sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nTight shot as the trance breaks: Leo's eyes clear to cold focus mid-absorption, gaze turning analytical over the crowd.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nJust as Leo nearly sinks in, his professional instinct fires back; his gaze snaps forward, scanning the reciter and the crowd like a field to dissect. Alice notices and reads the shift, a flicker of wariness crossing her face. Leo appears exactly once, Alice once, no duplicates, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: the recitation cutting off as his focus sharpens, muffled crowd sounds, bunker hum. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA sharp, precise percussive tick returns.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-BUNKER"
+      ],
+      "seed": 494409,
+      "out": "s3_c2_l12_video",
+      "output": "output/s3_c2_l12_video",
+      "extra": {
+        "prompt_id": "f2474b41-9702-465a-aac8-02e5cd209b69",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l13",
+      "description": "s3 c2_l13 對白·里歐：這首歌模仿極權動員曲，一百二十拍",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, panting softly, radiating nervous energy, lips moving to speak.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, pulled back at his push, attentive.\n\n<Subject 3> is the underground bunker from <Picture 3>:\nan old concrete bunker, red light, the gathering behind them.\n\nsummary:\nReference-based urgent structural-analysis dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on Leo, urgent and analytical as he pulls back; the red-lit bunker pulses with the rhythm he names.\n\n[Shot 1]\n\n00:00-00:15\n\nAction:\nLeo steps back from Alice, words tumbling but controlled; he deconstructs the song flatly, heartbeat still high. He appears exactly once as the speaking figure. Only his mouth moves; Alice listens, lips sealed, her expression hardening. No duplicate figures, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n這不對。\n艾莉絲，這首歌的結構，完全模仿了二十世紀的，極權主義動員曲。\n它的節奏是一百二十拍，這是最容易誘導集體步行的頻率。\n他在試圖讓我們變成同一個生物，他在剝奪我們的個體獨立性。\n</d>\n\noverall_soundscape:\nDialogue delivered by a breathless-but-clinical male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nPulsing rhythm continues beneath, dampened; bunker hum.\n\nnon_diegetic_music:\nDrums lock into the 120-BPM pattern under the voice.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-BUNKER"
+      ],
+      "seed": 494410,
+      "out": "s3_c2_l13_video",
+      "output": "output/s3_c2_l13_video",
+      "extra": {
+        "prompt_id": "3d040a32-9167-4ce4-848c-66a6bab82c48",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l14",
+      "description": "s3 c2_l14 對白·艾莉絲：獨立比聯結好嗎，我們是整體",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, eyes holding a mockery and a dare, lips moving to speak.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, cold and listening, lips sealed.\n\n<Subject 3> is the underground bunker from <Picture 3>:\nan old concrete bunker, red glow, gathered crowd behind them.\n\nsummary:\nReference-based ideological counter-attack dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her tone carries a mocking edge.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium-close on Alice, silk bright against the red dark, her dare landing plainly; Leo a sealed wall beside her.\n\n[Shot 1]\n\n00:00-00:13\n\nAction:\nAlice answers with a slight tilt of her head and a mocking warmth, describing the isolated atoms of the outside world versus the whole they form here. She appears exactly once as the speaking figure; Leo once beside her, lips sealed. Only Alice's mouth moves; neither duplicates; no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n里歐，你真的覺得獨立比聯結更好嗎？\n你看外面那些清醒的公民，他們像一個一個，互不相干的原子。\n而這裡，我們是一個整體。\n</d>\n\noverall_soundscape:\nDialogue delivered by a warm mocking female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nLow crowd murmur, pulsing rhythm, bunker hum.\n\nnon_diegetic_music:\nThe drums hold, a counter-melody sliding in.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-BUNKER"
+      ],
+      "seed": 494411,
+      "out": "s3_c2_l14_video",
+      "output": "output/s3_c2_l14_video",
+      "extra": {
+        "prompt_id": "feea3ce1-ee00-474f-81b9-7432c52b3316",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l15",
+      "description": "s3 c2_l15 對白·里歐：不需要大腦的整體，降熵的代價",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, counterattacking flatly, clear cold eyes, lips moving to speak.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, listening, lips sealed.\n\nsummary:\nReference-based counter-rebuttal dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His tone stays flat.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on Leo answering back without heat; the red light settles around them like a held breath.\n\n[Shot 1]\n\n00:00-00:11\n\nAction:\nLeo returns the strike with total coolness, naming the price of joining one entity: losing the right to define it. He appears exactly once as the speaking figure; no duplicate. Only his mouth moves; Alice's lips stay sealed, her gaze narrowing. No split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n一個不需要大腦的整體。這就是降熵的代價。\n當我們成為星辰的一部分，我們也就失去了，定義星辰的權利。\n</d>\n\noverall_soundscape:\nDialogue delivered by a flat clear male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nThe pulse fading to a sparse low hum, crowd stilling.\n\nnon_diegetic_music:\nString line thins to a single held note.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE"
+      ],
+      "seed": 494412,
+      "out": "s3_c2_l15_video",
+      "output": "output/s3_c2_l15_video",
+      "extra": {
+        "prompt_id": "6a7709c6-bfea-4da8-86b8-089aaa6cb5ba",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l16",
+      "description": "s3 c2_l16 場景：集會後昏暗走廊攔住艾莉絲，理智回歸",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the dim corridor from <Picture 1>:\nrough concrete corridor under weak red emergency light, old pipes, doorways, damp floor.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, cold clear eyes, standing in the corridor blocking the way, lips sealed.\n\n<Subject 3> is Alice from <Picture 3>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, stopping as he blocks her path.\n\nsummary:\nReference-based post-gathering interception shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks yet. No narration. No voice-over. Both lips stay sealed in this beat. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nMedium shot down the dim corridor: Leo blocking the way, Alice halted before him, the gathering receding behind them.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nAs the gathering disperses into the corridor, Leo moves to block Alice's way, his eyes returned to their cold clarity. She stops, reading his expression, neither moving to pass. Leo appears exactly once, Alice once, no duplicates, no split composition. Red glow behind them.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: receding crowd footfalls fading, corridor echo, faint red-light hum. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA quiet, tense pause.",
+      "refs": [
+        "Ref-CORRIDOR",
+        "Ref-LEO",
+        "Ref-ALICE"
+      ],
+      "seed": 494413,
+      "out": "s3_c2_l16_video",
+      "output": "output/s3_c2_l16_video",
+      "extra": {
+        "prompt_id": "29077064-5db6-42ce-9e5f-7a518b129002",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l17",
+      "description": "s3 c2_l17 對白·里歐：你不是普通交換生",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, low guarded face, cold intent, lips moving to speak.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, caught, face tensing, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nrough concrete corridor under weak red emergency light, old pipes, doorways.\n\nsummary:\nReference-based accusation dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His tone is low, certain, cold.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium close-up, shadowed, Leo's accusation landing quietly; Alice caught in the red dim.\n\n[Shot 1]\n\n00:00-00:12\n\nAction:\nLeo studies Alice in the shaft of red light, then states his finding without triumph. He appears exactly once as the speaking figure. Only his mouth moves; Alice's lips stay sealed as she reads what he has on her. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n你不是普通的交換生。\n剛才那首詩的隱喻結構，與境外那個聖戰共和國的，宣傳樣式完全一致。\n</d>\n\noverall_soundscape:\nDialogue delivered by a low certain male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nCorridor echo, damp drip, low hum.\n\nnon_diegetic_music:\nA thin, cold string tension.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494414,
+      "out": "s3_c2_l17_video",
+      "output": "output/s3_c2_l17_video",
+      "extra": {
+        "prompt_id": "6fcf7b4a-445c-4822-bb20-2cbad57f90ef",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l18",
+      "description": "s3 c2_l18 對白·里歐：你的工作是測試生物對感性的抵抗力",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, cold certainty on his face, continuing to speak.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, still caught in place, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nrough concrete corridor, weak red emergency light.\n\nsummary:\nReference-based cold deduction dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His tone stays flat, analytic.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot, Leo delivering the deduction while Alice remains fixed under the red light.\n\n[Shot 1]\n\n00:00-00:14\n\nAction:\nLeo continues flatly, naming her assignment and its intent as if reading a file. Alice grows stiller, watching him, the mask slipping visibly. He appears exactly once as the speaker; she once; only his mouth moves. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n艾莉絲，你在這裡進行生物感性測試，對吧？\n你想看看我們這群理性人，在面對純粹的非理性攻擊時，防禦力到底剩多少。\n</d>\n\noverall_soundscape:\nDialogue delivered by a flat analytic male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nCorridor echo, loud drip, low hum.\n\nnon_diegetic_music:\nThe string tension holds, colder.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494415,
+      "out": "s3_c2_l18_video",
+      "output": "output/s3_c2_l18_video",
+      "extra": {
+        "prompt_id": "4be09943-7b5a-4e13-a54a-a5568191875d",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l19",
+      "description": "s3 c2_l19 場景：艾莉絲笑容消失，冷峻專業不請自來",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, the smile vanishing into a cold professional calm, lips sealed.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, watching the transformation, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nrough concrete corridor, weak red emergency light.\n\nsummary:\nReference-based mask-drop beat\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Both lips sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nClose two-shot: the warmth drains from Alice's face as an old, trained composure inherits her features.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nAlice's playful warmth slips away in a breath; the professional who ran the test takes over, back straightening, gaze cooling into precision. Leo watches the shift without reaction. Alice appears exactly once, Leo once; no duplicates, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: corridor echo dropping, a sharp breath, low hum. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nThe music thins to a held, expectant note.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494416,
+      "out": "s3_c2_l19_video",
+      "output": "output/s3_c2_l19_video",
+      "extra": {
+        "prompt_id": "3dd0ca4b-a59b-49a5-a730-1f2168117bcc",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l20",
+      "description": "s3 c2_l20 對白·艾莉絲：測試結果一百四十，異常沉溺型",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, face cold and composed, speaking with flat precision, lips moving.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, stunned, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nrough concrete corridor, weak red emergency light.\n\nsummary:\nReference-based clinical result dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her tone is flat, clinical, professional.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium close-up on Alice now fully professional, delivering the number like a lab report; Leo stunned in the red half-light.\n\n[Shot 1]\n\n00:00-00:13\n\nAction:\nAlice states the finding with detachment, meeting his eyes squarely. Leo goes very still, the self-assurance cracking. Alice appears exactly once as the speaking figure; Leo once; only her mouth moves. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n沒錯，里歐，而測試結果令我驚訝。\n你的心率剛才一度達到了，一百四十。\n這意味著你的自然法教育，只是在一層薄薄的冰面上行走。\n</d>\n\noverall_soundscape:\nDialogue delivered by a flat clinical female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nCorridor echo, faint hum, a hard breath.\n\nnon_diegetic_music:\nA spare, ominous beat.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494417,
+      "out": "s3_c2_l20_video",
+      "output": "output/s3_c2_l20_video",
+      "extra": {
+        "prompt_id": "cf074a61-e3b5-4cf3-9b92-eb44ad1f32b6",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l21",
+      "description": "s3 c2_l21 對白·艾莉絲：正確的旋律，沙堡崩塌",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, fixed quiet gaze, continuing to speak.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, defenseless, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nrough concrete corridor, weak red emergency light.\n\nsummary:\nReference-based quiet devastation dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her tone is low, almost gentle, therefore heavier.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nQuiet medium shot, the corridor dim around them; Alice's low words landing on Leo like a slow demolition.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nAlice keeps her composure as she finishes the chain of reasoning; the pride in Leo's eyes visibly curdles as each syllable lands. She appears exactly once as the speaker; only her mouth moves; Leo's lips sealed, reeling. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n只要我們找到正確的旋律，\n這座理性的堡壘，會像沙堡一樣崩塌。\n</d>\n\noverall_soundscape:\nDialogue delivered in a low, almost gentle female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nHolding hum, slow drip, distant corridor footsteps.\n\nnon_diegetic_music:\nMusic resolves into a slow, hollow minor chord.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494418,
+      "out": "s3_c2_l21_video",
+      "output": "output/s3_c2_l21_video",
+      "extra": {
+        "prompt_id": "ea93ec09-7efd-4081-9eb1-ca2b0162e24e",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l22",
+      "description": "s3 c2_l22 場景：里歐握緊拳頭，她笑意在嘴角碎掉",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, hand slowly clenching into a fist at his side, jaw tight, lips sealed.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, turning to leave, a knowing hint just at the corner of her mouth, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nrough concrete corridor, weak red emergency light.\n\nsummary:\nReference-based silent defiance beat\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Both lips sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nClose on Leo's clenched fist, then a wider two-shot as Alice turns; the red light holds them apart.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nLeo's hand clenches slowly at his side, knuckles pale, jaw tightening; he does not move to stop her. Alice turns to leave, the ghost of a knowing smile at the corner of her mouth, then it breaks against her own coldness. Leo appears once, Alice once, no duplicates, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: a single hard breath, footsteps departing, corridor hum fading. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA single struck piano note, ringing.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494419,
+      "out": "s3_c2_l22_video",
+      "output": "output/s3_c2_l22_video",
+      "extra": {
+        "prompt_id": "93221412-cad0-4f79-9b71-c17bbd3166fb",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c2_l23",
+      "description": "s3 c2_l23 旁白：新形態戰爭的戰場不在城牆而在人心",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, alone in the dim corridor, back to the red light, a fresh resolve settling in his eyes, lips sealed.\n\n<Subject 2> is the dim corridor from <Picture 2>:\nrough concrete corridor, weak red emergency light, old pipes, doorways.\n\nsummary:\nReference-based cognitive-war realization narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration only by the fixed narrator voice. No on-screen mouth movement. Narrator: a calm middle-aged male voice, never female, never Cantonese. No English.\n\ndetailed_description:\n\nVisual style:\nWide shot of Leo alone in the red-lit corridor, small against the tunnel; the narrator frames the coming war.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLeo stands alone where Alice left him, eyes tracking the empty corridor, then he straightens with a new calm clarity. No on-screen mouth movement; his lips stay sealed. He appears exactly once, no repeat, no split composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No on-screen mouth movement.\n<d>\n[中文]\n他意識到，這不僅僅是一場課外活動，\n這是一場針對整個文明的認知戰爭。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), unhurried, not dialogue, no Cantonese, no English.\nEmpty corridor reverb, distant low hum.\n\nnon_diegetic_music:\nA slow, resolute string swell takes over.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 311000,
+      "out": "s3_c2_l23_video",
+      "output": "output/s3_c2_l23_video",
+      "extra": {
+        "prompt_id": "0bd55638-7267-4c46-8585-2cacdc92d6a2",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c3_l0",
+      "description": "s3 c3_l0 場景：里歐凌晨在圖書館研究艙，拒絕感性餘震",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the library research pod from <Picture 1>:\ncompact private study pod, warm single lamp, screens showing spectral waveforms and file trees, late night.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, hunched over a terminal deep into the night, eyes raw, lips sealed.\n\nsummary:\nReference-based late-night study shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nQuiet overhead side shot of a pod lit by one lamp; the screens dissolving data into the frequency-spectra of Alice's laughter and the forbidden poem.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLeo sits alone in the pod, the streams on his screens no longer dry statistics but spectra he has parsed from her voice and the underground chant. He scrolls and replays them, night spooling around him. He appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: keyboard clicks, system fan breathing, faint clock tick. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA muted, churning pulse of concentration.",
+      "refs": [
+        "Ref-POD",
+        "Ref-LEO"
+      ],
+      "seed": 494420,
+      "out": "s3_c3_l0_video",
+      "output": "output/s3_c3_l0_video",
+      "extra": {
+        "prompt_id": "49ec141d-a760-48fc-984c-cd79c2783afd",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c3_l1",
+      "description": "s3 c3_l1 旁白：既然他拔不出病毒，就把他變成免疫力",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, hunched over a terminal, fingers halting, a resolve settling into his jaw, lips sealed.\n\n<Subject 2> is the library research pod from <Picture 2>:\ncompact private study pod, warm lamp, screens showing spectral graphs, late night.\n\nsummary:\nReference-based counter-strategy narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration only by the fixed narrator voice. No on-screen mouth movement. Narrator: a calm middle-aged male voice, never female, never Cantonese. No English.\n\ndetailed_description:\n\nVisual style:\nSlow push toward Leo's side profile against the glowing screens; his hands still as the plan coheres.\n\n[Shot 1]\n\n00:00-00:13\n\nAction:\nLeo's scrolling slows and stops; he looks at the parsed spectra with a new, cold evaluation, then resumes. No on-screen mouth movement; lips sealed. He appears exactly once, no duplicate, no split composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No on-screen mouth movement.\n<d>\n[中文]\n他沒有向校方檢舉艾莉絲。\n在這種真自由的制度下，單純的檢舉是無效的，因為艾莉絲並沒有，強迫任何人聽。\n他要做的，是在認知層面上，徹底瓦解對方的攻勢。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), unhurried, not dialogue, no Cantonese, no English.\nKeyboard sounds fading to a quiet hum.\n\nnon_diegetic_music:\nA spare, building motif, algorithmic and warm at once.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-POD"
+      ],
+      "seed": 311000,
+      "out": "s3_c3_l1_video",
+      "output": "output/s3_c3_l1_video",
+      "extra": {
+        "prompt_id": "62ee417e-4ab6-4892-9e54-243133c69c4c",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c3_l2",
+      "description": "s3 c3_l2 場景：教授出現，理性世界的王后",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the classroom from <Picture 1>:\na university lecture hall, rows of students, term-inspired lighting, a lectern at the front.\n\n<Subject 2> is Professor Chen from <Picture 2>:\nEast Asian woman around fifty, grey-streaked hair in a neat bun, plain tailored coat, guarded rational face, at the lectern, lips sealed.\n\n<Subject 3> is Leo from <Picture 3>:\nEast Asian man around twenty-two, pale grey academy uniform, seated in the hall, attentive, lips sealed.\n\nsummary:\nReference-based controversial-topic class shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. All lips sealed in this beat. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot of the lecture hall; the professor at the front about to pose a divisive question, students leaning in.\n\n[Shot 1]\n\n00:00-00:03\n\nAction:\nThe hall holds its quiet attention as the professor stands at the lectern; Leo sits forward among the rows. Nobody speaks yet. Each figure appears exactly once, no duplicates, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: hall murmur settling, a soft projector hum, the professor's papers. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA measured, expectant phrase.",
+      "refs": [
+        "Ref-CLASS",
+        "Ref-PROF",
+        "Ref-LEO"
+      ],
+      "seed": 494421,
+      "out": "s3_c3_l2_video",
+      "output": "output/s3_c3_l2_video",
+      "extra": {
+        "prompt_id": "9aa1a254-ea97-4716-8922-06181053a725",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c3_l3",
+      "description": "s3 c3_l3 對白·教授：你在沉迷什麼，現在是測試週",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Professor Chen from <Picture 1>:\nEast Asian woman around fifty, grey-streaked hair in a neat bun, plain tailored coat, guarded rational face, at the lectern, lips moving to speak.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, seated in the hall, listening, lips sealed.\n\n<Subject 3> is the classroom from <Picture 3>:\nuniversity lecture hall, lectern at the front, rows of students.\n\nsummary:\nReference-based hypothetical-society dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her voice is measured, philosophical, testing the room.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on the professor posing the thought experiment; the lecture hall leaning closer.\n\n[Shot 1]\n\n00:00-00:16\n\nAction:\nThe professor lays out the hypothetical society and its dilemma with measured care, letting the question hang. Leo listens, absorbing well before answering. She appears exactly once as the speaking figure; only her mouth moves. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n如果一個社會的理性能量，足以應對所有外部風險，\n但人民卻因為缺乏情緒多巴胺，而產生自發性集體抑鬱，\n我們是否應該，在系統中植入適量的，良性假象。\n</d>\n\noverall_soundscape:\nDialogue delivered by a measured philosophical female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nHall hum, projector whir, a held attention.\n\nnon_diegetic_music:\nA questioning, open motif.",
+      "refs": [
+        "Ref-PROF",
+        "Ref-LEO",
+        "Ref-CLASS"
+      ],
+      "seed": 494422,
+      "out": "s3_c3_l3_video",
+      "output": "output/s3_c3_l3_video",
+      "extra": {
+        "prompt_id": "c787aa05-760b-4e87-97bb-5aa2cbdae314",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c3_l4",
+      "description": "s3 c3_l4 場景：全班陷入沉默",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the classroom from <Picture 1>:\nuniversity lecture hall, rows of students in stunned silence, the deliberation hanging in the air.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, seated, measured, lips sealed.\n\n<Subject 3> is Professor Chen from <Picture 3>:\nEast Asian woman around fifty, grey-streaked bun, tailored coat, at the lectern, waiting, lips sealed.\n\nsummary:\nReference-based stun-silence shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. All lips sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot of the hall under the weight of the question; stunned stillness across the rows.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nThe room goes quiet under the ultimate debate—happiness versus truth. Students exchange only glances; Leo and the professor hold the silence between them. No mouth moves. Each appears exactly once, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: the projector's low hum, a held breath of the hall, faint shuffling. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA bare, suspended chord.",
+      "refs": [
+        "Ref-CLASS",
+        "Ref-LEO",
+        "Ref-PROF"
+      ],
+      "seed": 494423,
+      "out": "s3_c3_l4_video",
+      "output": "output/s3_c3_l4_video",
+      "extra": {
+        "prompt_id": "0dec85dd-476d-46e6-b7a9-955021b04aea",
+        "v2_width": 512,
+        "v2_height": 288
+      }
+    },
+    {
+      "id": "c3_l5",
+      "description": "s3 c3_l5 對白·里歐：反對良性假象，發展感性的邏輯防禦",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, standing to speak, firm and exact, lips moving.\n\n<Subject 2> is Professor Chen from <Picture 2>:\nEast Asian woman around fifty, grey-streaked bun, tailored coat, at the lectern, listening, lips sealed.\n\n<Subject 3> is the classroom from <Picture 3>:\nuniversity lecture hall, rows of students turning to him.\n\nsummary:\nReference-based rejection-of-illusion dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice is firm, reasoned, no heat.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on Leo standing among the rows, speaking against the premise; the hall leaning to his argument.\n\n[Shot 1]\n\n00:00-00:16\n\nAction:\nLeo rises and lays out his objection to benign illusions, naming the immune-degradation and proposing emotional-logic defense instead. He appears exactly once as the speaker; only his mouth moves; the hall stays sealed, attentive. No split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n教授，我反對任何形式的，良性假象。\n因為假象的代價包是不可控的，它會導致人民的，認知免疫系統退化。\n我們不應該給予虛假的糖分，而是應該發展，感性的邏輯防禦。\n</d>\n\noverall_soundscape:\nDialogue delivered by a firm reasoned male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nHall focus, projector hum, the resonance of the room.\n\nnon_diegetic_music:\nA confident, weaving line.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-PROF",
+        "Ref-CLASS"
+      ],
+      "seed": 494424,
+      "out": "s3_c3_l5_video",
+      "output": "output/s3_c3_l5_video"
+    },
+    {
+      "id": "c3_l6",
+      "description": "s3 c3_l6 對白·教授：哦？願聞其詳",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Professor Chen from <Picture 1>:\nEast Asian woman around fifty, grey-streaked hair in a neat bun, plain tailored coat, raising an eyebrow, intrigued, lips moving to speak.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, standing, ready to answer, lips sealed.\n\nsummary:\nReference-based go-ahead dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her voice is dry, intrigued.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on the professor, eyebrow lifting with a dry interest; Leo poised to proceed.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nThe professor responds to Leo's pitch with a raised eyebrow and a single dry invitation to go on. She appears exactly once as the speaker; only her mouth moves; Leo remains sealed, waiting to advance. No split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n哦？願聞其詳。\n</d>\n\noverall_soundscape:\nDialogue delivered by a dry intrigued female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nHall still, projector hum, a faint murmur.\n\nnon_diegetic_music:\nA small, expectant lift.",
+      "refs": [
+        "Ref-PROF",
+        "Ref-LEO"
+      ],
+      "seed": 494425,
+      "out": "s3_c3_l6_video",
+      "output": "output/s3_c3_l6_video"
+    },
+    {
+      "id": "c3_l7",
+      "description": "s3 c3_l7 場景：里歐走上講台拆解詩的音頻波形",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, stepping to the lectern, calm before the hall, lips sealed.\n\n<Subject 2> is the classroom from <Picture 2>:\nuniversity lecture hall; the professor's display now showing a poem's audio waveform broken into logic blocks.\n\nsummary:\nReference-based lectern-waveform shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed in this beat. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nMedium shot of Leo at the lectern; the waveform of the forbidden poem dissolving into logical segments on screen.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLeo reaches the lectern and calls up the audio waveform of Alice's poem, splitting it into discrete logic blocks without playing the melody. The room takes it in silently. He appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: a soft tap, the display's digital chime, hall attention settling. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA clinical, dissecting pulse.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-CLASS"
+      ],
+      "seed": 494426,
+      "out": "s3_c3_l7_video",
+      "output": "output/s3_c3_l7_video"
+    },
+    {
+      "id": "c3_l8",
+      "description": "s3 c3_l8 對白·里歐：這首詩利用歸屬感，構建虛擬共同體",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, at the lectern, hands flying over the display, lips moving to speak.\n\n<Subject 2> is the classroom from <Picture 2>:\nuniversity lecture hall; the waveform marked with keywords, students watching.\n\nsummary:\nReference-based logic-lecture dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice is quick, exact, dispassionate.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on Leo at the lectern, fingers marking the waveform; the hall locked to his slides.\n\n[Shot 1]\n\n00:00-00:15\n\nAction:\nLeo dissects the poem's mechanism of belonging, annotating the keywords 'we', 'together', 'stars' on the waveform live. He moves fast, precise. He appears exactly once as the speaker; only his mouth moves. No split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n這首詩之所以能產生威力，是因為它利用了人類大腦，對歸屬感的原始渴望。\n它使用了大量我們、共同、星辰等詞彙。\n它在構建一個，沒有邊界的虛擬共同體。\n</d>\n\noverall_soundscape:\nDialogue delivered by a quick exact male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nDisplay chimes, hall still, projector hum.\n\nnon_diegetic_music:\nA rapid, analytic line.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-CLASS"
+      ],
+      "seed": 494427,
+      "out": "s3_c3_l8_video",
+      "output": "output/s3_c3_l8_video"
+    },
+    {
+      "id": "c3_l9",
+      "description": "s3 c3_l9 對白·里歐：方案不是封殺，而是透明化掛載",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, at the lectern, concluding each step crisply, lips moving to speak.\n\n<Subject 2> is the classroom from <Picture 2>:\nuniversity lecture hall; the display templating the approach, students at attention.\n\nsummary:\nReference-based transparency-proposal dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His tone is flat, sure.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on Leo naming the strategy; the hall listening without contest.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLeo states that the solution is not to ban but to attach transparency, the display confirming each term. He appears exactly once as the speaker; only his mouth moves. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n我的方案不是封殺它，\n而是對其進行，透明化掛載。\n</d>\n\noverall_soundscape:\nDialogue delivered by a flat sure male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nHall attention, display chime, projector hum.\n\nnon_diegetic_music:\nA crisp, assured beat.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-CLASS"
+      ],
+      "seed": 494428,
+      "out": "s3_c3_l9_video",
+      "output": "output/s3_c3_l9_video"
+    },
+    {
+      "id": "c3_l10",
+      "description": "s3 c3_l10 場景：情感代價實時映射器同步顯示殘骸數據",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, at the lectern launching a plugin, lips sealed.\n\n<Subject 2> is the classroom from <Picture 2>:\nuniversity lecture hall; the display rerunning the poem while syncing orbital-debris data, bone-loss rates and social-stagnation models beside each line.\n\nsummary:\nReference-based cost-mapper demo shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed in this beat. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot over the hall toward the display: the poem replays, but every ideal now carries a live physical cost beside it.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nLeo launches the emotional-cost mapper: the poem replays, and each line about returning to the stars brings up debris data, bone-wastage curves and a social-stasis model. The hall stares at the synchronized account. Leo appears exactly once at the lectern, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: the plugin's chime, projector whir, a low murmur of absorbed shock. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA cold, precise underscore.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-CLASS"
+      ],
+      "seed": 494429,
+      "out": "s3_c3_l10_video",
+      "output": "output/s3_c3_l10_video"
+    },
+    {
+      "id": "c3_l11",
+      "description": "s3 c3_l11 對白·里歐：感性被賦予物理代價，不再是火花",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, turning to face the class, the cost-mapper lit behind him, lips moving to speak.\n\n<Subject 2> is the classroom from <Picture 2>:\nuniversity lecture hall; the cost-mapper glowing, students watching him.\n\nsummary:\nReference-based emotional-cost lecture dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His tone is calm, pedagogical, final.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on Leo turning to the hall, the mapped costs at his back, delivering the lesson plainly.\n\n[Shot 1]\n\n00:00-00:15\n\nAction:\nLeo turns to the class and delivers the core claim: once feeling is priced, it stops being mystery and becomes consumption; crying while staring at the bill will not get you into self-destruction. He appears exactly once as the speaker; only his mouth moves. No split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n當感性被賦予了，精確的物理代價，\n它就不再是神祕的火花，而是一種，高昂的消費行為。\n當你清醒地看著帳單去流淚時，你就不會被誤導去自殺。\n</d>\n\noverall_soundscape:\nDialogue delivered by a calm pedagogical male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nHall intent, projector hum, the mapped data ticking.\n\nnon_diegetic_music:\nA steady, denuded truth-tone.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-CLASS"
+      ],
+      "seed": 494430,
+      "out": "s3_c3_l11_video",
+      "output": "output/s3_c3_l11_video"
+    },
+    {
+      "id": "c3_l12",
+      "description": "s3 c3_l12 場景：下課後艾莉絲在走廊盡頭等他",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the dim corridor from <Picture 1>:\nuniversity corridor after class, end-of-day light, a figure waiting at its far end.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, standing at the corridor's end, a dangerous glint in her eyes, lips sealed.\n\n<Subject 3> is Leo from <Picture 3>:\nEast Asian man around twenty-two, pale grey academy uniform, approaching along the corridor, stopping at her look, lips sealed.\n\nsummary:\nReference-based corridor-ambush beat\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Both lips sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nMedium shot down the corridor; Alice waiting at its end, Leo coming to a stop as their eyes meet.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nLeo emerges from the class into the corridor; Alice stands at the far end waiting, the daylight catching a dangerous spark in her gaze. He slows and stops. No mouth moves. Each appears exactly once, no duplicates, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: receding classroom noise behind a door, corridor echo, distant steps. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA held, wary note.",
+      "refs": [
+        "Ref-CORRIDOR",
+        "Ref-ALICE",
+        "Ref-LEO"
+      ],
+      "seed": 494431,
+      "out": "s3_c3_l12_video",
+      "output": "output/s3_c3_l12_video"
+    },
+    {
+      "id": "c3_l13",
+      "description": "s3 c3_l13 對白·艾莉絲：你把玫瑰拆解成碳分子",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, standing in the corridor, a cold mocking smile, lips moving to speak.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, facing her, composed, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nuniversity corridor after class, end-of-day light.\n\nsummary:\nReference-based beauty-debate dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her voice is cold, mocking, sure.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium two-shot, Alice's cold smile and Leo's stillness; corridor light between them.\n\n[Shot 1]\n\n00:00-00:09\n\nAction:\nAlice attacks his method directly—reducing beauty to carbon—while he stays motionless. She appears exactly once as the speaker; only her mouth moves; Leo's lips sealed. No split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n你試圖把玫瑰拆解成碳分子，里歐。\n但你忘了，美是無法被，掛載代價的。\n</d>\n\noverall_soundscape:\nDialogue delivered by a cold mocking female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nCorridor echo, end-of-day quiet, a distant step.\n\nnon_diegetic_music:\nA sharp, classical sting.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494432,
+      "out": "s3_c3_l13_video",
+      "output": "output/s3_c3_l13_video"
+    },
+    {
+      "id": "c3_l14",
+      "description": "s3 c3_l14 對白·里歐：美不需掛載代價，但政治動員必須",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, stepping in, calm like reading law, lips moving to speak.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, matching his advance, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nuniversity corridor after class, end-of-day light.\n\nsummary:\nReference-based legal-counter dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice is even, like a reading of statute.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot, Leo stepping toward Alice, calm and accusatory; she holds her place.\n\n[Shot 1]\n\n00:00-00:14\n\nAction:\nLeo answers: beauty needs no pricing, but political mobilization in beauty's name does; he names her regime as the thing she is selling. He appears exactly once as the speaker; only his mouth moves; Alice's lips stay sealed. No split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n美不需要被掛載代價，\n但以此為名的政治動員，必須。\n艾莉絲，妳試圖利用我們對美的追求，來推銷妳背後的政體。\n</d>\n\noverall_soundscape:\nDialogue delivered by an even statutory male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nCorridor echo tightening, a held quiet.\n\nnon_diegetic_music:\nA low, legal gravity.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494435,
+      "out": "s3_c3_l14_video",
+      "output": "output/s3_c3_l14_video"
+    },
+    {
+      "id": "c3_l15",
+      "description": "s3 c3_l15 對白·里歐：妳在感性病毒裡隱暎了異議者處理數據",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, stepping closer, low and measured, lips moving to speak.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, holding her ground, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nuniversity corridor after class, end-of-day light.\n\nsummary:\nReference-based indictment dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice drops low, deliberate.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot, Leo close, naming what she hid inside her viral poetry; Alice holding still.\n\n[Shot 1]\n\n00:00-00:10\n\nAction:\nLeo steps in and names the most damning file buried inside her seductive virus: the dossier on dissidents. He appears exactly once as the speaker; only his mouth moves; Alice's lips stay sealed. No split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n妳在妳的感性病毒裡，\n隱暎了最重要的一份文件，\n異議者的處理數據。\n</d>\n\noverall_soundscape:\nDialogue delivered by a low deliberate male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nCorridor echo deepening, a held quiet.\n\nnon_diegetic_music:\nA gathering, ominous weight.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494433,
+      "out": "s3_c3_l15_video",
+      "output": "output/s3_c3_l15_video"
+    },
+    {
+      "id": "c3_l16",
+      "description": "s3 c3_l16 場景：里歐打開終端機，顯示異議者處理數據",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, opening a terminal, cold, lips sealed.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, watching the screen, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nuniversity corridor after class; a portable terminal glowing between them.\n\nsummary:\nReference-based terminal-expose shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Both lips sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nMedium shot, a glowing terminal between them, the screen parting the corridor's dimness.\n\n[Shot 1]\n\n00:00-00:07\n\nAction:\nLeo opens his terminal and surfaces the overseas database he dug out overnight: in her kind of feeling-first country, thousands judged 'insufficiently passionate' are scrubbed from society each year. The figures roll silently. Neither speaks. Each appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: terminal hum, key strokes, the corridor's hush. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA cold factual dirge.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494436,
+      "out": "s3_c3_l16_video",
+      "output": "output/s3_c3_l16_video"
+    },
+    {
+      "id": "c3_l17",
+      "description": "s3 c3_l17 對白·里歐：星辰同歸是屍骨堆成的祭壇",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, the terminal glowing behind him, cold and final, lips moving to speak.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, facing the data, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nuniversity corridor after class; the terminal's glow.\n\nsummary:\nReference-based cold-verdict dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice is ice-cold, unhurried.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot, Leo delivering the verdict in the glow of the terminal; Alice pinned by the data.\n\n[Shot 1]\n\n00:00-00:09\n\nAction:\nLeo delivers the cold verdict: her star-return is an altar built from the bones of the nonconformists. He appears exactly once as the speaker; only his mouth moves; Alice stays sealed. No split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n這就是妳的星辰同歸，\n那是一座，由不合群者的屍骨，堆成的祭壇。\n</d>\n\noverall_soundscape:\nDialogue delivered by an ice-cold male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nTerminal hum, corridor stillness, a faint wind.\n\nnon_diegetic_music:\nA grim, settling brass.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494437,
+      "out": "s3_c3_l17_video",
+      "output": "output/s3_c3_l17_video"
+    },
+    {
+      "id": "c3_l18",
+      "description": "s3 c3_l18 場景：艾莉絲臉色第一次慘白",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, for the first time going pale, lips sealed.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, watching her, unmoved, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nuniversity corridor after class; the terminal's glow.\n\nsummary:\nReference-based first-pallor beat\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Both lips sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nClose shot on Alice's face as the color drains; Leo's stillness in the bokeh.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nFor the first time Alice's face turns white; the confident warmth vacates it, leaving something raw. Leo watches without moving. No mouth moves. Each appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: terminal hum, a barely-held breath, corridor hush. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA single, hollow strike.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494438,
+      "out": "s3_c3_l18_video",
+      "output": "output/s3_c3_l18_video"
+    },
+    {
+      "id": "c3_l19",
+      "description": "s3 c3_l19 旁白：艾莉絲發現里歐完成認知反偵察",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, standing still, dawning comprehension, lips sealed.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, terminal closed, calm, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nuniversity corridor after class, end-of-day light.\n\nsummary:\nReference-based narration over the reverse-recon quiet\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks aloud. No dialogue. No on-screen mouth movement from any person. Off-screen narration only, calm, measured.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium two-shot in the corridor; Alice's dawning realization vs Leo's quiet composure.\n\n[Shot 1]\n\n00:00-00:11\n\nAction:\nAlice realizes the truth: instead of being seduced, Leo used her own sensibility as a sample and finished a flawless reverse cognitive reconnaissance. No mouth moves; the realization sits between them.\n\nNarration:\nThe following lines are delivered as off-screen narration alone (no character speaks on camera).\n\n<d>\n[中文]\n她發現，里歐並沒有被她的感性誘惑，\n反而利用她的感性作為樣本，\n完成了一次完美的，認知反偵察。\n</d>\n\noverall_soundscape:\nOff-screen narration in a calm neutral voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nTerminal folding shut, corridor hush, a faint clock.\n\nnon_diegetic_music:\nA quiet, resolving undertow.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 311000,
+      "out": "s3_c3_l19_video",
+      "output": "output/s3_c3_l19_video"
+    },
+    {
+      "id": "c3_l20",
+      "description": "s3 c3_l20 對白·里歐：這場測試妳輸了，防線建立於對完整真相的追求",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, standing firm, closing the argument, lips moving to speak.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, listening, pale, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nuniversity corridor after class, end-of-day light.\n\nsummary:\nReference-based final-move dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice is declarative, unhurried.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot, Leo delivering the closing move; Alice quiet before him.\n\n[Shot 1]\n\n00:00-00:16\n\nAction:\nLeo closes the exchange: this test was lost the moment she banked on fragile defenses; the line is built on an absolute pursuit of complete truth. He appears exactly once as the speaker; only his mouth moves; Alice stays sealed. No split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n這場測試，妳輸了。\n妳以為我們理性的防線很脆弱，但妳忘了，\n我們的防線是建立在，對完整真相的極致追求上。\n</d>\n\noverall_soundscape:\nDialogue delivered by a declarative male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nCorridor echo, dusk settling, a far door.\n\nnon_diegetic_music:\nA closing, certain line.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494439,
+      "out": "s3_c3_l20_video",
+      "output": "output/s3_c3_l20_video"
+    },
+    {
+      "id": "c3_l21",
+      "description": "s3 c3_l21 對白·里歐：幻覺越多，能拆解出的虛偽代價越具體",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, standing in the corridor, closing, calm, lips moving to speak.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, pale, holding her ground, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nuniversity corridor after class, end-of-day light.\n\nsummary:\nReference-based closing-arithmetic dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His tone stays flat, sure.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on Leo delivering the last arithmetical line; the corridor hush around his words.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nLeo finishes the formula: the more illusions she can offer, the more concrete the counterfeit costs we can strip out. He appears exactly once as the speaker; only his mouth moves; Alice stays sealed. No split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n妳能給出的幻覺越多，\n我們能拆解出的，虛偽代價就越具體。\n</d>\n\noverall_soundscape:\nDialogue delivered by a flat sure male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nCorridor echo, end-of-day quiet.\n\nnon_diegetic_music:\nA final, settled grain.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 494437,
+      "out": "s3_c3_l21_video",
+      "output": "output/s3_c3_l21_video"
+    },
+    {
+      "id": "c3_l22",
+      "description": "s3 c3_l22 旁白：理性人並非沒有感情，而是昇華成對真實的絕對忠誠",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, watching Leo, dawning understanding, lips sealed.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, standing before her, composed, lips sealed.\n\n<Subject 3> is the dim corridor from <Picture 3>:\nuniversity corridor after class, end-of-day light.\n\nsummary:\nReference-based closing-revelation narration\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks aloud. No dialogue. No on-screen mouth movement from any person. Both lips stay sealed; neither mouths a word. Off-screen narration only, fixed narrator voice.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium two-shot; Alice studying Leo, truth settling in her, both still.\n\n[Shot 1]\n\n00:00-00:09\n\nAction:\nAlice studies Leo and the truth lands: these rational people are not lacking in feeling—they have sublimated feeling into an absolute loyalty to the real. Each appears exactly once; no mouth moves; lips sealed. No split composition.\n\nNarration:\nThe following narration belongs to the fixed off-screen narrator alone; no on-screen person mouths it, lips stay sealed.\n<d>\n[中文]\n艾莉絲看著里歐，突然意識到，\n這群理性人並非沒有感情，\n而是他們將感情昇華成了一種，對真實的絕對忠誠。\n</d>\n\noverall_soundscape:\nNarration delivered by a calm mature off-screen voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nCorridor hush, end-of-day quiet.\n\nnon_diegetic_music:\nA quiet, resolving warmth.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-CORRIDOR"
+      ],
+      "seed": 311000,
+      "out": "s3_c3_l22_video",
+      "output": "output/s3_c3_l22_video"
+    },
+    {
+      "id": "c4_l0",
+      "description": "s3 c4_l0 場景：期末考週，校園空氣緊繃",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the final-exam classroom from <Picture 1>:\nlarge exam hall, central screen, desks in rows, students tense, cool harsh lighting.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, sitting at an exam desk, composed, lips sealed.\n\nsummary:\nReference-based exam-week tension shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot of the tense exam hall; students hunched at desks, Leo composed through the storm of nervous energy.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nThe exam-week air in the hall is almost frozen; students shift anxiously, terminals flashing. Leo sits centered, still, the one calm figure in the tension. He appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: hushed breathing, faint terminal chirps, shuffled papers, a distant clock. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA taut, held drone.",
+      "refs": [
+        "Ref-EXAM",
+        "Ref-LEO"
+      ],
+      "seed": 494440,
+      "out": "s3_c4_l0_video",
+      "output": "output/s3_c4_l0_video"
+    },
+    {
+      "id": "c4_l1",
+      "description": "s3 c4_l1 旁白：終極驗證",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, at an exam desk, gathering himself, lips sealed.\n\n<Subject 2> is the final-exam classroom from <Picture 2>:\nlarge exam hall, central screen, rows of desks, cool lighting.\n\nsummary:\nReference-based final-verification narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration only by the fixed narrator voice. No on-screen mouth movement. Narrator: a calm middle-aged male voice, never female, never Cantonese. No English.\n\ndetailed_description:\n\nVisual style:\nSlow push toward Leo at his desk; the exam hall receding into a blur around the weight of the moment.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLeo breathes once, slow and steady, centering himself before the terminal. Around him the hall softens into a low hum. No on-screen mouth movement; lips sealed. He appears exactly once, no repeat, no split composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No on-screen mouth movement.\n<d>\n[中文]\n對里歐來說，這不僅是一場考試，\n更是對他認知防線的，終極驗證。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), unhurried, not dialogue, no Cantonese, no English.\nExam hall murmur falling away, a soft clock tick.\n\nnon_diegetic_music:\nA spare, weighty motif.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-EXAM"
+      ],
+      "seed": 311000,
+      "out": "s3_c4_l1_video",
+      "output": "output/s3_c4_l1_video"
+    },
+    {
+      "id": "c4_l2",
+      "description": "s3 c4_l2 場景：教授大螢幕顯示考題",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the final-exam classroom from <Picture 1>:\nlarge exam hall, central wall screen lighting up with the exam text.\n\n<Subject 2> is Professor Chen from <Picture 2>:\nEast Asian woman around fifty, grey-streaked bun, tailored coat, standing before the screen, lips sealed.\n\n<Subject 3> is Leo from <Picture 3>:\nEast Asian man around twenty-two, pale grey academy uniform, looking up at the screen, lips sealed.\n\nsummary:\nReference-based exam-screen reveal shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. All lips sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot: the professor beside the screen as the exam prompt flares up; students turning to read it.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nThe central screen ignites with the exam brief; the professor stands quiet beside it while the students, Leo among them, look up and read. Each figure appears exactly once, no duplicates, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: the screen's power-up hum, a low collective intake of breath, hall silence. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA brief, sharp cue.",
+      "refs": [
+        "Ref-EXAM",
+        "Ref-PROF",
+        "Ref-LEO"
+      ],
+      "seed": 494441,
+      "out": "s3_c4_l2_video",
+      "output": "output/s3_c4_l2_video"
+    },
+    {
+      "id": "c4_l3",
+      "description": "s3 c4_l3 旁白：任務與限制一",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the final-exam classroom from <Picture 1>:\nlarge exam hall, the central screen glowing with the written exam brief, students reading.\n\nsummary:\nReference-based exam-brief narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration only by the fixed narrator voice. No on-screen mouth movement. Narrator: a calm middle-aged male voice, never female, never Cantonese. No English.\n\ndetailed_description:\n\nVisual style:\nHolding wide on the glowing screen as the brief scrolls; the hall dim except for its light.\n\n[Shot 1]\n\n00:00-00:09\n\nAction:\nThe screen holds the exam text in sharp white on the dim hall; the narrative reads the task as the light flickers once per clause. No figure's mouth moves. No duplicated elements; the hall stays one. No split composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No on-screen mouth movement.\n<d>\n[中文]\n任務，提出一項國家大型建設案，並進行全民動員。\n限制一，禁止使用任何感性形容詞，如偉大、繁榮、幸福。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), unhurried, not dialogue, no Cantonese, no English.\nScreen hum, hall silence, faint typing.\n\nnon_diegetic_music:\nA clinical, ticking motif.",
+      "refs": [
+        "Ref-EXAM"
+      ],
+      "seed": 311000,
+      "out": "s3_c4_l3_video",
+      "output": "output/s3_c4_l3_video"
+    },
+    {
+      "id": "c4_l4",
+      "description": "s3 c4_l4 旁白：限制二三",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the final-exam classroom from <Picture 1>:\nlarge exam hall, the central screen still glowing with the exam brief, its constraint lines highlighted.\n\nsummary:\nReference-based exam-constraints narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration only by the fixed narrator voice. No on-screen mouth movement. Narrator: a calm middle-aged male voice, never female, never Cantonese. No English.\n\ndetailed_description:\n\nVisual style:\nSlower lateral drift across the screen's constraint lines; the hall still dim and quiet.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nThe brief's remaining constraints glow in sequence across the hall screen; the room stays breath-still under their weight. The classroom appears exactly once, no duplicate, no split composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No on-screen mouth movement.\n<d>\n[中文]\n限制二，禁止使用非理性的視覺修辭。\n限制三，必須獲得百分之五十以上的，模擬公民點擊參與。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), unhurried, not dialogue, no Cantonese, no English.\nScreen hum, a low murmur of alarm from the hall.\n\nnon_diegetic_music:\nThe ticking motif tightens.",
+      "refs": [
+        "Ref-EXAM"
+      ],
+      "seed": 311000,
+      "out": "s3_c4_l4_video",
+      "output": "output/s3_c4_l4_video"
+    },
+    {
+      "id": "c4_l5",
+      "description": "s3 c4_l5 場景：同學苦思，建立困難",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the final-exam classroom from <Picture 1>:\nlarge exam hall, rows of students hunched in private struggle, terminals glowing, cool lighting.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, seated among them, contemplative, lips sealed.\n\nsummary:\nReference-based collective-struggle shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. All lips sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nMedium-wide over the hall: classmates wrestling with the open-ended prompt, building harder than dismantling.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nStudents frown at their terminals, erasing and restarting, stuck in a world trained to tear down rather than raise up. Leo sits among them, still gathering his thought. No one's mouth moves. Each figure appears once; no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: frustrated sighs, keyboard spirals, hall murmur at low level. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA restless, low churn.",
+      "refs": [
+        "Ref-EXAM",
+        "Ref-LEO"
+      ],
+      "seed": 494442,
+      "out": "s3_c4_l5_video",
+      "output": "output/s3_c4_l5_video"
+    },
+    {
+      "id": "c4_l6",
+      "description": "s3 c4_l6 對白·同學：不能說為了下一代的幸福，怎麼說服人民掏錢",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is a classmate from <Picture 1>:\nEast Asian young man around twenty, plain grey student clothes, frustrated, gripping his own hair, lips moving to speak.\n\n<Subject 2> is the final-exam classroom from <Picture 2>:\nlarge exam hall, rows of desks, central screen glowing.\n\nsummary:\nReference-based frustrated-classmate dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His tone is frustrated, groaning.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on the classmate at his desk, hair gripped in both hands as he vents; hall rows behind.\n\n[Shot 1]\n\n00:00-00:01\n\nAction:\nThe classmate seizes his own hair in frustration, spilling out the impossible brief in a groan. He appears exactly once as the speaking figure. Only his mouth moves; classmates around him stay sealed. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n如果不能說為了下一代的幸福，\n我們要怎麼說服人民，把錢從口袋裡掏出來，建核聚變電廠？\n</d>\n\noverall_soundscape:\nDialogue delivered by a frustrated groaning male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nHall murmur, keyboard clicks.\n\nnon_diegetic_music:\nThe restless churn continues.",
+      "refs": [
+        "Ref-CLASS",
+        "Ref-EXAM"
+      ],
+      "seed": 494443,
+      "out": "s3_c4_l6_video",
+      "output": "output/s3_c4_l6_video"
+    },
+    {
+      "id": "c4_l7",
+      "description": "s3 c4_l7 對白·同學：說增加百分之十五能源冗餘，像讀說明書",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is a classmate from <Picture 1>:\nEast Asian young man around twenty, plain grey student clothes, hands falling to the desk in defeat, lips moving to speak.\n\n<Subject 2> is the final-exam classroom from <Picture 2>:\nlarge exam hall, rows of desks, central screen glowing.\n\nsummary:\nReference-based dry-defeat dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His tone is dry, deflated.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on the classmate, hands dropped, voice flat as he talks the prospect to death.\n\n[Shot 1]\n\n00:00-00:07\n\nAction:\nThe classmate answers his own question dryly, mocking the idea of pitching a power plant like a manual. Hands fall to the desk. He appears exactly once as the speaking figure; only his mouth moves. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n說這能增加百分之十五的能源冗餘嗎？\n這聽起來就像在讀說明書。\n</d>\n\noverall_soundscape:\nDialogue delivered by a dry deflated male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nHall lull, keyboard clicks, sighs.\n\nnon_diegetic_music:\nThe churn settles to a flat pedal.",
+      "refs": [
+        "Ref-CLASS",
+        "Ref-EXAM"
+      ],
+      "seed": 494444,
+      "out": "s3_c4_l7_video",
+      "output": "output/s3_c4_l7_video"
+    },
+    {
+      "id": "c4_l8",
+      "description": "s3 c4_l8 場景：里歐看著螢幕，閃過艾莉絲笑聲與集會殘響",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, staring at his exam terminal, a far-off light in his eyes, lips sealed.\n\n<Subject 2> is the final-exam classroom from <Picture 2>:\nlarge exam hall, his terminal glowing, cool light.\n\nsummary:\nReference-based memory-shimmer beat\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nClose on Leo's face as the underground chant and a laugh flicker past his sight-line; the hall holds still around him.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nLeo looks at his terminal but sees, for a moment, the red bunker and a flash of her smile and the chant's rhythm in the light. The impression passes and the hall is back. No second figure ever appears. He appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: a low distant rhythm fading in then gone, terminal hum, hall quiet. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA faint phantom pulse, then the taut drone resumes.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-EXAM"
+      ],
+      "seed": 494445,
+      "out": "s3_c4_l8_video",
+      "output": "output/s3_c4_l8_video"
+    },
+    {
+      "id": "c4_l9",
+      "description": "s3 c4_l9 旁白：真實本身也有一種頻率，但多數人不敢直視",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, at his terminal, eyes lifting with recognition, lips sealed.\n\n<Subject 2> is the final-exam classroom from <Picture 2>:\nlarge exam hall, central screen and terminals glowing, cool light.\n\nsummary:\nReference-based frequency-of-truth narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration only by the fixed narrator voice. No on-screen mouth movement. Narrator: a calm middle-aged male voice, never female, never Cantonese. No English.\n\ndetailed_description:\n\nVisual style:\nSlow push toward Leo as the realization settles; the hall's noise recedes.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nLeo's gaze turns inward and then sharpens, a decision forming at the edge of his brow; the hall stills around him. No on-screen mouth movement; lips sealed. He appears exactly once, no repeat, no split composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No on-screen mouth movement.\n<d>\n[中文]\n他意識到，真實本身也有一種頻率，\n只是大多數人，不敢直視它。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), unhurried, not dialogue, no Cantonese, no English.\nHall hush, a soft screen hum.\n\nnon_diegetic_music:\nA clean, resolving tone.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-EXAM"
+      ],
+      "seed": 311000,
+      "out": "s3_c4_l9_video",
+      "output": "output/s3_c4_l9_video"
+    },
+    {
+      "id": "c4_l10",
+      "description": "s3 c4_l10 場景：里歐上台投射歷史負債表",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, standing at the presentation console, calm, lips sealed.\n\n<Subject 2> is the final-exam classroom from <Picture 2>:\nlarge exam hall; the screen behind him now showing a stark, blood-like ledger — the historical debt table.\n\nsummary:\nReference-based harsh-ledger reveal shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed in this beat. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot, Leo small before the vast red-scale debt ledger; the hall falling silent around him.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLeo takes the console as the hall hushes; he projects not a pretty model but the stark historical debt table, raw figures sprawled across the screen. He stands before it composed. He appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: the screen's jolt, a low murmur of shock, hall silence falling. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA grave, low drum.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-EXAM"
+      ],
+      "seed": 494446,
+      "out": "s3_c4_l10_video",
+      "output": "output/s3_c4_l10_video"
+    },
+    {
+      "id": "c4_l11",
+      "description": "s3 c4_l11 對白·里歐：深空觀測站建設案",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, at the presentation console addressing the hall, lips moving to speak.\n\n<Subject 2> is the final-exam classroom from <Picture 2>:\nlarge exam hall, the debt-ledger screen behind him, students watching.\n\nsummary:\nReference-based project-title dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice is level, clinical.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on Leo at the console, delivering the dry title to a stunned hall.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLeo reads out the report title without ornament, the ledger screen looming behind him; the hall absorbs it in silence. He appears exactly once as the speaker; only his mouth moves. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n本次報告題目：\n深空觀測站建設案，關於人類作為碳基物種的存續精算。\n</d>\n\noverall_soundscape:\nDialogue delivered by a level clinical male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nHall silence, screen hum, mic echo.\n\nnon_diegetic_music:\nThe low drum holds.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-EXAM"
+      ],
+      "seed": 494447,
+      "out": "s3_c4_l11_video",
+      "output": "output/s3_c4_l11_video"
+    },
+    {
+      "id": "c4_l12",
+      "description": "s3 c4_l12 對白·里歐：文明崩潰臨界點將在一百四十二年到達",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, at the console, voice heavy as gravity, lips moving to speak.\n\n<Subject 2> is the final-exam classroom from <Picture 2>:\nlarge exam hall, the ledger screen behind him with grim simulation curves.\n\nsummary:\nReference-based collapse-deadline dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice is flat but presses down like weight.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium-wide shot; Leo steady at the console as the screen affirms each number he states.\n\n[Shot 1]\n\n00:00-00:13\n\nAction:\nLeo delivers the extinction arithmetic flatly, the screen confirming the deadline he names. The hall is still; only his mouth moves in the audience of sealed faces. He appears exactly once, no duplicate, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n公民們，\n根據當前的熵增速度與地緣數據模擬：\n人類在不進行星際資源擴張的情況下，文明崩潰的臨界點，將在一百四十二年後到達。\n</d>\n\noverall_soundscape:\nDialogue delivered by a flat heavy male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nMic echo, a shared held breath, screen hum.\n\nnon_diegetic_music:\nLow drums build.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-EXAM"
+      ],
+      "seed": 494448,
+      "out": "s3_c4_l12_video",
+      "output": "output/s3_c4_l12_video"
+    },
+    {
+      "id": "c4_l13",
+      "description": "s3 c4_l13 對白·里歐：不是可能而是必然",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, at the console, gaze reinforced, lips moving to speak.\n\n<Subject 2> is the final-exam classroom from <Picture 2>:\nlarge exam hall, simulation screen steady behind him.\n\nsummary:\nReference-based certainty-clause dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice is absolute.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium close on Leo, the word '必然' landing like a verdict; hall silent.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLeo classes the deadline not as speculation but as a deduction from physical constants, letting the hall sit with the shift. He appears exactly once as the speaker; only his mouth moves. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n這不是一個可能，\n而是一個基於現有物理常數的必然。\n</d>\n\noverall_soundscape:\nDialogue delivered by an absolute male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nComplete hall pause, screen hum.\n\nnon_diegetic_music:\nThe drums cut to a single strike.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-EXAM"
+      ],
+      "seed": 494449,
+      "out": "s3_c4_l13_video",
+      "output": "output/s3_c4_l13_video"
+    },
+    {
+      "id": "c4_l14",
+      "description": "s3 c4_l14 場景：文明剩餘秒數實時變動",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the final-exam classroom from <Picture 1>:\nlarge exam hall; the screen now flaunting a live-counting counter of remaining civilisation seconds.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, watching the counter beside him, lips sealed.\n\nsummary:\nReference-based seconds-counter shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot with the live second-counter dominating the screen, its digits sliding down in real time; Leo before it.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nThe screen snaps to a towering live counter, its seconds bleeding away visibly across the hall; Leo stands before it, letting the count do the talking. He appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: the counter's rolling tick, a low hall unsettlement, screen hum. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA mechanical, ticking urgency.",
+      "refs": [
+        "Ref-EXAM",
+        "Ref-LEO"
+      ],
+      "seed": 494450,
+      "out": "s3_c4_l14_video",
+      "output": "output/s3_c4_l14_video"
+    },
+    {
+      "id": "c4_l15",
+      "description": "s3 c4_l15 對白·里歐：徵收總資產八個百分比、一點二失能",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, at the console, hardening the raw costs on screen, lips moving to speak.\n\n<Subject 2> is the final-exam classroom from <Picture 2>:\nlarge exam hall; the screen holding the stark cost numbers, bolded.\n\nsummary:\nReference-based raw-cost dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice stays bare, unsoftened.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on Leo as he displays the true costs; the numbers rendered heavy and unapologetic.\n\n[Shot 1]\n\n00:00-00:10\n\nAction:\nLeo lays out the exact levy and the human cost, enlarging them instead of softening them; the hall flinches at the honesty. He appears exactly once as the speaker; only his mouth moves. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n建設這座觀測站，需要徵收總資產的百分之八，\n並有百分之一點二的參與者，可能因工程意外失能。\n我不會美化這些數字。\n</d>\n\noverall_soundscape:\nDialogue delivered by a bare unsoftened male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nHall flinch and quiet, screen hum, mic echo.\n\nnon_diegetic_music:\nA blunt, percussive tick.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-EXAM"
+      ],
+      "seed": 494451,
+      "out": "s3_c4_l15_video",
+      "output": "output/s3_c4_l15_video"
+    },
+    {
+      "id": "c4_l16",
+      "description": "s3 c4_l16 對白·里歐：不投資生存機率降至零點零四",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, at the console, offering no comfort, lips moving to speak.\n\n<Subject 2> is the final-exam classroom from <Picture 2>:\nlarge exam hall; the survival-probability curve behind him.\n\nsummary:\nReference-based survival-probability dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice is calm and remorseless.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium close on Leo, each clause landing; the curve on screen bleeding toward zero.\n\n[Shot 1]\n\n00:00-00:13\n\nAction:\nLeo offers no comfort, only the earned arithmetic; the survival curve sinks on the screen as he reads its end. He appears exactly once as the speaker; only his mouth moves. The hall is silent. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n我不會承諾你們會因此感到快樂。\n但我能提供數據證明：不投資這百分之八，\n你們的後代在一百五十年後，生存機率將降至，百分之零點零四。\n</d>\n\noverall_soundscape:\nDialogue delivered by a calm remorseless male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nTotal hall stillness, the counter ticking on.\n\nnon_diegetic_music:\nThe percussion tightens into a march.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-EXAM"
+      ],
+      "seed": 494452,
+      "out": "s3_c4_l16_video",
+      "output": "output/s3_c4_l16_video"
+    },
+    {
+      "id": "c4_l17",
+      "description": "s3 c4_l17 場景：模擬投票板緩慢爬升",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the final-exam classroom from <Picture 1>:\nlarge exam hall; the rear simulation ballot board crawling upward, participation ticking up.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, standing at the console watching the board, lips sealed.\n\nsummary:\nReference-based ballot-board climb shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot: the ballot board at the back climbing without slogans; the ledger and receipt of survival laid side by side.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nThe board begins to climb in small ticks as simulated citizens respond; beside it the raw debt-blueprint and the survival receipt sit side by side. Leo watches without a word, without ornament. He appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: soft ballot tick after tick, a rising murmur of astonishment, screen hum. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nThe march steadies, growing.",
+      "refs": [
+        "Ref-EXAM",
+        "Ref-LEO"
+      ],
+      "seed": 494453,
+      "out": "s3_c4_l17_video",
+      "output": "output/s3_c4_l17_video"
+    },
+    {
+      "id": "c4_l18",
+      "description": "s3 c4_l18 對白·里歐：你們可以選擇拒絕，報告完畢",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, at the console, clear cold eyes, closing the report, lips moving to speak.\n\n<Subject 2> is the final-exam classroom from <Picture 2>:\nlarge exam hall; ballot board ticking, screen steady.\n\nsummary:\nReference-based closing-verdict dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice is clear, almost gentle, final.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium close on Leo speaking plainly to the hall; the board ticking behind him.\n\n[Shot 1]\n\n00:00-00:12\n\nAction:\nLeo closes the report without spectacle, laying out the refusal's price then letting the numbers end it. He appears exactly once as the speaker; only his mouth moves. The hall absorbs it. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n你們可以選擇拒絕。\n拒絕的代價是短期的財務充裕，以及長期的集體滅絕。\n請根據你們對自我存續的定義，進行精算。\n報告完畢。\n</d>\n\noverall_soundscape:\nDialogue delivered by a clear almost gentle male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nHall silence, board ticks, mic settle.\n\nnon_diegetic_music:\nThe march resolves into a held chord.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-EXAM"
+      ],
+      "seed": 494454,
+      "out": "s3_c4_l18_video",
+      "output": "output/s3_c4_l18_video"
+    },
+    {
+      "id": "c4_l19",
+      "description": "s3 c4_l19 場景：投票板衝破六十八個百分比",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the final-exam classroom from <Picture 1>:\nlarge exam hall; the rear ballot board blazing past sixty-eight percent, participation flashing confirmation.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, standing before it, subdued, lips sealed.\n\nsummary:\nReference-based threshold-break shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot as the board lunges past the threshold in the final seconds; Leo unmoved before the proof.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nIn the last instant the ballot board surges past sixty-eight percent, the confirmation blazing; the hall stirs. Leo stands composed, taking no triumph in it. He appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: a sharp confirmation chime, a wave of startled murmur, board glow hum. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA single, quiet upswell.",
+      "refs": [
+        "Ref-EXAM",
+        "Ref-LEO"
+      ],
+      "seed": 494455,
+      "out": "s3_c4_l19_video",
+      "output": "output/s3_c4_l19_video"
+    },
+    {
+      "id": "c4_l20",
+      "description": "s3 c4_l20 對白·教授：事實是不需要修飾的煽動",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Professor Chen from <Picture 1>:\nEast Asian woman around fifty, grey-streaked bun, tailored coat, rising slowly, applauding, lips moving to speak.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, still at the console, receiving the verdict, lips sealed.\n\n<Subject 3> is the final-exam classroom from <Picture 3>:\nlarge exam hall, ballot board glowing behind them.\n\nsummary:\nReference-based mentor-verdict dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her voice is measured, granting, close to proud.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot: the professor rising and applauding, slow and single; Leo holding his place.\n\n[Shot 1]\n\n00:00-00:13\n\nAction:\nThe professor stands and claps slowly, judging the work as the course's central lesson given form. Leo receives it without bowing low. She appears exactly once as the speaker; only her mouth moves; Leo's lips stay sealed. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n里歐，你掌握了這門課的核心。\n事實是不需要修飾的煽動。\n當你把代價說得足夠清楚，理性的恐懼，會轉化為最強大的動能。\n</d>\n\noverall_soundscape:\nDialogue delivered by a measured female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), deliberate, no Cantonese, no English.\nThe slow clap, hall murmur, a settling hum.\n\nnon_diegetic_music:\nA grave, approving theme.",
+      "refs": [
+        "Ref-PROF",
+        "Ref-LEO",
+        "Ref-EXAM"
+      ],
+      "seed": 494456,
+      "out": "s3_c4_l20_video",
+      "output": "output/s3_c4_l20_video"
+    },
+    {
+      "id": "c4_l21",
+      "description": "s3 c4_l21 場景：校門口遇見牽行李箱的艾莉絲，被遣返",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the campus gate from <Picture 1>:\ncampus entrance at sunset, warm long light, the silver shuttle platform visible beyond.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, dragging a suitcase, about to leave, lips sealed.\n\n<Subject 3> is Leo from <Picture 3>:\nEast Asian man around twenty-two, pale grey academy uniform, arriving at the gate and stopping, lips sealed.\n\nsummary:\nReference-based sunset-parting arrival shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Both lips sealed in this beat. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot at the gate in the long sunset; Alice with her suitcase, Leo arriving across the light. Two figures, one departure.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nAt the campus gate, rippling gold, Alice stands with her suitcase, evidently repatriated; Leo comes up and stops across from her. Neither speaks yet. Each appears exactly once, no duplicates, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: sunset wind, a distant shuttle hum, wheels still on the ground. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA long, melancholic line.",
+      "refs": [
+        "Ref-GATE",
+        "Ref-ALICE",
+        "Ref-LEO"
+      ],
+      "seed": 494457,
+      "out": "s3_c4_l21_video",
+      "output": "output/s3_c4_l21_video"
+    },
+    {
+      "id": "c4_l22",
+      "description": "s3 c4_l22 對白·艾莉絲：你贏了，用最冰冷完成最熱血的動員",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, beside a suitcase at the gate, eyes complex, lips moving to speak.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, facing her, lips sealed.\n\n<Subject 3> is the campus gate from <Picture 3>:\ncampus entrance at sunset, warm long light.\n\nsummary:\nReference-based farewell-accusation dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her voice is complex—admiring and bitter.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium two-shot at the gate; Alice speaking with a strange smile, Leo a still listener.\n\n[Shot 1]\n\n00:00-00:14\n\nAction:\nAlice sizes him up in the sunset, concedes the game, then names the pity as she sees it. She appears exactly once as the speaker; only her mouth moves; Leo's lips stay sealed. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n你贏了，里歐。\n你用最冰冷的方式，完成了最熱血的動員。\n但你不覺得這很可悲嗎？你們只能被恐懼和生存驅動，\n而我們，我們能為了愛而行動。\n</d>\n\noverall_soundscape:\nDialogue delivered by a complex female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), admiring and bitter, no Cantonese, no English.\nSunset wind, distant shuttle, gate quiet.\n\nnon_diegetic_music:\nThe melancholic line deepens.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-GATE"
+      ],
+      "seed": 494458,
+      "out": "s3_c4_l22_video",
+      "output": "output/s3_c4_l22_video"
+    },
+    {
+      "id": "c4_l23",
+      "description": "s3 c4_l23 對白·里歐：你們的愛建立在對現實的遮蔽上，像毒藥",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, stepping forward, shadow stretched long by the sunset, lips moving to speak.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, listening, lips sealed.\n\n<Subject 3> is the campus gate from <Picture 3>:\ncampus entrance at sunset, warm long light.\n\nsummary:\nReference-based firm-reply dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His voice is firm, unresentful.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot, Leo answering with steadiness; the sunset pulling both shadows long.\n\n[Shot 1]\n\n00:00-00:14\n\nAction:\nLeo answers her quietly but without yielding, naming their love a beautiful poison and their own ground solid beneath each step. He appears exactly once as the speaker; only his mouth moves; Alice listens, lips sealed. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n艾莉絲，你們的愛，是建立在對現實的遮蔽上。\n那種愛很美，但它像毒藥。\n我們雖然只有冰冷的數據，但我們每走一步，腳下的土地都是堅實的。\n</d>\n\noverall_soundscape:\nDialogue delivered by a firm unresentful male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nSunset wind dropping, a hush at the gate.\n\nnon_diegetic_music:\nA quiet, grounded resolve.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-GATE"
+      ],
+      "seed": 494459,
+      "out": "s3_c4_l23_video",
+      "output": "output/s3_c4_l23_video"
+    },
+    {
+      "id": "c4_l24",
+      "description": "s3 c4_l24 對白·艾莉絲：也許吧，唱著歌死去",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, a light smile as she turns toward the shuttle, lips moving to speak.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, watching, lips sealed.\n\n<Subject 3> is the campus gate from <Picture 3>:\ncampus entrance at sunset, the silver shuttle platform at the edge.\n\nsummary:\nReference-based last-farewell dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her voice is light, almost singing.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot; Alice smiling and turning toward the shuttle, leaving the last word hung in the sunset.\n\n[Shot 1]\n\n00:00-00:10\n\nAction:\nAlice smiles, concedes nothing, and turns toward the boarding platform, her last line light and final. Leo watches her go, lips sealed. She appears exactly once as the speaker; only her mouth moves. No duplicates, no split composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n也許吧。\n但當世界末日真的來臨時，我希望我是唱著歌死去的，\n而不是看著帳單死去的。\n</d>\n\noverall_soundscape:\nDialogue delivered by a light almost-singing female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nShuttle hum rising, sunset wind, gate quiet.\n\nnon_diegetic_music:\nA soft, unresolved farewell.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-GATE"
+      ],
+      "seed": 494460,
+      "out": "s3_c4_l24_video",
+      "output": "output/s3_c4_l24_video"
+    },
+    {
+      "id": "c4_l25",
+      "description": "s3 c4_l25 場景：接駁艙升空，視網膜提示跳出",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the campus gate from <Picture 1>:\ncampus entrance at sunset; a silver shuttle launching upward into the warm sky.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, face tilted up; faint interface glyphs flicker at the rim of his sight, lips sealed.\n\nsummary:\nReference-based launch-and-prompt beat\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot: the shuttle climbing against the sunset; Leo tracking it, a system window already sliding open at the edge of his vision.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nThe silver shuttle lifts off and climbs; Leo watches it, and a small interface panel slips into view at the edge of frame as if on his retina. He doesn't dismiss it yet. He appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: the shuttle's rising roar fading to distance, wind, a soft alert chime. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA high, fading shimmer.",
+      "refs": [
+        "Ref-GATE",
+        "Ref-LEO"
+      ],
+      "seed": 494461,
+      "out": "s3_c4_l25_video",
+      "output": "output/s3_c4_l25_video"
+    },
+    {
+      "id": "c4_l26",
+      "description": "s3 c4_l26 旁白：檢測到心理波動，輕微遺憾",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, watching the departed shuttle, the interface glyph named regret glowing faintly, lips sealed.\n\n<Subject 2> is the campus gate from <Picture 2>:\ncampus entrance at sunset, empty platform now.\n\nsummary:\nReference-based system-diagnosis narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration only by the fixed narrator voice (here the flat system-diagnostic voice). No on-screen mouth movement. The diagnostic voice is a sterile machine voice; never female, never Cantonese. No English.\n\ndetailed_description:\n\nVisual style:\nClose on Leo as the retinal panel reads his state with machine matter-of-factness; the gate receding behind him.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nThe interface panel holds its diagnosis against the sunset—mild regret, recommended protocol. Leo's lips stay sealed as the system speaks. He appears exactly once, no duplicate, no split composition.\n\nDialogue:\nThe following narration is an off-screen system-diagnostic voice; no on-screen mouth movement.\n<d>\n[中文]\n檢測到心理波動，輕微遺憾。\n建議，進行深度呼吸，掛載社交替代成本分析。\n</d>\n\noverall_soundscape:\nNarration delivered as a flat sterile machine voice in Taiwan-accented Standard Mandarin (台灣腔普通話), clipped, no Cantonese, no English.\nFaint wind, distant shuttle fading, alert hum.\n\nnon_diegetic_music:\nA cold, faint-toned pulse.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-GATE"
+      ],
+      "seed": 311000,
+      "out": "s3_c4_l26_video",
+      "output": "output/s3_c4_l26_video"
+    },
+    {
+      "id": "c4_l27",
+      "description": "s3 c4_l27 場景：揮手關掉提示，感受名為孤獨的震動",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, dismissing the interface with a small wave, a raw current moving through him, lips sealed.\n\n<Subject 2> is the campus gate from <Picture 2>:\ncampus entrance at sunset, empty, wind-blown.\n\nsummary:\nReference-based dismissed-prompt beat\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nMedium shot on Leo waving the panel away, standing in the wind as an unnamed loneliness thrum passes through him.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nLeo flicks the diagnostic panel away with two fingers and stands in the open wind, feeling a tremor no dataset can frame. He appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: wind passing, empty gate, the softest breath. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nAn exposed, wordless hush.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-GATE"
+      ],
+      "seed": 494462,
+      "out": "s3_c4_l27_video",
+      "output": "output/s3_c4_l27_video"
+    },
+    {
+      "id": "c4_l28",
+      "description": "s3 c4_l28 旁白：給感情一個安全的容器，人最後的證明",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, at the empty gate in the wind, the closure settling in his face, lips sealed.\n\n<Subject 2> is the campus gate from <Picture 2>:\ncampus entrance at sunset, sky deepening, campus dimming behind.\n\nsummary:\nReference-based containment-of-feeling narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration only by the fixed narrator voice. No on-screen mouth movement. Narrator: a calm middle-aged male voice, never female, never Cantonese. No English.\n\ndetailed_description:\n\nVisual style:\nSlow pull-back at the gate; Leo small in the long light as the narration resolves the chapter's meaning.\n\n[Shot 1]\n\n00:00-00:13\n\nAction:\nLeo stands in the falling light as the narration places the institutions' purpose in a single frame; his expression settles from loss into acceptance. No on-screen mouth movement; lips sealed. He appears exactly once, no repeat, no split composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No on-screen mouth movement.\n<d>\n[中文]\n他終於明白，先賢建立這個制度，並不是要消滅感情，\n而是要給感情一個安全的容器。\n在公共領域，我們是絕對的理性的零件；\n但在私人領域，那種未被掛載代價的痛苦，才是我們身為人最後的證明。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), unhurried, not dialogue, no Cantonese, no English.\nWind steadying, distant campus hum, sunset quiet.\n\nnon_diegetic_music:\nA slow, resolving theme.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-GATE"
+      ],
+      "seed": 311000,
+      "out": "s3_c4_l28_video",
+      "output": "output/s3_c4_l28_video"
+    },
+    {
+      "id": "c4_l29",
+      "description": "s3 c4_l29 場景：口袋中的舊時代枯葉",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the old dried leaf from <Picture 1>:\na single dried old-era autumn leaf, held between two fingers in a soft close-up, no faces, no people.\n\n<Subject 2> is Leo's hand:\nEast Asian young man's hand in a pale grey uniform sleeve, drawing the leaf from a pocket, holding it to the sunset light.\n\nsummary:\nReference-based old-leaf close shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. No on-screen mouth movement (no face visible). No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nExtreme close-up: the dried leaf lifted toward the sunset light between grey-sleeved fingers; veined, brittle, weightless.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nThe fingers slide the old leaf from a uniform pocket and hold it up against the sunset; its veins glow briefly, then the fingers lower it gently. No face enters frame. The leaf appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: soft wind, the leaf's dry rustle against a fingertip, sunset quiet. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA single, fragile note.",
+      "refs": [
+        "Ref-LEAF"
+      ],
+      "seed": 494463,
+      "out": "s3_c4_l29_video",
+      "output": "output/s3_c4_l29_video"
+    },
+    {
+      "id": "c4_l30",
+      "description": "s3 c4_l30 旁白：這片葉子沒有任何功能，僅是一片葉子",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the old dried leaf from <Picture 1>:\na single dried old-era autumn leaf held between fingers in soft close-up, no faces.\n\n<Subject 2> is Leo's hand:\nEast Asian young man's hand in a pale grey uniform sleeve holding the leaf.\n\nsummary:\nReference-based useless-leaf narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration only by the fixed narrator voice. No on-screen mouth movement (no face visible). Narrator: a calm middle-aged male voice, never female, never Cantonese. No English.\n\ndetailed_description:\n\nVisual style:\nStatic close on the leaf in the hand; the hold delicate, as if treating the useless thing as precious.\n\n[Shot 1]\n\n00:00-00:06\n\nAction:\nThe leaf rests open on the palm in the sunset; it is only itself—dry, veined, meaningless to any ledger. The hand holds it with care. No face enters frame. The leaf appears exactly once; no duplicate, no split composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. No on-screen mouth movement.\n<d>\n[中文]\n這片葉子沒有任何功能，沒有任何數據。\n僅僅是，一片葉子。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), unhurried, not dialogue, no Cantonese, no English.\nWind soft on the leaf, sunset quiet.\n\nnon_diegetic_music:\nThe fragile note holds, wordless.",
+      "refs": [
+        "Ref-LEAF"
+      ],
+      "seed": 311000,
+      "out": "s3_c4_l30_video",
+      "output": "output/s3_c4_l30_video"
+    },
+    {
+      "id": "c4_l31",
+      "description": "s3 c4_l31 場景：收好葉子，轉身走回校園",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, tucking the leaf away and turning back into the dimming campus, lips sealed.\n\n<Subject 2> is the campus gate from <Picture 2>:\ncampus entrance at sunset deepening into dusk; the campus path behind him.\n\nsummary:\nReference-based closing-turning shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot: Leo tucking the leaf away and walking back into the campus, the gate and dusk behind his retreating form.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nLeo folds the leaf into his pocket, turns decisively, and walks back along the path into the campus as the gate dusk closes behind him. He appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: steady footsteps on path, dusk wind, campus hum far off. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nThe resolving theme comes to a gentle close.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-GATE"
+      ],
+      "seed": 494464,
+      "out": "s3_c4_l31_video",
+      "output": "output/s3_c4_l31_video"
     }
   ],
   "story_md": ""
