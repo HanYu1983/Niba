@@ -1,5 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { readFileSync, writeFileSync, mkdirSync, existsSync, renameSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, renameSync, readdirSync, statSync, rmSync } from "node:fs";
 import { z } from "zod";
 import { dirname, resolve, isAbsolute, join, extname } from "node:path";
 import { callComfyTool } from "./comfy_bridge.mjs";
@@ -45,6 +45,162 @@ function saveStory(outAbs, data) {
   const tmp = outAbs + `.tmp_${Date.now()}_${process.pid}_${Math.floor(Math.random() * 1e9)}`;
   writeFileSync(tmp, JSON.stringify(data, null, 2) + "\n", "utf-8");
   renameSync(tmp, outAbs);
+}
+
+// ---------- background submit-run registry + artifact files ----------
+// One async run per story file. Files written next to the JSON:
+//   <story>.submit.lock       written at start (holds {started_at, total, pid}), removed in finally
+//   <story>.submit.progress.json   rewritten after every element (progress/results snapshot)
+//   <story>.submit.err        written if the run aborts with an error
+// In-memory job so status/cancel can query without reading the story (avoids JSON RMW races).
+
+const SUBMIT_RUNS = new Map(); // abs -> { cancelled, results, ok, fail, running, done }
+
+const artifactPath = (abs, kind) =>
+  kind === "lock" ? `${abs}.submit.lock`
+  : kind === "progress" ? `${abs}.submit.progress.json`
+  : `${abs}.submit.err`;
+
+function writeJsonFile(p, obj) {
+  mkdirSync(dirname(p), { recursive: true });
+  writeFileSync(p, JSON.stringify(obj, null, 2) + "\n", "utf-8");
+}
+
+function startSubmitRun(abs, data, matched, jsonDir, baseDir, opts) {
+  const total = matched.length;
+  const run = {
+    cancelled: false,
+    cancel_file: `${abs}.submit.cancel`,
+    matched,
+    results: [],
+    ok: 0,
+    fail: 0,
+    running: true,
+    done: false,
+    aborted: false,
+    error: null
+  };
+  SUBMIT_RUNS.set(abs, run);
+  try { rmSync(run.cancel_file, { force: true }); } catch {}
+  writeJsonFile(artifactPath(abs, "lock"), {
+    started_at: new Date().toISOString(),
+    pid: process.pid,
+    file: abs,
+    total
+  });
+  writeJsonFile(artifactPath(abs, "progress"), {
+    status: "running",
+    total,
+    done: 0,
+    ok: 0,
+    fail: 0,
+    started_at: new Date().toISOString(),
+    results: [],
+    message: "提交中，請在完成前不要修改檔案 / 不要重新 submit。"
+  });
+  run.promise = runAllInBackground(abs, data, matched, jsonDir, baseDir, opts).finally(() => {
+    run.running = false;
+  });
+  return run;
+}
+
+async function runAllInBackground(abs, data, matched, jsonDir, baseDir, opts) {
+  const run = SUBMIT_RUNS.get(abs);
+  const results = [];
+  let okCount = 0;
+  let failCount = 0;
+  const continueOnError = opts.continue_on_error !== false;
+  const save = opts.save_prompt_id !== false && !opts.dry_run;
+  const progressPath = artifactPath(abs, "progress");
+
+  try {
+    for (let i = 0; i < matched.length; i++) {
+      if (run.cancelled) {
+        run.aborted = true;
+        writeJsonFile(progressPath, {
+          status: "cancelled",
+          total: matched.length,
+          done: i,
+          ok: okCount,
+          fail: failCount,
+          cancelled_good: true,
+          results
+        });
+        return;
+      }
+      const el = matched[i];
+      try {
+        const row = await submitOneComfy(data, el.id, jsonDir, baseDir, {
+          bump_seed: opts.bump_seed,
+          engine: opts.engine,
+          save_prompt_id: save,
+          dry_run: opts.dry_run,
+          comfy: opts.comfy
+        });
+        if (save && row.saved_to_story) saveStory(abs, data);
+        okCount++;
+        results.push({ index: i, ...row });
+        process.stderr.write(
+          `[mcp] ✓ ${el.id} → ${row.prompt_id ?? ""} (${i + 1}/${matched.length})\n`
+        );
+      } catch (e) {
+        failCount++;
+        const err = String(e?.message || e);
+        results.push({ index: i, ok: false, id: el.id, type: el.type, error: err });
+        process.stderr.write(`[mcp] ✗ ${el.id}: ${err}\n`);
+        if (!continueOnError) {
+          run.fail = failCount;
+          writeJsonFile(progressPath, {
+            status: "aborted",
+            total: matched.length,
+            done: i + 1,
+            ok: okCount,
+            fail: failCount,
+            results
+          });
+          throw new Error(`aborted at ${el.id}: ${err}`);
+        }
+      }
+      // every element: persist progress snapshot so status tool reports live numbers
+      writeJsonFile(progressPath, {
+        status: "running",
+        total: matched.length,
+        done: i + 1,
+        ok: okCount,
+        fail: failCount,
+        last_id: el.id,
+        started_at: run.started_at_iso,
+        results
+      });
+    }
+
+    run.ok = okCount;
+    run.fail = failCount;
+    run.results = results;
+    run.done = true;
+    writeJsonFile(progressPath, {
+      status: failCount ? (okCount ? "partial" : "failed") : "ok",
+      total: matched.length,
+      done: matched.length,
+      ok: okCount,
+      fail: failCount,
+      results
+    });
+  } catch (e) {
+    run.error = String(e?.message || e);
+    run.aborted = true;
+    writeJsonFile(artifactPath(abs, "err"), {
+      at: new Date().toISOString(),
+      total: matched.length,
+      ok: okCount,
+      fail: failCount,
+      error: run.error,
+      results
+    });
+  } finally {
+    try { rmSync(artifactPath(abs, "lock"), { force: true }); } catch {}
+    try { rmSync(run.cancel_file, { force: true }); } catch {}
+  }
 }
 
 // ---------- array helpers ----------
@@ -1084,60 +1240,168 @@ export function createMcpServer() {
       if (offset) matched = matched.slice(offset);
       if (p.limit) matched = matched.slice(0, p.limit);
 
-      const results = [];
-      let okCount = 0;
-      let failCount = 0;
-      const continueOnError = p.continue_on_error !== false;
-      const save = p.save_prompt_id !== false && !p.dry_run;
+      const opts = {
+        bump_seed: p.bump_seed,
+        engine: p.engine,
+        save_prompt_id: p.save_prompt_id !== false && !p.dry_run,
+        save_story_after_each: true,
+        dry_run: p.dry_run,
+        comfy: p.comfy,
+        continue_on_error: p.continue_on_error
+      };
 
-      for (let i = 0; i < matched.length; i++) {
-        const el = matched[i];
-        try {
-          const row = await submitOneComfy(data, el.id, jsonDir, baseDir, {
-            bump_seed: p.bump_seed,
-            engine: p.engine,
-            save_prompt_id: save,
-            dry_run: p.dry_run,
-            comfy: p.comfy
-          });
-          if (save && row.saved_to_story) saveStory(abs, data);
-          okCount++;
-          results.push({ index: i, ...row });
-          process.stderr.write(
-            `[mcp] story_submit_comfy_all ${i + 1}/${matched.length} OK ${el.id}` +
-              (row.prompt_id ? ` → ${row.prompt_id}` : "") +
-              "\n"
-          );
-        } catch (e) {
-          failCount++;
-          const err = String(e?.message || e);
-          results.push({ index: i, ok: false, id: el.id, type: el.type, error: err });
-          process.stderr.write(
-            `[mcp] story_submit_comfy_all ${i + 1}/${matched.length} FAIL ${el.id}: ${err}\n`
-          );
-          if (!continueOnError) {
-            return ok({
-              status: "aborted",
-              file: abs,
-              total: matched.length,
-              submitted: okCount,
-              failed: failCount,
-              remaining: matched.length - i - 1,
-              results
-            });
-          }
-        }
+      if (!matched.length) {
+        return ok({
+          status: "ok",
+          file: abs,
+          types: [...typeSet],
+          total: 0,
+          submitted: 0,
+          failed: 0,
+          dry_run: !!p.dry_run,
+          results: []
+        });
       }
 
+      const run = startSubmitRun(abs, data, matched, jsonDir, baseDir, opts,-1);
       return ok({
-        status: failCount ? (okCount ? "partial" : "failed") : "ok",
+        status: "submitting",
         file: abs,
         types: [...typeSet],
         total: matched.length,
-        submitted: okCount,
-        failed: failCount,
         dry_run: !!p.dry_run,
-        results
+        lock: artifactPath(abs, "lock"),
+        progress: artifactPath(abs, "progress"),
+        err: artifactPath(abs, "err"),
+        cancel: run.cancel_file,
+        note:
+          "已在背景提交，請在完成前不要修改 story 檔案 / 不要重新 submit / 不要 submit_comfy_all 其他元素。" +
+          "可用 story_submit_comfy_all_status 查詢進度，或用 story_submit_comfy_all_cancel 取消。"
+      });
+    }
+  );
+
+  server.registerTool(
+    "story_submit_comfy_all_status",
+    {
+      title: "story_submit_comfy_all_status",
+      description:
+        "Query the live status of a background story_submit_comfy_all run. Reads the in-memory run " +
+        "(SUBMIT_RUNS) and, if it is gone, falls back to the on-disk artifacts (<story>.submit.lock / " +
+        ".progress.json / .err / .cancel). Safe to call anytime; does not modify anything.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path (same as the submit call)")
+      }
+    },
+    async (p) => {
+      const abs = resolve(p.file);
+      const run = SUBMIT_RUNS.get(abs);
+      const lockP = artifactPath(abs, "lock");
+      const progressP = artifactPath(abs, "progress");
+      const errP = artifactPath(abs, "err");
+      const cancelP = artifactPath(abs, "cancel");
+
+      if (run) {
+        const snapshot = {
+          status: run.aborted ? "aborted"
+            : run.cancelled ? "cancelled"
+            : run.done ? (run.fail ? (run.ok ? "partial" : "failed") : "ok")
+            : "running",
+          file: abs,
+          in_memory: true,
+          total: run.matched?.length ?? null,
+          done: (run.ok || 0) + (run.fail || 0),
+          ok: run.ok || 0,
+          fail: run.fail || 0,
+          cancelled_requested: !!run.cancelled,
+          cancel_file: run.cancel_file,
+          lock: lockP,
+          progress: progressP,
+          err: errP,
+          message: run.done
+            ? "已完成。"
+            : "背景執行中：提交完成前請不要修改 story 檔 / 不要重新 submit。可用 story_submit_comfy_all_cancel 取消。"
+        };
+        if (existsSync(errP)) {
+          try { snapshot.err_artifact = JSON.parse(readFileSync(errP, "utf-8")); } catch {}
+        }
+        return ok(snapshot);
+      }
+
+      // run not in memory (server restarted mid-run): fall back to on-disk artifacts
+      let disk = {};
+      if (existsSync(lockP)) {
+        try { disk.lock = JSON.parse(readFileSync(lockP, "utf-8")); } catch {}
+      }
+      if (existsSync(progressP)) {
+        try { disk.progress = JSON.parse(readFileSync(progressP, "utf-8")); } catch {}
+      }
+      if (existsSync(errP)) {
+        try { disk.err = JSON.parse(readFileSync(errP, "utf-8")); } catch {}
+      }
+      const hasLock = !!disk.lock;
+      const progress = disk.progress;
+      const cancelled = existsSync(cancelP);
+      return ok({
+        status: hasLock ? (disk.err ? "error" : (progress?.status || "running")) : "none",
+        file: abs,
+        in_memory: false,
+        total: progress?.total ?? disk.lock?.total ?? null,
+        done: progress?.done ?? null,
+        ok: progress?.ok ?? null,
+        fail: progress?.fail ?? null,
+        cancel_requested: cancelled,
+        lock: lockP,
+        progress: progressP,
+        err: errP,
+        cancel_file: cancelP,
+        ...disk
+      });
+    }
+  );
+
+  server.registerTool(
+    "story_submit_comfy_all_cancel",
+    {
+      title: "story_submit_comfy_all_cancel",
+      description:
+        "Cancel a running / queued background story_submit_comfy_all run. Sets the in-memory run's cancelled " +
+        "flag (honored by the next iteration) and writes <story>.submit.cancel as an artifact so cancellation " +
+        "is also visible from disk. Idempotent: safe to call multiple times, and safe when nothing is running.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path (same as the submit call)")
+      }
+    },
+    async (p) => {
+      const abs = resolve(p.file);
+      const run = SUBMIT_RUNS.get(abs);
+      const cancelP = artifactPath(abs, "cancel");
+      if (run) {
+        run.cancelled = true;
+        writeJsonFile(cancelP, {
+          requested_at: new Date().toISOString(),
+          file: abs,
+          message: "取消請求已收到；將在目前元素完成後停止。"
+        });
+        return ok({
+          status: "cancelling",
+          file: abs,
+          in_memory: true,
+          cancel_file: cancelP,
+          message: "已請求取消。請用 story_submit_comfy_all_status 確認最終狀態。"
+        });
+      }
+      writeJsonFile(cancelP, {
+        requested_at: new Date().toISOString(),
+        file: abs,
+        message: "無執行中的 run（或 server 已重啟）。cancel 檔已寫入，無法中斷已完成/已遺失的 run。"
+      });
+      return ok({
+        status: "no_run",
+        file: abs,
+        in_memory: false,
+        cancel_file: cancelP,
+        message: "目前沒有可取消的 run；cancel 檔已寫入以防稍後有 run 檢查。"
       });
     }
   );
