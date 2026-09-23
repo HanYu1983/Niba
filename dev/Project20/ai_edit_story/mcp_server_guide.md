@@ -33,7 +33,7 @@
 - 所有工具透過 `input`（Story JSON 路徑）讀檔；`output` 可另存或省略（省略＝覆寫原檔）。
 - **陣列順序＝合併／字幕順序**。plan 與 story 的順序都要能對上號。
 - `id` 是唯一鍵：phase2 的 story 元素 `id` 必須對應 phase1 的 plan 分鏡 `id`
-  （只有 t2i 參考圖素材例外，可以獨立存在）。
+  （只有 t2i 參考圖素材例外，可以獨立存在；**t2i 一律用 Z-Image (zit) 生成，見 §五**）。
 
 ### 工具清單（依階段）
 
@@ -241,6 +241,7 @@
    一律加進 `refs`（放該 t2i 元素 id，提交時自動解析成圖片路徑）。
    r2v 最多 9 張、i2v 最多 2 張；一張主角肖像優先放 `ref_image_0`。
    未提供的 `ref_image_N` 不要帶入——MCP 層會刪除該節點，避免殘留污染。
+   **所有參考圖（t2i 素材）一律用 Z-Image (zit) 生成**（見 §五），不用 SDXL。
 5. **寫六欄位 r2v 提示詞**（詳見 `video_prompt_guide.md` §3.5）：
 
 ```
@@ -297,13 +298,13 @@ non_diegetic_music:      配樂（有對白/旁白可寫 "A clean, open string l
    `<d>` 內是否混入數字/英文字母。
 2. **`story_submit_bundle`**：取一格提交包，確認 `refs` 的 `via` 都解析成實際檔案
    （`output:dir-pick` = 取資料夾內建立時間最晚者）。缺 ref 會報錯並標明缺誰。
-   生成順序：先讓 refs（t2i 素材）有輸出，再提交依賴它們的 r2v。
+   生成順序：先讓 refs（t2i 素材，一律用 Z-Image (zit) 生成）有輸出，再提交依賴它們的 r2v。
 3. **`story_submit_comfy`**（單格）／**`story_submit_comfy_all`**（多格／全部）：
    組包後**直接轉呼叫** `comfy-video-gen` MCP，依元素 type 自動對應並代入參數：
    - `r2v` → `gen_r2v_video`（prompt／seed／duration／width／height／out／`ref_image_0..N`）
    - `i2v` → `gen_i2v_video`（refs[0]=first_frame，refs[1]=last_frame）
    - `t2v` → `gen_t2v_video`
-   - `t2i` → `gen_sdxl_image` 或 `gen_zit_image`（看 `extra.engine`，prompt 優先用 `extra.sdxl_prompt`）
+   - `t2i` → `gen_zit_image`（**參考圖一律用 Z-Image (zit) 生成**；`extra.engine` 固定為 `zit`，不用 SDXL）
    預設把回傳的 `prompt_id`（與實際 seed）寫回元素 `extra`／`seed`。
    `story_submit_comfy_all`：**依 story 陣列順序循序提交**（避免 JSON 競態）；預設 `types:["r2v"]`；
    可用 `types:["t2i","r2v"]`、`ids`／`skip_ids`、`limit`／`offset`、`continue_on_error`、`dry_run`、`bump_seed`。
@@ -341,7 +342,7 @@ non_diegetic_music:      配樂（有對白/旁白可寫 "A clean, open string l
 - [ ] `overall_soundscape` / `non_diegetic_music` 是否明寫？
 - [ ] 腔調錨點句 / 負向排除是否在每支對白與旁白區塊中？
 - [ ] seed 是否查過黑名單？旁白是否用旁白 seed（311000）？
-- [ ] 參考圖：用到的 `refs` 是否確實存在？未用的是否沒帶入（避免殘留污染）？
+- [ ] 參考圖：用到的 `refs` 是否確實存在？未用的是否沒帶入（避免殘留污染）？**是否全部用 Z-Image (zit) 生成（`extra.engine="zit"`）？**
 - [ ] 解析度是否全片統一（512×288）、合併順序是否正確？
 - [ ] 字幕資料表是否與區塊分割同步建立？合併後是否已產出 `.srt`？旁白是否加 `<i>` 斜體？
 - [ ] 有沒有長辯論/長獨白硬塞進一支？應拆分。
@@ -367,7 +368,7 @@ non_diegetic_music:      配樂（有對白/旁白可寫 "A clean, open string l
 - **畫面細節塞進 phase1**：phase1 的 description 可寫給自己看的提示，但分鏡責任只有
   voice/duration/lines。過早寫畫面細節只是浪費且後續難對齊。
 - **refs 漏加**：分鏡有出現角色/場景就要（若有素材）加進 refs；漏了角色會漂移、
-  場景會對不上。先建 t2i 素材並生成輸出，再讓分鏡元素 ref 它。
+  場景會對不上。先建 t2i 素材（用 Z-Image (zit) 生成）並生成輸出，再讓分鏡元素 ref 它。
 - **一次寫完所有 prompt**：容易斷裂。一格一格寫、每格對前一格，連貫性才好。
 - **旁白 seed 失效未察覺**：固定 seed = 固定聲線，一旦某支實測性別翻轉/歪腔，
   整支旁白 seed 失效，要換新 seed 並統一更新所有旁白元素。

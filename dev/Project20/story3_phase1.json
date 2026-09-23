@@ -1,0 +1,1619 @@
+{
+  "description": "修辭防線全書第一章【修辭拆解課】phase2：plan21＋story28。參考圖全部依新規一律用 Z-Image (zit) 生成（extra.engine=zit，不用 SDXL）。旁白 seed 311000；<d> 與 plan 鏡像，所有數字都轉中文，無英數。",
+  "width": 512,
+  "height": 288,
+  "phase": 1,
+  "plan": [
+    {
+      "id": "c1_l0",
+      "description": "場景：學院外觀＋圓形階梯教室第三排光譜儀",
+      "voice": "scene",
+      "duration": 6,
+      "lines": [],
+      "source": "聯邦大學的「認知安全學院」座落在特區的一角，建築風格極其簡約，外牆沒有任何裝飾性的浮雕或校訓。對這裡的學生來說，文字是危險的載體，除非它被精確地定義。里歐（Leo）坐在圓形階梯教室的第三排，他的桌面上跳動著一個虛擬的光譜儀——這是「語意頻譜分析儀」。"
+    },
+    {
+      "id": "c1_l1",
+      "description": "對白·教授：遠古意識形態復刻測試",
+      "voice": "dialogue",
+      "duration": 11,
+      "lines": [
+        "各位同學。",
+        "今天我們要進行的是，遠古意識形態復刻測試。",
+        "我將播放一段，取自二十世紀末的政治演說。",
+        "你們的任務是，在不被誘導的情況下，找出其資訊熵的流失點。"
+      ],
+      "source": "「各位同學，」教授是一位眼神銳利、說話從不帶修飾語的女性，她敲了敲螢幕，「今天我們要進行的是『遠古意識形態復刻測試』。我將播放一段取自二十世紀末的政治演說，你們的任務是：在不被誘導的情況下，找出其資訊熵的流失點。」"
+    },
+    {
+      "id": "c1_l2",
+      "description": "對白（廣播播放）：磁性男聲演說＋低沉鼓聲",
+      "voice": "dialogue",
+      "duration": 14,
+      "lines": [
+        "我的同胞們，我們站在歷史的十字路口。",
+        "長期以來，我們的光榮被竊取，我們的勤奮被浪費。",
+        "現在，是時候站起來，奪回屬於我們的正義。",
+        "讓我們的人民，再次感受到尊嚴的重量。"
+      ],
+      "source": "教室的音響響起，那是一個富有磁性的男聲，背景伴隨著低沉而有力的鼓聲：「我的同胞們，我們站在歷史的十字路口。長期以來，我們的光榮被竊取，我們的勤奮被浪費。現在，是時候站起來，奪回屬於我們的正義，讓我們的人民再次感受到尊嚴的重量！」"
+    },
+    {
+      "id": "c1_l3",
+      "description": "場景：光譜儀刺眼紅光映里歐",
+      "voice": "scene",
+      "duration": 5,
+      "lines": [],
+      "source": "里歐看著眼前的光譜儀。隨著演說者的聲音波動，螢幕上出現了一片刺眼的紅光。"
+    },
+    {
+      "id": "c1_l4",
+      "description": "對白·教授：分析結果",
+      "voice": "dialogue",
+      "duration": 3,
+      "lines": [
+        "分析結果。"
+      ],
+      "source": "「分析結果。」教授冷冷地說。"
+    },
+    {
+      "id": "c1_l5",
+      "description": "對白·里歐：五個無錨點詞彙，偽緊急狀態陷阱",
+      "voice": "dialogue",
+      "duration": 15,
+      "lines": [
+        "演說者在三十秒內，使用了五個無錨點詞彙。",
+        "首先，歷史的十字路口。",
+        "這是一個典型的，偽緊急狀態陷阱。",
+        "旨在誘發聽眾的戰或逃反應。",
+        "從而降低前額葉皮質的，邏輯審核能力。"
+      ],
+      "source": "里歐舉起手，他的聲音穩定且缺乏起伏：「演說者在三十秒內使用了五個『無錨點詞彙』。首先，『歷史的十字路口』。這是一個典型的『偽緊急狀態陷阱』，旨在誘發聽眾的戰或逃反應，從而降低前額葉皮質的邏輯審核能力。」"
+    },
+    {
+      "id": "c1_l6",
+      "description": "對白·教授：繼續",
+      "voice": "dialogue",
+      "duration": 3,
+      "lines": [
+        "繼續。"
+      ],
+      "source": "「繼續。」教授示意。"
+    },
+    {
+      "id": "c1_l7",
+      "description": "對白·里歐：光榮尊嚴降熵，自然法無效資訊",
+      "voice": "dialogue",
+      "duration": 19,
+      "lines": [
+        "第二，關於光榮與尊嚴。",
+        "這屬於語意高度降熵。",
+        "他將複雜的社會分配問題，簡化為情緒化的道德虧欠。",
+        "根據本國自然法，任何提及尊嚴的訴求，若不掛載心理滿意度與稅收支出平衡表，皆視為無效資訊。"
+      ],
+      "source": "「第二，關於『光榮』與『尊嚴』。」里歐在桌面上滑動，將演說的音軌轉化為數據曲線，「這屬於『語意高度降熵』。他將複雜的社會分配問題簡化為情緒化的道德虧欠。根據本國自然法，任何提及『尊嚴』的訴求，若不掛載『心理滿意度與稅收支出平衡表』，皆視為無效資訊。」"
+    },
+    {
+      "id": "c1_l8",
+      "description": "場景：里歐點開心率分析模擬",
+      "voice": "scene",
+      "duration": 4,
+      "lines": [],
+      "source": "里歐停頓了一下，點開了演說者的心率分析模擬（基於聲紋抖動）："
+    },
+    {
+      "id": "c1_l9",
+      "description": "對白·里歐：心率七十二拍，認知侵略行為",
+      "voice": "dialogue",
+      "duration": 13,
+      "lines": [
+        "演說者的心率維持在七十二拍。",
+        "呼吸極其平穩。",
+        "這證明他本人，並不處於激動狀態。",
+        "而是在精確地操控語氣頻率。",
+        "這是一場純粹的認知侵略行為。"
+      ],
+      "source": "「演說者的心率維持在 72 拍，呼吸極其平穩。這證明他本人並不處於激動狀態，而是在精確地操控語氣頻率。這是一場純粹的認知侵略行為。」"
+    },
+    {
+      "id": "c1_l10",
+      "description": "場景：同學補救練習，里歐輸入轉譯",
+      "voice": "scene",
+      "duration": 5,
+      "lines": [],
+      "source": "教室裡的其他同學正在進行補救練習。他們必須將這段煽情的話轉譯成符合《真自由憲法》的「真實陳述」。里歐在螢幕上輸入轉譯後的結果："
+    },
+    {
+      "id": "c1_l11",
+      "description": "旁白：轉譯結果真實陳述",
+      "voice": "narration",
+      "duration": 16,
+      "lines": [
+        "目前的資源分配模型顯示。",
+        "過往的決策導致百分之十五的產出，未能有效反饋至勞動階層。",
+        "我建議重新調整分配係數。",
+        "這將導致行政成本上升百分之三。",
+        "且可能引發高收入群體，百分之五的移民風險。",
+        "請在閱讀完代價包後，進行邏輯判定。"
+      ],
+      "source": "「目前的資源分配模型顯示，過往的決策導致 15% 的產出未能有效反饋至勞動階層。我建議重新調整分配係數。這將導致行政成本上升 3%，且可能引發高收入群體 5% 的移民風險。請在閱讀完代價包後進行邏輯判定。」"
+    },
+    {
+      "id": "c1_l12",
+      "description": "對白·教授：舊人類與資訊的審計員",
+      "voice": "dialogue",
+      "duration": 14,
+      "lines": [
+        "很好，里歐。",
+        "這就是我們與舊人類的區別。",
+        "舊人類是被詞彙驅動的畜牲。",
+        "而你們是資訊的審計員。",
+        "記住，任何讓你感到熱血沸騰的政治訊息。",
+        "都是對你智力的非法入侵。"
+      ],
+      "source": "「很好，里歐。」教授點了點頭，「這就是我們與『舊人類』的區別。舊人類是被詞彙驅動的畜牲，而你們是資訊的審計員。記住，任何讓你感到『熱血沸騰』的政治訊息，都是對你智力的非法入侵。」"
+    },
+    {
+      "id": "c1_l13",
+      "description": "場景：課後林蔭道，統計學講座耳機",
+      "voice": "scene",
+      "duration": 5,
+      "lines": [],
+      "source": "課後，里歐走在校園的林蔭道上。他的耳機裡播放著統計學講座，這是他的休息方式。"
+    },
+    {
+      "id": "c1_l14",
+      "description": "場景：艾莉絲鮮豔絲綢長裙攔住里歐",
+      "voice": "scene",
+      "duration": 5,
+      "lines": [],
+      "source": "這時，一個穿著鮮豔絲綢長裙、與周圍素色環境格格不入的女生攔住了他。她是艾莉絲，這學期剛來的境外交換生。"
+    },
+    {
+      "id": "c1_l15",
+      "description": "對白·艾莉絲：不覺得無聊嗎，機器的美",
+      "voice": "dialogue",
+      "duration": 8,
+      "lines": [
+        "你不覺得這很無聊嗎。",
+        "你們把世界拆解成了一堆零件。",
+        "卻忘了看整部機器的美。"
+      ],
+      "source": "「你不覺得這很無聊嗎？」艾莉絲笑著看著他，她的眼神裡有一種里歐在課堂模擬中才看過的、被定義為「煽動性」的熱情，「你們把世界拆解成了一堆零件，卻忘了看整部機器的美。里歐，你想聽聽看什麼是真正的『歌』嗎？不是那種數據分析，而是能讓你心跳漏掉一拍的聲音。」"
+    },
+    {
+      "id": "c1_l16",
+      "description": "對白·艾莉絲：真正的歌，心跳漏一拍的聲音",
+      "voice": "dialogue",
+      "duration": 8,
+      "lines": [
+        "里歐，你想聽聽看，什麼是真正的歌嗎。",
+        "不是那種數據分析。",
+        "而是能讓你心跳漏掉一拍的聲音。"
+      ],
+      "source": "里歐，你想聽聽看什麼是真正的『歌』嗎？不是那種數據分析，而是能讓你心跳漏掉一拍的聲音。"
+    },
+    {
+      "id": "c1_l17",
+      "description": "旁白：認知防禦系統警示",
+      "voice": "narration",
+      "duration": 5,
+      "lines": [
+        "警告。偵測到高濃度非理性誘導。",
+        "建議立即終止對話。"
+      ],
+      "source": "里歐看著艾莉絲。他的認知防禦系統在腦中瘋狂警示：警告！偵測到高濃度非理性誘導，建議立即終止對話。"
+    },
+    {
+      "id": "c1_l18",
+      "description": "旁白：但他沒有走，無法解釋的好奇",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "但他沒有走。",
+        "他那被高度訓練的理智中，產生了一絲微小的，無法被數據解釋的好奇。"
+      ],
+      "source": "但他沒有走。他那被高度訓練的理智中，產生了一絲微小的、無法被數據解釋的好奇。"
+    },
+    {
+      "id": "c1_l19",
+      "description": "對白·里歐：它掛載了什麼代價包",
+      "voice": "dialogue",
+      "duration": 4,
+      "lines": [
+        "那種聲音，它掛載了什麼代價包。"
+      ],
+      "source": "「那種聲音，」里歐平靜地問，「它掛載了什麼代價包？」"
+    },
+    {
+      "id": "c1_l20",
+      "description": "對白·艾莉絲：清醒的死亡",
+      "voice": "dialogue",
+      "duration": 7,
+      "lines": [
+        "它的代價。",
+        "就是你會發現，你過去二十年的生活。",
+        "其實是一場清醒的死亡。"
+      ],
+      "source": "艾莉絲笑得更燦爛了：「它的代價，就是你會發現你過去二十年的生活，其實是一場清醒的死亡。」"
+    },
+    {
+      "id": "c2_l0",
+      "description": "場景：艾莉絲帶里歐穿過廢棄舊圖書館進入地下防空洞",
+      "source": "艾莉絲帶著里歐穿過校園後方廢棄的舊圖書館，進入了一個被厚重鉛層屏蔽的地下防空洞。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c2_l1",
+      "description": "旁白：法律的盲區，監控失訊",
+      "source": "在這裡，所有的「語意分析監控」與「社會信用傳感器」都失去了訊號。這是一個法律的盲區。",
+      "voice": "narration",
+      "duration": 6,
+      "lines": [
+        "在這裡，所有的語意分析監控，與社會信用傳感器，都失去了訊號。",
+        "這是一個法律的盲區。"
+      ]
+    },
+    {
+      "id": "c2_l2",
+      "description": "場景：推開鐵門，黏稠紅光雜訊",
+      "source": "推開厚重的鐵門，里歐瞬間被一種黏稠的氣氛包覆。這裡沒有燈光，只有閃爍的紅光，空氣中飄散著一種未經淨化的、帶有泥土與舊紙張味道的「雜訊」。",
+      "voice": "scene",
+      "duration": 6,
+      "lines": []
+    },
+    {
+      "id": "c2_l3",
+      "description": "場景：中央小平台，學生閉眼朗誦",
+      "source": "中央有一個小平台，一個學生正閉著眼睛，對著麥克風朗誦著：",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c2_l4",
+      "description": "對白（朗誦學生）：火與旗幟，星辰同歸",
+      "source": "「……那火，在血液中燃燒；那旗幟，在廢墟中飛揚。我們不問代價，我們只問：何時能與星辰同歸？」",
+      "voice": "dialogue",
+      "duration": 11,
+      "lines": [
+        "那火，在血液中燃燒。",
+        "那旗幟，在廢墟中飛揚。",
+        "我們不問代價，我們只問：何時能與星辰同歸？"
+      ]
+    },
+    {
+      "id": "c2_l5",
+      "description": "場景：里歐劇痛，視網膜刷出紅色警告",
+      "source": "里歐的大腦瞬間劇烈抽痛。他的認知防禦系統在他的視網膜上刷出無數紅色警告：",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c2_l6",
+      "description": "旁白：系統警告，降熵口號、邏輯缺失",
+      "source": "「警告：偵測到極高純度『降熵口號』！」「警告：邏輯缺失率 100%！」「建議：立即離開，並進行 48 小時邏輯重啟訓練！」",
+      "voice": "narration",
+      "duration": 10,
+      "lines": [
+        "警告，偵測到極高純度降熵口號。",
+        "警告，邏輯缺失率百分之百。",
+        "建議，立即離開，並進行四十八小時邏輯重啟訓練。"
+      ]
+    },
+    {
+      "id": "c2_l7",
+      "description": "對白·里歐：關掉它，認知強姦",
+      "source": "「關掉它……」里歐痛苦地按著太陽穴，「這簡直是……認知強姦。他根本沒有給出星辰同歸的具體燃料消耗率，也沒有說明那面旗幟的織物來源與環境影響。」",
+      "voice": "dialogue",
+      "duration": 13,
+      "lines": [
+        "關掉它，這簡直是認知強姦。",
+        "他根本沒有給出，星辰同歸的具體燃料消耗率。",
+        "也沒有說明那面旗幟的，織物來源與環境影響。"
+      ]
+    },
+    {
+      "id": "c2_l8",
+      "description": "場景：艾莉絲拉住里歐的手，黑暗中觸覺放大",
+      "source": "艾莉絲拉住里歐的手。在這種黑暗中，人類的觸覺感官被放大到了極致。",
+      "voice": "scene",
+      "duration": 3,
+      "lines": []
+    },
+    {
+      "id": "c2_l9",
+      "description": "對白·艾莉絲：別分析它，用邊緣系統接收",
+      "source": "「別分析它，里歐。」艾莉絲湊到他耳邊，氣息溫熱，「試著用你的邊緣系統去接收，而不是用你的前額葉。這就是我們先祖活著的感覺——『盲從的狂喜』。」",
+      "voice": "dialogue",
+      "duration": 13,
+      "lines": [
+        "別分析它，里歐。",
+        "試著用你的邊緣系統去接收，而不是用你的前額葉。",
+        "這就是我們先祖活著的感覺，盲從的狂喜。"
+      ]
+    },
+    {
+      "id": "c2_l10",
+      "description": "場景：里歐閉眼，韻律繞過審核，心率飆升",
+      "source": "里歐試著放鬆。漸漸地，那種毫無邏輯的韻律開始繞過他的審核機制。他感到心率失控地飆升，一種名為「熱血」的化學物質（多巴胺與催產素的混合物）在他體內炸裂。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c2_l11",
+      "description": "旁白：危險的快感，營養代餐與非法蛋糕",
+      "source": "那是一種極其危險的快感。就像一個長期吃營養代餐的人，突然咬到了一口充滿脂肪與糖分的非法蛋糕。",
+      "voice": "narration",
+      "duration": 9,
+      "lines": [
+        "那是一種極其危險的快感。",
+        "就像一個長期吃營養代餐的人，突然咬到了一口，充滿脂肪與糖分的非法蛋糕。"
+      ]
+    },
+    {
+      "id": "c2_l12",
+      "description": "場景：職業本能反撲，開始對集會屍檢",
+      "source": "就在里歐即將沉溺其中時，他的職業本能突然反撲。他在腦中開始自動對這場集會進行「屍檢」。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c2_l13",
+      "description": "對白·里歐：這首歌模仿極權動員曲，一百二十拍",
+      "source": "「這不對……」里歐喘著氣，推開了艾莉絲，「艾莉絲，這首歌的結構完全模仿了二十世紀的極權主義動員曲。它的節奏是 120BPM，這是最容易誘導集體步行的頻率。他在試圖讓我們變成同一個生物，他在剝奪我們的個體獨立性。」",
+      "voice": "dialogue",
+      "duration": 15,
+      "lines": [
+        "這不對。",
+        "艾莉絲，這首歌的結構，完全模仿了二十世紀的，極權主義動員曲。",
+        "它的節奏是一百二十拍，這是最容易誘導集體步行的頻率。",
+        "他在試圖讓我們變成同一個生物，他在剝奪我們的個體獨立性。"
+      ]
+    },
+    {
+      "id": "c2_l14",
+      "description": "對白·艾莉絲：獨立比聯結好嗎，我們是一個整體",
+      "source": "艾莉絲看著他，眼神裡帶著一絲嘲諷：「里歐，你真的覺得『獨立』比『聯結』更好嗎？你看外面那些清醒的公民，他們像一個個互不相干的原子。而這裡，我們是一個整體。」",
+      "voice": "dialogue",
+      "duration": 13,
+      "lines": [
+        "里歐，你真的覺得獨立比聯結更好嗎？",
+        "你看外面那些清醒的公民，他們像一個一個，互不相干的原子。",
+        "而這裡，我們是一個整體。"
+      ]
+    },
+    {
+      "id": "c2_l15",
+      "description": "對白·里歐：一個不需要大腦的整體，失去定義星辰的權利",
+      "source": "「一個不需要大腦的整體。」里歐反擊道，「這就是『降熵』的代價。當我們成為星辰的一部分，我們也就失去了定義星辰的權利。」",
+      "voice": "dialogue",
+      "duration": 11,
+      "lines": [
+        "一個不需要大腦的整體。這就是降熵的代價。",
+        "當我們成為星辰的一部分，我們也就失去了，定義星辰的權利。"
+      ]
+    },
+    {
+      "id": "c2_l16",
+      "description": "場景：集會後昏暗走廊，里歐攔住艾莉絲，理智回歸",
+      "source": "集會結束後，里歐在昏暗的走廊裡攔住了艾莉絲。他的理智已經回歸，眼神恢復了那種冰冷的清澈。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c2_l17",
+      "description": "對白·里歐：你不是普通的交換生",
+      "source": "「你不是普通的交換生。」里歐調出他偷偷記錄的音頻樣本，「剛才那首詩的隱喻結構，與境外那個『聖戰共和國』的宣傳樣式完全一致。",
+      "voice": "dialogue",
+      "duration": 12,
+      "lines": [
+        "你不是普通的交換生。",
+        "剛才那首詩的隱喻結構，與境外那個聖戰共和國的，宣傳樣式完全一致。"
+      ]
+    },
+    {
+      "id": "c2_l18",
+      "description": "對白·里歐：你在進行生物感性測試",
+      "source": "艾莉絲，你在這裡進行『生物感性測試』，對吧？你想看看我們這群『理性人』，在面對純粹的非理性攻擊時，防禦力到底剩多少。」",
+      "voice": "dialogue",
+      "duration": 14,
+      "lines": [
+        "艾莉絲，你在這裡進行生物感性測試，對吧？",
+        "你想看看我們這群理性人，在面對純粹的非理性攻擊時，防禦力到底剩多少。"
+      ]
+    },
+    {
+      "id": "c2_l19",
+      "description": "場景：艾莉絲笑容消失，專業冷峻",
+      "source": "艾莉絲停下腳步，臉上的笑容消失了，取而代之的是一種極其專業的冷峻。",
+      "voice": "scene",
+      "duration": 3,
+      "lines": []
+    },
+    {
+      "id": "c2_l20",
+      "description": "對白·艾莉絲：測試結果，一百四十心率，薄冰行走",
+      "source": "「沒錯，里歐。」她淡淡地說，「而測試結果令我驚訝。你的心率剛才一度達到了 140，這意味著你的『自然法』教育只是在一層薄薄的冰面上行走。",
+      "voice": "dialogue",
+      "duration": 13,
+      "lines": [
+        "沒錯，里歐，而測試結果令我驚訝。",
+        "你的心率剛才一度達到了，一百四十。",
+        "這意味著你的自然法教育，只是在一層薄薄的冰面上行走。"
+      ]
+    },
+    {
+      "id": "c2_l21",
+      "description": "對白·艾莉絲：找到正確的旋律，堡壘像沙堡崩塌",
+      "source": "只要我們找到正確的旋律，這座理性的堡壘會像沙堡一樣崩塌。」",
+      "voice": "dialogue",
+      "duration": 8,
+      "lines": [
+        "只要我們找到正確的旋律，",
+        "這座理性的堡壘，會像沙堡一樣崩塌。"
+      ]
+    },
+    {
+      "id": "c2_l22",
+      "description": "場景：里歐握緊拳頭",
+      "source": "里歐握緊了拳頭。",
+      "voice": "scene",
+      "duration": 3,
+      "lines": []
+    },
+    {
+      "id": "c2_l23",
+      "description": "旁白：針對整個文明的認知戰爭",
+      "source": "他意識到，這不僅僅是一場課外活動，這是一場針對整個文明的認知戰爭。",
+      "voice": "narration",
+      "duration": 6,
+      "lines": [
+        "他意識到，這不僅僅是一場課外活動，",
+        "這是一場針對整個文明的認知戰爭。"
+      ]
+    },
+    {
+      "id": "c3_l0",
+      "description": "場景：圖書館個人研究艙，頻譜的笑聲與禁詩",
+      "source": "里歐坐在圖書館的個人研究艙內，螢幕上的數據流不再是枯燥的統計表，而是被他解析成頻譜的艾莉絲的笑聲，以及那首地下集會的禁詩。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c3_l1",
+      "description": "旁白：不檢舉，從認知層面瓦解攻勢",
+      "source": "他沒有向校方檢舉艾莉絲。在這種「真自由」的制度下，單純的檢舉是無效的，因為艾莉絲並沒有「強迫」任何人聽。他要做的，是在認知層面上徹底瓦解對方的攻勢。",
+      "voice": "narration",
+      "duration": 13,
+      "lines": [
+        "他沒有向校方檢舉艾莉絲。",
+        "在這種真自由的制度下，單純的檢舉是無效的，因為艾莉絲並沒有，強迫任何人聽。",
+        "他要做的，是在認知層面上，徹底瓦解對方的攻勢。"
+      ]
+    },
+    {
+      "id": "c3_l2",
+      "description": "場景：高級架構設計課，教授拋出議題",
+      "source": "隔天的「高級架構設計」課上，教授拋出了一個極具爭議的議題：",
+      "voice": "scene",
+      "duration": 3,
+      "lines": []
+    },
+    {
+      "id": "c3_l3",
+      "description": "對白·教授：良假象是否該植入題",
+      "source": "「如果一個社會的理性能量足以應對所有外部風險，但人民卻因為缺乏『情緒多巴胺』而產生自發性集體抑鬱，我們是否應該在系統中植入適量的『良性假象』？」",
+      "voice": "dialogue",
+      "duration": 16,
+      "lines": [
+        "如果一個社會的理性能量，足以應對所有外部風險，",
+        "但人民卻因為缺乏情緒多巴胺，而產生自發性集體抑鬱，",
+        "我們是否應該，在系統中植入適量的，良性假象。"
+      ]
+    },
+    {
+      "id": "c3_l4",
+      "description": "場景：全班陷入沉默",
+      "source": "全班陷入沉默。這是一個關於「幸福 vs. 真相」的終極辯論。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c3_l5",
+      "description": "對白·里歐：反對良性假象，發展感性邏輯防禦",
+      "source": "「教授，我反對任何形式的『良性假象』。因為假象的代價包是不可控的，它會導致人民的認知免疫系統退化。我們不應該給予『虛假的糖分』，而是應該發展『感性的邏輯防禦』。」",
+      "voice": "dialogue",
+      "duration": 16,
+      "lines": [
+        "教授，我反對任何形式的，良性假象。",
+        "因為假象的代價包是不可控的，它會導致人民的，認知免疫系統退化。",
+        "我們不應該給予虛假的糖分，而是應該發展，感性的邏輯防禦。"
+      ]
+    },
+    {
+      "id": "c3_l6",
+      "description": "對白·教授：哦，願聞其詳",
+      "source": "「哦？」教授挑起眉毛，「願聞其詳。」",
+      "voice": "dialogue",
+      "duration": 4,
+      "lines": [
+        "哦？願聞其詳。"
+      ]
+    },
+    {
+      "id": "c3_l7",
+      "description": "場景：里歐走上講台，拆解詩的音頻波形",
+      "source": "里歐走上講台，他在螢幕上調出了艾莉絲那首詩的音頻波形。他沒有播放旋律，而是將其拆解成數個邏輯區塊。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c3_l8",
+      "description": "對白·里歐：詩利用歸屬感渴望，構建虛擬共同體",
+      "source": "「這首詩之所以能產生威力，是因為它利用了人類大腦對『歸屬感』的原始渴望。它使用了大量『我們』、『共同』、『星辰』等詞彙。」里歐的手指在虛擬螢幕上飛速滑動，「它在構建一個沒有邊界的虛擬共同體。」",
+      "voice": "dialogue",
+      "duration": 15,
+      "lines": [
+        "這首詩之所以能產生威力，是因為它利用了人類大腦，對歸屬感的原始渴望。",
+        "它使用了大量我們、共同、星辰等詞彙。",
+        "它在構建一個，沒有邊界的虛擬共同體。"
+      ]
+    },
+    {
+      "id": "c3_l9",
+      "description": "對白·里歐：方案是透明化掛載",
+      "source": "「我的方案不是封殺它，而是對其進行『透明化掛載』。」",
+      "voice": "dialogue",
+      "duration": 6,
+      "lines": [
+        "我的方案不是封殺它，",
+        "而是對其進行，透明化掛載。"
+      ]
+    },
+    {
+      "id": "c3_l10",
+      "description": "場景：點開情感代價實時映射器，殘骸數據浮現",
+      "source": "里歐點開了一個他連夜寫好的程序插件：【情感代價實時映射器】。他將那首煽情的詩重新播放，但這一次，每當詩人說到「與星辰同歸」時，螢幕上會同步出現衛星軌道上的殘骸數據、長期太空航行的骨質流失率，以及放棄個體意志後的社會靜態化模型。",
+      "voice": "scene",
+      "duration": 8,
+      "lines": []
+    },
+    {
+      "id": "c3_l11",
+      "description": "對白·里歐：感性是消費行為，清醒看帳單流淚",
+      "source": "「當感性被賦予了精確的物理代價，」里歐轉頭看向台下的同學，「它就不再是神祕的『火花』，而是一種『高昂的消費行為』。當你清醒地看著帳單去流淚時，你就不會被誤導去自殺。」",
+      "voice": "dialogue",
+      "duration": 15,
+      "lines": [
+        "當感性被賦予了，精確的物理代價，",
+        "它就不再是神祕的火花，而是一種，高昂的消費行為。",
+        "當你清醒地看著帳單去流淚時，你就不會被誤導去自殺。"
+      ]
+    },
+    {
+      "id": "c3_l12",
+      "description": "場景：走廊盡頭艾莉絲等著，眼神危險",
+      "source": "下課後，艾莉絲在走廊盡頭等著他。她聽到了里歐的論點，眼神中閃爍著危險的光芒。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c3_l13",
+      "description": "對白·艾莉絲：玫瑰拆成碳分子，美無法掛載代價",
+      "source": "「你試圖把玫瑰拆解成碳分子，里歐。」艾莉絲冷笑，「但你忘了，美是無法被掛載代價的。」",
+      "voice": "dialogue",
+      "duration": 9,
+      "lines": [
+        "你試圖把玫瑰拆解成碳分子，里歐。",
+        "但你忘了，美是無法被，掛載代價的。"
+      ]
+    },
+    {
+      "id": "c3_l14",
+      "description": "對白·里歐：美不需掛代價，政治動員必須；推銷政體",
+      "source": "「美不需要被掛載代價，但『以此為名的政治動員』必須。艾莉絲，」里歐逼近一步，語氣平靜得像是在宣讀法律，「妳試圖利用我們對美的追求，來推銷妳背後的政體。",
+      "voice": "dialogue",
+      "duration": 14,
+      "lines": [
+        "美不需要被掛載代價，",
+        "但以此為名的政治動員，必須。",
+        "艾莉絲，妳試圖利用我們對美的追求，來推銷妳背後的政體。"
+      ]
+    },
+    {
+      "id": "c3_l15",
+      "description": "對白·里歐：感性病毒中隱暎異議者處理數據",
+      "source": "妳在妳的感性病毒裡隱暎了最重要的一份文件：『異議者的處理數據』。」",
+      "voice": "dialogue",
+      "duration": 10,
+      "lines": [
+        "妳在妳的感性病毒裡，",
+        "隱暎了最重要的一份文件，",
+        "異議者的處理數據。"
+      ]
+    },
+    {
+      "id": "c3_l16",
+      "description": "場景：打開終端機，顯示境外檔案被判定殘次品",
+      "source": "里歐打開終端機，顯示出他昨晚透過境外數據庫挖掘出的隱密檔案——在艾莉絲所代表的那種「感性至上」的國家，每年有多少人因為「情緒不夠激昂」而被判定為社會殘次品。",
+      "voice": "scene",
+      "duration": 7,
+      "lines": []
+    },
+    {
+      "id": "c3_l17",
+      "description": "對白·里歐：這就是妳的星辰同歸，屍骨祭壇",
+      "source": "「這就是妳的星辰同歸，」里歐冷冷地說，「那是一座由不合群者的屍骨堆成的祭壇。」",
+      "voice": "dialogue",
+      "duration": 9,
+      "lines": [
+        "這就是妳的星辰同歸，",
+        "那是一座，由不合群者的屍骨，堆成的祭壇。"
+      ]
+    },
+    {
+      "id": "c3_l18",
+      "description": "場景：艾莉絲臉色第一次慘白",
+      "source": "艾莉絲的臉色第一次變得慘白。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c3_l19",
+      "description": "旁白：感性誘惑反為樣本，完成認知反偵察",
+      "source": "她發現，里歐並沒有被她的感性誘惑，反而利用她的感性作為樣本，完成了一次完美的「認知反偵察」。",
+      "voice": "narration",
+      "duration": 11,
+      "lines": [
+        "她發現，里歐並沒有被她的感性誘惑，",
+        "反而利用她的感性作為樣本，",
+        "完成了一次完美的，認知反偵察。"
+      ]
+    },
+    {
+      "id": "c3_l20",
+      "description": "對白·里歐：測試輸了，防線建立在完整真相",
+      "source": "「這場測試，妳輸了。」里歐說，「妳以為我們理性的防線很脆弱，但妳忘了，我們的防線是建立在對『完整真相』的極致追求上。",
+      "voice": "dialogue",
+      "duration": 16,
+      "lines": [
+        "這場測試，妳輸了。",
+        "妳以為我們理性的防線很脆弱，但妳忘了，",
+        "我們的防線是建立在，對完整真相的極致追求上。"
+      ]
+    },
+    {
+      "id": "c3_l21",
+      "description": "對白·里歐：幻覺越多，虛偽代價越具體",
+      "source": "妳能給出的幻覺越多，我們能拆解出的虛偽代價就越具體。」",
+      "voice": "dialogue",
+      "duration": 8,
+      "lines": [
+        "妳能給出的幻覺越多，",
+        "我們能拆解出的，虛偽代價就越具體。"
+      ]
+    },
+    {
+      "id": "c3_l22",
+      "description": "旁白：理性人將感情昇華為對真實的忠誠",
+      "source": "艾莉絲看著里歐，突然意識到，這群「理性人」並非沒有感情，而是他們將感情昇華成了一種對「真實」的絕對忠誠。",
+      "voice": "narration",
+      "duration": 10,
+      "lines": [
+        "艾莉絲看著里歐，突然意識到，",
+        "這群理性人並非沒有感情，",
+        "而是他們將感情昇華成了一種，對真實的絕對忠誠。"
+      ]
+    },
+    {
+      "id": "c4_l0",
+      "description": "場景：期末考週，校園空氣緊繃",
+      "source": "期末考週，校園內的空氣緊繃得幾乎凝固。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c4_l1",
+      "description": "旁白：終極驗證",
+      "source": "對里歐來說，這不僅是一場考試，更是對他認知防線的終極驗證。",
+      "voice": "narration",
+      "duration": 5,
+      "lines": [
+        "對里歐來說，這不僅是一場考試，",
+        "更是對他認知防線的，終極驗證。"
+      ]
+    },
+    {
+      "id": "c4_l2",
+      "description": "場景：教授在中央螢幕顯示考題",
+      "source": "教授在中央大螢幕上顯示了考題：",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c4_l3",
+      "description": "旁白：考題任務與限制一",
+      "source": "任務：提出一項「國家大型建設案」並進行全民動員。限制：1. 禁止使用任何感性形容詞（如：偉大、繁榮、幸福）。",
+      "voice": "narration",
+      "duration": 9,
+      "lines": [
+        "任務，提出一項國家大型建設案，並進行全民動員。",
+        "限制一，禁止使用任何感性形容詞，如偉大、繁榮、幸福。"
+      ]
+    },
+    {
+      "id": "c4_l4",
+      "description": "旁白：限制二與限制三",
+      "source": "限制：2. 禁止使用非理性的視覺修辭（如：燦爛的笑容、壯麗的背景音樂）。3. 必須獲得 50% 以上的模擬公民點擊「參與」。",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "限制二，禁止使用非理性的視覺修辭。",
+        "限制三，必須獲得百分之五十以上的，模擬公民點擊參與。"
+      ]
+    },
+    {
+      "id": "c4_l5",
+      "description": "場景：同學陷入苦思",
+      "source": "教室內，同學們紛紛陷入苦思。在一個習慣於「拆解」的世界裡，「建立」變得異常困難。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c4_l6",
+      "description": "對白·同學：說服人民建核聚變電廠",
+      "source": "「如果不能說『為了下一代的幸福』，我們要怎麼說服人民把錢從口袋裡掏出來建核聚變電廠？」一名同學沮喪地抓著頭髮，",
+      "voice": "dialogue",
+      "duration": 11,
+      "lines": [
+        "如果不能說「為了下一代的幸福」，",
+        "我們要怎麼說服人民，把錢從口袋裡掏出來，建核聚變電廠？"
+      ]
+    },
+    {
+      "id": "c4_l7",
+      "description": "對白·同學：增加能源冗餘像讀說明書",
+      "source": "「說這能增加 15% 的能源冗餘」嗎？這聽起來就像在讀說明書。」",
+      "voice": "dialogue",
+      "duration": 7,
+      "lines": [
+        "說這能增加百分之十五的能源冗餘嗎？",
+        "這聽起來就像在讀說明書。"
+      ]
+    },
+    {
+      "id": "c4_l8",
+      "description": "場景：里歐看螢幕，閃過艾莉絲笑聲與集會殘響",
+      "source": "里歐看著自己的螢幕，腦海中閃過艾莉絲的笑聲與地下集會的殘響。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c4_l9",
+      "description": "旁白：真實本身也有一種頻率",
+      "source": "他意識到，「真實」本身也有一種頻率，只是大多數人不敢直視它。",
+      "voice": "narration",
+      "duration": 6,
+      "lines": [
+        "他意識到，真實本身也有一種頻率，",
+        "只是大多數人，不敢直視它。"
+      ]
+    },
+    {
+      "id": "c4_l10",
+      "description": "場景：里歐上台，投射歷史負債表",
+      "source": "里歐上台時，全場安靜了下來。他在螢幕上投射出的不是精美的建築模擬圖，而是一張巨大的、血淋淋的「歷史負債表」。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c4_l11",
+      "description": "對白·里歐：碳基物種存續精算",
+      "source": "他的報告題目是：《深空觀測站建設案：關於人類作為碳基物種的存續精算》。",
+      "voice": "dialogue",
+      "duration": 5,
+      "lines": [
+        "深空觀測站建設案，",
+        "關於人類作為碳基物種的，存續精算。"
+      ]
+    },
+    {
+      "id": "c4_l12",
+      "description": "對白·里歐：文明崩潰臨界點一百四十二年後",
+      "source": "「公民們，」里歐的聲音沒有起伏，卻有一種重力般的壓力，「根據當前的熵增速度與地緣數據模擬，人類在不進行星際資源擴張的情況下，文明崩潰的臨界點將在 142 年後到達。",
+      "voice": "dialogue",
+      "duration": 13,
+      "lines": [
+        "公民們。",
+        "根據當前的熵增速度與地緣數據模擬，",
+        "人類在不進行星際資源擴張的情況下，文明崩潰的臨界點，將在一百四十二年後到達。"
+      ]
+    },
+    {
+      "id": "c4_l13",
+      "description": "對白·里歐：基於物理常數的必然",
+      "source": "這不是一個『可能』，而是一個基於現有物理常數的『必然』。」",
+      "voice": "dialogue",
+      "duration": 5,
+      "lines": [
+        "這不是一個可能，",
+        "而是一個基於現有物理常數的，必然。"
+      ]
+    },
+    {
+      "id": "c4_l14",
+      "description": "場景：掛載文明剩餘秒數計數器",
+      "source": "他在螢幕上掛載了一個實時變動的數字：【文明剩餘秒數】。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c4_l15",
+      "description": "對白·里歐：徵收百分之八，百分之一點二失能",
+      "source": "「建設這座觀測站需要徵收總資產的 8%，並有 1.2% 的參與者可能因工程意外失能。」里歐沒有美化這些數字，反而將其加粗顯示，",
+      "voice": "dialogue",
+      "duration": 10,
+      "lines": [
+        "建設這座觀測站，需要徵收總資產的百分之八，",
+        "並有百分之一點二的參與者，可能因工程意外失能。"
+      ]
+    },
+    {
+      "id": "c4_l16",
+      "description": "對白·里歐：不投資後代生存機率降至零點零四",
+      "source": "「我不會承諾你們會因此感到快樂，但我能提供數據證明：不投資這 8%，你們的後代在 150 年後的生存機率將降至 0.04%。」",
+      "voice": "dialogue",
+      "duration": 13,
+      "lines": [
+        "我不會承諾你們會因此感到快樂。",
+        "但我能提供數據證明，不投資這百分之八，",
+        "你們的後代在一百五十年後，生存機率將降至百分之零點零四。"
+      ]
+    },
+    {
+      "id": "c4_l17",
+      "description": "場景：模擬投票板緩慢爬升，毀滅帳單與生存收據並列",
+      "source": "教室後的模擬投票板開始緩慢爬升。沒有煽情的口號，沒有夢想的包裝。里歐只是把「毀滅的帳單」與「生存的收據」並列在一起。",
+      "voice": "scene",
+      "duration": 6,
+      "lines": []
+    },
+    {
+      "id": "c4_l18",
+      "description": "對白·里歐：拒絕的代價與精算",
+      "source": "「你們可以選擇拒絕。」里歐看著台下的同學，眼神清澈得令人畏懼，「拒絕的代價是短期的財務充裕，以及長期的集體滅絕。請根據你們對『自我存續』的定義進行精算。報告完畢。」",
+      "voice": "dialogue",
+      "duration": 12,
+      "lines": [
+        "你們可以選擇拒絕。",
+        "拒絕的代價是短期的財務充裕，以及長期的集體滅絕。",
+        "請根據你們對自我存續的定義，進行精算。報告完畢。"
+      ]
+    },
+    {
+      "id": "c4_l19",
+      "description": "場景：投票板衝破百分之六十八",
+      "source": "投票板的數字在最後一刻衝破了 68%。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c4_l20",
+      "description": "對白·教授：事實是修飾的煽動，恐懼化為動能",
+      "source": "教授站了起來，緩緩鼓掌。「里歐，你掌握了這門課的核心：事實是不需要修飾的煽動。當你把代價說得足夠清楚，理性的恐懼會轉化為最強大的動能。」",
+      "voice": "dialogue",
+      "duration": 13,
+      "lines": [
+        "里歐，你掌握了這門課的核心。",
+        "事實是不需要修飾的煽動。",
+        "當你把代價說得足夠清楚，理性的恐懼，會轉化為最強大的動能。"
+      ]
+    },
+    {
+      "id": "c4_l21",
+      "description": "場景：校門口艾莉絲拖行李箱，遭遣返",
+      "source": "考試結束後，里歐在校門口遇見了艾莉絲。她拖著行李箱，顯然是被遣返回國了。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c4_l22",
+      "description": "對白·艾莉絲：最冰冷方式完成最熱血動員",
+      "source": "「你贏了，里歐。」艾莉絲看著他，眼神複雜，「你用最冰冷的方式，完成了最熱血的動員。但你不覺得這很可悲嗎？你們只能被『恐懼』和『生存』驅動，而我們……我們能為了『愛』而行動。」",
+      "voice": "dialogue",
+      "duration": 14,
+      "lines": [
+        "你贏了，里歐。",
+        "你用最冰冷的方式，完成了最熱血的動員。",
+        "但你不覺得這很可悲嗎？你們只能被恐懼和生存驅動，而我們，我們能為了愛而行動。"
+      ]
+    },
+    {
+      "id": "c4_l23",
+      "description": "對白·里歐：愛是遮蔽，我們腳下堅實",
+      "source": "「艾莉絲，」里歐停下腳步，夕陽將他的影子拉得很長，「你們的『愛』是建立在對現實的遮蔽上。那種愛很美，但它像毒藥。我們雖然只有冰冷的數據，但我們每走一步，腳下的土地都是堅實的。」",
+      "voice": "dialogue",
+      "duration": 14,
+      "lines": [
+        "艾莉絲，你們的愛，是建立在對現實的遮蔽上。",
+        "那種愛很美，但它像毒藥。",
+        "我們雖然只有冰冷的數據，但我們每走一步，腳下的土地都是堅實的。"
+      ]
+    },
+    {
+      "id": "c4_l24",
+      "description": "對白·艾莉絲：寧可唱著歌死去",
+      "source": "艾莉絲笑了笑，轉身走向接駁艙。「也許吧。但當世界末日真的來臨時，我希望我是唱著歌死去的，而不是看著帳單死去的。」",
+      "voice": "dialogue",
+      "duration": 10,
+      "lines": [
+        "也許吧。",
+        "但當世界末日真的來臨時，",
+        "我希望我是唱著歌死去的，而不是看著帳單死去的。"
+      ]
+    },
+    {
+      "id": "c4_l25",
+      "description": "場景：接駁艙升空，視網膜提示跳出",
+      "source": "里歐看著接駁艙升空。他的視網膜螢幕上跳出一個提示：",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c4_l26",
+      "description": "旁白：心理波動輕微遺憾",
+      "source": "檢測到心理波動：輕微遺憾。建議：進行深度呼吸，掛載「社交替代成本分析」。",
+      "voice": "narration",
+      "duration": 6,
+      "lines": [
+        "檢測到心理波動，輕微遺憾。",
+        "建議，進行深度呼吸，掛載社交替代成本分析。"
+      ]
+    },
+    {
+      "id": "c4_l27",
+      "description": "場景：里歐關掉提示，感受孤獨",
+      "source": "里歐揮手關掉了提示。他站在風中，感受著那種無法被數據化的、名為「孤獨」的震動。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c4_l28",
+      "description": "旁白：制度給感情安全容器，私人領域是為人證明",
+      "source": "他終於明白，先賢建立這個制度，並不是要消滅感情，而是要給感情一個「安全的容器」。在公共領域，我們是絕對的理性的零件；但在私人領域，那種未被掛載代價的痛苦，才是我們身為「人」最後的證明。",
+      "voice": "narration",
+      "duration": 13,
+      "lines": [
+        "他終於明白，先賢建立這個制度，並不是要消滅感情，",
+        "而是要給感情一個安全的容器。",
+        "在公共領域，我們是絕對的理性的零件；",
+        "但在私人領域，那種未被掛載代價的痛苦，才是我們身為人最後的證明。"
+      ]
+    },
+    {
+      "id": "c4_l29",
+      "description": "場景：拿出艾莉絲留下的舊時代枯葉",
+      "source": "他從口袋裡拿出一片艾莉絲留下的舊時代枯葉。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c4_l30",
+      "description": "旁白：這片葉子只是葉子",
+      "source": "這片葉子沒有任何功能，沒有任何數據，僅僅是……一片葉子。",
+      "voice": "narration",
+      "duration": 6,
+      "lines": [
+        "這片葉子沒有任何功能，沒有任何數據。",
+        "僅僅是，一片葉子。"
+      ]
+    },
+    {
+      "id": "c4_l31",
+      "description": "場景：收好枯葉，走回校園（結尾）",
+      "source": "里歐將它收好，轉身走回校園。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    }
+  ],
+  "story": [
+    {
+      "id": "Ref-LEO",
+      "description": "素材：里歐半身肖像，黑短髮淺灰制服，嘴唇緊閉（zit：beretMix，單人零女性）",
+      "type": "t2i",
+      "prompt": "1男，圓形階梯教室人物參考，場景：圓形階梯教室第三排課桌，背景簡約白牆與密集座位模糊，光線：冷白教室燈，柔和無陰影。角色1（里歐Leo）：22歲上下東亞男性，黑色短髮利落，眼神冷靜專注，嘴唇緊閉，身穿素色認知安全學院制服（淺灰襯衫）；位於畫面中央，正面面對鏡頭，半身入鏡上半身直立。動作與互動：靜止端坐，雙手下放在桌面，直視鏡頭無多餘動作。構圖紀律：畫面中除了里歐沒有任何其他人物，沒有女性，沒有旁觀學生，沒有背景人形，沒有鏡像或倒映人影，只有一個完好的單人半身像。寫實攝影風格，電影柔光",
+      "refs": [],
+      "out": "s3_leo_ref_h",
+      "output": "output/s3_leo_ref_h",
+      "extra": {
+        "engine": "zit",
+        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+        "clip": "qwen_3_4b.safetensors",
+        "cfg": 4,
+        "steps": 12,
+        "scheduler": "simple",
+        "sampler_name": "res_multistep",
+        "width": 832,
+        "height": 1248,
+        "gen16x9": true,
+        "seed": 494301,
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "7629a57b-d24c-4921-befe-5f8cbab56108"
+      },
+      "seed": 494301
+    },
+    {
+      "id": "Ref-PROF",
+      "description": "素材：教授半身肖像，銳利眼神深色套裝，嘴唇緊閉（zit：beretMix，單人零男性）",
+      "type": "t2i",
+      "prompt": "1女，圓形階梯教室人物參考，場景：圓形階梯教室講台前方，背景座位模糊，光線：冷白教室燈，柔和無陰影。角色1（教授Professor）：50歲上下東亞女性，短髮利落梳齊，眼神銳利，嘴唇緊閉，沒有笑容，身穿深色簡約套裝；位於畫面中央，正面面對鏡頭，半身入鏡上半身直立。動作與互動：靜止站立，雙手自然垂放，直視鏡頭無多餘動作。構圖紀律：畫面中除了教授沒有任何其他人物，沒有男性，沒有旁人，沒有背景人形，沒有鏡像或倒映人影，只有一個完好的單人半身像。寫實攝影風格，電影柔光",
+      "refs": [],
+      "out": "s3_prof_ref_h",
+      "output": "output/s3_prof_ref_h",
+      "extra": {
+        "engine": "zit",
+        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+        "clip": "qwen_3_4b.safetensors",
+        "cfg": 4,
+        "steps": 12,
+        "scheduler": "simple",
+        "sampler_name": "res_multistep",
+        "width": 832,
+        "height": 1248,
+        "gen16x9": true,
+        "seed": 494302,
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "1d2e87a0-5fdb-40a7-8436-b12ac261b82e"
+      },
+      "seed": 494302
+    },
+    {
+      "id": "Ref-ALICE",
+      "description": "素材：艾莉絲半身肖像，鮮豔絲綢長裙，眼神熱情（zit：beretMix，單人零男性）",
+      "type": "t2i",
+      "prompt": "1女，校園林蔭道人物參考，場景：素色校園林蔭道，樹影斑駁，背景乾淨，光線：午後柔和日光，無陰影。角色1（艾莉絲Alice）：22歲上下東亞女性，黑色長直髮披肩，眼神明亮帶熱情，嘴唇輕閉微微帶笑，身穿鮮豔絲綢長裙（亮紅橙色絹面）；位於畫面中央，正面面對鏡頭，半身入鏡上半身直立。動作與互動：靜止站立，雙手自然垂下，直視鏡頭無多餘動作。構圖紀律：畫面中除了艾莉絲沒有任何其他人物，沒有任何男人，沒有旁人，沒有背景人形，沒有鏡像或倒映人影，只有一個完好的單人半身像。寫實攝影風格，電影柔光",
+      "refs": [],
+      "out": "s3_alice_ref_h",
+      "output": "output/s3_alice_ref_h",
+      "extra": {
+        "engine": "zit",
+        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+        "clip": "qwen_3_4b.safetensors",
+        "cfg": 4,
+        "steps": 12,
+        "scheduler": "simple",
+        "sampler_name": "res_multistep",
+        "width": 832,
+        "height": 1248,
+        "gen16x9": true,
+        "seed": 494303,
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "2cf2e76c-19dc-49f7-905c-2411879fe603"
+      },
+      "seed": 494303
+    },
+    {
+      "id": "Ref-ACAD",
+      "description": "素材：認知安全學院外觀空景無人物（極簡無浮雕）",
+      "type": "t2i",
+      "prompt": "無人物，認知安全學院外觀空景參考，場景：極簡主義建築外觀，素色平整外牆沒有任何浮雕或校訓，入口大道，特區一角，天空乾淨，光線：白天均勻自然光，畫面乾淨無人。動作與互動：無，靜止空鏡，鏡頭正對建築主立面，建築在中、大道在下方、天空在上，位置分明不重疊。寫實攝影風格，電影柔光",
+      "refs": [],
+      "out": "s3_acad_ref_h",
+      "output": "output/s3_acad_ref_h",
+      "extra": {
+        "engine": "zit",
+        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+        "clip": "qwen_3_4b.safetensors",
+        "cfg": 4,
+        "steps": 12,
+        "scheduler": "simple",
+        "sampler_name": "res_multistep",
+        "width": 832,
+        "height": 1248,
+        "gen16x9": true,
+        "seed": 494304,
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "2773a546-703d-4f75-94a5-ab8cadc71845"
+      },
+      "seed": 494304
+    },
+    {
+      "id": "Ref-CLASS",
+      "description": "素材：圓形階梯教室空景無人物（同心座位中央講台）",
+      "type": "t2i",
+      "prompt": "無人物，圓形階梯教室空景參考，場景：極簡風格的圓形階梯教室，同心圓排列的座位層層升高，中央講台與大螢幕，白色簡約牆面無裝飾，光線：冷白均勻教室燈，畫面乾淨無人。動作與互動：無，靜止空鏡，鏡頭正對教室全貌，講台在中央、座位呈圓形環繞、大螢幕在講台後方，位置分明不重疊。寫實攝影風格，電影柔光",
+      "refs": [],
+      "out": "s3_class_ref_h",
+      "output": "output/s3_class_ref_h",
+      "extra": {
+        "engine": "zit",
+        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+        "clip": "qwen_3_4b.safetensors",
+        "cfg": 4,
+        "steps": 12,
+        "scheduler": "simple",
+        "sampler_name": "res_multistep",
+        "width": 832,
+        "height": 1248,
+        "gen16x9": true,
+        "seed": 494305,
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "f479f38f-edb7-40ef-817f-9fbca04759bf"
+      },
+      "seed": 494305
+    },
+    {
+      "id": "Ref-SPEC",
+      "description": "素材：桌面虛擬光譜儀特寫無人物（半透光譜曲線）",
+      "type": "t2i",
+      "prompt": "無人物，桌面虛擬光譜儀特寫參考，場景：淺色課桌面，桌面中央浮著一個半透明的虛擬光譜儀，跳動的光譜曲線與數據欄，背景教室模糊，光線：冷白光映在光譜儀上。動作與互動：無，靜止特寫，光譜儀在桌面中央，一條波動光譜線橫越，座標數據在側，位置分明不重疊。寫實攝影風格，電影柔光",
+      "refs": [],
+      "out": "s3_spec_ref_h",
+      "output": "output/s3_spec_ref_h",
+      "extra": {
+        "engine": "zit",
+        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+        "clip": "qwen_3_4b.safetensors",
+        "cfg": 4,
+        "steps": 12,
+        "scheduler": "simple",
+        "sampler_name": "res_multistep",
+        "width": 832,
+        "height": 1248,
+        "gen16x9": true,
+        "seed": 494306,
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "ca131ce0-144d-4cef-852f-397311c556f0"
+      },
+      "seed": 494306
+    },
+    {
+      "id": "Ref-CAMPUS",
+      "description": "素材：校園林蔭道空景無人物（素色簡約夾道）",
+      "type": "t2i",
+      "prompt": "無人物，校園林蔭道空景參考，場景：素色簡約校園的林蔭道，兩排樹木夾道，路面乾淨，遠端簡約教學樓，午後光透過樹葉，光線：柔和的自然日光，畫面乾淨無人。動作與互動：無，靜止空鏡，鏡頭正對林蔭道遠端，樹在兩側、道路在中、教學樓在遠端，位置分明不重疊。寫實攝影風格，電影柔光",
+      "refs": [],
+      "out": "s3_campus_ref_h",
+      "output": "output/s3_campus_ref_h",
+      "extra": {
+        "engine": "zit",
+        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+        "clip": "qwen_3_4b.safetensors",
+        "cfg": 4,
+        "steps": 12,
+        "scheduler": "simple",
+        "sampler_name": "res_multistep",
+        "width": 832,
+        "height": 1248,
+        "gen16x9": true,
+        "seed": 494307,
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "941b8451-ed9e-4423-8a58-b46c7c0e5162"
+      },
+      "seed": 494307
+    },
+    {
+      "id": "c1_l0",
+      "description": "s3 c1_l0 場景：學院外觀＋階梯教室＋里歐光譜儀",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the academy exterior from <Picture 1>:\nminimalist plain building facade with no carvings or motto, clean avenue in front, clear sky.\n\n<Subject 2> is the circular lecture hall from <Picture 2>:\nminimal circular amphitheater classroom, concentric raised rows, central podium, big display screen, cold even light.\n\n<Subject 3> is Leo from <Picture 3>:\nEast Asian man around twenty-two, short neat black hair, calm focused eyes, pale grey academy uniform, seated at a third-row desk, lips sealed.\n\n<Subject 4> is the holographic spectrum analyzer from <Picture 4>:\na translucent holographic analyzer floating over the desk with a oscillating spectrum curve.\n\nsummary:\nReference-based academy establishing scene\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n<Subject 4>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. No whispering. No muttering. No lip-flap. No off-screen speech. All characters keep lips sealed. No English. No Cantonese. No human voice of any kind.\n\ndetailed_description:\n\nVisual style:\nA slow establishing glide from the unadorned academy exterior into the pale circular hall, ending on Leo at the third row with the floating spectrum analyzer.\n\n[Shot 1]\n\n00:00-00:03\n\nAction:\nThe camera drifts in a slow push toward the minimalist academy facade; students in pale uniforms stream in small numbers through the entrance, none with faces toward camera. No one speaks. The plain wall holds no motto, no carving—only exact surfaces.\n\n[Shot 2]\n\n00:03-00:06\n\nAction:\nCut inside the circular amphitheater: concentric rows step upward under cold even light. Leo appears exactly once, seated at the third row; the translucent spectrum analyzer hovers above his desk, its curve shimmering. Students sit in soft background rows, none duplicated. A slow camera drift settles on the analyzer. No speaking figures.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: low distant ambient hum of the campus, soft footsteps, light projector whir. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
+      "refs": [
+        "Ref-ACAD",
+        "Ref-CLASS",
+        "Ref-LEO",
+        "Ref-SPEC"
+      ],
+      "seed": 494310,
+      "out": "s3_c1_l0_video",
+      "output": "output/s3_c1_l0_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "4884da27-7760-4e0b-9f35-c79d33eccafa"
+      }
+    },
+    {
+      "id": "c1_l1",
+      "description": "s3 c1_l1 對白·教授：遠古意識形態復刻測試",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the professor from <Picture 1>:\nEast Asian woman around fifty, short neat hair, piercing eyes, no smile, dark simple suit, standing at the central podium, lips moving only to speak.\n\n<Subject 2> is the circular lecture hall from <Picture 2>:\nminimal circular amphitheater classroom, concentric raised rows, central podium, big display screen.\n\nsummary:\nReference-based class-opening dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on the professor tapping the display; students in soft foreground blur, Leo a quiet listener in the mid-depth rows.\n\n[Shot 1]\n\n00:00-00:11\n\nAction:\nThe professor appears exactly once as the speaking figure. No duplicated figure. No split or mirrored composition. She taps the glowing screen once, knuckles bare, then speaks in clipped syllables—every word stripped of ornament; her mouth clearly forms each sentence. A slow push-in holds her in frame. Only the professor's mouth moves; rows of students stay sealed, motionless witnesses.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n各位同學。\n今天我們要進行的是，遠古意識形態復刻測試。\n我將播放一段，取自二十世紀末的政治演說。\n你們的任務是，在不被誘導的情況下，找出其資訊熵的流失點。\n</d>\n\noverall_soundscape:\nDialogue delivered by a sharp, unadorned female voice in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nLecture-hall silence between words, faint projector hum, fabric rustle.\n\nnon_diegetic_music:\nA sparse, watchful piano line.",
+      "refs": [
+        "Ref-PROF",
+        "Ref-CLASS"
+      ],
+      "seed": 494311,
+      "out": "s3_c1_l1_video",
+      "output": "output/s3_c1_l1_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "dba67334-bcb6-4507-bb3a-ac830facbedd"
+      }
+    },
+    {
+      "id": "c1_l2",
+      "description": "s3 c1_l2 對白（廣播播放）：磁性男聲演說＋鼓聲",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the circular lecture hall from <Picture 1>:\nminimal circular amphitheater classroom, central podium, big display panel, speakers on the walls.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, seated at a third-row desk watching the analyzer, lips sealed.\n\n<Subject 3> is the holographic spectrum analyzer from <Picture 3>:\na translucent holographic analyzer over the desk, spectrum curve pulsing to sound.\n\nsummary:\nReference-based recorded-broadcast listening shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nThe voice heard is a recorded political speech playing through the classroom speakers, off-screen, not a character. No character speaks on camera. No narration. No on-screen mouth movement from any person. The recording is a resonant male voice. No English, no code-switching.\n\ndetailed_description:\n\nVisual style:\nWide hall under the recorded voice, then a slow push toward Leo and the pulsing analyzer; a low drum beat anchors the cadence.\n\n[Shot 1]\n\n00:00-00:07\n\nAction:\nThe classroom speakers flare with the recorded speech; a low drumbeat pounds under the cadence. Students sit motionless, faces sealed. Leo watches the analyzer flaring on the desk; the curve spikes with each emphatic syllable. No one mouths the broadcast. No duplicated figures.\n\n[Shot 2]\n\n00:07-00:14\n\nAction:\nCamera pushes closer to Leo—still exactly once in frame. The analyzer's red glow begins to flicker at the curve peaks as the broadcast swells; a mute tension fills the rows. The recorded voice continues through the speakers; no character speaks or mouths it. No split or mirrored composition.\n\nDialogue:\nThe following broadcast audio plays through the classroom speakers; no on-screen person mouths these lines.\n\n<d>\n[中文]\n我的同胞們，我們站在歷史的十字路口。\n長期以來，我們的光榮被竊取，我們的勤奮被浪費。\n現在，是時候站起來，奪回屬於我們的正義。\n讓我們的人民，再次感受到尊嚴的重量。\n</d>\n\noverall_soundscape:\nThe recorded speech in a rich resonant male voice, delivered in Taiwan-accented Standard Mandarin (台灣腔普通話) with rousing cadence, broadcast over speakers; no Cantonese, no English. Under it a low powerful drumbeat marks each phrase.\n\nnon_diegetic_music:\nLow conspiracy drums only; no melodic theme.",
+      "refs": [
+        "Ref-CLASS",
+        "Ref-LEO",
+        "Ref-SPEC"
+      ],
+      "seed": 494312,
+      "out": "s3_c1_l2_video",
+      "output": "output/s3_c1_l2_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "a9c1f328-7aaa-4c50-9c3c-5b7e14be5ff7"
+      }
+    },
+    {
+      "id": "c1_l3",
+      "description": "s3 c1_l3 場景：光譜儀刺眼紅光映里歐",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, seated at a third-row desk, watching the analyzer, lips sealed.\n\n<Subject 2> is the holographic spectrum analyzer from <Picture 2>:\na translucent holographic analyzer over the desk, its curve now flaring harsh red.\n\nsummary:\nReference-based red alarm flash shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. No lip-flap. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nTight medium shot: harsh red holographic light washes across Leo's face as the analyzer spikes.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nThe analyzer's curve surges into a blinding red zone; the red glare floods Leo's cheekbones and eyes like an alarm. His pupils hold the light; lips stay sealed. The curve trembles at peak, dust shaken loose in the red haze. Leo appears exactly once, no duplicate, no split composition. Behind him the silent hall darkens into a red-tinted void.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: a rising electronic alert shimmer, the analyzer's hum climbing, faint ambient room tone. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA single held, uneasy tone.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-SPEC"
+      ],
+      "seed": 494313,
+      "out": "s3_c1_l3_video",
+      "output": "output/s3_c1_l3_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "171d5932-674d-49dc-be77-2b6bd494f1b8"
+      }
+    },
+    {
+      "id": "c1_l4",
+      "description": "s3 c1_l4 對白·教授：分析結果",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the professor from <Picture 1>:\nEast Asian woman around fifty, piercing eyes, no smile, dark simple suit, standing at the central podium, lips moving to speak.\n\n<Subject 2> is the circular lecture hall from <Picture 2>:\nminimal circular amphitheater classroom, central podium.\n\nsummary:\nReference-based cold order dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium close-up on the professor, cold and unyielding; red hall light tints the edges.\n\n[Shot 1]\n\n00:00-00:03\n\nAction:\nThe professor appears exactly once as the speaking figure. No duplicated figure. She does not gesture; only her mouth shapes the two clipped words against the red-lit hall, eyes flat as unpolished steel. Only the professor's mouth moves; the room lies still.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n分析結果。\n</d>\n\noverall_soundscape:\nDialogue delivered by a sharp, unadorned female voice in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nHeld silence, faint analyzer hum.\n\nnon_diegetic_music:\nNo music; only the held tone continues.",
+      "refs": [
+        "Ref-PROF",
+        "Ref-CLASS"
+      ],
+      "seed": 494314,
+      "out": "s3_c1_l4_video",
+      "output": "output/s3_c1_l4_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "f23718d9-12ec-486c-9d17-5780fa7cb317"
+      }
+    },
+    {
+      "id": "c1_l5",
+      "description": "s3 c1_l5 對白·里歐：五個無錨點詞彙，偽緊急狀態陷阱",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, short neat black hair, calm unflickering eyes, pale grey academy uniform, seated, hand raised, lips moving to speak.\n\n<Subject 2> is the circular lecture hall from <Picture 2>:\nminimal circular amphitheater classroom, raised rows.\n\n<Subject 3> is the holographic spectrum analyzer from <Picture 3>:\na translucent holographic analyzer over the desk, red curve spiking.\n\nsummary:\nReference-based dispassionate analysis dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His tone stays flat and unemotional.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot of Leo with hand raised, voice flat as readout; then a tighter insert on the red analyzer as he enumerates the traps.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nLeo appears exactly once as the speaking figure. No duplicated figure. No split or mirrored composition. He raises his hand without triumph, fingers straight; his mouth forms each enumeration calmly, pitch locked. Around him the class stays sealed listeners.\n\n[Shot 2]\n\n00:08-00:15\n\nAction:\nInsert on the analyzer as he counts off the traps: the red curve snaps in sharp jags at each 「無錨點詞彙」; Leo remains in soft shallow focus, still once, still speaking flatly. Red light glints off his jaw. Only Leo's mouth moves. No duplicated figure.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n演說者在三十秒內，使用了五個無錨點詞彙。\n首先，歷史的十字路口。\n這是一個典型的，偽緊急狀態陷阱。\n旨在誘發聽眾的戰或逃反應。\n從而降低前額葉皮質的，邏輯審核能力。\n</d>\n\noverall_soundscape:\nDialogue delivered by a calm flat male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), measured and unemotional, no Cantonese, no English.\nSoft class stillness beneath, faint analyzer hum.\n\nnon_diegetic_music:\nA thin, precise ticking pulse.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-CLASS",
+        "Ref-SPEC"
+      ],
+      "seed": 494315,
+      "out": "s3_c1_l5_video",
+      "output": "output/s3_c1_l5_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "cc1ce0dc-0e62-40a2-8c81-e7a411d25206"
+      }
+    },
+    {
+      "id": "c1_l6",
+      "description": "s3 c1_l6 對白·教授：繼續",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the professor from <Picture 1>:\nEast Asian woman around fifty, piercing eyes, no smile, dark simple suit, standing at the central podium, lips moving to speak.\n\n<Subject 2> is the circular lecture hall from <Picture 2>:\nminimal circular amphitheater classroom, central podium.\n\nsummary:\nReference-based brief order dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium close-up, professor's chin lifted a fraction; red light cooling to neutral white.\n\n[Shot 1]\n\n00:00-00:03\n\nAction:\nThe professor appears exactly once as the speaking figure. No duplicated figure. She gives the single command with a faint chin raise—no nod, no warmth—then lets the silence settle. Only her mouth moves; rows remain still.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n繼續。\n</d>\n\noverall_soundscape:\nDialogue delivered by a sharp, unadorned female voice in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nQuiet shift of the analyzer settling.\n\nnon_diegetic_music:\nNo music; thin pause.",
+      "refs": [
+        "Ref-PROF",
+        "Ref-CLASS"
+      ],
+      "seed": 494316,
+      "out": "s3_c1_l6_video",
+      "output": "output/s3_c1_l6_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "254091ce-44c4-4adc-bd52-963e46f03c46"
+      }
+    },
+    {
+      "id": "c1_l7",
+      "description": "s3 c1_l7 對白·里歐：光榮尊嚴降熵，自然法無效資訊",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, seated at the desk, finger sliding across the surface, lips moving to speak.\n\n<Subject 2> is the circular lecture hall from <Picture 2>:\nminimal circular amphitheater classroom.\n\n<Subject 3> is the holographic spectrum analyzer from <Picture 3>:\na translucent holographic analyzer, its curve converting into a flat data line.\n\nsummary:\nReference-based data-conversion analysis dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His tone stays flat and unemotional.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot of Leo sliding his finger over the desk; the analyzer's speech track flattens into a data curve as he enumerates the semantics.\n\n[Shot 1]\n\n00:00-00:07\n\nAction:\nLeo appears exactly once as the speaking figure. No duplicated figure. No split or mirrored composition. His fingertip drags across the desk surface; the oscillating speech track is dragged into a flat neutral line. Flat, unreactive voice continues without an upward glance.\n\n[Shot 2]\n\n00:07-00:13\n\nAction:\nInsert on the flattened data curve: the emotions squeezed out of the waveform, numeric columns scrolling. Leo in soft focus behind, still exactly once, lips parting to state the natural law clause.\n\n[Shot 3]\n\n00:13-00:19\n\nAction:\nBack to Leo, slightly tighter. He states the invalidation clause in one unhurried breath; the curve holds flat and dead, silvery rather than red. No duplicated figure. Only his mouth moves; the hall is a silent ledger.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n第二，關於光榮與尊嚴。\n這屬於語意高度降熵。\n他將複雜的社會分配問題，簡化為情緒化的道德虧欠。\n根據本國自然法，任何提及尊嚴的訴求，若不掛載心理滿意度與稅收支出平衡表，皆視為無效資訊。\n</d>\n\noverall_soundscape:\nDialogue delivered by a calm flat male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nSoft data-curve chirp under the voice, held hall quiet.\n\nnon_diegetic_music:\nA clean, dry woodwind note, clinical.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-CLASS",
+        "Ref-SPEC"
+      ],
+      "seed": 494317,
+      "out": "s3_c1_l7_video",
+      "output": "output/s3_c1_l7_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "c36c96d2-401a-4b16-8be3-eb5269f900cd"
+      }
+    },
+    {
+      "id": "c1_l8",
+      "description": "s3 c1_l8 場景：里歐點開心率分析模擬",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, seated at the desk, opening a panel, lips sealed.\n\n<Subject 2> is the holographic spectrum analyzer from <Picture 2>:\na translucent holographic analyzer, now joined by a heart-rate simulation graph.\n\nsummary:\nReference-based panel-open beat shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. No lip-flap. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nMedium close-up: Leo taps the analyzer once; a small heart-rate simulation panel blooms beside the curve.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nLeo taps a translucent control; a compact heart-rate simulation graph blooms beside the analyzer, its line sketching a slow steady rhythm. He watches without expression; lips sealed. Leo appears exactly once, no duplicate, no split composition.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: a soft panel chirp, the analyzer hum shifting a semitone. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA faint, expectant shimmer.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-SPEC"
+      ],
+      "seed": 494318,
+      "out": "s3_c1_l8_video",
+      "output": "output/s3_c1_l8_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "373b5b2b-97f4-47af-a980-84ff55e53fc5"
+      }
+    },
+    {
+      "id": "c1_l9",
+      "description": "s3 c1_l9 對白·里歐：心率七十二拍，認知侵略行為",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, seated, eyes steady on the panel, lips moving to speak.\n\n<Subject 2> is the circular lecture hall from <Picture 2>:\nminimal circular amphitheater classroom.\n\n<Subject 3> is the holographic spectrum analyzer from <Picture 3>:\na translucent analyzer with a heart-rate line holding a steady flat rhythm.\n\nsummary:\nReference-based heart-rate verdict dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His tone stays flat and unemotional.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot with the heart-rate line gliding steady at the flat rhythm; then close on Leo's cool, inflected-by-nothing delivery.\n\n[Shot 1]\n\n00:00-00:07\n\nAction:\nLeo appears exactly once as the speaking figure. No duplicated figure. The heart-rate line holds a perfectly even rhythm, metronome-still; he reads off the figures without emphasis, no flourish, certainty like arithmetic. Class stays still.\n\n[Shot 2]\n\n00:07-00:13\n\nAction:\nTighter close on Leo's mouth and eyes—still exactly once. His voice lands the verdict flat; the analyzer line holds, then a single brief glitch as he says the last clause, before calming again. No split or mirrored composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n演說者的心率維持在七十二拍。\n呼吸極其平穩。\n這證明他本人，並不處於激動狀態。\n而是在精確地操控語氣頻率。\n這是一場純粹的認知侵略行為。\n</d>\n\noverall_soundscape:\nDialogue delivered by a calm flat male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nA soft steady heartbeat pulse, muted hall ambience.\n\nnon_diegetic_music:\nA low, constant ticking heartbeat bass.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-CLASS",
+        "Ref-SPEC"
+      ],
+      "seed": 494319,
+      "out": "s3_c1_l9_video",
+      "output": "output/s3_c1_l9_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "b2ac2286-9b1d-47cc-aa0f-55343a1c2715"
+      }
+    },
+    {
+      "id": "c1_l10",
+      "description": "s3 c1_l10 場景：同學補救練習，里歐輸入轉譯",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the circular lecture hall from <Picture 1>:\nminimal circular amphitheater classroom, concentric raised rows of students at desks, each with a small screen.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey uniform, leaning over his desk screen, typing, lips sealed.\n\nsummary:\nReference-based remedial practice wide shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. No lip-flap. No on-screen mouth movement from any person. Leo's lips stay sealed. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nWide shot over the amphitheater during silent remedial drill; dozens of students retyping the rousing speech into bloodless statements.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nRows of students transcribe in practiced silence, fingers moving over desk surfaces, small screens strobing uniform text. No figure duplicates in the wide frame. Leo appears exactly once, leaning over his screen, entering the corrected statement. Lips sealed across the whole hall; only fingertip taps and screen ticks. Camera slowly pans across the rows.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: a field of light keyboard taps, faint screen ticks, muffled breathing, hall hum. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nSoft, mechanical papery rhythm.",
+      "refs": [
+        "Ref-CLASS",
+        "Ref-LEO"
+      ],
+      "seed": 494320,
+      "out": "s3_c1_l10_video",
+      "output": "output/s3_c1_l10_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "c7b3292a-b231-4707-8fac-8f48773008a0"
+      }
+    },
+    {
+      "id": "c1_l11",
+      "description": "s3 c1_l11 旁白：轉譯結果真實陳述",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, seated, typing the corrected statement, lips sealed.\n\n<Subject 2> is the holographic spectrum analyzer from <Picture 2>:\na translucent analyzer over the desk, its screen surface now scrolling the typed real-statement text.\n\nsummary:\nReference-based on-screen translation narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Leo's lips stay sealed; he is silent and never the source of the narration.\n\ndetailed_description:\n\nVisual style:\nMedium shot on Leo typing the neutral statement, then an insert on the scroll of clean ledger-prose glowing on the analyzer surface.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nLeo appears exactly once in frame. No duplicated figure. No split or mirrored composition. He types with precision—no flourish, no hesitation—as the celebratory speech is translated into flat, ledger-like sentences. Lips sealed, silent, never the source of the narration.\n\n[Shot 2]\n\n00:08-00:16\n\nAction:\nInsert on the glowing text scrolling across the analyzer surface: neat grey columns of a real statement, no exclamation anywhere. A cursor blinks with machine patience; Leo's sealed mouth hovers at the frame edge. No duplicated figure.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed.\n<d>\n[中文]\n目前的資源分配模型顯示。\n過往的決策導致百分之十五的產出，未能有效反饋至勞動階層。\n我建議重新調整分配係數。\n這將導致行政成本上升百分之三。\n且可能引發高收入群體，百分之五的移民風險。\n請在閱讀完代價包後，進行邏輯判定。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Typing ticks and soft panel hum under the voice.\n\nnon_diegetic_music:\nA clean, open string line, warm and unhurried.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-SPEC"
+      ],
+      "seed": 311000,
+      "out": "s3_c1_l11_video",
+      "output": "output/s3_c1_l11_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "6fab0075-de22-4f85-bf94-345f6bcf5f31"
+      }
+    },
+    {
+      "id": "c1_l12",
+      "description": "s3 c1_l12 對白·教授：舊人類與資訊的審計員",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the professor from <Picture 1>:\nEast Asian woman around fifty, piercing eyes, no smile, dark simple suit, standing at the central podium, nodding once, lips moving to speak.\n\n<Subject 2> is the circular lecture hall from <Picture 2>:\nminimal circular amphitheater classroom, central podium.\n\nsummary:\nReference-based commendation dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on the professor, one rare approving nod; then a holding close as she delivers the verdict on the old humans.\n\n[Shot 1]\n\n00:00-00:07\n\nAction:\nThe professor appears exactly once as the speaking figure. No duplicated figure. Her head gives a single precision nod—economical approval. She speaks sharply, without ornament, the word describing the old humans landing without sentiment. Only her mouth moves; class listens sealed.\n\n[Shot 2]\n\n00:07-00:14\n\nAction:\nSlightly tighter on her face—still once. She stamps the final warning with a flat index finger toward the rows, then drops her hand. The hall stays silent, no one mouths along. No split or mirrored composition.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n很好，里歐。\n這就是我們與舊人類的區別。\n舊人類是被詞彙驅動的畜牲。\n而你們是資訊的審計員。\n記住，任何讓你感到熱血沸騰的政治訊息。\n都是對你智力的非法入侵。\n</d>\n\noverall_soundscape:\nDialogue delivered by a sharp, unadorned female voice in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nAbsolute hall silence between her syllables.\n\nnon_diegetic_music:\nA stern, gathered brass line.",
+      "refs": [
+        "Ref-PROF",
+        "Ref-CLASS"
+      ],
+      "seed": 494321,
+      "out": "s3_c1_l12_video",
+      "output": "output/s3_c1_l12_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "25277b3e-c83b-4b32-b7f7-4cc278098812"
+      }
+    },
+    {
+      "id": "c1_l13",
+      "description": "s3 c1_l13 場景：課後林蔭道，統計學講座耳機",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the campus avenue from <Picture 1>:\nplain minimalist tree-lined campus path, neat road, simple teaching building at the far end, soft afternoon light through leaves.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, walking with earphones on, lips sealed.\n\nsummary:\nReference-based campus walk scene\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. No lip-flap. Leo's lips stay sealed. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nTracking medium shot behind Leo walking the tree-lined path, dappled light, earphones in; the campus muted and plain.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLeo walks the even path, earphones in, immersed in a statistical lecture as his leisure. He appears exactly once, no duplicate; leaf shadows slide across his shoulders. Around him students drift in spare numbers, faces down, none speaking, none mouthing. The plain teaching building waits at the far end. No duplicate figures.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: soft footsteps on the path, wind in leaves, a faint muffled lecture track leaking from his earphones (murmur only, no words). No intelligible voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA quiet, airy ambient pad.",
+      "refs": [
+        "Ref-CAMPUS",
+        "Ref-LEO"
+      ],
+      "seed": 494323,
+      "out": "s3_c1_l13_video",
+      "output": "output/s3_c1_l13_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "a4878ac4-5c0a-45c2-8226-a695e1bb8ae3"
+      }
+    },
+    {
+      "id": "c1_l14",
+      "description": "s3 c1_l14 場景：艾莉絲鮮豔絲綢長裙攔住里歐",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the campus avenue from <Picture 1>:\nplain minimalist tree-lined campus path, neat road, soft afternoon light.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, walking, earphones in.\n\n<Subject 3> is Alice from <Picture 3>:\nEast Asian young woman around twenty-two, long straight black hair, bright vivid silk dress, warm expressive eyes, slight smile, lips sealed for now.\n\nsummary:\nReference-based vivid-dress encounter scene\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks yet. No narration. No voice-over. No lip-flap. Both characters' lips stay sealed in this beat. No on-screen mouth movement from any person. No English. No Cantonese.\n\ndetailed_description:\n\nVisual style:\nMedium tracking shot: a vivid silk-dressed figure steps into frame and halts Leo mid-path—an explosion of color in the plain campus.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nAlice steps from the tree shadow into the path and stops in front of Leo, her bright silk dress flaring against the muted surroundings. He halts, earphones still in, eyes lifting. She appears exactly once; Leo appears exactly once; neither duplicates, no split composition. Neither mouth moves yet; the moment holds on held breath and shifting leaves.\n\noverall_soundscape:\nNo dialogue. No narration. Environment only: footsteps stop, leaf-rustle, distant campus murmur. No human voice, no English, no Cantonese.\n\nnon_diegetic_music:\nA curious, colorful plucked motif enters beneath the airy pad.",
+      "refs": [
+        "Ref-CAMPUS",
+        "Ref-LEO",
+        "Ref-ALICE"
+      ],
+      "seed": 494323,
+      "out": "s3_c1_l14_video",
+      "output": "output/s3_c1_l14_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "2df12234-3db9-44bd-8689-dd7254282868"
+      }
+    },
+    {
+      "id": "c1_l15",
+      "description": "s3 c1_l15 對白·艾莉絲：不覺得無聊嗎，機器的美",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, warm expressive eyes, lively mocking-smile, lips moving to speak.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey uniform, standing opposite, listening, lips sealed.\n\n<Subject 3> is the campus avenue from <Picture 3>:\nplain tree-lined campus path, soft afternoon light.\n\nsummary:\nReference-based teasing dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her tone is lively and warm, teasing.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot on Alice laughing lightly as she teases; Leo a sealed-faced listener in frame, tree light dancing on them both.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nAlice appears exactly once as the speaking figure. No duplicated figure. No split or mirrored composition. She laughs a soft, warm laugh with her eyes, then delivers the tease with vivid enthusiasm—her silk dress catching the dappled light. Only Alice's mouth moves; Leo stays sealed, watching, neither nodding nor recoiling.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n你不覺得這很無聊嗎。\n你們把世界拆解成了一堆零件。\n卻忘了看整部機器的美。\n</d>\n\noverall_soundscape:\nDialogue delivered by a warm lively female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), teasing and bright, no Cantonese, no English.\nWind in leaves, light footsteps, soft distant campus murmur.\n\nnon_diegetic_music:\nThe colorful plucked motif swells, playful.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-CAMPUS"
+      ],
+      "seed": 494324,
+      "out": "s3_c1_l15_video",
+      "output": "output/s3_c1_l15_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "9d19e00d-35a2-498b-b196-fd2ab6396d1f"
+      }
+    },
+    {
+      "id": "c1_l16",
+      "description": "s3 c1_l16 對白·艾莉絲：真正的歌，心跳漏一拍的聲音",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, warm expressive eyes, lively, lips moving to speak.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey uniform, listening, eyes guarded, lips sealed.\n\n<Subject 3> is the campus avenue from <Picture 3>:\nplain tree-lined campus path, soft afternoon light.\n\nsummary:\nReference-based song-offering dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her tone is warm, inviting, almost conspiratorial.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot drifting to a two-shot: Alice leaning a touch closer as she names the song; Leo's guarded stillness held against her vividness.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nAlice appears exactly once as the speaking figure. She tilts her head with invitation; the silk catches light. Leo stays sealed and watchful, not leaning, not retreating—a deliberate neutral. No duplicated figures, no split composition.\n\n[Shot 2]\n\n00:04-00:08\n\nAction:\nSlightly tighter two-shot as she finishes the offer: the phrase lands softer, a promise half-hidden in the afternoon. Only Alice's mouth moves; Leo's lips remain sealed, but something in his posture holds—he does not step away. Neither figure duplicates.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n里歐，你想聽聽看，什麼是真正的歌嗎。\n不是那種數據分析。\n而是能讓你心跳漏掉一拍的聲音。\n</d>\n\noverall_soundscape:\nDialogue delivered by a warm, inviting female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nLeaves shifting, a distant bell, both sets of soft breathing.\n\nnon_diegetic_music:\nThe plucked motif grows fuller, curious and warm.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-CAMPUS"
+      ],
+      "seed": 494325,
+      "out": "s3_c1_l16_video",
+      "output": "output/s3_c1_l16_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "0f257849-aeb3-4e28-92fe-5e011e117809"
+      }
+    },
+    {
+      "id": "c1_l17",
+      "description": "s3 c1_l17 旁白：認知防禦系統警示",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, standing on the path, eyes static, lips sealed.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, bright vivid silk dress, facing him, warm eyes, lips sealed.\n\n<Subject 3> is the campus avenue from <Picture 3>:\nplain tree-lined campus path, afternoon light dimming to a red tint.\n\nsummary:\nReference-based mental-alert narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Both characters' lips stay sealed; neither is the source of the narration.\n\ndetailed_description:\n\nVisual style:\nClose on Leo as a red system alert bleeds across his retinal display; Alice's bright dress an uneasy signal of the very threat.\n\n[Shot 1]\n\n00:00-00:05\n\nAction:\nLeo's vision overlaid by a flickering red warning frame; the campus light tints amber-red for a moment. He stands utterly still, pupils fixed; lips sealed, silent, never the source of the narration. Alice holds her warm smile, sealed too. Leo appears exactly once; Alice appears exactly once; no duplicate figures, no mirrored composition.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed. <Subject 2> remains silent, lips sealed.\n<d>\n[中文]\n警告。偵測到高濃度非理性誘導。\n建議立即終止對話。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. A thin distinct alert chime under the voice.\n\nnon_diegetic_music:\nA sparse warning tone, then near silence.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-CAMPUS"
+      ],
+      "seed": 311000,
+      "out": "s3_c1_l17_video",
+      "output": "output/s3_c1_l17_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "23b24ad2-0dae-45a9-a083-9196b633d7d6"
+      }
+    },
+    {
+      "id": "c1_l18",
+      "description": "s3 c1_l18 旁白：但他沒有走，無法解釋的好奇",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, standing still on the path, not leaving, lips sealed.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, bright vivid silk dress, facing him expectantly, lips sealed.\n\n<Subject 3> is the campus avenue from <Picture 3>:\nplain tree-lined campus path, afternoon light shifting back to neutral.\n\nsummary:\nReference-based curiosity narration shot\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks in frame. Narration by the fixed narrator voice only. No on-screen mouth movement. The narrator is a fixed calm male voice, never female, never Cantonese. Both characters' lips stay sealed.\n\ndetailed_description:\n\nVisual style:\nMedium shot: Leo does not walk away; a faint tell of curiosity loosens his trained stillness beneath a sealed face.\n\n[Shot 1]\n\n00:00-00:08\n\nAction:\nLeo remains rooted; the red alert fades from his eyes. A single micro-blink, a fractional forward lean—the trained mask holding while some small unresolved curiosity stirs behind it. Lips sealed, silent, never the source of the narration. Alice watches, sealed, expectant. Leo appears exactly once; Alice appears exactly once; no duplicate figures.\n\nDialogue:\nThe following narration is off-screen voice only, not spoken by any on-screen person. <Subject 1> remains silent, lips sealed. <Subject 2> remains silent, lips sealed.\n<d>\n[中文]\n但他沒有走。\n他那被高度訓練的理智中，產生了一絲微小的，無法被數據解釋的好奇。\n</d>\n\noverall_soundscape:\nNarration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. A soft held chord of ambient campus sound under the voice.\n\nnon_diegetic_music:\nA single uncertain piano note held into a warm open string.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-CAMPUS"
+      ],
+      "seed": 311001,
+      "out": "s3_c1_l18_video",
+      "output": "output/s3_c1_l18_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "2d8a6f18-c5c5-4e03-a110-4ad4cf1b983d"
+      }
+    },
+    {
+      "id": "c1_l19",
+      "description": "s3 c1_l19 對白·里歐：它掛載了什麼代價包",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Leo from <Picture 1>:\nEast Asian man around twenty-two, pale grey academy uniform, standing on the path, calm and level, lips moving to speak.\n\n<Subject 2> is Alice from <Picture 2>:\nEast Asian young woman around twenty-two, bright vivid silk dress, facing him, lips sealed.\n\n<Subject 3> is the campus avenue from <Picture 3>:\nplain tree-lined campus path, soft afternoon light.\n\nsummary:\nReference-based guarded-question dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. His tone is calm, flat, analytical.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium close-up on Leo asking the calm, sharp question; Alice a vivid sealed silhouette at the frame edge.\n\n[Shot 1]\n\n00:00-00:04\n\nAction:\nLeo appears exactly once as the speaking figure. No duplicated figure. No split or mirrored composition. The question lands flat and precise, an audit item, not an invitation. Only Leo's mouth moves; Alice stays sealed, smile holding. Rooted posture, calm eyes.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n那種聲音，它掛載了什麼代價包。\n</d>\n\noverall_soundscape:\nDialogue delivered by a calm flat male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nMuted wind, leaves, soft stillness.\n\nnon_diegetic_music:\nThe plucked motif pauses, listening.",
+      "refs": [
+        "Ref-LEO",
+        "Ref-ALICE",
+        "Ref-CAMPUS"
+      ],
+      "seed": 494327,
+      "out": "s3_c1_l19_video",
+      "output": "output/s3_c1_l19_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "5bd95070-71a7-4819-aa8d-a6430d93a08d"
+      }
+    },
+    {
+      "id": "c1_l20",
+      "description": "s3 c1_l20 對白·艾莉絲：清醒的死亡",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is Alice from <Picture 1>:\nEast Asian young woman around twenty-two, long black hair, bright vivid silk dress, warm expressive eyes, smile widening, lips moving to speak.\n\n<Subject 2> is Leo from <Picture 2>:\nEast Asian man around twenty-two, pale grey academy uniform, listening, a flicker behind the calm, lips sealed.\n\n<Subject 3> is the campus avenue from <Picture 3>:\nplain tree-lined campus path, late afternoon light deepening.\n\nsummary:\nReference-based fate-statement dialogue\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n<Subject 3>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No other character speaks. No narration. No voice-over. No on-screen mouth movement from any other person. Her tone is bright, almost delighted, yet the words land heavy.\nnever English / no code-switching / no foreign language.\n\ndetailed_description:\n\nVisual style:\nMedium shot: Alice's smile widening as the cold truth arrives; Leo's calm cracking a hairline behind his sealed mouth.\n\n[Shot 1]\n\n00:00-00:07\n\nAction:\nAlice appears exactly once as the speaking figure. No duplicated figure. No split or mirrored composition. Her smile broadens, delighted, as she delivers the final clause; the silk catches the deepening light. Only Alice's mouth moves. Leo stays sealed, but a faint falter crosses his eyes—the trained calm dented for one frame. Neither figure duplicates.\n\nDialogue:\nThe following lines belong to <Subject 1> alone.\n<Subject 1> says:\n\n<d>\n[中文]\n它的代價。\n就是你會發現，你過去二十年的生活。\n其實是一場清醒的死亡。\n</d>\n\noverall_soundscape:\nDialogue delivered by a warm bright female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.\nWind shifts, leaves falling, a quiet campus hum dimming.\n\nnon_diegetic_music:\nThe plucked motif resolves into a single sober, open note.",
+      "refs": [
+        "Ref-ALICE",
+        "Ref-LEO",
+        "Ref-CAMPUS"
+      ],
+      "seed": 494327,
+      "out": "s3_c1_l20_video",
+      "output": "output/s3_c1_l20_video",
+      "extra": {
+        "v2_width": 512,
+        "v2_height": 288,
+        "prompt_id": "c69c584a-bde3-46b1-a0dc-3e4d714d54c0"
+      }
+    }
+  ],
+  "story_md": ""
+}
