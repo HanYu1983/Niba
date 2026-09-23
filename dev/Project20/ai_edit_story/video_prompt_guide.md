@@ -266,6 +266,8 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
 - [ ] （QA Q10）人物入鏡的長鏡頭（>10 秒）：已拆成多個 `[Shot N]`？`Action` 至少含一個持續可動的小節點（鐘擺／光影／螢幕閃爍）或鏡頭運動（slow push-in）？是否已加 `No duplicated figure. No split or mirrored composition` 負向條款？「人物自撐整段時間」的純靜止構圖已避免？
 - [ ] （QA Q11）無對白／無旁白區塊（純場景、道具特寫）：`speaker_constraints` 已含「音訊空態」負向（`No whispering`／`No muttering`／`No off-screen speech`／`No device voice`）？畫面浮現文字已標 `visible on-screen text, never read aloud`？`Action` 無 `words`／`text`／`reads` 等 speech token？設備音效已定性「無語音」（`no voice`）？
 - [ ] （QA Q12）旁白區塊：`overall_soundscape` 錨點句為**完整版**（含 `low calm middle-aged male voice`，不得精簡成只剩腔調）？`speaker_constraints` 含 `The narrator is a fixed calm male voice, never female`？旁白鏡頭無可被聲軌認領的人形，或有路人已明寫 `silent and never the source of the narration`？
+- [ ] （QA Q13）旁白區塊：`<d>`／`Action` **未**寫成畫面中角色的內心獨白／視角句（「她發現／XX看著…突然意識到」）？`Subject 1` 非唯一可被聲軌認領的女性前景？錨點句已含 `not character dialogue, not on-screen voice`＋`never female`？
+- [ ] （QA Q14）對白／旁白區塊：`Action` **未**用英文複述／翻譯 `<d>` 台詞語意？逗號斷行的半句已併成完整語意單元或以句號收尾？抽象詞（政治動員／認知反偵察等）附近無英文對譯？
 
 ---
 
@@ -451,5 +453,39 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
   4. **修正後換新 seed 重跑**；若新 seed 仍翻轉性別，記入黑名單（擴充黑名單語義：不只歪腔，也記「性別翻轉」seed）。
 - **原理**：旁白男聲在以往章節是**顯式文字約束**（錨點句內含 `middle-aged male voice`），不是 seed 的隱式保證。移除文字約束後，聲線決定權交還給模型當下的條件組合（參考圖內容、畫面人形、文字、時長、seed），隨時可能翻轉。要長期掛住同一旁白聲線，必須讓「男聲」成為文字層的常數。
 - **鐵律**：旁白錨點句**必須含 `low calm middle-aged male voice` 的完整版**，禁止精簡成只剩腔調；旁白鏡頭優先空景（無人形），有人形就要明寫沉默。
+
+### Q13：旁白應為畫外男聲，卻變成「畫面中女性角色在講對白」（旁白→女對白）
+
+- **發生**：story3 `c3_l22`（旁白 10 秒，走廊雙人鏡，Ref-ALICE→Ref-LEO→Ref-CORRIDOR，seed=`311001`）。phase1 `voice=narration`，提示詞標了 `Narration`／`lips sealed`／`Off-screen narration only`，成品卻是**女性對白**（聲線＋口型歸因落到艾莉絲），而非固定旁白男聲。同段 `c3_l19` 亦為「她發現…」視角旁白，同構風險。
+- **原因**（Q12 性別翻轉的升級版：不只換女聲，還把旁白**重新分類成角色對白**）：
+  1. **主因：旁白文本寫成「畫面女主的認知行為」**。`<d>` 以「艾莉絲看著里歐，突然意識到…」起句；`Action` 同步寫 `Alice studies Leo and the truth lands:…`。模型把「意識到／truth lands」當成**說話行為**，再把聲軌認領給正在「意識到」的那個人→艾莉絲對白。這比 Q12 的「路人認領旁白」更糟：內容本身就在邀請角色發聲。
+  2. **`Subject 1`＝唯一前景女性**。refs 順序 Alice 第一；`subject_definitions`／構圖都以她為觀看主體。r2v 聲軌認領偏好 `Subject 1`／畫面主體（Q8／Q9／Q12 同源）；旁白缺強男聲釘定時，認領落到 Alice。
+  3. **錨點句違反 Q12 且缺「非對白」釘**：`overall_soundscape` 寫 `calm mature off-screen voice`——有 mature、無 **male**，也無 `not character dialogue, not on-screen voice`。`speaker_constraints` 有 `Off-screen narration only`，但**沒有** `fixed calm male voice, never female`。性別與「非角色對白」兩道鎖都鬆掉。
+  4. **次要：`Action` 英文複述與旁白同義**（見 Q14）→ 模型在「旁白／對白」邊界更混亂，易把英文敘事腔實作成角色口播。
+- **處置**：
+  1. **旁白 `<d>` 改第三人稱事件句，禁止角色視角動詞**：避免「XX看著／她發現／突然意識到／心中明白」。改寫成敘事者口吻，例如「里歐並未陷入感性誘惑；他完成了一次認知反偵察。」／「理性人並非沒有感情；那是對真實的絕對忠誠。」——**不要**以女主名字當主詞帶領整段。
+  2. **`Action` 只寫可見動作與表情，不寫內心獨白、不翻譯旁白**：`Alice and Leo stand still in the corridor; neither mouth moves.` 即可；刪除 `the truth lands`／`realizes`／英文寓意句。
+  3. **強制 Q12 完整錨點**：`Narration delivered in a low calm middle-aged male voice, …, not character dialogue, not on-screen voice, no Cantonese, no English.`＋`speaker_constraints`：`The narrator is a fixed calm male voice, never female. No on-screen mouth movement from any person.`
+  4. **降低女主被認領機率**：旁白鏡可改 Leo 為 `Subject 1`、Alice 遠景／側臉散焦並明寫 `lips sealed, never the source of the narration`；或空景＋物件。
+  5. **修正後換新旁白 seed 重跑**（性別／類型翻轉過的 seed 視同黑名單，見 §4.2）。
+- **原理**：旁白的「畫外」屬性要同時靠（a）聲線釘定男聲、（b）文本不召喚畫面角色的言語行為、（c）畫面主體不可被聲軌合理認領。三者缺一，模型會把旁白**降級成對白**並綁到最像說話者的人形——通常是 `Subject 1` 的女性。
+- **鐵律**：旁白 `<d>`／`Action` **禁止**「角色名＋認知／觀看動詞」開場；旁白錨點必須含 `male`＋`not character dialogue`；女主在旁白鏡不可當唯一可認領聲源。
+
+### Q14：對白中途突然插入英文（Action 英文複述台詞＋逗號半句斷行）
+
+- **發生**：story3 走廊對決段 `c3_l14`／`c3_l15`／`c3_l20`（里歐長對白；`c3_l19` 旁白亦見同類英文滲入）。`<d>` 已標 `[中文]`、`speaker_constraints`／soundscape 含 `never English`／`no English`，成品仍在**中文句中段**竄出英文詞或整段英文。
+- **原因**（Q3／Q5 的強化形態：不是借詞本身，而是**平行英文譯稿**＋**半句氣口**）：
+  1. **主因：`Action` 用英文近乎全文翻譯 `<d>`**。例：`c3_l14` Action 寫 `Leo answers: beauty needs no pricing, but political mobilization in beauty's name does; he names her regime…`——與中文「美不需要被掛載代價…政治動員…推銷…政體」一一對譯；`c3_l15` 的 `dossier on dissidents`、`c3_l20` 的 `absolute pursuit of complete truth` 同理。TTS 在句內切點對軌失敗時，會從**同義的英文 Action** 抽詞填洞→聽感即「對白講到一半變英文」。
+  2. **`<d>` 以逗號收尾行＝語意未完結的氣口**（Q4／Q6 句內切點）。如「但以此為名的政治動員，必須。」／「隱瞞了最重要的一份文件，」——逗號切開後，後半抽象詞（政治動員、異議者、完整真相）附近最容易被 Action 裡的英文對譯接走。
+  3. **抽象／政論詞彙放大切點風險**（Q5 借詞的兄弟）：中文詞本身不是英文，但 Action 提供了現成英譯（`political mobilization`／`reverse cognitive reconnaissance`／`complete truth`），模型不必「發明」外文，只需**切換語碼讀旁邊那份譯稿**。
+  4. **次要：時長偏長（14–16 秒）＋多行短逗號句**→ 切點數量↑，每次切點都是一次英文化的機會；`never English` 擋的是「意圖說英文」，擋不住「從 Action 抄英文來填氣口」。
+- **處置**：
+  1. **`Action` 只寫誰在說話、嘴／身體可見動作，禁止複述或翻譯台詞語意**（坐實 Q3／Q5）：`Leo steps closer; only his mouth moves; Alice's lips stay sealed. No split composition.`——刪除一切 `answers:`／`names:`／`closes the exchange:` 後的英文寓意句。
+  2. **`<d>` 每行必須是完整語意單元，優先句號收尾**；若必須逗號，同一語意片段不要拆成兩行氣口。抽象詞與後續結論盡量同句，避免「文件，」這種半句懸空。
+  3. **英文欄位禁用台詞關鍵英譯**：`summary` 維持名詞片語（已有 §3.6）；`Action`／`Visual style` 不出現與 `<d>` 對得上的英文術語對譯。
+  4. **保留** `no English / no code-switching`，但視為必要而非充分；真正斷根是拿掉平行譯稿。
+  5. **修正後換新 seed 重跑**。
+- **原理**：模型同時看到「中文 `<d>`」與「英文 Action 譯文」時，會把兩者當成同一句的雙語軌道；逗號半句提供切換點，政論抽象詞提供「用英文更省事」的誘因。禁英文的負向句無法刪除正向供給的英文譯稿。
+- **鐵律**：`<d>` 是唯一台詞來源；`Action` **零翻譯、零複述**；逗號斷行視為高風險切點，抽象詞附近尤其禁止英文對譯。
 
 ---
