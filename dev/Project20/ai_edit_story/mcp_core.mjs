@@ -59,6 +59,7 @@ const SUBMIT_RUNS = new Map(); // abs -> { cancelled, results, ok, fail, running
 const artifactPath = (abs, kind) =>
   kind === "lock" ? `${abs}.submit.lock`
   : kind === "progress" ? `${abs}.submit.progress.json`
+  : kind === "cancel" ? `${abs}.submit.cancel`
   : `${abs}.submit.err`;
 
 function writeJsonFile(p, obj) {
@@ -633,10 +634,86 @@ function mapBundleToComfyCall(bundle, overrides = {}) {
   throw new Error(`unsupported element type for Comfy submit: "${type}"`);
 }
 
+/**
+ * Submit one element (mutates data in memory when save_prompt_id). Caller may saveStory.
+ * Module-level so background runAllInBackground can call it.
+ */
+async function submitOneComfy(data, id, jsonDir, baseDir, opts = {}) {
+  const bundle = buildSubmitBundle(data, id, jsonDir, baseDir);
+  let seedOverride = opts.seed;
+  if (seedOverride === undefined && opts.bump_seed) {
+    const cur = bundle.seed ?? bundle.extra?.seed ?? 0;
+    seedOverride = Number(cur) + 1;
+  }
+  const { tool, args } = mapBundleToComfyCall(bundle, {
+    seed: seedOverride,
+    engine: opts.engine,
+    comfy: opts.comfy
+  });
+  const { _element, _plan, ...publicBundle } = bundle;
+
+  if (opts.dry_run) {
+    return {
+      ok: true,
+      dry_run: true,
+      id,
+      comfy_tool: tool,
+      comfy_args: args,
+      bundle: {
+        type: publicBundle.type,
+        duration: publicBundle.duration,
+        voice: publicBundle.voice,
+        width: publicBundle.width,
+        height: publicBundle.height,
+        out: args.out ?? publicBundle.out,
+        refs: publicBundle.refs.map((r) => ({ id: r.id, path: r.path }))
+      }
+    };
+  }
+
+  const comfyResult = await callComfyTool(tool, args);
+  const promptId = comfyResult?.prompt_id ?? null;
+  const usedSeed = comfyResult?.seed ?? args.seed ?? null;
+  const save = opts.save_prompt_id !== false;
+  if (save && promptId) {
+    const el = findById(data.story, id);
+    const prevExtra = el.extra && typeof el.extra === "object" ? { ...el.extra } : {};
+    el.extra = {
+      ...prevExtra,
+      prompt_id: promptId,
+      ...(data.width != null ? { v2_width: data.width } : {}),
+      ...(data.height != null ? { v2_height: data.height } : {})
+    };
+    if (usedSeed != null) el.seed = usedSeed;
+    if (args.out && !el.out) el.out = args.out;
+    if (el.out && !el.output) el.output = el.out.startsWith("output/") ? el.out : `output/${el.out}`;
+  }
+  return {
+    ok: true,
+    dry_run: false,
+    id,
+    status: comfyResult?.status || "submitted",
+    comfy_tool: tool,
+    prompt_id: promptId,
+    seed: usedSeed,
+    saved_to_story: !!(save && promptId),
+    comfy: comfyResult,
+    bundle: {
+      type: publicBundle.type,
+      duration: publicBundle.duration,
+      voice: publicBundle.voice,
+      width: publicBundle.width,
+      height: publicBundle.height,
+      out: args.out ?? publicBundle.out,
+      refs: publicBundle.refs.map((r) => ({ id: r.id, path: r.path }))
+    }
+  };
+}
+
 // ---------- server ----------
 
 export function createMcpServer() {
-  const server = new McpServer({ name: "story-editor", version: "2.8.0" });
+  const server = new McpServer({ name: "story-editor", version: "2.8.1" });
 
   server.registerTool(
     "story_init",
@@ -1088,81 +1165,6 @@ export function createMcpServer() {
     }
   );
 
-  /**
-   * Submit one element (mutates data in memory when save_prompt_id). Caller may saveStory.
-   */
-  async function submitOneComfy(data, id, jsonDir, baseDir, opts = {}) {
-    const bundle = buildSubmitBundle(data, id, jsonDir, baseDir);
-    let seedOverride = opts.seed;
-    if (seedOverride === undefined && opts.bump_seed) {
-      const cur = bundle.seed ?? bundle.extra?.seed ?? 0;
-      seedOverride = Number(cur) + 1;
-    }
-    const { tool, args } = mapBundleToComfyCall(bundle, {
-      seed: seedOverride,
-      engine: opts.engine,
-      comfy: opts.comfy
-    });
-    const { _element, _plan, ...publicBundle } = bundle;
-
-    if (opts.dry_run) {
-      return {
-        ok: true,
-        dry_run: true,
-        id,
-        comfy_tool: tool,
-        comfy_args: args,
-        bundle: {
-          type: publicBundle.type,
-          duration: publicBundle.duration,
-          voice: publicBundle.voice,
-          width: publicBundle.width,
-          height: publicBundle.height,
-          out: args.out ?? publicBundle.out,
-          refs: publicBundle.refs.map((r) => ({ id: r.id, path: r.path }))
-        }
-      };
-    }
-
-    const comfyResult = await callComfyTool(tool, args);
-    const promptId = comfyResult?.prompt_id ?? null;
-    const usedSeed = comfyResult?.seed ?? args.seed ?? null;
-    const save = opts.save_prompt_id !== false;
-    if (save && promptId) {
-      const el = findById(data.story, id);
-      const prevExtra = el.extra && typeof el.extra === "object" ? { ...el.extra } : {};
-      el.extra = {
-        ...prevExtra,
-        prompt_id: promptId,
-        ...(data.width != null ? { v2_width: data.width } : {}),
-        ...(data.height != null ? { v2_height: data.height } : {})
-      };
-      if (usedSeed != null) el.seed = usedSeed;
-      if (args.out && !el.out) el.out = args.out;
-      if (el.out && !el.output) el.output = el.out.startsWith("output/") ? el.out : `output/${el.out}`;
-    }
-    return {
-      ok: true,
-      dry_run: false,
-      id,
-      status: comfyResult?.status || "submitted",
-      comfy_tool: tool,
-      prompt_id: promptId,
-      seed: usedSeed,
-      saved_to_story: !!(save && promptId),
-      comfy: comfyResult,
-      bundle: {
-        type: publicBundle.type,
-        duration: publicBundle.duration,
-        voice: publicBundle.voice,
-        width: publicBundle.width,
-        height: publicBundle.height,
-        out: args.out ?? publicBundle.out,
-        refs: publicBundle.refs.map((r) => ({ id: r.id, path: r.path }))
-      }
-    };
-  }
-
   server.registerTool(
     "story_submit_comfy",
     {
@@ -1203,7 +1205,8 @@ export function createMcpServer() {
       description:
         "Submit many / all story elements to ComfyUI via comfy-video-gen, in story array order (sequential, " +
         "to avoid JSON RMW races). Default types=['r2v'] (skips t2i assets). Use types=['t2i','r2v'] for everything. " +
-        "continue_on_error defaults true. Writes prompt_id after each success when save_prompt_id is true.",
+        "continue_on_error defaults true. Writes prompt_id after each success when save_prompt_id is true. " +
+        "Real submits run in background (use story_submit_comfy_all_status); dry_run returns mapped results immediately.",
       inputSchema: {
         file: z.string().describe("Story JSON path"),
         base_dir: z.string().optional().describe("base dir for relative out/ref paths; default = cwd (use ai_gen_video dir)"),
@@ -1215,7 +1218,7 @@ export function createMcpServer() {
         engine: z.string().optional().describe("t2i only: sdxl | zit"),
         save_prompt_id: z.boolean().optional().describe("write prompt_id back after each success (default true)"),
         continue_on_error: z.boolean().optional().describe("continue after a failure (default true)"),
-        dry_run: z.boolean().optional().describe("map args only, do not call ComfyUI"),
+        dry_run: z.boolean().optional().describe("map args only, do not call ComfyUI (returns results synchronously)"),
         limit: z.number().int().min(1).optional().describe("max number of elements to submit (after filters)"),
         offset: z.number().int().min(0).optional().describe("skip first N matched elements"),
         comfy: z.record(z.any()).optional().describe("extra fields merged into every comfy tool call")
@@ -1244,7 +1247,6 @@ export function createMcpServer() {
         bump_seed: p.bump_seed,
         engine: p.engine,
         save_prompt_id: p.save_prompt_id !== false && !p.dry_run,
-        save_story_after_each: true,
         dry_run: p.dry_run,
         comfy: p.comfy,
         continue_on_error: p.continue_on_error
@@ -1263,19 +1265,54 @@ export function createMcpServer() {
         });
       }
 
-      const run = startSubmitRun(abs, data, matched, jsonDir, baseDir, opts,-1);
+      // dry_run: sync return full mapped results (no background / no Comfy call)
+      if (p.dry_run) {
+        const results = [];
+        let okCount = 0;
+        let failCount = 0;
+        for (let i = 0; i < matched.length; i++) {
+          const el = matched[i];
+          try {
+            const row = await submitOneComfy(data, el.id, jsonDir, baseDir, opts);
+            okCount++;
+            results.push({ index: i, ...row });
+          } catch (e) {
+            failCount++;
+            results.push({ index: i, ok: false, id: el.id, type: el.type, error: String(e?.message || e) });
+            if (p.continue_on_error === false) break;
+          }
+        }
+        return ok({
+          status: failCount ? (okCount ? "partial" : "failed") : "ok",
+          file: abs,
+          types: [...typeSet],
+          total: matched.length,
+          submitted: okCount,
+          failed: failCount,
+          dry_run: true,
+          results
+        });
+      }
+
+      if (SUBMIT_RUNS.get(abs)?.running) {
+        throw new Error(
+          `已有進行中的 submit_comfy_all（${abs}）。請先 story_submit_comfy_all_status / cancel，完成後再送。`
+        );
+      }
+
+      const run = startSubmitRun(abs, data, matched, jsonDir, baseDir, opts);
       return ok({
         status: "submitting",
         file: abs,
         types: [...typeSet],
         total: matched.length,
-        dry_run: !!p.dry_run,
+        dry_run: false,
         lock: artifactPath(abs, "lock"),
         progress: artifactPath(abs, "progress"),
         err: artifactPath(abs, "err"),
         cancel: run.cancel_file,
         note:
-          "已在背景提交，請在完成前不要修改 story 檔案 / 不要重新 submit / 不要 submit_comfy_all 其他元素。" +
+          "已在背景提交，請在完成前不要修改 story 檔案 / 不要重新 submit。" +
           "可用 story_submit_comfy_all_status 查詢進度，或用 story_submit_comfy_all_cancel 取消。"
       });
     }
