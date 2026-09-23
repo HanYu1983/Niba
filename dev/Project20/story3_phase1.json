@@ -2256,7 +2256,12 @@
       ],
       "seed": 494424,
       "out": "s3_c3_l5_video",
-      "output": "output/s3_c3_l5_video"
+      "output": "output/s3_c3_l5_video",
+      "extra": {
+        "prompt_id": "2ef3de45-70f9-43a9-a87c-379ae08849a2",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l6",
@@ -2269,7 +2274,12 @@
       ],
       "seed": 494425,
       "out": "s3_c3_l6_video",
-      "output": "output/s3_c3_l6_video"
+      "output": "output/s3_c3_l6_video",
+      "extra": {
+        "prompt_id": "a0eb3d4d-f49d-4f64-98b1-6f83ef2dbca4",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l7",
@@ -2282,7 +2292,12 @@
       ],
       "seed": 494426,
       "out": "s3_c3_l7_video",
-      "output": "output/s3_c3_l7_video"
+      "output": "output/s3_c3_l7_video",
+      "extra": {
+        "prompt_id": "5ac36237-9c91-431c-ac09-61a6e27002c7",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l8",
@@ -2295,7 +2310,12 @@
       ],
       "seed": 494427,
       "out": "s3_c3_l8_video",
-      "output": "output/s3_c3_l8_video"
+      "output": "output/s3_c3_l8_video",
+      "extra": {
+        "prompt_id": "ec2a6cf7-4036-48a7-804f-1bdcff17a3a9",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l9",
@@ -2308,7 +2328,12 @@
       ],
       "seed": 494428,
       "out": "s3_c3_l9_video",
-      "output": "output/s3_c3_l9_video"
+      "output": "output/s3_c3_l9_video",
+      "extra": {
+        "prompt_id": "efaaa0f2-8078-462a-9d53-987e490cf648",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l10",
@@ -2321,7 +2346,12 @@
       ],
       "seed": 494429,
       "out": "s3_c3_l10_video",
-      "output": "output/s3_c3_l10_video"
+      "output": "output/s3_c3_l10_video",
+      "extra": {
+        "prompt_id": "dc6bfb3d-70b8-4f46-a1b7-6314e2b6e637",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l11",
@@ -2334,7 +2364,12 @@
       ],
       "seed": 494430,
       "out": "s3_c3_l11_video",
-      "output": "output/s3_c3_l11_video"
+      "output": "output/s3_c3_l11_video",
+      "extra": {
+        "prompt_id": "9eb9f5c0-c8b3-4bb5-b894-a7fbbf517bde",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l12",
@@ -2348,7 +2383,12 @@
       ],
       "seed": 494431,
       "out": "s3_c3_l12_video",
-      "output": "output/s3_c3_l12_video"
+      "output": "output/s3_c3_l12_video",
+      "extra": {
+        "prompt_id": "8b571b98-9bd5-4761-a29c-a0e4e91ff971",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l13",
@@ -2362,7 +2402,12 @@
       ],
       "seed": 494432,
       "out": "s3_c3_l13_video",
-      "output": "output/s3_c3_l13_video"
+      "output": "output/s3_c3_l13_video",
+      "extra": {
+        "prompt_id": "1ff632fc-c659-464a-9c92-9565472f4fcc",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l14",
@@ -2376,7 +2421,12 @@
       ],
       "seed": 494435,
       "out": "s3_c3_l14_video",
-      "output": "output/s3_c3_l14_video"
+      "output": "output/s3_c3_l14_video",
+      "extra": {
+        "prompt_id": "fe17b6a4-5312-4ed5-a09d-1395edcabe8a",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l15",
@@ -2390,7 +2440,12 @@
       ],
       "seed": 494433,
       "out": "s3_c3_l15_video",
-      "output": "output/s3_c3_l15_video"
+      "output": "output/s3_c3_l15_video",
+      "extra": {
+        "prompt_id": "e29296b6-0bef-490d-9bb9-53fc5eebf293",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l16",
@@ -2404,7 +2459,12 @@
       ],
       "seed": 494436,
       "out": "s3_c3_l16_video",
-      "output": "output/s3_c3_l16_video"
+      "output": "output/s3_c3_l16_video",
+      "extra": {
+        "prompt_id": "d02ed9e2-ed48-4046-9a8b-e3dd6f23c1dd",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l17",
@@ -2418,7 +2478,12 @@
       ],
       "seed": 494437,
       "out": "s3_c3_l17_video",
-      "output": "output/s3_c3_l17_video"
+      "output": "output/s3_c3_l17_video",
+      "extra": {
+        "prompt_id": "db586cec-eda3-48a7-8a4c-f460cd1d7024",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l18",
@@ -2432,7 +2497,12 @@
       ],
       "seed": 494438,
       "out": "s3_c3_l18_video",
-      "output": "output/s3_c3_l18_video"
+      "output": "output/s3_c3_l18_video",
+      "extra": {
+        "prompt_id": "34a9e08b-ed49-4642-bc62-99d8bdfd5200",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l19",
@@ -2446,7 +2516,12 @@
       ],
       "seed": 311000,
       "out": "s3_c3_l19_video",
-      "output": "output/s3_c3_l19_video"
+      "output": "output/s3_c3_l19_video",
+      "extra": {
+        "prompt_id": "12677245-4b5d-4d09-a3c5-62f9a3f92064",
+        "v2_width": 512,
+        "v2_height": 288
+      }
     },
     {
       "id": "c3_l20",
