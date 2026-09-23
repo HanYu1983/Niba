@@ -319,8 +319,9 @@ non_diegetic_music:      配樂（有對白/旁白可寫 "A clean, open string l
    最新媒體檔＋專案 `width:height` resolution，輸出到 `base_dir/final`；有缺檔會先報錯不 merge；
    可覆寫 `out`／`resolution`）。也可用 `story_comfy_tool` 手動 `merge_videos`，全片固定同一 resolution。
    合併前確認每支影片解析度/幀率一致。
-6. **`story_export_srt`**：用 merge 回傳的 `total_seconds` 匯出。
+6. **`story_export_srt`**：用**成片實際總秒數**（merge 回傳或播放器量到的總長）當 `total_seconds` 匯出。
    `scale = 實際總秒數 / 規劃總秒數` 自動換算、旁白自動 `<i>` 斜體、scene 自動跳過。
+   **禁止**直接用 `plan` 加總（`planned_total_sec`）當 `total_seconds`——規劃秒與生成片實際秒系統性不一致（見下方「實作教訓」）。
 
 ### 下載與追蹤
 
@@ -345,9 +346,10 @@ non_diegetic_music:      配樂（有對白/旁白可寫 "A clean, open string l
 - [ ] 參考圖：用到的 `refs` 是否確實存在？未用的是否沒帶入（避免殘留污染）？**是否全部用 Z-Image (zit) 生成（`extra.engine="zit"`）？**
 - [ ] 解析度是否全片統一（512×288）、合併順序是否正確？
 - [ ] 字幕資料表是否與區塊分割同步建立？合併後是否已產出 `.srt`？旁白是否加 `<i>` 斜體？
+- [ ] `story_export_srt` 的 `total_seconds` 是否用**成片實際總長**（非 plan 加總）？
 - [ ] 有沒有長辯論/長獨白硬塞進一支？應拆分。
 
-### 實作教訓（2026-09，來自 story1/story2 實作）
+### 實作教訓（2026-09，來自 story1/story2/story3 實作）
 
 - **參考圖殘留污染**：workflow 未用到的 LoadImage 節點殘留舊檔名 → 被當參考圖餵入。
   已由 MCP 層在 `buildR2vWorkflow` 以「未提供即刪除節點+連線」根治。
@@ -356,6 +358,15 @@ non_diegetic_music:      配樂（有對白/旁白可寫 "A clean, open string l
 - **MCP 背景任務錯誤隔離**：非同步下載區段每檔案 try/catch，單一檔案失敗只印 log 不中斷整支 job。
 - **字幕時間是猜的，不是算的**：各支影片實際秒數與規劃秒數有偏差，只能以比例縮放
   （scale = 實際總長 / 規劃總長）。切割時就同步記錄字幕文字，避免合併後再回來逐檔反查。
+- **plan `duration` ≠ 生成片實際秒數（系統性偏長）**（story3，2026-09）：
+  - `plan.duration` 是口播／鏡頭的**規劃整數秒**，提交 Comfy 時原樣當 `duration` 參數。
+  - MiniMax H3 產出的 mp4 **幾乎每支都比 plan 略長**（同 plan 秒數 → 多出的量常固定，
+    例如 plan 13s → 實際 13.67s、plan 6s → 6.58s；story3 量測 87/100 支偏長、0 支偏短）。
+  - 100 支累積可差約 **+35s**（story3：plan 加總 821s，各檔加總 ≈856s，成片約 14:17＝857s）。
+  - **不是 plan 寫錯**，是生成／幀對齊造成的系統偏差；合併再編碼也可能再差約 1s。
+  - 匯出 SRT 必須用成片實際總長當 `total_seconds`；用 plan 加總會整軸偏快。
+  - 若要縮小差距：只能另訂送 Comfy 的 duration 補償策略，或接受 scale 補償；
+    不要事後逐格改 plan 去「湊」實際秒（會破壞字幕表與字數計秒紀律）。
 
 ---
 
@@ -372,3 +383,5 @@ non_diegetic_music:      配樂（有對白/旁白可寫 "A clean, open string l
 - **一次寫完所有 prompt**：容易斷裂。一格一格寫、每格對前一格，連貫性才好。
 - **旁白 seed 失效未察覺**：固定 seed = 固定聲線，一旦某支實測性別翻轉/歪腔，
   整支旁白 seed 失效，要換新 seed 並統一更新所有旁白元素。
+- **用 plan 加總當 SRT `total_seconds`**：生成片系統性比 plan 偏長，字幕軸會整片偏快；
+  必須用成片實際總長（見 §六「plan duration ≠ 實際秒數」）。
