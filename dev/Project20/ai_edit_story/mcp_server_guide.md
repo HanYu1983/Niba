@@ -274,43 +274,51 @@ non_diegetic_music:      配樂（有對白/旁白可寫 "A clean, open string l
      全片各格重複同一套錨點，避免漂成另一人。
    - **服裝依故事需要**可變（換裝、場景服裝），但同一連續段落內服裝描述要自洽；
      換裝時在 Action／描述中明寫過渡，不要 silently 換掉。
-3. **文字可盡量發揮**：構圖、鏡頭運動、光影、環境細節、微表情可寫得更自由；
+3. **畫面風格一致性（必鎖）**：t2v 每格獨立抽樣，**沒有共用風格錨時會漂成「有的寫實、有的動畫」**。
+   - 全片選定**同一套媒介／質感句**，每格 `integrated_multimodal_description` 的 `[Shot 1]` **開頭固定寫入**
+     （例：`photorealistic live-action cinematic, natural skin texture, real-world photography`）。
+   - 用負面排除句鎖死錯誤方向（例：`not anime, not cartoon, not illustration, not cel shading`）；
+     或依故事改為全片統一的動畫風／膠片風等——重點是**各格同一句、不要混用**。
+   - 跨格改稿時先對照上一格的風格句，勿另起「cinematic / stylized / anime」等互相衝突的標籤。
+4. **文字可盡量發揮**：構圖、鏡頭運動、光影、環境細節、微表情可寫得更自由；
    沒有參考圖綁定時，模型較不會被固定肖像「拉回」某一臉或某一姿勢。
-4. **寫三欄位 T2V 提示詞**（詳見 `video_prompt_guide.md` §3.1–§3.4）：
+5. **寫三欄位 T2V 提示詞**（詳見 `video_prompt_guide.md` §3.1–§3.4）：
 
 ```
-integrated_multimodal_description:  [Shot 1] 風格與構圖 + 後續 [Shot N] At HH:MM:SS, ...
+integrated_multimodal_description:  [Shot 1] 風格鎖 + 構圖 + 後續 [Shot N] At HH:MM:SS, ...
                                     角色用 (S1)/(S2) 出場順序編號；對白嵌 <d>[中文]...</d>
 overall_soundscape:                 環境音 + 腔調錨點句（勿重複對白／配樂）
 non_diegetic_music:                 配樂；無則 N/A
 ```
 
-5. **與 r2v 的差別提醒**：t2v **沒有** `subject_definitions`／`<Picture N>`／`retention_analysis`；
-   一致性全靠文字重複錨點。跨格時務必對照上一格的外觀句，不要另起一套形容。
+6. **與 r2v 的差別提醒**：t2v **沒有** `subject_definitions`／`<Picture N>`／`retention_analysis`；
+   一致性全靠文字重複錨點（**角色外觀 + 畫面風格**）。跨格時務必對照上一格的外觀句與風格句，不要另起一套形容。
 
-### 4C. i2v 方法（首尾幀銜接；建立在 t2v 完成之後）
+### 4C. i2v 方法（首幀驅動；建立在 t2v 完成之後）
 
-適用：已用 **4B t2v** 寫好並（建議）生成過各格，要再用首尾幀把相鄰鏡頭「焊」在一起，
-減少切鏡跳臉／跳場景。
+適用：已用 **4B t2v** 寫好並（建議）生成過各格，要用首幀把開場構圖／風格鎖死，
+必要時再加尾幀把相鄰鏡頭「焊」在一起，減少切鏡跳臉／跳場景／風格漂移。
 
 流程（依 story 陣列順序）：
 
 1. **先完成 t2v 提示詞**（必要時已有 t2v 成品可對照）。i2v 的畫面語意以該格 t2v prompt 為準，
-   不要另寫一套互相矛盾的故事。
-2. **為每一格準備首幀／尾幀參考圖**（t2i，一律 Z-Image / `extra.engine="zit"`）：
-   - 讀該格 t2v 提示詞，抽出開場構圖 → 生成**首幀**圖；
-   - 再依該格結尾狀態／下一鏡銜接需求 → 生成**尾幀**圖。
-3. **鍊式銜接鐵律**：
-   - **前一格的尾幀參考圖 = 下一格的首幀參考圖**（同一張圖／同一 t2i 元素，或複製同一輸出檔）。
-   - 全片形成：`[首0]→格0→[尾0=首1]→格1→[尾1=首2]→…`，中間不要斷鍊。
+   不要另寫一套互相矛盾的故事；風格句與 4B 鎖定的媒介保持一致。
+2. **每一格必備首幀；尾幀選用**（t2i，一律 Z-Image / `extra.engine="zit"`）：
+   - **首幀（必要）**：讀該格 t2v 提示詞，抽出開場構圖 + 同一套風格鎖 → 生成首幀圖。
+   - **尾幀（選用）**：僅在需要硬銜接下一切、或要鎖住本格結尾狀態時才生成；
+     依該格結尾狀態／下一鏡銜接需求寫提示詞。不需要鍊式銜接時可省略。
+3. **鍊式銜接（僅在使用尾幀時）**：
+   - 若相鄰兩格都要硬焊：前一格的尾幀 = 下一格的首幀（同一張圖／同一 t2i 元素，或複製同一輸出檔）。
+   - 形成：`[首0]→格0→[尾0=首1]→格1→…`。只做首幀、不做尾幀時，各格仍可獨立以首幀鎖開場。
 4. **改元素為 i2v 並掛 refs**：
    - 元素 `type` 改為 `i2v`；
-   - `refs[0]` = 本格首幀（t2i id），`refs[1]` = 本格尾幀（t2i id）；
-   - 提交走 `gen_i2v_video`（MCP 將 refs[0]/first_frame、refs[1]/last_frame）。
+   - `refs[0]` = 本格首幀（t2i id，**必要**）；
+   - `refs[1]` = 本格尾幀（t2i id，**選用**；沒有就不掛，只傳 first_frame）；
+   - 提交走 `gen_i2v_video`（MCP：refs[0]→first_frame；若有 refs[1]→last_frame）。
 5. **提示詞**：沿用／微調該格已寫好的 t2v 三欄位（`video_prompt_guide.md` §3.1–§3.4），
-   使 Action 起點對得上首幀、結尾對得上尾幀；對白 `<d>` 與 plan lines 仍須鏡像。
+   使 Action 起點對得上首幀；有尾幀時結尾也對得上尾幀；對白 `<d>` 與 plan lines 仍須鏡像。
 6. **注意**：i2v 最多 2 張 ref；不要把 r2v 多角色肖像塞進 i2v refs。
-   首尾幀本身要與文字外觀錨點一致，否則會把 t2v 已定的角色「拉歪」。
+   首幀（及選用尾幀）本身要與文字外觀錨點、**畫面風格鎖**一致，否則會把 t2v 已定的角色／媒介「拉歪」。
 
 ### 四原則（對白/旁白區塊一律套用，實測 2026-09）
 
@@ -359,7 +367,7 @@ non_diegetic_music:                 配樂；無則 N/A
 3. **`story_submit_comfy`**（單格）／**`story_submit_comfy_all`**（多格／全部）：
    組包後**直接轉呼叫** `comfy-video-gen` MCP，依元素 type 自動對應並代入參數：
    - `r2v` → `gen_r2v_video`（prompt／seed／duration／width／height／out／`ref_image_0..N`）
-   - `i2v` → `gen_i2v_video`（refs[0]=first_frame，refs[1]=last_frame）
+   - `i2v` → `gen_i2v_video`（refs[0]=first_frame 必要；refs[1]=last_frame 選用）
    - `t2v` → `gen_t2v_video`
    - `t2i` → `gen_zit_image`（**參考圖一律用 Z-Image (zit) 生成**；`extra.engine` 固定為 `zit`，不用 SDXL）
    預設把回傳的 `prompt_id`（與實際 seed）寫回元素 `extra`／`seed`。

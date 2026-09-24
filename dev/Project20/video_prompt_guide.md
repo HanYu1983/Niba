@@ -489,3 +489,63 @@ MiniMax H3 的中文聲線**常與 seed 耦合出方言腔**（實測 100303→�
 - **鐵律**：`<d>` 是唯一台詞來源；`Action` **零翻譯、零複述**；逗號斷行視為高風險切點，抽象詞附近尤其禁止英文對譯。
 
 ---
+
+## 八、T2V 纯文字角色一致性（锚点描述法，2026-09 实测可用）
+
+T2V 无参考图节点，一致性完全靠提示词设计 + 工作流策略。
+
+公式：`一致性 = 绝对固定的角色锚点句 + 高辨识度服饰/面部特征 + 仅改变动作与镜头指令`
+
+### 8.1 角色锚点句（全片逐字相同）
+
+- 唯一名字 + 年龄/族裔 + 脸/发/痣 + 眼镜/服装/裤装/饰品，一次写死。
+- 通用词（“帅气男孩”“漂亮女人”）每次都会重新抽卡，必须避免。
+- 范例（实测 Mei，seed 710001，512x288）：
+  `Mei, a specific 32-year-old Taiwanese woman, East Asian face, chin-length straight black bob hair, a small dark mole under her left eye, sharp jawline, wearing thin gold round glasses, a bright orange windbreaker jacket over a white crew-neck T-shirt, black jeans with yellow stitching, a silver crescent pendant around her neck.`
+
+### 8.2 固定模板顺序
+
+`[风格锁] + [角色锚点] + [动作表情] + [环境灯光] + [镜头语言] + [film stock]`
+
+- 风格锁（每格 `[Shot 1]` 开头必带）：`photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized`
+- film stock（每格结尾统一）：`35mm film photography, Kodak Portra 400, warm color grading`
+- 只改动作和镜头，角色锚点一个字都不改。
+
+### 8.3 实测记录（Mei A-H）
+
+- A/B：咖啡店坐捧杯沉思／起身转向窗（medium close-up static／medium shot push in）。
+- C/D：同店扶眼镜啜饮／走向窗户（close-up／medium-wide tracking）。
+- E/F：换场台北老街夜晚红灯笼湿石板路，站立捧杯远望／朝镜头走来。
+- G/H：换装对照（`a deep navy wool long coat over a beige turtleneck sweater, charcoal wide-leg trousers, brown leather ankle boots`，脸/眼镜/吊坠不动），场景拉回咖啡店对照 A/B。
+- 结论：脸／橘夹克／金眼镜／月牙坠跨镜稳定；换装换场时把变量一次只换一个（人物句不动）最稳。
+
+### 8.4 工作流
+
+1. 先用极简近景小动作测锚点稳定度，崩了说明特征太模糊。
+2. 同 seed 起步（如 710001），再视需要换 seed 验鲁棒性。
+3. 要求极高时仍建议先 T2I 定妆，再转 I2V／r2v（效率最高）。
+
+### 8.5 声线一致性（双人 T2V，2026-09 实测可用）
+
+同 seed 下声线仍由多因子加权：视觉性别 > 声线文字描述 > 环境词 > 说话顺序。
+
+- 第二人锚点（Chen，全程逐字相同）：
+  `Chen, a specific 35-year-old Taiwanese man, East Asian face, short neat black side-parted hair, thick eyebrows, wearing black rectangular glasses, a dark gray blazer over a navy shirt, khaki chinos, brown leather shoes`
+- 女声稳：Mei 女性特征强 + `a clear gentle female voice`，I/J（咖啡店无对白）、M（河滨公园）到 Q（书店）连贯。
+- 男声漂：`a calm male voice` 太松，在书店密闭场被实作成低沉（R）。单变量改为
+  `a young male voice in his early 30s, bright clear tone, not deep, not middle-aged` 后 r2 同场同词回稳，s 换新词仍同声。
+- 铁律：男女声一律显式年龄 + 音质 + 负向排除（如 `never female`／`not deep, not middle-aged`）；环境词勿带低沉暗示；换声线描述只改 soundscape 一处做对照。
+- 实测：I/J 咖啡店双人无对白、K/L 老街夜景双人无对白、M/N 河滨各说一句、O/P 天台同词、Q/R 书店新词、r2/s 年轻锚点验证。
+
+### 8.6 旁白防降级成对白（T2V 双人入镜，2026-09 实测可用）
+
+目标：有人形入镜时，旁白维持画外固定男声，不被声轨认领成女性角色对白（Q13 升级版）。
+
+- soundscape 一律完整版（含声线钉定）：`Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching.`
+- 画面双封印：每人 `lips sealed, never the source of the narration` ＋ 全场 `No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.`
+- `<d>` 禁角色视角动词（“她发现／看着／突然意识到／心中明白”），只写第三人称事件句；主词勿用女主名带领整段。
+- 旁白 seed 与对白分离（如旁白 311000，对白 710001），避免声线串台。
+- 动画物镜面加“实景屏幕”定语：`Close-up of a huge LED billboard screen in the real world; the screen displays colorful animation...`＋可读字 `visible on-screen text, never read aloud`，防整镜漂成动画。
+- 实测：T/U 书店双人旁白（8s，311000）＋ story1 c1_l14 同法修正重送（14s，`af70f982-...`，`<d>` 逐字未动，validate 全绿）。
+
+---
