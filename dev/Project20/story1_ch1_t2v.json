@@ -290,13 +290,13 @@
       "id": "c1_l2",
       "description": "s1c1 對白·巡邏員：新版鈔票",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close on the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance, mouth opening with clear lip shapes as he speaks. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build, stands nearby listening with lips sealed. Only (S2)'s mouth moves.\n(S2) says:\n<d>\n[中文]\n那是今年的新版鈔票。\n</d>\noverall_soundscape: Dialogue delivered by a clear dry weary male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Border wind and distant diesel hum.\nnon_diegetic_music: A blunt percussive tick.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close on the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance, mouth opening with clear lip shapes as he speaks. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build, stands nearby listening with lips sealed. Only (S2)'s mouth moves.\n(S2) says:\n<d>\n[中文]\n那是今年的新版鈔票。\n</d>\noverall_soundscape: Dialogue delivered by a dry weary male voice in his early fifties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Border wind and distant diesel hum.\nnon_diegetic_music: A blunt percussive tick.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l2_video",
       "output": "output/s1_c1_l2_video",
       "extra": {
-        "prompt_id": "75df0e85-7bfc-46e2-8e3a-9f613952f60b",
+        "prompt_id": "c3394824-5ea7-4ef3-868d-d6a0ba33f36b",
         "route": "t2v",
         "v2_height": 288,
         "v2_width": 512
@@ -338,39 +338,39 @@
       "id": "c1_l5",
       "description": "s1c1 旁白：索利亞幣正面",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Extreme close on a thin colorful banknote in Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's fingers: leader portrait, red star, gear motifs. Visible on-screen text on the bill is never read aloud. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stays lips sealed, never the source of the narration. Slow push on the paper texture.\nNarration off-screen only:\n<d>\n[中文]\n那是一張面額一千萬的索利亞幣。\n紙張的質感很薄，像廉價的面紙。\n紙幣的正面印著索利亞現任元首激昂的半身像，背景是象徵革命的紅星與繁榮的齒輪。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not on-screen voice. Dry wind under the voice.\nnon_diegetic_music: A cold factual grain.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Extreme close on a thin colorful banknote in Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's fingers: leader portrait, red star, gear motifs. Visible on-screen text on the bill is never read aloud. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stays lips sealed, never the source of the narration. Slow push on the paper texture. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n那是一張面額一千萬的索利亞幣。\n紙張的質感很薄，像廉價的面紙。\n紙幣的正面印著索利亞現任元首激昂的半身像，背景是象徵革命的紅星與繁榮的齒輪。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not on-screen voice. Dry wind under the voice.\nnon_diegetic_music: A cold factual grain.",
       "refs": [],
-      "seed": 495000,
+      "seed": 311000,
       "out": "s1_c1_l5_video",
       "output": "output/s1_c1_l5_video",
       "extra": {
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "8ced53a3-5af7-4ca0-8d4b-2e4203279c0c"
+        "prompt_id": "27b5289e-f3f9-4e8b-b5b7-2bfbf115afe7"
       }
     },
     {
       "id": "c1_l6",
       "description": "s1c1 旁白：紙幣背面口號",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Banknote flips to the reverse in Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's hand: ornate slogan lettering, visible on-screen text never read aloud. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed, never the narration source. Soft rustle as paper turns.\nNarration off-screen only:\n<d>\n[中文]\n紙幣背面用華麗的字體印著一行口號。\n主權是唯一的食糧，尊嚴是永恆的財富。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not on-screen voice. Dry wind under the voice.\nnon_diegetic_music: A hollow ornamental swell.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Banknote flips to the reverse in Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's hand: ornate slogan lettering, visible on-screen text never read aloud. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed, never the narration source. Soft rustle as paper turns. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n紙幣背面用華麗的字體印著一行口號。\n主權是唯一的食糧，尊嚴是永恆的財富。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not on-screen voice. Dry wind under the voice.\nnon_diegetic_music: A hollow ornamental swell.",
       "refs": [],
-      "seed": 495000,
+      "seed": 311000,
       "out": "s1_c1_l6_video",
       "output": "output/s1_c1_l6_video",
       "extra": {
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "fa4a2784-2111-4164-8bcf-b9c596ba14dd"
+        "prompt_id": "510b1813-996f-4dc2-a69f-1552df5cea53"
       }
     },
     {
       "id": "c1_l7",
       "description": "s1c1 對白·林墨：主權填不飽肚子",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close on Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build holding the thin banknote, low voice, mouth moving with clear lip shapes. Only (S1) speaks. No other person mouths words.\n(S1) says:\n<d>\n[中文]\n主權確實很沉重。\n但它顯然填不飽肚子。\n</d>\noverall_soundscape: Dialogue delivered by a low measured male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Soft paper rustle, dry wind.\nnon_diegetic_music: A grim quiet resolve.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close on Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build holding the thin banknote, low voice, mouth moving with clear lip shapes. Only (S1) speaks. No other person mouths words.\n(S1) says:\n<d>\n[中文]\n主權確實很沉重。\n但它顯然填不飽肚子。\n</d>\noverall_soundscape: Dialogue delivered by a low measured firm male voice in his mid-forties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Soft paper rustle, dry wind.\nnon_diegetic_music: A grim quiet resolve.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l7_video",
@@ -379,7 +379,7 @@
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "a92ed4aa-9fe1-493f-b96d-325d6ce698c2"
+        "prompt_id": "037b15e5-f686-4777-ba83-2d6a51af7c9b"
       }
     },
     {
@@ -418,7 +418,7 @@
       "id": "c1_l10",
       "description": "s1c1 對白·巡邏員：贏得只剩廢紙",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium: the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance pats dust from his uniform, numb tone, mouth moving with clear lip shapes. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build listens, lips sealed. Only (S2) speaks.\n(S2) says:\n<d>\n[中文]\n林博士，別看了。\n三年前，那邊的人也跟我們一樣，每天在網路上爭論誰才是更愛國的人。\n後來，他們贏了，贏得只剩下這堆廢紙。\n</d>\noverall_soundscape: Dialogue delivered by a clear numb weary male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Border wind and distant diesel hum.\nnon_diegetic_music: A flat resigned line.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium: the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance pats dust from his uniform, numb tone, mouth moving with clear lip shapes. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build listens, lips sealed. Only (S2) speaks.\n(S2) says:\n<d>\n[中文]\n林博士，別看了。\n三年前，那邊的人也跟我們一樣，每天在網路上爭論誰才是更愛國的人。\n後來，他們贏了，贏得只剩下這堆廢紙。\n</d>\noverall_soundscape: Dialogue delivered by a dry weary male voice in his early fifties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Border wind and distant diesel hum.\nnon_diegetic_music: A flat resigned line.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l10_video",
@@ -427,7 +427,7 @@
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "9cd0e383-58a4-4eb1-9e60-1f0b1d17fa5a"
+        "prompt_id": "1c6876a6-a9a6-4f06-9c26-a5f00d705d90"
       }
     },
     {
@@ -450,7 +450,7 @@
       "id": "c1_l12",
       "description": "s1c1 對白·林墨：他們不是贏了",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lifts his gaze toward the federal side beyond the fence, mouth moving clearly. Only (S1) speaks.\n(S1) says:\n<d>\n[中文]\n他們不是贏了。\n</d>\noverall_soundscape: Dialogue delivered by a firm male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Wind hush.\nnon_diegetic_music: A sharp short accent.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lifts his gaze toward the federal side beyond the fence, mouth moving clearly. Only (S1) speaks.\n(S1) says:\n<d>\n[中文]\n他們不是贏了。\n</d>\noverall_soundscape: Dialogue delivered by a low measured firm male voice in his mid-forties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Wind hush.\nnon_diegetic_music: A sharp short accent.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l12_video",
@@ -459,7 +459,7 @@
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "c92b6395-f378-4807-ad6d-129a4db75970"
+        "prompt_id": "26977502-c3cd-4754-b870-c8dcb534a858"
       }
     },
     {
@@ -484,37 +484,37 @@
       "type": "t2v",
       "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close-up of a huge LED billboard screen in the real world; the screen displays colorful animation of a bespectacled scholar drawn as a copper-stained crow pecking a seedling. Red ticker text scrolls along the bottom as visible on-screen text, never read aloud. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build watches from below, lips sealed, never the source of the narration. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n廣告牆上，色彩鮮艷的動畫正在播放。\n一名戴著眼鏡的反對派學者被畫成一隻滿身銅臭的烏鴉，正在啄食象徵國家未來的幼苗。\n螢幕下方滾動著一行巨大的紅字。\n警惕。數據是外敵瓦解我們團結的毒藥，唯有立場才是守護家園的盾牌。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not on-screen voice. Dry wind under the voice.\nnon_diegetic_music: A propagandistic brass smear.",
       "refs": [],
-      "seed": 495000,
+      "seed": 311000,
       "out": "s1_c1_l14_video",
       "output": "output/s1_c1_l14_video",
       "extra": {
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "af70f982-61cd-4b91-8dd2-81bdffe6466c"
+        "prompt_id": "bc4cff9f-b361-40a3-9b40-775be92cd360"
       }
     },
     {
       "id": "c1_l15",
       "description": "s1c1 旁白：字體如出一轍",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Match-cut hint: red propaganda lettering on the wall dissolves against the folded banknote edge peeking from Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's pocket. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed, never the narration source. Static hold.\nNarration off-screen only:\n<d>\n[中文]\n這行字的字體與色調，竟與他口袋裡那張廢紙幣上的如出一轍。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not on-screen voice. Dry wind under the voice.\nnon_diegetic_music: A cold recognizing tone.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Match-cut hint: red propaganda lettering on the wall dissolves against the folded banknote edge peeking from Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's pocket. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed, never the narration source. Static hold. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n這行字的字體與色調，竟與他口袋裡那張廢紙幣上的如出一轍。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not on-screen voice. Dry wind under the voice.\nnon_diegetic_music: A cold recognizing tone.",
       "refs": [],
-      "seed": 495000,
+      "seed": 311000,
       "out": "s1_c1_l15_video",
       "output": "output/s1_c1_l15_video",
       "extra": {
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "894d9a46-3dd2-49a0-aeaa-582f1cec4748"
+        "prompt_id": "bca8eec0-ad4a-44d5-bd3b-c0d2c73c0f14"
       }
     },
     {
       "id": "c1_l16",
       "description": "s1c1 對白·巡邏員：執政黨文宣",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium: the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance glances at the billboard with a trace of pride, mouth moving clearly. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stays silent, lips sealed. Only (S2) speaks.\n(S2) says:\n<d>\n[中文]\n那是執政黨這週的新文宣。\n說得真好，不是嗎？\n現在社會上那些質疑預算流向的人，真的都很像賣國賊。\n</d>\noverall_soundscape: Dialogue delivered by a clear proud casual male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Border wind and distant diesel hum.\nnon_diegetic_music: A hollow cheerful drum.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium: the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance glances at the billboard with a trace of pride, mouth moving clearly. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stays silent, lips sealed. Only (S2) speaks.\n(S2) says:\n<d>\n[中文]\n那是執政黨這週的新文宣。\n說得真好，不是嗎？\n現在社會上那些質疑預算流向的人，真的都很像賣國賊。\n</d>\noverall_soundscape: Dialogue delivered by a dry weary male voice in his early fifties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Border wind and distant diesel hum.\nnon_diegetic_music: A hollow cheerful drum.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l16_video",
@@ -523,7 +523,7 @@
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "8688746b-cd2d-49ba-9f5f-6c0550da3fbc"
+        "prompt_id": "3a1c694e-387b-4c78-a2fe-63403b7a9b55"
       }
     },
     {
@@ -546,39 +546,39 @@
       "id": "c1_l18",
       "description": "s1c1 旁白：崩潰前的法律",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stands still at the fence as the border softens into a brief memory haze: empty grocery shelves, courtroom doors, price boards — visual fragments only, no readable speech. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed, never the narration source.\nNarration off-screen only:\n<d>\n[中文]\n他想起索利亞崩潰前夕，那裡的法律也曾如此運作。\n政府不再解釋為什麼油價飆升，而是透過法院禁止任何傳播悲觀數據的人發言。\n政府不再說明糧食缺口，而是提告所有拍攝空貨架的人，指控他們偽造事實以動搖民心。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not on-screen voice. Dry wind under the voice.\nnon_diegetic_music: A dark remembering dirge.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stands still at the fence as the border softens into a brief memory haze: empty grocery shelves, courtroom doors, price boards — visual fragments only, no readable speech. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed, never the narration source. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n他想起索利亞崩潰前夕，那裡的法律也曾如此運作。\n政府不再解釋為什麼油價飆升，而是透過法院禁止任何傳播悲觀數據的人發言。\n政府不再說明糧食缺口，而是提告所有拍攝空貨架的人，指控他們偽造事實以動搖民心。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not on-screen voice. Dry wind under the voice.\nnon_diegetic_music: A dark remembering dirge.",
       "refs": [],
-      "seed": 495000,
+      "seed": 311000,
       "out": "s1_c1_l18_video",
       "output": "output/s1_c1_l18_video",
       "extra": {
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "99b2563d-6666-43a2-9cf2-695317df725f"
+        "prompt_id": "6e35be98-e522-4622-87a6-572fde4f4e08"
       }
     },
     {
       "id": "c1_l19",
       "description": "s1c1 旁白：真相消失凝固",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Wide: the silent border under a heavy sky; slogans half-burned in ash. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build small in frame, lips sealed, never the narration source. Slow pull-back.\nNarration off-screen only:\n<d>\n[中文]\n最後，那個國家的真相徹底消失在標籤與口號之中。\n當數據停止流動，文明的血液就開始凝固。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not on-screen voice. Dry wind under the voice.\nnon_diegetic_music: A coagulating low brass.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Wide: the silent border under a heavy sky; slogans half-burned in ash. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build small in frame, lips sealed, never the narration source. Slow pull-back. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n最後，那個國家的真相徹底消失在標籤與口號之中。\n當數據停止流動，文明的血液就開始凝固。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not on-screen voice. Dry wind under the voice.\nnon_diegetic_music: A coagulating low brass.",
       "refs": [],
-      "seed": 495000,
+      "seed": 311000,
       "out": "s1_c1_l19_video",
       "output": "output/s1_c1_l19_video",
       "extra": {
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "ef7550d4-5ed3-4163-a427-a236245240f3"
+        "prompt_id": "5ef9fe83-3683-40b7-83c8-98d3f1bf4409"
       }
     },
     {
       "id": "c1_l20",
       "description": "s1c1 對白·司機：回議會嗎",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Interior black sedan: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build settles into the back seat. Rearview shows the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair, mouth moving with clear lip shapes. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed. Only (S2) speaks.\n(S2) says:\n<d>\n[中文]\n林立委，我們要回議會了嗎？\n明天是國安資訊增補案的表決。\n</d>\noverall_soundscape: Dialogue delivered by a polite male chauffeur voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Soft cabin hush, idle engine.\nnon_diegetic_music: A muted cabin pulse.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Interior black sedan: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build settles into the back seat. Rearview shows the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair, mouth moving with clear lip shapes. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed. Only (S2) speaks.\n(S2) says:\n<d>\n[中文]\n林立委，我們要回議會了嗎？\n明天是國安資訊增補案的表決。\n</d>\noverall_soundscape: Dialogue delivered by a polite young male voice in his mid-thirties, bright clear tone, not deep, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Soft cabin hush, idle engine.\nnon_diegetic_music: A muted cabin pulse.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l20_video",
@@ -587,14 +587,14 @@
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "9859d277-e1bc-44da-84ae-46dbf94f3ab0"
+        "prompt_id": "39578f0d-4031-4d5a-9ade-32909845b2df"
       }
     },
     {
       "id": "c1_l21",
       "description": "s1c1 對白·林墨：回研究室",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Cabin close: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build leans into the seatback, eyes closing briefly, one hand pressing the pocket where the banknote rests under cloth; mouth moves clearly as he speaks. the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair stays silent ahead, lips sealed. Only (S1) speaks.\n(S1) says:\n<d>\n[中文]\n不。\n回研究室。\n我要把那份草案的序言重新寫一遍。\n</d>\noverall_soundscape: Dialogue delivered by a tired firm male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Soft seat leather, low engine.\nnon_diegetic_music: A deciding quiet line.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Cabin close: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build leans into the seatback, eyes closing briefly, one hand pressing the pocket where the banknote rests under cloth; mouth moves clearly as he speaks. the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair stays silent ahead, lips sealed. Only (S1) speaks.\n(S1) says:\n<d>\n[中文]\n不。\n回研究室。\n我要把那份草案的序言重新寫一遍。\n</d>\noverall_soundscape: Dialogue delivered by a low measured firm male voice in his mid-forties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Soft seat leather, low engine.\nnon_diegetic_music: A deciding quiet line.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l21_video",
@@ -603,14 +603,14 @@
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "8cf623c6-5a83-4756-a2ce-7fd3739ebf18"
+        "prompt_id": "ccdfcd68-723e-44ec-a2d7-d545f6ac45ee"
       }
     },
     {
       "id": "c1_l22",
       "description": "s1c1 對白·司機：哪份草案",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Rearview close: the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair glances back, curious, mouth moving clearly. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build remains in soft focus, lips sealed. Only (S2) speaks.\n(S2) says:\n<d>\n[中文]\n哪份草案？\n</d>\noverall_soundscape: Dialogue delivered by a curious male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Cabin road rumble.\nnon_diegetic_music: A brief questioning beat.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Rearview close: the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair glances back, curious, mouth moving clearly. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build remains in soft focus, lips sealed. Only (S2) speaks.\n(S2) says:\n<d>\n[中文]\n哪份草案？\n</d>\noverall_soundscape: Dialogue delivered by a polite young male voice in his mid-thirties, bright clear tone, not deep, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Cabin road rumble.\nnon_diegetic_music: A brief questioning beat.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l22_video",
@@ -619,14 +619,14 @@
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "5462eab8-320c-42a5-a5e6-57c7ac45e4e4"
+        "prompt_id": "f74dfe34-36f9-4e04-ad5d-ea2312b3d044"
       }
     },
     {
       "id": "c1_l23",
       "description": "s1c1 對白·林墨：讓數據說話",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close on Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build opening his eyes; roadside political banners streak past the window as reflections in his pupils. Mouth moves with clear lip shapes. Only (S1) speaks. the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair silent.\n(S1) says:\n<d>\n[中文]\n一份關於如何讓政府閉嘴，讓數據說話的法案。\n</d>\noverall_soundscape: Dialogue delivered by a calm resolute male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Road rush, soft cabin air.\nnon_diegetic_music: A clear resolving theme.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close on Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build opening his eyes; roadside political banners streak past the window as reflections in his pupils. Mouth moves with clear lip shapes. Only (S1) speaks. the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair silent with lips sealed.\n(S1) says:\n<d>\n[中文]\n一份關於如何讓政府閉嘴，讓數據說話的法案。\n</d>\noverall_soundscape: Dialogue delivered by a low measured firm male voice in his mid-forties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Road rush, soft cabin air.\nnon_diegetic_music: A clear resolving theme.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l23_video",
@@ -635,7 +635,7 @@
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "44dc8ff0-d945-4645-b1cf-08ff968cb0f0"
+        "prompt_id": "4aff5787-6178-49f4-8dd0-91af08e17a0e"
       }
     },
     {
