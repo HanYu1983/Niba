@@ -1,8 +1,8 @@
 {
   "description": "共識協議·第一章「邊境的廢紙」t2v 版：純文字驅動、無參考圖；角色以外觀文字定錨（林墨為主）。512×288。",
   "story_md": "D:\\han\\Niba\\dev\\Project20\\story1.md",
-  "width": 512,
-  "height": 288,
+  "width": 288,
+  "height": 512,
   "phase": 2,
   "plan": [
     {
@@ -290,13 +290,13 @@
       "id": "c1_l2",
       "description": "s1c1 對白·巡邏員：新版鈔票",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close on the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance, mouth opening with clear lip shapes as he speaks. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build, stands nearby listening with lips sealed. Only (S2)'s mouth moves.\n(S2) says:\n<d>\n[中文]\n那是今年的新版鈔票。\n</d>\noverall_soundscape: Dialogue delivered by a dry weary male voice in his early fifties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Border wind and distant diesel hum.\nnon_diegetic_music: A blunt percussive tick.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close on the border patrolman (S2), an East Asian man around fifty, square weathered face with tanned olive skin, deep-set dark brown eyes with heavy crow's feet, straight broad nose, short cropped grizzled hair grey at the sides. Distinct feature: a faint diagonal scar across his left cheek. Wearing a dusty olive patrol uniform, weary practical stance, mouth opening with clear lip shapes as he speaks. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build, stands nearby listening with lips sealed. Only (S2)'s mouth moves.\n(S2) says:\n<d>\n[中文]\n那是今年的新版鈔票。\n</d>\noverall_soundscape: Dialogue delivered by a dry weary male voice in his early fifties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Border wind and distant diesel hum.\nnon_diegetic_music: A blunt percussive tick.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l2_video",
       "output": "output/s1_c1_l2_video",
       "extra": {
-        "prompt_id": "c3394824-5ea7-4ef3-868d-d6a0ba33f36b",
+        "prompt_id": "177c856d-9564-45d6-b303-66eed266eb79",
         "route": "t2v",
         "v2_height": 288,
         "v2_width": 512
@@ -306,7 +306,7 @@
       "id": "c1_l3",
       "description": "s1c1 場景：鐵絲網外彩色廢紙",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Over-shoulder: the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance points beyond the fence. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build follows the gesture. Outside: a heap of vivid colorful papers under merciless sun, ironic brightness against brown dust. Slow pan along the pile. Both lips sealed.\noverall_soundscape: Wind riffling paper edges, distant fly buzz, dry heat hush. No dialogue. No narration. No human speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A bright, ironic chime over grit.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Over-shoulder: the border patrolman (S2), an East Asian man around fifty, square weathered face with tanned olive skin, deep-set dark brown eyes with heavy crow's feet, straight broad nose, short cropped grizzled hair grey at the sides. Distinct feature: a faint diagonal scar across his left cheek. Wearing a dusty olive patrol uniform, weary practical stance points beyond the fence. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build follows the gesture. Outside: a heap of vivid colorful papers under merciless sun, ironic brightness against brown dust. Slow pan along the pile. Both lips sealed.\noverall_soundscape: Wind riffling paper edges, distant fly buzz, dry heat hush. No dialogue. No narration. No human speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A bright, ironic chime over grit.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l3_video",
@@ -315,7 +315,7 @@
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "35cf7448-892f-4f56-b462-d0dad7635399"
+        "prompt_id": "bee405d9-1950-47de-89fa-c329dfd40267"
       }
     },
     {
@@ -418,7 +418,7 @@
       "id": "c1_l10",
       "description": "s1c1 對白·巡邏員：贏得只剩廢紙",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium: the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance pats dust from his uniform, numb tone, mouth moving with clear lip shapes. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build listens, lips sealed. Only (S2) speaks.\n(S2) says:\n<d>\n[中文]\n林博士，別看了。\n三年前，那邊的人也跟我們一樣，每天在網路上爭論誰才是更愛國的人。\n後來，他們贏了，贏得只剩下這堆廢紙。\n</d>\noverall_soundscape: Dialogue delivered by a dry weary male voice in his early fifties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Border wind and distant diesel hum.\nnon_diegetic_music: A flat resigned line.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium: the border patrolman (S2), an East Asian man around fifty, square weathered face with tanned olive skin, deep-set dark brown eyes with heavy crow's feet, straight broad nose, short cropped grizzled hair grey at the sides. Distinct feature: a faint diagonal scar across his left cheek. Wearing a dusty olive patrol uniform, weary practical stance pats dust from his uniform, numb tone, mouth moving with clear lip shapes. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build listens, lips sealed. Only (S2) speaks.\n(S2) says:\n<d>\n[中文]\n林博士，別看了。\n三年前，那邊的人也跟我們一樣，每天在網路上爭論誰才是更愛國的人。\n後來，他們贏了，贏得只剩下這堆廢紙。\n</d>\noverall_soundscape: Dialogue delivered by a dry weary male voice in his early fifties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Border wind and distant diesel hum.\nnon_diegetic_music: A flat resigned line.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l10_video",
@@ -427,7 +427,7 @@
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "1c6876a6-a9a6-4f06-9c26-a5f00d705d90"
+        "prompt_id": "58af7d0f-267d-4e20-838f-d7634977cbff"
       }
     },
     {
@@ -514,7 +514,7 @@
       "id": "c1_l16",
       "description": "s1c1 對白·巡邏員：執政黨文宣",
       "type": "t2v",
-      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium: the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance glances at the billboard with a trace of pride, mouth moving clearly. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stays silent, lips sealed. Only (S2) speaks.\n(S2) says:\n<d>\n[中文]\n那是執政黨這週的新文宣。\n說得真好，不是嗎？\n現在社會上那些質疑預算流向的人，真的都很像賣國賊。\n</d>\noverall_soundscape: Dialogue delivered by a dry weary male voice in his early fifties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Border wind and distant diesel hum.\nnon_diegetic_music: A hollow cheerful drum.",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium: the border patrolman (S2), an East Asian man around fifty, square weathered face with tanned olive skin, deep-set dark brown eyes with heavy crow's feet, straight broad nose, short cropped grizzled hair grey at the sides. Distinct feature: a faint diagonal scar across his left cheek. Wearing a dusty olive patrol uniform, weary practical stance glances at the billboard with a trace of pride, mouth moving clearly. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stays silent, lips sealed. Only (S2) speaks.\n(S2) says:\n<d>\n[中文]\n那是執政黨這週的新文宣。\n說得真好，不是嗎？\n現在社會上那些質疑預算流向的人，真的都很像賣國賊。\n</d>\noverall_soundscape: Dialogue delivered by a dry weary male voice in his early fifties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Border wind and distant diesel hum.\nnon_diegetic_music: A hollow cheerful drum.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l16_video",
@@ -523,7 +523,7 @@
         "v2_width": 512,
         "v2_height": 288,
         "route": "t2v",
-        "prompt_id": "3a1c694e-387b-4c78-a2fe-63403b7a9b55"
+        "prompt_id": "733c3c6a-91f6-45e5-80c5-69c515a604b8"
       }
     },
     {
