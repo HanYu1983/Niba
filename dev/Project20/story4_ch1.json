@@ -1,0 +1,1439 @@
+{
+  "description": "story4 第一章「完美的起訴書」t2v版：法庭形式主義開場，沈惟德／嚴立誠／林女士。純文字驅動無參考圖，512x288，先完成第一章。",
+  "story_md": "D:\\han\\Niba\\dev\\Project20\\story4.md",
+  "width": 896,
+  "height": 576,
+  "phase": 2,
+  "plan": [
+    {
+      "id": "c1_l0",
+      "description": "場景：法官辦公室紅木桌，正午鉛色光",
+      "source": "沈惟德坐在法官辦公室的紅木桌後，窗外是正午的陽光，但在這棟灰色的法院大樓裡，光線彷彿被厚重的石板過濾成了單調的鉛色。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c1_l1",
+      "description": "場景：桌上五百頁起訴書與泛黃法益真實論",
+      "source": "他的手邊放著兩樣東西：一份厚達五百頁、由檢察官嚴立誠簽署的起訴書，以及一本封皮泛黃、書脊略微磨損的《法益真實論：回歸人的刑法學》。",
+      "voice": "scene",
+      "duration": 6,
+      "lines": []
+    },
+    {
+      "id": "c1_l2",
+      "description": "旁白：瘋子的哲學",
+      "source": "這本法學論述在他桌上顯得格格不入。在現行的法律圈裡，這本書被戲稱為「瘋子的哲學」。",
+      "voice": "narration",
+      "duration": 7,
+      "lines": [
+        "這本法學論述在他桌上顯得格格不入。",
+        "在現行的法律圈裡，這本書被戲稱為瘋子的哲學。"
+      ]
+    },
+    {
+      "id": "c1_l3",
+      "description": "旁白：構成要件公式很安全",
+      "source": "大多數的法官更喜歡看《構成要件實務彙編》，因為那裡面的公式很安全——只要行為 A 符合要件 B，就等於刑期 C。",
+      "voice": "narration",
+      "duration": 10,
+      "lines": [
+        "大多數的法官更喜歡看構成要件實務彙編，因為那裡面的公式很安全。",
+        "只要行為甲符合要件乙，就等於刑期丙。"
+      ]
+    },
+    {
+      "id": "c1_l4",
+      "description": "場景：翻開起訴書第一頁",
+      "source": "沈惟德翻開起訴書的第一頁，嚴立誠那乾淨、銳利的筆觸映入眼簾。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c1_l5",
+      "description": "旁白：起訴書規避專戶收受三千萬",
+      "source": "「被告林○女士，身為民意代表候選人，明知《政治獻金法》之立法意旨係為確保政治活動之清廉，竟規避法定專戶，收受民間集資所得三千萬元，並私自支用於所謂救災物資，",
+      "voice": "narration",
+      "duration": 14,
+      "lines": [
+        "被告林女士，身為民意代表候選人。",
+        "明知政治獻金法之立法意旨係為確保政治活動之清廉。",
+        "竟規避法定專戶，收受民間集資所得三千萬元，並私自支用於所謂救災物資。"
+      ]
+    },
+    {
+      "id": "c1_l6",
+      "description": "旁白：戕害監督權誠信根基",
+      "source": "此舉嚴重戕害國家監督權，破壞法治國之誠信根基……」",
+      "voice": "narration",
+      "duration": 6,
+      "lines": [
+        "此舉嚴重戕害國家監督權，破壞法治國之誠信根基。"
+      ]
+    },
+    {
+      "id": "c1_l7",
+      "description": "場景：合上卷宗揉眉心",
+      "source": "沈惟德合上卷宗，揉了揉眉心。",
+      "voice": "scene",
+      "duration": 3,
+      "lines": []
+    },
+    {
+      "id": "c1_l8",
+      "description": "旁白：體系最完美的產品",
+      "source": "他能預見這場審判的走向。嚴立誠是這個體系裡最完美的產品，他從不談被告救了多少人，他只談那三千萬沒有經過「那個特定的帳戶」。",
+      "voice": "narration",
+      "duration": 11,
+      "lines": [
+        "他能預見這場審判的走向。",
+        "嚴立誠是這個體系裡最完美的產品，他從不談被告救了多少人。",
+        "他只談那三千萬沒有經過那個特定的帳戶。"
+      ]
+    },
+    {
+      "id": "c1_l9",
+      "description": "場景：二樓陰影俯瞰媒體簡報",
+      "source": "下午兩點，嚴立誠檢察官在法院大廳召開了媒體簡報。沈惟德站在二樓的陰影處向下望去。嚴立誠站在無數支麥克風前，金絲眼鏡在閃光燈下反射著冰冷的光。",
+      "voice": "scene",
+      "duration": 6,
+      "lines": []
+    },
+    {
+      "id": "c1_l10",
+      "description": "對白·嚴立誠：程序絕對性",
+      "source": "「各位，」嚴立誠的聲音清脆、果斷，「我們不否認林女士可能有一顆善良的心。但法律之所以為法律，就在於它的程序絕對性。",
+      "voice": "dialogue",
+      "duration": 9,
+      "lines": [
+        "各位。",
+        "我們不否認林女士可能有一顆善良的心。",
+        "但法律之所以為法律，就在於它的程序絕對性。"
+      ]
+    },
+    {
+      "id": "c1_l11",
+      "description": "對白·嚴立誠：救災與慈善挪用",
+      "source": "今天她可以因為『救災』而挪用不具名資金，明天別人就可以因為『慈善』而洗錢。",
+      "voice": "dialogue",
+      "duration": 8,
+      "lines": [
+        "今天她可以因為救災而挪用不具名資金。",
+        "明天別人就可以因為慈善而洗錢。"
+      ]
+    },
+    {
+      "id": "c1_l12",
+      "description": "對白·嚴立誠：五百萬憑證挑釁",
+      "source": "如果程序破裂了，善良就會變成邪惡的溫床。這五百萬元的憑證缺失，不是小事，它是對法治秩序的公然挑釁。」",
+      "voice": "dialogue",
+      "duration": 10,
+      "lines": [
+        "如果程序破裂了，善良就會變成邪惡的溫床。",
+        "這五百萬元的憑證缺失，不是小事。",
+        "它是對法治秩序的公然挑釁。"
+      ]
+    },
+    {
+      "id": "c1_l13",
+      "description": "旁白：避開道德引向程序",
+      "source": "嚴立誠很聰明。他避開了「林女士有沒有貪污」這個危險的道德問題，直接將問題引向了「程序是否受損」。",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "嚴立誠很聰明。",
+        "他避開了林女士有沒有貪污這個危險的道德問題。",
+        "直接將問題引向了程序是否受損。"
+      ]
+    },
+    {
+      "id": "c1_l14",
+      "description": "旁白：程序不守社會崩潰",
+      "source": "他在大眾心中植入了一個恐懼：如果程序不守，社會就會崩潰。",
+      "voice": "narration",
+      "duration": 5,
+      "lines": [
+        "他在大眾心中植入了一個恐懼。",
+        "如果程序不守，社會就會崩潰。"
+      ]
+    },
+    {
+      "id": "c1_l15",
+      "description": "場景：手機直播留言板跳動",
+      "source": "沈惟德看著手機上的新聞直播，下方的留言板正以驚人的速度跳動：",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c1_l16",
+      "description": "旁白：三則網民留言",
+      "source": "「程序不合法就是犯法，沒什麼好說的！」「如果大家都不報帳，國家不就亂了？」「連五百萬憑證都拿不出來，裡面一定有鬼，查辦到底！」",
+      "voice": "narration",
+      "duration": 10,
+      "lines": [
+        "程序不合法就是犯法，沒什麼好說的。",
+        "如果大家都不報帳，國家不就亂了。",
+        "連五百萬憑證都拿不出來，裡面一定有鬼，查辦到底。"
+      ]
+    },
+    {
+      "id": "c1_l17",
+      "description": "旁白：形式主義的魔術",
+      "source": "這就是形式主義的魔術——只要將行為貼上「破壞程序」的標籤，公眾就會自動忽略那個行為背後真實的價值。",
+      "voice": "narration",
+      "duration": 9,
+      "lines": [
+        "這就是形式主義的魔術。",
+        "只要將行為貼上破壞程序的標籤。",
+        "公眾就會自動忽略那個行為背後真實的價值。"
+      ]
+    },
+    {
+      "id": "c1_l18",
+      "description": "旁白：三千災民标签前微不足道",
+      "source": "林女士救活的三千個災民，在「五百萬憑證缺失」這個標籤面前，瞬間變得微不足道。",
+      "voice": "narration",
+      "duration": 6,
+      "lines": [
+        "林女士救活的三千個災民。",
+        "在五百萬憑證缺失這個標籤面前，瞬間變得微不足道。"
+      ]
+    },
+    {
+      "id": "c1_l19",
+      "description": "場景：深夜辦公室翻開法益真實論",
+      "source": "深夜，法院大樓恢復了死寂。沈惟德依然坐在辦公室裡。他翻開那本《法益真實論》，指尖停在其中一段話上：",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c1_l20",
+      "description": "旁白：官僚的裹屍布",
+      "source": "「當法律的解釋只剩下格式與代碼，而不再問『誰受傷了』，法律便不再是正義的護盾，而是官僚的裹屍布。」",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "當法律的解釋只剩下格式與代碼，而不再問誰受傷了。",
+        "法律便不再是正義的護盾，而是官僚的裹屍布。"
+      ]
+    },
+    {
+      "id": "c1_l21",
+      "description": "場景：筆尖畫問號",
+      "source": "他拿起筆，在起訴書提到的「嚴重戕害國家監督權」這行字旁邊，輕輕畫了一個問號。",
+      "voice": "scene",
+      "duration": 3,
+      "lines": []
+    },
+    {
+      "id": "c1_l22",
+      "description": "旁白：看守所照片無名牌無帳戶",
+      "source": "他腦中浮現出林女士在看守所的照片。那個女人沒有買過任何名牌，沒有任何海外帳戶，",
+      "voice": "narration",
+      "duration": 7,
+      "lines": [
+        "他腦中浮現出林女士在看守所的照片。",
+        "那個女人沒有買過任何名牌，沒有任何海外帳戶。"
+      ]
+    },
+    {
+      "id": "c1_l23",
+      "description": "旁白：不等公文先送帳篷",
+      "source": "她唯一的罪，似乎就是在那場大地震發生時，不等行政公文跑完三天，就先把錢換成帳篷送進了災區。",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "她唯一的罪，似乎就是在那場大地震發生時。",
+        "不等行政公文跑完三天，就先把錢換成帳篷送進了災區。"
+      ]
+    },
+    {
+      "id": "c1_l24",
+      "description": "對白·沈惟德：制度到底保護了誰",
+      "source": "「嚴檢察官，」沈惟德對著空無一人的辦公室低聲自語，「你指控她侵害了『制度』，但我想知道，在你的正義裡，那個制度到底保護了誰？」",
+      "voice": "dialogue",
+      "duration": 9,
+      "lines": [
+        "嚴檢察官。",
+        "你指控她侵害了制度。",
+        "但我想知道，在你的正義裡，那個制度到底保護了誰。"
+      ]
+    },
+    {
+      "id": "c1_l25",
+      "description": "旁白：必須依慣例主持不能表態",
+      "source": "他知道，明天的第一次預備程序，他必須依照「形式主義」的慣例主持。他不能表態，不能質疑檢察官的法律標籤。",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "他知道，明天的第一次預備程序，他必須依照形式主義的慣例主持。",
+        "他不能表態，不能質疑檢察官的法律標籤。"
+      ]
+    },
+    {
+      "id": "c1_l26",
+      "description": "旁白：石像聽著扼殺真實的人",
+      "source": "他必須像一尊石像一樣，聽著嚴立誠如何用那些冰冷的構成要件，一點一滴地扼殺掉那個真實的人。",
+      "voice": "narration",
+      "duration": 7,
+      "lines": [
+        "他必須像一尊石像一樣。",
+        "聽著嚴立誠如何用那些冰冷的構成要件，一點一滴地扼殺掉那個真實的人。"
+      ]
+    },
+    {
+      "id": "c1_l27",
+      "description": "場景：關燈黑暗體系壓力",
+      "source": "沈惟德關掉檯燈。在黑暗中，他感覺到一種巨大的壓力正從四面八方湧來——那是體系的壓力，那是民意的壓力，那是他身為法官，唯一不能出錯的壓力。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c2_l0",
+      "description": "場景：第一法庭推門玄色法袍登席",
+      "source": "第一法庭的大門緩緩推開，沈惟德穿著玄色法袍走上審判席。法庭內的回音異常空曠，彷彿每一聲腳步都在提醒被告，這裡是一個只講究「規格」的地方。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c2_l1",
+      "description": "場景：雜亂救災證物對雪白公文",
+      "source": "辯護律師林哲生坐在被告席旁，他的桌上堆滿了災區的照片、災民的感謝信，甚至還有一套沾滿泥土的救災背心。然而，在嚴立誠檢察官那疊整齊、雪白的 A4 公文面前，這些東西顯得如此雜亂、不合時宜，甚至有些卑微。",
+      "voice": "scene",
+      "duration": 6,
+      "lines": []
+    },
+    {
+      "id": "c2_l2",
+      "description": "對白·沈惟德：開始構成要件論述",
+      "source": "「請檢察官開始進行構成要件之論述。」沈惟德平靜地開口，雙手交疊在膝上，眼神深邃得看不出情緒。",
+      "voice": "dialogue",
+      "duration": 5,
+      "lines": [
+        "請檢察官開始進行構成要件之論述。"
+      ]
+    },
+    {
+      "id": "c2_l3",
+      "description": "場景：嚴立誠起身翻起訴書四十二頁",
+      "source": "嚴立誠優雅地站起身，他沒有看被告林女士，而是對著法官，精準地翻開起訴書第 42 頁。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c2_l4",
+      "description": "對白·嚴立誠：邏輯極其簡單",
+      "source": "「本案的邏輯極其簡單，」嚴立誠的聲音清澈而富有磁性，",
+      "voice": "dialogue",
+      "duration": 4,
+      "lines": [
+        "本案的邏輯極其簡單。"
+      ]
+    },
+    {
+      "id": "c2_l5",
+      "description": "對白·嚴立誠：獻金法第十三條",
+      "source": "「根據《政治獻金法》第 13 條及《刑法》偽造文書罪章，",
+      "voice": "dialogue",
+      "duration": 6,
+      "lines": [
+        "根據政治獻金法第十三條及刑法偽造文書罪章。"
+      ]
+    },
+    {
+      "id": "c2_l6",
+      "description": "對白·嚴立誠：未經核准逕行支用",
+      "source": "被告林女士在未經主管機關核准之情況下，將民間籌措之資金逕行支用。",
+      "voice": "dialogue",
+      "duration": 8,
+      "lines": [
+        "被告林女士在未經主管機關核准之情況下。",
+        "將民間籌措之資金逕行支用。"
+      ]
+    },
+    {
+      "id": "c2_l7",
+      "description": "對白·嚴立誠：宣稱救災",
+      "source": "雖然辯護人宣稱這筆錢用於『救災』，但——」",
+      "voice": "dialogue",
+      "duration": 5,
+      "lines": [
+        "雖然辯護人宣稱這筆錢用於救災。"
+      ]
+    },
+    {
+      "id": "c2_l8",
+      "description": "場景：停頓舉起報表截圖",
+      "source": "嚴立誠刻意停頓，舉起一張放大的報表截圖。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c2_l9",
+      "description": "對白·嚴立誠：非法流入資金",
+      "source": "「——在法律眼中，這三千萬元的本質是『非法流入資金』。",
+      "voice": "dialogue",
+      "duration": 6,
+      "lines": [
+        "在法律眼中，這三千萬元的本質是非法流入資金。"
+      ]
+    },
+    {
+      "id": "c2_l10",
+      "description": "對白·嚴立誠：五百萬僅手寫收據",
+      "source": "其中有五百萬元的支出，因為沒有符合會計準則的正式發票，僅有手寫收據。",
+      "voice": "dialogue",
+      "duration": 8,
+      "lines": [
+        "其中有五百萬元的支出，因為沒有符合會計準則的正式發票。",
+        "僅有手寫收據。"
+      ]
+    },
+    {
+      "id": "c2_l11",
+      "description": "對白·嚴立誠：程序破壞正義不復",
+      "source": "在形式上，這就是『侵佔』與『偽造』。法治國家的基石是程序，程序一旦被破壞，正義即不復存在。」",
+      "voice": "dialogue",
+      "duration": 9,
+      "lines": [
+        "在形式上，這就是侵佔與偽造。",
+        "法治國家的基石是程序，程序一旦被破壞，正義即不復存在。"
+      ]
+    },
+    {
+      "id": "c2_l12",
+      "description": "場景：林哲生猛站起急促",
+      "source": "林哲生律師猛地站起身，聲音帶著一絲急促。",
+      "voice": "scene",
+      "duration": 3,
+      "lines": []
+    },
+    {
+      "id": "c2_l13",
+      "description": "對白·林哲生：必須抗辯絕口不提背景",
+      "source": "「庭上！我必須抗辯！檢察官不斷強調『程序』，卻絕口不提當時的背景！",
+      "voice": "dialogue",
+      "duration": 7,
+      "lines": [
+        "庭上，我必須抗辯。",
+        "檢察官不斷強調程序，卻絕口不提當時的背景。"
+      ]
+    },
+    {
+      "id": "c2_l14",
+      "description": "對白·林哲生：地震三小時露天廢墟",
+      "source": "那是大地震後的第三個小時，所有的行政系統都癱瘓了。林女士如果不先撥款，災民就得露天睡在餘震不斷的廢墟裡。",
+      "voice": "dialogue",
+      "duration": 12,
+      "lines": [
+        "那是大地震後的第三個小時，所有的行政系統都癱瘓了。",
+        "林女士如果不先撥款，災民就得露天睡在餘震不斷的廢墟裡。"
+      ]
+    },
+    {
+      "id": "c2_l15",
+      "description": "對白·林哲生：小賣部老闆眼淚收據",
+      "source": "那些手寫收據，是災區小賣部老闆在斷電的情況下，忍著眼淚寫給林女士的，因為他把店裡所有的水和餅乾都搬空了……」",
+      "voice": "dialogue",
+      "duration": 12,
+      "lines": [
+        "那些手寫收據，是災區小賣部老闆在斷電的情況下，忍著眼淚寫給林女士的。",
+        "因為他把店裡所有的水和餅乾都搬空了。"
+      ]
+    },
+    {
+      "id": "c2_l16",
+      "description": "對白·嚴立誠：反對",
+      "source": "「反對。」嚴立誠冷冷地打斷，連頭都沒回，",
+      "voice": "dialogue",
+      "duration": 3,
+      "lines": [
+        "反對。"
+      ]
+    },
+    {
+      "id": "c2_l17",
+      "description": "對白·嚴立誠：煽情與構成要件無關",
+      "source": "「辯護人所描述的場景具有高度煽情性，但與本案『是否違反會計程序』之構成要件無關。",
+      "voice": "dialogue",
+      "duration": 8,
+      "lines": [
+        "辯護人所描述的場景具有高度煽情性。",
+        "但與本案是否違反會計程序之構成要件無關。"
+      ]
+    },
+    {
+      "id": "c2_l18",
+      "description": "對白·嚴立誠：只看行為結果對應",
+      "source": "法律不看動機，只看行為與結果的對應關係。」",
+      "voice": "dialogue",
+      "duration": 5,
+      "lines": [
+        "法律不看動機，只看行為與結果的對應關係。"
+      ]
+    },
+    {
+      "id": "c2_l19",
+      "description": "旁白：法益真實論翻動與困惑",
+      "source": "沈惟德看著林哲生，內心深處那本《法益真實論》正在劇烈翻動。他看見林女士抬起頭，那雙因為長年奔波而佈滿血絲的眼睛裡，充滿了對這間法庭的困惑：她救了人，為什麼現在大家在討論的是「收據的格式」？",
+      "voice": "narration",
+      "duration": 12,
+      "lines": [
+        "沈惟德看著林哲生，內心深處那本法益真實論正在劇烈翻動。",
+        "他看見林女士抬起頭，那雙佈滿血絲的眼睛裡充滿了困惑。",
+        "她救了人，為什麼大家在討論的是收據的格式。"
+      ]
+    },
+    {
+      "id": "c2_l20",
+      "description": "對白·沈惟德：反對有理針對辯論",
+      "source": "然而，身為法官，沈惟德只能開口：「反對有理。辯護人，請針對資金流向與會計憑證缺失之法律關係進行辯論，",
+      "voice": "dialogue",
+      "duration": 7,
+      "lines": [
+        "反對有理。",
+        "辯護人，請針對資金流向與會計憑證缺失之法律關係進行辯論。"
+      ]
+    },
+    {
+      "id": "c2_l21",
+      "description": "對白·沈惟德：不再提救災背景",
+      "source": "不要再提及救災背景。」",
+      "voice": "dialogue",
+      "duration": 4,
+      "lines": [
+        "不要再提及救災背景。"
+      ]
+    },
+    {
+      "id": "c2_l22",
+      "description": "旁白：證詞變不具關聯性",
+      "source": "林哲生愣住了。他看著自己帶來的災民證詞，那些真實的生命、那些獲救後的哭聲，在這一刻全變成了「不具關聯性」的垃圾。",
+      "voice": "narration",
+      "duration": 7,
+      "lines": [
+        "林哲生愣住了。",
+        "那些真實的生命與獲救後的哭聲，在這一刻全變成了不具關聯性的東西。"
+      ]
+    },
+    {
+      "id": "c2_l23",
+      "description": "旁白：五小時切割機編號",
+      "source": "審判持續了五個小時。嚴立誠像是一台精密的切割機，將林女士的行為拆解成無數個「時間點」和「編號」。",
+      "voice": "narration",
+      "duration": 6,
+      "lines": [
+        "審判持續了五個小時。",
+        "嚴立誠像是一台精密的切割機，將林女士的行為拆解成無數個時間點和編號。"
+      ]
+    },
+    {
+      "id": "c2_l24",
+      "description": "對白·嚴立誠：甲罪乙罪時間點",
+      "source": "「14 時 02 分，資金未入專戶，構成 A 罪。」「15 時 30 分，憑證未附發票，構成 B 罪。」",
+      "voice": "dialogue",
+      "duration": 8,
+      "lines": [
+        "十四時零二分，資金未入專戶，構成甲罪。",
+        "十五時三十分，憑證未附發票，構成乙罪。"
+      ]
+    },
+    {
+      "id": "c2_l25",
+      "description": "旁白：拉回被擋記者寫敗局",
+      "source": "林哲生每一次試圖把話題拉回「真實的損害」與「實際的效益」，都會被嚴立誠以「形式正義」為盾牌擋掉。法庭內的氣氛越來越窒息，媒體席上的記者已經開始撰寫新聞草稿：**《法律程序不容挑戰，林女士敗局已定》**。",
+      "voice": "narration",
+      "duration": 12,
+      "lines": [
+        "林哲生每一次試圖把話題拉回真實的損害與實際的效益。",
+        "都會被嚴立誠以形式正義為盾牌擋掉。",
+        "媒體席上的記者已經開始撰寫新聞草稿。",
+        "法律程序不容挑戰，林女士敗局已定。"
+      ]
+    },
+    {
+      "id": "c2_l26",
+      "description": "對白·沈惟德：還有什麼補充",
+      "source": "「律師，你還有什麼要補充的嗎？」沈惟德問道。",
+      "voice": "dialogue",
+      "duration": 4,
+      "lines": [
+        "律師，你還有什麼要補充的嗎。"
+      ]
+    },
+    {
+      "id": "c2_l27",
+      "description": "場景：揉皺感謝信鋼鐵長城",
+      "source": "林哲生看著手邊那張災民寫的感謝信，信紙已經被他揉得發皺。他感到一種深沉的絕望——他面對的不是一個人，而是一堵牆，一堵由無數條文和程序砌成的鋼鐵長城。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c2_l28",
+      "description": "對白·林哲生：指認的是什麼",
+      "source": "「庭上……」林哲生沙啞地說，「如果法律只剩下這些編號，我們指認的到底是什麼？",
+      "voice": "dialogue",
+      "duration": 6,
+      "lines": [
+        "庭上，如果法律只剩下這些編號，我們指認的到底是什麼。"
+      ]
+    },
+    {
+      "id": "c2_l29",
+      "description": "對白·林哲生：罪犯或忘了說明書的人",
+      "source": "是一個罪犯，還是一個因為太愛這個社會而忘了看說明書的人？」",
+      "voice": "dialogue",
+      "duration": 7,
+      "lines": [
+        "是一個罪犯，還是一個因為太愛這個社會而忘了看說明書的人。"
+      ]
+    },
+    {
+      "id": "c2_l30",
+      "description": "場景：安靜空調動搖一閃",
+      "source": "法庭安靜得連空調的運轉聲都清晰可聞。沈惟德盯著桌上的起訴書，他的眼神中閃過一絲連嚴立誠都沒察覺的動搖。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c2_l31",
+      "description": "旁白：寫下法益除魅",
+      "source": "他指尖微顫，在判決書的筆記欄裡，寫下了一個連他自己都感到陌生的詞：**「法益除魅」**。",
+      "voice": "narration",
+      "duration": 5,
+      "lines": [
+        "他指尖微顫，在筆記欄裡寫下了一個陌生的詞。",
+        "法益除魅。"
+      ]
+    },
+    {
+      "id": "c2_l32",
+      "description": "對白·沈惟德：辯論終結兩週後",
+      "source": "他抬起頭，看著節節敗退的律師，又看了看勝券在握的檢察官，緩緩宣布：「今日辯論終結，兩週後進行最終言詞辯論。」",
+      "voice": "dialogue",
+      "duration": 5,
+      "lines": [
+        "今日辯論終結。",
+        "兩週後進行最終言詞辯論。"
+      ]
+    },
+    {
+      "id": "c2_l33",
+      "description": "旁白：回頭一眼秩序崩塌一角",
+      "source": "林女士在被法警帶走前，轉頭看了一眼沈惟德。那一眼，讓沈惟德原本已經構築好的秩序，徹底崩塌了一角。",
+      "voice": "narration",
+      "duration": 6,
+      "lines": [
+        "林女士在被法警帶走前，轉頭看了一眼沈惟德。",
+        "那一眼，讓沈惟德構築好的秩序崩塌了一角。"
+      ]
+    }
+  ],
+  "story": [
+    {
+      "id": "c1_l0",
+      "description": "s4c1 場景：法官辦公室鉛色正午",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Wide of a solemn judge office interior at noon, heavy grey stone walls filtering daylight into a flat lead tone, a dark redwood desk centered, Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, seated still behind the desk, hands resting, lips sealed. Dust drifts in the pale light shaft. Slow push-in. He appears exactly once. No duplicated figure.\noverall_soundscape: Muted stone room tone, faint distant corridor hum, soft paper stillness. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A low restrained string drone.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l0_video",
+      "extra": {
+        "prompt_id": "e6219622-319a-4455-8273-9f94ab1e06a6",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l0_video"
+    },
+    {
+      "id": "c1_l1",
+      "description": "s4c1 場景：起訴書與泛黃法益真實論特寫",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close overhead of the redwood desk surface, a thick white indictment stack beside a yellowed worn book with visible on-screen cover text, never read aloud. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, hands resting at the frame edge, lips sealed. A slow lateral drift across the two objects. He appears exactly once.\noverall_soundscape: Quiet office air, faint paper fiber rustle, distant clock tick. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A dry paper-like tremor.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l1_video",
+      "extra": {
+        "prompt_id": "820c32b7-aeea-409a-bfb8-28d349e2dc51",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l1_video"
+    },
+    {
+      "id": "c1_l2",
+      "description": "s4c1 旁白：瘋子的哲學",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, seated at the redwood desk, gaze lowered at the yellowed book with visible on-screen cover text, never read aloud, lips sealed, never the source of the narration. A desk lamp glows softly. Slow push-in. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n這本法學論述在他桌上顯得格格不入。\n在現行的法律圈裡，這本書被戲稱為瘋子的哲學。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Quiet office air beneath the voice.\nnon_diegetic_music: A cold contemplative string line.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l2_video",
+      "extra": {
+        "prompt_id": "a764ff41-977b-4ed8-928e-4f0c333ceeca",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l2_video"
+    },
+    {
+      "id": "c1_l3",
+      "description": "s4c1 旁白：公式很安全",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close of a neat practical manual with dense printed tables as visible on-screen text, never read aloud, resting on the redwood desk. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, fingers resting near the pages, lips sealed, never the source of the narration. Cool daylight falls flat. Static hold with a slight drift. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n大多數的法官更喜歡看構成要件實務彙編，因為那裡面的公式很安全。\n只要行為甲符合要件乙，就等於刑期丙。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Faint paper stillness beneath the voice.\nnon_diegetic_music: A flat bureaucratic pulse.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l3_video",
+      "extra": {
+        "prompt_id": "2052c502-c9ab-4e26-8e8c-cf24eaa47af9",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l3_video"
+    },
+    {
+      "id": "c1_l4",
+      "description": "s4c1 場景：翻開起訴書第一頁",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, hands opening the first page of the indictment, sharp clean printed strokes as visible on-screen text, never read aloud, lips sealed. Cool desk light. Slow tilt from hands to his focused eyes. He appears exactly once.\noverall_soundscape: Paper page turn, soft fingertip brush, quiet office air. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A crisp single page-turn accent.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l4_video",
+      "extra": {
+        "prompt_id": "77b12d98-fff1-4800-bd39-fc2777226ed5",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l4_video"
+    },
+    {
+      "id": "c1_l5",
+      "description": "s4c1 旁白：規避專戶收受三千萬",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, [Shot 1] Close of the indictment pages with dense printed columns as visible on-screen text, never read aloud, under a cold desk lamp. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, holding the pages, lips sealed, never the source of the narration. [Shot 2] At 00:07.000, the camera cuts to a medium close-up of his lowered gaze, steady and grave, a wall clock ticking softly behind. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n被告林女士，身為民意代表候選人。\n明知政治獻金法之立法意旨係為確保政治活動之清廉。\n竟規避法定專戶，收受民間集資所得三千萬元，並私自支用於所謂救災物資。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Paper stillness beneath the voice.\nnon_diegetic_music: A grave documentary swell.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l5_video",
+      "extra": {
+        "prompt_id": "d2c46caf-b9cd-4925-a376-5f918ede824d",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l5_video"
+    },
+    {
+      "id": "c1_l6",
+      "description": "s4c1 旁白：戕害監督權誠信根基",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Tight close of a red official seal stamp on the indictment page as visible on-screen text, never read aloud. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, eyes fixed on the seal line, lips sealed, never the source of the narration. Cold lamp glare. Static hold. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n此舉嚴重戕害國家監督權，破壞法治國之誠信根基。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Heavy stamped-paper silence beneath the voice.\nnon_diegetic_music: A single ominous seal thud tone.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l6_video",
+      "extra": {
+        "prompt_id": "130c4883-4a3c-4b27-82d2-3061808dd446",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l6_video"
+    },
+    {
+      "id": "c1_l7",
+      "description": "s4c1 場景：合上卷宗揉眉心",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, closing the case file with both hands then pressing his brow with two fingers, eyes shutting briefly, lips sealed. Desk lamp warmth against grey walls. Subtle handheld sway. He appears exactly once.\noverall_soundscape: Heavy file thump, soft fingertip rub, weary exhale without voice. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech.\nnon_diegetic_music: A tired closing cadence.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l7_video",
+      "extra": {
+        "prompt_id": "440722da-270c-48a5-aa34-55f60f48c5e3",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l7_video"
+    },
+    {
+      "id": "c1_l8",
+      "description": "s4c1 旁白：體系最完美的產品",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, [Shot 1] Medium of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, leaning back in his chair, gaze distant through the grey window light, lips sealed, never the source of the narration. [Shot 2] At 00:05.500, the camera cuts to a close-up of the indictment edge under his resting hand, a slow push holding the tension. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n他能預見這場審判的走向。\n嚴立誠是這個體系裡最完美的產品，他從不談被告救了多少人。\n他只談那三千萬沒有經過那個特定的帳戶。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Muted office hush beneath the voice.\nnon_diegetic_music: A foreboding low swell.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l8_video",
+      "extra": {
+        "prompt_id": "7712c36a-b862-4a21-8d9e-8797916fa4c9",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l8_video"
+    },
+    {
+      "id": "c1_l9",
+      "description": "s4c1 場景：二樓俯瞰媒體簡報",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, High-angle wide of a grey courthouse hall, a row of microphones glinting under camera flashes. Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, standing straight at the podium, lips sealed. Above in shadow, Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark robe, watching down over the railing, lips sealed. Slow descending drift. Each man appears exactly once. No duplicated figure.\noverall_soundscape: Hall echo, camera shutter bursts, microphone handling taps. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A tense press-room pulse.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l9_video",
+      "extra": {
+        "prompt_id": "cd40b48a-d432-4337-9709-441ecd9cee58",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l9_video"
+    },
+    {
+      "id": "c1_l10",
+      "description": "s4c1 對白·嚴立誠：程序絕對性",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, facing the microphones, posture upright, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, calm but firm tone. Only (S2) speaks. No other person in the foreground.\n(S2) says:\n<d>\n[中文]\n各位。\n我們不否認林女士可能有一顆善良的心。\n但法律之所以為法律，就在於它的程序絕對性。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Hall echo and faint shutter clicks beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l10_video",
+      "extra": {
+        "prompt_id": "224ab459-eb25-4a2b-9a46-6f375938fee0",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l10_video"
+    },
+    {
+      "id": "c1_l11",
+      "description": "s4c1 對白·嚴立誠：救災慈善挪用",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, one hand raised in measured emphasis, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, steady stern tone. Only (S2) speaks. Microphones stay blurred below frame.\n(S2) says:\n<d>\n[中文]\n今天她可以因為救災而挪用不具名資金。\n明天別人就可以因為慈善而洗錢。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Hall echo beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l11_video",
+      "extra": {
+        "prompt_id": "417b0813-ce1f-4eee-88df-ed4c2007726e",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l11_video"
+    },
+    {
+      "id": "c1_l12",
+      "description": "s4c1 對白·嚴立誠：公然挑釁",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, leaning slightly into the microphones, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, grave warning tone. Only (S2) speaks. Flashbulbs flare softly behind.\n(S2) says:\n<d>\n[中文]\n如果程序破裂了，善良就會變成邪惡的溫床。\n這五百萬元的憑證缺失，不是小事。\n它是對法治秩序的公然挑釁。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Press hall echo beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l12_video",
+      "extra": {
+        "prompt_id": "60e0dd41-762e-4d82-abe1-33dd1116476e",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l12_video"
+    },
+    {
+      "id": "c1_l13",
+      "description": "s4c1 旁白：避開道德引向程序",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, stepping back from the podium with composed confidence, lips sealed, never the source of the narration. Flashbulbs continue softly. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n嚴立誠很聰明。\n他避開了林女士有沒有貪污這個危險的道德問題。\n直接將問題引向了程序是否受損。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Press hall murmur beneath the voice.\nnon_diegetic_music: A shrewd calculating motif.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l13_video",
+      "extra": {
+        "prompt_id": "3f4f4cd2-7976-479e-b91f-3ce40e8bb00a",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l13_video"
+    },
+    {
+      "id": "c1_l14",
+      "description": "s4c1 旁白：植入恐懼",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Wide of the courthouse hall crowd gazing up at the podium lights, faces half-lit, no single face dominant. Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, small at the podium, lips sealed, never the source of the narration. Camera drifts slowly across the listeners. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n他在大眾心中植入了一個恐懼。\n如果程序不守，社會就會崩潰。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Crowd hush beneath the voice.\nnon_diegetic_music: A cold spreading dread tone.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l14_video",
+      "extra": {
+        "prompt_id": "7b0072ea-c392-4c58-9b16-71385fe26c9d",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l14_video"
+    },
+    {
+      "id": "c1_l15",
+      "description": "s4c1 場景：二樓看手機直播",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark robe, standing in the dim second-floor shadow, holding a glowing phone, scrolling comment lines as visible on-screen text, never read aloud, lips sealed. Flash glow pulses from below. Slow push-in. He appears exactly once.\noverall_soundscape: Phone speaker murmur kept unintelligible, distant hall echo, soft thumb swipe on glass. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A restless scrolling tick.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l15_video",
+      "extra": {
+        "prompt_id": "68dba4e6-2a1f-42fb-8713-c2a44115e089",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l15_video"
+    },
+    {
+      "id": "c1_l16",
+      "description": "s4c1 旁白：三則留言",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Extreme close of the phone screen with rolling comment lines as visible on-screen text, never read aloud, thumb slowly scrolling. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark robe, reflected glow on his still face, lips sealed, never the source of the narration. Static hold on the glow. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n程序不合法就是犯法，沒什麼好說的。\n如果大家都不報帳，國家不就亂了。\n連五百萬憑證都拿不出來，裡面一定有鬼，查辦到底。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Faint glass swipe beneath the voice.\nnon_diegetic_music: A brittle digital murmur.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l16_video",
+      "extra": {
+        "prompt_id": "a278eccb-ecb2-40d9-9765-be958ec9fe1a",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l16_video"
+    },
+    {
+      "id": "c1_l17",
+      "description": "s4c1 旁白：形式主義的魔術",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark robe, lowering the phone, gaze hardening toward the hall lights below, lips sealed, never the source of the narration. Passing flashes wash his face. Slow push-in. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n這就是形式主義的魔術。\n只要將行為貼上破壞程序的標籤。\n公眾就會自動忽略那個行為背後真實的價值。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Hall ambience beneath the voice.\nnon_diegetic_music: A disillusioned minor fall.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l17_video",
+      "extra": {
+        "prompt_id": "fe11ce07-d47e-40b0-ab12-cad4a5b4b051",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l17_video"
+    },
+    {
+      "id": "c1_l18",
+      "description": "s4c1 旁白：三千災民微不足道",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Wide memory-like flash of a daylight relief camp, rows of plain canvas tents under dust, small distant figures carrying supplies, no readable signs. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark robe, seen from behind at the frame edge observing, lips sealed, never the source of the narration. Slow aerial drift. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n林女士救活的三千個災民。\n在五百萬憑證缺失這個標籤面前，瞬間變得微不足道。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Wind over canvas beneath the voice.\nnon_diegetic_music: A fragile humanitarian theme.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l18_video",
+      "extra": {
+        "prompt_id": "c41e8a8b-763d-46c8-a4d3-d7c18040369c",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l18_video"
+    },
+    {
+      "id": "c1_l19",
+      "description": "s4c1 場景：深夜翻開法益真實論",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Wide of a dead-silent courthouse office at night, single desk lamp pooling warm light. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark grey suit, seated alone, opening the yellowed book, fingertip resting on the page, lips sealed. Darkness presses at the window. Slow push-in. He appears exactly once.\noverall_soundscape: Night building hush, faint lamp buzz, soft page settle. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A hollow midnight drone.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l19_video",
+      "extra": {
+        "prompt_id": "48f9e849-426c-4c8b-8b8b-be062fc8da47",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l19_video"
+    },
+    {
+      "id": "c1_l20",
+      "description": "s4c1 旁白：官僚的裹屍布",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close of the yellowed book page with printed columns as visible on-screen text, never read aloud, a fingertip resting motionless on the lines. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark grey suit, bowed over the page, lips sealed, never the source of the narration. Lamp light trembles faintly. Static hold. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n當法律的解釋只剩下格式與代碼，而不再問誰受傷了。\n法律便不再是正義的護盾，而是官僚的裹屍布。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Lamp hush beneath the voice.\nnon_diegetic_music: A solemn verdict swell.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l20_video",
+      "extra": {
+        "prompt_id": "90201995-e50f-46ad-92bf-0c0c181d7b92",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l20_video"
+    },
+    {
+      "id": "c1_l21",
+      "description": "s4c1 場景：筆尖畫問號",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Extreme close of a pen tip drawing a small question mark beside a printed indictment line as visible on-screen text, never read aloud. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark grey suit, hand steady, lips sealed. Lamp light sharp on paper. Slow push on the ink stroke. He appears exactly once.\noverall_soundscape: Pen scratch on paper, soft breath, lamp hush. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A single questioning note.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l21_video",
+      "extra": {
+        "prompt_id": "b82d935c-409a-4468-947e-5401db750290",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l21_video"
+    },
+    {
+      "id": "c1_l22",
+      "description": "s4c1 旁白：看守所照片",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close of a worn detention photograph on the desk showing Lin lady (S3), an East Asian woman around sixty, short grey-streaked hair, plain worn jacket, tired kind eyes, unsmiling, lips sealed. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark grey suit, out-of-focus hand at the frame edge, lips sealed, never the source of the narration. Lamp glow across the photo. Slow push-in. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n他腦中浮現出林女士在看守所的照片。\n那個女人沒有買過任何名牌，沒有任何海外帳戶。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Paper stillness beneath the voice.\nnon_diegetic_music: A muted elegiac line.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l22_video",
+      "extra": {
+        "prompt_id": "9188c47b-05ee-4b9f-a06a-e0ddd4bc8a6d",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l22_video"
+    },
+    {
+      "id": "c1_l23",
+      "description": "s4c1 旁白：不等公文先送帳篷",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Wide flash of a quake-hit street at dusk, dust hanging, volunteers unloading plain canvas tents from a truck, no readable signs. Lin lady (S3), an East Asian woman around sixty, short grey-streaked hair, plain worn jacket, tired kind eyes, directing with a raised arm, lips sealed, never the source of the narration. Camera holds wide, slow lateral drift. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n她唯一的罪，似乎就是在那場大地震發生時。\n不等行政公文跑完三天，就先把錢換成帳篷送進了災區。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Distant canvas flap and truck idle beneath the voice.\nnon_diegetic_music: A mournful relief motif.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l23_video",
+      "extra": {
+        "prompt_id": "b881cb65-6f4c-40ef-b87f-abe59b023803",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l23_video"
+    },
+    {
+      "id": "c1_l24",
+      "description": "s4c1 對白·沈惟德：制度保護了誰",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close-up of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark grey suit, alone in the empty night office, facing slightly off-camera, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, low murmuring tone. Only (S1) speaks. No other person visible.\n(S1) says:\n<d>\n[中文]\n嚴檢察官。\n你指控她侵害了制度。\n但我想知道，在你的正義裡，那個制度到底保護了誰。\n</d>\noverall_soundscape: Dialogue delivered by a low measured firm male voice in his early fifties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Empty office hush beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l24_video",
+      "extra": {
+        "prompt_id": "d3c0069d-4862-40a5-b9b0-6b4df334c0e3",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l24_video"
+    },
+    {
+      "id": "c1_l25",
+      "description": "s4c1 旁白：必須依慣例主持",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark grey suit, seated rigidly at the desk in lamplight, hands folded, gaze lowered, lips sealed, never the source of the narration. Shadows crowd the walls. Slow push-in. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n他知道，明天的第一次預備程序，他必須依照形式主義的慣例主持。\n他不能表態，不能質疑檢察官的法律標籤。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Night office hush beneath the voice.\nnon_diegetic_music: A constrained ceremonial weight.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l25_video",
+      "extra": {
+        "prompt_id": "c35488b8-0580-47d7-82d1-b97eea38b1f9",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l25_video"
+    },
+    {
+      "id": "c1_l26",
+      "description": "s4c1 旁白：石像扼殺真實的人",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Locked medium of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark grey suit, sitting motionless as stone, lamplight carving his still profile, lips sealed, never the source of the narration. A faint clock second hand keeps ticking on the wall. Static hold. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n他必須像一尊石像一樣。\n聽著嚴立誠如何用那些冰冷的構成要件，一點一滴地扼殺掉那個真實的人。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Clock tick beneath the voice.\nnon_diegetic_music: A petrified held chord.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c1_l26_video",
+      "extra": {
+        "prompt_id": "a6716ecf-3d0d-4131-9207-7f7b9f33c9d2",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l26_video"
+    },
+    {
+      "id": "c1_l27",
+      "description": "s4c1 場景：關燈黑暗壓力",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark grey suit, switching off the desk lamp, his face sinking into near-darkness, only faint window glow tracing his outline, lips sealed. The room falls black around him. Slow push-in. He appears exactly once. No duplicated figure.\noverall_soundscape: Lamp click, sudden room hush, distant building groan. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A deep suffocating pressure tone.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c1_l27_video",
+      "extra": {
+        "prompt_id": "717c719e-bf82-4340-ab53-05bbd7758501",
+        "v2_width": 896,
+        "v2_height": 576
+      },
+      "output": "output/s4_c1_l27_video"
+    },
+    {
+      "id": "Char-Shen",
+      "description": "LOOKUP ONLY — DO NOT SUBMIT。角色卡：沈惟德，外觀錨點查詢用，不生成。",
+      "type": "t2i",
+      "prompt": "Photorealistic front-facing portrait reference of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, wearing a dark judge robe, neutral expression, lips closed, facing camera, plain grey background, natural skin texture, real-world photography, not anime, not cartoon, not illustration. LOOKUP ONLY, do not submit for generation.",
+      "refs": [],
+      "seed": 495010,
+      "out": "lookup_char_shen",
+      "extra": {
+        "anchor": "Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face",
+        "face_seed": 495010,
+        "no_submit": true,
+        "role": "char_lookup",
+        "voice_anchor": "a low measured firm male voice in his early fifties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching",
+        "wardrobe": "day: dark judge robe; night/private: dark grey suit"
+      }
+    },
+    {
+      "id": "Char-Yan",
+      "description": "LOOKUP ONLY — DO NOT SUBMIT。角色卡：嚴立誠，外觀錨點查詢用，不生成。",
+      "type": "t2i",
+      "prompt": "Photorealistic front-facing portrait reference of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, wearing a crisp white shirt with dark prosecutor robe, confident composed expression, lips closed, facing camera, plain grey background, natural skin texture, real-world photography, not anime, not cartoon, not illustration. LOOKUP ONLY, do not submit for generation.",
+      "refs": [],
+      "seed": 495010,
+      "out": "lookup_char_yan",
+      "extra": {
+        "anchor": "Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair",
+        "face_seed": 495010,
+        "no_submit": true,
+        "role": "char_lookup",
+        "voice_anchor": "a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching",
+        "wardrobe": "crisp white shirt with dark prosecutor robe"
+      }
+    },
+    {
+      "id": "Char-Lin",
+      "description": "LOOKUP ONLY — DO NOT SUBMIT。角色卡：林女士，外觀錨點查詢用，不生成。",
+      "type": "t2i",
+      "prompt": "Photorealistic front-facing portrait reference of Lin lady (S3), an East Asian woman around sixty, short grey-streaked hair, plain worn jacket, tired kind eyes, unsmiling weathered face, lips closed, facing camera, plain grey background, natural skin texture, real-world photography, not anime, not cartoon, not illustration. LOOKUP ONLY, do not submit for generation.",
+      "refs": [],
+      "seed": 495010,
+      "out": "lookup_char_lin",
+      "extra": {
+        "anchor": "Lin lady (S3), an East Asian woman around sixty, short grey-streaked hair, plain worn jacket, tired kind eyes",
+        "face_seed": 495010,
+        "first_appearance": "c1_l22",
+        "no_submit": true,
+        "role": "char_lookup",
+        "wardrobe": "plain worn jacket; detention photo: unsmiling"
+      }
+    },
+    {
+      "id": "Char-LinZhe",
+      "description": "LOOKUP ONLY — DO NOT SUBMIT。角色卡：林哲生，外觀錨點查詢用，不生成。",
+      "type": "t2i",
+      "prompt": "Photorealistic front-facing portrait reference of Lin Zhesheng (S4), an East Asian man around forty-five, haggard earnest face, short black slightly disheveled hair, deep tired eyes, plain dark lawyer suit, strained sincere expression, lips closed, facing camera, plain grey background, natural skin texture, real-world photography, not anime, not cartoon, not illustration. LOOKUP ONLY, do not submit for generation.",
+      "refs": [],
+      "seed": 495010,
+      "out": "lookup_char_linzhe",
+      "extra": {
+        "anchor": "Lin Zhesheng (S4), an East Asian man around forty-five, haggard earnest face, short black slightly disheveled hair, deep tired eyes, plain dark lawyer suit",
+        "face_seed": 495010,
+        "first_appearance": "c2_l1",
+        "no_submit": true,
+        "role": "char_lookup",
+        "voice_anchor": "an urgent hoarse male voice in his mid-forties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching",
+        "wardrobe": "plain dark lawyer suit"
+      }
+    },
+    {
+      "id": "c2_l0",
+      "description": "s4c2 場景：法庭推門登席",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Wide of a solemn wood-paneled courtroom, heavy double doors swinging slowly open. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, walking with measured steps toward the high bench, lips sealed. Hollow footsteps echo. Slow tracking drift. He appears exactly once. No duplicated figure.\noverall_soundscape: Heavy door creak, hollow footstep echoes, vast room hush. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A grave processional weight.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l0_video"
+    },
+    {
+      "id": "c2_l1",
+      "description": "s4c2 場景：雜亂證物對雪白公文",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Split-table still life in the courtroom, one side cluttered with relief photos and thank-you letters as visible on-screen objects with no readable wording, plus a mud-stained rescue vest, the other side a neat snow-white stack of printed documents as visible on-screen text, never read aloud. Lin Zhesheng (S4), an East Asian man around forty-five, haggard earnest face, short black slightly disheveled hair, deep tired eyes, plain dark lawyer suit, seated beside his cluttered table, lips sealed. Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, seated upright by the pristine stack, lips sealed. Slow lateral drift. Each man appears exactly once.\noverall_soundscape: Paper settle, faint chair creak, courtroom air hush. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A quiet contrast motif.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l1_video"
+    },
+    {
+      "id": "c2_l2",
+      "description": "s4c2 對白·沈惟德：開始論述",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close-up of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, seated high on the bench, hands folded, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, level judicial tone. Only (S1) speaks. No other person in the foreground.\n(S1) says:\n<d>\n[中文]\n請檢察官開始進行構成要件之論述。\n</d>\noverall_soundscape: Dialogue delivered by a low measured firm male voice in his early fifties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l2_video"
+    },
+    {
+      "id": "c2_l3",
+      "description": "s4c2 場景：起身翻卷",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, rising gracefully, turning toward the bench without a glance at the defense table, opening the indictment mid-volume with precise fingers, printed page lines as visible on-screen text, never read aloud, lips sealed. Paper whisper. Slow push-in. He appears exactly once.\noverall_soundscape: Chair glide, paper page turn, courtroom hush. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A poised rising tick.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l3_video"
+    },
+    {
+      "id": "c2_l4",
+      "description": "s4c2 對白·嚴立誠：邏輯簡單",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, standing composed at the prosecution table, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, clear magnetic tone. Only (S2) speaks. No other person in the foreground.\n(S2) says:\n<d>\n[中文]\n本案的邏輯極其簡單。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l4_video"
+    },
+    {
+      "id": "c2_l5",
+      "description": "s4c2 對白·嚴立誠：法條依據",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, one finger resting on the open statute page, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, precise citing tone. Only (S2) speaks. Statute pages stay blurred below frame.\n(S2) says:\n<d>\n[中文]\n根據政治獻金法第十三條及刑法偽造文書罪章。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Paper stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l5_video"
+    },
+    {
+      "id": "c2_l6",
+      "description": "s4c2 對白·嚴立誠：逕行支用",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, gaze level toward the bench, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, stern accusing tone. Only (S2) speaks. No other person in the foreground.\n(S2) says:\n<d>\n[中文]\n被告林女士在未經主管機關核准之情況下。\n將民間籌措之資金逕行支用。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l6_video"
+    },
+    {
+      "id": "c2_l7",
+      "description": "s4c2 對白·嚴立誠：宣稱救災",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, pausing with a dismissive half-gesture, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, cool skeptical tone. Only (S2) speaks. Lin Zhesheng (S4) stays far in soft background blur, lips sealed and silent.\n(S2) says:\n<d>\n[中文]\n雖然辯護人宣稱這筆錢用於救災。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l7_video"
+    },
+    {
+      "id": "c2_l8",
+      "description": "s4c2 場景：舉起報表截圖",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, holding up an enlarged printed spreadsheet toward the bench, chart grids as visible on-screen text, never read aloud, lips sealed. Courtroom lamps glare on the paper. Slow push-in. He appears exactly once.\noverall_soundscape: Paper lift swish, courtroom hush, faint bench creak. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A sharp exhibit sting.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l8_video"
+    },
+    {
+      "id": "c2_l9",
+      "description": "s4c2 對白·嚴立誠：非法流入資金",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, lowering the spreadsheet, gaze cutting toward the bench, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, grave defining tone. Only (S2) speaks. No other person in the foreground.\n(S2) says:\n<d>\n[中文]\n在法律眼中，這三千萬元的本質是非法流入資金。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l9_video"
+    },
+    {
+      "id": "c2_l10",
+      "description": "s4c2 對白·嚴立誠：僅手寫收據",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, tapping the spreadsheet edge for emphasis, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, cold factual tone. Only (S2) speaks. No other person in the foreground.\n(S2) says:\n<d>\n[中文]\n其中有五百萬元的支出，因為沒有符合會計準則的正式發票。\n僅有手寫收據。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Paper tap beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l10_video"
+    },
+    {
+      "id": "c2_l11",
+      "description": "s4c2 對白·嚴立誠：正義不復存在",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, setting the spreadsheet down with finality, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, solemn conclusive tone. Only (S2) speaks. No other person in the foreground.\n(S2) says:\n<d>\n[中文]\n在形式上，這就是侵佔與偽造。\n法治國家的基石是程序，程序一旦被破壞，正義即不復存在。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l11_video"
+    },
+    {
+      "id": "c2_l12",
+      "description": "s4c2 場景：林哲生猛站起",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium of Lin Zhesheng (S4), an East Asian man around forty-five, haggard earnest face, short black slightly disheveled hair, deep tired eyes, plain dark lawyer suit, pushing up abruptly from the defense table, palms striking the wood, chest heaving with urgency, lips pressed, eyes burning. Papers shudder on the table. Quick push-in. He appears exactly once.\noverall_soundscape: Chair scrape, palm thump on wood, sharp chair creak. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A sudden standing shock chord.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l12_video"
+    },
+    {
+      "id": "c2_l13",
+      "description": "s4c2 對白·林哲生：必須抗辯",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close-up of Lin Zhesheng (S4), an East Asian man around forty-five, haggard earnest face, short black slightly disheveled hair, deep tired eyes, plain dark lawyer suit, standing at the defense table facing the bench, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, urgent protesting tone. Only (S4) speaks. No other person in the foreground.\n(S4) says:\n<d>\n[中文]\n庭上，我必須抗辯。\n檢察官不斷強調程序，卻絕口不提當時的背景。\n</d>\noverall_soundscape: Dialogue delivered by an urgent hoarse male voice in his mid-forties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l13_video"
+    },
+    {
+      "id": "c2_l14",
+      "description": "s4c2 對白·林哲生：地震三小時",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, [Shot 1] Close-up of Lin Zhesheng (S4), an East Asian man around forty-five, haggard earnest face, short black slightly disheveled hair, deep tired eyes, plain dark lawyer suit, pleading toward the bench, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, trembling urgent tone. Only (S4) speaks. [Shot 2] At 00:06.000, the camera cuts to a brief flash of a dark rubble street at night, rescue lights sweeping dust, no readable signs, then returns to his face. No other person in the foreground.\n(S4) says:\n<d>\n[中文]\n那是大地震後的第三個小時，所有的行政系統都癱瘓了。\n林女士如果不先撥款，災民就得露天睡在餘震不斷的廢墟裡。\n</d>\noverall_soundscape: Dialogue delivered by an urgent hoarse male voice in his mid-forties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness with distant siren wash beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l14_video"
+    },
+    {
+      "id": "c2_l15",
+      "description": "s4c2 對白·林哲生：眼淚收據",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, [Shot 1] Close-up of Lin Zhesheng (S4), an East Asian man around forty-five, haggard earnest face, short black slightly disheveled hair, deep tired eyes, plain dark lawyer suit, holding up trembling handwritten slips, ink strokes as visible on-screen text, never read aloud, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, choked sincere tone. Only (S4) speaks. [Shot 2] At 00:06.000, the camera cuts to a close-up of the slips in his shaking hand, then back to his eyes. No other person in the foreground.\n(S4) says:\n<d>\n[中文]\n那些手寫收據，是災區小賣部老闆在斷電的情況下，忍著眼淚寫給林女士的。\n因為他把店裡所有的水和餅乾都搬空了。\n</d>\noverall_soundscape: Dialogue delivered by an urgent hoarse male voice in his mid-forties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Paper tremble beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l15_video"
+    },
+    {
+      "id": "c2_l16",
+      "description": "s4c2 對白·嚴立誠：反對",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, seated, turning his face coldly away from the defense table, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his profile, icy clipped tone. Only (S2) speaks. Lin Zhesheng (S4) stays far in soft background blur, lips sealed and silent.\n(S2) says:\n<d>\n[中文]\n反對。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l16_video"
+    },
+    {
+      "id": "c2_l17",
+      "description": "s4c2 對白·嚴立誠：煽情無關",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, eyes fixed on the bench, unmoved, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, dismissive level tone. Only (S2) speaks. No other person in the foreground.\n(S2) says:\n<d>\n[中文]\n辯護人所描述的場景具有高度煽情性。\n但與本案是否違反會計程序之構成要件無關。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l17_video"
+    },
+    {
+      "id": "c2_l18",
+      "description": "s4c2 對白·嚴立誠：行為結果對應",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, hands folded, final and absolute, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, doctrinal tone. Only (S2) speaks. No other person in the foreground.\n(S2) says:\n<d>\n[中文]\n法律不看動機，只看行為與結果的對應關係。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l18_video"
+    },
+    {
+      "id": "c2_l19",
+      "description": "s4c2 旁白：翻動與困惑",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, [Shot 1] Medium of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, seated high on the bench, gaze shifting between the two tables, lips sealed, never the source of the narration. [Shot 2] At 00:06.000, the camera cuts to a close-up of Lin lady (S3), an East Asian woman around sixty, short grey-streaked hair, plain worn jacket, tired kind eyes, lifting her head with bloodshot bewildered eyes, lips sealed, never the source of the narration. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n沈惟德看著林哲生，內心深處那本法益真實論正在劇烈翻動。\n他看見林女士抬起頭，那雙佈滿血絲的眼睛裡充滿了困惑。\n她救了人，為什麼大家在討論的是收據的格式。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Courtroom hush beneath the voice.\nnon_diegetic_music: A quietly cracking motif.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c2_l19_video"
+    },
+    {
+      "id": "c2_l20",
+      "description": "s4c2 對白·沈惟德：反對有理",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close-up of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, seated high on the bench, hands folded, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, restrained judicial tone. Only (S1) speaks. Lin Zhesheng (S4) stays far in soft background blur, lips sealed and silent.\n(S1) says:\n<d>\n[中文]\n反對有理。\n辯護人，請針對資金流向與會計憑證缺失之法律關係進行辯論。\n</d>\noverall_soundscape: Dialogue delivered by a low measured firm male voice in his early fifties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l20_video"
+    },
+    {
+      "id": "c2_l21",
+      "description": "s4c2 對白·沈惟德：不再提背景",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close-up of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, gaze lowered, jaw set with quiet pain, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, low final tone. Only (S1) speaks. No other person in the foreground.\n(S1) says:\n<d>\n[中文]\n不要再提及救災背景。\n</d>\noverall_soundscape: Dialogue delivered by a low measured firm male voice in his early fifties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l21_video"
+    },
+    {
+      "id": "c2_l22",
+      "description": "s4c2 旁白：證詞變不具關聯",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium of Lin Zhesheng (S4), an East Asian man around forty-five, haggard earnest face, short black slightly disheveled hair, deep tired eyes, plain dark lawyer suit, frozen mid-stand, staring at the scattered testimonial letters on his table, hands slack, lips sealed, never the source of the narration. Papers lie still. Slow push-in. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n林哲生愣住了。\n那些真實的生命與獲救後的哭聲，在這一刻全變成了不具關聯性的東西。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Paper stillness beneath the voice.\nnon_diegetic_music: A deflating hollow motif.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c2_l22_video"
+    },
+    {
+      "id": "c2_l23",
+      "description": "s4c2 旁白：五小時切割機",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Wide of the courtroom under flat fluorescent light, clock hands creeping. Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, slicing the air with precise hand chops at the prosecution table, lips sealed, never the source of the narration. Lin Zhesheng (S4) sits slumped at the defense table, lips sealed. Slow lateral drift. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n審判持續了五個小時。\n嚴立誠像是一台精密的切割機，將林女士的行為拆解成無數個時間點和編號。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Clock tick and paper shuffle beneath the voice.\nnon_diegetic_music: A grinding mechanical pulse.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c2_l23_video"
+    },
+    {
+      "id": "c2_l24",
+      "description": "s4c2 對白·嚴立誠：甲罪乙罪",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close-up of Yan Licheng (S2), an East Asian man around thirty-five, sharp thin face, gold-rimmed glasses, short black side-parted hair, crisp white shirt with dark prosecutor robe, reading coldly from a timestamped ledger page, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, machine-like citing tone. Only (S2) speaks. Ledger columns stay blurred below frame.\n(S2) says:\n<d>\n[中文]\n十四時零二分，資金未入專戶，構成甲罪。\n十五時三十分，憑證未附發票，構成乙罪。\n</d>\noverall_soundscape: Dialogue delivered by a clear decisive young male voice in his mid-thirties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Paper stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l24_video"
+    },
+    {
+      "id": "c2_l25",
+      "description": "s4c2 旁白：記者寫敗局已定",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, [Shot 1] Medium of Lin Zhesheng (S4), an East Asian man around forty-five, haggard earnest face, short black slightly disheveled hair, deep tired eyes, plain dark lawyer suit, gesturing helplessly at the defense table, lips sealed, never the source of the narration. [Shot 2] At 00:06.000, the camera cuts to the press bench where reporters scribble fast in notebooks, headline drafts as visible on-screen text, never read aloud, pens scratching. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n林哲生每一次試圖把話題拉回真實的損害與實際的效益。\n都會被嚴立誠以形式正義為盾牌擋掉。\n媒體席上的記者已經開始撰寫新聞草稿。\n法律程序不容挑戰，林女士敗局已定。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Pen scratches beneath the voice.\nnon_diegetic_music: A suffocating tightening line.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c2_l25_video"
+    },
+    {
+      "id": "c2_l26",
+      "description": "s4c2 對白·沈惟德：還有什麼補充",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close-up of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, seated high on the bench, leaning slightly forward, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, weary procedural tone. Only (S1) speaks. No other person in the foreground.\n(S1) says:\n<d>\n[中文]\n律師，你還有什麼要補充的嗎。\n</d>\noverall_soundscape: Dialogue delivered by a low measured firm male voice in his early fifties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l26_video"
+    },
+    {
+      "id": "c2_l27",
+      "description": "s4c2 場景：揉皺感謝信絕望",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close of Lin Zhesheng (S4), an East Asian man around forty-five, haggard earnest face, short black slightly disheveled hair, deep tired eyes, plain dark lawyer suit, staring at a crumpled thank-you letter in his fist, paper fibers crushed, shoulders sinking with deep despair, lips sealed. Behind him the courtroom wall of statute volumes looms. Slow push-in. He appears exactly once.\noverall_soundscape: Paper crumple, soft shaky breath without voice, courtroom hush. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A despairing low descent.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l27_video"
+    },
+    {
+      "id": "c2_l28",
+      "description": "s4c2 對白·林哲生：指認什麼",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close-up of Lin Zhesheng (S4), an East Asian man around forty-five, haggard earnest face, short black slightly disheveled hair, deep tired eyes, plain dark lawyer suit, straightening slowly to face the bench, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, hoarse questioning tone. Only (S4) speaks. No other person in the foreground.\n(S4) says:\n<d>\n[中文]\n庭上，如果法律只剩下這些編號，我們指認的到底是什麼。\n</d>\noverall_soundscape: Dialogue delivered by an urgent hoarse male voice in his mid-forties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l28_video"
+    },
+    {
+      "id": "c2_l29",
+      "description": "s4c2 對白·林哲生：罪犯或說明書",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close-up of Lin Zhesheng (S4), an East Asian man around forty-five, haggard earnest face, short black slightly disheveled hair, deep tired eyes, plain dark lawyer suit, eyes glistening, standing his ground before the bench, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, breaking heartfelt tone. Only (S4) speaks. No other person in the foreground.\n(S4) says:\n<d>\n[中文]\n是一個罪犯，還是一個因為太愛這個社會而忘了看說明書的人。\n</d>\noverall_soundscape: Dialogue delivered by an urgent hoarse male voice in his mid-forties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Courtroom stillness beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l29_video"
+    },
+    {
+      "id": "c2_l30",
+      "description": "s4c2 場景：安靜空調動搖",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, staring down at the indictment on the bench, a flicker of unnoticed wavering crossing his still eyes, lips sealed. Air-conditioner hum fills the dead silence. Slow push-in. He appears exactly once.\noverall_soundscape: Air-conditioner drone, faint paper edge tremble, dead courtroom silence. No dialogue. No narration. No human speech. No whispering. No muttering. No off-screen speech. No device voice.\nnon_diegetic_music: A barely audible fracture tone.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l30_video"
+    },
+    {
+      "id": "c2_l31",
+      "description": "s4c2 旁白：寫下法益除魅",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Extreme close of trembling fingertips writing two columns of characters in a margin notebook, ink strokes as visible on-screen text, never read aloud. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, hand unsteady, lips sealed, never the source of the narration. Bench lamp glare. Slow push on the ink. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n他指尖微顫，在筆記欄裡寫下了一個陌生的詞。\n法益除魅。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Pen scratch beneath the voice.\nnon_diegetic_music: A strange liberating note.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c2_l31_video"
+    },
+    {
+      "id": "c2_l32",
+      "description": "s4c2 對白·沈惟德：辯論終結",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium of Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, rising gaze from the defeated defense table to the assured prosecution table, then facing forward, his mouth opens and closes clearly with every syllable, lips visibly articulating the Chinese words, camera holds his face, grave announcing tone. Only (S1) speaks. Both lawyers stay far in soft background blur, lips sealed and silent.\n(S1) says:\n<d>\n[中文]\n今日辯論終結。\n兩週後進行最終言詞辯論。\n</d>\noverall_soundscape: Dialogue delivered by a low measured firm male voice in his early fifties, Taiwan-accented Standard Mandarin, no Cantonese, no English, no code-switching. Gavel wood knock beneath the speech.\nnon_diegetic_music: A clean open string line, warm and unhurried.",
+      "refs": [],
+      "seed": 495010,
+      "out": "s4_c2_l32_video"
+    },
+    {
+      "id": "c2_l33",
+      "description": "s4c2 旁白：回頭一眼崩塌一角",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Wide of the emptying courtroom, a bailiff escorting Lin lady (S3), an East Asian woman around sixty, short grey-streaked hair, plain worn jacket, tired kind eyes, toward the side door, she turns for one backward glance, lips sealed, never the source of the narration. Shen Weide (S1), an East Asian man around fifty, short neat black hair with faint grey at the temples, calm deep-set eyes, lean composed face, dark judge robe, small on the high bench meeting her eyes, lips sealed. Slow push-in. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n林女士在被法警帶走前，轉頭看了一眼沈惟德。\n那一眼，讓沈惟德構築好的秩序崩塌了一角。\n</d>\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin, read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English, no code-switching. Footstep echoes beneath the voice.\nnon_diegetic_music: A quietly collapsing chord.",
+      "refs": [],
+      "seed": 311000,
+      "out": "s4_c2_l33_video"
+    }
+  ]
+}

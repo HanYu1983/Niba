@@ -1,8 +1,8 @@
 {
   "description": "共識協議·第一章「邊境的廢紙」t2v 版：純文字驅動、無參考圖；角色以外觀文字定錨（林墨為主）。512×288。",
   "story_md": "D:\\han\\Niba\\dev\\Project20\\story1.md",
-  "width": 288,
-  "height": 512,
+  "width": 576,
+  "height": 896,
   "phase": 2,
   "plan": [
     {
@@ -658,7 +658,7 @@
       "id": "Ref-c1_l2_first",
       "description": "c1_l2 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Medium close on the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance, mouth opening with clear lip shapes as he speaks. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build, stands nearby listening with lips sealed. Only (S2)'s mouth moves.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Medium close on the border patrolman (S2), an East Asian man around fifty, square weathered face with tanned olive skin, deep-set dark brown eyes with heavy crow's feet, straight broad nose, short cropped grizzled hair grey at the sides. Distinct feature: a faint diagonal scar across his left cheek. Wearing a dusty olive patrol uniform, weary practical stance, lips closed, calm neutral expression just before speaking. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build, stands nearby listening with lips sealed. ",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l2_first",
@@ -668,16 +668,16 @@
         "for": "c1_l2",
         "role": "i2v_first_frame",
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "v2_height": 512,
-        "v2_width": 288,
-        "prompt_id": "560afff7-ad79-48f0-adc8-cbf80c100904"
+        "v2_height": 896,
+        "v2_width": 576,
+        "prompt_id": "d98a1771-e18b-4204-8779-39dfb57508e5"
       }
     },
     {
       "id": "Ref-c1_l2_last",
       "description": "c1_l2 尾幀：巡邏員說完／林墨仍聆聽，同構圖延續",
       "type": "t2i",
-      "prompt": "Cinematic still frame, 16:9 widescreen 512x288, dusty border fence under harsh noon sun. Medium close: same East Asian border patrolman around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary stance, mouth just closing after speaking, residual speech tension in jaw. Beside him same Lin Mo, East Asian man around forty-five, short neat black hair with faint grey at temples, lean angular face, dark charcoal suit over white shirt, composed serious eyes, lips still sealed listening. Rusted barbed wire and dry dust behind them. Continuity with the opening frame of the same shot. Photorealistic, sharp faces, natural daylight, no text, no watermark, no subtitle.",
+      "prompt": "Cinematic still frame, 9:14 vertical portrait 576x896, dusty border fence under harsh noon sun. Medium close: same East Asian border patrolman around fifty, square weathered face with tanned olive skin, deep-set dark brown eyes with heavy crow's feet, straight broad nose, short cropped grizzled hair grey at the sides, faint diagonal scar across his left cheek, dusty olive patrol uniform, weary stance, mouth just closing after speaking, residual speech tension in jaw. Beside him same Lin Mo, East Asian man around forty-five, short neat black hair with faint grey at temples, lean angular face, dark charcoal suit over white shirt, composed serious eyes, lips still sealed listening. Rusted barbed wire and dry dust behind them. Continuity with the opening frame of the same shot. Photorealistic, sharp faces, natural daylight, no text, no watermark, no subtitle.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l2_last",
@@ -687,16 +687,16 @@
         "for": "c1_l2",
         "role": "i2v_last_frame",
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
-        "v2_height": 512,
-        "v2_width": 288,
-        "prompt_id": "11eecc40-e92d-423e-a89c-969f5ffaf19b"
+        "v2_height": 896,
+        "v2_width": 576,
+        "prompt_id": "0dd0cc75-6743-47c0-8b45-1d799cc04f2f"
       }
     },
     {
       "id": "Ref-c1_l0_first",
       "description": "c1_l0 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Wide dusty borderscape under harsh noon sun: rusted watchtowers, cracked asphalt, heat shimmer. Diesel haze drifts. Dry brown dust lifts in thin sheets. No people close. Static wide hold.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Wide dusty borderscape under harsh noon sun: rusted watchtowers, cracked asphalt, heat shimmer. Diesel haze drifts. Dry brown dust lifts in thin sheets. No people close. Static wide hold.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l0_first",
@@ -706,16 +706,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l0",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "333e508a-38f5-4637-aaa9-8ae397ec5cd8"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "18f2eb2f-b0a3-47ac-a1eb-3135bd0d62e2"
       }
     },
     {
       "id": "Ref-c1_l1_first",
       "description": "c1_l1 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Medium-wide: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stands at a rusted barbed-wire fence, dusty leather shoes visible at the edge of frame, posture still. Beyond the fence an abandoned trade-gate skeleton. Wind lifts a scrap of paper. Slow push-in. Lips sealed. He appears exactly once.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Medium-wide: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stands at a rusted barbed-wire fence, dusty leather shoes visible at the edge of frame, posture still. Beyond the fence an abandoned trade-gate skeleton. Wind lifts a scrap of paper. Slow push-in. Lips sealed. He appears exactly once.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l1_first",
@@ -725,16 +725,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l1",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "7a5a6c1a-225a-4fe9-8510-5ca200d6a9ff"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "9aec242d-0dc5-4589-81ce-9a45e8a7fe40"
       }
     },
     {
       "id": "Ref-c1_l3_first",
       "description": "c1_l3 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Over-shoulder: the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance points beyond the fence. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build follows the gesture. Outside: a heap of vivid colorful papers under merciless sun, ironic brightness against brown dust. Slow pan along the pile. Both lips sealed.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Over-shoulder: the border patrolman (S2), an East Asian man around fifty, square weathered face with tanned olive skin, deep-set dark brown eyes with heavy crow's feet, straight broad nose, short cropped grizzled hair grey at the sides. Distinct feature: a faint diagonal scar across his left cheek. Wearing a dusty olive patrol uniform, weary practical stance points beyond the fence. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build follows the gesture. Outside: a heap of vivid colorful papers under merciless sun, ironic brightness against brown dust. Slow pan along the pile. Both lips sealed.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l3_first",
@@ -744,16 +744,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l3",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "8e2ef7cc-4a50-4901-a291-42f30d11d1d9"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "108d45ac-55fa-45ec-8b7e-c68b24996682"
       }
     },
     {
       "id": "Ref-c1_l4_first",
       "description": "c1_l4 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Medium: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build walks to the ash edge, crouches, fingers lift one half-burned banknote from grey ash. Close detail of ash on charcoal suit cuff. Lips sealed. He appears exactly once. Slow tilt up to his focused eyes.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Medium: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build walks to the ash edge, crouches, fingers lift one half-burned banknote from grey ash. Close detail of ash on charcoal suit cuff. Lips sealed. He appears exactly once. Slow tilt up to his focused eyes.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l4_first",
@@ -763,16 +763,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l4",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "3529bc1e-2a6e-4786-aa3b-815268cbb1c3"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "080879db-341f-4da5-8261-e179b7d5051a"
       }
     },
     {
       "id": "Ref-c1_l5_first",
       "description": "c1_l5 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Extreme close on a thin colorful banknote in Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's fingers: leader portrait, red star, gear motifs. Visible on-screen text on the bill is never read aloud. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stays lips sealed, never the source of the narration. Slow push on the paper texture.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Extreme close on a thin colorful banknote in Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's fingers: leader portrait, red star, gear motifs. Visible on-screen text on the bill is never read aloud. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stays lips sealed, never the source of the narration. Slow push on the paper texture.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l5_first",
@@ -782,16 +782,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l5",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "456925a8-8155-413d-a18f-9f01a2bf5bde"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "332d9b5e-2cac-4bfd-9277-5445e48248d8"
       }
     },
     {
       "id": "Ref-c1_l6_first",
       "description": "c1_l6 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Banknote flips to the reverse in Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's hand: ornate slogan lettering, visible on-screen text never read aloud. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed, never the narration source. Soft rustle as paper turns.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Banknote flips to the reverse in Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's hand: ornate slogan lettering, visible on-screen text never read aloud. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed, never the narration source. Soft rustle as paper turns.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l6_first",
@@ -801,16 +801,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l6",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "3af92766-bd53-4be6-bb51-ffd6372ad885"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "45af0d5b-dd93-4c47-87a1-13d6000f0f96"
       }
     },
     {
       "id": "Ref-c1_l7_first",
       "description": "c1_l7 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Close on Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build holding the thin banknote, low voice, mouth moving with clear lip shapes. Only (S1) speaks. No other person mouths words.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Close on Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build holding the thin banknote, lips closed, thoughtful gaze down at the note just before speaking.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l7_first",
@@ -820,16 +820,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l7",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "73069372-65e3-476e-8d5f-04daac15549f"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "60bc689c-9aee-4a52-a8d2-4a777b4ddb30"
       }
     },
     {
       "id": "Ref-c1_l8_first",
       "description": "c1_l8 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Beyond the fence: East Asian refugees in worn clothes huddle in shade, hollow eyes, fists full of colorful bills. One refugee extends a thick stack toward a rough smuggler offering half a cloudy plastic water bottle. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build watches from this side, lips sealed, charcoal suit still. No mouth movement from anyone.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Beyond the fence: East Asian refugees in worn clothes huddle in shade, hollow eyes, fists full of colorful bills. One refugee extends a thick stack toward a rough smuggler offering half a cloudy plastic water bottle. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build watches from this side, lips sealed, charcoal suit still. No mouth movement from anyone.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l8_first",
@@ -839,16 +839,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l8",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "493ec8fb-c2dc-47a1-880c-eae2f23f51eb"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "31ca1203-edb5-40f6-b977-2b63faa0a320"
       }
     },
     {
       "id": "Ref-c1_l9_first",
       "description": "c1_l9 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Close medium: the rough East Asian smuggler ignores counting, shoves colorful banknotes under a metal stove as kindling. Flames lick printed glory emblems. Heat shimmer. No faces speaking. Lips of any visible person sealed.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Close medium: the rough East Asian smuggler ignores counting, shoves colorful banknotes under a metal stove as kindling. Flames lick printed glory emblems. Heat shimmer. No faces speaking. Lips of any visible person sealed.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l9_first",
@@ -858,16 +858,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l9",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "c369613e-c535-492e-ac76-33f3046497af"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "b1b77a51-0bb1-4a70-bd8a-9fbbac60d25c"
       }
     },
     {
       "id": "Ref-c1_l10_first",
       "description": "c1_l10 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Medium: the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance pats dust from his uniform, numb tone, mouth moving with clear lip shapes. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build listens, lips sealed. Only (S2) speaks.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Medium: the border patrolman (S2), an East Asian man around fifty, square weathered face with tanned olive skin, deep-set dark brown eyes with heavy crow's feet, straight broad nose, short cropped grizzled hair grey at the sides. Distinct feature: a faint diagonal scar across his left cheek. Wearing a dusty olive patrol uniform, weary practical stance pats dust from his uniform, lips closed, weary neutral expression just before speaking. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build listens, lips sealed. ",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l10_first",
@@ -877,16 +877,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l10",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "4a805506-7785-4bf5-a842-a62b05e6afec"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "235c6bbe-2844-4a8c-b8b4-d23adf5ee795"
       }
     },
     {
       "id": "Ref-c1_l11_first",
       "description": "c1_l11 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Close: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build folds the ten-million banknote neatly and slides it into his charcoal suit breast pocket. Fingers press the cloth flat. Lips sealed. He appears exactly once.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Close: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build folds the ten-million banknote neatly and slides it into his charcoal suit breast pocket. Fingers press the cloth flat. Lips sealed. He appears exactly once.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l11_first",
@@ -896,16 +896,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l11",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "5d9ac194-86c9-485a-bb9b-0161749e4b24"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "ef292fcb-d5d9-41e1-943d-dfa076557d9a"
       }
     },
     {
       "id": "Ref-c1_l12_first",
       "description": "c1_l12 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Medium close: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lifts his gaze toward the federal side beyond the fence, mouth moving clearly. Only (S1) speaks.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Medium close: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lifts his gaze toward the federal side beyond the fence, lips closed, resolute calm just before speaking.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l12_first",
@@ -915,16 +915,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l12",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "cc0bc1dd-0a61-4712-b493-6684225f6416"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "bc989927-e9ed-4aac-82b7-2afa5f1a3d97"
       }
     },
     {
       "id": "Ref-c1_l13_first",
       "description": "c1_l13 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Wide toward the federal interior: a huge LED billboard wall flickers bright government propaganda colors over the dusty road. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build in foreground silhouette, lips sealed. Screen glow pulses. Visible on-screen text never read aloud.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Wide toward the federal interior: a huge LED billboard wall flickers bright government propaganda colors over the dusty road. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build in foreground silhouette, lips sealed. Screen glow pulses. Visible on-screen text never read aloud.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l13_first",
@@ -934,16 +934,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l13",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "52e9e72f-e207-4183-bc8b-8e8e82b36559"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "bee94cb5-526f-4895-a274-15e616cb0a9d"
       }
     },
     {
       "id": "Ref-c1_l14_first",
       "description": "c1_l14 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Billboard close: colorful animation of a bespectacled scholar drawn as a copper-stained crow pecking a seedling. Red ticker text scrolls along the bottom as visible on-screen text, never read aloud. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build watches from below, lips sealed, never the narration source.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Close-up of a huge LED billboard screen in the real world; the screen displays colorful animation of a bespectacled scholar drawn as a copper-stained crow pecking a seedling. Red ticker text scrolls along the bottom as visible on-screen text, never read aloud. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build watches from below, lips sealed, never the narration source.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l14_first",
@@ -953,16 +953,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l14",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "d5ae0e37-85ad-45f9-a64c-26103e63801a"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "15cb0c57-af5b-438c-a7dc-01f78b86f10f"
       }
     },
     {
       "id": "Ref-c1_l15_first",
       "description": "c1_l15 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Match-cut hint: red propaganda lettering on the wall dissolves against the folded banknote edge peeking from Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's pocket. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed, never the narration source. Static hold.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Match-cut hint: red propaganda lettering on the wall dissolves against the folded banknote edge peeking from Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's pocket. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed, never the narration source. Static hold.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l15_first",
@@ -972,16 +972,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l15",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "9b3f85ce-fca2-4d02-b297-5a772877ad93"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "e9c7adcf-cbca-46a9-952c-57cfacae7266"
       }
     },
     {
       "id": "Ref-c1_l16_first",
       "description": "c1_l16 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Medium: the border patrolman (S2), an East Asian man around fifty, dusty olive patrol uniform, sun-creased face, short cropped hair, weary practical stance glances at the billboard with a trace of pride, mouth moving clearly. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stays silent, lips sealed. Only (S2) speaks.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Medium: the border patrolman (S2), an East Asian man around fifty, square weathered face with tanned olive skin, deep-set dark brown eyes with heavy crow's feet, straight broad nose, short cropped grizzled hair grey at the sides. Distinct feature: a faint diagonal scar across his left cheek. Wearing a dusty olive patrol uniform, weary practical stance glances at the billboard with a trace of pride, lips closed, just before speaking. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stays silent, lips sealed. ",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l16_first",
@@ -991,16 +991,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l16",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "805a69e9-75d6-48ab-91b7-3b9d3f128dc7"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "0b0d4f50-9c70-4504-9a4e-33aaeeefabfa"
       }
     },
     {
       "id": "Ref-c1_l17_first",
       "description": "c1_l17 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Close on Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's face: no answer, a chill settling behind the eyes, jaw tight, lips sealed. Dust light softens. Slow push-in. He appears exactly once.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Close on Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build's face: no answer, a chill settling behind the eyes, jaw tight, lips sealed. Dust light softens. Slow push-in. He appears exactly once.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l17_first",
@@ -1010,16 +1010,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l17",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "ca3b22a8-440c-45cd-8f5d-7d1bdb8afb03"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "c64f1793-13d9-4230-9e98-d4fc7d2df559"
       }
     },
     {
       "id": "Ref-c1_l18_first",
       "description": "c1_l18 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stands still at the fence as the border softens into a brief memory haze: empty grocery shelves, courtroom doors, price boards — visual fragments only, no readable speech. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed, never the narration source.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build stands still at the fence as the border softens into a brief memory haze: empty grocery shelves, courtroom doors, price boards — visual fragments only, no readable speech. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed, never the narration source.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l18_first",
@@ -1029,16 +1029,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l18",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "46461ddd-2715-41c4-b930-667aef5b731d"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "759c6f9e-7db0-465c-9c36-f5989dacc36e"
       }
     },
     {
       "id": "Ref-c1_l19_first",
       "description": "c1_l19 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Wide: the silent border under a heavy sky; slogans half-burned in ash. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build small in frame, lips sealed, never the narration source. Slow pull-back.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Wide: the silent border under a heavy sky; slogans half-burned in ash. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build small in frame, lips sealed, never the narration source. Slow pull-back.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l19_first",
@@ -1048,16 +1048,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l19",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "ab5c692a-1a21-4eab-8d27-52e0f68d03a7"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "4c42bf3c-f0aa-4950-88df-250852604d22"
       }
     },
     {
       "id": "Ref-c1_l20_first",
       "description": "c1_l20 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Interior black sedan: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build settles into the back seat. Rearview shows the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair, mouth moving with clear lip shapes. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed. Only (S2) speaks.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Interior black sedan: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build settles into the back seat. Rearview shows the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair, lips closed, polite attentive expression just before speaking. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build lips sealed. ",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l20_first",
@@ -1067,16 +1067,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l20",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "820996d7-c3b7-45c4-82b8-0546dd3531ea"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "805d9348-9856-4e2f-9471-33adea90338d"
       }
     },
     {
       "id": "Ref-c1_l21_first",
       "description": "c1_l21 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Cabin close: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build leans into the seatback, eyes closing briefly, one hand pressing the pocket where the banknote rests under cloth; mouth moves clearly as he speaks. the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair stays silent ahead, lips sealed. Only (S1) speaks.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Cabin close: Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build leans into the seatback, eyes closing briefly, one hand pressing the pocket where the banknote rests under cloth; lips closed, eyes about to open, quiet moment just before speaking. the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair stays silent ahead, lips sealed. ",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l21_first",
@@ -1086,16 +1086,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l21",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "4cdaceef-065a-4fea-a679-55d385f6669e"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "49d9dbf6-3122-4efd-8f90-09ffef6c00d2"
       }
     },
     {
       "id": "Ref-c1_l22_first",
       "description": "c1_l22 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Rearview close: the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair glances back, curious, mouth moving clearly. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build remains in soft focus, lips sealed. Only (S2) speaks.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Rearview close: the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair glances back, curious, lips closed just before speaking. Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build remains in soft focus, lips sealed. ",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l22_first",
@@ -1105,16 +1105,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l22",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "0c4e907d-efdc-4d19-8c40-9980271d544b"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "7775e61f-f634-4d98-86bd-f29f78f4d664"
       }
     },
     {
       "id": "Ref-c1_l23_first",
       "description": "c1_l23 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Close on Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build opening his eyes; roadside political banners streak past the window as reflections in his pupils. Mouth moves with clear lip shapes. Only (S1) speaks. the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair silent.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Close on Lin Mo (S1), an East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, dark charcoal suit over a white shirt, composed serious eyes, upright lean build opening his eyes; roadside political banners streak past the window as reflections in his pupils. lips closed, eyes opening, calm resolute moment just before speaking. the chauffeur (S2), an East Asian man around thirty-five, dark chauffeur jacket, short black hair silent with lips sealed.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l23_first",
@@ -1124,16 +1124,16 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l23",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "90e54c02-f52a-4ac3-8e20-187d3ebae562"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "8b9b6ece-175d-47e1-ace9-c1dc0e20af73"
       }
     },
     {
       "id": "Ref-c1_l24_first",
       "description": "c1_l24 首幀參考圖（i2v first_frame）",
       "type": "t2i",
-      "prompt": "Cinematic still frame, opening keyframe of the shot, 16:9 widescreen 512x288. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (before speech completes if any). No text, no watermark, no subtitle, no UI. Scene: Exterior tracking: the black sedan accelerates away from the border of ash and slogans, highway leading toward a distant capital skyline under ideological haze. Dust settles behind. No faces speaking.",
+      "prompt": "Cinematic still frame, opening keyframe of the shot, 9:14 vertical portrait 576x896. Photorealistic, sharp faces, natural light, frozen moment at the START of the action (lips closed, before any speech begins). No text, no watermark, no subtitle, no UI. Scene: Exterior tracking: the black sedan accelerates away from the border of ash and slogans, highway leading toward a distant capital skyline under ideological haze. Dust settles behind. No faces speaking.",
       "refs": [],
       "seed": 495000,
       "out": "s1_c1_l24_first",
@@ -1143,9 +1143,9 @@
         "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
         "for": "c1_l24",
         "role": "i2v_first_frame",
-        "v2_width": 288,
-        "v2_height": 512,
-        "prompt_id": "abda9d1e-42d4-4b3f-96f6-ce3a86dc3903"
+        "v2_width": 576,
+        "v2_height": 896,
+        "prompt_id": "a10d11e6-7f33-4522-8611-32fdf62480b4"
       }
     }
   ]
