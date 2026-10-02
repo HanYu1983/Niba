@@ -1005,7 +1005,7 @@
       "description": "旁白：癱坐蒼白努力",
       "source": "律師林哲生癱坐在椅子上。他剛才試圖做的最後努力——論證「緊急處分」與「期待可能性」——在嚴立誠那套「程序絕對論」面前，顯得如此蒼白無力。他看著法官沈惟德，沈惟德依然垂著眼簾，彷彿已經睡著了，或是已經放棄了。",
       "voice": "narration",
-      "duration": 10,
+      "duration": 18,
       "lines": [
         "律師林哲生癱坐在椅子上。",
         "他剛才試圖做的最後努力，論證緊急處分與期待可能性，在嚴立誠那套程序絕對論面前，顯得如此蒼白無力。",
@@ -3336,7 +3336,7 @@
       "seed": 311000,
       "out": "s4_c4_l7_video",
       "extra": {
-        "prompt_id": "1960c11d-9fdb-4b91-9ab3-db651750262e",
+        "prompt_id": "990781a8-b216-41a2-a0e1-52f31a664b7b",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4146,7 +4146,7 @@
       "seed": 495010,
       "out": "s4_c5_l15_video",
       "extra": {
-        "prompt_id": "f774678d-7c7b-4566-855b-0fe4def19f6d",
+        "prompt_id": "0ad976cc-5ca0-49a7-8fc2-6ba87becbfd5",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4161,7 +4161,7 @@
       "seed": 495010,
       "out": "s4_c5_l16_video",
       "extra": {
-        "prompt_id": "0bb59121-7231-4eda-8a9b-ab741176d2dd",
+        "prompt_id": "7671f01e-24a9-4ded-a7d5-981648696ae1",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4176,7 +4176,7 @@
       "seed": 495010,
       "out": "s4_c5_l17_video",
       "extra": {
-        "prompt_id": "85f53f83-fbd0-40d2-8f4c-cb6ba790f461",
+        "prompt_id": "511077c8-b9b1-43e4-9a27-7eabb24e434d",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4191,7 +4191,7 @@
       "seed": 495010,
       "out": "s4_c5_l18_video",
       "extra": {
-        "prompt_id": "1ccb1efb-b416-4670-a49d-eba9344890f1",
+        "prompt_id": "bcdf7be1-cf49-47a3-864d-db53b004cc82",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4206,7 +4206,7 @@
       "seed": 495010,
       "out": "s4_c5_l19_video",
       "extra": {
-        "prompt_id": "22008574-d2cf-4385-b7e4-980ea7e00249",
+        "prompt_id": "9cebfc14-98a7-4cab-9c6a-137446a46738",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4221,7 +4221,7 @@
       "seed": 495010,
       "out": "s4_c5_l20_video",
       "extra": {
-        "prompt_id": "9fe966a3-0236-4621-8e34-91b538e3d6de",
+        "prompt_id": "2de743b5-0111-4895-9b59-bd9463e78ac9",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4236,7 +4236,7 @@
       "seed": 495010,
       "out": "s4_c5_l21_video",
       "extra": {
-        "prompt_id": "507c9d21-8617-4c8a-9e2c-77517d62522d",
+        "prompt_id": "663cdf4c-e61f-4b1b-a834-03d748b8b5c5",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4251,7 +4251,7 @@
       "seed": 495010,
       "out": "s4_c5_l22_video",
       "extra": {
-        "prompt_id": "851306fa-ff95-4923-831a-7483edf7763c",
+        "prompt_id": "3102bc59-973e-495e-bd19-c7211408b534",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4266,7 +4266,7 @@
       "seed": 495010,
       "out": "s4_c5_l23_video",
       "extra": {
-        "prompt_id": "b9aad98e-5d32-4a2a-b87a-67fd15b7b8e3",
+        "prompt_id": "92bbdb1c-34b9-48f7-b9a3-47e5f6065437",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4281,7 +4281,7 @@
       "seed": 495010,
       "out": "s4_c5_l24_video",
       "extra": {
-        "prompt_id": "606d3c37-2778-4756-a787-7f3ecd26d63b",
+        "prompt_id": "aeba61df-b638-4adb-a8fc-ed38917196f6",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4296,7 +4296,7 @@
       "seed": 495010,
       "out": "s4_c5_l25_video",
       "extra": {
-        "prompt_id": "05e8497c-365b-4383-af3b-6b6f5b1b1294",
+        "prompt_id": "022c909b-6e21-4742-bb91-f7d8e4bab500",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4311,7 +4311,7 @@
       "seed": 495010,
       "out": "s4_c5_l26_video",
       "extra": {
-        "prompt_id": "ceb72e0a-e2f9-436d-8695-aebe250173d9",
+        "prompt_id": "f78c5839-3931-4931-99b6-dd410a93ee9b",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4326,7 +4326,7 @@
       "seed": 495010,
       "out": "s4_c5_l27_video",
       "extra": {
-        "prompt_id": "1ca9eb1a-5417-4a42-9fec-65e0fa3636a5",
+        "prompt_id": "0585a296-2514-487d-b832-de944681a676",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4341,7 +4341,7 @@
       "seed": 495010,
       "out": "s4_c5_l28_video",
       "extra": {
-        "prompt_id": "b7d5f418-e11e-4972-bdec-c15666f2316d",
+        "prompt_id": "978d5bfa-277f-4f8f-a067-ccf418137a22",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4356,7 +4356,7 @@
       "seed": 495010,
       "out": "s4_c5_l29_video",
       "extra": {
-        "prompt_id": "54f131a0-8c23-42fb-9d63-a3b06dcd9b3a",
+        "prompt_id": "d17e08a9-00b7-446d-bac9-315fbcebd5b2",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4371,7 +4371,7 @@
       "seed": 311000,
       "out": "s4_c5_l30_video",
       "extra": {
-        "prompt_id": "1b06e911-c9e0-4452-ba4f-e053c9053b69",
+        "prompt_id": "1a0a7e72-569b-4026-9728-c95d30294d52",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4386,7 +4386,7 @@
       "seed": 311000,
       "out": "s4_c5_l31_video",
       "extra": {
-        "prompt_id": "47d48683-0d71-4d83-89a8-52bef83cca47",
+        "prompt_id": "90ff7a2a-3f4b-4f84-868c-c06e440beb13",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4401,7 +4401,7 @@
       "seed": 495010,
       "out": "s4_c5_l32_video",
       "extra": {
-        "prompt_id": "abd83714-20a3-4cb5-9c1d-e0d104bd3cb7",
+        "prompt_id": "9218b5d8-3bbe-4676-81d5-ef438c28aa7a",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4416,7 +4416,7 @@
       "seed": 495010,
       "out": "s4_c5_l33_video",
       "extra": {
-        "prompt_id": "2596b3fb-84b7-414f-9b2b-38b60135848e",
+        "prompt_id": "f8c81686-877e-4150-9c31-e04af7e98db2",
         "v2_width": 896,
         "v2_height": 576
       },
@@ -4431,7 +4431,7 @@
       "seed": 311000,
       "out": "s4_c5_l34_video",
       "extra": {
-        "prompt_id": "e74d6c24-1b24-420a-bac9-c99f831da7d2",
+        "prompt_id": "aed35e43-a546-4ea9-b6b6-f729834570df",
         "v2_width": 896,
         "v2_height": 576
       },
