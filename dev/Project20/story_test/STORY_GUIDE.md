@@ -111,12 +111,18 @@ seed    = scene.seed
 - `scene_context`：`石棺蓋被猛然推開，{{antagonist_desc}}坐起身...` → 換成實際木乃伊描述
 - `prompt_template`：「1男1女，動作冒險考古探險，{{scene_context}}，{{lighting}}，{{style}}。男性角色...」→ 全部替換後送出
 
+## 人物描述分工（story vs config）
+
+- `story.json` 各幕（`scene_context` / `scene_action`）提到人物時，**只寫動作與手持物／身外小物**（如手持的外套、飾品、道具），**不寫性別、外觀、衣裝**。
+- 性別、外觀、衣裝一律收斂到 `story_config_*.json` 的 `person*_desc` / `person*_clothing`，由 `prompt_template` 的 `{{person*_ref}}` / `{{person*_desc}}` / `{{person*_clothing}}` 統一帶入。
+- 目的：換一套 config（換角、換裝）不用改故事本文；故事只管「誰在做什麼、拿什麼」。
+
 ## 建議新增一套故事的步驟
 
 1. 建立 `story_<主題>.json`：
    - 填寫 `title`、`story_setting`、`lighting`、`camera`、`style`、`negative_common`、`sizes`。
    - 設計 `prompt_template`（決定角色與場景 token 的安插位置）。
-   - 撰寫 10 幕 `scenes`，每幕含 `n`、`title`、`seed`、`scene_context`、`scene_action`。
+    - 撰寫 10 幕 `scenes`，每幕含 `n`、`title`、`seed`、`scene_context`、`scene_action`（人物只寫動作與手持物／身外小物，不寫性別、外觀、衣裝，見上節）。
    - 結尾 `"negative": "{{negative_common}}"`。
 2. 建立 `story_config_<主題>.json`：
    - 填寫 `person1_desc`、`person1_clothing`、`person1_ref`、`person2_desc`、`person2_clothing`、`person2_ref`。
