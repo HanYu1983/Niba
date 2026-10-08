@@ -286,6 +286,90 @@ function planTable(plan) {
   return { rows, total: acc };
 }
 
+// ---------- plan duration check（字數→秒數，指南 §二②／§三） ----------
+// 對白 4 字/秒、旁白 5 字/秒；字數 = lines 全部字元的 codepoint 數（含標點，不計首尾空白）。
+// 場景無字幕不計秒，只檢查是否過長。
+function countLineChars(line) {
+  return [...String(line).trim()].length;
+}
+
+function countPlanChars(lines) {
+  return normLines(lines).reduce((a, l) => a + countLineChars(l), 0);
+}
+
+function checkPlanDurations(plan, opts = {}) {
+  const rateDialogue = opts.rate_dialogue ?? 4;
+  const rateNarration = opts.rate_narration ?? 5;
+  const slack = opts.slack ?? 2; // 允許比最低秒數多 slack 秒（緩神餘裕），超過算 long
+  const rows = [];
+  let shortCount = 0, tightCount = 0, okCount = 0, longCount = 0;
+  for (const p of plan) {
+    if (!p || typeof p.id !== "string" || !p.id) continue;
+    const lines = normLines(p.lines);
+    const totalChars = countPlanChars(lines);
+    if (p.voice === "scene") {
+      const status = !lines.length
+        ? (p.duration > 8 ? "long" : "ok")
+        : "has_lines";
+      if (status === "long") longCount++; else if (status === "ok") okCount++;
+      rows.push({
+        id: p.id, voice: p.voice, duration: p.duration,
+        total_chars: totalChars, lines_count: lines.length,
+        min_needed: null, recommended: null,
+        status,
+        ...(status === "has_lines" ? { note: "scene 不應有 lines（planProblems 也會擋）" } : {}),
+        ...(status === "long" ? { note: `scene 建議 1–8s（寧短勿長），目前 ${p.duration}s` } : {})
+      });
+      continue;
+    }
+    const rate = p.voice === "dialogue" ? rateDialogue : rateNarration;
+    if (!rate || rate <= 0) throw new Error("rate_dialogue / rate_narration 須為正數");
+    if (!lines.length) {
+      rows.push({
+        id: p.id, voice: p.voice, duration: p.duration,
+        total_chars: 0, lines_count: 0, rate,
+        min_needed: 0, recommended: 1,
+        status: "missing_lines", note: `${p.voice} 缺 lines（無法計秒）`
+      });
+      shortCount++;
+      continue;
+    }
+    const minNeeded = Math.ceil(totalChars / rate);
+    const recommended = minNeeded + 1; // 進位後再留 1s 緩神餘裕
+    let status, note;
+    if (p.duration < minNeeded) {
+      status = "short";
+      shortCount++;
+      note = `秒數不足：${totalChars}字 ÷ ${rate}字/秒 = 最少 ${minNeeded}s（建議 ${recommended}s），目前 ${p.duration}s 會唸不完`;
+    } else if (p.duration === minNeeded) {
+      status = "tight";
+      tightCount++;
+      note = `剛好塞滿：${totalChars}字 ÷ ${rate} = ${minNeeded}s，建議 +1s 緩神（→${recommended}s）`;
+    } else if (p.duration <= minNeeded + slack) {
+      status = "ok";
+      okCount++;
+      note = `${totalChars}字 ÷ ${rate} = 最少 ${minNeeded}s，建議 ${recommended}s，目前 ${p.duration}s 含緩神餘裕`;
+    } else {
+      status = "long";
+      longCount++;
+      note = `秒數偏長：${totalChars}字只需最少 ${minNeeded}s（建議 ${recommended}s），目前 ${p.duration}s 可考慮拆塊或縮秒`;
+    }
+    const row = {
+      id: p.id, voice: p.voice, duration: p.duration,
+      total_chars: totalChars, lines_count: lines.length, rate,
+      min_needed: minNeeded, recommended,
+      status, note,
+      per_line: lines.map((l) => ({ chars: countLineChars(l), text: l }))
+    };
+    if (p.duration >= 20 && (p.voice === "dialogue" || p.voice === "narration")) {
+      row.risky_20s = true;
+      row.note += "；⚠ 單支 ≥20s 語音易漂移，能拆就拆";
+    }
+    rows.push(row);
+  }
+  return { rows, shortCount, tightCount, okCount, longCount };
+}
+
 // ---------- <d> mirror ----------
 
 function extractDLines(prompt) {
@@ -713,7 +797,7 @@ async function submitOneComfy(data, id, jsonDir, baseDir, opts = {}) {
 // ---------- server ----------
 
 export function createMcpServer() {
-  const server = new McpServer({ name: "story-editor", version: "2.8.1" });
+  const server = new McpServer({ name: "story-editor", version: "2.9.0" });
 
   server.registerTool(
     "story_init",
@@ -905,6 +989,51 @@ export function createMcpServer() {
       const data = loadStory(abs);
       const { rows, total } = planTable(data.plan);
       return ok({ file: abs, phase: data.phase, blocks: rows.length, planned_total_sec: total, table: rows });
+    }
+  );
+
+  server.registerTool(
+    "plan_check_durations",
+    {
+      title: "plan_check_durations",
+      description: "Validate each plan block's duration against total chars in lines (guide §二②/§三: dialogue 4字/秒, narration 5字/秒, ceil後再留緩神餘裕; scene不計秒). Reports min_needed/recommended/status per block. Works in any phase; needs no videos.",
+      inputSchema: {
+        file: z.string().describe("Story JSON path"),
+        ids: z.array(z.string()).optional().describe("if set, only check these plan ids"),
+        rate_dialogue: z.number().positive().optional().describe("chars per second for dialogue (default 4)"),
+        rate_narration: z.number().positive().optional().describe("chars per second for narration (default 5)"),
+        slack: z.number().int().min(0).max(10).optional().describe("allowed seconds above min_needed before flagging long (default 2)")
+      }
+    },
+    async (p) => {
+      const abs = resolve(p.file);
+      const data = loadStory(abs);
+      const idSet = p.ids?.length ? new Set(p.ids) : null;
+      const plan = idSet ? data.plan.filter((e) => e && idSet.has(e.id)) : data.plan;
+      if (idSet) {
+        const missing = [...idSet].filter((id) => !findById(data.plan, id));
+        if (missing.length) throw new Error(`plan id not found: ${missing.join(", ")}`);
+      }
+      const { rows, shortCount, tightCount, okCount, longCount } = checkPlanDurations(plan, {
+        rate_dialogue: p.rate_dialogue,
+        rate_narration: p.rate_narration,
+        slack: p.slack
+      });
+      const problems = rows.filter((r) => r.status === "short" || r.status === "missing_lines" || r.status === "has_lines");
+      return ok({
+        file: abs,
+        phase: data.phase,
+        rate_dialogue: p.rate_dialogue ?? 4,
+        rate_narration: p.rate_narration ?? 5,
+        slack: p.slack ?? 2,
+        blocks: rows.length,
+        ok: okCount,
+        tight: tightCount,
+        short: shortCount,
+        long: longCount,
+        valid: !problems.length,
+        rows
+      });
     }
   );
 
