@@ -1,8 +1,8 @@
 {
   "description": "女孩的今日日記：單女主對觀眾說話，場景+旁白+對白，r2v+參考圖，r2v內不寫衣裝",
   "story_md": "",
-  "width": 352,
-  "height": 608,
+  "width": 544,
+  "height": 960,
   "phase": 2,
   "plan": [
     {
@@ -127,7 +127,7 @@
       "refs": [
         "char-heroine"
       ],
-      "seed": 520001,
+      "seed": 520000,
       "out": "diary_g0_video",
       "output": "output/diary_g0_video",
       "extra": {
@@ -163,7 +163,7 @@
       "refs": [
         "char-heroine"
       ],
-      "seed": 520002,
+      "seed": 520000,
       "out": "diary_g2_video",
       "output": "output/diary_g2_video",
       "extra": {
@@ -181,7 +181,7 @@
       "refs": [
         "char-heroine"
       ],
-      "seed": 520003,
+      "seed": 520000,
       "out": "diary_g3_video",
       "output": "output/diary_g3_video",
       "extra": {
@@ -217,7 +217,7 @@
       "refs": [
         "char-heroine"
       ],
-      "seed": 520005,
+      "seed": 520000,
       "out": "diary_g5_video",
       "output": "output/diary_g5_video",
       "extra": {
@@ -235,7 +235,7 @@
       "refs": [
         "char-heroine"
       ],
-      "seed": 520006,
+      "seed": 520000,
       "out": "diary_g6_video",
       "output": "output/diary_g6_video",
       "extra": {
@@ -258,9 +258,9 @@
       "output": "output/diary_g7_video",
       "extra": {
         "seed_note": "narration-shared",
-        "prompt_id": "a5596f08-4d5c-4098-9726-eae173afb69a",
-        "v2_width": 352,
-        "v2_height": 608
+        "prompt_id": "35ef23f9-8f76-4d15-8120-bb6827728dcc",
+        "v2_width": 544,
+        "v2_height": 960
       }
     },
     {
@@ -271,7 +271,7 @@
       "refs": [
         "char-heroine"
       ],
-      "seed": 520008,
+      "seed": 520000,
       "out": "diary_g8_video",
       "output": "output/diary_g8_video",
       "extra": {
@@ -294,9 +294,9 @@
       "output": "output/diary_g9_video",
       "extra": {
         "seed_note": "narration-shared",
-        "prompt_id": "ff6fd126-d21b-443b-b2e2-2c590de25ab3",
-        "v2_width": 352,
-        "v2_height": 608
+        "prompt_id": "e35b4fd1-684b-4323-8e07-626bada4a743",
+        "v2_width": 544,
+        "v2_height": 960
       }
     }
   ]
