@@ -1,0 +1,303 @@
+{
+  "description": "女孩的今日日記：單女主對觀眾說話，場景+旁白+對白，r2v+參考圖，r2v內不寫衣裝",
+  "story_md": "",
+  "width": 352,
+  "height": 608,
+  "phase": 2,
+  "plan": [
+    {
+      "id": "g0",
+      "description": "場景：清晨臥室，窗簾透光，女主還沒起床",
+      "source": "早晨七點，窗簾縫裡漏進一線光，房間還靜悄悄的。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "g1",
+      "description": "旁白：點出星期三與鬧鐘",
+      "source": "今天是星期三，鬧鐘比昨天早了十分鐘。",
+      "voice": "narration",
+      "duration": 5,
+      "lines": [
+        "今天是星期三，鬧鐘比昨天早了十分鐘。"
+      ]
+    },
+    {
+      "id": "g2",
+      "description": "對白：女主對鏡頭觀眾打招呼",
+      "source": "她揉揉眼睛，對著鏡頭笑說早安。",
+      "voice": "dialogue",
+      "duration": 4,
+      "lines": [
+        "早安，你也睡過頭了嗎。"
+      ]
+    },
+    {
+      "id": "g3",
+      "description": "場景：陽台，風吹衣物與綠植",
+      "source": "她推開陽台門，風把洗好的襪子吹得晃啊晃。",
+      "voice": "scene",
+      "duration": 3,
+      "lines": []
+    },
+    {
+      "id": "g4",
+      "description": "旁白：陽台的風與煩惱",
+      "source": "陽台的風很輕，適合把煩惱晾起來。",
+      "voice": "narration",
+      "duration": 5,
+      "lines": [
+        "陽台的風很輕，適合把煩惱晾起來。"
+      ]
+    },
+    {
+      "id": "g5",
+      "description": "對白：女主對觀眾介紹一天的開始",
+      "source": "她倒了一杯溫水，對鏡頭說這就是一天的開始。",
+      "voice": "dialogue",
+      "duration": 6,
+      "lines": [
+        "你看，這就是我的一天，從一杯溫水開始。"
+      ]
+    },
+    {
+      "id": "g6",
+      "description": "場景：街口公車站，人群與早餐店",
+      "source": "街口的公車站擠滿人，早餐店的蒸氣一直冒。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "g7",
+      "description": "旁白：公車靠窗的位置",
+      "source": "公車上的人很多，但我喜歡靠窗的位置。",
+      "voice": "narration",
+      "duration": 5,
+      "lines": [
+        "公車上的人很多，但我喜歡靠窗的位置。"
+      ]
+    },
+    {
+      "id": "g8",
+      "description": "對白：女主夜晚對觀眾約定",
+      "source": "晚上她對鏡頭伸出小指，約好別熬夜。",
+      "voice": "dialogue",
+      "duration": 5,
+      "lines": [
+        "今晚別熬夜了，我們打勾勾。"
+      ]
+    },
+    {
+      "id": "g9",
+      "description": "旁白：收尾金句微笑",
+      "source": "如果今天只能記住一件事，就記住微笑吧。",
+      "voice": "narration",
+      "duration": 5,
+      "lines": [
+        "如果今天只能記住一件事，就記住微笑吧。"
+      ]
+    }
+  ],
+  "story": [
+    {
+      "id": "char-heroine",
+      "description": "女主參考圖：22歲東亞女孩及肩黑髮齊瀏海（全片共用）",
+      "type": "t2i",
+      "prompt": "Vertical portrait character reference, 2:3 vertical 832x1248, photorealistic real-world photography, natural daylight, sharp face focus. A 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, gentle warm smile, three-quarter view facing camera, neutral clean indoor background slightly blurred. No text, no watermark, no subtitle.",
+      "refs": [],
+      "seed": 520000,
+      "out": "diary_heroine_ref",
+      "output": "output/diary_heroine_ref",
+      "extra": {
+        "engine": "zit",
+        "role": "char_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "v2_height": 608,
+        "v2_width": 352,
+        "prompt_id": "d048470c-0654-4323-a695-a747972e7464"
+      }
+    },
+    {
+      "id": "g0",
+      "description": "場景：清晨臥室透光，女主半睡",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the heroine from <Picture 1>: 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin\n\nsummary:\nquiet morning bedroom, thin light leak through curtains, girl still half asleep\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. No off-screen voice.\n\ndetailed_description:\nPhotorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration.\n[Shot 1]\n00:00-00:04\nAction: Small cozy bedroom at dawn, a thin blade of daylight leaking through curtain seams across the pillow. <Subject 1> lies half asleep, hair spread on the pillow, eyes closed, breathing slow. Static wide hold, then a gentle push toward the window light.\n\noverall_soundscape:\nSoft curtain rustle, faint distant alarm ticking, quiet morning room tone. No speech of any kind.\n\nnon_diegetic_music:\nA faint airy morning pad, barely there.",
+      "refs": [
+        "char-heroine"
+      ],
+      "seed": 520001,
+      "out": "diary_g0_video",
+      "output": "output/diary_g0_video",
+      "extra": {
+        "seed_note": "independent",
+        "prompt_id": "4a0cea4f-89d8-40bb-96b7-292db6d7f365",
+        "v2_width": 544,
+        "v2_height": 960
+      }
+    },
+    {
+      "id": "g1",
+      "description": "旁白：星期三與鬧鐘",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the heroine from <Picture 1>: 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin\n\nsummary:\nwaking close-up, alarm clock detail, calm morning narration mood\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNobody on screen speaks. Female narration voice-over only. No character dialogue. No off-screen dialogue. Never Cantonese, never Hong Kong accent.\n\ndetailed_description:\nPhotorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration.\n[Shot 1]\n00:00-00:05\nAction: Close-up of <Subject 1> opening her eyes slowly in the morning light, lips sealed, gaze soft toward the window. Shallow cut to a small alarm clock on the nightstand showing morning time as visible on-screen text, never read aloud. Her mouth never moves. The narrator is a fixed gentle young female voice.\nNarration voice-over only:\n<d>\n[中文]\n今天是星期三，鬧鐘比昨天早了十分鐘。\n</d>\n\noverall_soundscape:\nNarration in a gentle young female voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese. Soft bedding rustle under the voice.\n\nnon_diegetic_music:\nA light minimal piano figure, hopeful and quiet.",
+      "refs": [
+        "char-heroine"
+      ],
+      "seed": 310000,
+      "out": "diary_g1_video",
+      "output": "output/diary_g1_video",
+      "extra": {
+        "seed_note": "narration-shared",
+        "prompt_id": "3c258b71-e35f-4910-a8b2-bad333a25a69",
+        "v2_width": 352,
+        "v2_height": 608
+      }
+    },
+    {
+      "id": "g2",
+      "description": "對白：女主對觀眾說早安",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the heroine from <Picture 1>: 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, gentle warm smile\n\nsummary:\ndirect-to-camera morning greeting, playful eye contact with viewer\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No narration. No voice-over. No off-screen voice. Never Cantonese, never Hong Kong accent.\n\ndetailed_description:\nPhotorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration.\n[Shot 1]\n00:00-00:04\nAction: Medium close-up, <Subject 1> sits up in bed and looks straight into the lens, talking to the viewer with a sleepy playful smile, head tilted slightly, clear lip movement. She speaks in a bright young female voice with Taiwan-accented Standard Mandarin delivery.\nDialogue:\n<Subject 1> says:\n<d>\n[中文]\n早安，你也睡過頭了嗎。\n</d>\n\noverall_soundscape:\nDialogue in a bright young female voice speaking directly to the viewer. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese. Soft morning room tone under the voice.\n\nnon_diegetic_music:\nA bouncy two-note greeting motif.",
+      "refs": [
+        "char-heroine"
+      ],
+      "seed": 520002,
+      "out": "diary_g2_video",
+      "output": "output/diary_g2_video",
+      "extra": {
+        "seed_note": "independent",
+        "prompt_id": "9a598322-53da-4357-a39b-8b0afcd0b8ef",
+        "v2_width": 352,
+        "v2_height": 608
+      }
+    },
+    {
+      "id": "g3",
+      "description": "場景：陽台風吹衣物綠植",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the heroine from <Picture 1>: 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, soft natural glowing skin\n\nsummary:\nsunlit balcony, breeze moving laundry and green plants, quiet beat\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. No off-screen voice.\n\ndetailed_description:\nPhotorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration.\n[Shot 1]\n00:00-00:03\nAction: Sunlit narrow balcony, morning breeze swaying small laundry pieces and green plant leaves. <Subject 1> stands at the railing in profile, hair lifting lightly in the wind, lips sealed, gazing at the street below. Slow lateral drift.\n\noverall_soundscape:\nCloth flutter in breeze, distant sparrows, faint street murmur far below. No speech of any kind.\n\nnon_diegetic_music:\nA soft breezy shimmer tone.",
+      "refs": [
+        "char-heroine"
+      ],
+      "seed": 520003,
+      "out": "diary_g3_video",
+      "output": "output/diary_g3_video",
+      "extra": {
+        "seed_note": "independent",
+        "prompt_id": "9346ad61-1b27-4af0-af24-3c4d56f60f66",
+        "v2_width": 352,
+        "v2_height": 608
+      }
+    },
+    {
+      "id": "g4",
+      "description": "旁白：陽台風與煩惱",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the heroine from <Picture 1>: 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, soft natural glowing skin\n\nsummary:\nbalcony breeze portrait, airing worries narration mood\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNobody on screen speaks. Female narration voice-over only. No character dialogue. No off-screen dialogue. Never Cantonese, never Hong Kong accent.\n\ndetailed_description:\nPhotorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration.\n[Shot 1]\n00:00-00:05\nAction: Gentle close-up of <Subject 1> on the balcony, eyes half closed enjoying the light breeze, hair drifting, lips sealed, serene expression. Laundry and leaves sway softly behind her. Her mouth never moves. The narrator is a fixed gentle young female voice.\nNarration voice-over only:\n<d>\n[中文]\n陽台的風很輕，適合把煩惱晾起來。\n</d>\n\noverall_soundscape:\nNarration in a gentle young female voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese. Light breeze and cloth sway under the voice.\n\nnon_diegetic_music:\nA calm floating string line.",
+      "refs": [
+        "char-heroine"
+      ],
+      "seed": 310000,
+      "out": "diary_g4_video",
+      "output": "output/diary_g4_video",
+      "extra": {
+        "seed_note": "narration-shared",
+        "prompt_id": "74aa3320-e7fd-4608-b137-af2d2ea960fc",
+        "v2_width": 352,
+        "v2_height": 608
+      }
+    },
+    {
+      "id": "g5",
+      "description": "對白：女主對觀眾介紹一天開始",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the heroine from <Picture 1>: 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, gentle warm smile\n\nsummary:\nkitchen morning ritual, warm water glass, direct address to viewer\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No narration. No voice-over. No off-screen voice. Never Cantonese, never Hong Kong accent.\n\ndetailed_description:\nPhotorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration.\n[Shot 1]\n00:00-00:06\nAction: Bright small kitchen in the morning, steam rising softly. <Subject 1> holds a glass of warm water with both hands, turns to the lens and talks to the viewer with an inviting smile, clear lip movement. She speaks in a warm young female voice with Taiwan-accented Standard Mandarin delivery.\nDialogue:\n<Subject 1> says:\n<d>\n[中文]\n你看，這就是我的一天，從一杯溫水開始。\n</d>\n\noverall_soundscape:\nDialogue in a warm young female voice speaking directly to the viewer. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese. Faint kettle warmth and kitchen hush under the voice.\n\nnon_diegetic_music:\nA fresh morning acoustic guitar touch.",
+      "refs": [
+        "char-heroine"
+      ],
+      "seed": 520005,
+      "out": "diary_g5_video",
+      "output": "output/diary_g5_video",
+      "extra": {
+        "seed_note": "independent",
+        "prompt_id": "020f6f93-37dd-4f4c-bd96-d737138cc571",
+        "v2_width": 352,
+        "v2_height": 608
+      }
+    },
+    {
+      "id": "g6",
+      "description": "場景：街口公車站早餐店",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the heroine from <Picture 1>: 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, soft natural glowing skin\n\nsummary:\ncrowded bus stop morning, breakfast stall steam, city routine\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo one speaks. No narration. No voice-over. No off-screen voice.\n\ndetailed_description:\nPhotorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration.\n[Shot 1]\n00:00-00:04\nAction: Street-level bus stop in the morning rush, commuters waiting, steam billowing from a breakfast stall nearby. <Subject 1> stands among the crowd holding a transit card, hair moving in the street breeze, lips sealed, watching the arriving bus. Handheld sway.\n\noverall_soundscape:\nBus brakes sighing, crowd shuffle, breakfast stall sizzle and vendor clatter. No speech of any kind.\n\nnon_diegetic_music:\nA brisk city-morning pulse.",
+      "refs": [
+        "char-heroine"
+      ],
+      "seed": 520006,
+      "out": "diary_g6_video",
+      "output": "output/diary_g6_video",
+      "extra": {
+        "seed_note": "independent",
+        "prompt_id": "d67fbf22-1e90-405a-9790-f162003f9c56",
+        "v2_width": 352,
+        "v2_height": 608
+      }
+    },
+    {
+      "id": "g7",
+      "description": "旁白：公車靠窗位置",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the heroine from <Picture 1>: 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, soft natural glowing skin\n\nsummary:\nbus window seat ride, passing street light, gentle narration mood\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNobody on screen speaks. Female narration voice-over only. No character dialogue. No off-screen dialogue. Never Cantonese, never Hong Kong accent.\n\ndetailed_description:\nPhotorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration.\n[Shot 1]\n00:00-00:05\nAction: Inside a moving bus, <Subject 1> sits in a window seat watching streets slide past, cheek resting near her hand, lips sealed, calm thoughtful gaze. Light flickers across her face through the window frames. Her mouth never moves. The narrator is a fixed gentle young female voice.\nNarration voice-over only:\n<d>\n[中文]\n公車上的人很多，但我喜歡靠窗的位置。\n</d>\n\noverall_soundscape:\nNarration in a gentle young female voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese. Low bus engine hum and window rattle under the voice.\n\nnon_diegetic_music:\nA mellow swaying transit theme.",
+      "refs": [
+        "char-heroine"
+      ],
+      "seed": 310000,
+      "out": "diary_g7_video",
+      "output": "output/diary_g7_video",
+      "extra": {
+        "seed_note": "narration-shared",
+        "prompt_id": "a5596f08-4d5c-4098-9726-eae173afb69a",
+        "v2_width": 352,
+        "v2_height": 608
+      }
+    },
+    {
+      "id": "g8",
+      "description": "對白：女主夜晚對觀眾打勾勾",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the heroine from <Picture 1>: 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, gentle warm smile\n\nsummary:\nnight room promise, pinky swear to camera, intimate viewer bond\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No narration. No voice-over. No off-screen voice. Never Cantonese, never Hong Kong accent.\n\ndetailed_description:\nPhotorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration.\n[Shot 1]\n00:00-00:05\nAction: Warm dim bedroom at night, soft lamp glow. <Subject 1> faces the lens closely and talks to the viewer, extending her little finger toward the camera for a pinky promise, eyes sincere and tender, clear lip movement. She speaks in a soft young female voice with Taiwan-accented Standard Mandarin delivery.\nDialogue:\n<Subject 1> says:\n<d>\n[中文]\n今晚別熬夜了，我們打勾勾。\n</d>\n\noverall_soundscape:\nDialogue in a soft young female voice speaking directly to the viewer. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese. Quiet night room tone under the voice.\n\nnon_diegetic_music:\nA tender sparse guitar lullaby touch.",
+      "refs": [
+        "char-heroine"
+      ],
+      "seed": 520008,
+      "out": "diary_g8_video",
+      "output": "output/diary_g8_video",
+      "extra": {
+        "seed_note": "independent",
+        "prompt_id": "57d4af11-a3be-472e-af38-869cb55a0891",
+        "v2_width": 352,
+        "v2_height": 608
+      }
+    },
+    {
+      "id": "g9",
+      "description": "旁白：收尾記住微笑",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the heroine from <Picture 1>: 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, soft natural glowing skin, gentle warm smile\n\nsummary:\nclosing smile diary note, warm lamp glow, hopeful ending\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNobody on screen speaks. Female narration voice-over only. No character dialogue. No off-screen dialogue. Never Cantonese, never Hong Kong accent.\n\ndetailed_description:\nPhotorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration.\n[Shot 1]\n00:00-00:05\nAction: Warm night close-up of <Subject 1> smiling softly at her desk diary, pen resting on the page, lamp glow on her face, lips sealed in a calm content smile. Slow gentle push-in. Her mouth never moves. The narrator is a fixed gentle young female voice.\nNarration voice-over only:\n<d>\n[中文]\n如果今天只能記住一件事，就記住微笑吧。\n</d>\n\noverall_soundscape:\nNarration in a gentle young female voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese. Faint pen scratch and quiet night hush under the voice.\n\nnon_diegetic_music:\nA warm resolving piano close.",
+      "refs": [
+        "char-heroine"
+      ],
+      "seed": 310000,
+      "out": "diary_g9_video",
+      "output": "output/diary_g9_video",
+      "extra": {
+        "seed_note": "narration-shared",
+        "prompt_id": "ff6fd126-d21b-443b-b2e2-2c590de25ab3",
+        "v2_width": 352,
+        "v2_height": 608
+      }
+    }
+  ]
+}

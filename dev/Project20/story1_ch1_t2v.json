@@ -51,7 +51,7 @@
       "id": "c1_l5",
       "description": "旁白：一千萬索利亞幣與正面圖案",
       "voice": "narration",
-      "duration": 10,
+      "duration": 15,
       "lines": [
         "那是一張面額一千萬的索利亞幣。",
         "紙張的質感很薄，像廉價的面紙。",
@@ -74,7 +74,7 @@
       "id": "c1_l7",
       "description": "對白·林墨：主權沉重填不飽肚子",
       "voice": "dialogue",
-      "duration": 8,
+      "duration": 6,
       "lines": [
         "主權確實很沉重。",
         "但它顯然填不飽肚子。"
@@ -139,7 +139,7 @@
       "id": "c1_l14",
       "description": "旁白：烏鴉動畫與紅字警告",
       "voice": "narration",
-      "duration": 14,
+      "duration": 22,
       "lines": [
         "廣告牆上，色彩鮮艷的動畫正在播放。",
         "一名戴著眼鏡的反對派學者被畫成一隻滿身銅臭的烏鴉，正在啄食象徵國家未來的幼苗。",
@@ -152,7 +152,7 @@
       "id": "c1_l15",
       "description": "旁白：字體與廢紙幣如出一轍",
       "voice": "narration",
-      "duration": 6,
+      "duration": 7,
       "lines": [
         "這行字的字體與色調，竟與他口袋裡那張廢紙幣上的如出一轍。"
       ],
@@ -162,7 +162,7 @@
       "id": "c1_l16",
       "description": "對白·巡邏員：執政黨新文宣",
       "voice": "dialogue",
-      "duration": 12,
+      "duration": 13,
       "lines": [
         "那是執政黨這週的新文宣。",
         "說得真好，不是嗎？",
@@ -182,7 +182,7 @@
       "id": "c1_l18",
       "description": "旁白：索利亞崩潰前夕法律如何運作",
       "voice": "narration",
-      "duration": 16,
+      "duration": 21,
       "lines": [
         "他想起索利亞崩潰前夕，那裡的法律也曾如此運作。",
         "政府不再解釋為什麼油價飆升，而是透過法院禁止任何傳播悲觀數據的人發言。",
@@ -205,7 +205,7 @@
       "id": "c1_l20",
       "description": "對白·司機：回議會表決國安資訊增補案",
       "voice": "dialogue",
-      "duration": 10,
+      "duration": 8,
       "lines": [
         "林立委，我們要回議會了嗎？",
         "明天是國安資訊增補案的表決。"
@@ -216,7 +216,7 @@
       "id": "c1_l21",
       "description": "對白·林墨：回研究室重寫草案序言",
       "voice": "dialogue",
-      "duration": 10,
+      "duration": 7,
       "lines": [
         "不。",
         "回研究室。",
@@ -238,7 +238,7 @@
       "id": "c1_l23",
       "description": "對白·林墨：讓政府閉嘴讓數據說話",
       "voice": "dialogue",
-      "duration": 10,
+      "duration": 7,
       "lines": [
         "一份關於如何讓政府閉嘴，讓數據說話的法案。"
       ],
@@ -251,6 +251,16 @@
       "duration": 5,
       "lines": [],
       "source": "車輛加速，駛離了這片充滿廢紙與口號的邊境，朝著那個正沉溺在意識形態高燒中的首都前進。"
+    },
+    {
+      "id": "c1_l0_l3",
+      "description": "合版：c1_l0~l3 時間序連戲 19s r2v用",
+      "source": "聯邦南方的聖胡安邊境，空氣中混雜著廉價柴油味與乾枯的塵土。林墨站在生鏽的鐵絲網邊。「那是今年的新版鈔票。」身旁的邊境巡邏員指著鐵絲網外的一堆「廢棄物」說道。",
+      "voice": "dialogue",
+      "duration": 19,
+      "lines": [
+        "那是今年的新版鈔票。"
+      ]
     }
   ],
   "story": [
@@ -1146,6 +1156,63 @@
         "v2_width": 576,
         "v2_height": 896,
         "prompt_id": "a10d11e6-7f33-4522-8611-32fdf62480b4"
+      }
+    },
+    {
+      "id": "char-linmo",
+      "description": "直式角色參考圖：林墨 S1（c1_l0~l3用）",
+      "type": "t2i",
+      "prompt": "Vertical portrait character reference sheet, 9:14 vertical 576x896, photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration. Character: Lin Mo (S1), East Asian man around forty-five, short neat black hair with faint grey at the temples, lean angular face, composed serious eyes, dark charcoal suit over white shirt, upright lean build. Neutral front three-quarter view, lips sealed, calm neutral expression, plain dusty border background slightly blurred, natural daylight, sharp face focus. No text, no watermark, no subtitle, no UI.",
+      "refs": [],
+      "seed": 495000,
+      "out": "s1_char_linmo",
+      "output": "output/s1_char_linmo",
+      "extra": {
+        "engine": "zit",
+        "for": "c1_l0,c1_l1,c1_l2,c1_l3",
+        "role": "char_ref",
+        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+        "v2_height": 896,
+        "v2_width": 576,
+        "prompt_id": "218bac6c-350a-4ed3-952d-ad4d76302213"
+      }
+    },
+    {
+      "id": "char-patrol",
+      "description": "直式角色參考圖：巡邏員 S2（c1_l2,l3用）",
+      "type": "t2i",
+      "prompt": "Vertical portrait character reference sheet, 9:14 vertical 576x896, photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration. Character: border patrolman (S2), East Asian man around fifty, square weathered face with tanned olive skin, deep-set dark brown eyes with heavy crow's feet, straight broad nose, short cropped grizzled hair grey at sides, faint diagonal scar across left cheek, dusty olive patrol uniform, weary practical stance. Neutral front three-quarter view, lips sealed, calm neutral expression, blurry dusty desert border fence background, natural daylight, sharp face focus. No text, no watermark, no subtitle, no UI.",
+      "refs": [],
+      "seed": 495001,
+      "out": "s1_char_patrol",
+      "output": "output/s1_char_patrol",
+      "extra": {
+        "engine": "zit",
+        "for": "c1_l2,c1_l3",
+        "role": "char_ref",
+        "unet": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+        "v2_height": 896,
+        "v2_width": 576,
+        "prompt_id": "55023f18-ecd6-403b-a505-b43cb30446d6"
+      }
+    },
+    {
+      "id": "c1_l0_l3",
+      "description": "合版r2v：c1_l0~l3 19s 時間序（林墨+巡邏員）",
+      "type": "r2v",
+      "prompt": "A. 共享創意指導\n鏡頭數量：4 個連續分鏡，單一時間序不斷戲\n統一調色盤：邊境塵土棕、柴油灰藍、烈日慘白、鐵鏽紅褐\n一般環境背景：歐若拉聯邦南方聖胡安邊境，正午烈日，廉價柴油味與乾枯塵土，生鏽瞭望塔、龜裂柏油、廢棄貿易口岸鐵絲網。photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized. 畫面內可見文字永不朗讀。\n發音：全片僅一處對白，台灣腔普通話，無粵語、無英語。\n\nB. 角色與風格參考\n林墨 S1：參考圖1，東亞男子約四十五歲，短整黑髮鬢角微白，瘦削稜角臉，深色炭灰西裝配白襯衫，沉著銳利眼神，挺拔偏瘦。人臉、年齡、髮型、穿著、膚色需 100% 一致，全程僅出現一次，不複製。\n巡邏員 S2：參考圖2，東亞男子約五十歲，方形風霜臉、古銅曬黑皮膚、深陷深棕眼、魚尾紋重、直挺寬鼻、短促花白髮、左頰淡斜疤，塵土橄欖色巡邏制服。人臉、疤痕、制服需 100% 一致，全程僅出現一次。\n其他人無近臉，不說話。\n\nC. 環境與場景設計\n戶外地點：聖胡安邊境鐵絲網內外，烈日、熱浪、薄塵，網外一堆色彩斑斕廢紙。\n機位總覽：遠景靜守 → 中遠景緩推林墨 → 中近景巡邏員說話 → 過肩橫移廢紙堆。自然正午頂光，塵埃柔化。\n\nD. 故事板\nCUT #01 時間：00:00-00:04（對應 c1_l0）畫面：高溫正午廣角邊境全景，生鏽瞭望塔、龜裂柏油、熱浪抖動，薄塵橫捲，無近人。鏡別：Wide Static。運鏡：靜止廣角微持。台詞：無對白無旁白。打光：烈日頂光。音效：遠方卡車怠速、乾風捲塵、金屬吱呀。音樂：乾枯空曠熱浪低鳴。\nCUT #02 時間：00:04-00:10（對應 c1_l1）畫面：中遠景林墨 S1 站生鏽鐵絲網邊，皮鞋沾灰，身後廢棄貿易口岸骨架，風捲碎紙。鏡別：Medium-Wide。運鏡：緩慢推近，嘴唇全程閉合。台詞：無。打光：烈日側頂光。音效：風穿鐵網、遠門空響。音樂：孤寂細弦。\nCUT #03 時間：00:10-00:14（對應 c1_l2）畫面：中近景巡邏員 S2 開口，林墨 S1 在旁聆聽嘴閉合，僅 S2 嘴動。鏡別：Medium Close-Up。運鏡：鎖定 S2唇形清晰。台詞：(S2) says: <d>[中文] 那是今年的新版鈔票。 </d> 打光：面部自然日光。音效：台灣腔五十歲乾啞男聲。音樂：鈍重打擊單點。\nCUT #04 時間：00:14-00:19（對應 c1_l3）畫面：過肩鏡頭，S2 手指鐵絲網外，林墨順指望去，網外烈日下色彩斑斕紙堆。鏡別：Over-Shoulder to Pan。運鏡：沿紙堆緩慢橫移，兩人嘴閉合。台詞：無。打光：烈日直射紙堆。音效：紙緣風翻、遠蠅鳴。音樂：明亮反諷鈴聲。",
+      "refs": [
+        "char-linmo",
+        "char-patrol"
+      ],
+      "seed": 495000,
+      "out": "s1_c1_l0_l3_video",
+      "output": "output/s1_c1_l0_l3_video",
+      "extra": {
+        "role": "combined_r2v",
+        "prompt_id": "bc544e9d-ceff-4947-914a-87813d96ab1d",
+        "v2_width": 576,
+        "v2_height": 896
       }
     }
   ]
