@@ -1,0 +1,819 @@
+{
+  "description": "第一章【微塵的重量】偶像劇風格 r2v 影像化：動作場景＋對白＋旁白三類分鏡。主角許法官改為女性（22歲東亞女性、齊肩直黑短髮＋薄瀏海、細金框眼鏡、黑色法袍），全片以兩張角色參考圖錨定人臉。旁白為固定低沉男聲導演視角，對白為女主出鏡說話，台灣腔普通話。",
+  "story_md": "ch1_microdust.md",
+  "width": 512,
+  "height": 288,
+  "phase": 2,
+  "plan": [
+    {
+      "id": "c1_b01",
+      "description": "場景：夜晚辦公室，鋼筆懸在判決書草稿「量刑理由」上方",
+      "source": "許法官坐在辦公室，手裡握著鋼筆，筆尖懸在判決書草稿的「量刑理由」上方。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c1_b02",
+      "description": "旁白：心證傾斜，援引刑法彈性空間、寫下社會秩序法益論述",
+      "source": "許法官想引用《刑法》中關於「累犯」與「惡性重大」的彈性空間，給予阿強最高刑度，並在判決書中撰寫長篇大論來指認「社會秩序法益」。這能讓他感覺自己像個守護城市的英雄。",
+      "voice": "narration",
+      "duration": 11,
+      "lines": [
+        "法官打算援引刑法中累犯與惡性重大的彈性空間，給阿強最高刑度，並在判決書裡寫下社會秩序法益的長篇論述。"
+      ]
+    },
+    {
+      "id": "c1_b03",
+      "description": "對白：低聲自語指認阿強是社會的毒瘤",
+      "source": "「阿強這種人是社會的毒瘤。」他對自己低聲說，「雖然這只是一支手錶，但這是老人最後的尊嚴。",
+      "voice": "dialogue",
+      "duration": 9,
+      "lines": [
+        "阿強這種人是社會的毒瘤。",
+        "雖然這只是一支手錶，但這是老人最後的尊嚴。"
+      ]
+    },
+    {
+      "id": "c1_b04",
+      "description": "對白：引沈惟德之言，看見法益的深度，認定縱容惡",
+      "source": "沈惟德說過，執法者要看見法益的『深度』。如果我今天只判他幾個月，我就是對惡的縱容。",
+      "voice": "dialogue",
+      "duration": 11,
+      "lines": [
+        "沈惟德說過，執法者要看見法益的深度。",
+        "如果我今天只判他幾個月，我就是對惡的縱容。"
+      ]
+    },
+    {
+      "id": "c1_b05",
+      "description": "對白：宣判最高刑、撤銷假釋、化身守護城市的英雄",
+      "source": "我要判他最高刑期，我要讓他撤銷假釋，我要讓他這輩子在牢裡為這份惡贖罪。……這能讓他感覺自己像個守護城市的英雄。",
+      "voice": "dialogue",
+      "duration": 14,
+      "lines": [
+        "我要判他最高刑期，我要讓他撤銷假釋。",
+        "我要讓他這輩子在牢裡為這份惡贖罪。",
+        "我要像個守護城市的英雄一樣。"
+      ]
+    },
+    {
+      "id": "c1_b06",
+      "description": "場景：在判決書草稿寫下華麗的量刑辭（畫面可見文字）",
+      "source": "他甚至已經想好了那句華麗的判決詞：「本院衡酌被告無視法紀、戕害他人精神法益至深……」",
+      "voice": "scene",
+      "duration": 6,
+      "lines": []
+    },
+    {
+      "id": "c1_b07",
+      "description": "旁白：重新檢視鑑識報告，紀錄誤差如刺",
+      "source": "然而，他的眼睛再次掃過那份鑑識報告。那 15 分鐘的紀錄誤差像是一根刺，扎在他理性的視網膜上。",
+      "voice": "narration",
+      "duration": 9,
+      "lines": [
+        "法官再次掃過那份鑑識報告。",
+        "十五分鐘的紀錄誤差像一根刺，扎進理性的視網膜。"
+      ]
+    },
+    {
+      "id": "c1_b08",
+      "description": "場景：放大鏡下的煙蒂照片，焦油濾嘴顏色異常淡",
+      "source": "他看著數據。阿強抽的是平價菸，焦油重，味道竄。但現場採集到的那根菸蒂，焦油濾嘴的顏色太淡了。",
+      "voice": "scene",
+      "duration": 6,
+      "lines": []
+    },
+    {
+      "id": "c1_b09",
+      "description": "對白：低聲唸出焦油含量數據，指出濾嘴顏色太淡",
+      "source": "「焦油含量……」他看著數據。阿強抽的是平價菸，焦油重，味道竄。但現場採集到的那根菸蒂，焦油濾嘴的顏色太淡了。",
+      "voice": "dialogue",
+      "duration": 11,
+      "lines": [
+        "焦油含量。",
+        "阿強抽的是平價菸，焦油重，味道竄。",
+        "現場那根菸蒂的焦油濾嘴顏色太淡。"
+      ]
+    },
+    {
+      "id": "c1_b10",
+      "description": "對白：物理證據瓦解的推論",
+      "source": "「如果菸蒂不是他的，那麼現場唯一的物理證據就瓦解了。",
+      "voice": "dialogue",
+      "duration": 7,
+      "lines": [
+        "如果菸蒂不是他的，那麼現場唯一的物理證據就瓦解了。"
+      ]
+    },
+    {
+      "id": "c1_b11",
+      "description": "對白：只剩老人模糊的指認，能否分辨真兇",
+      "source": "剩下的只有老人那模糊的指認——老人在驚嚇中，真的能分清誰是阿強，還是只是一個長得像阿強的流浪漢？",
+      "voice": "dialogue",
+      "duration": 12,
+      "lines": [
+        "剩下的只有老人那模糊的指認。",
+        "老人在驚嚇中，真的能分清誰是阿強？",
+        "還是一個長得像阿強的流浪漢？"
+      ]
+    },
+    {
+      "id": "c1_b12",
+      "description": "場景：握筆的手開始發抖，筆尖在紙上顫抖",
+      "source": "他握筆的手開始發抖。他渴望判刑，渴望那種「指認真實」的快感。",
+      "voice": "scene",
+      "duration": 6,
+      "lines": []
+    },
+    {
+      "id": "c1_b13",
+      "description": "場景：放下鋼筆、劃掉量刑辭、寫下「無罪」",
+      "source": "他最終放下了鋼筆。他把那段華麗的、充滿正義感的量刑辭給劃掉了。「無罪。」他寫下了這兩個字。",
+      "voice": "scene",
+      "duration": 6,
+      "lines": []
+    },
+    {
+      "id": "c1_b14",
+      "description": "旁白：沒有崇高感，只剩必須面對家屬與警察的現實",
+      "source": "這不是他想要的「崇高感」，這甚至讓他感到挫敗。他必須去面對家屬的憤怒，面對警察的埋怨。",
+      "voice": "narration",
+      "duration": 10,
+      "lines": [
+        "這份判決書沒有換來崇高感，只有冷硬的文件與一室的沉默。",
+        "她必須面對家屬的憤怒與警察的埋怨。"
+      ]
+    },
+    {
+      "id": "c1_b15",
+      "description": "場景：宣判兩週後，分局傳來消息（電話鈴響）",
+      "source": "但就在宣判兩週後，分局傳來消息。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c1_b16",
+      "description": "旁白：抓到真正的竊賊、手中的古董錶；阿強在公園長椅睡著",
+      "source": "他們在另一個銷贓管道抓到了真正的竊賊，那個人手裡正握著老人的古董錶。而阿強，那天晚上其實是在三條街外的公園長椅上睡著了",
+      "voice": "narration",
+      "duration": 13,
+      "lines": [
+        "兩週後，分局在另一條銷贓管道抓到了真正的竊賊，那人手裡握著老人的古董錶。",
+        "阿強那天晚上其實在三條街外的公園長椅上睡著了。"
+      ]
+    },
+    {
+      "id": "c1_b17",
+      "description": "旁白：菸蒂確實是老人的，老人忘了自己抽過菸",
+      "source": "那根菸蒂確實是老人的，只是老人忘了自己那天下午在院子抽過一根菸。",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "那根菸蒂確實是老人的，只是老人忘了自己那天下午在院子抽過一根菸。"
+      ]
+    },
+    {
+      "id": "c1_b18",
+      "description": "場景：空無一人的法庭，她獨坐看著空蕩蕩的被告席",
+      "source": "許法官坐在空無一人的法庭裡，看著那張空蕩蕩的被告席。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c1_b19",
+      "description": "對白：空法庭裡自言自語「好險」",
+      "source": "「好險。」他自言自語，聲音在法庭裡迴盪。",
+      "voice": "dialogue",
+      "duration": 3,
+      "lines": [
+        "好險。"
+      ]
+    },
+    {
+      "id": "c1_b20",
+      "description": "對白：自省沒有把睡在公園的流浪漢關進地獄",
+      "source": "「好險我那天沒有為了追求『指認惡』的快感，而把一個睡在公園裡的流浪漢關進地獄。」",
+      "voice": "dialogue",
+      "duration": 10,
+      "lines": [
+        "好險我那天沒有為了追求指認惡的快感，而把一個睡在公園裡的流浪漢關進地獄。"
+      ]
+    },
+    {
+      "id": "c1_b21",
+      "description": "旁白：平庸與冷酷有時比熱血更能保護真實",
+      "source": "他第一次意識到，他的平庸與冷酷，有時候比他的熱血更能保護真實。",
+      "voice": "narration",
+      "duration": 6,
+      "lines": [
+        "她的平庸與冷酷，有時候比她的熱血更能保護真實。"
+      ]
+    }
+  ],
+  "story": [
+    {
+      "id": "ref-xu-multi",
+      "description": "角色參考圖（多視角）：22歲東亞女性，含大臉特寫與正面/側身/背面全身",
+      "type": "t2i",
+      "prompt": "Character reference sheet, plain light gray studio background, photorealistic real-world photography, natural soft daylight, sharp focus. The same person appears in every panel: a 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, gentle warm smile, slim build, wearing a plain white crew-neck t-shirt, light blue jeans and white sneakers. Layout: the upper half of the image is one single large close-up of her face, her face filling almost the entire upper area, straight-on front view. The lower half is split into three equal narrow vertical panels, each one a full body view of the same girl standing, entire body from head to toe visible: left panel front view, middle panel side profile view at ninety degrees, right panel back view. Identical face, hairstyle and outfit in every panel. Even studio lighting, no text, no watermark, no labels, no borders.",
+      "refs": [],
+      "seed": 520020,
+      "out": "ref_xu_multiview",
+      "output": "output/ref_xu_multiview",
+      "extra": {
+        "role": "char_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "note": "existing reference image, do not regenerate"
+      }
+    },
+    {
+      "id": "ref-xu-portrait",
+      "description": "角色參考圖（直式肖像）：22歲東亞女性，肩長直黑髮薄瀏海",
+      "type": "t2i",
+      "prompt": "Vertical portrait character reference, 2:3 vertical 832x1248, photorealistic real-world photography, natural daylight, sharp face focus. A 22-year-old East Asian girl, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, gentle warm smile, three-quarter view facing camera, neutral clean indoor background slightly blurred. No text, no watermark, no subtitle.",
+      "refs": [],
+      "seed": 520000,
+      "out": "ref_xu_portrait",
+      "output": "output/ref_xu_portrait",
+      "extra": {
+        "role": "char_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "note": "existing reference image, do not regenerate"
+      }
+    },
+    {
+      "id": "c1_b01",
+      "description": "場景：夜晚辦公室，鋼筆懸在判決書草稿「量刑理由」上方",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nnight office, wooden desk, single young woman in judge attire, close-up, calm before the storm, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement from any person. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Never Cantonese, never English, no code-switching. The visible writing on the documents is never read aloud.\n\ndetailed_description:\nTaiwanese idol-drama style, soft glowing desk-lamp key light with luminous highlights, dreamy warm bokeh, shallow depth of field, polished bright skin, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:05\nAction: Close-up of <Subject 1> in a dim night office, seated upright at a wooden desk in a formal black judge robe and thin metal-framed glasses, her lips sealed, both hands holding a silver-and-black fountain pen over the draft judgment with the pen tip hovering a few millimeters above the page. The heading on the page is visible on-screen text, never read aloud. A desk lamp throws a warm pool of light, a stack of case files sits at the edge of the frame, dust drifts through the beam. The camera holds a slow gentle push-in on her face and hands. <Subject 1> appears exactly once. No duplicated figure. No split or mirrored composition.\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, faint paper rustle, quiet breathing. Strict silence of any human voice, no whispering, no device voice, no spoken sounds of any kind.\n\nnon_diegetic_music:\nA restrained low string drone with sparse piano notes, formal and quietly tense, fading out at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b01_video",
+      "output": "output/c1_b01_video",
+      "extra": {
+        "role": "scene",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "4af01b27-ca0c-4afd-afb1-0fa72aad7420"
+      }
+    },
+    {
+      "id": "c1_b02",
+      "description": "旁白：心證傾斜，援引刑法彈性空間、寫下社會秩序法益論述",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nnight office, draft judgment page, long typed paragraphs, warm desk-lamp pool of light, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nThe narrator is a fixed calm male voice, never female. No character speaks on camera. No on-screen mouth movement from any person. No whispering. No muttering. No off-screen speech. Never Cantonese, never English, no code-switching. The visible writing on the documents is never read aloud.\n\ndetailed_description:\nTaiwanese idol-drama style, soft glowing desk-lamp light, dreamy warm bokeh, shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:05\nAction: Overhead close-up of the draft judgment page on the wooden desk, long typed paragraphs filling the sheet, her hands resting beside it with a fountain pen, the paper edges shifting slightly in the lamp light. Every printed character on the page is visible on-screen text, never read aloud. The camera drifts slowly across the lines.\n[Shot 2]\n00:05-00:11\nAction: Close-up of a stack of case folders and a legal book lying open, a page corner lifting and settling, her fingers tracing the margin of the draft, lamplight glinting on the pen nib. Every printed character is visible on-screen text, never read aloud. The camera pushes in slowly and stops.\nNarration voice-over only:\n<d>\n[中文]\n法官打算援引刑法中累犯與惡性重大的彈性空間，給阿強最高刑度，並在判決書裡寫下社會秩序法益的長篇論述。\n</d>\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, faint paper rustle, a pen rolling on wood, quiet breathing. The narration is delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English.\n\nnon_diegetic_music:\nA restrained low string drone with sparse piano notes, formal and slightly ominous, fading quietly at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b02_video",
+      "output": "output/c1_b02_video",
+      "extra": {
+        "role": "narration",
+        "voice_anchor": "tw_mandarin_calm_male_narrator",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "9efb42a8-2cf2-4b33-954f-e871c42122a3"
+      }
+    },
+    {
+      "id": "c1_b03",
+      "description": "對白：低聲自語指認阿強是社會的毒瘤",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nnight office, single young woman in judge attire, tight close-up, cold determined gaze, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No narration. No voice-over. No off-screen voice. No whispering. No muttering. Never Cantonese, never English, no code-switching, no foreign language. The mouth of <Subject 1> moves visibly while speaking, and no other mouth is visible in frame.\n\ndetailed_description:\nTaiwanese idol-drama style close-up, soft glowing desk-lamp key light with luminous highlights, dreamy warm bokeh, shallow depth of field, polished bright skin, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:09\nAction: Tight close-up of <Subject 1> at the desk, her lips parting and her mouth opening and closing clearly with every syllable, lips visibly articulating the words, her jaw set hard and her eyes cold and steady, the camera holding her face, a slow gentle push-in. She keeps her gaze on the page. Only <Subject 1>'s mouth moves. <Subject 1> appears exactly once. No duplicated figure. No split or mirrored composition.\nDialogue:\n<Subject 1> says:\n<d>\n[中文]\n阿強這種人是社會的毒瘤。\n雖然這只是一支手錶，但這是老人最後的尊嚴。\n</d>\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, faint paper rustle, quiet breathing. The speaking voice is a bright controlled young female voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin Chinese only, no Cantonese, no English, no code-switching.\n\nnon_diegetic_music:\nA restrained low string drone with sparse piano notes, tense and cold, fading quietly at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b03_video",
+      "output": "output/c1_b03_video",
+      "extra": {
+        "role": "dialogue",
+        "voice_anchor": "tw_mandarin_female",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "e63ac285-23dc-4442-b180-c595fa0c0520"
+      }
+    },
+    {
+      "id": "c1_b04",
+      "description": "對白：引沈惟德之言，看見法益的深度，認定縱容惡",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nnight office, judge at desk with pen, medium close-up, resolute expression, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No narration. No voice-over. No off-screen voice. No whispering. No muttering. Never Cantonese, never English, no code-switching, no foreign language. The mouth of <Subject 1> moves visibly while speaking, and no other mouth is visible in frame.\n\ndetailed_description:\nTaiwanese idol-drama style, soft glowing desk-lamp key light with luminous highlights, dreamy warm bokeh, shallow depth of field, polished bright skin, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:05\nAction: Medium close-up of <Subject 1> seated at the desk with the pen in her hand, her lips parting and her mouth opening and closing clearly with every syllable, lips visibly articulating the words, her chin lifting slightly and her brows drawing together, the camera holding her face. Only <Subject 1>'s mouth moves.\n[Shot 2]\n00:05-00:11\nAction: Slightly tighter angle from the left, her eyes narrowing as she continues, her mouth still opening and closing clearly with every syllable, lamplight sliding across the rim of her glasses, the camera pushing in slowly. Only <Subject 1>'s mouth moves. <Subject 1> appears exactly once. No duplicated figure. No split or mirrored composition.\nDialogue:\n<Subject 1> says:\n<d>\n[中文]\n沈惟德說過，執法者要看見法益的深度。\n如果我今天只判他幾個月，我就是對惡的縱容。\n</d>\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, faint paper rustle, quiet breathing. The speaking voice is a bright controlled young female voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin Chinese only, no Cantonese, no English, no code-switching.\n\nnon_diegetic_music:\nA restrained low string drone with sparse piano notes, tense and cold, fading quietly at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b04_video",
+      "output": "output/c1_b04_video",
+      "extra": {
+        "role": "dialogue",
+        "voice_anchor": "tw_mandarin_female",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "79dfb762-3b5a-4bb6-93fd-006c881448bc"
+      }
+    },
+    {
+      "id": "c1_b05",
+      "description": "對白：宣判最高刑、撤銷假釋、化身守護城市的英雄",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nnight office, judge at desk, fierce conviction, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No narration. No voice-over. No off-screen voice. No whispering. No muttering. Never Cantonese, never English, no code-switching, no foreign language. The mouth of <Subject 1> moves visibly while speaking, and no other mouth is visible in frame.\n\ndetailed_description:\nTaiwanese idol-drama style, soft glowing desk-lamp key light with luminous highlights, dreamy warm bokeh, shallow depth of field, polished bright skin, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:05\nAction: Medium close-up of <Subject 1> leaning slightly over the draft with the pen pressed to the page, her mouth opening and closing clearly with every syllable, lips visibly articulating the words, her eyes burning with conviction, the camera holding her face. Only <Subject 1>'s mouth moves.\n[Shot 2]\n00:05-00:10\nAction: Close-up from a low angle, her shoulders squared under the black robe, her mouth still moving clearly with every syllable, lamplight flaring on her cheekbone, the camera pushing in slowly. Only <Subject 1>'s mouth moves.\n[Shot 3]\n00:10-00:14\nAction: Extreme close-up of her eyes above the rim of her glasses, her mouth still articulating the words, a fierce bright light in them, the camera holding still. Only <Subject 1>'s mouth moves. <Subject 1> appears exactly once. No duplicated figure. No split or mirrored composition.\nDialogue:\n<Subject 1> says:\n<d>\n[中文]\n我要判他最高刑期，我要讓他撤銷假釋。\n我要讓他這輩子在牢裡為這份惡贖罪。\n我要像個守護城市的英雄一樣。\n</d>\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, faint paper rustle, quiet breathing. The speaking voice is a bright controlled young female voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin Chinese only, no Cantonese, no English, no code-switching.\n\nnon_diegetic_music:\nDriving low strings with a slow percussion pulse, cold and resolute, fading quietly at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b05_video",
+      "output": "output/c1_b05_video",
+      "extra": {
+        "role": "dialogue",
+        "voice_anchor": "tw_mandarin_female",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "3f57e2fb-270e-498a-9a5a-2d9fa5e3f72a"
+      }
+    },
+    {
+      "id": "c1_b06",
+      "description": "場景：在判決書草稿寫下華麗的量刑辭（畫面可見文字）",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nnight office, fountain pen writing on a judgment draft, extreme close-up, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement from any person. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Never Cantonese, never English, no code-switching. The visible writing on the documents is never read aloud.\n\ndetailed_description:\nTaiwanese idol-drama style macro shot, soft glowing desk-lamp light with luminous highlights, dreamy warm bokeh, very shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:06\nAction: Extreme close-up of the fountain pen nib moving in smooth deliberate strokes across the draft judgment, writing a long florid paragraph beneath the heading, dark ink flowing onto the paper. The heading and the written line are visible on-screen text, never read aloud, never spoken. The lamp light slides along the wet ink and the camera tracks the nib slowly. Only her hands are in frame, her lips never visible.\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, the soft friction of a nib on paper. Strict silence of any human voice, no whispering, no device voice, no spoken sounds of any kind.\n\nnon_diegetic_music:\nA restrained low string drone with sparse piano notes, formal and quietly tense, fading out at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b06_video",
+      "output": "output/c1_b06_video",
+      "extra": {
+        "role": "scene",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "03af3c29-3f08-4a88-bc78-a56f5e77774a"
+      }
+    },
+    {
+      "id": "c1_b07",
+      "description": "旁白：重新檢視鑑識報告，紀錄誤差如刺",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nnight office, forensic report, narrow eyes scanning paperwork, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nThe narrator is a fixed calm male voice, never female. No character speaks on camera. No on-screen mouth movement from any person. No whispering. No muttering. No off-screen speech. Never Cantonese, never English, no code-switching. The visible writing on the documents is never read aloud.\n\ndetailed_description:\nTaiwanese idol-drama style, soft glowing desk-lamp light with luminous highlights, dreamy warm bokeh, shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:04\nAction: Extreme close-up of <Subject 1>'s eyes behind thin metal-framed glasses, her lips out of frame, the pupils moving across the page, lamplight reflected in the lenses. Every printed character on the report is visible on-screen text, never read aloud. The camera holds steady.\n[Shot 2]\n00:04-00:09\nAction: Close-up of a forensic report page, a column of timed entries printed in a table, her fingertip stopping at one row, the paper edge flexing under her finger. Every printed character is visible on-screen text, never read aloud. The camera pushes in slowly toward the fingertip.\nNarration voice-over only:\n<d>\n[中文]\n法官再次掃過那份鑑識報告。\n十五分鐘的紀錄誤差像一根刺，扎進理性的視網膜。\n</d>\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, faint paper rustle, quiet breathing. The narration is delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English.\n\nnon_diegetic_music:\nA low sustained string drone with a soft ticking pulse, uneasy and cold, fading quietly at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b07_video",
+      "output": "output/c1_b07_video",
+      "extra": {
+        "role": "narration",
+        "voice_anchor": "tw_mandarin_calm_male_narrator",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "b9185d32-a311-41fe-a2e1-5b775984c498"
+      }
+    },
+    {
+      "id": "c1_b08",
+      "description": "場景：放大鏡下的煙蒂照片，焦油濾嘴顏色異常淡",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the desk still life from <Picture 1>: a round magnifying glass resting on a dark wooden desk just above a small printed photograph of a cigarette butt, the cigarette filter seen through the lens unusually pale and washed out with soft edges, warm desk-lamp light from the left, glossy highlights along the glass rim, an empty surface with no person in frame\n\nsummary:\nextreme macro, magnifying glass over a cigarette butt photograph on a wooden desk, idol-drama style, reference-based still life\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement from any person. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Never Cantonese, never English, no code-switching. The visible writing on the papers is never read aloud.\n\ndetailed_description:\nTaiwanese idol-drama style macro shot, soft glowing desk-lamp light with luminous highlights, dreamy warm bokeh, very shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:06\nAction: Extreme macro close-up of a magnifying glass resting on the wooden desk just above a small photograph of a cigarette butt, through the lens the filter looks unusually pale and washed out, its edges slightly soft. The magnifying glass tilts a few degrees and a soft light glides across the glass. The camera tracks slowly along the rim of the lens. Any printed mark on the paper is visible on-screen text, never read aloud. The room is empty. No person in frame, no hand enters the frame, no human figure in frame, no human mouth in frame.\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, the faint scrape of a glass rim on the wooden desk. Strict silence of any human voice, no whispering, no device voice, no spoken sounds of any kind.\n\nnon_diegetic_music:\nA low sustained string drone with a soft ticking pulse, uneasy and cold, fading quietly at the end.",
+      "refs": [
+        "ref-scene-macro-lens"
+      ],
+      "seed": 311200,
+      "out": "c1_b08_video",
+      "output": "output/c1_b08_video/video/MiniMax_H3_01671_.mp4",
+      "extra": {
+        "note": "v2: 女主未入鏡 → 移除 ref-xu-multi，改鎖 ref-scene-macro-lens 場景參照（無人桌面微距）；Action 加強 no person/no hand",
+        "prompt_id": "f64d1242-832a-45f1-8d82-48353d630217",
+        "role": "scene",
+        "v2_height": 288,
+        "v2_width": 512,
+        "file": "MiniMax_H3_01671_.mp4"
+      }
+    },
+    {
+      "id": "c1_b09",
+      "description": "對白：低聲唸出焦油含量數據，指出濾嘴顏色太淡",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nnight office, judge reading the report, tight close-up, uneasy realization, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No narration. No voice-over. No off-screen voice. No whispering. No muttering. Never Cantonese, never English, no code-switching, no foreign language. The mouth of <Subject 1> moves visibly while speaking, and no other mouth is visible in frame.\n\ndetailed_description:\nTaiwanese idol-drama style, soft glowing desk-lamp key light with luminous highlights, dreamy warm bokeh, shallow depth of field, polished bright skin, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:05\nAction: Tight close-up of <Subject 1> looking down at the report on the desk, her lips parting and her mouth opening and closing clearly with every syllable, lips visibly articulating the words, her brow tightening, the camera holding her face. Only <Subject 1>'s mouth moves.\n[Shot 2]\n00:05-00:11\nAction: Extreme close-up of her mouth and eyes above the glasses, her mouth still articulating every syllable, a faint crease between her brows, lamplight trembling slightly on the lens, the camera pushing in slowly. Only <Subject 1>'s mouth moves. <Subject 1> appears exactly once. No duplicated figure. No split or mirrored composition.\nDialogue:\n<Subject 1> says:\n<d>\n[中文]\n焦油含量。\n阿強抽的是平價菸，焦油重，味道竄。\n現場那根菸蒂的焦油濾嘴顏色太淡。\n</d>\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, faint paper rustle, quiet breathing. The speaking voice is a bright controlled young female voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin Chinese only, no Cantonese, no English, no code-switching.\n\nnon_diegetic_music:\nA low sustained string drone with a soft ticking pulse, uneasy and cold, fading quietly at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b09_video",
+      "output": "output/c1_b09_video",
+      "extra": {
+        "role": "dialogue",
+        "voice_anchor": "tw_mandarin_female",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "0f4aae40-223c-4e3b-9481-f2190b5c3185"
+      }
+    },
+    {
+      "id": "c1_b10",
+      "description": "對白：物理證據瓦解的推論",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nnight office, judge at desk, cold analytical close-up, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No narration. No voice-over. No off-screen voice. No whispering. No muttering. Never Cantonese, never English, no code-switching, no foreign language. The mouth of <Subject 1> moves visibly while speaking, and no other mouth is visible in frame.\n\ndetailed_description:\nTaiwanese idol-drama style, soft glowing desk-lamp key light with luminous highlights, dreamy warm bokeh, shallow depth of field, polished bright skin, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:07\nAction: Close-up of <Subject 1>, her mouth opening and closing clearly with every syllable, lips visibly articulating the words, her eyes steady and calculating, the camera holding her face, a slow gentle push-in. Only <Subject 1>'s mouth moves. <Subject 1> appears exactly once. No duplicated figure. No split or mirrored composition.\nDialogue:\n<Subject 1> says:\n<d>\n[中文]\n如果菸蒂不是他的，那麼現場唯一的物理證據就瓦解了。\n</d>\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, faint paper rustle, quiet breathing. The speaking voice is a bright controlled young female voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin Chinese only, no Cantonese, no English, no code-switching.\n\nnon_diegetic_music:\nA low sustained string drone with a soft ticking pulse, uneasy and cold, fading quietly at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b10_video",
+      "output": "output/c1_b10_video",
+      "extra": {
+        "role": "dialogue",
+        "voice_anchor": "tw_mandarin_female",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "d4401126-b6d8-4d4d-8014-c2e74934a8e6"
+      }
+    },
+    {
+      "id": "c1_b11",
+      "description": "對白：只剩老人模糊的指認，能否分辨真兇",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nnight office, judge doubting herself, troubled close-up, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No narration. No voice-over. No off-screen voice. No whispering. No muttering. Never Cantonese, never English, no code-switching, no foreign language. The mouth of <Subject 1> moves visibly while speaking, and no other mouth is visible in frame.\n\ndetailed_description:\nTaiwanese idol-drama style, soft glowing desk-lamp key light with luminous highlights, dreamy warm bokeh, shallow depth of field, polished bright skin, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:06\nAction: Close-up of <Subject 1> in the lamplight, her mouth opening and closing clearly with every syllable, lips visibly articulating the words, her eyes moving from the report to the window, the camera holding her face. Only <Subject 1>'s mouth moves.\n[Shot 2]\n00:06-00:12\nAction: Tighter angle from slightly below, her mouth still articulating every syllable, doubt flickering in her eyes, the lamplight dimming across the frame, the camera pushing in slowly. Only <Subject 1>'s mouth moves. <Subject 1> appears exactly once. No duplicated figure. No split or mirrored composition.\nDialogue:\n<Subject 1> says:\n<d>\n[中文]\n剩下的只有老人那模糊的指認。\n老人在驚嚇中，真的能分清誰是阿強？\n還是一個長得像阿強的流浪漢？\n</d>\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, faint paper rustle, quiet breathing. The speaking voice is a bright controlled young female voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin Chinese only, no Cantonese, no English, no code-switching.\n\nnon_diegetic_music:\nA low sustained string drone with a soft ticking pulse, uneasy and cold, fading quietly at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b11_video",
+      "output": "output/c1_b11_video",
+      "extra": {
+        "role": "dialogue",
+        "voice_anchor": "tw_mandarin_female",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "6b015f09-d6f5-4054-aeda-932aef4f5123"
+      }
+    },
+    {
+      "id": "c1_b12",
+      "description": "場景：握筆的手開始發抖，筆尖在紙上顫抖",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nextreme close-up, trembling hand and fountain pen above the judgment draft, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement from any person. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Never Cantonese, never English, no code-switching. The visible writing on the documents is never read aloud.\n\ndetailed_description:\nTaiwanese idol-drama style macro shot, soft glowing desk-lamp light with luminous highlights, dreamy warm bokeh, very shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:06\nAction: Extreme close-up of her hand holding the fountain pen above the judgment draft, the fingers trembling so that the nib shakes visibly over the paper, a small ink blot forming where the tip touches down, the lamplight trembling with her hand. The camera holds with a very slow push-in. Only her hand is in frame, her lips never visible.\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, the faint scratch of a nib on paper, her uneven breathing. Strict silence of any human voice, no whispering, no device voice, no spoken sounds of any kind.\n\nnon_diegetic_music:\nA low sustained string drone with a soft ticking pulse, uneasy and cold, fading quietly at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b12_video",
+      "output": "output/c1_b12_video",
+      "extra": {
+        "role": "scene",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "dd42abb7-205e-415d-be1d-cc44563b3935"
+      }
+    },
+    {
+      "id": "c1_b13",
+      "description": "場景：放下鋼筆、劃掉量刑辭、寫下「無罪」",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nnight office, red pen striking through a paragraph and writing two characters, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement from any person. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Never Cantonese, never English, no code-switching. The visible writing on the documents is never read aloud.\n\ndetailed_description:\nTaiwanese idol-drama style, soft glowing desk-lamp light with luminous highlights, dreamy warm bokeh, very shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:06\nAction: Close-up of the desk as she sets the fountain pen down, picks up a red pen and draws one long line through the florid paragraph, then writes two characters underneath in clean steady strokes. The written characters and the struck-through paragraph are visible on-screen text, never read aloud, never spoken. The camera holds slow and steady on the page, lamplight pooling on the paper, her hands now completely steady.\n\noverall_soundscape:\nQuiet night office ambience with a faint air conditioner hum, a low clock tick, the soft friction of a pen on paper, a pen set down on wood. Strict silence of any human voice, no whispering, no device voice, no spoken sounds of any kind.\n\nnon_diegetic_music:\nA soft piano theme with warm strings, quiet and resolute, fading out at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b13_video",
+      "output": "output/c1_b13_video",
+      "extra": {
+        "role": "scene",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "5ba040c1-1821-4df5-8066-c31ccb7d184a"
+      }
+    },
+    {
+      "id": "c1_b14",
+      "description": "旁白：沒有崇高感，只剩必須面對家屬與警察的現實",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the empty night office from <Picture 1>: a wooden desk lit only by a warm desk lamp, a closed case file with a thick document on the desk, a fountain pen lying beside it, an empty wooden chair pushed back, a black telephone with a coiled cord on the corner of the desk, tall window with dark city lights outside, an unoccupied room with no person in frame\n\nsummary:\nempty night office, closed case file, empty chair, cold documents, idol-drama style, reference-based empty scene\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nThe narrator is a fixed calm male voice, never female. No character speaks on camera. No on-screen mouth movement from any person. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Never Cantonese, never English, no code-switching. The visible writing on the documents is never read aloud.\n\ndetailed_description:\nTaiwanese idol-drama style, soft glowing desk-lamp light with luminous highlights, dreamy warm bokeh, shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:05\nAction: The empty desk after the case was decided, the closed case file with the judgment inside, a pen lying beside it, the lamp still burning, the room empty of people. Every printed character on the file is visible on-screen text, never read aloud. The camera drifts slowly across the desk, dust drifting through the lamplight.\n[Shot 2]\n00:05-00:10\nAction: An empty chair pushed back from the desk and a telephone on the corner, its cord coiled, the lamplight swaying slightly as a shadow passes across the wall outside the window. No person in frame, no human figure in frame, no human mouth in frame. The camera pushes in slowly.\nNarration voice-over only:\n<d>\n[中文]\n這份判決書沒有換來崇高感，只有冷硬的文件與一室的沉默。\n她必須面對家屬的憤怒與警察的埋怨。\n</d>\n\noverall_soundscape:\nEmpty night office ambience with a faint air conditioner hum, a low clock tick, a distant door closing somewhere down the hall, faint paper rustle in the draft. The narration is delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English.\n\nnon_diegetic_music:\nA solo piano line with a low string bed, quiet and slightly hollow, fading out at the end.",
+      "refs": [
+        "ref-scene-office-night"
+      ],
+      "seed": 311200,
+      "out": "c1_b14_video",
+      "output": "output/c1_b14_video/video/MiniMax_H3_01672_.mp4",
+      "extra": {
+        "note": "v2: 女主未入鏡 → 移除 ref-xu-multi，改鎖 ref-scene-office-night 場景參照（無人夜晚辦公室）；Q11 音訊空態、Q12 完整男聲錨點保留",
+        "prompt_id": "403f8962-25a1-4b30-8df5-25ede8a47c80",
+        "role": "narration",
+        "v2_height": 288,
+        "v2_width": 512,
+        "voice_anchor": "tw_mandarin_calm_male_narrator",
+        "file": "MiniMax_H3_01672_.mp4"
+      }
+    },
+    {
+      "id": "c1_b15",
+      "description": "場景：宣判兩週後，分局傳來消息（電話鈴響）",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nnight office, ringing telephone on the desk, case files, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement from any person. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. The telephone rings with a plain electronic ringtone and no voice at all. Strict silence of any human voice. Never Cantonese, never English, no code-switching. The visible writing on the files is never read aloud.\n\ndetailed_description:\nTaiwanese idol-drama style, soft glowing desk-lamp light with luminous highlights, dreamy warm bokeh, shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:05\nAction: A black telephone on the desk rings with a plain electronic ringtone and no voice, her hand enters the frame and lifts the receiver, the other hand flipping open the case file, the lamplight shaking slightly with the movement. Any printed character on the file is visible on-screen text, never read aloud. The camera pushes in toward the phone. Only her hands are in frame, her lips never visible.\n\noverall_soundscape:\nA plain electronic telephone ringtone with no spoken content, a faint air conditioner hum, a low clock tick, paper rustle, a drawer sliding. Strict silence of any human voice, no whispering, no device voice, no spoken sounds of any kind.\n\nnon_diegetic_music:\nA soft piano line with a low string bed, quiet and slightly hollow, fading out at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b15_video",
+      "output": "output/c1_b15_video",
+      "extra": {
+        "role": "scene",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "6a137af3-0c12-4603-adb3-c9f03a5a00e9"
+      }
+    },
+    {
+      "id": "c1_b16",
+      "description": "旁白：抓到真正的竊賊、手中的古董錶；阿強在公園長椅睡著",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the evidence room from <Picture 1>: an antique gold pocket watch with an engraved case lying in an open transparent evidence bag on a brushed metal table, cold overhead fluorescent light, a blank white label on the bag, an empty evidence room with no person in frame\n<Subject 2> is the 45-year-old East Asian man in <Picture 2>: thin gaunt build, weathered sun-tanned skin, short unkempt black hair turning gray at the temples, dark sunken tired eyes, unshaven stubble beard, wearing a faded gray-blue work jacket over a dirty white undershirt, worn dark gray trousers and scuffed old canvas sneakers, a cheap unfiltered cigarette between two fingers; in this scene he is asleep on the park bench, eyes closed, mouth closed, completely still\n\nsummary:\npolice evidence room with an antique pocket watch, night city park bench with a sleeping man, idol-drama style, reference-based\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n<Subject 2>: fully_preserved.\n\nspeaker_constraints:\nThe narrator is a fixed calm male voice, never female. The male narrator is the only human voice in this clip and his narration must be clearly audible from the first second to the last second of the clip. The narration is an off-screen voice-over and is never spoken by anyone in frame. No character speaks on camera. The sleeping man never moves his mouth, never speaks, makes no sound of his own, and no other mouth is visible in frame. If any other person is visible in frame, their mouth also stays sealed throughout. No woman in frame. No female face. No female figure. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Never Cantonese, never English, no code-switching. The visible writing on the evidence bag is never read aloud.\n\ndetailed_description:\nTaiwanese idol-drama style, cool polished highlights on metal and glass, dreamy bokeh, shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:06\nAction: Close-up of an antique pocket watch lying in an open evidence bag on a metal table under cold overhead light, its engraved case catching the light, a label on the bag visible on-screen text, never read aloud, no people in frame, no human figure in frame, no human mouth in frame. The camera glides slowly across the watch. A calm male narrator is already speaking over this shot.\nNarration voice-over only, spoken continuously from 00:00 to 00:13 in one single calm male voice:\n<d>\n[中文]\n兩週後，分局在另一條銷贓管道抓到了真正的竊賊，那人手裡握著老人的古董錶。\n阿強那天晚上其實在三條街外的公園長椅上睡著了。\n</d>\n[Shot 2]\n00:06-00:13\nAction: A nighttime city park, <Subject 2> lies asleep on a bench under a streetlamp, curled on his side on a folded blanket, eyes closed, mouth closed, an unlit cheap cigarette still between two fingers, a crumpled paper cup on the pavement beside him, wet leaves on the ground, his body completely still, no mouth movement, he does not speak, his lips stay sealed throughout. The camera pans slowly along the bench while the same calm male narration continues over the shot. <Subject 2> appears exactly once. No duplicated figure. No split or mirrored composition.\n\noverall_soundscape:\nA cold evidence room with a faint fluorescent hum and a metal door closing somewhere, then open night air with distant traffic, insects and a hollow wind through a park, faint slow breathing of the sleeping man on the bench, no voice from him. The narration is delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English. The male narration is clearly audible over the ambience from the first second to the last second of the clip.\n\nnon_diegetic_music:\nA slow string pad with sparse piano notes, cool and reflective, fading quietly at the end.",
+      "refs": [
+        "ref-scene-evidence-room",
+        "ref-aqiang-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b16_video",
+      "output": "output/c1_b16_video/video/MiniMax_H3_01673_.mp4",
+      "extra": {
+        "note": "v4: 女主未入鏡 → 移除 ref-xu-multi，改鎖 ref-scene-evidence-room（<Picture 1>）＋ref-aqiang-multi（<Picture 2>，阿強 Subject 2 不變）；Q9/Q13 加強旁白不被畫面人物認領",
+        "prompt_id": "c8869d74-a410-4654-8be7-c2f97b08560d",
+        "q14_fix": "ref-aqiang-multi added, Subject 2 asleep on bench in Shot 2; v4 removed ref-xu-multi, Shot 1 locked to evidence room scene ref",
+        "role": "narration",
+        "v2_height": 288,
+        "v2_width": 512,
+        "voice_anchor": "tw_mandarin_calm_male_narrator",
+        "file": "MiniMax_H3_01673_.mp4"
+      }
+    },
+    {
+      "id": "c1_b17",
+      "description": "旁白：菸蒂確實是老人的，老人忘了自己抽過菸",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the quiet old courtyard from <Picture 1>: a weathered concrete courtyard in late afternoon golden sunlight, a stone step with an ashtray holding one single cigarette butt, a half-drunk glass of tea beside it, potted green plants, leaves moving in a gentle breeze, an unoccupied courtyard with no person in frame\n\nsummary:\nold courtyard in late afternoon, ashtray with one cigarette butt, idol-drama style, reference-based empty scene\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nThe narrator is a fixed calm male voice, never female. No character speaks on camera. No on-screen mouth movement from any person. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Never Cantonese, never English, no code-switching. The visible writing on the papers is never read aloud.\n\ndetailed_description:\nTaiwanese idol-drama style, warm late-afternoon sunlight with soft golden highlights, dreamy bokeh, shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:08\nAction: A quiet old courtyard in late afternoon light, an ashtray on a stone step holding one cigarette butt, a half-drunk glass of tea beside it, leaves moving in a gentle breeze, no people in frame, no human figure in frame, no human mouth in frame. The camera pushes in slowly toward the ashtray and stops.\nNarration voice-over only:\n<d>\n[中文]\n那根菸蒂確實是老人的，只是老人忘了自己那天下午在院子抽過一根菸。\n</d>\n\noverall_soundscape:\nA quiet old courtyard with distant birds, a light breeze through leaves, a faint water drip, the soft clink of a teacup. The narration is delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English.\n\nnon_diegetic_music:\nA warm piano theme with soft strings, gentle and wistful, fading quietly at the end.",
+      "refs": [
+        "ref-scene-courtyard"
+      ],
+      "seed": 311200,
+      "out": "c1_b17_video",
+      "output": "output/c1_b17_video/video/MiniMax_H3_01674_.mp4",
+      "extra": {
+        "note": "v2: 女主未入鏡 → 移除 ref-xu-multi，改鎖 ref-scene-courtyard 場景參照（無人舊院子）；Q12 完整男聲錨點保留",
+        "prompt_id": "c90dc7bc-d3be-45e2-9a9f-c1987c80cf77",
+        "role": "narration",
+        "v2_height": 288,
+        "v2_width": 512,
+        "voice_anchor": "tw_mandarin_calm_male_narrator",
+        "file": "MiniMax_H3_01674_.mp4"
+      }
+    },
+    {
+      "id": "c1_b18",
+      "description": "場景：空無一人的法庭，她獨坐看著空蕩蕩的被告席",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nempty courtroom, morning light through tall windows, judge seated alone, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nNo character speaks. No narration. No voice-over. No on-screen mouth movement from any person. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Strict silence of any human voice. Never Cantonese, never English, no code-switching.\n\ndetailed_description:\nTaiwanese idol-drama style, soft morning sunlight with luminous highlights, dreamy golden bokeh, shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:05\nAction: Wide shot of an empty courtroom in the morning, sunbeams falling through tall windows onto the vacant defendant dock, <Subject 1> sitting alone at the bench in her black judge robe, seen from behind with her face not visible, small and still in the frame. The camera glides slowly forward. <Subject 1> appears exactly once. No duplicated figure. No split or mirrored composition.\n\noverall_soundscape:\nA vast empty courtroom with a faint air conditioner hum, distant footsteps in the far corridor, a wooden door settling, dust moving in the light. Strict silence of any human voice, no whispering, no device voice, no spoken sounds of any kind.\n\nnon_diegetic_music:\nA soft piano theme with warm strings, quiet and wide, fading quietly at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b18_video",
+      "output": "output/c1_b18_video",
+      "extra": {
+        "role": "scene",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "2eb15e53-32e9-499c-85cf-239c4fb85a47"
+      }
+    },
+    {
+      "id": "c1_b19",
+      "description": "對白：空法庭裡自言自語「好險」",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nempty courtroom, judge murmuring to herself, close-up, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No narration. No voice-over. No off-screen voice. No whispering. No muttering. Never Cantonese, never English, no code-switching, no foreign language. The mouth of <Subject 1> moves visibly while speaking, and no other mouth is visible in frame.\n\ndetailed_description:\nTaiwanese idol-drama style close-up, soft morning sunlight with luminous highlights, dreamy golden bokeh, shallow depth of field, polished bright skin, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:03\nAction: Medium close-up of <Subject 1> alone in the empty courtroom, her lips parting and her mouth opening and closing clearly with every syllable, lips visibly articulating the words, a faint relieved breath, her eyes resting on the empty dock, the camera holding her face. Only <Subject 1>'s mouth moves. <Subject 1> appears exactly once. No duplicated figure. No split or mirrored composition.\nDialogue:\n<Subject 1> says:\n<d>\n[中文]\n好險。\n</d>\n\noverall_soundscape:\nA vast empty courtroom with a faint air conditioner hum, distant footsteps in the far corridor, her own breath echoing in the hall. The speaking voice is a bright controlled young female voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin Chinese only, no Cantonese, no English, no code-switching.\n\nnon_diegetic_music:\nA soft piano theme with warm strings, quiet and wide, fading quietly at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b19_video",
+      "output": "output/c1_b19_video",
+      "extra": {
+        "role": "dialogue",
+        "voice_anchor": "tw_mandarin_female",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "ed0bd816-356a-426b-8c81-580e4c682400"
+      }
+    },
+    {
+      "id": "c1_b20",
+      "description": "對白：自省沒有把睡在公園的流浪漢關進地獄",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the young East Asian woman in <Picture 1>: 22 years old, straight black hair with thin bangs cut to the shoulders, round bright dark eyes, soft natural glowing skin, slim build; in this scene she wears thin metal-framed glasses and a formal black judge robe over a white shirt\n\nsummary:\nempty courtroom, judge speaking softly to herself, close-up, idol-drama style\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nOnly <Subject 1> speaks. No narration. No voice-over. No off-screen voice. No whispering. No muttering. Never Cantonese, never English, no code-switching, no foreign language. The mouth of <Subject 1> moves visibly while speaking, and no other mouth is visible in frame.\n\ndetailed_description:\nTaiwanese idol-drama style close-up, soft morning sunlight with luminous highlights, dreamy golden bokeh, shallow depth of field, polished bright skin, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:05\nAction: Close-up of <Subject 1> in the quiet courtroom, her mouth opening and closing clearly with every syllable, lips visibly articulating the words, her eyes thoughtful and a little tired, morning light on her cheek, the camera holding her face with a slow gentle push-in. Only <Subject 1>'s mouth moves.\n[Shot 2]\n00:05-00:10\nAction: Tighter close-up from the side, her mouth still articulating every syllable, a faint rueful smile forming, dust drifting in the sunbeam, the camera pushing in slowly. Only <Subject 1>'s mouth moves. <Subject 1> appears exactly once. No duplicated figure. No split or mirrored composition.\nDialogue:\n<Subject 1> says:\n<d>\n[中文]\n好險我那天沒有為了追求指認惡的快感，而把一個睡在公園裡的流浪漢關進地獄。\n</d>\n\noverall_soundscape:\nA vast empty courtroom with a faint air conditioner hum, distant footsteps in the far corridor, her own breath echoing in the hall. The speaking voice is a bright controlled young female voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin Chinese only, no Cantonese, no English, no code-switching.\n\nnon_diegetic_music:\nA soft piano theme with warm strings, quiet and wide, fading quietly at the end.",
+      "refs": [
+        "ref-xu-multi"
+      ],
+      "seed": 311200,
+      "out": "c1_b20_video",
+      "output": "output/c1_b20_video",
+      "extra": {
+        "role": "dialogue",
+        "voice_anchor": "tw_mandarin_female",
+        "v2_height": 288,
+        "v2_width": 512,
+        "prompt_id": "c0d5f224-b167-44af-abf4-349a3d54d21e"
+      }
+    },
+    {
+      "id": "c1_b21",
+      "description": "旁白：平庸與冷酷有時比熱血更能保護真實",
+      "type": "r2v",
+      "prompt": "subject_definitions:\n<Subject 1> is the empty courtroom from <Picture 1>: a wide courtroom in the morning seen from the defendant dock side, the judge bench and a vacant high chair behind it, tall windows with sunbeams falling onto the polished wooden floor, rows of empty wooden benches, dust in the air, an unoccupied courtroom with no person in frame\n\nsummary:\nempty courtroom wide shot, morning light on the wooden floor, idol-drama style, reference-based empty scene\n\nretention_analysis:\n<Subject 1>: fully_preserved.\n\nspeaker_constraints:\nThe narrator is a fixed calm male voice, never female. No character speaks on camera. No on-screen mouth movement from any person. No whispering. No muttering. No lip-flap. No off-screen speech. No device voice. Never Cantonese, never English, no code-switching.\n\ndetailed_description:\nTaiwanese idol-drama style, soft morning sunlight with luminous highlights, dreamy golden bokeh, shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir.\n[Shot 1]\n00:00-00:06\nAction: Wide shot of the empty courtroom from the defendant dock side, the bench and the vacant seat in soft morning light, sunlight moving slowly across the wooden floor, dust in the air, no people in frame, no human figure in frame, no human mouth in frame. The camera drifts slowly and the image settles.\nNarration voice-over only:\n<d>\n[中文]\n她的平庸與冷酷，有時候比她的熱血更能保護真實。\n</d>\n\noverall_soundscape:\nA vast empty courtroom with a faint air conditioner hum, distant footsteps in the far corridor, dust settling, a wooden door settling. The narration is delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), read flat at a steady pace, not character dialogue, not on-screen voice, no Cantonese, no English.\n\nnon_diegetic_music:\nA soft piano theme with warm strings, quiet and wide, fading quietly at the end.",
+      "refs": [
+        "ref-scene-court-empty"
+      ],
+      "seed": 311200,
+      "out": "c1_b21_video",
+      "output": "output/c1_b21_video/video/MiniMax_H3_01675_.mp4",
+      "extra": {
+        "note": "v2: 女主未入鏡 → 移除 ref-xu-multi，改鎖 ref-scene-court-empty 場景參照（無人空法庭）；Q12 完整男聲錨點保留",
+        "prompt_id": "471647ca-557e-4d7a-b89e-264c389eb518",
+        "role": "narration",
+        "v2_height": 288,
+        "v2_width": 512,
+        "voice_anchor": "tw_mandarin_calm_male_narrator",
+        "file": "MiniMax_H3_01675_.mp4"
+      }
+    },
+    {
+      "id": "ref-aqiang-multi",
+      "description": "角色參考圖（多視角）：阿強，45歲東亞男性，單薄落魄流浪漢外型，含大臉特寫與正面/側身/背面全身。作為 r2v 的 ref-aqiang-multi 參照。",
+      "type": "t2i",
+      "prompt": "Character reference sheet, plain light gray studio background, photorealistic real-world photography, natural soft daylight, sharp focus. The same person appears in every panel: a 45-year-old East Asian man, thin gaunt build, weathered sun-tanned skin, short unkempt black hair turning gray at the temples, dark sunken tired eyes, heavy under-eye circles, unshaven stubble beard, deep nasolabial lines, sunken cheeks, slightly hunched tired posture, wearing a faded gray-blue work jacket over a dirty white undershirt, worn dark gray trousers and scuffed old canvas sneakers, a cheap unfiltered cigarette held between two fingers of his right hand. Layout: the upper half of the image is one single large close-up of his face, his face filling almost the entire upper area, straight-on front view. The lower half is split into three equal narrow vertical panels, each one a full body view of the same man standing, entire body from head to toe visible: left panel front view, middle panel side profile view at ninety degrees, right panel back view. Identical face, hairstyle and outfit in every panel. Even studio lighting, no text, no watermark, no labels, no borders, no other people.",
+      "refs": [],
+      "seed": 520030,
+      "out": "ref_aqiang_multiview",
+      "extra": {
+        "file": "zimage_00255_.png",
+        "note": "阿強多視角參考圖（1024x1024），供 c1_b16 公園長椅出鏡錨定",
+        "prompt_id": "b055c874-b98c-4912-ab1c-005bf5afa7b0",
+        "role": "char_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors"
+      },
+      "output": "output/ref_aqiang_multiview/zimage_00255_.png"
+    },
+    {
+      "id": "ref-scene-macro-lens",
+      "description": "場景參照圖：放大鏡下的香菸濾嘴照片微距（b08 用，無人）",
+      "type": "t2i",
+      "prompt": "Photorealistic cinematic extreme macro still life: a round magnifying glass resting on a dark wooden desk just above a small printed photograph of a cigarette butt, seen through the lens the filter looks unusually pale and washed out, soft warm desk-lamp light from the left, luminous creamy bokeh, very shallow depth of field, glossy highlights along the glass rim, clean uncluttered surface, no people, no hands, no faces, no text, no watermark, no logo",
+      "refs": [],
+      "seed": 520040,
+      "out": "ref_scene_macro_lens",
+      "output": "output/ref_scene_macro_lens/zimage_00256_.png",
+      "extra": {
+        "role": "scene_ref",
+        "engine": "zit",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "clip": "qwen_3_4b.safetensors",
+        "weight_dtype": "fp8_e4m3fn_fast",
+        "shift": 3,
+        "steps": 8,
+        "cfg": 1,
+        "sampler_name": "res_multistep",
+        "scheduler": "simple",
+        "width": 1024,
+        "height": 576,
+        "gen16x9": true,
+        "v2_width": 512,
+        "v2_height": 288,
+        "file": "zimage_00256_.png",
+        "prompt_id": "2ec3b932-5001-4d57-a58c-b9d205fab62b",
+        "note": "無人場景參照圖（1024x576），供 r2v 鎖定場景、避免女主入鏡"
+      }
+    },
+    {
+      "id": "ref-scene-office-night",
+      "description": "場景參照圖：夜晚法官辦公室空桌（b14 用，無人）",
+      "type": "t2i",
+      "prompt": "Photorealistic cinematic interior of a night office, an empty wooden desk lit only by a warm desk lamp, a closed case file with a thick document on the desk, a fountain pen lying beside it, an empty wooden chair pushed back, a black telephone with a coiled cord on the corner of the desk, tall window with dark city lights outside, warm lamp glow, dreamy bokeh, shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir, no people, no faces, no hands, no text, no watermark",
+      "refs": [],
+      "seed": 520041,
+      "out": "ref_scene_office_night",
+      "output": "output/ref_scene_office_night/zimage_00257_.png",
+      "extra": {
+        "role": "scene_ref",
+        "engine": "zit",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "clip": "qwen_3_4b.safetensors",
+        "weight_dtype": "fp8_e4m3fn_fast",
+        "shift": 3,
+        "steps": 8,
+        "cfg": 1,
+        "sampler_name": "res_multistep",
+        "scheduler": "simple",
+        "width": 1024,
+        "height": 576,
+        "gen16x9": true,
+        "v2_width": 512,
+        "v2_height": 288,
+        "file": "zimage_00257_.png",
+        "prompt_id": "e989b64d-55b9-4568-8de3-43066bd9219e",
+        "note": "無人場景參照圖（1024x576），供 r2v 鎖定場景、避免女主入鏡"
+      }
+    },
+    {
+      "id": "ref-scene-courtyard",
+      "description": "場景參照圖：舊公寓院子夕照、菸灰缸（b17 用，無人）",
+      "type": "t2i",
+      "prompt": "Photorealistic cinematic quiet old courtyard in late afternoon golden sunlight, an ashtray on a stone step holding one single cigarette butt, a half-drunk glass of tea beside it, weathered concrete walls, potted green plants, leaves moving in a gentle breeze, warm soft bokeh, shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir, no people, no faces, no hands, no text, no watermark",
+      "refs": [],
+      "seed": 520042,
+      "out": "ref_scene_courtyard",
+      "output": "output/ref_scene_courtyard/zimage_00258_.png",
+      "extra": {
+        "role": "scene_ref",
+        "engine": "zit",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "clip": "qwen_3_4b.safetensors",
+        "weight_dtype": "fp8_e4m3fn_fast",
+        "shift": 3,
+        "steps": 8,
+        "cfg": 1,
+        "sampler_name": "res_multistep",
+        "scheduler": "simple",
+        "width": 1024,
+        "height": 576,
+        "gen16x9": true,
+        "v2_width": 512,
+        "v2_height": 288,
+        "file": "zimage_00258_.png",
+        "prompt_id": "9d3b771f-53ae-451d-9282-cda516ad987c",
+        "note": "無人場景參照圖（1024x576），供 r2v 鎖定場景、避免女主入鏡"
+      }
+    },
+    {
+      "id": "ref-scene-court-empty",
+      "description": "場景參照圖：清晨空法庭（b21 用，無人）",
+      "type": "t2i",
+      "prompt": "Photorealistic cinematic wide shot of an empty courtroom in the morning, viewed from the defendant dock side, the judge bench and a vacant high chair behind it, tall windows with sunbeams falling onto the polished wooden floor, dust in the air, rows of empty wooden benches, soft golden bokeh, shallow depth of field, elegant and glamorous lighting, not gritty, not film-noir, no people, no faces, no hands, no text, no watermark",
+      "refs": [],
+      "seed": 520043,
+      "out": "ref_scene_court_empty",
+      "output": "output/ref_scene_court_empty/zimage_00259_.png",
+      "extra": {
+        "role": "scene_ref",
+        "engine": "zit",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "clip": "qwen_3_4b.safetensors",
+        "weight_dtype": "fp8_e4m3fn_fast",
+        "shift": 3,
+        "steps": 8,
+        "cfg": 1,
+        "sampler_name": "res_multistep",
+        "scheduler": "simple",
+        "width": 1024,
+        "height": 576,
+        "gen16x9": true,
+        "v2_width": 512,
+        "v2_height": 288,
+        "file": "zimage_00259_.png",
+        "prompt_id": "7d10122d-ace6-4f79-8862-d92d6df30260",
+        "note": "無人場景參照圖（1024x576），供 r2v 鎖定場景、避免女主入鏡"
+      }
+    },
+    {
+      "id": "ref-scene-evidence-room",
+      "description": "場景參照圖：分局證物室金屬桌上的古董懷錶與證物袋（b16 Shot1 用，無人）",
+      "type": "t2i",
+      "prompt": "Photorealistic cinematic close-up of an antique gold pocket watch with an engraved case lying inside an open transparent evidence bag on a brushed metal table, cold overhead fluorescent light, cool metallic highlights, faint fingerprint dust on the metal surface, a blank white label on the bag, shallow depth of field, dreamy bokeh, elegant and glamorous lighting, not gritty, not film-noir, no people, no faces, no hands, no readable text, no watermark",
+      "refs": [],
+      "seed": 520044,
+      "out": "ref_scene_evidence_room",
+      "output": "output/ref_scene_evidence_room/zimage_00260_.png",
+      "extra": {
+        "role": "scene_ref",
+        "engine": "zit",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "clip": "qwen_3_4b.safetensors",
+        "weight_dtype": "fp8_e4m3fn_fast",
+        "shift": 3,
+        "steps": 8,
+        "cfg": 1,
+        "sampler_name": "res_multistep",
+        "scheduler": "simple",
+        "width": 1024,
+        "height": 576,
+        "gen16x9": true,
+        "v2_width": 512,
+        "v2_height": 288,
+        "file": "zimage_00260_.png",
+        "prompt_id": "92d8d99f-78cc-48df-933a-7eef272aa725",
+        "note": "無人場景參照圖（1024x576），供 r2v 鎖定場景、避免女主入鏡"
+      }
+    }
+  ]
+}
