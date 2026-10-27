@@ -1,0 +1,896 @@
+{
+  "description": "第三章【消失的第三人】t2v 影像化：跨國販運毒品案與十九歲頂罪少年。純文字驅動、預設不綁參考圖，角色一致性靠外觀文字錨點（許法官為22歲東亞女性法官：齊肩直黑短髮＋薄瀏海、細金框眼鏡、黑色法袍）。三型別分鏡：場景／對白／旁白；台灣腔普通話；960×544。",
+  "story_md": "D:\\han\\Niba\\dev\\Project20\\ch1_microdust.md",
+  "width": 960,
+  "height": 544,
+  "phase": 2,
+  "plan": [
+    {
+      "id": "c3_b01",
+      "description": "場景：機場海關攔截，行李箱夾層",
+      "source": "他在機場被攔截，行李箱夾層裡藏有三公斤的高純度海洛因。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c3_b02",
+      "description": "旁白：十九歲少年阿傑與三公斤海洛因",
+      "source": "被告是一名十九歲的少年「阿傑」",
+      "voice": "narration",
+      "duration": 10,
+      "lines": [
+        "被告是一名十九歲的少年，阿傑。",
+        "他在機場被攔下時，行李箱的夾層裡，藏著三公斤的高純度海洛因。"
+      ]
+    },
+    {
+      "id": "c3_b03",
+      "description": "場景：被告席上神情木然的少年",
+      "source": "阿傑在法庭上神情木然",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c3_b04",
+      "description": "對白：阿傑承認東西是他的",
+      "source": "「東西是我的，沒有人指使我，我就是想賺錢。」",
+      "voice": "dialogue",
+      "duration": 6,
+      "lines": [
+        "東西是我的，沒有人指使我，我就是想賺錢。"
+      ]
+    },
+    {
+      "id": "c3_b05",
+      "description": "旁白：從警詢到法庭全部坦承",
+      "source": "阿傑在警詢、偵訊到法庭上，全部坦承不諱，甚至主動要求「判我重一點，我認罪」。",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "從警詢、偵訊到法庭，他全部坦承不諱。",
+        "他甚至主動要求，判重一點。"
+      ]
+    },
+    {
+      "id": "c3_b06",
+      "description": "旁白：三公斤足以摧毀無數家庭",
+      "source": "這個少年雖然可憐，但三公斤的海洛因足以摧毀無數家庭。既然他自己都認了，這就是最穩固的實質真實。",
+      "voice": "narration",
+      "duration": 11,
+      "lines": [
+        "這個少年雖然可憐，但三公斤的海洛因，足以摧毀無數家庭。",
+        "既然他自己都認了，這就是最穩固的實質真實。"
+      ]
+    },
+    {
+      "id": "c3_b07",
+      "description": "場景：許法官俯視稚嫩而絕望的臉",
+      "source": "許法官看著少年那張稚嫩卻絕望的臉，心中升起一種悲憫交織的正義感。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c3_b08",
+      "description": "場景：深夜書房，通訊紀錄與金流報告",
+      "source": "就在他翻閱阿傑的通訊紀錄與金流報告時",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c3_b09",
+      "description": "旁白：出發前最後一通電話只有十秒",
+      "source": "阿傑在出發前，最後一通電話是打給他在療養院的母親，通話時間僅有十秒。",
+      "voice": "narration",
+      "duration": 9,
+      "lines": [
+        "通訊紀錄顯示，出發前的最後一通電話，是打給療養院的母親。",
+        "通話時間，僅有十秒。"
+      ]
+    },
+    {
+      "id": "c3_b10",
+      "description": "旁白：帳戶空白與神祕捐款",
+      "source": "阿傑的帳戶裡一毛錢都沒有，但療養院卻在阿傑被捕後的隔天，收到了一筆匿名捐款，金額剛好夠付他母親未來三年的醫療費。",
+      "voice": "narration",
+      "duration": 10,
+      "lines": [
+        "他的帳戶裡，一毛錢都沒有。",
+        "被捕隔天，療養院收到一筆匿名捐款，剛好夠付母親未來三年的醫療費。"
+      ]
+    },
+    {
+      "id": "c3_b11",
+      "description": "旁白：包装與交貨細節一問三不知",
+      "source": "一個為了錢販毒的人，戶頭竟然是空的？而且他對毒品的包裝方式、交貨細節一問三不知",
+      "voice": "narration",
+      "duration": 9,
+      "lines": [
+        "一個為了錢販毒的人，戶頭竟然是空的。",
+        "毒品的包裝方式、交貨細節，他一問三不知。"
+      ]
+    },
+    {
+      "id": "c3_b12",
+      "description": "旁白：連機場名字都說不出來",
+      "source": "甚至連他要去的那個城市的機場名字都說不出來。這不是販毒者的自白，這是「頂罪者」的腳本。",
+      "voice": "narration",
+      "duration": 10,
+      "lines": [
+        "甚至連他要去的那座城市的機場名字，都說不出來。",
+        "這不是販毒者的自白，這是頂罪者的腳本。"
+      ]
+    },
+    {
+      "id": "c3_b13",
+      "description": "場景：筆尖停住，前所未有的焦躁",
+      "source": "許法官感到了前所未有的焦躁。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c3_b14",
+      "description": "對白：許法官私下傳喚，提出減刑",
+      "source": "「阿傑，如果你是被威脅的，我可以幫你。你說出那個人，我給你減刑。」",
+      "voice": "dialogue",
+      "duration": 9,
+      "lines": [
+        "阿傑，如果你是被威脅的，我可以幫你。",
+        "你說出那個人，我給你減刑。"
+      ]
+    },
+    {
+      "id": "c3_b15",
+      "description": "對白：阿傑激動反嗆",
+      "source": "「法官！你怎麼這麼多廢話？我說了是我就是我！」",
+      "voice": "dialogue",
+      "duration": 7,
+      "lines": [
+        "法官！你怎麼這麼多廢話？",
+        "我說了是我就是我！"
+      ]
+    },
+    {
+      "id": "c3_b16",
+      "description": "對白：阿傑要求判死",
+      "source": "「你判我啊！你不是很有正義感嗎？你判我死在牢裡啊！」",
+      "voice": "dialogue",
+      "duration": 7,
+      "lines": [
+        "你判我啊！",
+        "你不是很有正義感嗎？",
+        "你判我死在牢裡啊！"
+      ]
+    },
+    {
+      "id": "c3_b17",
+      "description": "場景：許法官愣住",
+      "source": "許法官愣住了。",
+      "voice": "scene",
+      "duration": 3,
+      "lines": []
+    },
+    {
+      "id": "c3_b18",
+      "description": "旁白：他想求刑，他想犧牲",
+      "source": "他想求刑，他想犧牲。如果我成全他，法律的形式完整了，我的負罪感也得到了滿足。",
+      "voice": "narration",
+      "duration": 9,
+      "lines": [
+        "他想求刑，他想犧牲。",
+        "如果我成全他，法律的形式就完整了，我的負罪感也得到了滿足。"
+      ]
+    },
+    {
+      "id": "c3_b19",
+      "description": "場景：判決書草稿與紅筆圈起",
+      "source": "他坐回辦公桌前，死刑（或無期）的判決書草稿已經打好了。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c3_b20",
+      "description": "旁白：簽名前看見被捕時的照片",
+      "source": "就在他要簽名時，他看到卷宗裡阿傑被捕時的照片。",
+      "voice": "narration",
+      "duration": 7,
+      "lines": [
+        "就在他要簽名的時候，他看見卷宗裡，阿傑被捕時的照片。"
+      ]
+    },
+    {
+      "id": "c3_b21",
+      "description": "旁白：緊抱行李箱的眼神是恐懼",
+      "source": "少年緊緊抱著那個行李箱，眼神不是貪婪，而是恐懼。",
+      "voice": "narration",
+      "duration": 7,
+      "lines": [
+        "少年緊緊抱著那個行李箱。",
+        "那雙眼睛裡，不是貪婪，而是恐懼。"
+      ]
+    },
+    {
+      "id": "c3_b22",
+      "description": "旁白：職責是守住事實的邊界",
+      "source": "你太想當那個「看穿靈魂的人」了。你的職責是守住事實的邊界，而不是幫他完成殉難。",
+      "voice": "narration",
+      "duration": 9,
+      "lines": [
+        "你太想當那個看穿靈魂的人了。",
+        "你的職責，是守住事實的邊界，而不是幫他完成殉難。"
+      ]
+    },
+    {
+      "id": "c3_b23",
+      "description": "場景：一陣惡寒，筆放下",
+      "source": "他感到一陣惡寒。",
+      "voice": "scene",
+      "duration": 4,
+      "lines": []
+    },
+    {
+      "id": "c3_b24",
+      "description": "旁白：以疑點為由發回重查",
+      "source": "他以「事實仍有諸多疑點、自白之任意性與真實性存疑」為由，將案件發回重查",
+      "voice": "narration",
+      "duration": 8,
+      "lines": [
+        "最後，他以事實仍有諸多疑點、自白的真實性存疑為由，將案件發回重查。"
+      ]
+    },
+    {
+      "id": "c3_b25",
+      "description": "旁白：判決書列出神祕捐款與斷層",
+      "source": "並在判決書中詳細列出了那筆「神祕捐款」與阿傑認罪中的邏輯斷層。",
+      "voice": "narration",
+      "duration": 7,
+      "lines": [
+        "判決書裡，詳細列出了那筆神祕捐款，與認罪中的邏輯斷層。"
+      ]
+    },
+    {
+      "id": "c3_b26",
+      "description": "場景：阿傑咆哮與報紙標題",
+      "source": "雖然阿傑在庭上對他咆哮，雖然報紙標題寫著「法官縱容毒販」",
+      "voice": "scene",
+      "duration": 6,
+      "lines": []
+    },
+    {
+      "id": "c3_b27",
+      "description": "場景：一年後偵訊室裡的毒梟",
+      "source": "一年後，警方在另一宗洗錢案中抓到了真正的毒梟。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c3_b28",
+      "description": "對白：毒梟炫耀最愛聖人法官",
+      "source": "「我最喜歡那種想當聖人的法官，他們判得越重，我就越安全。」",
+      "voice": "dialogue",
+      "duration": 8,
+      "lines": [
+        "我最喜歡那種想當聖人的法官。",
+        "他們判得越重，我就越安全。"
+      ]
+    },
+    {
+      "id": "c3_b29",
+      "description": "場景：許法官讀報，手心全是汗",
+      "source": "許法官在報紙上看到這條新聞，手心全是不自覺的汗。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c3_b30",
+      "description": "場景：夜裡回家，窗外月亮",
+      "source": "他回到家，看著窗外的月亮，長長地舒了一口氣。",
+      "voice": "scene",
+      "duration": 5,
+      "lines": []
+    },
+    {
+      "id": "c3_b31",
+      "description": "旁白：好險天賦比慈悲更冷",
+      "source": "「好險，」他輕聲對自己說，「好險我的天賦比我的慈悲更冷。好險我沒讓自己變成那個『成全邪惡、卻以為在執行正義』的蠢貨。」",
+      "voice": "narration",
+      "duration": 10,
+      "lines": [
+        "好險，我的天賦比我的慈悲更冷。",
+        "好險我沒讓自己，變成那個成全邪惡、卻以為在執行正義的蠢貨。"
+      ]
+    }
+  ],
+  "story": [
+    {
+      "id": "c3_b01",
+      "description": "場景：機場海關開箱，夾層毒品磚",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Airport customs inspection hall under flat white fluorescent light, a black hard-shell suitcase lying open on a brushed steel counter, its inner lining slit open along the seam, three brick-shaped packages wrapped in clear plastic and brown tape stacked beside it, fine white powder dusting the gray laminate. Blue-gloved inspector hands enter frame and lift one brick, turning it slowly. No faces. No readable screens.\nAt 00:03.000, slow push in on the opened lining and the bricks, focus racking from the torn fabric to the taped plastic surface. Cold, procedural stillness.\noverall_soundscape: Fluorescent hum, zipper rasp, tape peeling, gloved fingers on plastic, muffled unintelligible airport announcements far away. No whispering. No muttering. No off-screen speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A low, dry electronic pulse.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b01_video",
+      "output": "output/c3_b01_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b02",
+      "description": "旁白：少年被押送的背影",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Airport service corridor, gray tiled walls and a long strip of overhead light. Ajie (S2), a 19-year-old East Asian young man, short messy black hair, pale tired face with dark shadows under his eyes, thin adolescent frame, wearing an oversized gray hoodie and faded jeans walks away from camera between two uniformed customs officers, hands cuffed in front of him, shoulders pulled inward. His face is not visible, only the back of his head and the slump of his neck. Fluorescent light slides across the floor.\nAjie (S2) stays lips sealed; he never speaks; the narration is off-screen only. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\nNarration off-screen only:\n<d>\n[中文]\n被告是一名十九歲的少年，阿傑。\n他在機場被攔下時，行李箱的夾層裡，藏著三公斤的高純度海洛因。\n</d>\nAt 00:05.000, slow lateral track alongside the three figures, camera never reaching the boy's face.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Footsteps, distant ventilation hum.\nnon_diegetic_music: A sparse, cold piano figure.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b02_video",
+      "output": "output/c3_b02_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b03",
+      "description": "場景：被告席上木然的少年",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Interior of a modest Taiwanese district courtroom, warm medium-toned wood paneling, tall windows with diffuse daylight. Ajie (S2), a 19-year-old East Asian young man, short messy black hair, pale tired face with dark shadows under his eyes, thin adolescent frame, wearing an oversized gray hoodie and faded jeans stands in the defendant's dock, shoulders loose, face blank and emptied, eyes fixed on nothing. His lips are shut. In the blurred foreground, the dark silhouette of the judge's bench cuts the lower frame.\nAt 00:02.500, very slow push toward his face, the background softening further, dust moving in the window light.\noverall_soundscape: Courtroom room tone, a chair creaking, paper rustling, air conditioning. No whispering. No muttering. No off-screen speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A single sustained low cello note.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b03_video",
+      "output": "output/c3_b03_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b04",
+      "description": "對白：阿傑承認東西是他的",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close on Ajie (S2), a 19-year-old East Asian young man, short messy black hair, pale tired face with dark shadows under his eyes, thin adolescent frame, wearing an oversized gray hoodie and faded jeans, standing in the defendant's dock of a wood-paneled Taiwanese courtroom. His mouth opens with clear lip shapes as he speaks, jaw tight, eyes lowered then lifting briefly to the bench. Behind him, out of focus, Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a formal black judge robe over a white shirt sits at the bench with her lips sealed.\nOnly (S2)'s mouth moves.\n(S2) says:\n<d>\n[中文]\n東西是我的，沒有人指使我，我就是想賺錢。\n</d>\nAt 00:03.500, the camera holds steady, a slight breathing drift only.\noverall_soundscape: Dialogue delivered by a thin, flat young male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Courtroom room tone and one distant cough.\nnon_diegetic_music: A single muted piano note.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b04_video",
+      "output": "output/c3_b04_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b05",
+      "description": "旁白：警詢、偵訊、法庭一路坦承",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Interrogation room at night, gray concrete wall, a steel table, a single hanging lamp. A printed statement form lies open, a pen resting across it, the handwriting unreadable on purpose. Two pairs of hands at the table edge, no faces.\nNarration off-screen only. No on-screen mouth movement from any person. The narrator is a fixed calm male voice, never female.\n<d>\n[中文]\n從警詢、偵訊到法庭，他全部坦承不諱。\n他甚至主動要求，判重一點。\n</d>\nAt 00:04.000, dissolve to a prosecutor's desk in daylight, the same form stamped and slid into a file, then to the courtroom dock seen from above.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Pen scratching, paper sliding, room hum.\nnon_diegetic_music: A dry ticking pulse.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b05_video",
+      "output": "output/c3_b05_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b06",
+      "description": "旁白：三公斤足以摧毀無數家庭",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a formal black judge robe over a white shirt seated at the raised bench, looking down at the case file in her hands, then lifting her eyes toward the dock off-screen. Her expression is grave, almost tender. Her lips stay sealed; she never speaks; the narration is off-screen only.\n<d>\n[中文]\n這個少年雖然可憐，但三公斤的海洛因，足以摧毀無數家庭。\n既然他自己都認了，這就是最穩固的實質真實。\n</d>\nAt 00:05.000, cut to a slow overhead push on three plastic-wrapped bricks on an evidence table, a numbered tag beside them, no readable text.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Quiet room tone, a page turning.\nnon_diegetic_music: A low, burdened string swell.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b06_video",
+      "output": "output/c3_b06_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b07",
+      "description": "場景：法庭全景與悲憫的正義感",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Wide courtroom interior in late afternoon light, empty public gallery, dust in the sunbeams. Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a formal black judge robe over a white shirt sits small and precise at the high bench, hands folded, chin slightly lowered, eyes on the dock. The room feels very quiet and very large.\nAt 00:03.000, slow crane down from the ceiling to her face, the bench railing crossing the lower frame.\noverall_soundscape: Courtroom room tone, clock ticking, air conditioning, distant corridor footsteps. No whispering. No muttering. No off-screen speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A warm, restrained string line.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b07_video",
+      "output": "output/c3_b07_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b08",
+      "description": "場景：深夜書房，卷宗攤開",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, A small judge's study at night, one warm desk lamp, rain-dark window behind. Thick case files spread across the desk, phone-record printouts and bank statements fanned out, a cold cup of tea. Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse leans over the papers, glasses catching a thin line of lamplight, one finger sliding down a printed column.\nAt 00:03.000, top-down shot of the desk, the finger stopping on a single line, the lamp pool shrinking the world to paper.\noverall_soundscape: Room tone, paper sliding, a clock, faint rain on glass. No whispering. No muttering. No off-screen speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A quiet, uneasy low drone.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b08_video",
+      "output": "output/c3_b08_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b09",
+      "description": "旁白：最後一通電話只有十秒",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Macro shot of a phone-record printout under lamplight, rows of numbers and timestamps, all text deliberately soft and unreadable. Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse's index finger rests on one row, her nail pale, the paper faintly creased. Her lips stay sealed; she never speaks; the narration is off-screen only.\n<d>\n[中文]\n通訊紀錄顯示，出發前的最後一通電話，是打給療養院的母親。\n通話時間，僅有十秒。\n</d>\nAt 00:04.500, pull back to her face in profile, eyes narrowing, the lamp reflected in one lens.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Paper rustle, rain, clock.\nnon_diegetic_music: Two slow, isolated piano notes.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b09_video",
+      "output": "output/c3_b09_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b10",
+      "description": "旁白：空帳戶與匿名捐款",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Two documents side by side on a dark desk under lamplight: a bank statement showing a column of empty zero entries, and a nursing-home receipt with a stamped anonymous donation line, all figures soft and unreadable. Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse's hands frame them, still.\n<d>\n[中文]\n他的帳戶裡，一毛錢都沒有。\n被捕隔天，療養院收到一筆匿名捐款，剛好夠付母親未來三年的醫療費。\n</d>\nAt 00:05.000, tilt up from the papers to her face, her expression flattening into something colder than pity.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Paper, rain, a distant car passing.\nnon_diegetic_music: A low sustained tone, slightly detuned.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b10_video",
+      "output": "output/c3_b10_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b11",
+      "description": "旁白：戶頭空白，細節一問三不知",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse leans back in her chair, eyes half closed, the lamplight carving her face into hard planes. One hand rests on the closed file. Her lips stay sealed; she never speaks; the narration is off-screen only.\n<d>\n[中文]\n一個為了錢販毒的人，戶頭竟然是空的。\n毒品的包裝方式、交貨細節，他一問三不知。\n</d>\nAt 00:04.000, cut to the interrogation transcript pages flipping under her fingers, lines of dialogue blurred, then back to her eyes.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Pages turning, rain.\nnon_diegetic_music: A thin, rising tension string.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b11_video",
+      "output": "output/c3_b11_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b12",
+      "description": "旁白：連機場名字都說不出來",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Extreme close on Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse's eyes behind thin metal frames, the lamp a small hard spark in each lens, her gaze fixed and unblinking. Her lips stay sealed; she never speaks; the narration is off-screen only.\n<d>\n[中文]\n甚至連他要去的那座城市的機場名字，都說不出來。\n這不是販毒者的自白，這是頂罪者的腳本。\n</d>\nAt 00:04.500, rack focus from her eyes to the blurred case file in the foreground, the typed confession lines going soft.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. A faint electrical hum, rain.\nnon_diegetic_music: A cold, suspended chord.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b12_video",
+      "output": "output/c3_b12_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b13",
+      "description": "場景：筆尖停住，焦躁升起",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Macro on a fountain pen held above a printed judgment draft, the nib trembling a few millimeters from the paper, a small ink bead forming. Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse's fingers tighten on the barrel. The draft text is soft and unreadable.\nAt 00:02.000, the nib touches down, a single dot of ink spreading, then the hand withdraws abruptly.\noverall_soundscape: Room tone, a clock, the faint scratch of the nib, breath through the nose. No whispering. No muttering. No off-screen speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A tight, pulsing low string.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b13_video",
+      "output": "output/c3_b13_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b14",
+      "description": "對白：許法官提出減刑交換",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Detention-house meeting room, a wire-mesh partition dividing the frame, pale green walls, hard overhead light. Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a formal black judge robe over a white shirt sits on the near side, leaning slightly toward the mesh, speaking with clear lip shapes, her voice low and controlled. Across the mesh, Ajie (S2), a 19-year-old East Asian young man, short messy black hair, pale tired face with dark shadows under his eyes, thin adolescent frame, wearing an oversized gray hoodie and faded jeans sits with his head down, lips sealed, shoulders rigid.\nOnly (S1)'s mouth moves; (S2)'s lips stay closed.\n(S1) says:\n<d>\n[中文]\n阿傑，如果你是被威脅的，我可以幫你。\n你說出那個人，我給你減刑。\n</d>\nAt 00:04.500, slow push through the mesh toward the boy's lowered face.\noverall_soundscape: Dialogue delivered by a composed young female voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Hollow room tone, a chair scraping once.\nnon_diegetic_music: Almost none, a faint room-tone pad.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b14_video",
+      "output": "output/c3_b14_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b15",
+      "description": "對白：阿傑反嗆廢話太多",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close on Ajie (S2), a 19-year-old East Asian young man, short messy black hair, pale tired face with dark shadows under his eyes, thin adolescent frame, wearing an oversized gray hoodie and faded jeans behind the wire mesh, face lifting suddenly, eyes wet and furious, mouth opening wide as he shouts. The mesh casts a faint grid of shadow across his cheek.\nOnly (S2)'s mouth moves.\n(S2) says:\n<d>\n[中文]\n法官！你怎麼這麼多廢話？\n我說了是我就是我！\n</d>\nAt 00:03.000, the camera jolts slightly with his outburst, handheld tension.\noverall_soundscape: Dialogue delivered by a cracking, raw young male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Sharp room echo off concrete, a chair leg striking the floor.\nnon_diegetic_music: A sudden low percussive hit.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b15_video",
+      "output": "output/c3_b15_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b16",
+      "description": "對白：阿傑要求判死",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Same detention meeting room, tighter now on Ajie (S2), a 19-year-old East Asian young man, short messy black hair, pale tired face with dark shadows under his eyes, thin adolescent frame, wearing an oversized gray hoodie and faded jeans's face pressed near the mesh, spittle at the corner of his mouth, chin shaking, eyes locked forward as he shouts again.\nOnly (S2)'s mouth moves.\n(S2) says:\n<d>\n[中文]\n你判我啊！\n你不是很有正義感嗎？\n你判我死在牢裡啊！\n</d>\nAt 00:03.000, hold, then a small pull back through the mesh as his voice breaks.\noverall_soundscape: Dialogue delivered by a cracking young male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, hoarse at the edges. Concrete echo, trembling breath.\nnon_diegetic_music: A dissonant sustained string, fading to silence.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b16_video",
+      "output": "output/c3_b16_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b17",
+      "description": "場景：許法官愣住",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a formal black judge robe over a white shirt on the near side of the mesh, perfectly still, mouth slightly parted but silent, eyes wide and unfocused. The wire grid lies across her face. Nothing moves except a slow blink.\nAt 00:01.500, very slow push in, the mesh going out of focus as her face sharpens.\noverall_soundscape: Room tone, the boy's ragged breathing from off-screen, a flickering fluorescent buzz. No whispering. No muttering. No off-screen speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: Silence, then a single low tone.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b17_video",
+      "output": "output/c3_b17_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b18",
+      "description": "旁白：他想求刑，他想犧牲",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Back in the study at night, Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse sits at the desk with a printed draft in front of her, one hand pressed flat on the paper, the other rubbing her forehead. Her lips stay sealed; she never speaks; the narration is off-screen only.\n<d>\n[中文]\n他想求刑，他想犧牲。\n如果我成全他，法律的形式就完整了，我的負罪感也得到了滿足。\n</d>\nAt 00:04.500, slow push toward the draft, a red pen lying across it, then tilt up to her face, eyes closed.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Paper, rain, a chair creak.\nnon_diegetic_music: A slow, heavy piano figure.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b18_video",
+      "output": "output/c3_b18_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b19",
+      "description": "場景：判決書草稿與紅筆圈起",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Over-the-shoulder on a monitor glowing in a dark study, a judgment draft filling the screen, the text soft and unreadable except for one bold line at the center. A red pen enters frame and circles that line twice, hard enough to dent the paper printout beneath.\nAt 00:03.000, rack focus from the pen tip to the reflection of Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse's face in the dark screen edge, her expression unreadable.\noverall_soundscape: Keyboard silence, a fan hum, pen scratching paper, rain on glass. No whispering. No muttering. No off-screen speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A low, mechanical pulse.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b19_video",
+      "output": "output/c3_b19_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b20",
+      "description": "旁白：簽名前看見那張照片",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Desk surface at night, a signature line at the bottom of a document, a pen hovering, then a manila evidence envelope sliding into frame. A gloved evidence photo is pulled halfway out: an airport corridor, a boy hugging a suitcase to his chest.\n<d>\n[中文]\n就在他要簽名的時候，他看見卷宗裡，阿傑被捕時的照片。\n</d>\nAt 00:03.000, the pen lowers out of the top of frame and stops.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Paper sliding, rain.\nnon_diegetic_music: A single held piano note.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b20_video",
+      "output": "output/c3_b20_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b21",
+      "description": "旁白：緊抱行李箱的眼神是恐懼",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Extreme close on the glossy evidence photograph, slightly curled at one corner. In the photo, Ajie (S2), a 19-year-old East Asian young man, short messy black hair, pale tired face with dark shadows under his eyes, thin adolescent frame, wearing an oversized gray hoodie and faded jeans hugs a black suitcase against his chest with both arms, chin pressed to the shell, eyes wide and glassy with fear rather than greed, fluorescent light flat across his face.\n<d>\n[中文]\n少年緊緊抱著那個行李箱。\n那雙眼睛裡，不是貪婪，而是恐懼。\n</d>\nAt 00:03.500, the photograph is laid flat by a hand entering frame, the curl snapping down.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Paper crease, rain.\nnon_diegetic_music: A fragile high harmonic.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b21_video",
+      "output": "output/c3_b21_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b22",
+      "description": "旁白：職責是守住事實的邊界",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Night window as a dark mirror, Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse's reflection floating over the black glass, her eyes meeting her own gaze, the room behind her dim and out of focus. Her lips stay sealed; she never speaks; the narration is off-screen only.\n<d>\n[中文]\n你太想當那個看穿靈魂的人了。\n你的職責，是守住事實的邊界，而不是幫他完成殉難。\n</d>\nAt 00:04.500, her reflection slowly lowers its eyes, the streetlights beyond the glass blooming into soft bokeh.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Rain, a distant siren fading.\nnon_diegetic_music: A slow, cold string line.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b22_video",
+      "output": "output/c3_b22_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b23",
+      "description": "場景：惡寒，手放下筆",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close on Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse's hand resting on the desk, fingers trembling slightly, then withdrawing from the pen as if the metal were cold. A fine sheen of sweat on her wrist. Her breath fogs once in the lamplight.\nAt 00:02.000, tilt up to her face, jaw tight, eyes shut, a small swallow.\noverall_soundscape: Room tone, a clock, uneven breathing, the pen rolling a few centimeters on wood. No whispering. No muttering. No off-screen speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A low sub-bass shudder.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b23_video",
+      "output": "output/c3_b23_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b24",
+      "description": "旁白：以疑點為由發回重查",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Court clerk's counter in gray morning light, a thick case file closed and pushed across the counter by Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a formal black judge robe over a white shirt's hand, a formal routing slip clipped to the cover, all text soft and unreadable. The receiving clerk's hands enter frame and lift the file.\n<d>\n[中文]\n最後，他以事實仍有諸多疑點、自白的真實性存疑為由，將案件發回重查。\n</d>\nAt 00:03.500, the file disappears into a wire tray, the camera holding on the empty counter.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Paper thud, corridor footsteps.\nnon_diegetic_music: A quiet, resolute low string.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b24_video",
+      "output": "output/c3_b24_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b25",
+      "description": "旁白：判決書列出捐款與斷層",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Top-down on an open judgment, dense paragraphs with two passages marked by thin yellow highlighter, an anonymous-donation receipt clipped to the margin, all figures soft and unreadable. Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse's finger rests beside one highlighted block.\n<d>\n[中文]\n判決書裡，詳細列出了那筆神祕捐款，與認罪中的邏輯斷層。\n</d>\nAt 00:03.000, the page is turned, the highlight passing out of frame.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Paper, a clock.\nnon_diegetic_music: A dry, factual piano.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b25_video",
+      "output": "output/c3_b25_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b26",
+      "description": "場景：阿傑咆哮，報紙標題",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Courtroom after the ruling, wide shot: Ajie (S2), a 19-year-old East Asian young man, short messy black hair, pale tired face with dark shadows under his eyes, thin adolescent frame, wearing an oversized gray hoodie and faded jeans on his feet in the dock, mouth open, shouting toward the bench, a bailiff's hand on his shoulder. Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a formal black judge robe over a white shirt sits motionless at the bench, face composed.\nAt 00:03.000, hard cut to a newspaper front page filling frame, a large bold Chinese headline and a photograph of the judge walking with his head down, the print crisp but never read aloud.\noverall_soundscape: Courtroom echo, a chair scraping, muffled shouting, then the slap of newsprint on a table. No whispering. No muttering. No off-screen speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A hard, clipped percussive rhythm.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b26_video",
+      "output": "output/c3_b26_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b27",
+      "description": "場景：一年後偵訊室的毒梟",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Police interrogation room, bare concrete, a steel table bolted to the floor, harsh overhead light. the trafficker (S3), a heavy-set East Asian man in his late forties, short buzz-cut black hair, thick neck, a thin gold chain and a dark navy polo shirt sits leaned back with ankles crossed, one arm draped over the chair back, a small smile, entirely at ease. A detective's shoulder blurs in the foreground.\nAt 00:03.000, slow push toward his face, the light cutting hard shadows under his eyes.\noverall_soundscape: Fluorescent buzz, a chair creaking, a pen tapping, ventilation. No whispering. No muttering. No off-screen speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A low, oily bass pulse.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b27_video",
+      "output": "output/c3_b27_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b28",
+      "description": "對白：毒梟炫耀最愛聖人法官",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Medium close on the trafficker (S3), a heavy-set East Asian man in his late forties, short buzz-cut black hair, thick neck, a thin gold chain and a dark navy polo shirt at the interrogation table, chin lifted, mouth opening in a relaxed, pleased way, eyes sliding toward the camera as he speaks. Only his mouth moves.\nOnly (S3)'s mouth moves.\n(S3) says:\n<d>\n[中文]\n我最喜歡那種想當聖人的法官。\n他們判得越重，我就越安全。\n</d>\nAt 00:03.500, he leans forward into the light, the smile widening.\noverall_soundscape: Dialogue delivered by a low, smug male voice in his late forties, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching. Concrete room echo, a chair creak.\nnon_diegetic_music: A single sour cello note.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b28_video",
+      "output": "output/c3_b28_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b29",
+      "description": "場景：讀報，手心全是汗",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Judge's office in daylight, a folded newspaper on the desk, the same front-page photograph visible but unreadable. Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a formal black judge robe over a white shirt sits with one palm flat on the paper, the skin of her hand faintly damp, a small tremor in her fingers.\nAt 00:03.000, macro on the palm, a bead of sweat sliding along the lifeline, then tilt up to her face, eyes closed.\noverall_soundscape: Room tone, a clock, a distant corridor door, her slow exhale. No whispering. No muttering. No off-screen speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A low, uneasy drone.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b29_video",
+      "output": "output/c3_b29_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b30",
+      "description": "場景：夜裡回家，窗外月亮",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, A modest apartment at night, lights off, Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse stands at the window with her back to camera, one hand on the frame, the city below reduced to scattered warm dots. A low full moon hangs above the rooftops, hazy at the edge.\nAt 00:03.000, slow push past her shoulder toward the moon, her silhouette going soft at the frame edge.\noverall_soundscape: Night room tone, distant traffic, a refrigerator hum, her long exhale. No whispering. No muttering. No off-screen speech. No dialogue. No narration. No human speech.\nnon_diegetic_music: A warm, quiet piano figure.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b30_video",
+      "output": "output/c3_b30_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "c3_b31",
+      "description": "旁白：好險天賦比慈悲更冷",
+      "type": "t2v",
+      "prompt": "integrated_multimodal_description: [Shot 1] photorealistic live-action cinematic, natural skin texture, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, Close on Xu (S1), a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a soft gray knit cardigan over a white blouse in profile against the moonlit window, eyes open and calm, the faintest tired smile at the corner of her mouth. Her lips stay sealed; she never speaks; the narration is off-screen only.\n<d>\n[中文]\n好險，我的天賦比我的慈悲更冷。\n好險我沒讓自己，變成那個成全邪惡、卻以為在執行正義的蠢貨。\n</d>\nAt 00:05.000, the camera holds, then slowly pulls back until she is a small figure against the pale window.\noverall_soundscape: Narration delivered in a low calm middle-aged male voice, Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English, no code-switching, read flat at a steady pace, not character dialogue, not an on-screen voice. The narrator is a fixed calm male voice, never female. Night room tone, one distant dog bark.\nnon_diegetic_music: A soft, resolved string cadence.",
+      "refs": [],
+      "seed": 520100,
+      "out": "c3_b31_video",
+      "output": "output/c3_b31_video",
+      "extra": {
+        "route": "t2v"
+      }
+    },
+    {
+      "id": "ref-xu-ch3",
+      "description": "S1 角色參考圖（直式）：22歲東亞女性法官",
+      "type": "t2i",
+      "prompt": "Vertical portrait character reference, 2:3 vertical, photorealistic real-world photography, soft even studio daylight, sharp facial focus, plain light gray background slightly out of focus. The subject is a 22-year-old East Asian woman judge, shoulder-length straight black hair with thin bangs, round bright dark eyes, soft natural glowing skin, slim build, thin metal-framed glasses, wearing a formal black judge robe over a white shirt. Three-quarter view facing camera, calm neutral expression, lips closed, no smile. No text, no watermark, no subtitle.",
+      "refs": [],
+      "seed": 520100,
+      "out": "ref_xu_ch3",
+      "output": "output/ref_xu_ch3",
+      "extra": {
+        "engine": "zit",
+        "width": 832,
+        "height": 1248,
+        "role": "char_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "prompt_id": "3934d541-bcb8-498c-9bfc-c67308725c9c",
+        "v2_width": 960,
+        "v2_height": 544
+      }
+    },
+    {
+      "id": "ref-ajie-ch3",
+      "description": "S2 角色參考圖（直式）：19歲東亞少年",
+      "type": "t2i",
+      "prompt": "Vertical portrait character reference, 2:3 vertical, photorealistic real-world photography, soft even studio daylight, sharp facial focus, plain light gray background slightly out of focus. The subject is a 19-year-old East Asian young man, short messy black hair, pale tired face with dark shadows under his eyes, thin adolescent frame, wearing an oversized gray hoodie. Three-quarter view facing camera, guarded downward gaze, lips closed, no smile. No text, no watermark, no subtitle.",
+      "refs": [],
+      "seed": 520100,
+      "out": "ref_ajie_ch3",
+      "output": "output/ref_ajie_ch3",
+      "extra": {
+        "engine": "zit",
+        "width": 832,
+        "height": 1248,
+        "role": "char_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "prompt_id": "25cc50e9-b416-4f2f-861d-bf7727f77716",
+        "v2_width": 960,
+        "v2_height": 544
+      }
+    },
+    {
+      "id": "ref-lord-ch3",
+      "description": "S3 角色參考圖（直式）：四十餘歲毒梟",
+      "type": "t2i",
+      "prompt": "Vertical portrait character reference, 2:3 vertical, photorealistic real-world photography, soft even studio daylight, sharp facial focus, plain light gray background slightly out of focus. The subject is a heavy-set East Asian man in his late forties, short buzz-cut black hair, thick neck, a thin gold chain and a dark navy polo shirt. Three-quarter view facing camera, faint smug smile, lips closed. No text, no watermark, no subtitle.",
+      "refs": [],
+      "seed": 520100,
+      "out": "ref_lord_ch3",
+      "output": "output/ref_lord_ch3",
+      "extra": {
+        "engine": "zit",
+        "width": 832,
+        "height": 1248,
+        "role": "char_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "prompt_id": "fb455b67-bd57-49d2-b536-f55e62af3985",
+        "v2_width": 960,
+        "v2_height": 544
+      }
+    },
+    {
+      "id": "ref-scene-airport",
+      "description": "場景參考圖（橫幅 16:9）：機場海關查驗台",
+      "type": "t2i",
+      "prompt": "Cinematic 16:9 horizontal wide shot, photorealistic live-action cinematic, natural lighting, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, 35mm film photography, Kodak Portra 400. Airport customs inspection area: brushed steel counters, gray tiled floor, overhead fluorescent strips, an open hard-shell suitcase and scanning belt, blue-gloved inspector station. Empty of people, clean architectural reference showing the full layout. No text, no watermark, no subtitle.",
+      "refs": [],
+      "seed": 520100,
+      "out": "ref_scene_airport",
+      "output": "output/ref_scene_airport",
+      "extra": {
+        "engine": "zit",
+        "width": 1216,
+        "height": 672,
+        "role": "scene_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "prompt_id": "6f14c835-73dd-4bb4-bb57-9fc55abb6d93",
+        "v2_width": 960,
+        "v2_height": 544
+      }
+    },
+    {
+      "id": "ref-scene-courtroom3",
+      "description": "場景參考圖（橫幅 16:9）：地方法院法庭",
+      "type": "t2i",
+      "prompt": "Cinematic 16:9 horizontal wide shot, photorealistic live-action cinematic, natural lighting, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, 35mm film photography, Kodak Portra 400. Interior of a modest Taiwanese district courtroom: warm medium-toned wood paneling, raised judge's bench, defendant's dock, gallery benches, tall windows with diffuse daylight, wooden railings. Empty courtroom, no people, clean architectural reference from wide angle showing the full room layout. No text, no watermark, no subtitle.",
+      "refs": [],
+      "seed": 520100,
+      "out": "ref_scene_courtroom3",
+      "output": "output/ref_scene_courtroom3",
+      "extra": {
+        "engine": "zit",
+        "width": 1216,
+        "height": 672,
+        "role": "scene_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "prompt_id": "bcce1792-2aff-46c6-8f81-a3bbed34c641",
+        "v2_width": 960,
+        "v2_height": 544
+      }
+    },
+    {
+      "id": "ref-scene-study3",
+      "description": "場景參考圖（橫幅 16:9）：深夜法官書房",
+      "type": "t2i",
+      "prompt": "Cinematic 16:9 horizontal wide shot, photorealistic live-action cinematic, natural lighting, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, 35mm film photography, Kodak Portra 400. Small judge's study at night: a heavy wooden desk with a single warm lamp, stacked case files, shelves of legal volumes, a rain-darkened window. Empty of people, quiet and cramped, clean reference showing desk position and lamp pool. No text, no watermark, no subtitle.",
+      "refs": [],
+      "seed": 520100,
+      "out": "ref_scene_study3",
+      "output": "output/ref_scene_study3",
+      "extra": {
+        "engine": "zit",
+        "width": 1216,
+        "height": 672,
+        "role": "scene_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "prompt_id": "ee2c747d-07ab-42b6-a01e-d3230915c804",
+        "v2_width": 960,
+        "v2_height": 544
+      }
+    },
+    {
+      "id": "ref-scene-detention",
+      "description": "場景參考圖（橫幅 16:9）：看守所會客室",
+      "type": "t2i",
+      "prompt": "Cinematic 16:9 horizontal wide shot, photorealistic live-action cinematic, natural lighting, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, 35mm film photography, Kodak Portra 400. Detention-house meeting room: wire-mesh partition splitting the space, pale green painted walls, fixed stools and a narrow counter on each side, harsh overhead fluorescent light. Empty of people, clean reference showing the mesh partition and both sides. No text, no watermark, no subtitle.",
+      "refs": [],
+      "seed": 520100,
+      "out": "ref_scene_detention",
+      "output": "output/ref_scene_detention",
+      "extra": {
+        "engine": "zit",
+        "width": 1216,
+        "height": 672,
+        "role": "scene_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "prompt_id": "0fb64415-d3a8-4c70-83a4-4b9544a4f734",
+        "v2_width": 960,
+        "v2_height": 544
+      }
+    },
+    {
+      "id": "ref-scene-interrogation",
+      "description": "場景參考圖（橫幅 16:9）：警局偵訊室",
+      "type": "t2i",
+      "prompt": "Cinematic 16:9 horizontal wide shot, photorealistic live-action cinematic, natural lighting, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, 35mm film photography, Kodak Portra 400. Police interrogation room: bare concrete walls, a steel table bolted to the floor, two fixed chairs, harsh overhead light with hard shadows, a small wall vent. Empty of people, clean reference showing the table and light direction. No text, no watermark, no subtitle.",
+      "refs": [],
+      "seed": 520100,
+      "out": "ref_scene_interrogation",
+      "output": "output/ref_scene_interrogation",
+      "extra": {
+        "engine": "zit",
+        "width": 1216,
+        "height": 672,
+        "role": "scene_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "prompt_id": "a8740cfe-0555-4c38-a105-2e42af9fd41b",
+        "v2_width": 960,
+        "v2_height": 544
+      }
+    },
+    {
+      "id": "ref-scene-home-night",
+      "description": "場景參考圖（橫幅 16:9）：夜裡公寓窗前",
+      "type": "t2i",
+      "prompt": "Cinematic 16:9 horizontal wide shot, photorealistic live-action cinematic, natural lighting, real-world photography, not anime, not cartoon, not illustration, not cel shading, not stylized, 35mm film photography, Kodak Portra 400. Modest apartment interior at night, lights off: a wide window with a low hazy full moon above city rooftops, scattered warm window lights below, a curtain edge, a low sill. Empty of people, blue-gray night tones, clean reference showing window framing. No text, no watermark, no subtitle.",
+      "refs": [],
+      "seed": 520100,
+      "out": "ref_scene_home_night",
+      "output": "output/ref_scene_home_night",
+      "extra": {
+        "engine": "zit",
+        "width": 1216,
+        "height": 672,
+        "role": "scene_ref",
+        "unet": "harukiMIX_zit2606_pruned_fp8.safetensors",
+        "prompt_id": "06afd129-2bd4-4eb7-ac6b-2496a02198f4",
+        "v2_width": 960,
+        "v2_height": 544
+      }
+    }
+  ]
+}
