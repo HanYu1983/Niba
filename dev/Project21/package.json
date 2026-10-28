@@ -1,0 +1,15 @@
+{
+  "name": "json-editor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "JSON MCP server: inspect/query/patch large JSON files by path instead of rewriting them",
+  "type": "module",
+  "scripts": {
+    "mcp": "node mcp_server_stdio.mjs",
+    "test": "node test/smoke.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^3.25.76"
+  }
+}
