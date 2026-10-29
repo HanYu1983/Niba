@@ -3,7 +3,7 @@
   "mcp": {
     "json-editor": {
       "type": "local",
-      "command": ["node", "D:\\han\\Niba\\dev\\Project21\\mcp_server_stdio.mjs"],
+      "command": ["node", "D:\\han\\Niba\\dev\\Project21\\json_editor\\mcp_server_stdio.mjs"],
       "enabled": true
     }
   }
