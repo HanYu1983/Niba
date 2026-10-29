@@ -1,0 +1,94 @@
+{
+  "version": "1.12",
+  "project_title": "Judge_Xu_Single_Block_Example",
+  "global_settings": {
+    "aspect_ratio": "16:9",
+    "style": "Cinematic court drama, 35mm film grain, cold top lighting with deep wooden shadows",
+    "default_audio_design": "Continuous warm analog room tone with faint vintage optical film hiss."
+  },
+  "entities": {
+    "characters": [
+      {
+        "id": "char_judge_xu",
+        "name": "許法官 (Judge Xu)",
+        "identity_features": {
+          "ethnicity": "East Asian (Taiwanese)",
+          "age": "Late 50s",
+          "face_and_hair": "Sharp jawline, tired yet observant dark eyes, short slicked-back black hair with silver streaks at the temples",
+          "physique": "Slender build, upright posture",
+          "vibe": "Reserved, stoic, analytical"
+        }
+      },
+      {
+        "id": "char_defendant_ajie",
+        "name": "阿傑 (A-Jie)",
+        "identity_features": {
+          "ethnicity": "East Asian (Taiwanese)",
+          "age": "Early 30s",
+          "face_and_hair": "Hollow cheeks, restless bloodshot eyes, short messy black hair",
+          "physique": "Lean, tense shoulders",
+          "vibe": "Volatile, defiant, cornered"
+        }
+      }
+    ],
+    "props": [
+      {
+        "id": "prop_verdict",
+        "name": "判決書",
+        "appearance": "Heavy official court document on cream-colored paper, red seal at the bottom, key phrases underlined in black ink."
+      }
+    ],
+    "locations": [
+      {
+        "id": "loc_courtroom",
+        "name": "肅穆法庭",
+        "description": "Tall dark wooden judicial bench, empty public gallery behind a low railing, cold overhead light pooling on the bench surface."
+      }
+    ]
+  },
+  "blocks": [
+    {
+      "id": "block_verdict_read",
+      "timeframe": {
+        "start_sec": 0,
+        "end_sec": 6
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Formal dark judicial robe with white collar trim",
+          "facial_state": "Calm and composed, lips moving naturally as he reads aloud, eyes fixed on the document"
+        },
+        {
+          "entity_ref": "char_defendant_ajie",
+          "outfit": "Wrinkled grey detention-center shirt",
+          "facial_state": "Jaw clenched, lips pressed tight and motionless, staring up at the bench"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_verdict"
+        }
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "target_ref": "prop_verdict",
+        "description": "Judge Xu lifts the verdict document with both hands and reads the final sentence aloud in a level, unhurried voice, while A-Jie watches him in rigid silence."
+      },
+      "audio_control": {
+        "audio_mode": "clean_dialogue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": true,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "spoken_on_screen",
+          "language": "zh-TW",
+          "original_text": "本庭判處被告有期徒刑十二年，褫奪公權五年。全案仍可上訴。",
+          "voice_prompt": "Calm, low-pitched, authoritative male voice in his late fifties, measured courtroom delivery with slight gravel"
+        },
+        "soundtrack_specification": "Clean close-mic courtroom dialogue, subtle natural reverb of a high-ceilinged chamber, layered under continuous warm analog room tone and faint 35mm optical film hiss."
+      }
+    }
+  ]
+}

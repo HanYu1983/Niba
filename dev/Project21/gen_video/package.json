@@ -1,0 +1,16 @@
+{
+  "name": "video-compiler",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MCP server: compile Omni-Media project JSON blocks into render payloads (ComfyUI submission comes later)",
+  "type": "module",
+  "scripts": {
+    "mcp": "node mcp_server_stdio.mjs",
+    "compile": "node cli.mjs",
+    "test": "node test/smoke.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^3.25.76"
+  }
+}

@@ -5,6 +5,11 @@
       "type": "local",
       "command": ["node", "D:\\han\\Niba\\dev\\Project21\\json_editor\\mcp_server_stdio.mjs"],
       "enabled": true
+    },
+    "video-compiler": {
+      "type": "local",
+      "command": ["node", "D:\\han\\Niba\\dev\\Project21\\gen_video\\mcp_server_stdio.mjs"],
+      "enabled": true
     }
   }
 }

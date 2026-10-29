@@ -1,0 +1,234 @@
+{
+  "version": "1.12",
+  "project_title": "Chapter_04_The_Addiction_of_Guilt",
+  "global_settings": {
+    "aspect_ratio": "16:9",
+    "style": "Cinematic legal drama, 35mm film grain, cold institutional lighting, deep wooden shadows",
+    "default_audio_design": "Continuous warm analog room tone with faint vintage optical film hiss."
+  },
+  "entities": {
+    "characters": [
+      {
+        "id": "char_judge_xu",
+        "name": "許法官 (Judge Xu)",
+        "identity_features": {
+          "ethnicity": "East Asian (Taiwanese)",
+          "age": "Late 50s",
+          "face_and_hair": "Sharp jawline, tired yet observant dark eyes, short slicked-back black hair with silver streaks at the temples",
+          "physique": "Slender build, upright posture",
+          "vibe": "Reserved, stoic, analytical"
+        }
+      },
+      {
+        "id": "char_zhao_liting",
+        "name": "趙立廷 (Zhao Liting)",
+        "identity_features": {
+          "ethnicity": "East Asian (Taiwanese)",
+          "age": "Late 60s",
+          "face_and_hair": "Silver hair combed straight back, deep-set calm eyes, deeply lined but dignified face",
+          "physique": "Tall frame, faintly stooped shoulders",
+          "vibe": "Composed, weary, unshaken"
+        }
+      }
+    ],
+    "props": [
+      {
+        "id": "prop_bank_statement",
+        "name": "海外帳戶匯款明細",
+        "appearance": "Printed offshore bank transfer record on crisp white paper, dense columns of timestamps and account numbers, one transaction row circled in red ink."
+      },
+      {
+        "id": "prop_verdict",
+        "name": "無罪判決書",
+        "appearance": "Heavy official court ruling on cream-colored paper, red seal at the bottom, the two characters for acquittal inked in black."
+      }
+    ],
+    "locations": [
+      {
+        "id": "loc_courtroom",
+        "name": "肅穆法庭",
+        "description": "Tall dark wooden judicial bench, empty public gallery behind a low railing, cold overhead light pooling on the bench surface."
+      },
+      {
+        "id": "loc_judge_office_night",
+        "name": "法官辦公室（深夜）",
+        "description": "Cluttered desk buried in case files, a single green banker's lamp casting a tight pool of light, dark windows reflecting the room."
+      },
+      {
+        "id": "loc_remote_branch_office",
+        "name": "偏遠分院辦公室",
+        "description": "Small bare office with half-packed cardboard boxes, a window overlooking empty farmland at dusk."
+      }
+    ]
+  },
+  "blocks": [
+    {
+      "id": "block_01_court_temptation",
+      "timeframe": { "start_sec": 0, "end_sec": 6 },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Formal dark judicial robe with white collar trim",
+          "facial_state": "Calm and composed, lips firmly sealed, eyes fixed on the defendant's seat"
+        },
+        {
+          "entity_ref": "char_zhao_liting",
+          "outfit": "Dark grey suit without a tie",
+          "facial_state": "Dignified and still, lips sealed, steady gaze lifted toward the bench"
+        }
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "target_ref": "char_zhao_liting",
+        "description": "Judge Xu sits motionless on the bench, staring down at his former mentor in the defendant's seat while a private thought takes hold behind his sealed lips."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "這是我等待已久的時刻。只要判他有罪，我就能證明，我可以為了正義犧牲自己的情感。",
+          "voice_prompt": "Low, restrained internal male voice in his late fifties, cold and faintly eager, close-mic whisper with slight low-pass room filter"
+        },
+        "soundtrack_specification": "Intimate internal voiceover under a hushed courtroom room tone, distant air-conditioning hum, continuous warm 35mm film hiss. Judge Xu's lips remain strictly sealed.",
+        "visual_sound_sync": "Closed sealed lips, zero vocalization from the courtroom itself, all speech exists only inside the character's head."
+      }
+    },
+    {
+      "id": "block_02_night_discrepancy",
+      "timeframe": { "start_sec": 6, "end_sec": 13 },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed tight, motionless jaw, eyes narrowing at the document"
+        }
+      ],
+      "present_props": [
+        { "entity_ref": "prop_bank_statement" }
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "target_ref": "prop_bank_statement",
+        "description": "Judge Xu leans over the transfer record under the banker's lamp, one fingertip tracing a column of timestamps until it stops on the entry that could not exist."
+      },
+      "audio_control": {
+        "audio_mode": "vintage_film_room_tone",
+        "speech_present": false,
+        "lip_sync_enabled": false,
+        "soundtrack_specification": "Continuous heavy 35mm optical film projector hiss, warm analog room tone filling the entire frequency spectrum, the faint dry tick of a wall clock, subtle crisp paper friction under steady ambient design.",
+        "visual_sound_sync": "Purely mechanical and environmental acoustic design, closed sealed lips, zero vocalization, zero speech."
+      }
+    },
+    {
+      "id": "block_03_mirror_break",
+      "timeframe": { "start_sec": 13, "end_sec": 19 },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed tight, face pale, eyes wet, expression collapsing from ambition into disgust"
+        }
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Judge Xu stops in front of the dark office window, meeting his own reflection, and his expression breaks as nausea rises in his throat."
+      },
+      "referenced_blocks": ["block_02_night_discrepancy"],
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "你竟然想為了讓自己的負罪感看起來很偉大，而去毀掉一個人的清譽。",
+          "voice_prompt": "Cold, self-loathing internal male voice, close-mic whisper, low-pass filtered, almost breaking at the end"
+        },
+        "soundtrack_specification": "Intimate internal voiceover with a low-pass acoustic filter, a thin rising tinnitus tone, heavy 35mm optical film hiss beneath. The character's mouth stays shut.",
+        "visual_sound_sync": "Closed sealed lips, zero vocalization, the only human sound is the internal voice."
+      }
+    },
+    {
+      "id": "block_04_acquittal_verdict",
+      "timeframe": { "start_sec": 19, "end_sec": 25 },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Formal dark judicial robe with white collar trim",
+          "facial_state": "Calm and flat, lips moving as he reads the ruling aloud, eyes never leaving the document"
+        },
+        {
+          "entity_ref": "char_zhao_liting",
+          "outfit": "Dark grey suit without a tie",
+          "facial_state": "Lips sealed, eyes steady, a faint easing of the shoulders"
+        }
+      ],
+      "present_props": [
+        { "entity_ref": "prop_verdict" }
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "target_ref": "prop_verdict",
+        "description": "Judge Xu reads the acquittal aloud in a flat, measured voice, never looking up from the ruling, while the gallery erupts into shocked murmurs behind him."
+      },
+      "referenced_blocks": ["block_02_night_discrepancy"],
+      "audio_control": {
+        "audio_mode": "clean_dialogue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": true,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "spoken_on_screen",
+          "language": "zh-TW",
+          "original_text": "趙立廷，無罪。本件關鍵匯款紀錄與銀行斷線時間不符，證據不足。",
+          "voice_prompt": "Calm, low-pitched, authoritative male voice in his late fifties, flat courtroom delivery with slight gravel"
+        },
+        "soundtrack_specification": "Clean close-mic courtroom dialogue, subtle natural reverb of a high-ceilinged chamber, a ripple of shocked murmurs swelling behind the bench, continuous warm analog room tone."
+      }
+    },
+    {
+      "id": "block_05_remote_dusk",
+      "timeframe": { "start_sec": 25, "end_sec": 32 },
+      "location_ref": "loc_remote_branch_office",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Loose grey cardigan over a worn shirt, no robe",
+          "facial_state": "Lips sealed tight, eyes glistening, a faint smile breaking through"
+        }
+      ],
+      "present_props": [
+        { "entity_ref": "prop_verdict" }
+      ],
+      "referenced_blocks": ["block_02_night_discrepancy", "block_04_acquittal_verdict"],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "target_ref": "prop_verdict",
+        "description": "Judge Xu sits alone in the bare branch office at dusk, the old ruling open on his knees, his fingertip resting on the circled bank-outage date as he laughs silently with tears at the corners of his eyes."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "好險我那天沒讓那種想當英雄的癮頭給毀了。好險我只是個冷酷的、看見事實的人。",
+          "voice_prompt": "Quiet, weathered internal male voice in his late fifties, half laugh and half tears, close-mic with low-pass room filter"
+        },
+        "soundtrack_specification": "Distant cicadas and empty-field wind drifting through an open window, warm analog room tone, continuous 35mm optical film hiss filling the spectrum. No vocalization beyond the internal voice.",
+        "visual_sound_sync": "Closed sealed lips, zero on-screen speech, the laugh is silent and internal."
+      }
+    }
+  ]
+}
