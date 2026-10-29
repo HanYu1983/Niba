@@ -7,7 +7,6 @@
   "en-US": "I love judges who want to play saints. The heavier their sentences, the safer I am."
 }
 ```
-
 # 第一章：核心架構設計與巢狀指涉機制 (Core Architecture & Nested Reference Mechanism)
 
 本章將深入探討本系統的核心基石：**非線性邏輯解耦**、**段落拆解（Block Chunking）**與**巢狀指涉機制（Nested References）**。透過這套架構，我們能夠將龐大、跨時空且充滿因果交錯的小說劇本，安全且精準地轉譯為可供 AI 影片模型渲染的微觀分鏡。
@@ -50,7 +49,7 @@
 
 ## 1.4 章節範例：完整巢狀指涉 JSON 架構示範
 
-以下為第一章的核心範例，展示如何透過 `entities` 宣告全域資產，並在 `blocks` 中透過 `referenced_blocks` 實作跨時空的巢狀指涉與物件載體轉換：
+以下為第一章的核心範例，展示如何透過 `entities` 宣告全域資產，並在 `blocks` 中實作跨時空的巢狀指涉、載體轉換與分鏡連結：
 
 ```json
 {
@@ -94,7 +93,7 @@
 
   "blocks": [
     {
-      "id": "block_1_verdict",
+      "id": "block_1",
       "timeframe": { "start_sec": 0, "end_sec": 5 },
       "location_ref": "loc_study_desk",
       "present_characters": [
@@ -106,11 +105,12 @@
       ],
       "action": {
         "subject_ref": "char_judge_xu",
+        "target_ref": "prop_case_file_and_photo",
         "description": "Judge Xu reviews the case file and signs the official document remanding the case."
       }
     },
     {
-      "id": "block_2_nested_realization",
+      "id": "block_2",
       "timeframe": { "start_sec": 5, "end_sec": 12 },
       "location_ref": "loc_study_desk",
       "present_characters": [
@@ -118,18 +118,32 @@
           "entity_ref": "char_judge_xu",
           "outfit": "Dark casual collar shirt",
           "facial_state": "Lips firmly sealed tight, motionless jaw, expression shifting to deep realization"
+        },
+        /* 巢狀指涉角色：將 block_1 當作當前區塊的參照物件 */
+        {
+          "id": "char_event_block1",
+          "type": "block_reference",
+          "ref_id": "block_1",
+          "manifestation": "Printed black-and-white evidence photograph embedded inside the paper case file"
         }
       ],
       "present_props": [
         { "entity_ref": "prop_case_file_and_photo" }
       ],
-      /* 巢狀指涉：本區塊透過 ID 鏈結了前一個區塊的上下文脈絡 */
-      "referenced_blocks": ["block_1_verdict"],
+      "referenced_blocks": ["block_1"],
       "action": {
         "subject_ref": "char_judge_xu",
-        "target_ref": "prop_case_file_and_photo",
-        "description": "Just as his pen hovers over block_1's documents, his gaze drops sharply onto the evidence photograph, recognizing the true fear in the suspect's eyes."
+        "target_ref": "char_event_block1",
+        "description": "Just as his pen hovers over the documents, Judge Xu's gaze drops sharply onto char_event_block1, recognizing the true fear in the suspect's eyes."
       },
+      "transitions": [
+        {
+          "from_block_id": "block_1",
+          "type": "match_cut",
+          "visual_blend": "Focus shifts sharply from the floating pen tip down to the still photograph inside the case file",
+          "color_grade_shift": "Subtle desaturation, heightening contrast around the black-and-white evidence photo"
+        }
+      ],
       "audio_control": {
         "audio_mode": "vintage_film_room_tone",
         "speech_present": false,
@@ -143,6 +157,23 @@
 ```
 
 ---
+
+## 1.5 設計重點解析
+
+1. **`id` 與 `ref_id` (巢狀指涉的核心)**：
+* 在 `block_2` 的角色列表中，將 `char_event_block1` 的 `type` 設為 `"block_reference"`，並透過 `"ref_id": "block_1"` 直接嵌入/指涉整個區塊 1 的情節，讓編譯器能在渲染時將過去的 Block 轉化為上下文。
+
+
+2. **`manifestation` (具象化方式)**：
+* 當一個區塊（`block_1`）被當作另一個區塊（`block_2`）的角色或物件時，寫明它在視覺上的呈現媒介（如：`Printed black-and-white evidence photograph embedded inside the paper case file`，或報紙頭條、電視新聞螢幕、回憶畫面等）。
+
+
+3. **`subject_ref` / `target_ref` (動作指涉)**：
+* 動作（`action`）明確指出誰是主詞（`subject_ref`）、對誰/何物做動作（`target_ref`，例如對準 `char_event_block1`），使 AI 能更精準解析動作邏輯，避免物體互動錯位。
+
+
+4. **`transitions` (分鏡連結)**：
+* 將區塊間的鏡頭推移（如 `match_cut`）與色調轉換（`color_grade_shift`）獨立為專屬陣列，方便影片模型處理多鏡頭連續生成與畫面調速。
 
 # 第二章：單一語態與 MiniMax H3 適應原則 (Single Intent Principle & Model Adaptation)
 
