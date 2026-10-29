@@ -1,0 +1,362 @@
+# 小說 → 分鏡 JSON：兩階段工作流
+
+本文件說明如何把一篇小說（或其中一章）轉成可編譯的分鏡 JSON。流程刻意拆成兩個**互不回頭**的階段：
+
+| 階段 | 輸入 | 產出 | 誰在做 |
+|---|---|---|---|
+| 一、規劃 | 小說原文 | `plan.<chapter>.json` | 讀完全文，做實體盤點與段落切分 |
+| 二、生成 | **只有** `plan.json` | `<chapter>.json`（entities + blocks） | 逐段寫巢狀 JSON，不再讀小說 |
+
+第一階段只做「規劃」，**不寫任何提示詞**；第二階段只做「生成」，**不需要再讀原文**。兩階段之間唯一的契約就是 `plan.json`，所以它必須自足：任何第二階段需要的資訊，都必須在第一階段就寫進去。
+
+---
+
+## 0. 為什麼要拆兩階段
+
+* **可驗證**：`plan.json` 的 `source` 是原文的逐字切片，能併回完整小說，段落有沒有漏、有沒有重疊一眼可查。
+* **可重跑**：段落切錯，只重跑第一階段；某段畫面不滿意，只重跑該段，不必重讀三萬字。
+* **可分工**：規劃是「讀懂故事」，生成是「寫鏡頭」，兩件事的注意力完全不同，混在一起容易漏角色、漏道具、漏指涉。
+* **可除錯**：時長不合理、指涉斷鏈、角色沒定義，都會在 `plan.json` 就暴露，而不是等到影片生成才發現。
+
+---
+
+# 第一階段：`plan.<chapter>.json`
+
+## 1.1 檔案骨架
+
+```json
+{
+  "version": "1.0",
+  "stage": "plan",
+  "project_title": "Chapter_04_The_Addiction_of_Guilt",
+  "source": {
+    "file": "ch1_microdust.md",
+    "chapter": 4,
+    "chars": 38210,
+    "sha256": "…",
+    "eol": "lf"
+  },
+  "entities": {
+    "characters": [],
+    "props": [],
+    "locations": []
+  },
+  "segments": []
+}
+```
+
+`source.chars` 與 `source.sha256` 是完整性憑證：第二階段或編譯器可以用它們確認 `segments` 沒有被改壞。
+
+## 1.2 實體盤點（entities）
+
+先把全章讀完，再列出**會反覆出現**的角色、關鍵物品、場景。原則是「單一真理來源」：
+
+* **characters**：只寫**恆定生理特徵**（年齡、臉型、髮型、身形、氣質）。**不要寫服裝**——服裝屬於某個段落當下的狀態，第二階段才決定。
+* **props**：貫穿劇情的物件（判決書、匯款明細、凶器）。寫外觀，不寫它在哪個鏡頭出現。
+* **locations**：固定空間特徵（法庭、深夜辦公室、偏遠分院）。
+
+```json
+{
+  "characters": [
+    {
+      "id": "char_judge_xu",
+      "name": "許法官 (Judge Xu)",
+      "aliases": ["許法官", "他"],
+      "traits": "Late 50s, sharp jawline, tired observant eyes, slicked-back black hair with silver temples, slender, stoic",
+      "first_seen": "seg_001"
+    }
+  ],
+  "props": [
+    {
+      "id": "prop_bank_statement",
+      "name": "海外帳戶匯款明細",
+      "aliases": ["匯款單", "帳戶明細"],
+      "traits": "Printed offshore transfer record, dense timestamp columns, one row circled in red ink",
+      "first_seen": "seg_004"
+    }
+  ],
+  "locations": [
+    {
+      "id": "loc_courtroom",
+      "name": "肅穆法庭",
+      "aliases": ["法庭", "審判席"],
+      "traits": "Tall dark wooden bench, empty gallery, cold overhead light",
+      "first_seen": "seg_001"
+    }
+  ]
+}
+```
+
+`aliases` 是給第二階段用的：段落裡只寫「他」或「匯款單」時，才對得回實體。`first_seen` 讓你知道這個實體最晚在哪一段之前必須定義完。
+
+## 1.3 段落切分（segments）
+
+### 切分依據：指南第一章 1.2
+
+滿足任一條就切新段落：
+
+1. **時間轉折**：宣判日 → 數年後。
+2. **空間切換**：法庭 → 深夜辦公室 → 偏遠分院。
+3. **視覺焦點／主體變換**：從「法官的臉」切到「桌上的匯款明細」。
+
+### 再切一層：指南第二章 2.2
+
+即使時空沒變，只要**發聲模式、說話者、心理意圖**改變，仍必須切開。例如同一間辦公室裡：
+
+* 法官發現時間差（無聲、純視覺）→ 一段
+* 法官在鏡子前自我厭惡（內心獨白）→ 另一段
+
+**切點落在段落邊界。** 一個 segment 就是一個「敘事節拍」：小說的一個段落、或一個明顯換氣的地方。一章通常切成 10–20 段，長度不必剛好 5–7 秒——段落比 7 秒長時，用 `render_blocks`（見 1.6）告訴第二階段這一段要拆成幾個鏡頭。硬把長段落壓成一個 7 秒鏡頭，只會讓旁白唸不完。
+
+### `split_reason` 只能是這幾種
+
+| 值 | 意思 |
+|---|---|
+| `chapter_start` | 章節的第一段（開場定位） |
+| `paragraph_break` | 同一時空下的一般換段（敘事節拍改變） |
+| `time_shift` | 時間改變 |
+| `location_change` | 地點改變 |
+| `focus_change` | 視覺焦點或主體改變 |
+| `voice_change` | 發聲模式／說話者／意圖改變 |
+| `duration_split` | 同一段台詞太長，且中間有明顯停頓，值得切成兩個 segment |
+
+## 1.4 `source` 完整性（必須能併回原文）
+
+每一段都必須帶**逐字原文切片**與字元位移：
+
+```json
+{
+  "id": "seg_004",
+  "order": 4,
+  "source_start": 2410,
+  "source_end": 2864,
+  "source": "然而，當他深夜反覆翻看那份海外帳戶的匯款單時……（逐字原文）"
+}
+```
+
+規則：
+
+* `source` 必須是原文的**完全一致**子字串，不改字、不加省略號、不翻譯。
+* `segments` 依 `order` 串接後，`join("")` 必須**等於原文全章**（或你宣告的章節範圍）。
+* 位移規則：`source_end - source_start === source.length`，且 `segments[i].source_end === segments[i+1].source_start`。
+* 切點落在句子或段落邊界，不要切在半句話中間；若真的必須切（`duration_split`），寧可讓前後段共用一句的完整子句。
+
+驗證（第二階段開跑前必做）：
+
+```js
+const joined = plan.segments.map((s) => s.source).join("");
+if (joined !== originalChapter) throw new Error("segments do not reassemble the chapter");
+if (sha256(joined) !== plan.source.sha256) throw new Error("hash mismatch");
+```
+
+## 1.5 段落類型（`kind`）
+
+每段必須標記三種之一：
+
+| `kind` | 定義 | 典型畫面 |
+|---|---|---|
+| `dialogue` | 角色在畫面上說話 | 宣判、咆哮、對話 |
+| `narration` | 旁白敘事（非畫面角色發聲） | 背景交代、時序過場 |
+| `action` | 無台詞的動作／純視覺 | 翻卷宗、發現時間差、鏡前崩潰 |
+
+`dialogue`／`narration` 必須再記 `spoken_text`：**這一段會被唸出來的全部文字**（只記唸出來的部分，動作描述不算）。`action` 的 `spoken_text` 固定為 `null`。
+
+> 內心獨白、回想中的台詞都歸在 `narration` 或 `dialogue`（依段落主體是「只有聲音」還是「畫面中有人說話」），再用 `voice_intent` 區分實際發聲方式；`kind` 只回答「這段有沒有台詞」。
+
+另外建議記 `voice_intent`，讓第二階段知道聲音往哪裡放：
+
+* `spoken_on_screen`：現場對白（對嘴），含獨自一人在房裡出聲說話
+* `internal_monologue`：內心獨白（閉唇）
+* `remembered_voice`：閃回／回想中的他人台詞（畫面可能是回憶，不對嘴）
+* `narrator`：客觀旁白
+* `none`：純動作
+
+判斷內在還是出聲，看原文的書寫慣例。本專案的小說用：
+
+* `*「…」*`（斜體＋引號）→ 內心獨白
+* `「…」`（一般引號，常伴隨「輕聲說」「笑了」等動作）→ 出聲對白
+* 敘述句轉述「他心想」「他覺得」→ 純視覺或旁白，由你決定要不要配音
+
+## 1.6 用字數推估時長
+
+只數**中文字與英數字**，標點與空白不計。
+
+```
+estimated_sec = max( 5 , ceil(char_count / rate) + 1 )
+render_blocks = ceil(estimated_sec / 7)
+```
+
+| `voice_intent` | `rate`（字／秒） | 說明 |
+|---|---|---|
+| `spoken_on_screen` | 5.0 | 一般語速 |
+| `spoken_on_screen`（咆哮／情緒） | 4.5 | 情緒拉長 |
+| `remembered_voice` | 4.5 | 回想中的台詞，略慢 |
+| `internal_monologue` | 4.0 | 獨白較慢、有停頓 |
+| `narrator` | 5.0 | 旁白穩定 |
+| `none`（action） | — | 以「動作節拍」估，1 拍 ≈ 5 秒，上限 6 |
+
+`estimated_sec` 是**這一段實際需要幾秒**，不是鏡頭長度。單一鏡頭上限 7 秒，所以用 `render_blocks = ceil(estimated_sec / 7)` 表示第二階段要把這段話拆成幾個 block 才唸得完（`action` 段固定為 1）。
+
+實例：第四章結尾那句「好險，好險我那天沒讓那種『想當英雄的癮頭』給毀了。好險我只是個冷酷的、看見事實的人。」共 36 字，36 / 5.0 = 7.2 → 8 + 1 = 9 秒 → `render_blocks: 2`。
+
+只有在同一段台詞內部有**明顯停頓或語氣轉折**、值得讓它成為獨立敘事節拍時，才切成兩個 segment（`split_reason: "duration_split"`）；單純因為字數超長，用 `render_blocks` 就好，不要為了湊 7 秒把一句話切碎。
+
+## 1.7 指涉關係（`references`）
+
+若這一段需要回顧、呼應、引用前面的段落，**不要重寫舊情節**，只記指標：
+
+```json
+"references": [
+  {
+    "segment_ref": "seg_004",
+    "why": "判決理由直接引用匯款明細上的銀行斷線時間",
+    "manifestation": "判決書紙本上被紅筆圈起的那一行時間"
+  }
+]
+```
+
+* `segment_ref`：指向本段之前的 segment id。
+* `why`：為什麼要指涉（劇情功能）。
+* `manifestation`：編譯時要變成的**具體載體**——報紙頭條、案卷照片、腦中迴響、判決書上的紅圈。這欄是第二階段寫 `referenced_blocks` 的依據。
+
+只允許指向**前面**的段落；指向後面的段落代表你切錯了順序。
+
+## 1.8 單一段落長相
+
+```json
+{
+  "id": "seg_004",
+  "order": 4,
+  "source_start": 2410,
+  "source_end": 2864,
+  "source": "然而，當他深夜反覆翻看那份海外帳戶的匯款單時……",
+  "kind": "action",
+  "split_reason": "location_change",
+  "location_ref": "loc_judge_office_night",
+  "character_refs": ["char_judge_xu"],
+  "prop_refs": ["prop_bank_statement"],
+  "context": "法官在深夜辦公室發現匯款時間落在銀行斷線的 24 小時內，證據可能是偽造的。",
+  "visual_context": "檯燈下只有一份文件被照亮，手指沿著時間欄滑動後停住；全程無聲。",
+  "continuity": "承接法庭上「準備判有罪」的心證，這裡第一次鬆動。",
+  "voice_intent": "none",
+  "spoken_text": null,
+  "char_count": 0,
+  "rate_chars_per_sec": null,
+  "estimated_sec": 6,
+  "render_blocks": 1,
+  "references": []
+}
+```
+
+對白段的差別：
+
+```json
+{
+  "kind": "dialogue",
+  "voice_intent": "spoken_on_screen",
+  "speaker_ref": "char_judge_xu",
+  "spoken_text": "趙立廷，無罪。本件關鍵匯款紀錄與銀行斷線時間不符，證據不足。",
+  "char_count": 30,
+  "rate_chars_per_sec": 5.0,
+  "estimated_sec": 7,
+  "render_blocks": 1
+}
+```
+
+> `plan.json` 到這裡為止。**不要**寫 `prompt`、`action.description`、`soundtrack_specification`、`facial_state` 這些給模型的文字——那些是第二階段的事。
+
+---
+
+# 第二階段：逐段生成巢狀 JSON
+
+## 2.1 輸入只有 `plan.json`
+
+先把 `entities` 原封不動抄進新的專案 JSON（id 不改、特徵不改），再依 `segments` 的 `order` 一段一段生成 block。**不要回頭讀小說**；如果 `plan.json` 資訊不足，那是第一階段的缺陷，回去補 plan，而不是在第二階段臨時翻原文。
+
+## 2.2 每段要做的事
+
+1. 讀 `kind`、`voice_intent`、`context`、`visual_context`、`continuity`。
+2. 用 `character_refs` / `prop_refs` / `location_ref` 組出 `present_characters`、`present_props`、`location_ref`。
+3. 為每個角色補上**這一段專屬**的 `outfit` 與 `facial_state`（服裝永遠不進 `entities`）。
+4. 寫 `action.description`：只描述這一段看得見的動作，不寫心理分析。
+5. 依 `voice_intent` 選 `audio_control.audio_mode`。`spoken_text` 是逐字原文，寫進 `dialogue.original_text` 前要先轉成可唸版本（去引號、去冒號、數字改中文、一句一行），規則見 [`PROMPT_TECHNIQUES.md`](PROMPT_TECHNIQUES.md)。
+6. 若 `references` 非空，把 `segment_ref` 換成對應的 `block_id` 寫進 `referenced_blocks`。
+7. **若 `render_blocks > 1`**，把 `spoken_text` 依句意切成 `render_blocks` 段，每段各自生成一個 block（總長不超過 7 秒）。第一塊承接畫面與 `references`，之後每一塊用 `referenced_blocks` 指回同一段的前一塊，維持視覺連續；不要為了塞進 7 秒把詞切斷。
+8. `timeframe` 依生成順序累加；編譯時 `compile_block` 會自動重算成 `0..duration`。
+
+## 2.3 欄位對照表
+
+| `plan.json` | 生成的 block 欄位 |
+|---|---|
+| `id`（`seg_004`） | `id`（`block_04_<slug>`） |
+| `location_ref` | `location_ref` |
+| `character_refs[]` | `present_characters[].entity_ref` + 新增 `outfit` / `facial_state` |
+| `prop_refs[]` | `present_props[].entity_ref` |
+| `context` + `visual_context` | `action.description`（改寫成鏡頭語言） |
+| `voice_intent: none` | `vintage_film_room_tone`、`speech_present: false` |
+| `voice_intent: spoken_on_screen` | `clean_dialogue_with_room_tone`、`lip_sync_enabled: true` |
+| `voice_intent: internal_monologue` | `internal_monologue_with_room_tone`、`lip_sync_enabled: false` |
+| `voice_intent: remembered_voice` | `remembered_voiceover`、`lip_sync_enabled: false` |
+| `voice_intent: narrator` | `narrator_voiceover`、`lip_sync_enabled: false` |
+| `spoken_text` | `dialogue.original_text`（先轉可唸版本；`render_blocks > 1` 時切段） |
+| `references[].segment_ref` | `referenced_blocks[]` |
+| `estimated_sec` | `timeframe`（編譯時再重算） |
+| `render_blocks` | 這一段要生成幾個 block |
+
+## 2.4 聲學規則（指南第四、五章）
+
+* 無台詞段落一定要寫 `soundtrack_specification`，用 35mm film hiss + room tone 把頻段填滿；不要用 `no speech` 這類負向詞。
+* 內心獨白：`lip_sync_enabled: false`，`facial_state` 明確鎖唇（`Lips sealed tight, motionless jaw`）。
+* 現場對白：`lip_sync_enabled: true`，`facial_state` 描述嘴部動態。
+* 每個 block 只能有一種發聲模式；`plan.json` 若把兩種聲音放進同一段，代表切分錯了。
+
+## 2.5 產出格式
+
+一章一個檔案，維持指南 1.4 的形狀：
+
+```json
+{
+  "version": "1.12",
+  "project_title": "Chapter_04_The_Addiction_of_Guilt",
+  "global_settings": {
+    "aspect_ratio": "16:9",
+    "style": "…",
+    "default_audio_design": "…"
+  },
+  "entities": {},
+  "blocks": []
+}
+```
+
+* `entities` 是整章的單一真理來源，**每段都從這裡取**，不要複製貼上改寫。
+* `blocks` 依 `order` 排列。
+* 不寫 `subtitles`（若要寫，只能單一語言）；不寫註解；不寫 `source` 原文（原文留在 plan）。
+
+## 2.6 交付前檢查
+
+- [ ] `plan.segments` 串接後等於原章，sha256 相符
+- [ ] 每段都有 `kind`，對白／旁白都有 `spoken_text` 與 `estimated_sec`
+- [ ] `render_blocks === ceil(estimated_sec / 7)`，且生成的 block 真的把台詞唸進這麼多塊
+- [ ] 每段只有一種 `voice_intent`
+- [ ] 所有 `character_refs` / `prop_refs` / `location_ref` 都在 `entities` 裡，且沒有「只被提到、不會入鏡」的人
+- [ ] `references` 只指向前面的段落
+- [ ] 生成的每個 block 都能通過 `video-compiler` 的 `compile_block`
+- [ ] JSON 無註解、無重複語言 subtitles
+
+---
+
+# 附：兩階段的分工邊界
+
+| 問題 | 第一階段（plan） | 第二階段（生成） |
+|---|---|---|
+| 這段屬於哪個場景？ | ✅ | 只引用 |
+| 角色長什麼樣？ | ✅ 恆定特徵 | ❌ 不改寫 |
+| 角色這鏡頭穿什麼？ | ❌ | ✅ |
+| 這段是對白／旁白／動作？ | ✅ | 依此選音軌 |
+| 台詞全文？ | ✅ | 原樣搬進 `original_text` |
+| 這段幾秒？ | ✅ 估算 | 沿用，編譯時重算 |
+| 指涉哪一段？ | ✅ 記 `segment_ref` | ✅ 轉成 `referenced_blocks` |
+| 鏡頭怎麼拍、怎麼運鏡？ | ❌ | ✅ `action.description` |
+| 底噪、對嘴開關？ | ❌ | ✅ `audio_control` |
+
+一句話總結：**plan 決定「講什麼、切成幾段、每段多久、跟誰有關」；生成決定「怎麼拍、怎麼聽」。**
