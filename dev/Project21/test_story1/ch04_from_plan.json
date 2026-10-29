@@ -1,0 +1,1874 @@
+{
+  "version": "1.12",
+  "project_title": "Chapter_04_The_Addiction_of_Guilt",
+  "global_settings": {
+    "aspect_ratio": "16:9",
+    "style": "Cinematic legal drama, 35mm film grain, cold institutional lighting, deep wooden shadows",
+    "default_audio_design": "Continuous warm analog room tone with faint vintage optical film hiss."
+  },
+  "entities": {
+    "characters": [
+      {
+        "id": "char_judge_xu",
+        "name": "許法官 (Judge Xu)",
+        "identity_features": {
+          "ethnicity": "East Asian (Taiwanese)",
+          "age": "Late 50s",
+          "face_and_hair": "Sharp jawline, tired yet observant dark eyes, short slicked-back black hair with silver streaks at the temples",
+          "physique": "Slender build, upright posture",
+          "vibe": "Reserved, stoic, analytical"
+        }
+      },
+      {
+        "id": "char_zhao_liting",
+        "name": "趙立廷 (Zhao Liting)",
+        "identity_features": {
+          "ethnicity": "East Asian (Taiwanese)",
+          "age": "Late 60s",
+          "face_and_hair": "Silver hair combed back, deep-set calm eyes, deep lines around the mouth, dignified weathered face",
+          "physique": "Tall and faintly stooped",
+          "vibe": "Calm, dignified, unshaken"
+        }
+      }
+    ],
+    "props": [
+      {
+        "id": "prop_bank_statement",
+        "name": "海外帳戶匯款明細",
+        "appearance": "Printed offshore transfer record, dense timestamp columns, one row later circled in red ink"
+      },
+      {
+        "id": "prop_verdict_draft",
+        "name": "判決書草稿",
+        "appearance": "Blank ruling draft on ruled paper, ink still wet in places"
+      },
+      {
+        "id": "prop_verdict",
+        "name": "無罪判決書",
+        "appearance": "Heavy official ruling on cream-colored paper, red seal at the bottom, a circled bank-outage date in the margin"
+      }
+    ],
+    "locations": [
+      {
+        "id": "loc_courtroom",
+        "name": "肅穆法庭",
+        "description": "Tall dark wooden bench, empty public gallery, cold overhead light, green-shaded clerk desks"
+      },
+      {
+        "id": "loc_judge_office_night",
+        "name": "法官辦公室（深夜）",
+        "description": "Cluttered desk buried in case files, a single green banker's lamp casting a tight pool of light, dark windows reflecting the room."
+      },
+      {
+        "id": "loc_remote_branch_office",
+        "name": "偏遠分院辦公室",
+        "description": "Small bare office with half-packed cardboard boxes, a window overlooking empty farmland at dusk."
+      }
+    ]
+  },
+  "blocks": [
+    {
+      "id": "block_001_court_wide",
+      "timeframe": {
+        "start_sec": 0,
+        "end_sec": 5
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Jaw set, eyes fixed on the defendant's bench, face unreadable"
+        },
+        {
+          "entity_ref": "char_zhao_liting",
+          "outfit": "Dark grey suit, no tie, well-worn but immaculate",
+          "facial_state": "Calm, chin slightly lifted, eyes clear and steady"
+        }
+      ],
+      "present_props": [],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Wide shot from the back of an empty courtroom: a single defendant's bench lit by cold overhead light, the black-robed judge small and distant behind the high wooden bench."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "這一章，許法官迎來了職業生涯中最痛苦的斷裂。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Non-diegetic narrator voice over a cold, vast courtroom room tone; distant air-conditioning hum, faint 35mm optical hiss, no music.",
+        "visual_sound_sync": "Both figures remain silent, mouths closed; the only voice is the narrator."
+      }
+    },
+    {
+      "id": "block_002_dock_zhao",
+      "timeframe": {
+        "start_sec": 5,
+        "end_sec": 13
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_zhao_liting",
+          "outfit": "Dark grey suit, no tie, well-worn but immaculate",
+          "facial_state": "Calm, chin slightly lifted, eyes clear and steady"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_001_court_wide"
+      ],
+      "action": {
+        "subject_ref": "char_zhao_liting",
+        "description": "Slow push toward the defendant's bench: Zhao Liting sits alone, silver hair combed back, hands folded, chin lifted, the empty gallery dissolving into shadow behind him."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "被告席上坐著的不是罪犯，而是他的恩師，曾被譽為司法界最後良心的退休法官趙立廷。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Non-diegetic narrator voice over a cold, vast courtroom room tone; distant air-conditioning hum, faint 35mm optical hiss, no music.",
+        "visual_sound_sync": "Both figures remain silent, mouths closed; the only voice is the narrator."
+      }
+    },
+    {
+      "id": "block_003_indictment",
+      "timeframe": {
+        "start_sec": 13,
+        "end_sec": 17
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Jaw set, eyes fixed on the defendant's bench, face unreadable"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_002_dock_zhao"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Close on the case file open on the bench, the indictment's first page naming Zhao; the judge's fingers rest at its edge, perfectly still."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "趙前輩被控在多年前的一宗土地弊案中。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Non-diegetic narrator voice over a cold, vast courtroom room tone; distant air-conditioning hum, faint 35mm optical hiss, no music.",
+        "visual_sound_sync": "Both figures remain silent, mouths closed; the only voice is the narrator."
+      }
+    },
+    {
+      "id": "block_004_site_plan",
+      "timeframe": {
+        "start_sec": 17,
+        "end_sec": 23
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Jaw set, eyes fixed on the defendant's bench, face unreadable"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_003_indictment"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "The page turns under his thumb; a developer's site plan clipped to the file slides into the pool of light."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "私下收受了開發商的賄賂，以換取行政法院的有利判決。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Non-diegetic narrator voice over a cold, vast courtroom room tone; distant air-conditioning hum, faint 35mm optical hiss, no music.",
+        "visual_sound_sync": "Both figures remain silent, mouths closed; the only voice is the narrator."
+      }
+    },
+    {
+      "id": "block_005_pulpit",
+      "timeframe": {
+        "start_sec": 23,
+        "end_sec": 27
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Mouth tight, eyes narrowing with ambition"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_004_site_plan"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Reverse angle from behind the bench: the judge looks down at the dock, the tall bench framing him like a pulpit."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "這是一個能讓許法官一戰成名的案件。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Same detached narrator over low courtroom air and one distant door latch; thin 35mm hiss, no music.",
+        "visual_sound_sync": "The judge does not speak; his lips stay closed."
+      }
+    },
+    {
+      "id": "block_006_grip",
+      "timeframe": {
+        "start_sec": 27,
+        "end_sec": 35
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Mouth tight, eyes narrowing with ambition"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_005_pulpit"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "His hand closes slowly around the arm of the chair, knuckles paling, while the empty gallery waits in dead silence."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "如果他判了這位昔日巨頭，他將真正踏入上級執法者的殿堂，完成一次弒師般的靈魂洗禮。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Same detached narrator over low courtroom air and one distant door latch; thin 35mm hiss, no music.",
+        "visual_sound_sync": "The judge does not speak; his lips stay closed."
+      }
+    },
+    {
+      "id": "block_007_dignity",
+      "timeframe": {
+        "start_sec": 35,
+        "end_sec": 40
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_zhao_liting",
+          "outfit": "Dark grey suit, no tie, well-worn but immaculate",
+          "facial_state": "Serene, unhurried, hands folded"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_004_site_plan"
+      ],
+      "action": {
+        "subject_ref": "char_zhao_liting",
+        "description": "Medium shot of Zhao Liting in the dock: back straight, hands folded, morning light cutting across his silver hair while a stack of evidence folders sits untouched before him."
+      },
+      "audio_control": {
+        "audio_mode": "vintage_film_room_tone",
+        "speech_present": false,
+        "lip_sync_enabled": false,
+        "soundtrack_specification": "Dry courtroom room tone, a ceiling fan's slow tick, distant traffic through stone walls, continuous 35mm optical hiss filling the spectrum.",
+        "visual_sound_sync": "No speech; both mouths closed."
+      }
+    },
+    {
+      "id": "block_008_eyes",
+      "timeframe": {
+        "start_sec": 40,
+        "end_sec": 48
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Lips sealed tight and motionless, eyes bright and unfocused, jaw held in quiet triumph"
+        }
+      ],
+      "present_props": [],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Extreme close-up of the judge's eyes above the bench, the courtroom lights reflected as two small cold points."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "這就是我等待已久的時刻。沈惟德說過，真正的正義必須對抗權威。",
+          "voice_prompt": "Cold, self-congratulatory internal male voice, close-mic whisper with a low-pass filter, controlled and precise"
+        },
+        "soundtrack_specification": "Intimate internal voiceover under a low-pass filter; the courtroom air turns muffled and distant, warm 35mm hiss beneath, no music.",
+        "visual_sound_sync": "Lips sealed tight, zero vocalization, the only human sound is the internal voice."
+      }
+    },
+    {
+      "id": "block_009_profile",
+      "timeframe": {
+        "start_sec": 48,
+        "end_sec": 55
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Lips sealed tight and motionless, eyes bright and unfocused, jaw held in quiet triumph"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_008_eyes"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Profile shot: he tilts his head slightly toward the dock, the high collar of the robe shadowing his throat."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "如果我親手判處恩師重刑，我不僅是指認了法益的純潔性。",
+          "voice_prompt": "Cold, self-congratulatory internal male voice, close-mic whisper with a low-pass filter, controlled and precise"
+        },
+        "soundtrack_specification": "Intimate internal voiceover under a low-pass filter; the courtroom air turns muffled and distant, warm 35mm hiss beneath, no music.",
+        "visual_sound_sync": "Lips sealed tight, zero vocalization, the only human sound is the internal voice."
+      }
+    },
+    {
+      "id": "block_010_bench_tap",
+      "timeframe": {
+        "start_sec": 55,
+        "end_sec": 62
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Lips sealed tight and motionless, eyes bright and unfocused, jaw held in quiet triumph"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_009_profile"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "His fingertips tap once on the polished bench, then flatten, as if closing a book."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "我更是在向世界證明，我可以為了正義犧牲個人情感。",
+          "voice_prompt": "Cold, self-congratulatory internal male voice, close-mic whisper with a low-pass filter, controlled and precise"
+        },
+        "soundtrack_specification": "Intimate internal voiceover under a low-pass filter; the courtroom air turns muffled and distant, warm 35mm hiss beneath, no music.",
+        "visual_sound_sync": "Lips sealed tight, zero vocalization, the only human sound is the internal voice."
+      }
+    },
+    {
+      "id": "block_011_low_angle",
+      "timeframe": {
+        "start_sec": 62,
+        "end_sec": 70
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Lips sealed tight and motionless, eyes bright and unfocused, jaw held in quiet triumph"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_010_bench_tap"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Low angle from the bench's edge: his face fills the frame, lit from below by the desk lamp, eyes never blinking."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "這份判決的重量，將會是我職業生涯中最沉重的十字架，我渴望背負它。",
+          "voice_prompt": "Cold, self-congratulatory internal male voice, close-mic whisper with a low-pass filter, controlled and precise"
+        },
+        "soundtrack_specification": "Intimate internal voiceover under a low-pass filter; the courtroom air turns muffled and distant, warm 35mm hiss beneath, no music.",
+        "visual_sound_sync": "Lips sealed tight, zero vocalization, the only human sound is the internal voice."
+      }
+    },
+    {
+      "id": "block_012_silhouette",
+      "timeframe": {
+        "start_sec": 70,
+        "end_sec": 75
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Lips sealed tight and motionless, eyes bright and unfocused, jaw held in quiet triumph"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_011_low_angle"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Wide silhouette of the judge alone in the vast courtroom, dust turning slowly in the light above him."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "我要讓這份判決書成為司法清廉的祭文。",
+          "voice_prompt": "Cold, self-congratulatory internal male voice, close-mic whisper with a low-pass filter, controlled and precise"
+        },
+        "soundtrack_specification": "Intimate internal voiceover under a low-pass filter; the courtroom air turns muffled and distant, warm 35mm hiss beneath, no music.",
+        "visual_sound_sync": "Lips sealed tight, zero vocalization, the only human sound is the internal voice."
+      }
+    },
+    {
+      "id": "block_013_pen_hover",
+      "timeframe": {
+        "start_sec": 75,
+        "end_sec": 81
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Focused, almost hungry, lips parted a breath"
+        },
+        {
+          "entity_ref": "char_zhao_liting",
+          "outfit": "Dark grey suit, no tie, well-worn but immaculate",
+          "facial_state": "Serene, eyes lowered"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_verdict_draft"
+        }
+      ],
+      "referenced_blocks": [
+        "block_012_silhouette"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "target_ref": "prop_verdict_draft",
+        "description": "Over-the-shoulder shot: the blank ruling draft lies on the bench, the judge's fountain pen hovering above the first line, Zhao Liting soft and out of focus beyond."
+      },
+      "audio_control": {
+        "audio_mode": "vintage_film_room_tone",
+        "speech_present": false,
+        "lip_sync_enabled": false,
+        "soundtrack_specification": "Close, dry room tone; the pen's nib ticking faintly against paper; continuous 35mm hiss.",
+        "visual_sound_sync": "No speech; the judge's mouth stays closed over the blank page."
+      }
+    },
+    {
+      "id": "block_014_lamp_pool",
+      "timeframe": {
+        "start_sec": 81,
+        "end_sec": 87
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips pressed thin, eyes moving fast across the page"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Hard cut to a dark office: a single green banker's lamp drops a tight pool of light on the transfer record, the rest of the room black, the judge's hands entering the frame."
+      },
+      "audio_control": {
+        "audio_mode": "vintage_film_room_tone",
+        "speech_present": false,
+        "lip_sync_enabled": false,
+        "soundtrack_specification": "Dead-quiet night office, the lamp's faint electrical buzz, a clock ticking somewhere behind, continuous 35mm hiss.",
+        "visual_sound_sync": "No speech; only paper and breath."
+      }
+    },
+    {
+      "id": "block_015_finger_slide",
+      "timeframe": {
+        "start_sec": 87,
+        "end_sec": 93
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Pupils fixed on one line, mouth slightly open"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "target_ref": "prop_bank_statement",
+        "description": "Macro shot of the statement: dense timestamp columns, a fingertip sliding down the page, stopping dead on one entry."
+      },
+      "audio_control": {
+        "audio_mode": "vintage_film_room_tone",
+        "speech_present": false,
+        "lip_sync_enabled": false,
+        "soundtrack_specification": "Paper friction, a single dry swallow, the lamp's buzz, continuous 35mm hiss.",
+        "visual_sound_sync": "No speech; his lips part but no sound comes out."
+      }
+    },
+    {
+      "id": "block_016_frozen_eyes",
+      "timeframe": {
+        "start_sec": 93,
+        "end_sec": 98
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed tight, eyes frozen, a muscle jumping in the jaw"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "referenced_blocks": [
+        "block_015_finger_slide"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Extreme close-up: his eyes stop moving; the reflection of the page sits in each pupil."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "逻辑斷裂。這份帳戶明細是偽造的。",
+          "voice_prompt": "Cold, rapid internal male voice, close-mic whisper with a low-pass filter, accelerating as the logic locks in"
+        },
+        "soundtrack_specification": "Internal voiceover pressed close to the ear; the room tone compressed and airless, a thin rising tinnitus tone under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed tight, jaw locked, no vocalization."
+      }
+    },
+    {
+      "id": "block_017_hot_paper",
+      "timeframe": {
+        "start_sec": 98,
+        "end_sec": 104
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed tight, eyes frozen, a muscle jumping in the jaw"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "referenced_blocks": [
+        "block_016_frozen_eyes"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "His finger lifts from the page and hovers, as if the paper had become hot."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "而且偽造的人非常聰明，他模擬了所有的轉帳邏輯。",
+          "voice_prompt": "Cold, rapid internal male voice, close-mic whisper with a low-pass filter, accelerating as the logic locks in"
+        },
+        "soundtrack_specification": "Internal voiceover pressed close to the ear; the room tone compressed and airless, a thin rising tinnitus tone under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed tight, jaw locked, no vocalization."
+      }
+    },
+    {
+      "id": "block_018_outage_window",
+      "timeframe": {
+        "start_sec": 104,
+        "end_sec": 108
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed tight, eyes frozen, a muscle jumping in the jaw"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "referenced_blocks": [
+        "block_017_hot_paper"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "target_ref": "prop_bank_statement",
+        "description": "Extreme close on the transfer record: the outage window printed in the timestamp column, one entry sitting inside it."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "卻忘記了那場罕見的銀行斷線。",
+          "voice_prompt": "Cold, rapid internal male voice, close-mic whisper with a low-pass filter, accelerating as the logic locks in"
+        },
+        "soundtrack_specification": "Internal voiceover pressed close to the ear; the room tone compressed and airless, a thin rising tinnitus tone under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed tight, jaw locked, no vocalization."
+      }
+    },
+    {
+      "id": "block_019_circled_date",
+      "timeframe": {
+        "start_sec": 108,
+        "end_sec": 114
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed tight, eyes frozen, a muscle jumping in the jaw"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "referenced_blocks": [
+        "block_018_outage_window"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "target_ref": "prop_bank_statement",
+        "description": "Insert: the transfer record, the circled date, a second date written in pencil in the margin."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "如果這份關鍵證據是偽造的，那麼其他的證人指認。",
+          "voice_prompt": "Cold, rapid internal male voice, close-mic whisper with a low-pass filter, accelerating as the logic locks in"
+        },
+        "soundtrack_specification": "Internal voiceover pressed close to the ear; the room tone compressed and airless, a thin rising tinnitus tone under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed tight, jaw locked, no vocalization."
+      }
+    },
+    {
+      "id": "block_020_witness_stack",
+      "timeframe": {
+        "start_sec": 114,
+        "end_sec": 121
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed tight, eyes frozen, a muscle jumping in the jaw"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "referenced_blocks": [
+        "block_019_circled_date"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "His hand slides the statement aside; beneath it a stack of witness statements fans out across the desk."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "那些趙前輩曾經得罪過的政客，難道不是一場集體的構陷？",
+          "voice_prompt": "Cold, rapid internal male voice, close-mic whisper with a low-pass filter, accelerating as the logic locks in"
+        },
+        "soundtrack_specification": "Internal voiceover pressed close to the ear; the room tone compressed and airless, a thin rising tinnitus tone under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed tight, jaw locked, no vocalization."
+      }
+    },
+    {
+      "id": "block_021_lamp_flicker",
+      "timeframe": {
+        "start_sec": 121,
+        "end_sec": 126
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed tight, eyes frozen, a muscle jumping in the jaw"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "referenced_blocks": [
+        "block_020_witness_stack"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Slow push toward his face as the lamp flickers once; his lips stay sealed."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "如果你現在判下去，你不是在指認正義。",
+          "voice_prompt": "Cold, rapid internal male voice, close-mic whisper with a low-pass filter, accelerating as the logic locks in"
+        },
+        "soundtrack_specification": "Internal voiceover pressed close to the ear; the room tone compressed and airless, a thin rising tinnitus tone under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed tight, jaw locked, no vocalization."
+      }
+    },
+    {
+      "id": "block_022_shrinking_circle",
+      "timeframe": {
+        "start_sec": 126,
+        "end_sec": 132
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed tight, eyes frozen, a muscle jumping in the jaw"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "referenced_blocks": [
+        "block_021_lamp_flicker"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Wide shot: the judge alone at the desk, the lamp's circle shrinking around him in the dark."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "你是在幫權力者完成一場針對清廉者的處決。",
+          "voice_prompt": "Cold, rapid internal male voice, close-mic whisper with a low-pass filter, accelerating as the logic locks in"
+        },
+        "soundtrack_specification": "Internal voiceover pressed close to the ear; the room tone compressed and airless, a thin rising tinnitus tone under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed tight, jaw locked, no vocalization."
+      }
+    },
+    {
+      "id": "block_023_fist",
+      "timeframe": {
+        "start_sec": 132,
+        "end_sec": 137
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Nostrils flared, teeth clenched, breath visible"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "referenced_blocks": [
+        "block_022_shrinking_circle"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "He pushes back from the desk; the chair scrapes, his fist lands on the statement, creasing the corner."
+      },
+      "audio_control": {
+        "audio_mode": "vintage_film_room_tone",
+        "speech_present": false,
+        "lip_sync_enabled": false,
+        "soundtrack_specification": "Chair legs scraping wood, one sharp exhale, then the lamp's buzz returning, continuous 35mm hiss.",
+        "visual_sound_sync": "No speech; only breath through the nose."
+      }
+    },
+    {
+      "id": "block_024_back_turn",
+      "timeframe": {
+        "start_sec": 137,
+        "end_sec": 141
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed, eyes wet with anger, brow knotted"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_023_fist"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "He stands with his back to the desk, shoulders rising, the window behind him a black mirror."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "為什麼我要看到那個時間差？",
+          "voice_prompt": "Tense, defensive internal male voice, close-mic whisper rising toward the end, low-pass filtered"
+        },
+        "soundtrack_specification": "Internal voiceover tight and close; the room tone pressed down, a faint pulse under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed, jaw working without sound."
+      }
+    },
+    {
+      "id": "block_025_reflection",
+      "timeframe": {
+        "start_sec": 141,
+        "end_sec": 148
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed, eyes wet with anger, brow knotted"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_024_back_turn"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "His reflection in the dark window: eyes wide, jaw working, lips shut."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "為什麼我不能像其他人一樣，順著那份正義的激情判下去？",
+          "voice_prompt": "Tense, defensive internal male voice, close-mic whisper rising toward the end, low-pass filtered"
+        },
+        "soundtrack_specification": "Internal voiceover tight and close; the room tone pressed down, a faint pulse under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed, jaw working without sound."
+      }
+    },
+    {
+      "id": "block_026_look_down",
+      "timeframe": {
+        "start_sec": 148,
+        "end_sec": 155
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed, eyes wet with anger, brow knotted"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "referenced_blocks": [
+        "block_025_reflection"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "He turns back toward the desk, one hand braced on the chair, looking down at the statement."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "趙前輩老了，也許他真的收了，只是這份證據做壞了而已。",
+          "voice_prompt": "Tense, defensive internal male voice, close-mic whisper rising toward the end, low-pass filtered"
+        },
+        "soundtrack_specification": "Internal voiceover tight and close; the room tone pressed down, a faint pulse under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed, jaw working without sound."
+      }
+    },
+    {
+      "id": "block_027_crushed_corner",
+      "timeframe": {
+        "start_sec": 155,
+        "end_sec": 161
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed, eyes wet with anger, brow knotted"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "referenced_blocks": [
+        "block_026_look_down"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Close on his hand crushing the page's corner, the paper buckling under his thumb."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "如果我放過他，我就失去了指認高層貪腐的機會。",
+          "voice_prompt": "Tense, defensive internal male voice, close-mic whisper rising toward the end, low-pass filtered"
+        },
+        "soundtrack_specification": "Internal voiceover tight and close; the room tone pressed down, a faint pulse under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed, jaw working without sound."
+      }
+    },
+    {
+      "id": "block_028_open_palm",
+      "timeframe": {
+        "start_sec": 161,
+        "end_sec": 165
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed, eyes wet with anger, brow knotted"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_bank_statement"
+        }
+      ],
+      "referenced_blocks": [
+        "block_027_crushed_corner"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "He lets go; the creased corner springs back, and he stares at the palm of his own hand."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "我會被視為包庇恩師的懦夫！",
+          "voice_prompt": "Tense, defensive internal male voice, close-mic whisper rising toward the end, low-pass filtered"
+        },
+        "soundtrack_specification": "Internal voiceover tight and close; the room tone pressed down, a faint pulse under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed, jaw working without sound."
+      }
+    },
+    {
+      "id": "block_029_ink_bead",
+      "timeframe": {
+        "start_sec": 165,
+        "end_sec": 171
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed, a slow swallow, eyes fixed on the blank line"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_verdict_draft"
+        }
+      ],
+      "referenced_blocks": [
+        "block_028_open_palm"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "target_ref": "prop_verdict_draft",
+        "description": "He sits back down and draws the ruling draft close; the nib hovers over the empty line, a bead of ink swelling."
+      },
+      "audio_control": {
+        "audio_mode": "vintage_film_room_tone",
+        "speech_present": false,
+        "lip_sync_enabled": false,
+        "soundtrack_specification": "The nib scratching once, a held breath, the lamp's buzz, continuous 35mm hiss.",
+        "visual_sound_sync": "No speech; the mouth stays shut over the swelling ink."
+      }
+    },
+    {
+      "id": "block_030_remembered_line",
+      "timeframe": {
+        "start_sec": 171,
+        "end_sec": 176
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Pen stopped mid-air, eyes distant"
+        },
+        {
+          "entity_ref": "char_zhao_liting",
+          "outfit": "Dark grey suit, no tie, well-worn but immaculate",
+          "facial_state": "Calm, lips closed, eyes resting on the judge"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_007_dignity"
+      ],
+      "action": {
+        "subject_ref": "char_zhao_liting",
+        "description": "The office dims and a soft-edged flashback surfaces: Zhao Liting in the dock, hands folded, looking straight at the judge; the present-day pen hangs motionless in the foreground."
+      },
+      "audio_control": {
+        "audio_mode": "remembered_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_zhao_liting",
+          "type": "remembered_voice",
+          "language": "zh-TW",
+          "original_text": "許法官，法律不需要英雄，只需要看見事實的人。",
+          "voice_prompt": "Calm, weathered male voice of a retired judge in his early seventies, unhurried, slightly reverberant as if heard from another room"
+        },
+        "soundtrack_specification": "The office sound drops away into a soft courtroom reverb; the remembered line sits inside a warm, distant room tone with 35mm hiss and no music.",
+        "visual_sound_sync": "The remembered figure's lips stay closed; this is memory, not present speech."
+      }
+    },
+    {
+      "id": "block_031_pen_falls",
+      "timeframe": {
+        "start_sec": 176,
+        "end_sec": 181
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Eyes wide, breath caught, mouth closed"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_verdict_draft"
+        }
+      ],
+      "referenced_blocks": [
+        "block_030_remembered_line"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "The pen slips from his fingers and lands on the draft, dragging a crooked wet line across the empty page."
+      },
+      "audio_control": {
+        "audio_mode": "vintage_film_room_tone",
+        "speech_present": false,
+        "lip_sync_enabled": false,
+        "soundtrack_specification": "A small wooden clatter, ink soaking into paper, the room tone rushing back in, continuous 35mm hiss.",
+        "visual_sound_sync": "No speech; a single held breath."
+      }
+    },
+    {
+      "id": "block_032_braced",
+      "timeframe": {
+        "start_sec": 181,
+        "end_sec": 185
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed, jaw trembling, eyes wet and furious"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_031_pen_falls"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "He braces both hands on the desk, head bowed, the lamp lighting the top of his skull."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "許法官，你這個瘋子。",
+          "voice_prompt": "Harsh, self-loathing internal male voice close to breaking, close-mic whisper, low-pass filtered"
+        },
+        "soundtrack_specification": "Internal voiceover ragged and close; the room tone recedes, a faint ringing under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed tight, tears without sound."
+      }
+    },
+    {
+      "id": "block_033_tear_line",
+      "timeframe": {
+        "start_sec": 185,
+        "end_sec": 191
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed, jaw trembling, eyes wet and furious"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_032_braced"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Close on his face from below: eyes squeezed shut, one tear held at the lash line, lips sealed."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "你竟然想為了讓你自己的負罪感看起來很偉大。",
+          "voice_prompt": "Harsh, self-loathing internal male voice close to breaking, close-mic whisper, low-pass filtered"
+        },
+        "soundtrack_specification": "Internal voiceover ragged and close; the room tone recedes, a faint ringing under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed tight, tears without sound."
+      }
+    },
+    {
+      "id": "block_034_tear_breaks",
+      "timeframe": {
+        "start_sec": 191,
+        "end_sec": 195
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed, jaw trembling, eyes wet and furious"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_033_tear_line"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "The tear breaks and runs; his jaw tightens, lips still sealed."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "而去毀掉一個人的清譽。",
+          "voice_prompt": "Harsh, self-loathing internal male voice close to breaking, close-mic whisper, low-pass filtered"
+        },
+        "soundtrack_specification": "Internal voiceover ragged and close; the room tone recedes, a faint ringing under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed tight, tears without sound."
+      }
+    },
+    {
+      "id": "block_035_open_fist",
+      "timeframe": {
+        "start_sec": 195,
+        "end_sec": 202
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed, jaw trembling, eyes wet and furious"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_034_tear_breaks"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "His fist opens slowly against the desk, fingers trembling."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "你這不是在追求正義，你是在追求那種扮演正義的快感。",
+          "voice_prompt": "Harsh, self-loathing internal male voice close to breaking, close-mic whisper, low-pass filtered"
+        },
+        "soundtrack_specification": "Internal voiceover ragged and close; the room tone recedes, a faint ringing under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed tight, tears without sound."
+      }
+    },
+    {
+      "id": "block_036_no_reflection",
+      "timeframe": {
+        "start_sec": 202,
+        "end_sec": 210
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Lips sealed, jaw trembling, eyes wet and furious"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_035_open_fist"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "He lifts his head and looks at nothing, the black window behind him holding his reflection."
+      },
+      "audio_control": {
+        "audio_mode": "internal_monologue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "internal_monologue",
+          "language": "zh-TW",
+          "original_text": "你對趙前輩的恨，其實是來自於你對自己無法成為聖人的嫉妒。",
+          "voice_prompt": "Harsh, self-loathing internal male voice close to breaking, close-mic whisper, low-pass filtered"
+        },
+        "soundtrack_specification": "Internal voiceover ragged and close; the room tone recedes, a faint ringing under the 35mm hiss.",
+        "visual_sound_sync": "Lips sealed tight, tears without sound."
+      }
+    },
+    {
+      "id": "block_037_mirror",
+      "timeframe": {
+        "start_sec": 210,
+        "end_sec": 215
+      },
+      "location_ref": "loc_judge_office_night",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "White dress shirt with sleeves rolled up, collar open, no robe",
+          "facial_state": "Pale, eyes hollow, mouth slightly open in disgust"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_036_no_reflection"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "He turns to the dark window; the reflection stares back, a stranger's face, and he steps closer until his breath fogs the glass."
+      },
+      "audio_control": {
+        "audio_mode": "vintage_film_room_tone",
+        "speech_present": false,
+        "lip_sync_enabled": false,
+        "soundtrack_specification": "One unsteady breath, glass fogging, the lamp buzzing behind him, continuous 35mm hiss.",
+        "visual_sound_sync": "No speech; only breath on glass."
+      }
+    },
+    {
+      "id": "block_038_verdict_read",
+      "timeframe": {
+        "start_sec": 215,
+        "end_sec": 221
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Face blank, eyes down on the verdict"
+        },
+        {
+          "entity_ref": "char_zhao_liting",
+          "outfit": "Dark grey suit, no tie, well-worn but immaculate",
+          "facial_state": "Eyes closed, shoulders lowering a fraction"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_verdict"
+        }
+      ],
+      "referenced_blocks": [
+        "block_030_remembered_line"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "target_ref": "prop_verdict",
+        "description": "The judge stands and reads the ruling; the camera holds on Zhao Liting's closed eyes and the red seal on the paper as the gavel comes down."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "最後，許法官做出了他職業生涯中最具爭議的判決。趙立廷無罪。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "A crowded courtroom held in total silence; the paper of the ruling loud in the hush, one wooden knock, continuous 35mm hiss.",
+        "visual_sound_sync": "The judge reads without sound; the narrator carries the line."
+      }
+    },
+    {
+      "id": "block_039_underlines",
+      "timeframe": {
+        "start_sec": 221,
+        "end_sec": 229
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Black judicial robe with a red-trimmed collar, white shirt beneath",
+          "facial_state": "Expressionless, eyes steady"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_verdict"
+        }
+      ],
+      "referenced_blocks": [
+        "block_022_shrinking_circle"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Close on the written judgment: the judge's hand underlines the bank outage date, paragraph by paragraph."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "他在判決書中詳細列舉了銀行斷線與匯款單時間的矛盾，並公開質疑了檢方證據的來源。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Narrator over a montage of newsroom noise, printing presses and telephone rings, continuous 35mm hiss.",
+        "visual_sound_sync": "No on-screen speech in any shot."
+      }
+    },
+    {
+      "id": "block_040_headlines",
+      "timeframe": {
+        "start_sec": 229,
+        "end_sec": 236
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_039_underlines"
+      ],
+      "action": {
+        "description": "Montage: newspaper front pages slap down on a table, the headline branding him the guardian of the judicial gatekeeper."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "這份判決引發了政壇巨震，許法官被媒體指責為司法門神的守護者。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Narrator over a montage of newsroom noise, printing presses and telephone rings, continuous 35mm hiss.",
+        "visual_sound_sync": "No on-screen speech in any shot."
+      }
+    },
+    {
+      "id": "block_041_transfer_order",
+      "timeframe": {
+        "start_sec": 236,
+        "end_sec": 241
+      },
+      "location_ref": "loc_courtroom",
+      "present_characters": [],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_040_headlines"
+      ],
+      "action": {
+        "description": "A transfer order slides across a bare desk; the camera pulls back to an empty corridor stacked with taped boxes."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "他的晉升之路從此中斷，甚至被發配到偏遠的分院。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Narrator over a montage of newsroom noise, printing presses and telephone rings, continuous 35mm hiss.",
+        "visual_sound_sync": "No on-screen speech in any shot."
+      }
+    },
+    {
+      "id": "block_042_arrest_footage",
+      "timeframe": {
+        "start_sec": 241,
+        "end_sec": 246
+      },
+      "present_characters": [],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_041_transfer_order"
+      ],
+      "action": {
+        "description": "Grainy news footage: a man in a windbreaker is walked through an airport corridor by two officers, faces blurred."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "幾年後，那個空殼公司的真實操盤手在國外落網。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Narrator over airport terminal announcements, camera shutters and a foreign-language news feed, continuous 35mm hiss.",
+        "visual_sound_sync": "No dialogue; news footage only, faces out of focus."
+      }
+    },
+    {
+      "id": "block_043_clipping",
+      "timeframe": {
+        "start_sec": 246,
+        "end_sec": 250
+      },
+      "present_characters": [],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_042_arrest_footage"
+      ],
+      "action": {
+        "description": "A newspaper clipping and a frozen news frame on a television screen, the timestamp burning in the corner."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "坦承那是為了除掉趙立廷而設計的局。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Narrator over airport terminal announcements, camera shutters and a foreign-language news feed, continuous 35mm hiss.",
+        "visual_sound_sync": "No dialogue; news footage only, faces out of focus."
+      }
+    },
+    {
+      "id": "block_044_branch_office",
+      "timeframe": {
+        "start_sec": 250,
+        "end_sec": 255
+      },
+      "location_ref": "loc_remote_branch_office",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Loose grey cardigan over a worn shirt, no robe",
+          "facial_state": "Tired, unreadable, eyes on the fields"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_043_clipping"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Late afternoon: the judge sits behind a bare desk in a small branch office, boxes half-packed, the window full of empty farmland."
+      },
+      "audio_control": {
+        "audio_mode": "vintage_film_room_tone",
+        "speech_present": false,
+        "lip_sync_enabled": false,
+        "soundtrack_specification": "Dusk wind over open fields through a loose window frame, distant cicadas, continuous 35mm hiss.",
+        "visual_sound_sync": "No speech; he sits still and watches the fields."
+      }
+    },
+    {
+      "id": "block_045_circled_date_again",
+      "timeframe": {
+        "start_sec": 255,
+        "end_sec": 260
+      },
+      "location_ref": "loc_remote_branch_office",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Loose grey cardigan over a worn shirt, no robe",
+          "facial_state": "Soft, absorbed, eyes on the page"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_verdict"
+        }
+      ],
+      "referenced_blocks": [
+        "block_015_finger_slide",
+        "block_041_transfer_order"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "target_ref": "prop_verdict",
+        "description": "He opens the old ruling on his knees; his fingertip finds the circled date and rests there."
+      },
+      "audio_control": {
+        "audio_mode": "vintage_film_room_tone",
+        "speech_present": false,
+        "lip_sync_enabled": false,
+        "soundtrack_specification": "Dry paper, a single cicada, the window frame ticking, continuous 35mm hiss.",
+        "visual_sound_sync": "No speech; his fingertip rests on the circled date."
+      }
+    },
+    {
+      "id": "block_046_half_laugh",
+      "timeframe": {
+        "start_sec": 260,
+        "end_sec": 265
+      },
+      "location_ref": "loc_remote_branch_office",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Loose grey cardigan over a worn shirt, no robe",
+          "facial_state": "A small smile, tears at the corners of his eyes, lips moving quietly"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_verdict"
+        }
+      ],
+      "referenced_blocks": [
+        "block_015_finger_slide",
+        "block_038_verdict_read"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "He looks up from the ruling, half laughing, the last light on his face."
+      },
+      "audio_control": {
+        "audio_mode": "clean_dialogue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": true,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "spoken_on_screen",
+          "language": "zh-TW",
+          "original_text": "好險，好險我那天沒讓那種想當英雄的癮頭給毀了。",
+          "voice_prompt": "Quiet, weathered male voice in his late fifties, half laugh and half tears, close-mic with the room's natural reverb"
+        },
+        "soundtrack_specification": "Close-mic quiet speech over dusk wind and cicadas, warm analog room tone, continuous 35mm hiss, no music.",
+        "visual_sound_sync": "Lips move softly to the words; the smile and the tears stay."
+      }
+    },
+    {
+      "id": "block_047_wet_eyes",
+      "timeframe": {
+        "start_sec": 265,
+        "end_sec": 269
+      },
+      "location_ref": "loc_remote_branch_office",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Loose grey cardigan over a worn shirt, no robe",
+          "facial_state": "A small smile, tears at the corners of his eyes, lips moving quietly"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_verdict"
+        }
+      ],
+      "referenced_blocks": [
+        "block_046_half_laugh"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "Close on his eyes, wet at the corners, the ruling still open on his knees."
+      },
+      "audio_control": {
+        "audio_mode": "clean_dialogue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": true,
+        "dialogue": {
+          "speaker_ref": "char_judge_xu",
+          "type": "spoken_on_screen",
+          "language": "zh-TW",
+          "original_text": "好險我只是個冷酷的、看見事實的人。",
+          "voice_prompt": "Quiet, weathered male voice in his late fifties, half laugh and half tears, close-mic with the room's natural reverb"
+        },
+        "soundtrack_specification": "Close-mic quiet speech over dusk wind and cicadas, warm analog room tone, continuous 35mm hiss, no music.",
+        "visual_sound_sync": "Lips move softly to the words; the smile and the tears stay."
+      }
+    },
+    {
+      "id": "block_048_closes_ruling",
+      "timeframe": {
+        "start_sec": 269,
+        "end_sec": 273
+      },
+      "location_ref": "loc_remote_branch_office",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Loose grey cardigan over a worn shirt, no robe",
+          "facial_state": "Calm, eyes closing slowly"
+        }
+      ],
+      "present_props": [
+        {
+          "entity_ref": "prop_verdict"
+        }
+      ],
+      "referenced_blocks": [
+        "block_047_wet_eyes"
+      ],
+      "action": {
+        "subject_ref": "char_judge_xu",
+        "description": "He closes the ruling and sets it down; the room darkens by one shade."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "在那一刻，他終於明白。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Narrator over the last of the daylight; wind drops, a single lamp switches on, continuous 35mm hiss.",
+        "visual_sound_sync": "The judge's mouth stays closed; the narrator closes the chapter."
+      }
+    },
+    {
+      "id": "block_049_lit_window",
+      "timeframe": {
+        "start_sec": 273,
+        "end_sec": 280
+      },
+      "location_ref": "loc_remote_branch_office",
+      "present_characters": [
+        {
+          "entity_ref": "char_judge_xu",
+          "outfit": "Loose grey cardigan over a worn shirt, no robe",
+          "facial_state": "Calm, eyes closing slowly"
+        }
+      ],
+      "present_props": [],
+      "referenced_blocks": [
+        "block_048_closes_ruling"
+      ],
+      "action": {
+        "description": "Wide shot from outside the window: the small lit office alone in the middle of dark fields."
+      },
+      "audio_control": {
+        "audio_mode": "narrator_voiceover",
+        "speech_present": true,
+        "lip_sync_enabled": false,
+        "dialogue": {
+          "type": "narration",
+          "language": "zh-TW",
+          "original_text": "真正的負罪，不是為了正義而去殺人，而是為了事實而去忍受被誤解的孤獨。",
+          "voice_prompt": "Measured, low male narrator in his late forties, broadcast-clear and detached, Taiwan-accented Standard Mandarin"
+        },
+        "soundtrack_specification": "Narrator over the last of the daylight; wind drops, a single lamp switches on, continuous 35mm hiss.",
+        "visual_sound_sync": "The judge's mouth stays closed; the narrator closes the chapter."
+      }
+    }
+  ]
+}

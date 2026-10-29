@@ -9,6 +9,8 @@
 
 第一階段只做「規劃」，**不寫任何提示詞**；第二階段只做「生成」，**不需要再讀原文**。兩階段之間唯一的契約就是 `plan.json`，所以它必須自足：任何第二階段需要的資訊，都必須在第一階段就寫進去。
 
+> **生成端是 r2v（reference-to-video）**：每次生成至少要吃一張參考圖。所以 plan 階段除了文字，還要指定**每個段落至少一個場景參考**（見 1.4）。沒有參考的段落，模型只能自由發明空間，同一個場景在相鄰鏡頭之間就會漂移。
+
 ---
 
 ## 0. 為什麼要拆兩階段
@@ -54,6 +56,7 @@
 * **characters**：只寫**恆定生理特徵**（年齡、臉型、髮型、身形、氣質）。**不要寫服裝**——服裝屬於某個段落當下的狀態，第二階段才決定。
 * **props**：貫穿劇情的物件（判決書、匯款明細、凶器）。寫外觀，不寫它在哪個鏡頭出現。
 * **locations**：固定空間特徵（法庭、深夜辦公室、偏遠分院）。
+* **每個實體附一張 `reference`**：r2v 的參考圖就是靠這張，所以圖要跟著實體走，不要每段各生一張。
 
 ```json
 {
@@ -63,7 +66,12 @@
       "name": "許法官 (Judge Xu)",
       "aliases": ["許法官", "他"],
       "traits": "Late 50s, sharp jawline, tired observant eyes, slicked-back black hair with silver temples, slender, stoic",
-      "first_seen": "seg_001"
+      "first_seen": "seg_001",
+      "reference": {
+        "image": "refs/char_judge_xu_face.png",
+        "status": "ready",
+        "prompt": "Neutral front-facing portrait, East Asian man in his late fifties, sharp jawline, tired observant eyes, slicked-back black hair with silver temples, plain grey backdrop, no text"
+      }
     }
   ],
   "props": [
@@ -72,7 +80,12 @@
       "name": "海外帳戶匯款明細",
       "aliases": ["匯款單", "帳戶明細"],
       "traits": "Printed offshore transfer record, dense timestamp columns, one row circled in red ink",
-      "first_seen": "seg_004"
+      "first_seen": "seg_004",
+      "reference": {
+        "image": "refs/prop_bank_statement_topdown.png",
+        "status": "to_generate",
+        "prompt": "Top-down photo of a printed offshore bank transfer record, dense timestamp columns, one row circled in red ink, on a dark desk, no readable personal data"
+      }
     }
   ],
   "locations": [
@@ -81,11 +94,18 @@
       "name": "肅穆法庭",
       "aliases": ["法庭", "審判席"],
       "traits": "Tall dark wooden bench, empty gallery, cold overhead light",
-      "first_seen": "seg_001"
+      "first_seen": "seg_001",
+      "reference": {
+        "image": "refs/loc_courtroom_wide.png",
+        "status": "ready",
+        "prompt": "Wide establishing plate of an empty Taiwanese courtroom, tall dark wooden bench, empty public gallery, cold overhead light, green-shaded clerk desks, 35mm film grain, 16:9, no people, no text"
+      }
     }
   ]
 }
 ```
+
+`reference.status` 只有兩種：`ready`（圖已存在）與 `to_generate`（第二階段前要先產）。`to_generate` 才需要 `prompt`；寫「空景、無人物、無文字」，避免參考圖自帶角色或字幕。
 
 `aliases` 是給第二階段用的：段落裡只寫「他」或「匯款單」時，才對得回實體。`first_seen` 讓你知道這個實體最晚在哪一段之前必須定義完。
 
@@ -106,7 +126,7 @@
 * 法官發現時間差（無聲、純視覺）→ 一段
 * 法官在鏡子前自我厭惡（內心獨白）→ 另一段
 
-**切點落在段落邊界。** 一個 segment 就是一個「敘事節拍」：小說的一個段落、或一個明顯換氣的地方。一章通常切成 10–20 段，長度不必剛好 5–7 秒——段落比 7 秒長時，用 `render_blocks`（見 1.6）告訴第二階段這一段要拆成幾個鏡頭。硬把長段落壓成一個 7 秒鏡頭，只會讓旁白唸不完。
+**切點落在段落邊界。** 一個 segment 就是一個「敘事節拍」：小說的一個段落、或一個明顯換氣的地方。一章通常切成 10–20 段，長度不必剛好 5–7 秒——段落比 7 秒長時，用 `render_blocks`（見 1.7）告訴第二階段這一段要拆成幾個鏡頭。硬把長段落壓成一個 7 秒鏡頭，只會讓旁白唸不完。
 
 ### `split_reason` 只能是這幾種
 
@@ -120,7 +140,35 @@
 | `voice_change` | 發聲模式／說話者／意圖改變 |
 | `duration_split` | 同一段台詞太長，且中間有明顯停頓，值得切成兩個 segment |
 
-## 1.4 `source` 完整性（必須能併回原文）
+## 1.4 參考圖：r2v 的硬需求
+
+生成端是 **r2v（reference-to-video）**：每次生成至少吃一張參考圖，模型用它鎖定空間、光線與長相。文字提示只能描述「大概長怎樣」，參考圖才能固定「就是這一個空間、這一張臉」。
+
+所以 plan 有兩條硬規則：
+
+1. **每個 segment 至少要有一個 `role: "scene"` 的參考**，指向 `entities.locations` 的場景。
+2. **畫面上出現的每個角色**都要有 `role: "character"` 的參考，且整章共用同一張（`reference.image` 同一個檔）。
+
+段落只記「這一段用哪幾張、怎麼取景」，圖本身留在實體上：
+
+```json
+"reference_images": [
+  { "role": "scene", "ref": "loc_judge_office_night", "note": "wide plate, the banker's lamp is the only light" },
+  { "role": "character", "ref": "char_judge_xu", "note": "same identity plate as seg_001" }
+]
+```
+
+規則：
+
+* `reference_images[0]` **必須是 `scene`**。
+* `ref` 必須存在於 `entities`，且型別對得上：`scene` → `locations`、`character` → `characters`、`prop` → `props`。
+* 一個 block 建議 1–3 張：場景必備，主講者次之，其他角色最後。超過模型上限時，砍角色不砍場景。
+* **沒有實體場景的段落**（新聞蒙太奇、純字卡、抽象閃回）一樣要有 scene 參考：在 `entities.locations` 建一個抽象場景（例如 `loc_news_montage`），參考圖可以是一張空的新聞畫面質感板。
+* `note` 寫這一段的取景需求（低角度、只拍桌面、逆光），不要重複 `action.description`——那是第二階段的事。
+
+**順位永遠是「場景 → 主講者 → 其他角色」**：場景錯，後面每個鏡頭都錯；人物錯，只錯一張臉。
+
+## 1.5 `source` 完整性（必須能併回原文）
 
 每一段都必須帶**逐字原文切片**與字元位移：
 
@@ -149,7 +197,7 @@ if (joined !== originalChapter) throw new Error("segments do not reassemble the 
 if (sha256(joined) !== plan.source.sha256) throw new Error("hash mismatch");
 ```
 
-## 1.5 段落類型（`kind`）
+## 1.6 段落類型（`kind`）
 
 每段必須標記三種之一：
 
@@ -177,7 +225,7 @@ if (sha256(joined) !== plan.source.sha256) throw new Error("hash mismatch");
 * `「…」`（一般引號，常伴隨「輕聲說」「笑了」等動作）→ 出聲對白
 * 敘述句轉述「他心想」「他覺得」→ 純視覺或旁白，由你決定要不要配音
 
-## 1.6 用字數推估時長
+## 1.7 用字數推估時長
 
 只數**中文字與英數字**，標點與空白不計。
 
@@ -201,7 +249,7 @@ render_blocks = ceil(estimated_sec / 7)
 
 只有在同一段台詞內部有**明顯停頓或語氣轉折**、值得讓它成為獨立敘事節拍時，才切成兩個 segment（`split_reason: "duration_split"`）；單純因為字數超長，用 `render_blocks` 就好，不要為了湊 7 秒把一句話切碎。
 
-## 1.7 指涉關係（`references`）
+## 1.8 指涉關係（`references`）
 
 若這一段需要回顧、呼應、引用前面的段落，**不要重寫舊情節**，只記指標：
 
@@ -221,7 +269,7 @@ render_blocks = ceil(estimated_sec / 7)
 
 只允許指向**前面**的段落；指向後面的段落代表你切錯了順序。
 
-## 1.8 單一段落長相
+## 1.9 單一段落長相
 
 ```json
 {
@@ -235,6 +283,10 @@ render_blocks = ceil(estimated_sec / 7)
   "location_ref": "loc_judge_office_night",
   "character_refs": ["char_judge_xu"],
   "prop_refs": ["prop_bank_statement"],
+  "reference_images": [
+    { "role": "scene", "ref": "loc_judge_office_night", "note": "wide plate, the banker's lamp is the only light" },
+    { "role": "character", "ref": "char_judge_xu", "note": "same identity plate as seg_001" }
+  ],
   "context": "法官在深夜辦公室發現匯款時間落在銀行斷線的 24 小時內，證據可能是偽造的。",
   "visual_context": "檯燈下只有一份文件被照亮，手指沿著時間欄滑動後停住；全程無聲。",
   "continuity": "承接法庭上「準備判有罪」的心證，這裡第一次鬆動。",
@@ -255,6 +307,10 @@ render_blocks = ceil(estimated_sec / 7)
   "kind": "dialogue",
   "voice_intent": "spoken_on_screen",
   "speaker_ref": "char_judge_xu",
+  "reference_images": [
+    { "role": "scene", "ref": "loc_courtroom", "note": "bench side, judge in frame" },
+    { "role": "character", "ref": "char_judge_xu" }
+  ],
   "spoken_text": "趙立廷，無罪。本件關鍵匯款紀錄與銀行斷線時間不符，證據不足。",
   "char_count": 30,
   "rate_chars_per_sec": 5.0,
@@ -281,7 +337,7 @@ render_blocks = ceil(estimated_sec / 7)
 4. 寫 `action.description`：只描述這一段看得見的動作，不寫心理分析。
 5. 依 `voice_intent` 選 `audio_control.audio_mode`。`spoken_text` 是逐字原文，寫進 `dialogue.original_text` 前要先轉成可唸版本（去引號、去冒號、數字改中文、一句一行），規則見 [`PROMPT_TECHNIQUES.md`](PROMPT_TECHNIQUES.md)。
 6. 若 `references` 非空，把 `segment_ref` 換成對應的 `block_id` 寫進 `referenced_blocks`。
-7. **若 `render_blocks > 1`**，把 `spoken_text` 依句意切成 `render_blocks` 段，每段各自生成一個 block（總長不超過 7 秒）。第一塊承接畫面與 `references`，之後每一塊用 `referenced_blocks` 指回同一段的前一塊，維持視覺連續；不要為了塞進 7 秒把詞切斷。
+7. **若 `render_blocks > 1`**，把 `spoken_text` 依句意切成 `render_blocks` 段，每段各自生成一個 block（總長不超過 7 秒）。第一塊承接畫面與 `references`，之後每一塊用 `referenced_blocks` 指回同一段的前一塊，維持視覺連續；不要為了塞進 7 秒把詞切斷。句子本身比 7 秒長時（例如 4 字／秒的獨白超過 28 字），可以在逗號處再拆，block 數會多於 `render_blocks`，這是允許的。
 8. `timeframe` 依生成順序累加；編譯時 `compile_block` 會自動重算成 `0..duration`。
 
 ## 2.3 欄位對照表
@@ -336,7 +392,7 @@ render_blocks = ceil(estimated_sec / 7)
 
 - [ ] `plan.segments` 串接後等於原章，sha256 相符
 - [ ] 每段都有 `kind`，對白／旁白都有 `spoken_text` 與 `estimated_sec`
-- [ ] `render_blocks === ceil(estimated_sec / 7)`，且生成的 block 真的把台詞唸進這麼多塊
+- [ ] 每個 segment 至少生成 `render_blocks` 個 block，且每個 block 落在 4–8 秒（句界需要時可多於 `render_blocks`）
 - [ ] 每段只有一種 `voice_intent`
 - [ ] 所有 `character_refs` / `prop_refs` / `location_ref` 都在 `entities` 裡，且沒有「只被提到、不會入鏡」的人
 - [ ] `references` 只指向前面的段落

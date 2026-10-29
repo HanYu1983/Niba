@@ -1,0 +1,780 @@
+{
+  "version": "1.0",
+  "stage": "plan",
+  "project_title": "Chapter_04_The_Addiction_of_Guilt",
+  "source": {
+    "file": "ch1_microdust.md",
+    "chapter": 4,
+    "chars": 1843,
+    "sha256": "882b88cb547808f5a9ff905a68ac017c2932837ce7e9dd13120ee385e7d84e6c",
+    "eol": "lf",
+    "range": {
+      "start": 4480,
+      "end": 6323
+    }
+  },
+  "entities": {
+    "characters": [
+      {
+        "id": "char_judge_xu",
+        "name": "許法官 (Judge Xu)",
+        "aliases": [
+          "許法官",
+          "他"
+        ],
+        "traits": "Late 50s, sharp jawline, tired yet observant dark eyes, slicked-back black hair with silver temples, slender, stoic",
+        "first_seen": "seg_001"
+      },
+      {
+        "id": "char_zhao_liting",
+        "name": "趙立廷 (Zhao Liting)",
+        "aliases": [
+          "趙立廷",
+          "趙前輩",
+          "恩師"
+        ],
+        "traits": "Late 60s, silver hair combed back, deep-set calm eyes, lined dignified face, tall and faintly stooped",
+        "first_seen": "seg_001"
+      }
+    ],
+    "props": [
+      {
+        "id": "prop_bank_statement",
+        "name": "海外帳戶匯款明細",
+        "aliases": [
+          "匯款單",
+          "帳戶明細",
+          "匯款紀錄"
+        ],
+        "traits": "Printed offshore transfer record, dense timestamp columns, one row later circled in red ink",
+        "first_seen": "seg_006"
+      },
+      {
+        "id": "prop_verdict_draft",
+        "name": "判決書草稿",
+        "aliases": [
+          "草稿",
+          "判決草稿"
+        ],
+        "traits": "Blank ruling draft on ruled paper, ink still wet in places",
+        "first_seen": "seg_005"
+      },
+      {
+        "id": "prop_verdict",
+        "name": "無罪判決書",
+        "aliases": [
+          "判決書",
+          "判決"
+        ],
+        "traits": "Heavy official ruling on cream paper, red seal at the bottom, a circled bank-outage date in the margin",
+        "first_seen": "seg_016"
+      }
+    ],
+    "locations": [
+      {
+        "id": "loc_courtroom",
+        "name": "肅穆法庭",
+        "aliases": [
+          "法庭",
+          "審判席",
+          "被告席"
+        ],
+        "traits": "Tall dark wooden bench, empty public gallery, cold overhead light",
+        "first_seen": "seg_001"
+      },
+      {
+        "id": "loc_judge_office_night",
+        "name": "法官辦公室（深夜）",
+        "aliases": [
+          "深夜辦公室",
+          "辦公室"
+        ],
+        "traits": "Cluttered desk, single green banker's lamp, dark windows reflecting the room",
+        "first_seen": "seg_006"
+      },
+      {
+        "id": "loc_remote_branch_office",
+        "name": "偏遠分院辦公室",
+        "aliases": [
+          "分院",
+          "偏遠分院"
+        ],
+        "traits": "Small bare office, half-packed boxes, window over empty farmland at dusk",
+        "first_seen": "seg_019"
+      }
+    ]
+  },
+  "segments": [
+    {
+      "id": "seg_001",
+      "order": 1,
+      "source_start": 4480,
+      "source_end": 4622,
+      "source": "### **第四章：【負罪的癮頭】**\n\n**背景：**\n這一章，許法官迎來了職業生涯中最痛苦的斷裂。被告席上坐著的不是罪犯，而是他的恩師——曾被譽為「司法界最後良心」的退休法官**趙立廷**。趙前輩被控在多年前的一宗土地弊案中，私下收受了開發商的賄賂，以換取行政法院的有利判決。\n\n",
+      "kind": "narration",
+      "split_reason": "chapter_start",
+      "location_ref": null,
+      "character_refs": [
+        "char_judge_xu",
+        "char_zhao_liting"
+      ],
+      "prop_refs": [],
+      "context": "章節開場：被告不是罪犯，而是許法官的恩師趙立廷，罪名是土地弊案收賄。",
+      "visual_context": "法庭全景，被告席上白髮的趙立廷，法官席上的許法官俯視。",
+      "continuity": "建立「弒師」的兩難，全章的前提。",
+      "voice_intent": "narrator",
+      "spoken_text": "這一章，許法官迎來了職業生涯中最痛苦的斷裂。被告席上坐著的不是罪犯，而是他的恩師——曾被譽為「司法界最後良心」的退休法官趙立廷。趙前輩被控在多年前的一宗土地弊案中，私下收受了開發商的賄賂，以換取行政法院的有利判決。",
+      "char_count": 96,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 21,
+      "render_blocks": 3,
+      "references": []
+    },
+    {
+      "id": "seg_002",
+      "order": 2,
+      "source_start": 4622,
+      "source_end": 4683,
+      "source": "這是一個能讓許法官「一戰成名」的案件。如果他判了這位昔日巨頭，他將真正踏入「上級執法者」的殿堂，完成一次弒師般的靈魂洗禮。",
+      "kind": "narration",
+      "split_reason": "paragraph_break",
+      "location_ref": "loc_courtroom",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [],
+      "context": "判有罪等於踏入上級執法者的殿堂，完成一次弒師般的靈魂洗禮。",
+      "visual_context": "許法官主觀視角俯視被告席，手心在法袍下微微收緊。",
+      "continuity": "把「正義」與「上位」綁在一起，這是他的誘惑。",
+      "voice_intent": "narrator",
+      "spoken_text": "這是一個能讓許法官「一戰成名」的案件。如果他判了這位昔日巨頭，他將真正踏入「上級執法者」的殿堂，完成一次弒師般的靈魂洗禮。",
+      "char_count": 53,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 12,
+      "render_blocks": 2,
+      "references": [
+        {
+          "segment_ref": "seg_001",
+          "why": "延續開場的被告身分",
+          "manifestation": "被告席上那個熟悉的白髮身影"
+        }
+      ]
+    },
+    {
+      "id": "seg_003",
+      "order": 3,
+      "source_start": 4683,
+      "source_end": 4782,
+      "source": "\n\n---\n\n#### **1. 誘惑：最神聖的祭壇**\n\n趙立廷在庭上氣定神閒，即便鬢角斑白，依舊維持著那種高尚的尊嚴。所有的證據——海外帳戶的匯款、證人的指認，都指向這位「道德聖徒」的墮落。\n\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_courtroom",
+      "character_refs": [
+        "char_judge_xu",
+        "char_zhao_liting"
+      ],
+      "prop_refs": [],
+      "context": "趙立廷氣定神閒，鬢角斑白仍維持尊嚴；所有證據都指向他。",
+      "visual_context": "趙立廷坐在被告席，背脊挺直；桌上攤著匯款文件與證人指認筆錄。",
+      "continuity": "先給恩師尊嚴，後面的墮落才有重量。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_001",
+          "why": "延續恩師身分與罪名",
+          "manifestation": "被告席上的趙立廷本人"
+        }
+      ]
+    },
+    {
+      "id": "seg_004",
+      "order": 4,
+      "source_start": 4782,
+      "source_end": 4937,
+      "source": "**許法官的大腦（理想版）：**\n*「這就是我等待已久的時刻。沈惟德說過，真正的正義必須對抗權威。如果我親手判處恩師重刑，我不僅是指認了『法益的純潔性』，我更是在向世界證明，我可以為了正義犧牲個人情感。這份判決的重量，將會是我職業生涯中最沉重的十字架，我渴望背負它。我要讓這份判決書成為司法清廉的祭文。」*\n\n",
+      "kind": "narration",
+      "split_reason": "voice_change",
+      "location_ref": "loc_courtroom",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [],
+      "context": "理想版獨白：把判恩師重刑想像成一場神聖處決，並以此證明自己能為正義犧牲情感。",
+      "visual_context": "許法官臉部特寫，眼神發亮，嘴唇完全不動。",
+      "continuity": "承接「一戰成名」，把虛榮翻譯成正義。",
+      "voice_intent": "internal_monologue",
+      "spoken_text": "這就是我等待已久的時刻。沈惟德說過，真正的正義必須對抗權威。如果我親手判處恩師重刑，我不僅是指認了『法益的純潔性』，我更是在向世界證明，我可以為了正義犧牲個人情感。這份判決的重量，將會是我職業生涯中最沉重的十字架，我渴望背負它。我要讓這份判決書成為司法清廉的祭文。",
+      "char_count": 119,
+      "rate_chars_per_sec": 4,
+      "estimated_sec": 31,
+      "render_blocks": 5,
+      "references": []
+    },
+    {
+      "id": "seg_005",
+      "order": 5,
+      "source_start": 4937,
+      "source_end": 5026,
+      "source": "許法官坐在審判席上，看著趙前輩的眼神，心中竟然有一種扭曲的亢奮。他覺得自己正在進行一場神聖的處決，他甚至已經在腦海中打好了草稿，要寫下那句：*「即便是我師，法律亦不容情。」*\n\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_courtroom",
+      "character_refs": [
+        "char_judge_xu",
+        "char_zhao_liting"
+      ],
+      "prop_refs": [
+        "prop_verdict_draft"
+      ],
+      "context": "他在腦中打好草稿，甚至想好那句判決詞：即便是我師，法律亦不容情。",
+      "visual_context": "許法官指尖輕敲桌面，眼神落在判決草稿的第一行。",
+      "continuity": "從幻想落到紙面，下一步就是動筆。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_004",
+          "why": "判決草稿延續獨白裡的那份判決書",
+          "manifestation": "桌上那份空白判決草稿"
+        }
+      ]
+    },
+    {
+      "id": "seg_006",
+      "order": 6,
+      "source_start": 5026,
+      "source_end": 5125,
+      "source": "#### **2. 天賦的干預：拆解「完美」的指紋**\n\n然而，當他深夜反覆翻看那份海外帳戶的匯款單時，他那如詛咒般的天賦再次啟動，像一台高效能的濾鏡，過濾掉了所有的道德激情，只剩下冰冷的像素。\n\n",
+      "kind": "action",
+      "split_reason": "location_change",
+      "location_ref": "loc_judge_office_night",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [
+        "prop_bank_statement"
+      ],
+      "context": "深夜查帳，天賦啟動：情緒被剝離，只剩冰冷的像素。",
+      "visual_context": "深夜辦公室，檯燈照亮一份匯款單，四周全暗。",
+      "continuity": "從法庭的亢奮切到夜裡的冷靜，語氣反轉。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_007",
+      "order": 7,
+      "source_start": 5125,
+      "source_end": 5244,
+      "source": "> **帳戶明細：** 匯款來源是一個空殼公司，轉帳路徑極其複雜。\n> **天賦的發現：** 其中一個中轉銀行在匯款當天，因為網路系統大斷線，所有的自動轉帳都延後了 24 小時。然而，這份帳戶明細上的入帳時間，卻精準地顯示在斷線期間。\n\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_judge_office_night",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [
+        "prop_bank_statement"
+      ],
+      "context": "文件內容：空殼公司轉帳；中轉銀行當天斷線 24 小時，入帳時間卻落在斷線期間。",
+      "visual_context": "匯款明細特寫，手指沿時間欄滑動後停住；入帳時間與斷線區間重疊。",
+      "continuity": "全章的關鍵物證，也是後面所有指涉的載體。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_008",
+      "order": 8,
+      "source_start": 5244,
+      "source_end": 5405,
+      "source": "許法官的大腦（理性版）：\n*「逻辑斷裂。這份帳戶明細是偽造的。而且偽造的人非常聰明，他模擬了所有的轉帳邏輯，卻忘記了那場罕見的銀行斷線。如果這份關鍵證據是偽造的，那麼其他的證人指認——那些趙前輩曾經得罪過的政客——難道不是一場集體的構陷？如果你現在判下去，你不是在指認正義，你是在幫權力者完成一場針對清廉者的處決。」*\n\n",
+      "kind": "narration",
+      "split_reason": "voice_change",
+      "location_ref": "loc_judge_office_night",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [
+        "prop_bank_statement"
+      ],
+      "context": "理性版獨白：明細是偽造的；若關鍵證據造假，證人指認可能是一場集體構陷。",
+      "visual_context": "許法官眼神凍結，嘴唇緊閉，手指停在那一行時間上。",
+      "continuity": "把「判有罪」從正義改寫成幫權力者處決清廉者。",
+      "voice_intent": "internal_monologue",
+      "spoken_text": "逻辑斷裂。這份帳戶明細是偽造的。而且偽造的人非常聰明，他模擬了所有的轉帳邏輯，卻忘記了那場罕見的銀行斷線。如果這份關鍵證據是偽造的，那麼其他的證人指認——那些趙前輩曾經得罪過的政客——難道不是一場集體的構陷？如果你現在判下去，你不是在指認正義，你是在幫權力者完成一場針對清廉者的處決。",
+      "char_count": 128,
+      "rate_chars_per_sec": 4,
+      "estimated_sec": 33,
+      "render_blocks": 5,
+      "references": [
+        {
+          "segment_ref": "seg_007",
+          "why": "獨白直接引用明細上的斷線時間",
+          "manifestation": "紙上被指尖壓住的那一行入帳時間"
+        }
+      ]
+    },
+    {
+      "id": "seg_009",
+      "order": 9,
+      "source_start": 5405,
+      "source_end": 5457,
+      "source": "#### **3. 走火入魔的邊緣**\n\n許法官感到了前所未有的憤怒。他甚至開始討厭自己的這份天賦。\n*",
+      "kind": "action",
+      "split_reason": "voice_change",
+      "location_ref": "loc_judge_office_night",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [],
+      "context": "他開始討厭自己的天賦：為什麼偏偏看見那個時間差。",
+      "visual_context": "許法官握拳，呼吸變重，檯燈光在他臉上切出硬邊。",
+      "continuity": "從理性轉向憤怒，準備無視證據。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_008",
+          "why": "憤怒源自剛才的邏輯拆解",
+          "manifestation": "腦中仍未散去的時間差"
+        }
+      ]
+    },
+    {
+      "id": "seg_010",
+      "order": 10,
+      "source_start": 5457,
+      "source_end": 5564,
+      "source": "「為什麼我要看到那個時間差？為什麼我不能像其他人一樣，順著那份正義的激情判下去？趙前輩老了，也許他真的收了，只是這份證據做壞了而已。如果我放過他，我就失去了指認『高層貪腐』的機會，我會被視為包庇恩師的懦夫！」*\n\n",
+      "kind": "narration",
+      "split_reason": "voice_change",
+      "location_ref": "loc_judge_office_night",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [],
+      "context": "走火入魔的自辯：想順著正義的激情判下去，怕被視為包庇恩師的懦夫。",
+      "visual_context": "他背對文件站起，影子壓在牆上，嘴唇不動。",
+      "continuity": "把「放過」等同於「懦弱」，這是最大的認知陷阱。",
+      "voice_intent": "internal_monologue",
+      "spoken_text": "為什麼我要看到那個時間差？為什麼我不能像其他人一樣，順著那份正義的激情判下去？趙前輩老了，也許他真的收了，只是這份證據做壞了而已。如果我放過他，我就失去了指認『高層貪腐』的機會，我會被視為包庇恩師的懦夫！",
+      "char_count": 91,
+      "rate_chars_per_sec": 4,
+      "estimated_sec": 24,
+      "render_blocks": 4,
+      "references": [
+        {
+          "segment_ref": "seg_009",
+          "why": "延續對天賦的厭惡",
+          "manifestation": "那雙看得見誤差的眼睛"
+        }
+      ]
+    },
+    {
+      "id": "seg_011",
+      "order": 11,
+      "source_start": 5564,
+      "source_end": 5661,
+      "source": "他甚至產生了一種「負罪的癮頭」：他想無視那個時間差，他想判趙前輩有罪。他覺得，即便證據有瑕疵，只要他能承擔起「誤判恩師」的痛苦，那種痛苦本身就是一種高尚的證明。他想用判決來「消費」這份痛苦。\n\n",
+      "kind": "action",
+      "split_reason": "voice_change",
+      "location_ref": "loc_judge_office_night",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [
+        "prop_verdict_draft"
+      ],
+      "context": "他發現自己想用判決「消費」痛苦：只要承擔誤判的痛，就能證明自己高尚。",
+      "visual_context": "筆尖懸在草稿上「有罪」兩字上方，墨點慢慢暈開。",
+      "continuity": "把判決變成自我證明的工具，這是全章最危險的一刻。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_010",
+          "why": "延續想判有罪的衝動",
+          "manifestation": "草稿紙上未落筆的「有罪」"
+        }
+      ]
+    },
+    {
+      "id": "seg_012",
+      "order": 12,
+      "source_start": 5661,
+      "source_end": 5742,
+      "source": "#### **4. 驚險的歸位**\n\n就在他要落筆寫下「有罪」的那一刻，他看到了趙前輩在庭上留下的最後一句話：「許法官，法律不需要英雄，只需要看見事實的人。」\n\n",
+      "kind": "dialogue",
+      "split_reason": "time_shift",
+      "location_ref": "loc_courtroom",
+      "character_refs": [
+        "char_judge_xu",
+        "char_zhao_liting"
+      ],
+      "prop_refs": [],
+      "context": "落筆前，趙立廷在庭上留下的最後一句話在腦中響起：法律不需要英雄，只需要看見事實的人。",
+      "visual_context": "閃回法庭：趙立廷平靜說完這句話；切回現在，筆尖停在半空。",
+      "continuity": "一句話打斷他的英雄夢，是全章的轉軸。",
+      "voice_intent": "remembered_voice",
+      "speaker_ref": "char_zhao_liting",
+      "spoken_text": "許法官，法律不需要英雄，只需要看見事實的人。",
+      "char_count": 19,
+      "rate_chars_per_sec": 4.5,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_003",
+          "why": "引用趙立廷在法庭上的形象",
+          "manifestation": "閃回中趙立廷的臉"
+        }
+      ]
+    },
+    {
+      "id": "seg_013",
+      "order": 13,
+      "source_start": 5742,
+      "source_end": 5762,
+      "source": "這句話像一記耳光，打碎了他的英雄夢。\n\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_judge_office_night",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [
+        "prop_verdict_draft"
+      ],
+      "context": "英雄夢被打碎：這句話讓他無法再假裝自己是正義的執行者。",
+      "visual_context": "筆從指間滑落，在草稿上留下一道歪斜的墨痕。",
+      "continuity": "從亢奮掉到失重，為下一段自我審判鋪路。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_012",
+          "why": "反應剛才那句話",
+          "manifestation": "草稿上被劃壞的一筆"
+        }
+      ]
+    },
+    {
+      "id": "seg_014",
+      "order": 14,
+      "source_start": 5762,
+      "source_end": 5867,
+      "source": "*「許法官，你這個瘋子。你竟然想為了讓你自己的『負罪感』看起來很偉大，而去毀掉一個人的清譽。你這不是在追求正義，你是在追求那種『扮演正義』的快感。你對趙前輩的恨，其實是來自於你對自己無法成為聖人的嫉妒。」*\n\n",
+      "kind": "narration",
+      "split_reason": "voice_change",
+      "location_ref": "loc_judge_office_night",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [],
+      "context": "自我清算：他想為了讓負罪感看起來偉大，去毀掉一個人的清譽；恨來自無法成為聖人的嫉妒。",
+      "visual_context": "許法官撐著桌沿，肩膀繃緊，嘴唇緊閉。",
+      "continuity": "把動機從正義剝到嫉妒，這是他第一次誠實。",
+      "voice_intent": "internal_monologue",
+      "spoken_text": "許法官，你這個瘋子。你竟然想為了讓你自己的『負罪感』看起來很偉大，而去毀掉一個人的清譽。你這不是在追求正義，你是在追求那種『扮演正義』的快感。你對趙前輩的恨，其實是來自於你對自己無法成為聖人的嫉妒。",
+      "char_count": 87,
+      "rate_chars_per_sec": 4,
+      "estimated_sec": 23,
+      "render_blocks": 4,
+      "references": [
+        {
+          "segment_ref": "seg_013",
+          "why": "延續崩解的情緒",
+          "manifestation": "掉在桌上的筆"
+        }
+      ]
+    },
+    {
+      "id": "seg_015",
+      "order": 15,
+      "source_start": 5867,
+      "source_end": 5911,
+      "source": "噁心感再次如潮水般襲來。他看著鏡子裡的自己，發現那張臉因為渴望「權力與名聲」而變得扭曲。",
+      "kind": "action",
+      "split_reason": "voice_change",
+      "location_ref": "loc_judge_office_night",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [],
+      "context": "生理性厭惡湧上，他在鏡子裡看見一張因渴望權力而扭曲的臉。",
+      "visual_context": "他抬頭看鏡子，鏡中的人臉色發白，眼神陌生。",
+      "continuity": "身體比理智更早否決了那個判決。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_014",
+          "why": "自我清算引發的生理反應",
+          "manifestation": "鏡中扭曲的自己"
+        }
+      ]
+    },
+    {
+      "id": "seg_016",
+      "order": 16,
+      "source_start": 5911,
+      "source_end": 5972,
+      "source": "\n\n---\n\n### **本章結尾：【慶幸】**\n\n最後，許法官做出了他職業生涯中最具爭議的判決：**趙立廷無罪。**\n\n",
+      "kind": "narration",
+      "split_reason": "time_shift",
+      "location_ref": "loc_courtroom",
+      "character_refs": [
+        "char_judge_xu",
+        "char_zhao_liting"
+      ],
+      "prop_refs": [
+        "prop_verdict"
+      ],
+      "context": "判決出爐：趙立廷無罪。",
+      "visual_context": "法庭內宣讀主文，法槌落下；趙立廷閉眼，許法官面無表情。",
+      "continuity": "從深夜的自我審判回到公開的判決結果。",
+      "voice_intent": "narrator",
+      "spoken_text": "最後，許法官做出了他職業生涯中最具爭議的判決：趙立廷無罪。",
+      "char_count": 26,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 7,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_012",
+          "why": "判決正是回應恩師那句話",
+          "manifestation": "判決主文上的「無罪」"
+        }
+      ]
+    },
+    {
+      "id": "seg_017",
+      "order": 17,
+      "source_start": 5972,
+      "source_end": 6069,
+      "source": "他在判決書中詳細列舉了銀行斷線與匯款單時間的矛盾，並公開質疑了檢方證據的來源。\n這份判決引發了政壇巨震，許法官被媒體指責為「司法門神的守護者」，他的晉升之路從此中斷，甚至被發配到偏遠的分院。\n\n",
+      "kind": "narration",
+      "split_reason": "paragraph_break",
+      "location_ref": "loc_courtroom",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [
+        "prop_verdict"
+      ],
+      "context": "判決理由公開質疑檢方證據；代價是媒體圍剿、晉升中斷、發配偏遠分院。",
+      "visual_context": "報紙頭條「司法門神」、電視政論畫面、一紙調職令。",
+      "continuity": "把「無罪」的代價具體化。",
+      "voice_intent": "narrator",
+      "spoken_text": "他在判決書中詳細列舉了銀行斷線與匯款單時間的矛盾，並公開質疑了檢方證據的來源。這份判決引發了政壇巨震，許法官被媒體指責為「司法門神的守護者」，他的晉升之路從此中斷，甚至被發配到偏遠的分院。",
+      "char_count": 86,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 19,
+      "render_blocks": 3,
+      "references": [
+        {
+          "segment_ref": "seg_008",
+          "why": "判決理由就是那段理性獨白",
+          "manifestation": "判決書上逐條列出的時間矛盾"
+        }
+      ]
+    },
+    {
+      "id": "seg_018",
+      "order": 18,
+      "source_start": 6069,
+      "source_end": 6110,
+      "source": "幾年後，那個空殼公司的真實操盤手在國外落網，坦承那是為了除掉趙立廷而設計的局。\n\n",
+      "kind": "narration",
+      "split_reason": "time_shift",
+      "location_ref": null,
+      "character_refs": [],
+      "prop_refs": [],
+      "context": "數年後真相大白：空殼公司操盤手落網，承認設局除掉趙立廷。",
+      "visual_context": "國外機場押解畫面、新聞跑馬燈、舊報紙對照。",
+      "continuity": "證明他當年的判斷是對的，但這份正確沒有還他任何東西。",
+      "voice_intent": "narrator",
+      "spoken_text": "幾年後，那個空殼公司的真實操盤手在國外落網，坦承那是為了除掉趙立廷而設計的局。",
+      "char_count": 36,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 9,
+      "render_blocks": 2,
+      "references": [
+        {
+          "segment_ref": "seg_017",
+          "why": "回應當年被質疑的判決",
+          "manifestation": "新聞畫面與當年的判決書並置"
+        }
+      ]
+    },
+    {
+      "id": "seg_019",
+      "order": 19,
+      "source_start": 6110,
+      "source_end": 6180,
+      "source": "許法官坐在偏遠分院的辦公室裡，看著窗外的田野。他沒有名聲，沒有地位，甚至沒有了那個曾經崇拜的恩師——因為趙前輩在判決後不久就因病去世了。\n\n",
+      "kind": "action",
+      "split_reason": "location_change",
+      "location_ref": "loc_remote_branch_office",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [],
+      "context": "他在偏遠分院，沒有名聲、沒有地位，恩師也在判決後不久病逝。",
+      "visual_context": "小辦公室、紙箱、窗外田野；牆上掛著一張舊合照，其中一人已被翻面。",
+      "continuity": "把「贏了判決、輸了人生」具體化。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_018",
+          "why": "時間與境遇都由此而來",
+          "manifestation": "窗外田野與桌上的舊報紙"
+        }
+      ]
+    },
+    {
+      "id": "seg_020",
+      "order": 20,
+      "source_start": 6180,
+      "source_end": 6208,
+      "source": "他拿起那份當年的判決書，指尖劃過那個銀行斷線的日期。\n\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_remote_branch_office",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [
+        "prop_verdict"
+      ],
+      "context": "指尖劃過當年的銀行斷線日期，那個曾被所有人嘲笑的細節。",
+      "visual_context": "泛黃判決書的特寫，指尖停在一個日期上，紙邊已經磨毛。",
+      "continuity": "把全章的關鍵物證收回手裡。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_007",
+          "why": "指尖停的就是當年的斷線日期",
+          "manifestation": "判決書上被圈起的日期"
+        },
+        {
+          "segment_ref": "seg_017",
+          "why": "這份判決讓他被發配到這裡",
+          "manifestation": "同一份判決書"
+        }
+      ]
+    },
+    {
+      "id": "seg_021",
+      "order": 21,
+      "source_start": 6208,
+      "source_end": 6273,
+      "source": "「好險，」他輕聲笑了，眼角帶著淚水，**「好險我那天沒讓那種『想當英雄的癮頭』給毀了。好險我只是個冷酷的、看見事實的人。」**\n\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_remote_branch_office",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [
+        "prop_verdict"
+      ],
+      "context": "釋懷：好險沒讓想當英雄的癮頭毀了自己；好險只是個冷酷、看見事實的人。",
+      "visual_context": "夕陽從窗外照進來，他笑著，眼角有淚，嘴唇微動，聲音很輕。",
+      "continuity": "全章的情緒落點，與開場的亢奮對照。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_judge_xu",
+      "spoken_text": "好險，好險我那天沒讓那種『想當英雄的癮頭』給毀了。好險我只是個冷酷的、看見事實的人。",
+      "char_count": 36,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 9,
+      "render_blocks": 2,
+      "references": [
+        {
+          "segment_ref": "seg_007",
+          "why": "「看見事實」指的就是當年的時間差",
+          "manifestation": "指下的日期"
+        },
+        {
+          "segment_ref": "seg_016",
+          "why": "「那天」就是宣判無罪那天",
+          "manifestation": "手上的判決書"
+        }
+      ]
+    },
+    {
+      "id": "seg_022",
+      "order": 22,
+      "source_start": 6273,
+      "source_end": 6323,
+      "source": "在那一刻，他終於明白，**真正的負罪，不是為了正義而去殺人，而是為了事實而去忍受被誤解的孤獨。**\n",
+      "kind": "narration",
+      "split_reason": "paragraph_break",
+      "location_ref": "loc_remote_branch_office",
+      "character_refs": [
+        "char_judge_xu"
+      ],
+      "prop_refs": [],
+      "context": "主題句：真正的負罪不是為正義殺人，而是為事實忍受被誤解的孤獨。",
+      "visual_context": "他闔上判決書，窗外天色轉暗，辦公室只剩一盞燈。",
+      "continuity": "收束全章，把「負罪」重新定義。",
+      "voice_intent": "narrator",
+      "spoken_text": "在那一刻，他終於明白，真正的負罪，不是為了正義而去殺人，而是為了事實而去忍受被誤解的孤獨。",
+      "char_count": 40,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 9,
+      "render_blocks": 2,
+      "references": [
+        {
+          "segment_ref": "seg_021",
+          "why": "接續他的釋懷",
+          "manifestation": "闔上的判決書"
+        }
+      ]
+    }
+  ]
+}
