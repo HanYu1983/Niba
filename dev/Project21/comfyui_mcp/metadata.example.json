@@ -1,0 +1,9 @@
+{
+  "version": "1.0",
+  "comfyui": {
+    "url": null,
+    "output_dir": null,
+    "timeout_sec": 900,
+    "client_id": "comfyui-mcp"
+  }
+}

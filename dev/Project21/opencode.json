@@ -10,6 +10,11 @@
       "type": "local",
       "command": ["node", "D:\\han\\Niba\\dev\\Project21\\gen_video\\mcp_server_stdio.mjs"],
       "enabled": true
+    },
+    "comfyui": {
+      "type": "local",
+      "command": ["node", "D:\\han\\Niba\\dev\\Project21\\comfyui_mcp\\mcp_server_stdio.mjs"],
+      "enabled": true
     }
   }
 }

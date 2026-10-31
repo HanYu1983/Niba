@@ -23,7 +23,12 @@
           "他"
         ],
         "traits": "Late 50s, sharp jawline, tired yet observant dark eyes, slicked-back black hair with silver temples, slender, stoic",
-        "first_seen": "seg_001"
+        "first_seen": "seg_001",
+        "reference": {
+          "image": "refs/char_judge_xu",
+          "status": "to_generate",
+          "prompt": "Neutral front-facing portrait of an East Asian man in his late fifties, sharp jawline, tired observant eyes, short slicked-back black hair with silver temples, plain grey backdrop, soft key light, 16:9 crop, no text"
+        }
       },
       {
         "id": "char_zhao_liting",
@@ -34,7 +39,12 @@
           "恩師"
         ],
         "traits": "Late 60s, silver hair combed back, deep-set calm eyes, lined dignified face, tall and faintly stooped",
-        "first_seen": "seg_001"
+        "first_seen": "seg_001",
+        "reference": {
+          "image": "refs/char_zhao_liting",
+          "status": "to_generate",
+          "prompt": "Neutral front-facing portrait of an East Asian man in his late sixties, silver hair combed back, deep-set calm eyes, deep lines around the mouth, dignified weathered face, plain grey backdrop, soft key light, 16:9 crop, no text"
+        }
       }
     ],
     "props": [
@@ -47,7 +57,12 @@
           "匯款紀錄"
         ],
         "traits": "Printed offshore transfer record, dense timestamp columns, one row later circled in red ink",
-        "first_seen": "seg_006"
+        "first_seen": "seg_006",
+        "reference": {
+          "image": "refs/prop_bank_statement",
+          "status": "to_generate",
+          "prompt": "Top-down photo of an offshore bank transfer record on a dark desk, dense timestamp columns, one row circled in red ink, no legible personal data, 35mm film grain"
+        }
       },
       {
         "id": "prop_verdict_draft",
@@ -57,7 +72,12 @@
           "判決草稿"
         ],
         "traits": "Blank ruling draft on ruled paper, ink still wet in places",
-        "first_seen": "seg_005"
+        "first_seen": "seg_005",
+        "reference": {
+          "image": "refs/prop_verdict_draft",
+          "status": "to_generate",
+          "prompt": "Top-down photo of a blank ruling draft on ruled paper, fountain pen resting beside it, wet ink, warm lamp light, 35mm film grain"
+        }
       },
       {
         "id": "prop_verdict",
@@ -67,7 +87,12 @@
           "判決"
         ],
         "traits": "Heavy official ruling on cream paper, red seal at the bottom, a circled bank-outage date in the margin",
-        "first_seen": "seg_016"
+        "first_seen": "seg_016",
+        "reference": {
+          "image": "refs/prop_verdict",
+          "status": "to_generate",
+          "prompt": "Top-down photo of a heavy official court ruling on cream paper, red seal at the bottom, a circled date in the margin, 35mm film grain"
+        }
       }
     ],
     "locations": [
@@ -80,7 +105,12 @@
           "被告席"
         ],
         "traits": "Tall dark wooden bench, empty public gallery, cold overhead light",
-        "first_seen": "seg_001"
+        "first_seen": "seg_001",
+        "reference": {
+          "image": "refs/loc_courtroom",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of an empty Taiwanese courtroom, tall dark wooden bench, empty public gallery, cold overhead light, green-shaded clerk desks, 35mm film grain, 16:9, no people, no text"
+        }
       },
       {
         "id": "loc_judge_office_night",
@@ -90,7 +120,12 @@
           "辦公室"
         ],
         "traits": "Cluttered desk, single green banker's lamp, dark windows reflecting the room",
-        "first_seen": "seg_006"
+        "first_seen": "seg_006",
+        "reference": {
+          "image": "refs/loc_judge_office_night",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a judge's office at night, cluttered desk under a single green banker's lamp, dark windows reflecting the room, deep shadows, 35mm film grain, 16:9, no people, no text"
+        }
       },
       {
         "id": "loc_remote_branch_office",
@@ -100,7 +135,28 @@
           "偏遠分院"
         ],
         "traits": "Small bare office, half-packed boxes, window over empty farmland at dusk",
-        "first_seen": "seg_019"
+        "first_seen": "seg_019",
+        "reference": {
+          "image": "refs/loc_remote_branch_office",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a small rural branch office at dusk, half-packed cardboard boxes, bare desk, window over empty farmland, warm fading light, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_news_montage",
+        "name": "新聞畫面蒙太奇",
+        "aliases": [
+          "新聞畫面",
+          "跑馬燈",
+          "報紙頭條"
+        ],
+        "traits": "Abstract broadcast texture: CRT scanlines, heavy grain, no legible text, no faces",
+        "first_seen": "seg_018",
+        "reference": {
+          "image": "refs/loc_news_montage",
+          "status": "to_generate",
+          "prompt": "Neutral news-broadcast texture plate, muted CRT scanlines and heavy grain, no legible text, no faces, 16:9, 35mm film grain"
+        }
       }
     ]
   },
@@ -113,7 +169,7 @@
       "source": "### **第四章：【負罪的癮頭】**\n\n**背景：**\n這一章，許法官迎來了職業生涯中最痛苦的斷裂。被告席上坐著的不是罪犯，而是他的恩師——曾被譽為「司法界最後良心」的退休法官**趙立廷**。趙前輩被控在多年前的一宗土地弊案中，私下收受了開發商的賄賂，以換取行政法院的有利判決。\n\n",
       "kind": "narration",
       "split_reason": "chapter_start",
-      "location_ref": null,
+      "location_ref": "loc_courtroom",
       "character_refs": [
         "char_judge_xu",
         "char_zhao_liting"
@@ -128,7 +184,24 @@
       "rate_chars_per_sec": 5,
       "estimated_sec": 21,
       "render_blocks": 3,
-      "references": []
+      "references": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_courtroom",
+          "note": "courtroom wide, defendant's bench on the right"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_zhao_liting",
+          "note": "identity plate, same file across the chapter"
+        }
+      ]
     },
     {
       "id": "seg_002",
@@ -157,6 +230,18 @@
           "segment_ref": "seg_001",
           "why": "延續開場的被告身分",
           "manifestation": "被告席上那個熟悉的白髮身影"
+        }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_courtroom",
+          "note": "from behind the bench, looking down at the dock"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
         }
       ]
     },
@@ -189,6 +274,23 @@
           "why": "延續恩師身分與罪名",
           "manifestation": "被告席上的趙立廷本人"
         }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_courtroom",
+          "note": "medium shot of the dock, background soft"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_zhao_liting",
+          "note": "identity plate, same file across the chapter"
+        }
       ]
     },
     {
@@ -213,7 +315,19 @@
       "rate_chars_per_sec": 4,
       "estimated_sec": 31,
       "render_blocks": 5,
-      "references": []
+      "references": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_courtroom",
+          "note": "low angle on the judge's face, empty courtroom behind"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        }
+      ]
     },
     {
       "id": "seg_005",
@@ -246,6 +360,23 @@
           "why": "判決草稿延續獨白裡的那份判決書",
           "manifestation": "桌上那份空白判決草稿"
         }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_courtroom",
+          "note": "top-down on the bench, ruling draft inside the light pool"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_zhao_liting",
+          "note": "identity plate, same file across the chapter"
+        }
       ]
     },
     {
@@ -272,7 +403,19 @@
       "rate_chars_per_sec": null,
       "estimated_sec": 6,
       "render_blocks": 1,
-      "references": []
+      "references": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_judge_office_night",
+          "note": "night office wide, the banker's lamp is the only light"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        }
+      ]
     },
     {
       "id": "seg_007",
@@ -298,7 +441,19 @@
       "rate_chars_per_sec": null,
       "estimated_sec": 6,
       "render_blocks": 1,
-      "references": []
+      "references": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_judge_office_night",
+          "note": "desk close-up, the transfer record fills the frame"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        }
+      ]
     },
     {
       "id": "seg_008",
@@ -330,6 +485,18 @@
           "why": "獨白直接引用明細上的斷線時間",
           "manifestation": "紙上被指尖壓住的那一行入帳時間"
         }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_judge_office_night",
+          "note": "judge's face close-up, background almost black"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        }
       ]
     },
     {
@@ -360,6 +527,18 @@
           "why": "憤怒源自剛才的邏輯拆解",
           "manifestation": "腦中仍未散去的時間差"
         }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_judge_office_night",
+          "note": "office medium shot, figure backed against the window"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        }
       ]
     },
     {
@@ -389,6 +568,18 @@
           "segment_ref": "seg_009",
           "why": "延續對天賦的厭惡",
           "manifestation": "那雙看得見誤差的眼睛"
+        }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_judge_office_night",
+          "note": "window reflection, half-body"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
         }
       ]
     },
@@ -422,6 +613,18 @@
           "why": "延續想判有罪的衝動",
           "manifestation": "草稿紙上未落筆的「有罪」"
         }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_judge_office_night",
+          "note": "top-down on the desk, nib and draft"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        }
       ]
     },
     {
@@ -453,6 +656,23 @@
           "segment_ref": "seg_003",
           "why": "引用趙立廷在法庭上的形象",
           "manifestation": "閃回中趙立廷的臉"
+        }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_courtroom",
+          "note": "courtroom flashback, soft focus, slightly overexposed"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_zhao_liting",
+          "note": "identity plate, same file across the chapter"
         }
       ]
     },
@@ -486,6 +706,18 @@
           "why": "反應剛才那句話",
           "manifestation": "草稿上被劃壞的一筆"
         }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_judge_office_night",
+          "note": "desk close-up, the pen just landed"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        }
       ]
     },
     {
@@ -516,6 +748,18 @@
           "why": "延續崩解的情緒",
           "manifestation": "掉在桌上的筆"
         }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_judge_office_night",
+          "note": "judge half-body, low angle, lamp from below"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        }
       ]
     },
     {
@@ -545,6 +789,18 @@
           "segment_ref": "seg_014",
           "why": "自我清算引發的生理反應",
           "manifestation": "鏡中扭曲的自己"
+        }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_judge_office_night",
+          "note": "dark window reflection, frontal"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
         }
       ]
     },
@@ -579,6 +835,23 @@
           "why": "判決正是回應恩師那句話",
           "manifestation": "判決主文上的「無罪」"
         }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_courtroom",
+          "note": "courtroom wide at the moment of the verdict"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_zhao_liting",
+          "note": "identity plate, same file across the chapter"
+        }
       ]
     },
     {
@@ -611,6 +884,18 @@
           "why": "判決理由就是那段理性獨白",
           "manifestation": "判決書上逐條列出的時間矛盾"
         }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_courtroom",
+          "note": "documents and newspaper montage, no faces"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        }
       ]
     },
     {
@@ -621,7 +906,7 @@
       "source": "幾年後，那個空殼公司的真實操盤手在國外落網，坦承那是為了除掉趙立廷而設計的局。\n\n",
       "kind": "narration",
       "split_reason": "time_shift",
-      "location_ref": null,
+      "location_ref": "loc_news_montage",
       "character_refs": [],
       "prop_refs": [],
       "context": "數年後真相大白：空殼公司操盤手落網，承認設局除掉趙立廷。",
@@ -638,6 +923,13 @@
           "segment_ref": "seg_017",
           "why": "回應當年被質疑的判決",
           "manifestation": "新聞畫面與當年的判決書並置"
+        }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_news_montage",
+          "note": "news texture plate, faces blurred out"
         }
       ]
     },
@@ -668,6 +960,18 @@
           "segment_ref": "seg_018",
           "why": "時間與境遇都由此而來",
           "manifestation": "窗外田野與桌上的舊報紙"
+        }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_remote_branch_office",
+          "note": "branch office wide, fields through the window"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
         }
       ]
     },
@@ -705,6 +1009,18 @@
           "segment_ref": "seg_017",
           "why": "這份判決讓他被發配到這裡",
           "manifestation": "同一份判決書"
+        }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_remote_branch_office",
+          "note": "ruling close-up, fingertip on the date"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
         }
       ]
     },
@@ -744,6 +1060,18 @@
           "why": "「那天」就是宣判無罪那天",
           "manifestation": "手上的判決書"
         }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_remote_branch_office",
+          "note": "branch office medium shot, backlit by the last light"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
+        }
       ]
     },
     {
@@ -773,6 +1101,18 @@
           "segment_ref": "seg_021",
           "why": "接續他的釋懷",
           "manifestation": "闔上的判決書"
+        }
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_remote_branch_office",
+          "note": "from outside the window, one lit room in the dark"
+        },
+        {
+          "role": "character",
+          "ref": "char_judge_xu",
+          "note": "identity plate, same file across the chapter"
         }
       ]
     }

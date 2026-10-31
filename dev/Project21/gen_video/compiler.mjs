@@ -10,11 +10,14 @@
  *   compilePayload()  section 6.2 shape — the flat API payload (prompt string, duration_sec,
  *                     dialogue fields). Kept for the upcoming ComfyUI adapter.
  *
+ *   entityPrompt()    one entity's reference-image prompt, so the r2v plates can be
+ *                     produced or re-checked without opening the whole project.
+ *
  * Not implemented yet: `referenced_blocks` expansion (6.1). The ids are validated and
  * preserved, but the referenced blocks are not merged into the prompt text.
  */
 
-export const VERSION = "0.3.0";
+export const VERSION = "0.5.0";
 
 /** Compiler-specific failure, so the MCP layer can report it without a stack dump. */
 export class CompilerError extends Error {
@@ -145,6 +148,119 @@ export function compileBlock(project, blockId, opts = {}) {
   };
 
   return out;
+}
+
+const ENTITY_KINDS = [
+  { key: "characters", kind: "character" },
+  { key: "props", kind: "prop" },
+  { key: "locations", kind: "location" }
+];
+
+/** Trim a prose field down to one clause, dropping a trailing period so it can be joined. */
+function sentence(v) {
+  return typeof v === "string" && v.trim() !== "" ? v.trim().replace(/\.+$/, "") : "";
+}
+
+/**
+ * Build a reference-image prompt from the entity's own fields, for the plates that
+ * have no `reference.prompt` yet. Characters get a portrait plate, props a top-down
+ * plate, locations a wide empty establishing plate.
+ */
+function derivedEntityPrompt(entity, kind) {
+  const name = entity.name ?? entity.id;
+
+  if (kind === "character") {
+    const f = isObject(entity.identity_features) ? entity.identity_features : {};
+    const features = [f.ethnicity, f.age, f.face_and_hair, f.physique, f.vibe].filter(Boolean).join(", ");
+    const traits = sentence(entity.traits);
+    const look = features || traits;
+    return {
+      source: features ? "identity_features" : traits ? "traits" : "name",
+      prompt:
+        ["Neutral front-facing portrait", look, "plain grey backdrop, soft key light, 16:9 crop, no text"]
+          .filter(Boolean)
+          .join(", ") + "."
+    };
+  }
+
+  if (kind === "prop") {
+    const look = sentence(entity.appearance);
+    return {
+      source: "appearance",
+      prompt: [`Top-down plate of ${name}`, look, "plain dark surface, 35mm film grain, no captions"].filter(Boolean).join(", ") + "."
+    };
+  }
+
+  const look = sentence(entity.description);
+  return {
+    source: "description",
+    prompt: [`Wide establishing plate of ${name}`, look, "empty of people, no text, 16:9, 35mm film grain"].filter(Boolean).join(", ") + "."
+  };
+}
+
+/**
+ * Return one entity's reference-image prompt.
+ *
+ * A project entity may carry `reference: { image, status, prompt }`. When `prompt` is there
+ * it wins verbatim — that string is what actually produced (or will produce) the plate.
+ * Otherwise the prompt is derived from `identity_features` / `traits` / `appearance` /
+ * `description`, so an entity written before the r2v rules still answers.
+ *
+ * @param {object} project parsed project JSON
+ * @param {string} entityId character / prop / location id
+ */
+export function entityPrompt(project, entityId) {
+  if (!isObject(project)) throw new CompilerError("project must be a JSON object");
+  if (typeof entityId !== "string" || entityId.length === 0) {
+    throw new CompilerError("entity_id must be a non-empty string");
+  }
+
+  const entities = isObject(project.entities) ? project.entities : {};
+  const found = [];
+  for (const { key, kind } of ENTITY_KINDS) {
+    for (const entity of requireArray(entities, key, "entities")) {
+      if (isObject(entity) && typeof entity.id === "string") found.push({ entity, kind });
+    }
+  }
+
+  const hit = found.find(({ entity }) => entity.id === entityId);
+  if (!hit) {
+    throw new CompilerError(`unknown entity id "${entityId}"`, { known_ids: found.map(({ entity }) => entity.id) });
+  }
+
+  const { entity, kind } = hit;
+  const reference = isObject(entity.reference) ? entity.reference : null;
+  const hasPrompt = typeof reference?.prompt === "string" && reference.prompt.trim() !== "";
+  const built = hasPrompt ? null : derivedEntityPrompt(entity, kind);
+
+  const attributes =
+    kind === "character"
+      ? isObject(entity.identity_features)
+        ? entity.identity_features
+        : typeof entity.traits === "string"
+          ? { traits: entity.traits }
+          : {}
+      : kind === "prop"
+        ? { appearance: entity.appearance ?? null }
+        : { description: entity.description ?? null };
+
+  return {
+    kind,
+    id: entity.id,
+    name: entity.name ?? entity.id,
+    prompt: hasPrompt ? reference.prompt.trim() : built.prompt,
+    prompt_source: hasPrompt ? "reference" : built.source,
+    attributes: structuredClone(attributes),
+    ...(Array.isArray(entity.aliases) ? { aliases: [...entity.aliases] } : {}),
+    ...(reference
+      ? {
+          reference: {
+            image: reference.image ?? null,
+            status: reference.status ?? null
+          }
+        }
+      : {})
+  };
 }
 
 /** "許法官 (Judge Xu) (Late 50s, Sharp jawline...): Outfit: ... . Facial State: ... ." */

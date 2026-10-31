@@ -17,6 +17,11 @@
           "face_and_hair": "Sharp jawline, tired yet observant dark eyes, short slicked-back black hair with silver streaks at the temples",
           "physique": "Slender build, upright posture",
           "vibe": "Reserved, stoic, analytical"
+        },
+        "reference": {
+          "image": "refs/char_judge_xu",
+          "status": "to_generate",
+          "prompt": "Neutral front-facing portrait of an East Asian man in his late fifties, sharp jawline, tired observant eyes, short slicked-back black hair with silver temples, plain grey backdrop, soft key light, 16:9 crop, no text"
         }
       },
       {
@@ -28,6 +33,11 @@
           "face_and_hair": "Silver hair combed back, deep-set calm eyes, deep lines around the mouth, dignified weathered face",
           "physique": "Tall and faintly stooped",
           "vibe": "Calm, dignified, unshaken"
+        },
+        "reference": {
+          "image": "refs/char_zhao_liting",
+          "status": "to_generate",
+          "prompt": "Neutral front-facing portrait of an East Asian man in his late sixties, silver hair combed back, deep-set calm eyes, deep lines around the mouth, dignified weathered face, plain grey backdrop, soft key light, 16:9 crop, no text"
         }
       }
     ],
@@ -35,34 +45,74 @@
       {
         "id": "prop_bank_statement",
         "name": "海外帳戶匯款明細",
-        "appearance": "Printed offshore transfer record, dense timestamp columns, one row later circled in red ink"
+        "appearance": "Printed offshore transfer record, dense timestamp columns, one row later circled in red ink",
+        "reference": {
+          "image": "refs/prop_bank_statement",
+          "status": "to_generate",
+          "prompt": "Top-down photo of an offshore bank transfer record on a dark desk, dense timestamp columns, one row circled in red ink, no legible personal data, 35mm film grain"
+        }
       },
       {
         "id": "prop_verdict_draft",
         "name": "判決書草稿",
-        "appearance": "Blank ruling draft on ruled paper, ink still wet in places"
+        "appearance": "Blank ruling draft on ruled paper, ink still wet in places",
+        "reference": {
+          "image": "refs/prop_verdict_draft",
+          "status": "to_generate",
+          "prompt": "Top-down photo of a blank ruling draft on ruled paper, fountain pen resting beside it, wet ink, warm lamp light, 35mm film grain"
+        }
       },
       {
         "id": "prop_verdict",
         "name": "無罪判決書",
-        "appearance": "Heavy official ruling on cream-colored paper, red seal at the bottom, a circled bank-outage date in the margin"
+        "appearance": "Heavy official ruling on cream-colored paper, red seal at the bottom, a circled bank-outage date in the margin",
+        "reference": {
+          "image": "refs/prop_verdict",
+          "status": "to_generate",
+          "prompt": "Top-down photo of a heavy official court ruling on cream paper, red seal at the bottom, a circled date in the margin, 35mm film grain"
+        }
       }
     ],
     "locations": [
       {
         "id": "loc_courtroom",
         "name": "肅穆法庭",
-        "description": "Tall dark wooden bench, empty public gallery, cold overhead light, green-shaded clerk desks"
+        "description": "Tall dark wooden bench, empty public gallery, cold overhead light, green-shaded clerk desks",
+        "reference": {
+          "image": "refs/loc_courtroom",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of an empty Taiwanese courtroom, tall dark wooden bench, empty public gallery, cold overhead light, green-shaded clerk desks, 35mm film grain, 16:9, no people, no text"
+        }
       },
       {
         "id": "loc_judge_office_night",
         "name": "法官辦公室（深夜）",
-        "description": "Cluttered desk buried in case files, a single green banker's lamp casting a tight pool of light, dark windows reflecting the room."
+        "description": "Cluttered desk buried in case files, a single green banker's lamp casting a tight pool of light, dark windows reflecting the room.",
+        "reference": {
+          "image": "refs/loc_judge_office_night",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a judge's office at night, cluttered desk under a single green banker's lamp, dark windows reflecting the room, deep shadows, 35mm film grain, 16:9, no people, no text"
+        }
       },
       {
         "id": "loc_remote_branch_office",
         "name": "偏遠分院辦公室",
-        "description": "Small bare office with half-packed cardboard boxes, a window overlooking empty farmland at dusk."
+        "description": "Small bare office with half-packed cardboard boxes, a window overlooking empty farmland at dusk.",
+        "reference": {
+          "image": "refs/loc_remote_branch_office",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a small rural branch office at dusk, half-packed cardboard boxes, bare desk, window over empty farmland, warm fading light, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_news_montage",
+        "name": "新聞畫面蒙太奇",
+        "description": "Abstract broadcast texture: CRT scanlines, heavy grain, no legible text, no faces.",
+        "reference": {
+          "image": "refs/loc_news_montage",
+          "status": "to_generate",
+          "prompt": "Neutral news-broadcast texture plate, muted CRT scanlines and heavy grain, no legible text, no faces, 16:9, 35mm film grain"
+        }
       }
     ]
   },
@@ -74,6 +124,23 @@
         "end_sec": 5
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_zhao_liting",
+          "image": "refs/char_zhao_liting"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -112,6 +179,18 @@
         "end_sec": 13
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_zhao_liting",
+          "image": "refs/char_zhao_liting"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_zhao_liting",
@@ -148,6 +227,18 @@
         "end_sec": 17
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -184,6 +275,18 @@
         "end_sec": 23
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -220,6 +323,18 @@
         "end_sec": 27
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -256,6 +371,18 @@
         "end_sec": 35
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -292,6 +419,18 @@
         "end_sec": 40
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_zhao_liting",
+          "image": "refs/char_zhao_liting"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_zhao_liting",
@@ -322,6 +461,18 @@
         "end_sec": 48
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -356,6 +507,18 @@
         "end_sec": 55
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -393,6 +556,18 @@
         "end_sec": 62
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -430,6 +605,18 @@
         "end_sec": 70
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -467,6 +654,18 @@
         "end_sec": 75
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -504,6 +703,23 @@
         "end_sec": 81
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_zhao_liting",
+          "image": "refs/char_zhao_liting"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -544,6 +760,18 @@
         "end_sec": 87
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -575,6 +803,18 @@
         "end_sec": 93
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -607,6 +847,18 @@
         "end_sec": 98
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -648,6 +900,18 @@
         "end_sec": 104
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -689,6 +953,18 @@
         "end_sec": 108
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -731,6 +1007,18 @@
         "end_sec": 114
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -773,6 +1061,18 @@
         "end_sec": 121
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -814,6 +1114,18 @@
         "end_sec": 126
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -855,6 +1167,18 @@
         "end_sec": 132
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -896,6 +1220,18 @@
         "end_sec": 137
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -930,6 +1266,18 @@
         "end_sec": 141
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -967,6 +1315,18 @@
         "end_sec": 148
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1004,6 +1364,18 @@
         "end_sec": 155
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1045,6 +1417,18 @@
         "end_sec": 161
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1086,6 +1470,18 @@
         "end_sec": 165
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1127,6 +1523,18 @@
         "end_sec": 171
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1162,6 +1570,23 @@
         "end_sec": 176
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_zhao_liting",
+          "image": "refs/char_zhao_liting"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1204,6 +1629,18 @@
         "end_sec": 181
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1238,6 +1675,18 @@
         "end_sec": 185
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1275,6 +1724,18 @@
         "end_sec": 191
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1312,6 +1773,18 @@
         "end_sec": 195
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1349,6 +1822,18 @@
         "end_sec": 202
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1386,6 +1871,18 @@
         "end_sec": 210
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1423,6 +1920,18 @@
         "end_sec": 215
       },
       "location_ref": "loc_judge_office_night",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_judge_office_night",
+          "image": "refs/loc_judge_office_night"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1453,6 +1962,23 @@
         "end_sec": 221
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_zhao_liting",
+          "image": "refs/char_zhao_liting"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1499,6 +2025,18 @@
         "end_sec": 229
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1539,6 +2077,13 @@
         "end_sec": 236
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        }
+      ],
       "present_characters": [],
       "present_props": [],
       "referenced_blocks": [
@@ -1568,6 +2113,13 @@
         "end_sec": 241
       },
       "location_ref": "loc_courtroom",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_courtroom",
+          "image": "refs/loc_courtroom"
+        }
+      ],
       "present_characters": [],
       "present_props": [],
       "referenced_blocks": [
@@ -1596,6 +2148,14 @@
         "start_sec": 241,
         "end_sec": 246
       },
+      "location_ref": "loc_news_montage",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_news_montage",
+          "image": "refs/loc_news_montage"
+        }
+      ],
       "present_characters": [],
       "present_props": [],
       "referenced_blocks": [
@@ -1624,6 +2184,14 @@
         "start_sec": 246,
         "end_sec": 250
       },
+      "location_ref": "loc_news_montage",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_news_montage",
+          "image": "refs/loc_news_montage"
+        }
+      ],
       "present_characters": [],
       "present_props": [],
       "referenced_blocks": [
@@ -1653,6 +2221,18 @@
         "end_sec": 255
       },
       "location_ref": "loc_remote_branch_office",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_remote_branch_office",
+          "image": "refs/loc_remote_branch_office"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1683,6 +2263,18 @@
         "end_sec": 260
       },
       "location_ref": "loc_remote_branch_office",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_remote_branch_office",
+          "image": "refs/loc_remote_branch_office"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1719,6 +2311,18 @@
         "end_sec": 265
       },
       "location_ref": "loc_remote_branch_office",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_remote_branch_office",
+          "image": "refs/loc_remote_branch_office"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1761,6 +2365,18 @@
         "end_sec": 269
       },
       "location_ref": "loc_remote_branch_office",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_remote_branch_office",
+          "image": "refs/loc_remote_branch_office"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1802,6 +2418,18 @@
         "end_sec": 273
       },
       "location_ref": "loc_remote_branch_office",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_remote_branch_office",
+          "image": "refs/loc_remote_branch_office"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",
@@ -1842,6 +2470,18 @@
         "end_sec": 280
       },
       "location_ref": "loc_remote_branch_office",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_remote_branch_office",
+          "image": "refs/loc_remote_branch_office"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_judge_xu",
+          "image": "refs/char_judge_xu"
+        }
+      ],
       "present_characters": [
         {
           "entity_ref": "char_judge_xu",

@@ -1,0 +1,16 @@
+{
+  "name": "comfyui-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MCP server: drive the ComfyUI box (http://100.106.154.88:8000) through the workflow templates in ./workflow",
+  "type": "module",
+  "scripts": {
+    "mcp": "node mcp_server_stdio.mjs",
+    "cli": "node cli.mjs",
+    "test": "node test/smoke.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^3.25.76"
+  }
+}

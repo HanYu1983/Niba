@@ -4,7 +4,7 @@
 
 | 階段 | 輸入 | 產出 | 誰在做 |
 |---|---|---|---|
-| 一、規劃 | 小說原文 | `plan.<chapter>.json` | 讀完全文，做實體盤點與段落切分 |
+| 一、規劃 | 小說原文 | `plan.<chapter>.json` | 讀完全文，做實體盤點與段落切分，並為每段指定場景參考 |
 | 二、生成 | **只有** `plan.json` | `<chapter>.json`（entities + blocks） | 逐段寫巢狀 JSON，不再讀小說 |
 
 第一階段只做「規劃」，**不寫任何提示詞**；第二階段只做「生成」，**不需要再讀原文**。兩階段之間唯一的契約就是 `plan.json`，所以它必須自足：任何第二階段需要的資訊，都必須在第一階段就寫進去。
@@ -57,6 +57,7 @@
 * **props**：貫穿劇情的物件（判決書、匯款明細、凶器）。寫外觀，不寫它在哪個鏡頭出現。
 * **locations**：固定空間特徵（法庭、深夜辦公室、偏遠分院）。
 * **每個實體附一張 `reference`**：r2v 的參考圖就是靠這張，所以圖要跟著實體走，不要每段各生一張。
+* **`reference.image` 填資料夾，不是檔名**：ComfyUI 出圖時自己命名（`ComfyUI_00007_.png` 之類），你沒辦法指定，所以一個實體一個資料夾（`refs/<entity_id>`），只記「圖會落在哪」。
 
 ```json
 {
@@ -68,7 +69,7 @@
       "traits": "Late 50s, sharp jawline, tired observant eyes, slicked-back black hair with silver temples, slender, stoic",
       "first_seen": "seg_001",
       "reference": {
-        "image": "refs/char_judge_xu_face.png",
+        "image": "refs/char_judge_xu",
         "status": "ready",
         "prompt": "Neutral front-facing portrait, East Asian man in his late fifties, sharp jawline, tired observant eyes, slicked-back black hair with silver temples, plain grey backdrop, no text"
       }
@@ -82,7 +83,7 @@
       "traits": "Printed offshore transfer record, dense timestamp columns, one row circled in red ink",
       "first_seen": "seg_004",
       "reference": {
-        "image": "refs/prop_bank_statement_topdown.png",
+        "image": "refs/prop_bank_statement",
         "status": "to_generate",
         "prompt": "Top-down photo of a printed offshore bank transfer record, dense timestamp columns, one row circled in red ink, on a dark desk, no readable personal data"
       }
@@ -96,7 +97,7 @@
       "traits": "Tall dark wooden bench, empty gallery, cold overhead light",
       "first_seen": "seg_001",
       "reference": {
-        "image": "refs/loc_courtroom_wide.png",
+        "image": "refs/loc_courtroom",
         "status": "ready",
         "prompt": "Wide establishing plate of an empty Taiwanese courtroom, tall dark wooden bench, empty public gallery, cold overhead light, green-shaded clerk desks, 35mm film grain, 16:9, no people, no text"
       }
@@ -105,7 +106,11 @@
 }
 ```
 
-`reference.status` 只有兩種：`ready`（圖已存在）與 `to_generate`（第二階段前要先產）。`to_generate` 才需要 `prompt`；寫「空景、無人物、無文字」，避免參考圖自帶角色或字幕。
+`reference.image` 是**相對於 plan.json 的資料夾**（`refs/char_judge_xu`），整個 `refs/` 跟著 plan 一起搬就好。資料夾裡有什麼檔名不重要——ComfyUI 產完直接丟進去，下游取最新一張（或多張）當參考。
+
+**絕對路徑不寫進 JSON**：ComfyUI 的輸出資料夾是機器設定，放在 MCP server 的 `metadata.json`（`comfyui.output_dir`，用 `metadata_set` 設定）。`entity_prompt` 會把它和 `reference.image` 接起來，回報 `image_dir`；JSON 保持可攜。
+
+`reference.status` 只有兩種：`ready`（資料夾裡已經有圖）與 `to_generate`（第二階段前要先產）。`to_generate` 才需要 `prompt`；寫「空景、無人物、無文字」，避免參考圖自帶角色或字幕。
 
 `aliases` 是給第二階段用的：段落裡只寫「他」或「匯款單」時，才對得回實體。`first_seen` 讓你知道這個實體最晚在哪一段之前必須定義完。
 
@@ -147,7 +152,7 @@
 所以 plan 有兩條硬規則：
 
 1. **每個 segment 至少要有一個 `role: "scene"` 的參考**，指向 `entities.locations` 的場景。
-2. **畫面上出現的每個角色**都要有 `role: "character"` 的參考，且整章共用同一張（`reference.image` 同一個檔）。
+2. **畫面上出現的每個角色**都要有 `role: "character"` 的參考，且整章共用同一個資料夾（`reference.image` 同一個 `refs/<entity_id>`）。
 
 段落只記「這一段用哪幾張、怎麼取景」，圖本身留在實體上：
 
@@ -162,11 +167,18 @@
 
 * `reference_images[0]` **必須是 `scene`**。
 * `ref` 必須存在於 `entities`，且型別對得上：`scene` → `locations`、`character` → `characters`、`prop` → `props`。
+* 第二階段的 block 會把 `ref` 換成該實體的 `reference.image`，也就是那個**資料夾**——不要在段落裡另外寫檔名。
 * 一個 block 建議 1–3 張：場景必備，主講者次之，其他角色最後。超過模型上限時，砍角色不砍場景。
 * **沒有實體場景的段落**（新聞蒙太奇、純字卡、抽象閃回）一樣要有 scene 參考：在 `entities.locations` 建一個抽象場景（例如 `loc_news_montage`），參考圖可以是一張空的新聞畫面質感板。
 * `note` 寫這一段的取景需求（低角度、只拍桌面、逆光），不要重複 `action.description`——那是第二階段的事。
 
 **順位永遠是「場景 → 主講者 → 其他角色」**：場景錯，後面每個鏡頭都錯；人物錯，只錯一張臉。
+
+要逐張產圖時，用 MCP 工具 `entity_prompt`（`{ project_file, entity_id }`）取該實體的提示詞：
+
+* `prompt_source: "reference"` 表示用的是 `reference.prompt`，也就是當初產出這張圖的字串；其他值（`identity_features` / `traits` / `appearance` / `description`）表示是臨時推導的，記得回填成 `reference.prompt`。
+* `image_dir` 是實際要產圖／放圖的**絕對資料夾**（`comfyui.output_dir` + `reference.image`，`image_dir_source` 會說是 `metadata`、`project` 還是 `absolute`），直接把這個路徑交給 ComfyUI。
+* `reference.images` 是那個資料夾裡實際存在的圖檔（新到舊），`image_exists` 就是「有沒有至少一張」。`status: "to_generate"` 但 `images: []`，就是還沒產。檔名不用管，ComfyUI 自己取的。
 
 ## 1.5 `source` 完整性（必須能併回原文）
 
@@ -333,12 +345,13 @@ render_blocks = ceil(estimated_sec / 7)
 
 1. 讀 `kind`、`voice_intent`、`context`、`visual_context`、`continuity`。
 2. 用 `character_refs` / `prop_refs` / `location_ref` 組出 `present_characters`、`present_props`、`location_ref`。
-3. 為每個角色補上**這一段專屬**的 `outfit` 與 `facial_state`（服裝永遠不進 `entities`）。
-4. 寫 `action.description`：只描述這一段看得見的動作，不寫心理分析。
-5. 依 `voice_intent` 選 `audio_control.audio_mode`。`spoken_text` 是逐字原文，寫進 `dialogue.original_text` 前要先轉成可唸版本（去引號、去冒號、數字改中文、一句一行），規則見 [`PROMPT_TECHNIQUES.md`](PROMPT_TECHNIQUES.md)。
-6. 若 `references` 非空，把 `segment_ref` 換成對應的 `block_id` 寫進 `referenced_blocks`。
-7. **若 `render_blocks > 1`**，把 `spoken_text` 依句意切成 `render_blocks` 段，每段各自生成一個 block（總長不超過 7 秒）。第一塊承接畫面與 `references`，之後每一塊用 `referenced_blocks` 指回同一段的前一塊，維持視覺連續；不要為了塞進 7 秒把詞切斷。句子本身比 7 秒長時（例如 4 字／秒的獨白超過 28 字），可以在逗號處再拆，block 數會多於 `render_blocks`，這是允許的。
-8. `timeframe` 依生成順序累加；編譯時 `compile_block` 會自動重算成 `0..duration`。
+3. 把 `reference_images` 原樣搬進 block：`ref` 改成 `entity_ref`，再從實體補上 `image`（r2v 要的是資料夾，不是 id）。第一張必須是場景圖；沒有角色的鏡頭就只有場景這一張。
+4. 為每個角色補上**這一段專屬**的 `outfit` 與 `facial_state`（服裝永遠不進 `entities`）。
+5. 寫 `action.description`：只描述這一段看得見的動作，不寫心理分析。
+6. 依 `voice_intent` 選 `audio_control.audio_mode`。`spoken_text` 是逐字原文，寫進 `dialogue.original_text` 前要先轉成可唸版本（去引號、去冒號、數字改中文、一句一行），規則見 [`PROMPT_TECHNIQUES.md`](PROMPT_TECHNIQUES.md)。
+7. 若 `references` 非空，把 `segment_ref` 換成對應的 `block_id` 寫進 `referenced_blocks`。
+8. **若 `render_blocks > 1`**，把 `spoken_text` 依句意切成 `render_blocks` 段，每段各自生成一個 block（總長不超過 7 秒）。第一塊承接畫面與 `references`，之後每一塊用 `referenced_blocks` 指回同一段的前一塊，維持視覺連續；不要為了塞進 7 秒把詞切斷。句子本身比 7 秒長時（例如 4 字／秒的獨白超過 28 字），可以在逗號處再拆，block 數會多於 `render_blocks`，這是允許的。
+9. `timeframe` 依生成順序累加；編譯時 `compile_block` 會自動重算成 `0..duration`。
 
 ## 2.3 欄位對照表
 
@@ -348,6 +361,7 @@ render_blocks = ceil(estimated_sec / 7)
 | `location_ref` | `location_ref` |
 | `character_refs[]` | `present_characters[].entity_ref` + 新增 `outfit` / `facial_state` |
 | `prop_refs[]` | `present_props[].entity_ref` |
+| `reference_images[]` | `reference_images[]`：`ref` → `entity_ref`，並補上 `image`（取自 `entities[].reference.image`，是資料夾）；第一張是 scene |
 | `context` + `visual_context` | `action.description`（改寫成鏡頭語言） |
 | `voice_intent: none` | `vintage_film_room_tone`、`speech_present: false` |
 | `voice_intent: spoken_on_screen` | `clean_dialogue_with_room_tone`、`lip_sync_enabled: true` |
@@ -386,6 +400,7 @@ render_blocks = ceil(estimated_sec / 7)
 
 * `entities` 是整章的單一真理來源，**每段都從這裡取**，不要複製貼上改寫。
 * `blocks` 依 `order` 排列。
+* 每個 block 帶 `reference_images`：`[{ role, entity_ref, image, note? }]`，第一個元素是場景圖，之後是角色圖；r2v 每次至少吃第一張。
 * 不寫 `subtitles`（若要寫，只能單一語言）；不寫註解；不寫 `source` 原文（原文留在 plan）。
 
 ## 2.6 交付前檢查
@@ -395,6 +410,9 @@ render_blocks = ceil(estimated_sec / 7)
 - [ ] 每個 segment 至少生成 `render_blocks` 個 block，且每個 block 落在 4–8 秒（句界需要時可多於 `render_blocks`）
 - [ ] 每段只有一種 `voice_intent`
 - [ ] 所有 `character_refs` / `prop_refs` / `location_ref` 都在 `entities` 裡，且沒有「只被提到、不會入鏡」的人
+- [ ] 每個 segment 都有 `reference_images`，且第一張是 `role: "scene"`
+- [ ] 每個入鏡角色都有 `role: "character"` 的參考，且整章共用同一個 `reference.image`
+- [ ] 所有 `reference_images[].ref` 都存在於 `entities`，`status: "to_generate"` 的圖已在生成前補齊
 - [ ] `references` 只指向前面的段落
 - [ ] 生成的每個 block 都能通過 `video-compiler` 的 `compile_block`
 - [ ] JSON 無註解、無重複語言 subtitles
@@ -406,7 +424,8 @@ render_blocks = ceil(estimated_sec / 7)
 | 問題 | 第一階段（plan） | 第二階段（生成） |
 |---|---|---|
 | 這段屬於哪個場景？ | ✅ | 只引用 |
-| 角色長什麼樣？ | ✅ 恆定特徵 | ❌ 不改寫 |
+| 這段的場景參考圖？ | ✅ 指定（至少一張） | 解析成檔案 |
+| 角色長什麼樣？ | ✅ 恆定特徵＋參考圖 | ❌ 不改寫 |
 | 角色這鏡頭穿什麼？ | ❌ | ✅ |
 | 這段是對白／旁白／動作？ | ✅ | 依此選音軌 |
 | 台詞全文？ | ✅ | 原樣搬進 `original_text` |
@@ -415,4 +434,4 @@ render_blocks = ceil(estimated_sec / 7)
 | 鏡頭怎麼拍、怎麼運鏡？ | ❌ | ✅ `action.description` |
 | 底噪、對嘴開關？ | ❌ | ✅ `audio_control` |
 
-一句話總結：**plan 決定「講什麼、切成幾段、每段多久、跟誰有關」；生成決定「怎麼拍、怎麼聽」。**
+一句話總結：**plan 決定「講什麼、切成幾段、每段多久、用哪幾張參考圖、跟誰有關」；生成決定「怎麼拍、怎麼聽」。**
