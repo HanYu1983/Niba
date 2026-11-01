@@ -9,11 +9,12 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
 import { ComfyError } from "./comfy.mjs";
+import { updateJob } from "./jobs.mjs";
 import { MetadataError, comfyuiSettings, readMetadata, updateMetadata } from "./metadata.mjs";
 import { inspectJob, runTool, runtime } from "./runner.mjs";
 import { TOOLS, WORKFLOW_DIR, coverage } from "./workflows.mjs";
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.2.0";
 
 const ok = (obj) => ({ content: [{ type: "text", text: JSON.stringify(obj, null, 2) }] });
 
@@ -47,7 +48,13 @@ const RUN_OPTS = {
     .describe("default true: block until finished and download; false returns prompt_id immediately (poll with comfy_job)"),
   timeout_sec: z.number().positive().optional().describe("blocking budget; default metadata.comfyui.timeout_sec (900)"),
   download: z.boolean().optional().describe("default true: pull the results into output_dir"),
-  output_dir: z.string().optional().describe("override the local download root for this call")
+  output_dir: z.string().optional().describe("override the local download root for this call"),
+  label: z
+    .record(z.string())
+    .optional()
+    .describe(
+      'tags stored in the job ledger so a submission can be found again, e.g. { "project": "test_story1/ch04_from_plan.json", "block_id": "b012" }'
+    )
 };
 
 const NEGATIVE = z.string().optional().describe("negative prompt; omit for the template's default");
@@ -208,14 +215,21 @@ export function createMcpServer() {
     {
       title: "comfy_job",
       description:
-        "Inspect a job submitted with wait:false, or collect its outputs later. With prompt_id and wait:true it " +
-        "blocks until the job finishes and downloads the files; without prompt_id it shows the queue and recent ids.",
+        "Every submission is written to a job ledger (jobs/<prompt_id>.json) the moment ComfyUI accepts it, " +
+        "so a prompt_id is never lost to a timeout or a restart. Without prompt_id this lists the ledger " +
+        "(newest first, filter with label/status/tool) plus the live queue; with prompt_id and wait:true it " +
+        "blocks until the job finishes and downloads the files. If ComfyUI no longer has the job (history " +
+        "trimmed or server restarted) the ledger record is returned instead.",
       inputSchema: {
         prompt_id: z.string().optional().describe("the prompt_id returned when the job was submitted"),
         wait: z.boolean().optional().describe("default false: only report status; true: block until finished and download"),
         timeout_sec: z.number().positive().optional(),
         download: z.boolean().optional(),
-        output_dir: z.string().optional()
+        output_dir: z.string().optional().describe("default: the output_dir recorded when the job was submitted"),
+        label: z.record(z.string()).optional().describe("when listing: only jobs whose label matches every key/value"),
+        status: z.string().optional().describe('when listing: only this status, e.g. "timeout" or "success"'),
+        tool: z.string().optional().describe('when listing: only jobs from one tool, e.g. "minimax_r2v"'),
+        limit: z.number().int().positive().optional().describe("when listing: default 20, newest first")
       }
     },
     async (p) =>
@@ -224,7 +238,11 @@ export function createMcpServer() {
           wait: p.wait === true,
           timeout_sec: p.timeout_sec,
           download: p.download,
-          output_dir: p.output_dir
+          output_dir: p.output_dir,
+          label: p.label,
+          status: p.status,
+          tool: p.tool,
+          limit: p.limit
         })
       )
   );
@@ -233,13 +251,21 @@ export function createMcpServer() {
     "comfy_cancel",
     {
       title: "comfy_cancel",
-      description: "Drop a pending job or interrupt the one currently running on the box.",
+      description: "Drop a pending job or interrupt the one currently running on the box; the ledger entry is marked cancelled.",
       inputSchema: { prompt_id: z.string().describe("prompt_id of the job to cancel") }
     },
     async (p) =>
       guard(async () => {
         const { client } = runtime();
-        return client.cancel(p.prompt_id);
+        const out = await client.cancel(p.prompt_id);
+        if (out.cancelled) {
+          try {
+            updateJob(p.prompt_id, { status: "cancelled", cancelled: out.cancelled });
+          } catch {
+            // the ledger is best-effort
+          }
+        }
+        return out;
       })
   );
 

@@ -17,6 +17,7 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
 import { ComfyClient, ComfyError, jobOutcome, summarizeNodeErrors } from "../comfy.mjs";
+import { JobLedgerError, jobsDir, listJobs, normalizeLabel, readJob, recordSubmission, updateJob } from "../jobs.mjs";
 import { MetadataError, comfyuiSettings, readMetadata, updateMetadata } from "../metadata.mjs";
 import { createMcpServer } from "../mcp_core.mjs";
 import { inspectJob, runTool } from "../runner.mjs";
@@ -230,6 +231,8 @@ function assertNoDanglingLinks(workflow) {
 const testRoot = mkdtempSync(join(tmpdir(), "comfyui-mcp-"));
 const metadataFile = join(testRoot, "metadata.json");
 process.env.COMFYUI_MCP_METADATA = metadataFile;
+const jobsRoot = join(testRoot, "jobs");
+process.env.COMFYUI_MCP_JOBS = jobsRoot;
 const outRoot = join(testRoot, "downloads");
 
 /* ------------------------------------------------------------------ templates */
@@ -523,12 +526,121 @@ await check("client submits, waits, and mirrors outputs into output_dir", async 
   assert.equal(sent.prompt["7"].inputs.filename_prefix, "refs/char_judge_xu/plate");
 });
 
+/* ------------------------------------------------------------------ job ledger */
+
+await check("every submission lands in the job ledger, with the id and where its files go", async () => {
+  assert.equal(jobsDir(), jobsRoot, "the test points the ledger at a temp folder");
+  const entry = readJob("fake-1");
+  assert.ok(entry, "fake-1 was recorded");
+  assert.equal(entry.prompt_id, "fake-1");
+  assert.equal(entry.status, "success", "the ledger follows the job to its result");
+  assert.equal(entry.tool, "sdxl_t2i");
+  assert.equal(entry.workflow, "workflow_sdxl_t2i.json");
+  assert.equal(entry.output_dir, outRoot);
+  assert.equal(entry.client_id, "smoke");
+  assert.equal(entry.comfyui_url, baseUrl);
+  assert.equal(entry.files.length, 1);
+  assert.equal(entry.files[0].path, join(outRoot, "sdxl_00001_.png"));
+  assert.ok(entry.submitted_at && entry.last_checked_at, "timestamps are stamped");
+  assert.equal(existsSync(join(jobsRoot, "fake-1.json")), true, "one file per job, named by prompt_id");
+});
+
+await check("the record is written before waiting, so wait:false keeps the id", async () => {
+  const result = await runTool("sdxl_t2i", { prompt: "x" }, { wait: false, label: { project: "test_story1/ch04.json", block_id: "b001" } });
+  const entry = readJob(result.prompt_id);
+  assert.ok(entry, "recorded even though we never waited");
+  assert.equal(entry.label.block_id, "b001");
+  assert.equal(entry.summary.width, 1024);
+  assert.equal(result.job_file, join(jobsRoot, `${result.prompt_id}.json`));
+  assert.ok(["queued", "running"].includes(entry.status), `unexpected status ${entry.status}`);
+});
+
+await check("a job that vanished from ComfyUI still resolves through the ledger", async () => {
+  recordSubmission({
+    prompt_id: "forgotten-1",
+    comfyui_url: baseUrl,
+    tool: "minimax_r2v",
+    workflow: "video_minimax_h3_r2v.json",
+    output_dir: outRoot,
+    label: { project: "test_story1/ch04.json", block_id: "b077" },
+    summary: { frames: 124 }
+  });
+  updateJob("forgotten-1", {
+    status: "success",
+    files: [{ filename: "x.mp4", subfolder: "video", path: join(outRoot, "video", "x.mp4"), bytes: 10 }]
+  });
+
+  const back = await inspectJob("forgotten-1");
+  assert.equal(back.source, "ledger");
+  assert.equal(back.status, "success");
+  assert.match(back.note, /no longer holds this job/);
+  assert.equal(back.files[0].path, join(outRoot, "video", "x.mp4"));
+  assert.equal(back.label.block_id, "b077");
+});
+
+await check("the ledger lists newest first and filters by label / status", async () => {
+  const all = listJobs({ limit: 50 });
+  assert.ok(all.length >= 3);
+  for (let i = 1; i < all.length; i++) {
+    assert.ok(String(all[i - 1].submitted_at) >= String(all[i].submitted_at), "newest first");
+  }
+
+  const ch04 = listJobs({ label: { project: "test_story1/ch04.json" } });
+  assert.equal(ch04.length, 2);
+  assert.deepEqual(ch04.map((j) => j.label.block_id).sort(), ["b001", "b077"]);
+
+  const succeeded = listJobs({ status: "success" });
+  assert.equal(succeeded.some((j) => j.prompt_id === "fake-1"), true);
+});
+
+await check("comfy_job with no prompt_id reports the ledger and the unfinished jobs", async () => {
+  const listing = await inspectJob(null);
+  assert.ok(Array.isArray(listing.jobs) && listing.jobs.length >= 3);
+  assert.equal(listing.jobs_dir, jobsRoot);
+  assert.ok(Array.isArray(listing.unfinished));
+  assert.equal(listing.unfinished.some((j) => j.prompt_id === "forgotten-1"), false, "success is terminal");
+});
+
+await check("a re-download uses the output_dir recorded at submit time", async () => {
+  const altRoot = join(testRoot, "alt-downloads");
+  const submitted = await runTool(
+    "sdxl_t2i",
+    { prompt: "x", filename_prefix: "refs/alt/plate" },
+    { output_dir: altRoot, wait: false }
+  );
+  assert.equal(readJob(submitted.prompt_id).output_dir, altRoot);
+
+  const back = await inspectJob(submitted.prompt_id, { wait: true });
+  assert.equal(back.status, "success");
+  assert.equal(back.output_dir, altRoot, "the recorded root wins over metadata");
+  assert.equal(existsSync(join(altRoot, "sdxl_00001_.png")), true);
+});
+
+await check("the ledger refuses prompt ids that would escape its folder", async () => {
+  assert.throws(() => readJob("../../evil"), JobLedgerError);
+  assert.throws(() => readJob("a/b"), JobLedgerError);
+  assert.throws(() => recordSubmission({ prompt_id: "" }), JobLedgerError);
+});
+
+await check("labels accept an object, k=v pairs, and the shell-mangled JSON form", () => {
+  assert.deepEqual(normalizeLabel({ block_id: "b1", take: 2 }), { block_id: "b1", take: "2" });
+  assert.deepEqual(normalizeLabel("block_id=b1,project=a.json"), { block_id: "b1", project: "a.json" });
+  // PowerShell strips the quotes of an inline object, leaving {key:value,key:value}
+  assert.deepEqual(normalizeLabel("{project:test.json,block_id:b2}"), { project: "test.json", block_id: "b2" });
+  assert.equal(normalizeLabel(""), null);
+  assert.equal(normalizeLabel(null), null);
+  assert.equal(normalizeLabel("no-separators"), null);
+});
+
+let videoJobId = null;
+
 await check("subfolder in the remote path is mirrored locally", async () => {
   const result = await runTool("minimax_r2v", {
     prompt: "two people talking",
     reference_images: ["C:/a.png"],
     duration_sec: 5
   });
+  videoJobId = result.prompt_id;
   assert.equal(result.status, "success");
   assert.equal(result.files[0].kind, "video");
   assert.equal(result.files[0].subfolder, "video");
@@ -560,13 +672,14 @@ await check("wait:false returns the prompt_id without downloading", async () => 
   const before = fake.state.downloads.length;
   const result = await runTool("sdxl_t2i", { prompt: "x" }, { wait: false });
   assert.equal(result.status, "queued");
-  assert.equal(result.prompt_id, "fake-5");
+  assert.match(result.prompt_id, /^fake-\d+$/, "a real prompt_id, not a placeholder");
+  assert.equal(readJob(result.prompt_id).status, "queued", "and it is in the ledger straight away");
   assert.equal(fake.state.downloads.length, before);
   assert.match(result.hint, /comfy_job/);
 });
 
 await check("comfy_job collects a job that was submitted with wait:false", async () => {
-  const result = await inspectJob("fake-4", { wait: true });
+  const result = await inspectJob(videoJobId, { wait: true });
   assert.equal(result.status, "success");
   assert.equal(result.files.length, 1);
   assert.equal(result.files[0].filename, "MiniMax_H3_00001_.mp4");
@@ -576,6 +689,7 @@ await check("text outputs come back as texts, not files", async () => {
   const result = await runTool("text_gen", { prompt: "describe this" });
   assert.equal(result.status, "success");
   assert.deepEqual(result.texts, [{ node: "4", slot: "text", text: "a generated description" }]);
+  assert.deepEqual(readJob(result.prompt_id).texts, result.texts, "text lives in the ledger too");
 });
 
 await check("a rejected workflow surfaces the node errors", async () => {

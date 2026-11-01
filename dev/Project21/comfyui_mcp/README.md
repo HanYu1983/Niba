@@ -11,7 +11,7 @@ D:\han\Niba\dev\Project21\
 ├─ comfyui_mcp\            ← this server
 │  ├─ workflow\*.json      ← API-format templates (the source of truth)
 │  ├─ metadata.json        ← url + local download root (gitignored)
-│  └─ output\              ← default download mirror (metadata.comfyui.output_dir)
+│  └─ jobs\<id>.json       ← one record per submission (gitignored)
 └─ gen_video\              ← video-compiler: story JSON -> prompts
 ```
 
@@ -28,7 +28,8 @@ ComfyUI side is HTTP, so nothing else is lost.
 | `workflows.mjs` | template loading + one builder per template + `TOOLS` manifest |
 | `comfy.mjs` | HTTP client: submit / queue / history / view / upload / cancel, path safety |
 | `metadata.mjs` | `metadata.json` (url, download root, timeout, client id) |
-| `runner.mjs` | tool call → build → submit → wait → download |
+| `jobs.mjs` | the job ledger: one `jobs/<prompt_id>.json` per submission |
+| `runner.mjs` | tool call → build → submit → record → wait → download |
 | `mcp_core.mjs` | MCP registration (14 tools) |
 | `mcp_server_stdio.mjs` | stdio entry point |
 | `cli.mjs` | run any tool without MCP |
@@ -75,7 +76,7 @@ Register once in `../opencode.json`:
 | `text_gen` | `llm_qwen3_5_text_gen.json` | text (optionally about an image) |
 | `comfy_status` | — | reachability, GPU, queue, models, per-tool preflight |
 | `comfy_workflows` | — | templates ↔ tools, unmapped files |
-| `comfy_job` | — | inspect / collect a `wait:false` job |
+| `comfy_job` | — | list the job ledger / inspect / re-download a job |
 | `comfy_cancel` | — | drop a pending job or interrupt the running one |
 | `comfy_metadata_get` / `comfy_metadata_set` | — | the machine settings above |
 
@@ -86,7 +87,8 @@ Every generator takes the same four run options:
   "wait": true,           // false -> return prompt_id immediately, poll with comfy_job
   "timeout_sec": 900,     // blocking budget; a timeout is NOT an error (see below)
   "download": true,       // false -> leave the files on the box
-  "output_dir": "…"       // override the local download root for this call
+  "output_dir": "…",      // override the local download root for this call
+  "label": { "block_id": "b012" }  // stored in the job ledger, so the submission can be found again
 }
 ```
 
@@ -157,6 +159,58 @@ That is deliberately **not** an error — resubmitting would duplicate the rende
 A workflow ComfyUI rejects comes back as `isError` with `node_errors` (node id, class, message);
 an execution failure comes back with the node that died and its exception message.
 
+## The job ledger
+
+Every `/prompt` that ComfyUI accepts is written to `jobs/<prompt_id>.json` **before** any waiting,
+so a timeout, a killed MCP process, or a lost session cannot lose the handle to a job that is
+already rendering.
+
+```jsonc
+// comfyui_mcp/jobs/e9d8132e-eb1d-4c20-bba5-08a7befcee80.json
+{
+  "version": "1.0",
+  "prompt_id": "e9d8132e-eb1d-4c20-bba5-08a7befcee80",
+  "submitted_at": "2026-11-01T04:12:31.882Z",
+  "comfyui_url": "http://100.106.154.88:8000",
+  "client_id": "comfyui-mcp",
+  "tool": "minimax_r2v",
+  "workflow": "video_minimax_h3_r2v.json",
+  "output_dir": "D:\\han\\Niba\\dev\\Project21\\output",
+  "label": { "project": "test_story1/ch04_from_plan.json", "block_id": "b012" },
+  "queue_number": 231,
+  "summary": { "width": 352, "height": 608, "frames": 124, "turbo": true },
+  "status": "success",
+  "files": [ { "filename": "…_00001_.mp4", "subfolder": "video", "path": "D:\\…\\output\\video\\…", "bytes": 1009140 } ],
+  "last_checked_at": "2026-11-01T04:13:35.100Z"
+}
+```
+
+Why a file per job: one submission writes exactly one new file (atomic rename), so a crash cannot
+corrupt the rest, and listing is a directory scan.
+
+Why it is not in the story JSON: a `prompt_id` is machine state — it dies when ComfyUI restarts or
+trims its history, and it would churn the creative document on every retry. `label` is the bridge:
+put `{ project, block_id }` there and query the ledger instead.
+
+```jsonc
+// pass a label to any generator
+{ "prompt": "…", "label": { "project": "test_story1/ch04_from_plan.json", "block_id": "b012" } }
+
+// then, without any prompt_id, ask what has been submitted
+comfy_job { "label": { "block_id": "b012" } }
+comfy_job { "status": "timeout" }        // everything still owed
+comfy_job { "tool": "minimax_r2v", "limit": 50 }
+```
+
+- **`output_dir` is recorded** because it can be overridden per call; a later `comfy_job` re-download
+  uses the recorded root unless you pass `output_dir` again.
+- **`status` is kept current**: `submitted` → `queued`/`running` → `success` / `timeout` / `error` /
+  `cancelled`, with `files` filled in when the outputs land.
+- **When ComfyUI forgets a job** (history trimmed, server restarted) `comfy_job { prompt_id }` returns
+  the ledger record with `"source": "ledger"` instead of a useless "unknown" — prompt_id, output
+  folder and the files it produced are all still there.
+- `jobs/` is gitignored, like `metadata.json`.
+
 ## Per-template notes
 
 - **`minimax_t2v` / `minimax_r2v`** — length is quantised by the template's own math node to
@@ -201,8 +255,10 @@ node cli.mjs --status
 node cli.mjs --workflows
 node cli.mjs sdxl_t2i --prompt "…" --width 832 --height 1216 --filename_prefix refs/char_x/plate
 node cli.mjs minimax_r2v --prompt "…" --reference_images out/a.png --reference_images out/b.png --turbo
-node cli.mjs --job --prompt_id <id>            # status only
-node cli.mjs --job --prompt_id <id> --wait     # block + download
+node cli.mjs --jobs                              # the job ledger, newest first
+node cli.mjs --jobs --status timeout             # everything still owed
+node cli.mjs --job --prompt_id <id>              # status only
+node cli.mjs --job --prompt_id <id> --wait       # block + download
 ```
 
 Flags parse numbers/booleans/JSON; repeating a flag builds an array (handy for
@@ -214,8 +270,9 @@ Flags parse numbers/booleans/JSON; repeating a flag builds an array (handy for
 node test/smoke.mjs
 ```
 
-40 checks: template coverage, every builder (including dropped branches and dangling links),
+49 checks: template coverage, every builder (including dropped branches and dangling links),
 duration quantisation, metadata rules, upload/download round-trips against a fake ComfyUI, error
-surfacing, path safety, the whole MCP surface over an in-memory transport, and the real stdio
-server. `COMFYUI_MCP_METADATA` points the test at a temp file, so the real `metadata.json` is
-never touched.
+surfacing, path safety, the job ledger (written before waiting, updated on completion, surviving a
+ComfyUI that forgot the job, label/status filters, path safety), the whole MCP surface over an
+in-memory transport, and the real stdio server. `COMFYUI_MCP_METADATA` / `COMFYUI_MCP_JOBS` point the
+test at temp files, so the real `metadata.json` and `jobs/` are never touched.

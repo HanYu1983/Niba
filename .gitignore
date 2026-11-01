@@ -174,3 +174,4 @@ output
 # video-compiler: machine-specific asset roots
 dev/Project21/gen_video/metadata.json
 dev/Project21/comfyui_mcp/metadata.json
+dev/Project21/comfyui_mcp/jobs/

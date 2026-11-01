@@ -95,7 +95,7 @@ async function main(argv) {
       return 0;
     }
 
-    if (head === "--job") {
+    if (head === "--job" || head === "--jobs") {
       const args = parseArgs(rest);
       const result = await inspectJob(args.prompt_id ?? null, { ...args, wait: args.wait === true });
       console.log(JSON.stringify(result, null, 2));

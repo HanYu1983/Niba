@@ -1,6 +1,6 @@
 {
   "name": "comfyui-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "MCP server: drive the ComfyUI box (http://100.106.154.88:8000) through the workflow templates in ./workflow",
   "type": "module",
