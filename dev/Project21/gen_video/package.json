@@ -2,15 +2,20 @@
   "name": "video-compiler",
   "version": "0.5.0",
   "private": true,
-  "description": "MCP server: compile Omni-Media project JSON blocks into render payloads (ComfyUI submission comes later)",
+  "description": "MCP server + render pipeline: Omni-Media project JSON blocks to ComfyUI MiniMax r2v jobs",
   "type": "module",
   "scripts": {
     "mcp": "node mcp_server_stdio.mjs",
     "compile": "node cli.mjs",
+    "check": "node compile_blocks.mjs --check",
+    "render": "node render_blocks.mjs",
+    "sync": "node sync_manifest.mjs",
+    "assemble": "node assemble_blocks.mjs",
     "test": "node test/smoke.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
+    "ffmpeg-static": "^5.3.0",
     "zod": "^3.25.76"
   }
 }

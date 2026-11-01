@@ -2,7 +2,7 @@
 
 MCP server that extracts render-ready slices from an Omni-Media project JSON.
 
-**Current scope: sections 1.4 + 6.2, plus the `entity_prompt` / metadata helpers.** Nothing is sent to ComfyUI yet.
+**Current scope: sections 1.4 + 6.2, the `entity_prompt` / metadata helpers, and the block render pipeline that drives ComfyUI.**
 
 ## Why Node instead of the guide's Python
 
@@ -155,10 +155,48 @@ Machine paths live in `metadata.json` next to the server, never in the story JSO
 - **Missing refs throw** instead of silently producing `Character (None, None)`: unknown
   block / character / prop / location, non-positive timeframe, or a dangling `referenced_blocks` id.
 
+## Rendering pipeline (ch04)
+
+`compile_blocks.mjs` and `render_blocks.mjs` take a chapter from "49 blocks in a plan" to "49 mp4 files
+plus one cut". They are not MCP tools: they are the loop that drives the `comfyui` MCP server's
+`minimax_r2v`.
+
+```powershell
+node compile_blocks.mjs --check                       # validate all blocks, print issues
+node compile_blocks.mjs --prompt block_016_frozen_eyes --take 2   # read one assembled prompt
+node render_blocks.mjs --from block_004               # submit the rest, sequentially
+node render_blocks.mjs --only block_016 --take 2      # a corrected retake
+node sync_manifest.mjs --write                        # reconcile manifest with the job ledger
+node assemble_blocks.mjs                              # stitch the keeper takes into one mp4
+```
+
+| File | Role |
+|---|---|
+| `render_plan.mjs` | block + Chinese notes -> `{ prompt, reference_images, seed, … }`, plus hard-rule issues |
+| `compile_blocks.mjs` | CLI over `render_plan` (`--check`, `--prompt`, `--out`) |
+| `render_blocks.mjs` | submits each job through `../comfyui_mcp/runner.mjs`, writes the manifest |
+| `sync_manifest.mjs` | newest successful ledger entry per block wins; drops entries whose file vanished |
+| `assemble_blocks.mjs` | ffmpeg concat in plan order (stream copy, re-encode as fallback) |
+
+### Why a notes file instead of generating the Chinese
+
+The plan JSON stays English and stays the creative source. `test_story1/ch04_shot_notes.json` holds the
+Chinese that the model actually reads: one reviewable, diffable line per shot, plus dictionaries for
+outfits, facial states, lighting and voice modes. A shot has exactly one correct Chinese sentence, and no
+rule derives it from `action.description`, so the compiler stays deterministic: it resolves the newest
+reference plate per entity, enforces scene-in-slot-1, quantises frames, splits narration, and refuses to
+emit text that breaks the pronounceability rules (`PROMPT_TECHNIQUES.md`).
+
+Per-block overrides live in the notes:
+
+- `refs` — narrow the plan's reference list. Two similar faces in three slots merge into one face, so a
+  block whose action only shows one person must not carry the other person's plate.
+- `no_wardrobe: true` — insert shots (a hand, a page, a pen). Naming a robe and a jaw pulls a torso and a
+  face into a frame that should only contain paper.
+
 ## Not implemented yet
 
 - `referenced_blocks` unpacking into the visual description (6.1).
-- ComfyUI submission, per-model prompt post-processing, batch compilation.
 
 ## Run
 

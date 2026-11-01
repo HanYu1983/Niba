@@ -1,0 +1,556 @@
+{
+  "version": "1.0",
+  "project": "test_story1/ch04_from_plan.json",
+  "note": "Chinese shooting notes for ch04. The plan JSON stays English (it is the creative source); this file is the pronounceable Chinese that the compiler turns into MiniMax H3 r2v prompts.",
+  "size": {
+    "width": 608,
+    "height": 352,
+    "fps": 24
+  },
+  "seed_base": 240820,
+  "entities": {
+    "loc_courtroom": {
+      "kind": "scene",
+      "zh": "肅穆的法庭"
+    },
+    "loc_judge_office_night": {
+      "kind": "scene",
+      "zh": "深夜的法官辦公室"
+    },
+    "loc_remote_branch_office": {
+      "kind": "scene",
+      "zh": "偏遠分院的小辦公室"
+    },
+    "loc_news_montage": {
+      "kind": "scene",
+      "zh": "電視新聞畫面"
+    },
+    "char_judge_xu": {
+      "kind": "character",
+      "zh": "許法官",
+      "who": "五十多歲的東亞男性"
+    },
+    "char_zhao_liting": {
+      "kind": "character",
+      "zh": "趙立廷",
+      "who": "六十多歲的東亞男性"
+    }
+  },
+  "outfits": {
+    "Black judicial robe with a red-trimmed collar, white shirt beneath": "黑色法袍，寬大的長袍，裡面是白色襯衫",
+    "Dark grey suit, no tie, well-worn but immaculate": "深灰色西裝，沒有打領帶，舊但很整潔",
+    "White dress shirt with sleeves rolled up, collar open, no robe": "白色襯衫，袖子捲起來，領口敞開，沒有穿法袍",
+    "Loose grey cardigan over a worn shirt, no robe": "寬鬆的灰色針織外套，裡面是舊襯衫，沒有穿法袍"
+  },
+  "faces": {
+    "Jaw set, eyes fixed on the defendant's bench, face unreadable": "下顎繃著，眼睛盯著被告席，臉上沒有表情",
+    "Calm, chin slightly lifted, eyes clear and steady": "神情平靜，下巴微抬，眼睛清澈而穩定",
+    "Mouth tight, eyes narrowing with ambition": "嘴唇抿緊，眼睛微微瞇起，帶著野心",
+    "Serene, unhurried, hands folded": "神情安詳，從容不迫，雙手交疊",
+    "Lips sealed tight and motionless, eyes bright and unfocused, jaw held in quiet triumph": "嘴唇緊閉不動，眼神發亮而失焦，下顎帶著安靜的得意",
+    "Focused, almost hungry, lips parted a breath": "專注到近乎貪婪，嘴唇微微張開一線",
+    "Serene, eyes lowered": "神情安詳，眼睛低垂",
+    "Lips pressed thin, eyes moving fast across the page": "嘴唇抿成一條線，眼睛在紙頁上快速移動",
+    "Pupils fixed on one line, mouth slightly open": "瞳孔定在某一行，嘴巴微微張開",
+    "Lips sealed tight, eyes frozen, a muscle jumping in the jaw": "嘴唇緊閉，眼神凍住，下顎的肌肉在跳動",
+    "Nostrils flared, teeth clenched, breath visible": "鼻孔張大，牙關咬緊，吐出的氣看得見",
+    "Lips sealed, eyes wet with anger, brow knotted": "嘴唇閉著，眼裡含著怒氣，眉頭糾結",
+    "Lips sealed, a slow swallow, eyes fixed on the blank line": "嘴唇閉著，慢慢吞了一口口水，眼睛盯著空白的那一行",
+    "Pen stopped mid-air, eyes distant": "筆停在半空中，眼神飄遠",
+    "Calm, lips closed, eyes resting on the judge": "神情平靜，嘴唇閉著，目光停在許法官身上",
+    "Eyes wide, breath caught, mouth closed": "眼睛睜大，屏住呼吸，嘴巴閉著",
+    "Lips sealed, jaw trembling, eyes wet and furious": "嘴唇閉著，下顎顫抖，眼裡濕潤而憤怒",
+    "Pale, eyes hollow, mouth slightly open in disgust": "臉色發白，眼神空洞，嘴巴微微張開，像是厭惡",
+    "Face blank, eyes down on the verdict": "面無表情，眼睛落在判決書上",
+    "Eyes closed, shoulders lowering a fraction": "眼睛閉著，肩膀微微放下",
+    "Expressionless, eyes steady": "面無表情，眼神穩定",
+    "Tired, unreadable, eyes on the fields": "神情疲憊，看不出情緒，眼睛望著窗外的田",
+    "Soft, absorbed, eyes on the page": "神情柔和，很專注，眼睛在紙頁上",
+    "A small smile, tears at the corners of his eyes, lips moving quietly": "淺淺一笑，眼角帶著淚，嘴唇微微動著",
+    "Calm, eyes closing slowly": "神情平靜，眼睛慢慢閉上"
+  },
+  "light": {
+    "loc_courtroom": "冷白頂光從上方落下，只照亮人物所在的桌面，其餘沉在深木色的陰影裡",
+    "loc_judge_office_night": "只有桌上的綠色檯燈亮著，燈下形成一小圈光，房間其餘部分全黑",
+    "loc_remote_branch_office": "黃昏的暖光從窗戶斜射進來，室內偏暗，空氣裡有灰塵",
+    "loc_news_montage": "電視螢幕的冷光，掃描線和顆粒感很重"
+  },
+  "sound": {
+    "default": "房間底噪，遠處空調低鳴，底片輕微雜音，沒有音樂",
+    "vintage_film_room_tone": "只有底片的嘶嘶聲和房間底噪，沒有音樂"
+  },
+  "voices": {
+    "narrator_voiceover": {
+      "speaker": "旁白",
+      "desc": "低沉平穩的男聲，廣播級清晰，畫外音",
+      "silence": "畫面裡的人都閉著嘴，沒有人開口"
+    },
+    "internal_monologue_with_room_tone": {
+      "speaker": "內心獨白",
+      "desc": "低沉克制的男聲，貼近麥克風，聲音微微悶住，像在心裡說話",
+      "silence": "他閉著嘴，嘴唇一動也不動"
+    },
+    "remembered_voiceover": {
+      "speaker": "回憶旁白",
+      "desc": "趙立廷的聲音，溫和而疲憊，從很遠的地方傳來，畫外音",
+      "silence": "畫面裡的人都不開口"
+    },
+    "clean_dialogue_with_room_tone": {
+      "speaker": "許法官開口說話",
+      "desc": "現場收音，許法官開口說話，嘴型與語音同步",
+      "silence": "他的嘴型跟著語音開合"
+    },
+    "vintage_film_room_tone": {
+      "speaker": null,
+      "desc": null,
+      "silence": "沒有人開口，也沒有對白"
+    }
+  },
+  "blocks": {
+    "block_001_court_wide": {
+      "shot": "大全景",
+      "move": "極緩慢地向前推進",
+      "refs": [
+        "loc_courtroom",
+        "char_judge_xu"
+      ],
+      "lines": [
+        "畫面裡是一座空蕩的法庭，所有座位都空著。",
+        "被告席位在畫面前方，被冷白的頂光單獨照亮。",
+        "遠處是高高升起的深色木製法檯。",
+        "許法官坐在法檯後方，身形很小、很遙遠。"
+      ]
+    },
+    "block_002_dock_zhao": {
+      "shot": "被告席的中近景",
+      "move": "緩慢地推向被告席",
+      "lines": [
+        "趙立廷獨自坐在被告席的椅子上。",
+        "銀白色的頭髮向後梳，雙手交疊放在桌面上。",
+        "他的下巴微微抬起，眼睛清澈而平穩。",
+        "身後的旁聽席一整片空著，慢慢融進黑暗。"
+      ]
+    },
+    "block_003_indictment": {
+      "shot": "俯視特寫，畫面裡只有桌面、文件和一隻手",
+      "move": "完全不動",
+      "no_wardrobe": true,
+      "lines": [
+        "深色木桌的桌面上攤著一疊白色文件。",
+        "紙頁平整，上面是橫排的黑色打字字行。",
+        "許法官的手從畫面下方伸進來。",
+        "手指停在紙頁邊緣，一動也不動。"
+      ]
+    },
+    "block_004_site_plan": {
+      "shot": "紙頁特寫",
+      "move": "完全不動",
+      "lines": [
+        "大拇指把紙頁翻過去。",
+        "一張開發商的土地規劃圖夾在卷宗裡，滑進那圈燈光。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_005_pulpit": {
+      "shot": "從法檯後方反拍的中近景，只拍到許法官的上半身",
+      "move": "完全不動",
+      "lines": [
+        "鏡位貼近法檯的木頭邊緣，深色木頭佔住畫面下緣。",
+        "許法官坐在法檯後方，占滿畫面中央，只拍到他的上半身。",
+        "他低下頭，視線往下望向被告席。",
+        "整個法庭是空的，他身後一個人也沒有。",
+        "旁聽席的椅子排成一片，全都沒有人坐。"
+      ]
+    },
+    "block_006_grip": {
+      "shot": "手部特寫",
+      "move": "完全不動",
+      "lines": [
+        "他的手慢慢握緊椅子的扶手。",
+        "指節因為用力而發白。",
+        "身後的旁聽席一片死寂。"
+      ]
+    },
+    "block_007_dignity": {
+      "shot": "被告席的中景",
+      "move": "完全不動",
+      "lines": [
+        "趙立廷坐在被告席上，背脊挺直。",
+        "雙手交疊，前面的證據文件疊得整整齊齊，沒有人翻動。",
+        "晨光從側面切過他的銀白頭髮。"
+      ]
+    },
+    "block_008_eyes": {
+      "shot": "眼睛大特寫",
+      "move": "完全不動",
+      "lines": [
+        "許法官的眼睛在法檯上方，大特寫。",
+        "法庭的燈光在他眼裡反射成兩個很小的冷點。",
+        "他不眨眼。"
+      ]
+    },
+    "block_009_profile": {
+      "shot": "側面近景",
+      "move": "完全不動",
+      "lines": [
+        "側面近景，他把頭微微轉向被告席。",
+        "法袍的高領在他喉嚨上留下一道陰影。"
+      ]
+    },
+    "block_010_bench_tap": {
+      "shot": "手部特寫",
+      "move": "完全不動",
+      "lines": [
+        "指尖在光滑的木製法檯上輕敲一下。",
+        "然後整隻手掌平貼下去，像把一本書合上。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_011_low_angle": {
+      "shot": "仰角大特寫",
+      "move": "完全不動",
+      "lines": [
+        "從法檯邊緣往上拍的仰角。",
+        "他的臉佔滿畫面，桌燈從下方照亮他。",
+        "他的眼睛一次都沒有眨。"
+      ]
+    },
+    "block_012_silhouette": {
+      "shot": "審判檯的剪影全景，只看得見他的輪廓",
+      "move": "完全不動",
+      "no_wardrobe": true,
+      "light": "只有背後一片冷白的光，他整個人變成黑色的剪影，其餘全暗",
+      "lines": [
+        "許法官獨自坐在空曠的法庭裡，成為一個剪影。",
+        "整個法庭是空的，旁聽席一個人也沒有。",
+        "光線裡的灰塵慢慢飄動。"
+      ]
+    },
+    "block_013_pen_hover": {
+      "shot": "過肩鏡位",
+      "move": "完全不動",
+      "lines": [
+        "從許法官肩後看過去。",
+        "法檯上攤著空白的判決書草稿，鋼筆懸在第一行上方。",
+        "遠處的趙立廷是柔焦的。"
+      ]
+    },
+    "block_014_lamp_pool": {
+      "shot": "硬切到辦公室的廣角",
+      "move": "完全不動",
+      "lines": [
+        "硬切到一間昏暗的辦公室。",
+        "一盞綠色檯燈在桌上留下一小圈光。",
+        "光圈裡是一份匯款紀錄，房間其他部分全黑。",
+        "許法官的手伸進畫面。"
+      ]
+    },
+    "block_015_finger_slide": {
+      "shot": "桌面微距",
+      "move": "完全不動",
+      "lines": [
+        "匯款明細的特寫。",
+        "密密麻麻的時間戳記排成一欄。",
+        "一根手指沿著紙頁往下滑，突然停在某一列上。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_016_frozen_eyes": {
+      "shot": "眼睛大特寫",
+      "move": "完全不動",
+      "lines": [
+        "大特寫，他的眼睛停止移動。",
+        "紙頁的倒影落在兩隻瞳孔裡。"
+      ]
+    },
+    "block_017_hot_paper": {
+      "shot": "手指特寫",
+      "move": "完全不動",
+      "lines": [
+        "他的手指從紙頁上抬起來，停在半空中。",
+        "那張紙好像突然變得很燙。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_018_outage_window": {
+      "shot": "匯款紀錄的大特寫",
+      "move": "完全不動",
+      "lines": [
+        "匯款紀錄的大特寫。",
+        "時間欄裡印著一段銀行斷線的區間。",
+        "其中一筆匯款正好落在這段區間裡面。"
+      ]
+    },
+    "block_019_circled_date": {
+      "shot": "插入鏡頭",
+      "move": "完全不動",
+      "lines": [
+        "匯款紀錄上有一個紅筆圈起來的日期。",
+        "旁邊的空白處，用鉛筆寫著另一個日期。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_020_witness_stack": {
+      "shot": "桌面特寫",
+      "move": "完全不動",
+      "lines": [
+        "他把匯款明細推到一邊。",
+        "底下是一整疊證人筆錄，在桌面上攤開。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_021_lamp_flicker": {
+      "shot": "臉部中近景",
+      "move": "緩慢地推近",
+      "lines": [
+        "緩慢推近他的臉。",
+        "檯燈閃了一下。",
+        "他的嘴唇緊緊閉著。"
+      ]
+    },
+    "block_022_shrinking_circle": {
+      "shot": "全景",
+      "move": "完全不動",
+      "lines": [
+        "許法官獨自坐在桌前。",
+        "檯燈的光圈在他身上慢慢縮小，四周全是黑暗。"
+      ]
+    },
+    "block_023_fist": {
+      "shot": "中景",
+      "move": "完全不動",
+      "lines": [
+        "他從桌前推開椅子站起來，椅子在地上刮出聲音。",
+        "他的拳頭落在匯款明細上，把紙角壓皺。"
+      ]
+    },
+    "block_024_back_turn": {
+      "shot": "背影中景",
+      "move": "完全不動",
+      "lines": [
+        "他背對桌子站著，肩膀微微起伏。",
+        "身後的窗戶是一片黑色的鏡子。"
+      ]
+    },
+    "block_025_reflection": {
+      "shot": "倒影特寫",
+      "move": "完全不動",
+      "lines": [
+        "他在暗窗裡的倒影。",
+        "眼睛睜得很大，下顎在動，嘴唇閉著。"
+      ]
+    },
+    "block_026_look_down": {
+      "shot": "中景",
+      "move": "完全不動",
+      "lines": [
+        "他轉回桌邊，一隻手撐在椅背上。",
+        "低頭看著那份匯款明細。"
+      ]
+    },
+    "block_027_crushed_corner": {
+      "shot": "手部特寫",
+      "move": "完全不動",
+      "lines": [
+        "他的手把紙角壓皺。",
+        "紙張在他的拇指底下彎折。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_028_open_palm": {
+      "shot": "手部特寫",
+      "move": "完全不動",
+      "lines": [
+        "他鬆開手，皺掉的紙角彈回來。",
+        "他盯著自己的掌心。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_029_ink_bead": {
+      "shot": "桌面特寫",
+      "move": "完全不動",
+      "lines": [
+        "他坐回椅子上，把判決書草稿拉到面前。",
+        "筆尖停在空白的那一行上方。",
+        "一滴墨慢慢脹大。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_030_remembered_line": {
+      "shot": "柔焦回憶的近景",
+      "move": "完全不動",
+      "refs": ["loc_courtroom", "char_zhao_liting"],
+      "lines": [
+        "畫面浮起一段柔焦的回憶，邊緣泛著光。",
+        "趙立廷坐在被告席上，雙手交疊。",
+        "他直直看著前方，嘴唇閉著。"
+      ]
+    },
+    "block_031_pen_falls": {
+      "shot": "桌面特寫",
+      "move": "完全不動",
+      "lines": [
+        "鋼筆從他的指間滑落，掉在草稿上。",
+        "筆尖在空白的紙上拖出一道歪斜的濕痕。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_032_braced": {
+      "shot": "中景",
+      "move": "完全不動",
+      "lines": [
+        "他雙手撐在桌面上，低著頭。",
+        "檯燈只照亮他的頭頂。"
+      ]
+    },
+    "block_033_tear_line": {
+      "shot": "由下往上的臉部特寫",
+      "move": "完全不動",
+      "lines": [
+        "從下方拍他的臉。",
+        "他緊緊閉著眼睛，一滴淚停在睫毛上。",
+        "嘴唇閉著。"
+      ]
+    },
+    "block_034_tear_breaks": {
+      "shot": "臉部特寫",
+      "move": "完全不動",
+      "lines": [
+        "那滴淚滑下來。",
+        "他的下顎繃緊，嘴唇還是閉著。"
+      ]
+    },
+    "block_035_open_fist": {
+      "shot": "手部特寫",
+      "move": "完全不動",
+      "lines": [
+        "他的拳頭在桌面上慢慢張開。",
+        "手指在發抖。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_036_no_reflection": {
+      "shot": "中景",
+      "move": "完全不動",
+      "lines": [
+        "他抬起頭，看著一個沒有東西的方向。",
+        "身後的黑色窗戶映著他的倒影。"
+      ]
+    },
+    "block_037_mirror": {
+      "shot": "倒影近景",
+      "move": "完全不動",
+      "lines": [
+        "他轉向暗窗，倒影回望著他，那是一張陌生的臉。",
+        "他往前一步，近到呼出的氣在玻璃上起霧。"
+      ]
+    },
+    "block_038_verdict_read": {
+      "shot": "法庭中景，只拍許法官一個人",
+      "move": "完全不動",
+      "refs": ["loc_courtroom", "char_judge_xu"],
+      "lines": [
+        "許法官站著，雙手拿著判決書，低頭宣讀。",
+        "他身後的法庭是空的，所有人都在畫面之外。",
+        "他闔上判決書，放在法檯上。"
+      ]
+    },
+    "block_039_underlines": {
+      "shot": "判決書特寫",
+      "move": "完全不動",
+      "lines": [
+        "判決書的特寫。",
+        "他的手沿著文字，一行一行劃出銀行斷線的日期。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_040_headlines": {
+      "shot": "蒙太奇",
+      "move": "完全不動",
+      "lines": [
+        "報紙的頭版一張一張拍在桌面上。",
+        "標題把他寫成司法門神的守護者。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_041_transfer_order": {
+      "shot": "桌面中景，慢慢往後拉遠",
+      "move": "緩慢往後拉遠",
+      "lines": [
+        "空著的桌面中央放著一張調職令。",
+        "桌子旁邊的地上，疊著幾個貼了膠帶的紙箱。",
+        "鏡位慢慢往後拉，露出空蕩的位子。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_042_arrest_footage": {
+      "shot": "新聞畫面",
+      "move": "完全不動",
+      "lines": [
+        "顆粒很粗的新聞畫面。",
+        "一個穿風衣的男人被兩名警員帶過機場走廊，臉部模糊。"
+      ]
+    },
+    "block_043_clipping": {
+      "shot": "新聞畫面",
+      "move": "完全不動",
+      "lines": [
+        "一張剪報和電視螢幕上的定格新聞畫面。",
+        "畫面角落燒著時間戳記。"
+      ],
+      "no_wardrobe": true
+    },
+    "block_044_branch_office": {
+      "shot": "全景",
+      "move": "完全不動",
+      "lines": [
+        "傍晚，偏遠分院的小辦公室。",
+        "許法官坐在一張空桌子後面，紙箱裝了一半。",
+        "窗外是一整片空曠的農田。"
+      ]
+    },
+    "block_045_circled_date_again": {
+      "shot": "中近景",
+      "move": "完全不動",
+      "lines": [
+        "他把舊判決書攤在膝蓋上打開。",
+        "指尖找到那個被圈起來的日期，停在那裡。"
+      ]
+    },
+    "block_046_half_laugh": {
+      "shot": "臉部中近景",
+      "move": "完全不動",
+      "lines": [
+        "他從判決書上抬起頭，笑了一半。",
+        "最後的天光落在他臉上。"
+      ]
+    },
+    "block_047_wet_eyes": {
+      "shot": "眼睛特寫",
+      "move": "完全不動",
+      "lines": [
+        "他的眼睛特寫，眼角是濕的。",
+        "判決書還攤在膝蓋上。"
+      ]
+    },
+    "block_048_closes_ruling": {
+      "shot": "中景",
+      "move": "完全不動",
+      "lines": [
+        "他合上判決書，放在桌上。",
+        "房間又暗了一階。"
+      ]
+    },
+    "block_049_lit_window": {
+      "shot": "窗外全景",
+      "move": "完全不動",
+      "no_wardrobe": true,
+      "light": "整片田野只剩天邊最後一點光，小辦公室的窗戶是畫面裡唯一亮著的方塊",
+      "lines": [
+        "從屋外的田野往屋子看。",
+        "那間亮著燈的小辦公室，獨自立在黑暗的田野中間。",
+        "窗裡只看見一個坐著的人影，看不清楚臉。"
+      ]
+    }
+  }
+}
