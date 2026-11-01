@@ -120,8 +120,9 @@ export function createMcpServer() {
         "whole file. Uses the entity's reference.prompt verbatim when present; otherwise derives a " +
         "prompt from identity_features / appearance / description and says so in prompt_source. " +
         "reference.image is a FOLDER (ComfyUI names its own output files); the absolute folder is " +
-        "computed as metadata.comfyui.output_dir + reference.image, and the plates already sitting " +
-        "there are listed.",
+        "computed as metadata.comfyui.output_dir + reference.image. Every plate in it is listed newest " +
+        "first, and reference.image_path is the newest one — that is the plate to hand to r2v when an " +
+        "earlier attempt is still lying around.",
       inputSchema: {
         project_file: z.string().optional().describe("path to the project JSON (entities + blocks); use this or project"),
         project: z.any().optional().describe("inline project object; use this or project_file"),
@@ -145,6 +146,12 @@ export function createMcpServer() {
             out.reference.image_dir_source = located.source;
             out.reference.images = images;
             out.reference.image_exists = images.length > 0;
+            if (images.length > 0) {
+              // A folder may hold earlier attempts; the plate to feed r2v is the newest one.
+              out.reference.image_file = images[0];
+              out.reference.image_path = resolve(located.dir, images[0]);
+              out.reference.image_picked_by = "newest";
+            }
           }
         }
 

@@ -20,8 +20,8 @@
         },
         "reference": {
           "image": "refs/char_judge_xu",
-          "status": "to_generate",
-          "prompt": "Neutral front-facing portrait of an East Asian man in his late fifties, sharp jawline, tired observant eyes, short slicked-back black hair with silver temples, plain grey backdrop, soft key light, 16:9 crop, no text"
+          "status": "ready",
+          "prompt": "Neutral front-facing portrait of an East Asian man in his late fifties, sharp jawline, tired observant eyes, short slicked-back black hair with silver temples, plain grey backdrop, soft key light, no text"
         }
       },
       {
@@ -36,8 +36,8 @@
         },
         "reference": {
           "image": "refs/char_zhao_liting",
-          "status": "to_generate",
-          "prompt": "Neutral front-facing portrait of an East Asian man in his late sixties, silver hair combed back, deep-set calm eyes, deep lines around the mouth, dignified weathered face, plain grey backdrop, soft key light, 16:9 crop, no text"
+          "status": "ready",
+          "prompt": "Neutral front-facing portrait of an East Asian man in his late sixties, silver hair combed back, deep-set calm eyes, deep lines around the mouth, dignified weathered face, plain grey backdrop, soft key light, no text"
         }
       }
     ],
@@ -48,7 +48,7 @@
         "appearance": "Printed offshore transfer record, dense timestamp columns, one row later circled in red ink",
         "reference": {
           "image": "refs/prop_bank_statement",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Top-down photo of an offshore bank transfer record on a dark desk, dense timestamp columns, one row circled in red ink, no legible personal data, 35mm film grain"
         }
       },
@@ -58,7 +58,7 @@
         "appearance": "Blank ruling draft on ruled paper, ink still wet in places",
         "reference": {
           "image": "refs/prop_verdict_draft",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Top-down photo of a blank ruling draft on ruled paper, fountain pen resting beside it, wet ink, warm lamp light, 35mm film grain"
         }
       },
@@ -68,7 +68,7 @@
         "appearance": "Heavy official ruling on cream-colored paper, red seal at the bottom, a circled bank-outage date in the margin",
         "reference": {
           "image": "refs/prop_verdict",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Top-down photo of a heavy official court ruling on cream paper, red seal at the bottom, a circled date in the margin, 35mm film grain"
         }
       }
@@ -80,7 +80,7 @@
         "description": "Tall dark wooden bench, empty public gallery, cold overhead light, green-shaded clerk desks",
         "reference": {
           "image": "refs/loc_courtroom",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of an empty Taiwanese courtroom, tall dark wooden bench, empty public gallery, cold overhead light, green-shaded clerk desks, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -90,7 +90,7 @@
         "description": "Cluttered desk buried in case files, a single green banker's lamp casting a tight pool of light, dark windows reflecting the room.",
         "reference": {
           "image": "refs/loc_judge_office_night",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a judge's office at night, cluttered desk under a single green banker's lamp, dark windows reflecting the room, deep shadows, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -100,7 +100,7 @@
         "description": "Small bare office with half-packed cardboard boxes, a window overlooking empty farmland at dusk.",
         "reference": {
           "image": "refs/loc_remote_branch_office",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a small rural branch office at dusk, half-packed cardboard boxes, bare desk, window over empty farmland, warm fading light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -110,7 +110,7 @@
         "description": "Abstract broadcast texture: CRT scanlines, heavy grain, no legible text, no faces.",
         "reference": {
           "image": "refs/loc_news_montage",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral news-broadcast texture plate, muted CRT scanlines and heavy grain, no legible text, no faces, 16:9, 35mm film grain"
         }
       }

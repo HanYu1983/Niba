@@ -310,7 +310,27 @@ const plate = JSON.parse(
 assert.deepEqual(plate.reference.images, ["ComfyUI_00007_.png"], "picks up whatever ComfyUI named the file");
 assert.equal(plate.reference.image_exists, true);
 assert.equal(plate.reference.image_dir, PLATE_DIR);
+assert.equal(plate.reference.image_path, join(PLATE_DIR, "ComfyUI_00007_.png"), "the newest plate is the one handed out");
+assert.equal(plate.reference.image_picked_by, "newest");
 console.log("ok  entity_prompt lists the plates ComfyUI left in the folder");
+
+// A folder can hold several attempts (ComfyUI never overwrites), so the plate to feed r2v is the
+// one created last — not the first alphabetically and not the one with the biggest counter.
+const multiDir = join(OUTPUT_DIR, "refs", "char_multi");
+mkdirSync(multiDir, { recursive: true });
+for (const name of ["attempt_a.png", "attempt_b.png", "attempt_c.png"]) {
+  writeFileSync(join(multiDir, name), ""); // "attempt_c.png" is created last
+  await new Promise((r) => setTimeout(r, 40)); // birthtime has ms resolution; keep the order real
+}
+const multiProject = structuredClone(refProject);
+multiProject.entities.characters[0].reference.image = "refs/char_multi";
+const multi = JSON.parse(
+  (await client.callTool({ name: "entity_prompt", arguments: { project: multiProject, entity_id: "char_judge_xu" } })).content[0].text
+);
+assert.deepEqual(multi.reference.images, ["attempt_c.png", "attempt_b.png", "attempt_a.png"], "newest first");
+assert.equal(multi.reference.image_file, "attempt_c.png");
+assert.equal(multi.reference.image_path, join(multiDir, "attempt_c.png"));
+console.log("ok  entity_prompt hands out the newest plate when a folder holds several attempts");
 
 const relativeMeta = await client.callTool({ name: "metadata_set", arguments: { comfyui_output_dir: "refs/relative" } });
 assert.equal(relativeMeta.isError, true);

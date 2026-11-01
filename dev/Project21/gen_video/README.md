@@ -117,6 +117,10 @@ generated (or re-checked) without opening the whole file.
 - **`reference.images`** lists the image files actually sitting in that folder (newest first) and
   `image_exists` is just `images.length > 0`, so "generated but not on disk" is visible at a glance.
   A legacy `reference.image` that still points at one file falls back to its parent folder.
+- **`reference.image_path`** / **`reference.image_file`** / **`reference.image_picked_by`** — when the
+  folder is non-empty, `image_file` is the newest plate (`images[0]`) and `image_path` joins it back to
+  its absolute folder. **This is the plate to hand to r2v**: ComfyUI appends a counter on every render,
+  so "newest by creation time" is the current, best version; the older ones are stale attempts.
 - Pass `check_image: false` to skip the folder lookup; an inline `project` with no metadata has no
   base to anchor to, so the folder fields are omitted.
 - Unknown id → `isError` with `known_ids`.

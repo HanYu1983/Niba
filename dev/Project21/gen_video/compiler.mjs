@@ -17,7 +17,7 @@
  * preserved, but the referenced blocks are not merged into the prompt text.
  */
 
-export const VERSION = "0.5.0";
+export const VERSION = "0.5.1";
 
 /** Compiler-specific failure, so the MCP layer can report it without a stack dump. */
 export class CompilerError extends Error {

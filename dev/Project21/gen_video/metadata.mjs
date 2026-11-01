@@ -141,7 +141,14 @@ export function locateReference(projectFile, image) {
   return { dir: resolve(dirname(projectFile), image), source: "project", metadata_file: file };
 }
 
-/** Plate files already sitting in a reference folder, newest first. */
+/**
+ * Plate files already sitting in a reference folder, NEWEST FIRST.
+ *
+ * "Newest" means creation time (`birthtime`), because re-generating a plate overwrites nothing:
+ * ComfyUI appends a counter, so birthtime is what tells a fresh plate from an old one. Filesystems
+ * that do not expose birthtime (or report 0) fall back to mtime, which is the same thing for a
+ * file that was downloaded once and never touched.
+ */
 const IMAGE_EXT = /\.(png|jpe?g|webp|avif)$/i;
 
 export function listPlates(dir) {
@@ -154,13 +161,14 @@ export function listPlates(dir) {
   const plates = [];
   for (const entry of entries) {
     if (!entry.isFile() || !IMAGE_EXT.test(entry.name)) continue;
-    let mtime = 0;
+    let created = 0;
     try {
-      mtime = statSync(resolve(dir, entry.name)).mtimeMs;
+      const stat = statSync(resolve(dir, entry.name));
+      created = stat.birthtimeMs > 0 ? stat.birthtimeMs : stat.mtimeMs;
     } catch {
       // keep 0
     }
-    plates.push({ name: entry.name, mtime });
+    plates.push({ name: entry.name, created });
   }
-  return plates.sort((a, b) => b.mtime - a.mtime).map((p) => p.name);
+  return plates.sort((a, b) => b.created - a.created).map((p) => p.name);
 }
