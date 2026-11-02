@@ -1,0 +1,2786 @@
+{
+  "version": "1.0",
+  "stage": "plan",
+  "project_title": "New_Momotaro_Girl",
+  "source": {
+    "file": "doc/story.md",
+    "chapter": 0,
+    "chars": 5782,
+    "sha256": "08ea0d7cf0a8b7b4bbfd2e0644b61c7bff5c619152be38938f5d8087a69aff7c",
+    "eol": "lf",
+    "range": {
+      "start": 1255,
+      "end": 7037
+    }
+  },
+  "entities": {
+    "characters": [
+      {
+        "id": "char_momo",
+        "name": "桃 (Momo)",
+        "aliases": [
+          "桃",
+          "小桃",
+          "桃太娘",
+          "她"
+        ],
+        "traits": "East Asian Japanese woman, about 20, fair skin, long light-brown hair in a high ponytail tied with a red ribbon, straight bangs, large warm dark eyes, athletic slim build, light freckles, determined and open expression",
+        "first_seen": "seg_001",
+        "reference": {
+          "image": "refs/char_momo",
+          "status": "to_generate",
+          "prompt": "Neutral front-facing portrait of a young Japanese woman about twenty, fair skin, long light-brown hair in a high ponytail tied with a red ribbon, straight bangs, large warm dark eyes, athletic slim build, calm determined expression, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_shiro",
+        "name": "シロ (Shiro)",
+        "aliases": [
+          "シロ",
+          "白",
+          "柴犬",
+          "犬",
+          "狗"
+        ],
+        "traits": "Japanese Shiba Inu, tan and cream fur, compact sturdy body, pointed ears, bright intelligent eyes, curled tail, alert and loyal",
+        "first_seen": "seg_001",
+        "reference": {
+          "image": "refs/char_shiro",
+          "status": "to_generate",
+          "prompt": "Neutral full-body reference plate of a Japanese Shiba Inu with tan and cream fur, pointed ears, bright intelligent eyes, curled tail, standing alert, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_gon",
+        "name": "ゴン (Gon)",
+        "aliases": [
+          "ゴン",
+          "猴",
+          "獼猴",
+          "猴子"
+        ],
+        "traits": "Japanese macaque, reddish-brown fur, pale face, expressive dark eyes, lean wiry body, mischievous and quick",
+        "first_seen": "seg_004",
+        "reference": {
+          "image": "refs/char_gon",
+          "status": "to_generate",
+          "prompt": "Neutral full-body reference plate of a Japanese macaque with reddish-brown fur and a pale face, expressive dark eyes, lean wiry body, curious alert posture, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_peach",
+        "name": "ピーチ (Peach the pheasant)",
+        "aliases": [
+          "ピーチ",
+          "雉",
+          "雉雞",
+          "桃鳥"
+        ],
+        "traits": "Japanese green pheasant, iridescent green and copper plumage, long sweeping tail, red face wattles, bright watchful eye",
+        "first_seen": "seg_004",
+        "reference": {
+          "image": "refs/char_peach",
+          "status": "to_generate",
+          "prompt": "Neutral full-body reference plate of a Japanese green pheasant with iridescent green and copper plumage, long sweeping tail, red face wattles, bright watchful eye, perched upright, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_grandma",
+        "name": "おばあさん (Grandma)",
+        "aliases": [
+          "おばあさん",
+          "婆婆",
+          "奶奶"
+        ],
+        "traits": "Elderly Japanese farm woman, late seventies, silver hair in a low bun, deep kind wrinkles, small stooped frame, weathered hands, gentle steady eyes",
+        "first_seen": "seg_006",
+        "reference": {
+          "image": "refs/char_grandma",
+          "status": "to_generate",
+          "prompt": "Neutral front-facing portrait of an elderly Japanese farm woman in her late seventies, silver hair in a low bun, deep kind wrinkles, weathered hands, small stooped frame, gentle steady eyes, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_kiha",
+        "name": "喜八 (Kiha)",
+        "aliases": [
+          "喜八",
+          "村長",
+          "老漁夫",
+          "鬍髯漢子"
+        ],
+        "traits": "Old Japanese fisherman and village chief, late sixties, wind-burnt face, grey stubble, matted dark hair, broad work-hardened hands, missing teeth, wary deep-set eyes",
+        "first_seen": "seg_016",
+        "reference": {
+          "image": "refs/char_kiha",
+          "status": "to_generate",
+          "prompt": "Neutral front-facing portrait of an old Japanese fisherman in his late sixties, wind-burnt weathered face, grey stubble, matted dark hair, broad work-hardened hands, wary deep-set eyes, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_genzo",
+        "name": "源蔵 (Genzo)",
+        "aliases": [
+          "源蔵",
+          "上老",
+          "老者",
+          "老人"
+        ],
+        "traits": "Old island elder, late seventies, long white hair and beard, gaunt frame, deep scars and calluses on his hands, hollow but proud eyes",
+        "first_seen": "seg_029",
+        "reference": {
+          "image": "refs/char_genzo",
+          "status": "to_generate",
+          "prompt": "Neutral front-facing portrait of an old island elder in his late seventies, long white hair and beard, gaunt weathered face, deep scars and calluses, hollow but proud eyes, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_oni_king",
+        "name": "鬼王 (Oni King)",
+        "aliases": [
+          "鬼王",
+          "大鬼",
+          "巨大鬼"
+        ],
+        "traits": "Colossal oni, deep red skin, two black curved horns, burning red eyes, heavy brow and tusks, mountain-like muscular build",
+        "first_seen": "seg_033",
+        "reference": {
+          "image": "refs/char_oni_king",
+          "status": "to_generate",
+          "prompt": "Neutral full-body reference plate of a colossal oni king, deep red skin, two black curved horns, burning red eyes, heavy brow and tusks, mountain-like muscular build, standing still, plain dark-grey backdrop, dramatic low key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_oni_general",
+        "name": "鬼將 (Oni General)",
+        "aliases": [
+          "鬼將",
+          "鬼武士",
+          "守門鬼",
+          "巨漢"
+        ],
+        "traits": "Horned oni warrior, red skin, one broken tusk, scarred face, pillar-thick arms, massive armoured build",
+        "first_seen": "seg_025",
+        "reference": {
+          "image": "refs/char_oni_general",
+          "status": "to_generate",
+          "prompt": "Neutral full-body reference plate of a horned oni warrior, red skin, one broken tusk, scarred face, pillar-thick arms, massive armoured build, standing still, plain dark-grey backdrop, dramatic low key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_oni_cub",
+        "name": "猴鬼小卒 (Oni cub)",
+        "aliases": [
+          "猴鬼",
+          "小卒",
+          "鬼兵"
+        ],
+        "traits": "Small monkey-like oni, red skin and fur, short horns, round yellow eyes, wiry body, nervous bravado",
+        "first_seen": "seg_024",
+        "reference": {
+          "image": "refs/char_oni_cub",
+          "status": "to_generate",
+          "prompt": "Neutral full-body reference plate of a small monkey-like oni, red skin and fur, short horns, round yellow eyes, wiry body, nervous bravado, standing with a spear, plain dark-grey backdrop, dramatic low key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_oni_soldier",
+        "name": "紅皮鬼卒 (Oni soldier)",
+        "aliases": [
+          "鬼卒",
+          "紅皮鬼",
+          "鬼兵"
+        ],
+        "traits": "Red-skinned oni soldier, squat muscular body, short horns, tusks, dark leather and iron scrap armour",
+        "first_seen": "seg_031",
+        "reference": {
+          "image": "refs/char_oni_soldier",
+          "status": "to_generate",
+          "prompt": "Neutral full-body reference plate of a red-skinned oni soldier, squat muscular body, short horns, tusks, dark leather and iron scrap armour, standing with a torch, plain dark-grey backdrop, dramatic low key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_akita",
+        "name": "秋田犬 (Akita)",
+        "aliases": [
+          "秋田犬",
+          "大狗",
+          "狗"
+        ],
+        "traits": "Large Japanese Akita, thick brown and white coat, broad head, dark small eyes, heavy build",
+        "first_seen": "seg_036",
+        "reference": {
+          "image": "refs/char_akita",
+          "status": "to_generate",
+          "prompt": "Neutral full-body reference plate of a large Japanese Akita with thick brown and white coat, broad head, dark small eyes, heavy build, sitting calmly, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_villager",
+        "name": "村民 (Villager)",
+        "aliases": [
+          "村民",
+          "村民甲",
+          "岸上的人"
+        ],
+        "traits": "Middle-aged Japanese fisherman, weathered round face, short black hair, stubble, stocky build, work clothes",
+        "first_seen": "seg_017",
+        "reference": {
+          "image": "refs/char_villager",
+          "status": "to_generate",
+          "prompt": "Neutral front-facing portrait of a middle-aged Japanese fisherman, weathered round face, short black hair, stubble, stocky build, work clothes, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
+        }
+      }
+    ],
+    "props": [
+      {
+        "id": "prop_travel_orb",
+        "name": "旅字白球",
+        "aliases": [
+          "白球",
+          "旅之球",
+          "球"
+        ],
+        "traits": "Smooth white lacquered ball, one large black brush character 旅, slight wear",
+        "first_seen": "seg_004",
+        "reference": {
+          "image": "refs/prop_travel_orb",
+          "status": "to_generate",
+          "prompt": "Top-down product plate of a smooth white lacquered ball with one large black brush character 旅, slight wear, warm daylight, 35mm film grain, no people, no other text"
+        }
+      },
+      {
+        "id": "prop_bundle",
+        "name": "桃紋行囊",
+        "aliases": [
+          "行囊",
+          "行李",
+          "旅の記録",
+          "包袱"
+        ],
+        "traits": "Large cloth bundle in peach-print fabric, lashed to a bamboo frame, small wooden writing box tucked inside",
+        "first_seen": "seg_005",
+        "reference": {
+          "image": "refs/prop_bundle",
+          "status": "to_generate",
+          "prompt": "Product plate of a large peach-print cloth travel bundle lashed to a bamboo frame, small wooden writing box tucked in, warm daylight, 35mm film grain, no people, no text"
+        }
+      },
+      {
+        "id": "prop_gourd",
+        "name": "大葫蘆",
+        "aliases": [
+          "葫蘆",
+          "水葫蘆"
+        ],
+        "traits": "Large brown dried gourd, braided cord, stopper, water beading on the rim",
+        "first_seen": "seg_009",
+        "reference": {
+          "image": "refs/prop_gourd",
+          "status": "to_generate",
+          "prompt": "Product plate of a large brown dried gourd water flask with a braided cord and stopper, water beading on the rim, warm daylight, 35mm film grain, no people, no text"
+        }
+      },
+      {
+        "id": "prop_map",
+        "name": "鬼ヶ島地圖",
+        "aliases": [
+          "地圖",
+          "舊地圖",
+          "海圖"
+        ],
+        "traits": "Old parchment map, hand-inked coastlines, one island marked with a red cross and 鬼ヶ島",
+        "first_seen": "seg_011",
+        "reference": {
+          "image": "refs/prop_map",
+          "status": "to_generate",
+          "prompt": "Top-down plate of an old parchment sea map with hand-inked coastlines, one island marked with a red cross and the characters 鬼ヶ島, worn edges, warm lamp light, 35mm film grain, no people"
+        }
+      },
+      {
+        "id": "prop_travel_guide",
+        "name": "旅の手引",
+        "aliases": [
+          "旅の手引",
+          "旅行指南",
+          "書"
+        ],
+        "traits": "Small worn Japanese travel guide, cloth cover, brush title 旅の手引, loose pages",
+        "first_seen": "seg_011",
+        "reference": {
+          "image": "refs/prop_travel_guide",
+          "status": "to_generate",
+          "prompt": "Top-down plate of a small worn Japanese travel guide with a cloth cover and the brush title 旅の手引, loose pages, warm daylight, 35mm film grain, no people"
+        }
+      },
+      {
+        "id": "prop_oni_banner",
+        "name": "染血鬼面旗",
+        "aliases": [
+          "鬼旗",
+          "鬼面旗",
+          "染血的旗"
+        ],
+        "traits": "Torn dark cloth banner, embroidered snarling red oni face, black horns, dark dried blood along the edges",
+        "first_seen": "seg_016",
+        "reference": {
+          "image": "refs/prop_oni_banner",
+          "status": "to_generate",
+          "prompt": "Product plate of a torn dark cloth war banner embroidered with a snarling red oni face and black horns, dark dried blood along the edges, firelight, 35mm film grain, no people, no other text"
+        }
+      },
+      {
+        "id": "prop_oni_sail",
+        "name": "鬼面船帆",
+        "aliases": [
+          "船帆",
+          "鬼面帆",
+          "帆"
+        ],
+        "traits": "White canvas sail, huge red oni face painted across it, rope seams, wind-filled",
+        "first_seen": "seg_017",
+        "reference": {
+          "image": "refs/prop_oni_sail",
+          "status": "to_generate",
+          "prompt": "Product plate of a white canvas boat sail with a huge red oni face painted across it, rope seams, wind-filled, bright daylight, 35mm film grain, no people, no other text"
+        }
+      },
+      {
+        "id": "prop_wooden_box",
+        "name": "桃字木匣",
+        "aliases": [
+          "木匣",
+          "匣子",
+          "盒子"
+        ],
+        "traits": "Small dark wooden box, carved character 桃 on the lid, red tassel, worn brass clasp",
+        "first_seen": "seg_027",
+        "reference": {
+          "image": "refs/prop_wooden_box",
+          "status": "to_generate",
+          "prompt": "Top-down product plate of a small dark wooden box with the carved character 桃 on the lid, red tassel, worn brass clasp, firelight, 35mm film grain, no people"
+        }
+      },
+      {
+        "id": "prop_cloth_house",
+        "name": "桃樹舊屋畫布",
+        "aliases": [
+          "畫布",
+          "布",
+          "舊屋圖"
+        ],
+        "traits": "Small painted cloth, a thatched house under a peach tree, faded inks, creased folds",
+        "first_seen": "seg_027",
+        "reference": {
+          "image": "refs/prop_cloth_house",
+          "status": "to_generate",
+          "prompt": "Top-down plate of a small painted cloth showing a thatched house under a peach tree, faded inks, creased folds, warm lantern light, 35mm film grain, no people, no text"
+        }
+      },
+      {
+        "id": "prop_katana",
+        "name": "桃的刀",
+        "aliases": [
+          "刀",
+          "武士刀",
+          "katana"
+        ],
+        "traits": "Japanese katana, worn black scabbard, red cord wrap, plain iron guard, nicked edge",
+        "first_seen": "seg_003",
+        "reference": {
+          "image": "refs/prop_katana",
+          "status": "to_generate",
+          "prompt": "Product plate of a Japanese katana with a worn black scabbard, red cord wrap, plain iron guard, nicked edge, lying on dark wood, 35mm film grain, no people, no text"
+        }
+      },
+      {
+        "id": "prop_king_banner",
+        "name": "鬼王大幡",
+        "aliases": [
+          "黑幡",
+          "鬼王幡",
+          "大幡"
+        ],
+        "traits": "Tall black war banner, two white brush characters 鬼王, ragged lower edge, soot-stained pole",
+        "first_seen": "seg_035",
+        "reference": {
+          "image": "refs/prop_king_banner",
+          "status": "to_generate",
+          "prompt": "Product plate of a tall black war banner with two white brush characters 鬼王, ragged lower edge, soot-stained pole, torchlight, 35mm film grain, no people"
+        }
+      },
+      {
+        "id": "prop_greatsword",
+        "name": "鬼王巨劍",
+        "aliases": [
+          "巨劍",
+          "大劍",
+          "鬼王之劍"
+        ],
+        "traits": "Massive black iron greatsword, chipped edge, horned guard, longer than a man",
+        "first_seen": "seg_033",
+        "reference": {
+          "image": "refs/prop_greatsword",
+          "status": "to_generate",
+          "prompt": "Product plate of a massive black iron greatsword with a chipped edge and horned guard, longer than a man, resting against stone, torchlight, 35mm film grain, no people, no text"
+        }
+      },
+      {
+        "id": "prop_spear",
+        "name": "鬼卒長矛",
+        "aliases": [
+          "長矛",
+          "矛",
+          "槍"
+        ],
+        "traits": "Crude iron-tipped spear, dark wooden shaft, leather grip, bent tip",
+        "first_seen": "seg_024",
+        "reference": {
+          "image": "refs/prop_spear",
+          "status": "to_generate",
+          "prompt": "Product plate of a crude iron-tipped spear with a dark wooden shaft, leather grip, bent tip, morning light, 35mm film grain, no people, no text"
+        }
+      },
+      {
+        "id": "prop_basket",
+        "name": "竹籃米糕",
+        "aliases": [
+          "竹籃",
+          "米糕",
+          "飯糰",
+          "籃子"
+        ],
+        "traits": "Woven bamboo basket, rice cakes wrapped in green leaves, steam, coarse cloth cover",
+        "first_seen": "seg_009",
+        "reference": {
+          "image": "refs/prop_basket",
+          "status": "to_generate",
+          "prompt": "Top-down plate of a woven bamboo basket with rice cakes wrapped in green leaves, faint steam, coarse cloth cover, mossy stone, 35mm film grain, no people, no text"
+        }
+      },
+      {
+        "id": "prop_torch",
+        "name": "火把",
+        "aliases": [
+          "火把",
+          "火炬",
+          "松明"
+        ],
+        "traits": "Pitch-soaked wooden torch, iron basket, orange flame, smoke trail",
+        "first_seen": "seg_021",
+        "reference": {
+          "image": "refs/prop_torch",
+          "status": "to_generate",
+          "prompt": "Product plate of a pitch-soaked wooden torch with an iron basket, orange flame and smoke trail, dark stone background, 35mm film grain, no people, no text"
+        }
+      },
+      {
+        "id": "prop_cards",
+        "name": "桃花牌",
+        "aliases": [
+          "牌",
+          "卡牌",
+          "桃花卡"
+        ],
+        "traits": "Hand-sized playing cards, cream paper, peach-blossom emblem, worn corners",
+        "first_seen": "seg_015",
+        "reference": {
+          "image": "refs/prop_cards",
+          "status": "to_generate",
+          "prompt": "Top-down plate of hand-sized playing cards with a peach-blossom emblem on cream paper, worn corners, lantern light, 35mm film grain, no people, no text"
+        }
+      },
+      {
+        "id": "prop_fish",
+        "name": "炭火烤魚",
+        "aliases": [
+          "烤魚",
+          "魚",
+          "地魚の炭火焼"
+        ],
+        "traits": "Whole grilled fish on a skewer, charred skin, coarse salt, small ceramic plate",
+        "first_seen": "seg_014",
+        "reference": {
+          "image": "refs/prop_fish",
+          "status": "to_generate",
+          "prompt": "Top-down plate of a whole grilled fish on a skewer with charred skin and coarse salt on a small ceramic plate, lantern light, 35mm film grain, no people, no text"
+        }
+      }
+    ],
+    "locations": [
+      {
+        "id": "loc_dock",
+        "name": "木碼頭",
+        "aliases": [
+          "碼頭",
+          "船艔",
+          "木欄邊"
+        ],
+        "traits": "Weathered wooden dock, pilings, barrels, a tattered peach flag, bright sea",
+        "first_seen": "seg_001",
+        "reference": {
+          "image": "refs/loc_dock",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a weathered wooden dock in a 90s Japanese seaside village, pilings, barrels, a tattered peach flag, sparkling blue sea, warm sunlight, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_veranda",
+        "name": "婆婆家木廊",
+        "aliases": [
+          "木廊",
+          "簷廊",
+          "走廊"
+        ],
+        "traits": "Old wooden veranda, sun-warmed slats, thatched house behind, mountain view",
+        "first_seen": "seg_005",
+        "reference": {
+          "image": "refs/loc_veranda",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of an old Japanese farmhouse wooden veranda, sun-warmed slats, thatched roof behind, green mountains beyond, late afternoon light, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_village_gate",
+        "name": "村口",
+        "aliases": [
+          "村口",
+          "門口",
+          "山路口"
+        ],
+        "traits": "Packed dirt road, stone steps, thatched roofs, a tall 桃太郎 banner, distant mountains",
+        "first_seen": "seg_006",
+        "reference": {
+          "image": "refs/loc_village_gate",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a rural Japanese village entrance, packed dirt road, stone steps, thatched roofs, a tall 桃太郎 banner on a wooden pole, distant green mountains, golden hour, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_shrine",
+        "name": "神社石階",
+        "aliases": [
+          "神社",
+          "石階",
+          "石沿"
+        ],
+        "traits": "Rustic shrine, mossy stone ledge, stone water spout and basin, wooden banner frame, forest",
+        "first_seen": "seg_009",
+        "reference": {
+          "image": "refs/loc_shrine",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a rustic Japanese shrine, mossy stone ledge, stone water spout and basin, wooden banner frame, deep green forest, midday light, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_stream",
+        "name": "山溪",
+        "aliases": [
+          "溪谷",
+          "溪邊",
+          "山溪"
+        ],
+        "traits": "Shallow clear mountain stream, mossy boulders, small waterfall, sun-dappled forest",
+        "first_seen": "seg_010",
+        "reference": {
+          "image": "refs/loc_stream",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a shallow clear mountain stream, mossy boulders, a small waterfall, sun-dappled forest, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_inn_veranda",
+        "name": "客棧簷廊",
+        "aliases": [
+          "客棧",
+          "簷廊",
+          "旅館廊下"
+        ],
+        "traits": "Low inn veranda, worn planks, open sea view, hanging travel banners",
+        "first_seen": "seg_011",
+        "reference": {
+          "image": "refs/loc_inn_veranda",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a low Japanese inn veranda, worn wooden planks, open view of a blue sea, hanging travel banners, hard sunlight, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_mountain_trail",
+        "name": "山徑",
+        "aliases": [
+          "山徑",
+          "山路",
+          "路標"
+        ],
+        "traits": "Rocky mountain trail above the sea, weathered signpost, wind-bent grass, distant islands",
+        "first_seen": "seg_008",
+        "reference": {
+          "image": "refs/loc_mountain_trail",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a rocky Japanese mountain trail above a blue sea, weathered wooden signpost, wind-bent grass, distant islands, bright daylight, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_onsen",
+        "name": "桃太郎の湯",
+        "aliases": [
+          "溫泉",
+          "露天溫泉",
+          "浴池"
+        ],
+        "traits": "Rustic outdoor hot spring, steam, wooden bathhouse beams, stone pool edge, forest",
+        "first_seen": "seg_013",
+        "reference": {
+          "image": "refs/loc_onsen",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a rustic Japanese outdoor hot spring, rising steam, wooden bathhouse beams, stone pool edge, forest behind, soft afternoon light, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_inn_night",
+        "name": "旅館夜宴",
+        "aliases": [
+          "旅館",
+          "夜宴",
+          "飯桌"
+        ],
+        "traits": "Lantern-lit inn dining room, low table, grilled fish, ceramic plates, paper screens",
+        "first_seen": "seg_014",
+        "reference": {
+          "image": "refs/loc_inn_night",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a lantern-lit Japanese inn dining room at night, low table with grilled fish and ceramic plates, paper screens, warm amber light, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_inn_room",
+        "name": "客房榻榻米",
+        "aliases": [
+          "客房",
+          "榻榻米",
+          "房間"
+        ],
+        "traits": "Tatami bedroom, futon, low lantern, peach-print cards, paper walls",
+        "first_seen": "seg_015",
+        "reference": {
+          "image": "refs/loc_inn_room",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a Japanese tatami bedroom at night, futon, low paper lantern, scattered peach-print cards, paper walls, warm amber light, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_warehouse",
+        "name": "村長倉房",
+        "aliases": [
+          "倉房",
+          "倉庫",
+          "喜八家"
+        ],
+        "traits": "Dark storehouse, brazier fire, hanging scroll 鬼ヶ島, old beams, long shadows",
+        "first_seen": "seg_016",
+        "reference": {
+          "image": "refs/loc_warehouse",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a dark Japanese storehouse at night, brazier fire, hanging scroll marked 鬼ヶ島, old wooden beams, long shadows, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_harbor",
+        "name": "出航港口",
+        "aliases": [
+          "港口",
+          "岸邊",
+          "碼頭"
+        ],
+        "traits": "Crowded wooden harbor, small boats, paper curtain bunting 鬼ヶ島へ出発, white sail, bright sun",
+        "first_seen": "seg_017",
+        "reference": {
+          "image": "refs/loc_harbor",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a crowded Japanese fishing harbor, wooden boats, paper curtain bunting reading 鬼ヶ島へ出発, a white sail, bright hard sunlight, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_sea",
+        "name": "海上",
+        "aliases": [
+          "海",
+          "海面",
+          "船尾"
+        ],
+        "traits": "Open choppy sea, wooden boat deck and rail, skull-shaped mountain and smoking fortress ahead",
+        "first_seen": "seg_018",
+        "reference": {
+          "image": "refs/loc_sea",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of open choppy sea from a wooden boat deck, a skull-shaped mountain with a dark smoking fortress on the horizon, bright hard sunlight, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_jungle_ruins",
+        "name": "叢林遺跡",
+        "aliases": [
+          "叢林",
+          "遺跡",
+          "石柱"
+        ],
+        "traits": "Jungle ruins, fallen stone pillars, vine-wrapped corridor, glowing red footprints, a red-corded skull",
+        "first_seen": "seg_019",
+        "reference": {
+          "image": "refs/loc_jungle_ruins",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of jungle ruins with fallen stone pillars, vine-wrapped corridor, faint glowing red footprints in the dirt, a red-corded skull in the foreground, dappled light, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_spiked_gate",
+        "name": "荊棘木門",
+        "aliases": [
+          "木門",
+          "尖樁門",
+          "鬼門"
+        ],
+        "traits": "Massive wooden gate studded with sharp spikes, black oni banner, moss, dusty light shafts",
+        "first_seen": "seg_020",
+        "reference": {
+          "image": "refs/loc_spiked_gate",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a massive wooden gate studded with sharp spikes, black oni banner above, moss-covered walls, dusty shafts of light, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_fortress_pillars",
+        "name": "鬼城柱廊（夜）",
+        "aliases": [
+          "鬼城",
+          "柱廊",
+          "城內"
+        ],
+        "traits": "Night inside an oni fortress, huge wooden pillars, torchlight, rafters, deep shadow",
+        "first_seen": "seg_021",
+        "reference": {
+          "image": "refs/loc_fortress_pillars",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of the interior of an oni fortress at night, huge wooden pillars, torchlight, heavy rafters, deep shadow, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_stone_wall",
+        "name": "鬼城石牆",
+        "aliases": [
+          "石牆",
+          "城牆",
+          "攀牆"
+        ],
+        "traits": "Steep ancient stone fortress wall, cracks, vines, pre-dawn mist, forest below",
+        "first_seen": "seg_022",
+        "reference": {
+          "image": "refs/loc_stone_wall",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a steep ancient stone fortress wall with cracks and vines, pre-dawn mist, dark forest below, cold blue light, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_bridge",
+        "name": "箭樓木橋",
+        "aliases": [
+          "木橋",
+          "橋",
+          "箭樓"
+        ],
+        "traits": "Narrow wooden bridge between watchtowers, rope rails, deep drop, banner shadows",
+        "first_seen": "seg_023",
+        "reference": {
+          "image": "refs/loc_bridge",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a narrow wooden bridge between two watchtowers, rope rails, deep drop below, hanging banner shadows, early light, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_wall_base",
+        "name": "城牆腳",
+        "aliases": [
+          "牆根",
+          "城牆下",
+          "監視塔"
+        ],
+        "traits": "Fortress wall base, watchtower above, packed earth, morning light, spear racks",
+        "first_seen": "seg_024",
+        "reference": {
+          "image": "refs/loc_wall_base",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a fortress wall base with a watchtower above, packed earth, spear racks, morning light, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_corner_gate",
+        "name": "角門",
+        "aliases": [
+          "角門",
+          "側門",
+          "第一戰"
+        ],
+        "traits": "Heavy corner gate, packed-earth yard, dappled forest light, oni banner",
+        "first_seen": "seg_025",
+        "reference": {
+          "image": "refs/loc_corner_gate",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a heavy wooden corner gate in an oni fortress, packed-earth yard, dappled forest light, an oni banner, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_gate_frame",
+        "name": "城門門框",
+        "aliases": [
+          "門框",
+          "城門",
+          "橫木"
+        ],
+        "traits": "Massive gate frame and crossbar, gap of torchlit corridor beyond, battle smoke",
+        "first_seen": "seg_026",
+        "reference": {
+          "image": "refs/loc_gate_frame",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a massive wooden gate frame and crossbar, a narrow gap of torchlit corridor beyond, battle smoke, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_corridor",
+        "name": "鬼城長廊",
+        "aliases": [
+          "長廊",
+          "走廊",
+          "通道"
+        ],
+        "traits": "Dark stone corridor, blood-streaked stone lantern, torch brackets, distant hall glow",
+        "first_seen": "seg_027",
+        "reference": {
+          "image": "refs/loc_corridor",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a dark stone fortress corridor, a blood-streaked stone lantern, torch brackets, distant hall glow, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_broken_tower",
+        "name": "殘塔",
+        "aliases": [
+          "殘塔",
+          "塔",
+          "高處"
+        ],
+        "traits": "Broken fortress tower at night, charred post, view of the burning oni king hall above",
+        "first_seen": "seg_028",
+        "reference": {
+          "image": "refs/loc_broken_tower",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a broken fortress tower at night, charred wooden post, view of a burning hall at the fortress peak, cold wind, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_dungeon",
+        "name": "天牢",
+        "aliases": [
+          "天牢",
+          "牢房",
+          "牢門"
+        ],
+        "traits": "Dungeon of wooden bars, mud floor, torchlight, stone walls, chains",
+        "first_seen": "seg_029",
+        "reference": {
+          "image": "refs/loc_dungeon",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a fortress dungeon with wooden bars, mud floor, torchlight, stone walls, hanging chains, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_passage",
+        "name": "突圍通道",
+        "aliases": [
+          "通道",
+          "走道",
+          "大殿入口"
+        ],
+        "traits": "Long torch-lit stone passage, wooden beams, dust, distant hall entrance",
+        "first_seen": "seg_030",
+        "reference": {
+          "image": "refs/loc_passage",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a long torch-lit stone passage inside a fortress, wooden beams, dust in the air, a distant hall entrance, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_great_hall",
+        "name": "鬼王殿",
+        "aliases": [
+          "大殿",
+          "鬼王殿",
+          "王座廳"
+        ],
+        "traits": "Vast vaulted hall, black timbers, torch sconces, semicircle of oni warriors, throne at the far end",
+        "first_seen": "seg_031",
+        "reference": {
+          "image": "refs/loc_great_hall",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a vast vaulted oni king's hall, black timbers, torch sconces, a semicircle of empty armoured stands, a throne at the far end, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_throne_dais",
+        "name": "王座台階",
+        "aliases": [
+          "王座",
+          "台階",
+          "高台"
+        ],
+        "traits": "High stone throne dais, black iron throne, burning braziers, horned silhouettes",
+        "first_seen": "seg_033",
+        "reference": {
+          "image": "refs/loc_throne_dais",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a high stone throne dais with a black iron throne, burning braziers, horned silhouettes carved into the wall, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_courtyard_dawn",
+        "name": "破城庭院（黎明）",
+        "aliases": [
+          "庭院",
+          "戰後",
+          "廢墟"
+        ],
+        "traits": "Burnt fortress courtyard at dawn, embers, broken walls, grey sky, distant sea",
+        "first_seen": "seg_036",
+        "reference": {
+          "image": "refs/loc_courtyard_dawn",
+          "status": "to_generate",
+          "prompt": "Wide establishing plate of a burnt fortress courtyard at dawn, glowing embers, broken walls, grey sky, a distant strip of sea, 35mm film grain, 16:9, no people, no text"
+        }
+      },
+      {
+        "id": "loc_endcard",
+        "name": "片尾字卡",
+        "aliases": [
+          "字卡",
+          "片尾",
+          "標題卡"
+        ],
+        "traits": "Abstract 90s title card, black background, projector grain, brush calligraphy",
+        "first_seen": "seg_038",
+        "reference": {
+          "image": "refs/loc_endcard",
+          "status": "to_generate",
+          "prompt": "Abstract 90s Japanese film title card, deep black background, warm projector grain and faint dust, empty space for brush calligraphy, no text, 16:9"
+        }
+      }
+    ]
+  },
+  "segments": [
+    {
+      "id": "seg_001",
+      "order": 1,
+      "source_start": 1255,
+      "source_end": 1480,
+      "source": "【圖 01 — 片頭預告】\n畫面來回晃動，鏡頭外有人喊著「還沒收工」。桃坐在木欄邊，馬尾鬆了，緞帶仍牢牢繫著。她嘴裡含著一口飯糰，對著鏡頭微微瞇起眼——有點累，但藏不住笑意。\n\n> 桃：（嚼嚼）「鬼退治のあとで……就是說，打完鬼以後囉。」\n> 桃：（歎口氣，彎腰）「勝ったけど、ちょっと疲れた。（贏是贏了，可是有點累了。）」\n> 桃：當鏡頭又湊近——「まだ撮るの？（還在拍嗎？）」她作勢躲開，卻又笑著回頭，指了指螢幕：\n> 桃：「また、どこかへ♡」\n",
+      "kind": "dialogue",
+      "split_reason": "chapter_start",
+      "location_ref": "loc_dock",
+      "character_refs": [
+        "char_momo",
+        "char_shiro"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_dock",
+          "note": "木碼頭 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "片頭：桃坐在木欄邊吃飯糰，柴犬把鼻子湊到鏡頭前；她對著鏡頭說話，疲憊但滿足。",
+      "visual_context": "手持近景，暖色黃昏光，桃的馬尾鬆了但紅緞帶仍繫著，柴犬佔左前景。",
+      "continuity": "建立桃的直接對鏡頭語氣與「拍片」框架，片尾會回到同一顆鏡頭。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「鬼退治のあとで……就是說，打完鬼以後囉。」\n「勝ったけど、ちょっと疲れた。」\n「まだ撮るの？」\n「また、どこかへ♡」",
+      "char_count": 39,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 12,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_002",
+      "order": 2,
+      "source_start": 1480,
+      "source_end": 1523,
+      "source": "> 旁白（畫外）：**「新たな冒険は、まだ終わっていない——『新·桃太娘』。」**\n\n",
+      "kind": "narration",
+      "split_reason": "voice_change",
+      "location_ref": "loc_dock",
+      "character_refs": [
+        "char_momo"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_dock",
+          "note": "木碼頭 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "畫外旁白把片頭訪談收束成片名與主視覺。",
+      "visual_context": "畫面由木欄邊溶接成 90s 復古海報，桃側身按刀，書法標題在背後。",
+      "continuity": "從「拍片現場」轉成「電影海報」，宣告故事開始。",
+      "voice_intent": "narrator",
+      "spoken_text": "「新たな冒険は、まだ終わっていない——『新·桃太娘』。」",
+      "char_count": 19,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_001",
+          "why": "片頭訪談直接變成海報標語",
+          "manifestation": "海報上以書法寫出的「鬼退治のあとで。」字樣"
+        }
+      ]
+    },
+    {
+      "id": "seg_003",
+      "order": 3,
+      "source_start": 1523,
+      "source_end": 1690,
+      "source": "【圖 02 — 主視覺海報】\n鏡頭拉遠，化為一張 90s 復古風格的海報：桃側身而立，眼神堅定，手按腰間刀柄：「桃太郎」三個字以書法落在她背後。影像標題——**「新·桃太娘（Shin Momotarou Musume）」**。\n\n---\n\n### 第一幕｜啟程（圖 03–14）\n\n#### 第一場·桃樹下的女孩（圖 03–07）\n\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_dock",
+      "character_refs": [
+        "char_momo"
+      ],
+      "prop_refs": [
+        "prop_katana"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_dock",
+          "note": "木碼頭 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "主視覺海報定格，鏡頭緩推，確立桃的英雄形象。",
+      "visual_context": "海報細節：眼神、刀柄、桃紋、書法標題；印刷顆粒與投影機閃爍。",
+      "continuity": "把片頭的手持感收成正式主視覺，情緒由疲憊轉為堅定。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_002",
+          "why": "延續旁白鎖定的海報",
+          "manifestation": "同一張主視覺海報的細節特寫"
+        }
+      ]
+    },
+    {
+      "id": "seg_004",
+      "order": 4,
+      "source_start": 1690,
+      "source_end": 1858,
+      "source": "【圖 03 — 碼頭／伙伴齊聚】\n晴空下的樹影蓋在木碼頭上。桃盤腿坐在碼頭邊，水裡映著她手中一顆圓白球——球上寫著大大的「旅」字。\n\n> 犬（シロ）湊到她身邊，吐著舌頭。\n> 桃：「大家都到齊了吧？」\n> ゴン（從她頭後探出來）：『……那個球，可以寫「食」嗎。』\n> 桃：「寫著『旅』才有意義嘛。走吧——我們的旅行，才不是為了吃。」\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_dock",
+      "character_refs": [
+        "char_momo",
+        "char_shiro",
+        "char_gon",
+        "char_peach"
+      ],
+      "prop_refs": [
+        "prop_travel_orb"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_dock",
+          "note": "木碼頭 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_peach",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "晴天木碼頭，桃與犬、猿、雉齊聚；她手上的白球寫著「旅」。",
+      "visual_context": "桃盤腿坐在碼頭邊，柴犬吐舌，猴從她頭後探出，雉停在肩上；背景有酒桶、破桃旗與閃亮海面。",
+      "continuity": "建立四人（加雉）旅行小隊的構圖與各自位置。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「大家都到齊了吧？」\n『……那個球，可以寫「食」嗎。』\n「寫著『旅』才有意義嘛。走吧——我們的旅行，才不是為了吃。」",
+      "char_count": 36,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 16,
+      "render_blocks": 3,
+      "references": []
+    },
+    {
+      "id": "seg_005",
+      "order": 5,
+      "source_start": 1858,
+      "source_end": 1954,
+      "source": "【圖 04 — 出發前夜·伸展】\n相同午後，她靠坐在木廊上，右手高舉過頭，舒舒服服地伸了個懶腰；緞帶隨著動作晃動，像在對天空打招呼。\n\n> 桃：「明天開始，就要去很多很多沒見過的地方了。」\n\n",
+      "kind": "dialogue",
+      "split_reason": "paragraph_break",
+      "location_ref": "loc_veranda",
+      "character_refs": [
+        "char_momo"
+      ],
+      "prop_refs": [
+        "prop_bundle"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_veranda",
+          "note": "婆婆家木廊 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "出發前夜，桃在木廊上伸展，說出對未知地方的期待。",
+      "visual_context": "午後木廊，桃一手高舉過頭伸懶腰，紅緞帶晃動，行囊在旁。",
+      "continuity": "從碼頭的熱鬧轉為獨處的柔軟，補上她「想去看世界」的動機。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「明天開始，就要去很多很多沒見過的地方了。」",
+      "char_count": 18,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_006",
+      "order": 6,
+      "source_start": 1954,
+      "source_end": 2107,
+      "source": "【圖 05 — 拜別婆婆】\n村口，老婦人身後的木柱掛著一幅「桃太郎」旗。桃單膝跪地，收斂了平日的調皮，低著頭。\n\n> 桃：「婆婆……那句話，我一直想說。」\n> おばあさん：「坐在桃樹下等我回來的孩子啊。」\n> 桃（仰頭看她，有點害羞又認真）：『我會好好活著回來。活著回來，聽你罵我怎麼搞得到處都是泥。』\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_village_gate",
+      "character_refs": [
+        "char_momo",
+        "char_grandma"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_village_gate",
+          "note": "村口 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_grandma",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "村口拜別：桃單膝跪地，向婆婆說出一直想說的話。",
+      "visual_context": "黃昏村口，桃跪在泥地上，婆婆站在屋簷下；背後是桃太郎旗、石階與遠山。",
+      "continuity": "全片的「家」第一次具體出現，後段木匣與返家都回指這裡。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「婆婆……那句話，我一直想說。」\n「坐在桃樹下等我回來的孩子啊。」\n『我會好好活著回來。活著回來，聽你罵我怎麼搞得到處都是泥。』",
+      "char_count": 48,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 19,
+      "render_blocks": 3,
+      "references": []
+    },
+    {
+      "id": "seg_007",
+      "order": 7,
+      "source_start": 2107,
+      "source_end": 2224,
+      "source": "【圖 06 — 出發】\n桃背著行囊，在山路上回頭。村口門口，婆婆站在屋簷下，用力揮著手。樹影、石階、遠山，都被照成暖金色。\n\n> おばあさん（喊）：「衣服破了自己補！別忘了帶飯糰！」\n> 桃（也揮手，聲音有點啞）：「知道啦——！」\n\n",
+      "kind": "dialogue",
+      "split_reason": "paragraph_break",
+      "location_ref": "loc_village_gate",
+      "character_refs": [
+        "char_momo",
+        "char_grandma",
+        "char_shiro"
+      ],
+      "prop_refs": [
+        "prop_bundle"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_village_gate",
+          "note": "村口 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_grandma",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "桃背上行囊上路，婆婆在屋簷下大聲叮嚀。",
+      "visual_context": "桃在山路上回頭，婆婆在門口揮手；樹影、石階、遠山都照成暖金色。",
+      "continuity": "把告別推到行動：她真的走了。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「衣服破了自己補！別忘了帶飯糰！」\n「知道啦——！」",
+      "char_count": 16,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 8,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_008",
+      "order": 8,
+      "source_start": 2224,
+      "source_end": 2349,
+      "source": "【圖 07 — 背上行囊】\n桃低頭看往腳邊，シロ戴著鞍布仰頭看她，眼睛亮亮的。她摸摸狗的頭，把那塊包著桃紋的行李捆妥。\n\n> 桃：「接下來就是我們四個人的旅途了。寫一篇讓婆婆也看得懂的『旅の記録』吧。」\n\n#### 第二場·旅途（圖 08–14）\n\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_mountain_trail",
+      "character_refs": [
+        "char_momo",
+        "char_shiro"
+      ],
+      "prop_refs": [
+        "prop_bundle"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_mountain_trail",
+          "note": "山徑 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "桃在路邊蹲下摸柴犬的頭，把行囊綁妥，宣告四人之旅。",
+      "visual_context": "山路近景，柴犬戴藍色鞍布仰頭，桃摸牠的頭；桃紋行囊與桃太郎旗在背上。",
+      "continuity": "把「旅」從口號變成具體的同行關係。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「接下來就是我們四個人的旅途了。寫一篇讓婆婆也看得懂的『旅の記録』吧。」",
+      "char_count": 30,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 8,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_009",
+      "order": 9,
+      "source_start": 2349,
+      "source_end": 2499,
+      "source": "【圖 08 — 神社喝水】\n旅途半路，桃坐在神社石沿上，雙手捧著大葫蘆仰頭喝水，水珠順著嘴角滑落。シロ伏在她左邊，ゴン蹲在右邊啃著飯糰，ピーチ則停在石燈籠上替她放哨。\n\n> 桃（放下葫蘆，長吁一口氣）：『啊——活過來了。ゴン，你為什麼每顆飯糰都要先偷咬一口。』\n> ゴン（無辜狀）：『……試毒。』\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_shrine",
+      "character_refs": [
+        "char_momo",
+        "char_shiro",
+        "char_gon",
+        "char_peach"
+      ],
+      "prop_refs": [
+        "prop_gourd",
+        "prop_basket"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_shrine",
+          "note": "神社石階 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_peach",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "神社石階休息：桃喝水，ゴン偷咬飯糰，ピーチ放哨。",
+      "visual_context": "桃坐在石沿，雙手捧大葫蘆仰頭喝水；柴犬伏左，猴蹲右啃飯糰，雉停石燈籠。",
+      "continuity": "建立旅途的日常節奏與三個伙伴各自的性格。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "『啊——活過來了。ゴン，你為什麼每顆飯糰都要先偷咬一口。』\n『……試毒。』",
+      "char_count": 24,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 11,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_010",
+      "order": 10,
+      "source_start": 2499,
+      "source_end": 2617,
+      "source": "【圖 09 — 溪谷早餐】\n山溪淺淺的，桃蹲在溪邊掬水洗臉。シロ踩在長苔的石頭上，嗅著裝了米糕的竹籃。\n\n> 桃：「走了一上午，在這裡歇一下吧。水是甜的，風也是甜的。」\n> ピーチ：「咕咕——！」\n> 桃：「你看，連ピーチ都說好。」\n\n",
+      "kind": "dialogue",
+      "split_reason": "paragraph_break",
+      "location_ref": "loc_stream",
+      "character_refs": [
+        "char_momo",
+        "char_shiro",
+        "char_gon",
+        "char_peach"
+      ],
+      "prop_refs": [
+        "prop_basket"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_stream",
+          "note": "山溪 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_peach",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "溪邊洗臉休息，桃說水甜風也甜，ピーチ叫了一聲附和。",
+      "visual_context": "淺溪、長苔石頭、竹籃米糕；桃蹲在溪邊掬水，柴犬嗅籃子，雉在巨石上。",
+      "continuity": "旅途的短暫喘息，下一段就轉進鬼島的決心。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「走了一上午，在這裡歇一下吧。水是甜的，風也是甜的。」\n「咕咕——！」\n「你看，連ピーチ都說好。」",
+      "char_count": 32,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 10,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_011",
+      "order": 11,
+      "source_start": 2617,
+      "source_end": 2799,
+      "source": "【圖 10 — 對地圖的決心】\n低矮的客棧簷廊下，桃攤開一張舊地圖，指尖畫過海面，落在一個標了紅色叉叉的島上——**「鬼ヶ島」**。她身旁攤著一本《旅の手引》。\n\n> 桃：「婆婆說，我的『桃』和鬼島的那些人一樣，都是從『別的地方』來的。」（她收起玩笑的表情）\n> 犬（イヌ）：汪。\n> 桃：「……那就決定啦。先去鬼ヶ島，看看那些被關起來的人。然後——再回來。」\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_inn_veranda",
+      "character_refs": [
+        "char_momo",
+        "char_shiro",
+        "char_gon",
+        "char_peach"
+      ],
+      "prop_refs": [
+        "prop_map",
+        "prop_travel_guide"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_inn_veranda",
+          "note": "客棧簷廊 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_peach",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "客棧簷廊攤開舊地圖，桃的指尖落在鬼ヶ島的紅叉上，決定先去救人也回家。",
+      "visual_context": "低矮簷廊、強烈陽光、舊地圖與《旅の手引》；桃、柴犬、猴、雉圍著地圖。",
+      "continuity": "全片目標正式確立：先去鬼ヶ島，再回來。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「婆婆說，我的『桃』和鬼島的那些人一樣，都是從『別的地方』來的。」\n「汪。」\n「……那就決定啦。先去鬼ヶ島，看看那些被關起來的人。然後——再回來。」",
+      "char_count": 50,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 16,
+      "render_blocks": 2,
+      "references": [
+        {
+          "segment_ref": "seg_006",
+          "why": "婆婆說過她的來歷，這裡第一次把身世連到鬼島",
+          "manifestation": "地圖上被指尖壓住的鬼ヶ島紅叉"
+        }
+      ]
+    },
+    {
+      "id": "seg_012",
+      "order": 12,
+      "source_start": 2799,
+      "source_end": 2930,
+      "source": "【圖 11 — 山徑指路】\n山徑盡頭立著路標：**「鬼ヶ島 →」**。桃一手搭在木牌上，回頭笑。シロ背著馱包、ゴン背著行李，排成一列往海的方向走去。\n\n> 桃：「出發！」\n> ゴン：「（小小聲）……你連島長什麼樣都不知道。」\n> 桃：「所以才更要去看看啊！」\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_mountain_trail",
+      "character_refs": [
+        "char_momo",
+        "char_shiro",
+        "char_gon"
+      ],
+      "prop_refs": [
+        "prop_bundle"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_mountain_trail",
+          "note": "山徑 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "山徑路標寫著「鬼ヶ島 →」，桃拍著木牌回頭笑，隊伍往海邊出發。",
+      "visual_context": "陽光山徑、藍海、路標；柴犬背馱包、猴背行李排成一列。",
+      "continuity": "把決心變成腳步，往海邊移動。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「出發！」\n「（小小聲）……你連島長什麼樣都不知道。」\n「所以才更要去看看啊！」",
+      "char_count": 25,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 13,
+      "render_blocks": 3,
+      "references": []
+    },
+    {
+      "id": "seg_013",
+      "order": 13,
+      "source_start": 2930,
+      "source_end": 3109,
+      "source": "【圖 12 — 桃太郎の湯】\n溫泉的熱氣裡，木牌掛著「**桃太郎の湯**」。桃把全身泡進水裡，膝蓋曲到胸前，仰頭吐氣。ゴン趴在池沿，シロ套著小綠背心泡到昏昏欲睡。\n\n> 桃（閉著眼）：『哇——好舒服。這就是『いい湯、いい島』吧。』\n> ゴン：『喂，前面就是鬼島了，你還有心情泡湯喔。』\n> 桃（睜開一隻眼）：『就是了鬼島才要泡。把力氣存好，明天好上路。』\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_onsen",
+      "character_refs": [
+        "char_momo",
+        "char_shiro",
+        "char_gon"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_onsen",
+          "note": "桃太郎の湯 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "露天溫泉「桃太郎の湯」：桃泡湯，ゴン提醒前面就是鬼島。",
+      "visual_context": "蒸氣、木牌、石池；桃曲膝泡在水裡，猴趴在池沿，柴犬穿小綠背心泡到想睡。",
+      "continuity": "用一個喜劇喘息段把遠航前的緊張壓下來。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "『哇——好舒服。這就是『いい湯、いい島』吧。』\n『喂，前面就是鬼島了，你還有心情泡湯喔。』\n『就是了鬼島才要泡。把力氣存好，明天好上路。』",
+      "char_count": 48,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 18,
+      "render_blocks": 3,
+      "references": []
+    },
+    {
+      "id": "seg_014",
+      "order": 14,
+      "source_start": 3109,
+      "source_end": 3252,
+      "source": "【圖 13 — 旅館夜宴】\n夜晚，客棧燈籠搖曳，桌上鋪著「**地魚の炭火焼**」。桃瞇著眼、俏皮地對鏡頭眨了一下，夾起一片烤魚往鏡頭送；シロ繫著小兜兜坐在桌邊，ゴン的手早伸向下一碟。\n\n> 桃：「這是今天的收穫！一口咬下去，海的味道——」\n> ゴン：「（帶著魚）你已經講第三遍了。」\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_inn_night",
+      "character_refs": [
+        "char_momo",
+        "char_shiro",
+        "char_gon"
+      ],
+      "prop_refs": [
+        "prop_fish"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_inn_night",
+          "note": "旅館夜宴 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "夜晚旅館飯桌，桃夾烤魚對鏡頭獻寶，ゴン吐槽她講第三遍。",
+      "visual_context": "燈籠搖曳、地魚の炭火焼；桃眨眼獻魚，柴犬繫小兜兜，猴的手伸向下一碟。",
+      "continuity": "把伙伴關係從「隊友」寫成「家人式的吐槽」。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「這是今天的收穫！一口咬下去，海的味道——」\n「（帶著魚）你已經講第三遍了。」",
+      "char_count": 27,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 9,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_015",
+      "order": 15,
+      "source_start": 3252,
+      "source_end": 3495,
+      "source": "【圖 14 — 房內夜談·牌局】\n客房榻榻米上，桃趴著，腳丫在空中晃，手上捏著一張印著桃花的卡牌，吐著舌頭裝出得意的表情；ゴン學她舉著一扇牌，シロ則頭枕在爪上、端端地趴在旁邊。\n\n> 桃：「說好囉——去鬼ヶ島，把該救的人救回來，然後我們四個就一起去看更大的海。」\n> 犬（イヌ）：汪。\n> ゴン：『要是鬼王很兇呢？』\n> 桃（把牌一翻，壓在榻榻米上）：「那就打贏他，再回來泡湯。」\n\n---\n\n### 第二幕｜遠航與潛入（圖 15–28）\n\n#### 第三場·鬼島的真相（圖 15）\n\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_inn_room",
+      "character_refs": [
+        "char_momo",
+        "char_shiro",
+        "char_gon"
+      ],
+      "prop_refs": [
+        "prop_cards"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_inn_room",
+          "note": "客房榻榻米 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "客房榻榻米上玩牌，桃許下四個人一起去看更大的海的約定。",
+      "visual_context": "桃趴著、腳丫在空中晃，手捏桃花牌；猴舉牌，柴犬趴在旁。",
+      "continuity": "把「勝利後一起回家」的承諾先種下，決戰與片尾都要回收。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「說好囉——去鬼ヶ島，把該救的人救回來，然後我們四個就一起去看更大的海。」\n「汪。」\n『要是鬼王很兇呢？』\n「那就打贏他，再回來泡湯。」",
+      "char_count": 48,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 17,
+      "render_blocks": 3,
+      "references": []
+    },
+    {
+      "id": "seg_016",
+      "order": 16,
+      "source_start": 3495,
+      "source_end": 3803,
+      "source": "【圖 15 — 染血的鬼旗】\n村長的倉房裡，火盆的光把室內的影子拉得很長。喜八抖開一幅破舊的布——上面繡著一張猙獰的紅鬼面，邊緣染著黑褐色乾血。桃蹲在旗前，表情第一次沉下來。喜八滿身泥，指著那面旗。\n\n> 喜八：「老夫年輕時跟著船朝北走，被浪打上鬼ヶ島。那島啊——根本不是島，是『城堡』。島中央有座山，山頂像顆骷髏。鬼王把山下的人都關進籠子裡，替他搬石頭。」\n> 桃：「那島上的人……都還在嗎？」\n> 喜八（沉默了很久）：『只要你還活著一只，就都還在。老夫是游水回來的，全村只有老夫一個人回來。』\n> 桃（把染血的旗接過來，慢慢收好）：「這面旗，我借了。回來再還你。」\n\n#### 第四場·出航（圖 16–17）\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_warehouse",
+      "character_refs": [
+        "char_momo",
+        "char_kiha",
+        "char_shiro",
+        "char_gon"
+      ],
+      "prop_refs": [
+        "prop_oni_banner"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_warehouse",
+          "note": "村長倉房 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_kiha",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "村長倉房，喜八抖開染血鬼面旗，說出鬼ヶ島其實是鬼王的城堡。",
+      "visual_context": "火盆光、長影、掛軸「鬼ヶ島」；喜八滿身泥指著旗，桃蹲在旗前第一次沉下臉。",
+      "continuity": "全片基調由明亮冒險轉為沉重遠征；桃借走鬼旗。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「老夫年輕時跟著船朝北走，被浪打上鬼ヶ島。那島啊——根本不是島，是『城堡』。島中央有座山，山頂像顆骷髏。鬼王把山下的人都關進籠子裡，替他搬石頭。」\n「那島上的人……都還在嗎？」\n『只要你還活著一只，就都還在。老夫是游水回來的，全村只有老夫一個人回來。』\n「這面旗，我借了。回來再還你。」",
+      "char_count": 110,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 33,
+      "render_blocks": 5,
+      "references": [
+        {
+          "segment_ref": "seg_015",
+          "why": "上一段的輕鬆牌局被這面旗打斷",
+          "manifestation": "火盆旁突然抖開的染血鬼面旗"
+        }
+      ]
+    },
+    {
+      "id": "seg_017",
+      "order": 17,
+      "source_start": 3803,
+      "source_end": 4001,
+      "source": "【圖 16 — 鬼ヶ島へ出発】\n港口擠滿小船，布幕上寫著「**鬼ヶ島へ出発**」。桃坐在船舷上，回過頭對岸上的人咧嘴笑——岸上的人與鬼島無關，只是來送這些「不自量力的小孩」出海。\n\n> 村民甲：「小桃！就你們四個能幹嘛！」\n> 桃（大聲喊）：『我們有五個！シロ、ゴン、ピーチ，還有我——加上婆婆在門口看著呢！』\n> 岸上響起笑聲，也有人偷偷擦眼角。船帆升起，漁白色的帆布上畫著大大的紅色鬼面。\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_harbor",
+      "character_refs": [
+        "char_momo",
+        "char_shiro",
+        "char_gon",
+        "char_villager"
+      ],
+      "prop_refs": [
+        "prop_oni_sail"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_harbor",
+          "note": "出航港口 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_villager",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "出航港口，村民笑他們四個人能做什麼，桃大聲說我們有五個。",
+      "visual_context": "擠滿小船的港口、布幕「鬼ヶ島へ出発」、白色鬼面帆升起；桃坐在船舷回頭笑。",
+      "continuity": "把「五個人」的定義說出來：四個伙伴加上門口的婆婆。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「小桃！就你們四個能幹嘛！」\n『我們有五個！シロ、ゴン、ピーチ，還有我——加上婆婆在門口看著呢！』",
+      "char_count": 35,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 12,
+      "render_blocks": 2,
+      "references": [
+        {
+          "segment_ref": "seg_016",
+          "why": "鬼旗上的鬼面變成船帆上的圖案",
+          "manifestation": "白色船帆上巨大的紅色鬼面"
+        }
+      ]
+    },
+    {
+      "id": "seg_018",
+      "order": 18,
+      "source_start": 4001,
+      "source_end": 4181,
+      "source": "【圖 17 — 海上·望見鬼島】\n離岸越遠，海就越深。桃站在船尾，風把她的髮掃過臉。遠方，一座拔海的高山頂著岩石組成的「骷髏頭」，山腰上嵌著黑沉沉的舊城，煙正從城裡往上爬。\n\n> 桃（輕聲）：『……真的好像鬼。』\n> 犬（シロ）在腳邊低低吼了一長聲。\n> 桃（按住狗頭）：『我知道。我們是去把那座城，拆下來的。』\n\n#### 第五場·登島（圖 18–24）\n\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_sea",
+      "character_refs": [
+        "char_momo",
+        "char_shiro"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_sea",
+          "note": "海上 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "海上望見骷髏山與冒煙鬼城，桃說她們是去把城拆下來的。",
+      "visual_context": "船尾、深藍海、遠方骷髏形山頂與黑城；桃的髮被風掃過臉，柴犬低吼。",
+      "continuity": "第一次讓鬼島完整入鏡，確定「攻城」的規模。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "『……真的好像鬼。』\n『我知道。我們是去把那座城，拆下來的。』",
+      "char_count": 20,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 7,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_019",
+      "order": 19,
+      "source_start": 4181,
+      "source_end": 4364,
+      "source": "【圖 18 — 叢林遺跡】\n上岸的第二天。叢林裡是墜落的石柱與纏滿藤蔓的長廊，樹影明明滅滅。桃蹲低身子，指尖觸到地上發著微光的紅色腳印——一個、兩個，蜿蜒沒入更深處。她腳邊，一具纏著紅繩的頭骨靜靜躺著。\n\n> 桃（低聲）：『這些腳印……是那些被抓走的人留下的？不——太深了。這是鬼的腳印。』\n> 犬（イヌ）：嗅著泥土，低伏身子。ゴン在她身後蹲坐，眼神罕見地認真。\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_jungle_ruins",
+      "character_refs": [
+        "char_momo",
+        "char_shiro",
+        "char_gon"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_jungle_ruins",
+          "note": "叢林遺跡 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "登島第二天，叢林遺跡裡出現發光的紅色腳印；桃判斷那是鬼的腳印。",
+      "visual_context": "墜落石柱、藤蔓長廊、明明滅滅的樹影；紅繩頭骨躺在腳邊，柴犬低伏嗅土。",
+      "continuity": "把鬼從傳說變成可追蹤的實體；跟蹤線開始。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "『這些腳印……是那些被抓走的人留下的？不——太深了。這是鬼的腳印。』",
+      "char_count": 25,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 8,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_020",
+      "order": 20,
+      "source_start": 4364,
+      "source_end": 4472,
+      "source": "【圖 19 — 荊棘木門】\n木門腳下釘滿尖樁，門上的鬼面旗被風吹得獵獵作響。桃與シロ伏低，動作壓到最小。光從樹頂漏下來，塵埃漂浮，空氣裡全是朽木與腥味的氣味。\n\n> 桃（比手勢）：「一進門就有哨位。我數到三——」\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_spiked_gate",
+      "character_refs": [
+        "char_momo",
+        "char_shiro"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_spiked_gate",
+          "note": "荊棘木門 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "荊棘木門前，桃與柴犬伏低，門上鬼面旗獵獵作響；她數到三準備進門。",
+      "visual_context": "低角度、尖樁木門、黑鬼面旗、樹頂漏光與漂浮塵埃。",
+      "continuity": "從遺跡跟蹤推進到入侵據點，潛入段開始。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「一進門就有哨位。我數到三——」",
+      "char_count": 11,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 4,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_021",
+      "order": 21,
+      "source_start": 4472,
+      "source_end": 4582,
+      "source": "【圖 20 — 夜潛】\n夜裡，鬼城的木柱間。桃手持一支火把壓在柱邊，蹲著墊步前移；火光照出她抿緊的唇。\n\n> ゴン（攀在橫樑上，比劃著）：『牆內有人。兩個。』\n> 桃：「那就換邊走。我們是來救人的，不是來吵醒人的。」\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_fortress_pillars",
+      "character_refs": [
+        "char_momo",
+        "char_gon"
+      ],
+      "prop_refs": [
+        "prop_torch"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_fortress_pillars",
+          "note": "鬼城柱廊（夜） establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "夜裡鬼城木柱間，桃持火把貼柱前進；ゴン在橫樑上回報牆內有兩個人。",
+      "visual_context": "黑夜、巨大木柱、火把光、猴攀在橫樑上比劃。",
+      "continuity": "建立鬼城內部空間與「不吵醒人」的作戰原則。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "『牆內有人。兩個。』\n「那就換邊走。我們是來救人的，不是來吵醒人的。」",
+      "char_count": 25,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 12,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_022",
+      "order": 22,
+      "source_start": 4582,
+      "source_end": 4721,
+      "source": "【圖 21–22 — 攀牆】\n黎明最暗的時刻，桃拉著牆縫往上爬，指節磨得生疼。シロ套著皮甲跟在她旁邊，四個爪子摳住石縫。她回頭看一眼，見狗仍在，才繼續前進。\n\n> 桃（喘著氣，近乎耳語）：『再高一點……牆裡面就是城了。』\n> 犬（イヌ）：一聲短促的「汪」，是回答，也是承諾。\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_stone_wall",
+      "character_refs": [
+        "char_momo",
+        "char_shiro"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_stone_wall",
+          "note": "鬼城石牆 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "黎明前最暗的時刻，桃與柴犬沿石牆裂縫向上攀。",
+      "visual_context": "粗礪石牆、指節磨破、柴犬四爪摳住石縫；霧氣與藤蔓在下方。",
+      "continuity": "用肉體的吃力把攻城難度具體化。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "『再高一點……牆裡面就是城了。』\n「汪。」",
+      "char_count": 12,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 4,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_023",
+      "order": 23,
+      "source_start": 4721,
+      "source_end": 4861,
+      "source": "【圖 23 — 木橋上的影子】\n一條窄木橋橫在兩座箭樓之間。橋下兩名持刀的鬼武士影子拖得老長。桃蜷低在橋板上，呼吸幾乎停了；シロ也伏在她身旁，連尾巴都不敢動。\n\n> 桃（腹語般的氣聲）：『等他們走過去——一個，兩個，三個——』\n> 影子終於挪開。她鬆開一口氣，發現掌心全是汗。\n\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_bridge",
+      "character_refs": [
+        "char_momo",
+        "char_shiro"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_bridge",
+          "note": "箭樓木橋 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "窄木橋上，桃與柴犬伏低，等兩名持刀鬼武士的影子走過去。",
+      "visual_context": "橋板近景、下方長影、桃幾乎停止呼吸、柴犬連尾巴都不敢動。",
+      "continuity": "全片最緊繃的靜默段之一，下一段用果實解圍。",
+      "voice_intent": "internal_monologue",
+      "spoken_text": "『等他們走過去——一個，兩個，三個——』",
+      "char_count": 12,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 4,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_024",
+      "order": 24,
+      "source_start": 4861,
+      "source_end": 5060,
+      "source": "【圖 24 — 以果結緣】\n牆根下，一頭戴皮甲的猴鬼小卒趴在監視塔上，手持長矛，卻對食物毫無抵抗力。桃解下腰間的果實，單膝跪地，把果子高舉過頭頂，遞上去。\n\n> 桃：「給你。我們不打架，你讓路就好。」\n> 猴鬼小卒（愣住，盯著果子看了三秒，一把抓過，指了指另一條暗門）：……走那條路。\n> 桃（收刀入鞘，向後拍拍シロ）：『你看，柿子比刀有用。』\n\n#### 第六場·初戰與攻城（圖 25–28）\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_wall_base",
+      "character_refs": [
+        "char_momo",
+        "char_oni_cub"
+      ],
+      "prop_refs": [
+        "prop_spear"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_wall_base",
+          "note": "城牆腳 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_oni_cub",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "牆根下，桃把果實高舉給戴皮甲的猴鬼小卒，換到一條暗門。",
+      "visual_context": "監視塔、長矛、桃單膝跪地把果子舉過頭；小卒盯了三秒一把抓過。",
+      "continuity": "用「不打架」解決第一個障礙，替後面的「鬼也能講道理」鋪路。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「給你。我們不打架，你讓路就好。」\n「……走那條路。」\n『你看，柿子比刀有用。』",
+      "char_count": 24,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 15,
+      "render_blocks": 3,
+      "references": []
+    },
+    {
+      "id": "seg_025",
+      "order": 25,
+      "source_start": 5060,
+      "source_end": 5177,
+      "source": "【圖 25 — 第一戰】\n角門處，一尊披甲的巨漢攔了路——頭生雙角，臂粗如柱。桃拔刀踏前，眼神一下子銳厲；シロ頸上的紅巾被風掀起。\n\n> 鬼將：「小娃娃也敢來拆牆？」\n> 桃（橫刀護身，聲音還是穩的）：『對。我來帶牆裡的人回家。』\n\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_corner_gate",
+      "character_refs": [
+        "char_momo",
+        "char_shiro",
+        "char_gon",
+        "char_oni_general"
+      ],
+      "prop_refs": [
+        "prop_katana"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_corner_gate",
+          "note": "角門 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_gon",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_oni_general",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "角門被雙角巨漢攔住，桃拔刀踏前，說要帶牆裡的人回家。",
+      "visual_context": "巨漢披甲、臂粗如柱；桃橫刀護身、眼神銳利；柴犬與猴在後。",
+      "continuity": "第一次正面戰鬥，對手是鬼將。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「小娃娃也敢來拆牆？」\n『對。我來帶牆裡的人回家。』",
+      "char_count": 18,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 10,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_026",
+      "order": 26,
+      "source_start": 5177,
+      "source_end": 5318,
+      "source": "【圖 26 — 城門激戰】\n桃攀在門框上，雙臂扣住橫木，全身用力；汗順著下頷滴落。門縫外，成排的紅皮鬼卒正舉著火把湧來，其中幾頭已經看著她。\n\n> 桃（咬牙）：『シロ——好感！」 犬低吼著，死死把住退路的木階。\n> 她這一下把城門撞開一條縫，黑暗中，一條通往大殿的長廊亮著火光。\n\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_gate_frame",
+      "character_refs": [
+        "char_momo",
+        "char_shiro"
+      ],
+      "prop_refs": [
+        "prop_katana"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_gate_frame",
+          "note": "城門門框 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "桃攀在門框上死命把城門撞開一條縫，對柴犬喊「行け」。",
+      "visual_context": "門框、橫木、汗滴下頷；門縫外紅皮鬼卒舉火把湧來；柴犬死守退路木階。",
+      "continuity": "把「五人小隊」推入真正的戰鬥。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "『シロ——好感！」",
+      "char_count": 4,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 4,
+      "render_blocks": 1,
+      "references": [],
+      "source_note": "原文「好感」疑為誤植；生成端以「シロ、行け。」配音。"
+    },
+    {
+      "id": "seg_027",
+      "order": 27,
+      "source_start": 5318,
+      "source_end": 5494,
+      "source": "【圖 27 — 木匣】\n混戰間，桃在血痕斑斑的石燈下，撿到一只木匣。匣面刻著「桃」字，繫著紅穗。她蹲下捧起，指尖小心地撥開鎖扣——裡頭是一幅布，布上畫著一座桃樹下的舊屋，與婆婆家一模一樣。\n\n> 桃（愣住）：『這是……婆婆說的，那間屋子？』\n> 鬼兵聲（由遠而近）：『那孩子在那裡！』\n> 桃（把布收進懷裡，闔上匣子）：『總之——先保住這件東西。』\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_corridor",
+      "character_refs": [
+        "char_momo"
+      ],
+      "prop_refs": [
+        "prop_wooden_box",
+        "prop_cloth_house"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_corridor",
+          "note": "鬼城長廊 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "混戰間桃在血痕石燈下撿到刻著「桃」字的木匣，裡面是婆婆家舊屋的畫布。",
+      "visual_context": "長廊、石燈、木匣紅穗、畫布上的桃樹舊屋；遠處鬼兵喊聲逼近。",
+      "continuity": "第一次把桃的身世與鬼城連在一起；木匣成為後段護身物件。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "『這是……婆婆說的，那間屋子？』\n『那孩子在那裡！』\n『總之——先保住這件東西。』",
+      "char_count": 25,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 8,
+      "render_blocks": 2,
+      "references": [
+        {
+          "segment_ref": "seg_006",
+          "why": "畫布上的舊屋正是婆婆家的樣子",
+          "manifestation": "木匣裡那塊畫著桃樹下舊屋的布"
+        }
+      ]
+    },
+    {
+      "id": "seg_028",
+      "order": 28,
+      "source_start": 5494,
+      "source_end": 5712,
+      "source": "【圖 28 — 眺望鬼城】\n入夜，桃靠在殘塔的木柱上，仰頭看遠方——鬼城最上層白著火光，那就是「鬼王殿」。ピーチ停在她肩頭，替她看著背後。\n\n> 桃（自言自語）：『那個人（婆婆）說，我是從桃樹下被撿到的。會不會，我家也跟這座城一樣，原本也是有屋簷的。』\n> 她握緊懷中的布，目光變得堅定：「不管怎樣，先打完再說。明晚，我們就進去。」\n\n---\n\n### 第三幕｜破城與歸途（圖 29–37）\n\n#### 第七場·天牢重逢（圖 29）\n\n",
+      "kind": "narration",
+      "split_reason": "location_change",
+      "location_ref": "loc_broken_tower",
+      "character_refs": [
+        "char_momo",
+        "char_peach"
+      ],
+      "prop_refs": [
+        "prop_cloth_house"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_broken_tower",
+          "note": "殘塔 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_peach",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "入夜，桃靠在殘塔木柱上，看著鬼王殿的火光，自言自語自己的來歷，然後下定決心明晚進殿。",
+      "visual_context": "殘塔、遠方最高層的火光、雉停肩頭；桃握緊懷中的布。",
+      "continuity": "把身世疑問暫時收起，轉成「先打完再說」的行動。",
+      "voice_intent": "internal_monologue",
+      "spoken_text": "『那個人（婆婆）說，我是從桃樹下被撿到的。會不會，我家也跟這座城一樣，原本也是有屋簷的。』\n「不管怎樣，先打完再說。明晚，我們就進去。」",
+      "char_count": 52,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 14,
+      "render_blocks": 2,
+      "references": [
+        {
+          "segment_ref": "seg_027",
+          "why": "木匣裡的畫布引出她對「家」的疑問",
+          "manifestation": "她按在胸口的布與遠方鬼王殿的火光"
+        }
+      ]
+    },
+    {
+      "id": "seg_029",
+      "order": 29,
+      "source_start": 5712,
+      "source_end": 6001,
+      "source": "【圖 29 — 天牢】\n鬼城深處，火把的光幽幽晃動。桃跪在一整面木柵前，從柵欄間握住了老人的手。老人頭髮花白，手背上全是舊繭——是源蔵。她被押著走了三天才到得了的地方，他已經住了三年。\n\n> 桃：「您是島另一頭的上老，是不是？我是從村子裡來的，我叫桃。」\n> 源蔵（顫著聲音）：『桃……你怎麼進得來。快走！鬼王會把你——』\n> 桃（把他的手握緊，湊近柵欄）：『要走也是大家一起走。我先把牢門劈開，再往大殿去討個說法。』\n> 源蔵：『那大殿上……可是真的鬼王啊。』\n> 桃：『我知道。婆婆說過，鬼也是能講道理的——只要你先動手。』\n\n#### 第八場·破城戰（圖 30–36）\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_dungeon",
+      "character_refs": [
+        "char_momo",
+        "char_genzo",
+        "char_shiro"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_dungeon",
+          "note": "天牢 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_genzo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "天牢重逢：桃隔著木柵握住源蔵的手，承諾要走也是大家一起走。",
+      "visual_context": "火把幽光、木柵、老人花白頭髮與舊繭手；桃跪在泥地湊近柵欄。",
+      "continuity": "把「救人」從抽象目標變成一個具體的老人；也第一次提出「鬼也能講道理」。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「您是島另一頭的上老，是不是？我是從村子裡來的，我叫桃。」\n『桃……你怎麼進得來。快走！鬼王會把你——』\n『要走也是大家一起走。我先把牢門劈開，再往大殿去討個說法。』\n『那大殿上……可是真的鬼王啊。』\n『我知道。婆婆說過，鬼也是能講道理的——只要你先動手。』",
+      "char_count": 94,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 34,
+      "render_blocks": 5,
+      "references": []
+    },
+    {
+      "id": "seg_030",
+      "order": 30,
+      "source_start": 6001,
+      "source_end": 6066,
+      "source": "【圖 30 — 突圍】\n桃在走道裡拔腿狂奔，風把緞帶吹得直直拖在身後。身後是整排追兵的吼聲，前面是微光的大殿入口。她沒有回頭。\n\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_passage",
+      "character_refs": [
+        "char_momo"
+      ],
+      "prop_refs": [
+        "prop_katana"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_passage",
+          "note": "突圍通道 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "桃在走道裡拔腿狂奔，身後是整排追兵，前面是微光的大殿入口；她沒有回頭。",
+      "visual_context": "長廊、火把殘影、緞帶直直拖在身後、塵土與汗。",
+      "continuity": "把天牢的情感壓力轉成純速度，衝進大殿。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_029",
+          "why": "從天牢直接衝出",
+          "manifestation": "身後越來越遠的牢門與追兵吼聲"
+        }
+      ]
+    },
+    {
+      "id": "seg_031",
+      "order": 31,
+      "source_start": 6066,
+      "source_end": 6142,
+      "source": "【圖 31–34 — 大殿對峙】\n大殿內，火把沿牆一路點到陰暗的穹頂。穿甲的鬼武士在兩旁排出半圓。桃緩步走進中央，一路淌著汗，嘴邊卻抿著有勝算的笑。\n\n",
+      "kind": "action",
+      "split_reason": "location_change",
+      "location_ref": "loc_great_hall",
+      "character_refs": [
+        "char_momo",
+        "char_oni_soldier"
+      ],
+      "prop_refs": [
+        "prop_katana"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_great_hall",
+          "note": "鬼王殿 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_oni_soldier",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "大殿內火把沿牆點到穹頂，穿甲鬼武士排出半圓；桃緩步走進中央。",
+      "visual_context": "巨大穹頂、黑木樑、兩排鬼武士、桃小小的身影走進火光中央。",
+      "continuity": "把「攻城」推到最後的儀式性對峙。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_032",
+      "order": 32,
+      "source_start": 6142,
+      "source_end": 6186,
+      "source": "> 鬼將們齊聲低吼，壓迫如山。\n> 桃（拔出刀，刀鋒映著火）：『鬼王——我要你做人。』\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_great_hall",
+      "character_refs": [
+        "char_momo",
+        "char_oni_soldier"
+      ],
+      "prop_refs": [
+        "prop_katana"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_great_hall",
+          "note": "鬼王殿 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_oni_soldier",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "鬼將齊聲低吼，桃拔刀，對鬼王說「我要你做人」。",
+      "visual_context": "桃在火光中央拔刀，刀鋒映火；半圓鬼武士壓迫如山。",
+      "continuity": "全片主題句：不是殺鬼，是把鬼變回人。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "『鬼王——我要你做人。』",
+      "char_count": 7,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 4,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_033",
+      "order": 33,
+      "source_start": 6186,
+      "source_end": 6230,
+      "source": "> 一隻如山的身影從王座上站起，黑甲、雙角、赤眼。整個大殿的重量，都壓在那道目光上。\n\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_throne_dais",
+      "character_refs": [
+        "char_momo",
+        "char_oni_king"
+      ],
+      "prop_refs": [
+        "prop_greatsword"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_throne_dais",
+          "note": "王座台階 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_oni_king",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "如山的身影從王座站起：黑甲、雙角、赤眼；整個大殿的重量壓在那道目光上。",
+      "visual_context": "低角度、王座、巨鬼站起、巨劍拖出火花；桃在前景顯得極小但不退。",
+      "continuity": "把最終敵人的尺度拉到最大。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_034",
+      "order": 34,
+      "source_start": 6230,
+      "source_end": 6358,
+      "source": "【圖 35 — 斬落】\n兩個身影交錯的一瞬間——大鬼的巨劍砸下，桃的刀刃逆著那道勢頭，從下往上、乾乾淨淨地斬開。\n\n> 桃（落地，單膝著地，喘著）：『……我負責帶人回去。你負責，睡一覺。』\n> 鬼王高大的身軀轟然倒地，鐵甲砸在地面的聲音在殿裡滾了很久。\n\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_great_hall",
+      "character_refs": [
+        "char_momo",
+        "char_oni_king"
+      ],
+      "prop_refs": [
+        "prop_katana",
+        "prop_greatsword"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_great_hall",
+          "note": "鬼王殿 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_oni_king",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "巨劍砸下，桃的刀刃逆勢由下往上斬開；鬼王倒下，她單膝落地說「你負責睡一覺」。",
+      "visual_context": "交錯的一瞬、上升的刀弧、鐵甲砸地；桃單膝著地、刀尖滴血。",
+      "continuity": "把主題付諸行動：她負責帶人回去，鬼王負責睡一覺。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "『……我負責帶人回去。你負責，睡一覺。』",
+      "char_count": 13,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 9,
+      "render_blocks": 2,
+      "references": [
+        {
+          "segment_ref": "seg_033",
+          "why": "承接鬼王起身的壓迫",
+          "manifestation": "從上方砸下的巨劍與逆勢上斬的刀弧"
+        }
+      ]
+    },
+    {
+      "id": "seg_035",
+      "order": 35,
+      "source_start": 6358,
+      "source_end": 6507,
+      "source": "【圖 36 — 勝利】\n大殿靜下來。桃站在鬼王倒下的身軀上，刀尖滴著血。她用刀尖挑起鬼王的黑幡——「**鬼王**」二字仍在火光裡閃。シロ挺直身子站在她腳邊，一聲長吠，喊醒了整座城。\n\n> 桃（低聲，幾乎只有自己聽得見）：『婆婆——我回來囉。』\n\n#### 第九場·歸途（圖 37 → 圖 01）\n\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_great_hall",
+      "character_refs": [
+        "char_momo",
+        "char_shiro"
+      ],
+      "prop_refs": [
+        "prop_king_banner",
+        "prop_katana"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_great_hall",
+          "note": "鬼王殿 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "大殿靜下來，桃站在鬼王身上，刀尖挑起鬼王黑幡；柴犬長吠，她低聲說「婆婆，我回來囉」。",
+      "visual_context": "勝利構圖、黑幡「鬼王」、刀尖滴血、柴犬在腳邊長吠。",
+      "continuity": "戰役結束，情緒轉向返家。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "『婆婆——我回來囉。』",
+      "char_count": 6,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 8,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_036",
+      "order": 36,
+      "source_start": 6507,
+      "source_end": 6734,
+      "source": "【圖 37 — 戰後】\n天亮前，火還在燒。桃蹲下來，衣角上全是乾掉的血。她面前，那頭跟了三天的秋田犬——城裡被鎖在最底層的大狗——正坐在她跟前，毛上沾著泥與血。她抬手，輕輕捧住狗的下頷，一下一下地撫。\n\n> 桃：「……你也想家吧。打完仗的人，都是要回家的。」\n> 她抬頭看了一眼天光，聲音又輕又軟：\n> 「那我們也回家吧。回去泡婆婆的湯，回去坐在桃樹下，把這趟『旅の記録』講成整整三天三夜都講不完的故事。」\n> 犬低低地「嗚」了一長聲，靠進她的膝蓋。\n\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_courtyard_dawn",
+      "character_refs": [
+        "char_momo",
+        "char_akita"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_courtyard_dawn",
+          "note": "破城庭院（黎明） establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_akita",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "天亮前火還在燒，桃蹲下捧住秋田犬的下頷，說打完仗的人都要回家，然後決定回家。",
+      "visual_context": "廢墟庭院、餘燼、桃衣角乾血、大狗毛上泥血；她一下一下撫著狗。",
+      "continuity": "把「家」從婆婆擴大到所有打完仗的人；片尾返家。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「……你也想家吧。打完仗的人，都是要回家的。」\n「那我們也回家吧。回去泡婆婆的湯，回去坐在桃樹下，把這趟『旅の記録』講成整整三天三夜都講不完的故事。」",
+      "char_count": 59,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 20,
+      "render_blocks": 3,
+      "references": [
+        {
+          "segment_ref": "seg_027",
+          "why": "木匣裡的舊屋畫布讓她終於理解「家」",
+          "manifestation": "她按在胸口的那塊布與眼前無家可歸的狗"
+        }
+      ]
+    },
+    {
+      "id": "seg_037",
+      "order": 37,
+      "source_start": 6734,
+      "source_end": 6900,
+      "source": "【圖 01 — 片尾】\n鏡頭又回到開頭那張木欄邊。桃彷彿對鏡頭外的某個人說——「**鬼退治のあとで。**」\n\n> 桃（下巴擱在飯糰上，眨眨眼）：「**勝ったけど、ちょっと疲れた。**」\n> 她伸了個懶腰，緞帶在風裡晃了晃。\n> 「**まだ撮るの？** 收了啦——」她把鏡頭推開一點，又忍不住回頭：\n> 「**また、どこかへ♡**」\n",
+      "kind": "dialogue",
+      "split_reason": "time_shift",
+      "location_ref": "loc_dock",
+      "character_refs": [
+        "char_momo",
+        "char_shiro"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_dock",
+          "note": "木碼頭 establishing plate"
+        },
+        {
+          "role": "character",
+          "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_shiro",
+          "note": "same identity plate across the chapter"
+        }
+      ],
+      "context": "片尾回到開頭木欄邊，桃對鏡頭外的某個人說「鬼退治のあとで」，然后推開鏡頭。",
+      "visual_context": "同一張木欄邊，桃下巴擱在飯糰上，柴犬鼻子靠近鏡頭；她伸懶腰，緞帶晃動。",
+      "continuity": "與片頭形成閉環：打完鬼之後，她還是那個會對鏡頭笑的人。",
+      "voice_intent": "spoken_on_screen",
+      "spoken_text": "「鬼退治のあとで。」\n「勝ったけど、ちょっと疲れた。」\n「まだ撮るの？收了啦——」\n「また、どこかへ♡」",
+      "char_count": 33,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 10,
+      "render_blocks": 2,
+      "references": [
+        {
+          "segment_ref": "seg_001",
+          "why": "片尾直接回到片頭同一顆鏡頭",
+          "manifestation": "同一張木欄、同一顆飯糰、同一隻把鼻子湊近鏡頭的柴犬"
+        }
+      ]
+    },
+    {
+      "id": "seg_038",
+      "order": 38,
+      "source_start": 6900,
+      "source_end": 7037,
+      "source": "> 片尾字卡：**「新たな冒険は、まだ終わっていない。」**\n\n---\n\n## 4. 一句話主題\n\n> 「桃太郎」的故事總是在問：一個孩子能為別人的島做些什麼。\n> 這則故事裡，桃的回答是：先去，去完再回家。\n> **March. 因為不去看，永遠不知道海的那邊有什麼。**",
+      "kind": "narration",
+      "split_reason": "voice_change",
+      "location_ref": "loc_endcard",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_endcard",
+          "note": "片尾字卡 establishing plate"
+        }
+      ],
+      "context": "片尾字卡：新たな冒険は、まだ終わっていない。",
+      "visual_context": "黑底、投影機顆粒、書法標題「新·桃太娘」與片尾句。",
+      "continuity": "把「冒險未完」留成開放式收尾。",
+      "voice_intent": "narrator",
+      "spoken_text": "「新たな冒険は、まだ終わっていない。」",
+      "char_count": 15,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_002",
+          "why": "與片頭旁白同一句式的收束",
+          "manifestation": "黑底字卡上的同一句「新たな冒険は、まだ終わっていない。」"
+        }
+      ]
+    }
+  ]
+}
