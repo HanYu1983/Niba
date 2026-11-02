@@ -42,16 +42,13 @@
       "take": 1,
       "seed": 240824,
       "status": "success",
-      "duration_sec": 4,
+      "duration_sec": 4.46,
       "frames": 107,
-      "audio_mode": "narrator_voiceover",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_courtroom\\plate_00003_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_005_pulpit_00001_.mp4",
       "bytes": 447073,
-      "submitted_at": "2026-11-01T05:28:32.132Z"
+      "submitted_at": "2026-11-01T05:27:38.702Z"
     },
     "block_006_grip": {
       "block_id": "block_006_grip",
@@ -95,14 +92,11 @@
       "status": "success",
       "duration_sec": 8,
       "frames": 192,
-      "audio_mode": "internal_monologue_with_room_tone",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_courtroom\\plate_00003_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_008_eyes_00001_.mp4",
       "bytes": 987375,
-      "submitted_at": "2026-11-01T05:32:23.793Z"
+      "submitted_at": "2026-11-01T05:30:57.888Z"
     },
     "block_009_profile": {
       "block_id": "block_009_profile",
@@ -110,16 +104,13 @@
       "take": 1,
       "seed": 240828,
       "status": "success",
-      "duration_sec": 7,
+      "duration_sec": 7.29,
       "frames": 175,
-      "audio_mode": "internal_monologue_with_room_tone",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_courtroom\\plate_00003_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_009_profile_00001_.mp4",
       "bytes": 851920,
-      "submitted_at": "2026-11-01T05:33:44.488Z"
+      "submitted_at": "2026-11-01T05:32:24.232Z"
     },
     "block_010_bench_tap": {
       "block_id": "block_010_bench_tap",
@@ -161,16 +152,13 @@
       "take": 1,
       "seed": 240831,
       "status": "success",
-      "duration_sec": 5,
+      "duration_sec": 5.17,
       "frames": 124,
-      "audio_mode": "internal_monologue_with_room_tone",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_courtroom\\plate_00003_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_012_silhouette_00001_.mp4",
       "bytes": 551544,
-      "submitted_at": "2026-11-01T05:37:32.356Z"
+      "submitted_at": "2026-11-01T05:36:33.343Z"
     },
     "block_013_pen_hover": {
       "block_id": "block_013_pen_hover",
@@ -230,16 +218,13 @@
       "take": 1,
       "seed": 240835,
       "status": "success",
-      "duration_sec": 5,
+      "duration_sec": 5.17,
       "frames": 124,
-      "audio_mode": "internal_monologue_with_room_tone",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_judge_office_night\\plate_00001_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_016_frozen_eyes_00001_.mp4",
       "bytes": 830124,
-      "submitted_at": "2026-11-01T05:42:09.489Z"
+      "submitted_at": "2026-11-01T05:41:09.698Z"
     },
     "block_017_hot_paper": {
       "block_id": "block_017_hot_paper",
@@ -264,16 +249,13 @@
       "take": 1,
       "seed": 240837,
       "status": "success",
-      "duration_sec": 4,
+      "duration_sec": 4.46,
       "frames": 107,
-      "audio_mode": "internal_monologue_with_room_tone",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_judge_office_night\\plate_00001_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_018_outage_window_00001_.mp4",
       "bytes": 595990,
-      "submitted_at": "2026-11-01T05:44:17.030Z"
+      "submitted_at": "2026-11-01T05:43:23.417Z"
     },
     "block_019_circled_date": {
       "block_id": "block_019_circled_date",
@@ -315,16 +297,13 @@
       "take": 1,
       "seed": 240840,
       "status": "success",
-      "duration_sec": 5,
+      "duration_sec": 5.17,
       "frames": 124,
-      "audio_mode": "internal_monologue_with_room_tone",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_judge_office_night\\plate_00001_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_021_lamp_flicker_00001_.mp4",
       "bytes": 765535,
-      "submitted_at": "2026-11-01T05:47:50.655Z"
+      "submitted_at": "2026-11-01T05:46:51.585Z"
     },
     "block_022_shrinking_circle": {
       "block_id": "block_022_shrinking_circle",
@@ -434,16 +413,13 @@
       "take": 1,
       "seed": 240847,
       "status": "success",
-      "duration_sec": 4,
+      "duration_sec": 4.46,
       "frames": 107,
-      "audio_mode": "internal_monologue_with_room_tone",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_judge_office_night\\plate_00001_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_028_open_palm_00001_.mp4",
       "bytes": 557289,
-      "submitted_at": "2026-11-01T05:55:42.187Z"
+      "submitted_at": "2026-11-01T05:54:48.793Z"
     },
     "block_029_ink_bead": {
       "block_id": "block_029_ink_bead",
@@ -468,17 +444,13 @@
       "take": 1,
       "seed": 240849,
       "status": "success",
-      "duration_sec": 5,
+      "duration_sec": 5.17,
       "frames": 124,
-      "audio_mode": "remembered_voiceover",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_courtroom\\plate_00003_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_zhao_liting\\plate_00001_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_030_remembered_line_00001_.mp4",
       "bytes": 554929,
-      "submitted_at": "2026-11-01T05:57:56.616Z"
+      "submitted_at": "2026-11-01T05:56:53.983Z"
     },
     "block_031_pen_falls": {
       "block_id": "block_031_pen_falls",
@@ -520,16 +492,13 @@
       "take": 1,
       "seed": 240852,
       "status": "success",
-      "duration_sec": 6,
+      "duration_sec": 6.58,
       "frames": 158,
-      "audio_mode": "internal_monologue_with_room_tone",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_judge_office_night\\plate_00001_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_033_tear_line_00001_.mp4",
       "bytes": 1097338,
-      "submitted_at": "2026-11-01T06:01:01.412Z"
+      "submitted_at": "2026-11-01T05:59:50.236Z"
     },
     "block_034_tear_breaks": {
       "block_id": "block_034_tear_breaks",
@@ -554,16 +523,13 @@
       "take": 1,
       "seed": 240854,
       "status": "success",
-      "duration_sec": 7,
+      "duration_sec": 7.29,
       "frames": 175,
-      "audio_mode": "internal_monologue_with_room_tone",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_judge_office_night\\plate_00001_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_035_open_fist_00001_.mp4",
       "bytes": 722040,
-      "submitted_at": "2026-11-01T06:03:14.441Z"
+      "submitted_at": "2026-11-01T06:01:54.949Z"
     },
     "block_036_no_reflection": {
       "block_id": "block_036_no_reflection",
@@ -738,16 +704,13 @@
       "take": 1,
       "seed": 240865,
       "status": "success",
-      "duration_sec": 5,
+      "duration_sec": 5.17,
       "frames": 124,
-      "audio_mode": "clean_dialogue_with_room_tone",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_remote_branch_office\\plate_00001_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_046_half_laugh_00001_.mp4",
       "bytes": 851081,
-      "submitted_at": "2026-11-01T06:15:23.757Z"
+      "submitted_at": "2026-11-01T06:14:24.130Z"
     },
     "block_047_wet_eyes": {
       "block_id": "block_047_wet_eyes",
@@ -755,16 +718,13 @@
       "take": 1,
       "seed": 240866,
       "status": "success",
-      "duration_sec": 4,
+      "duration_sec": 4.46,
       "frames": 107,
-      "audio_mode": "clean_dialogue_with_room_tone",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_remote_branch_office\\plate_00001_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_047_wet_eyes_00001_.mp4",
       "bytes": 790501,
-      "submitted_at": "2026-11-01T06:16:18.034Z"
+      "submitted_at": "2026-11-01T06:15:24.107Z"
     },
     "block_048_closes_ruling": {
       "block_id": "block_048_closes_ruling",
@@ -772,16 +732,13 @@
       "take": 1,
       "seed": 240867,
       "status": "success",
-      "duration_sec": 4,
+      "duration_sec": 4.46,
       "frames": 107,
-      "audio_mode": "narrator_voiceover",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_remote_branch_office\\plate_00001_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_048_closes_ruling_00001_.mp4",
       "bytes": 685043,
-      "submitted_at": "2026-11-01T06:17:12.116Z"
+      "submitted_at": "2026-11-01T06:16:18.446Z"
     },
     "block_049_lit_window": {
       "block_id": "block_049_lit_window",
@@ -789,16 +746,13 @@
       "take": 1,
       "seed": 240868,
       "status": "success",
-      "duration_sec": 7,
+      "duration_sec": 7.29,
       "frames": 175,
-      "audio_mode": "narrator_voiceover",
-      "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_remote_branch_office\\plate_00001_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_judge_xu\\plate_00003_.png"
-      ],
+      "audio_mode": null,
+      "references": [],
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\ch04\\block_049_lit_window_00001_.mp4",
       "bytes": 1077349,
-      "submitted_at": "2026-11-01T06:18:31.983Z"
+      "submitted_at": "2026-11-01T06:17:12.733Z"
     },
     "block_001_court_wide": {
       "block_id": "block_001_court_wide",

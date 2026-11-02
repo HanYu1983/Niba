@@ -58,7 +58,7 @@ for (const [id, job] of keepers) {
   if (have?.prompt_id === job.prompt_id) continue;
   changes.push({
     id,
-    from: have ? `${have.prompt_id?.slice(0, 8)} take ${have.take}` : "(absent)",
+    from: have ? `${have.prompt_id?.slice(0, 8) ?? "(no job)"} take ${have.take ?? "?"}` : "(absent)",
     to: `${job.prompt_id.slice(0, 8)} take ${job.label.take}`,
     file: file.path
   });

@@ -107,7 +107,20 @@ ok("only the deliberate issues remain", () => {
      001 = an empty court with the judge far away, 030 = a flashback of Zhao alone,
      038 = the judge reading the verdict. */
   const overrides = result.jobs.filter((j) => j.issues.some((i) => i.kind === "refs-override")).map((j) => j.block_id);
-  assert.deepEqual(overrides, ["block_001_court_wide", "block_030_remembered_line", "block_038_verdict_read"]);
+  assert.deepEqual(overrides, [
+    "block_001_court_wide",
+    "block_008_eyes",
+    "block_016_frozen_eyes",
+    "block_030_remembered_line",
+    "block_038_verdict_read"
+  ]);
+});
+
+ok("every prompt asks for a clean frame (no burned-in subtitles)", () => {
+  /* Two clips in the first batch came back with Chinese subtitles seared into the lower third. */
+  for (const job of result.jobs) {
+    assert.ok(job.prompt.includes("沒有任何字幕"), `${job.block_id}: missing the subtitle guard`);
+  }
 });
 
 ok("narration is pronounceable and short enough for the block", () => {

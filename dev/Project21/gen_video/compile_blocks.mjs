@@ -95,7 +95,8 @@ try {
       console.log(`wrote ${resolve(args.out)}`);
     }
 
-    const hard = result.errors.length > 0 || result.jobs.some((j) => j.issues.some((i) => i.kind !== "refs-override"));
+    const hard = result.errors.length > 0 ||
+      result.jobs.some((j) => j.issues.some((i) => i.kind !== "refs-override" && i.kind !== "script-normalised"));
     process.exitCode = args.check && hard ? 1 : 0;
   }
 } catch (e) {

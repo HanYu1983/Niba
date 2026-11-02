@@ -193,7 +193,7 @@ function assemblePrompt({ notes, note, project, block, refs, narrationLines }) {
     if (!entry) throw new CompilerError(`shot notes have no Chinese name for "${entityId}"`);
     const ok = (characters.some((c) => c.id === entityId) || locations.some((l) => l.id === entityId) || props.some((p) => p.id === entityId));
     if (!ok) throw new CompilerError(`"${entityId}" is not an entity in the project`);
-    if (i === 0) {
+    if (i === 0 && entry.kind !== "character") {
       legend.push(`參考圖一是場景，${entry.zh}。`);
     } else if (entry.kind === "character") {
       legend.push(`參考圖${["一", "二", "三"][i]}是${entry.zh}，${entry.who ?? "人物"}。`);
@@ -231,6 +231,10 @@ function assemblePrompt({ notes, note, project, block, refs, narrationLines }) {
   parts.push(...wardrobe);
   if (note.no_wardrobe) parts.push("沒有人說話。");
   else if (voice.silence) parts.push(`${voice.silence}。`);
+  /* Two clips in the first batch had a subtitle burned into the lower third. The template
+     prompt carries the same instruction (「畫面完全無任何字幕」), and blocks that kept it
+     stayed clean. */
+  parts.push("畫面裡沒有任何字幕，也沒有浮水印。");
   parts.push(`打光，${light}。`);
   parts.push(`音效，${sound}。`);
 
@@ -275,7 +279,9 @@ export function compileRenderJob(project, notes, blockId, opts = {}) {
   if (!(duration >= 4 && duration <= 8)) {
     issues.push({ kind: "duration", value: duration, why: "one block must be 4-8 seconds" });
   }
-  if (refs[0] !== block.location_ref) {
+  /* A pure face insert (an eye, a mouth) is better anchored on the person's plate; the scene
+     plate only gives the model permission to pull back into a wide. */
+  if (!note.no_scene && refs[0] !== block.location_ref) {
     issues.push({ kind: "slot-order", why: "the scene must sit in slot 1", got: refs[0], expected: block.location_ref });
   }
   if (Array.isArray(note.refs) && note.refs.join() !== planRefs.join()) {
