@@ -20,7 +20,7 @@
         },
         "reference": {
           "image": "refs/char_momo",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral front-facing portrait of a young Japanese woman about twenty, fair skin, long light-brown hair in a high ponytail tied with a red ribbon, straight bangs, large warm dark eyes, athletic slim build, calm determined expression, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -36,7 +36,7 @@
         },
         "reference": {
           "image": "refs/char_shiro",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a Japanese Shiba Inu with tan and cream fur, pointed ears, bright intelligent eyes, curled tail, standing alert, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -52,7 +52,7 @@
         },
         "reference": {
           "image": "refs/char_gon",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a Japanese macaque with reddish-brown fur and a pale face, expressive dark eyes, lean wiry body, curious alert posture, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -68,7 +68,7 @@
         },
         "reference": {
           "image": "refs/char_peach",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a Japanese green pheasant with iridescent green and copper plumage, long sweeping tail, red face wattles, bright watchful eye, perched upright, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -84,7 +84,7 @@
         },
         "reference": {
           "image": "refs/char_grandma",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral front-facing portrait of an elderly Japanese farm woman in her late seventies, silver hair in a low bun, deep kind wrinkles, weathered hands, small stooped frame, gentle steady eyes, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -100,7 +100,7 @@
         },
         "reference": {
           "image": "refs/char_kiha",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral front-facing portrait of an old Japanese fisherman in his late sixties, wind-burnt weathered face, grey stubble, matted dark hair, broad work-hardened hands, wary deep-set eyes, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -116,7 +116,7 @@
         },
         "reference": {
           "image": "refs/char_genzo",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral front-facing portrait of an old island elder in his late seventies, long white hair and beard, gaunt weathered face, deep scars and calluses, hollow but proud eyes, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -132,7 +132,7 @@
         },
         "reference": {
           "image": "refs/char_oni_king",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a colossal oni king, deep red skin, two black curved horns, burning red eyes, heavy brow and tusks, mountain-like muscular build, standing still, plain dark-grey backdrop, dramatic low key light, 35mm film grain, no text"
         }
       },
@@ -148,7 +148,7 @@
         },
         "reference": {
           "image": "refs/char_oni_general",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a horned oni warrior, red skin, one broken tusk, scarred face, pillar-thick arms, massive armoured build, standing still, plain dark-grey backdrop, dramatic low key light, 35mm film grain, no text"
         }
       },
@@ -164,7 +164,7 @@
         },
         "reference": {
           "image": "refs/char_oni_cub",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a small monkey-like oni, red skin and fur, short horns, round yellow eyes, wiry body, nervous bravado, standing with a spear, plain dark-grey backdrop, dramatic low key light, 35mm film grain, no text"
         }
       },
@@ -180,7 +180,7 @@
         },
         "reference": {
           "image": "refs/char_oni_soldier",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a red-skinned oni soldier, squat muscular body, short horns, tusks, dark leather and iron scrap armour, standing with a torch, plain dark-grey backdrop, dramatic low key light, 35mm film grain, no text"
         }
       },
@@ -196,7 +196,7 @@
         },
         "reference": {
           "image": "refs/char_akita",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a large Japanese Akita with thick brown and white coat, broad head, dark small eyes, heavy build, sitting calmly, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -212,7 +212,7 @@
         },
         "reference": {
           "image": "refs/char_villager",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral front-facing portrait of a middle-aged Japanese fisherman, weathered round face, short black hair, stubble, stocky build, work clothes, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       }
@@ -224,8 +224,8 @@
         "appearance": "Smooth white lacquered ball, one large black brush character 旅, slight wear",
         "reference": {
           "image": "refs/prop_travel_orb",
-          "status": "to_generate",
-          "prompt": "Top-down product plate of a smooth white lacquered ball with one large black brush character 旅, slight wear, warm daylight, 35mm film grain, no people, no other text"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of a smooth white lacquered ball with one large black brush character 旅, slight wear, warm daylight, 35mm film grain, no people, no other text"
         }
       },
       {
@@ -234,8 +234,8 @@
         "appearance": "Large cloth bundle in peach-print fabric, lashed to a bamboo frame, small wooden writing box tucked inside",
         "reference": {
           "image": "refs/prop_bundle",
-          "status": "to_generate",
-          "prompt": "Product plate of a large peach-print cloth travel bundle lashed to a bamboo frame, small wooden writing box tucked in, warm daylight, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a large peach-print cloth travel bundle lashed to a bamboo frame, small wooden writing box tucked in, warm daylight, 35mm film grain, no people, no text"
         }
       },
       {
@@ -244,8 +244,8 @@
         "appearance": "Large brown dried gourd, braided cord, stopper, water beading on the rim",
         "reference": {
           "image": "refs/prop_gourd",
-          "status": "to_generate",
-          "prompt": "Product plate of a large brown dried gourd water flask with a braided cord and stopper, water beading on the rim, warm daylight, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a large brown dried gourd water flask with a braided cord and stopper, water beading on the rim, warm daylight, 35mm film grain, no people, no text"
         }
       },
       {
@@ -254,8 +254,8 @@
         "appearance": "Old parchment map, hand-inked coastlines, one island marked with a red cross and 鬼ヶ島",
         "reference": {
           "image": "refs/prop_map",
-          "status": "to_generate",
-          "prompt": "Top-down plate of an old parchment sea map with hand-inked coastlines, one island marked with a red cross and the characters 鬼ヶ島, worn edges, warm lamp light, 35mm film grain, no people"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of an old parchment sea map with hand-inked coastlines, one island marked with a red cross and the characters 鬼ヶ島, worn edges, warm lamp light, 35mm film grain, no people"
         }
       },
       {
@@ -264,8 +264,8 @@
         "appearance": "Small worn Japanese travel guide, cloth cover, brush title 旅の手引, loose pages",
         "reference": {
           "image": "refs/prop_travel_guide",
-          "status": "to_generate",
-          "prompt": "Top-down plate of a small worn Japanese travel guide with a cloth cover and the brush title 旅の手引, loose pages, warm daylight, 35mm film grain, no people"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of a small worn Japanese travel guide with a cloth cover and the brush title 旅の手引, loose pages, warm daylight, 35mm film grain, no people"
         }
       },
       {
@@ -274,8 +274,8 @@
         "appearance": "Torn dark cloth banner, embroidered snarling red oni face, black horns, dark dried blood along the edges",
         "reference": {
           "image": "refs/prop_oni_banner",
-          "status": "to_generate",
-          "prompt": "Product plate of a torn dark cloth war banner embroidered with a snarling red oni face and black horns, dark dried blood along the edges, firelight, 35mm film grain, no people, no other text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a torn dark cloth war banner embroidered with a snarling red oni face and black horns, dark dried blood along the edges, firelight, 35mm film grain, no people, no other text"
         }
       },
       {
@@ -284,8 +284,8 @@
         "appearance": "White canvas sail, huge red oni face painted across it, rope seams, wind-filled",
         "reference": {
           "image": "refs/prop_oni_sail",
-          "status": "to_generate",
-          "prompt": "Product plate of a white canvas boat sail with a huge red oni face painted across it, rope seams, wind-filled, bright daylight, 35mm film grain, no people, no other text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a white canvas boat sail with a huge red oni face painted across it, rope seams, wind-filled, bright daylight, 35mm film grain, no people, no other text"
         }
       },
       {
@@ -294,8 +294,8 @@
         "appearance": "Small dark wooden box, carved character 桃 on the lid, red tassel, worn brass clasp",
         "reference": {
           "image": "refs/prop_wooden_box",
-          "status": "to_generate",
-          "prompt": "Top-down product plate of a small dark wooden box with the carved character 桃 on the lid, red tassel, worn brass clasp, firelight, 35mm film grain, no people"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of a small dark wooden box with the carved character 桃 on the lid, red tassel, worn brass clasp, firelight, 35mm film grain, no people"
         }
       },
       {
@@ -304,8 +304,8 @@
         "appearance": "Small painted cloth, a thatched house under a peach tree, faded inks, creased folds",
         "reference": {
           "image": "refs/prop_cloth_house",
-          "status": "to_generate",
-          "prompt": "Top-down plate of a small painted cloth showing a thatched house under a peach tree, faded inks, creased folds, warm lantern light, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of a small painted cloth showing a thatched house under a peach tree, faded inks, creased folds, warm lantern light, 35mm film grain, no people, no text"
         }
       },
       {
@@ -314,8 +314,8 @@
         "appearance": "Japanese katana, worn black scabbard, red cord wrap, plain iron guard, nicked edge",
         "reference": {
           "image": "refs/prop_katana",
-          "status": "to_generate",
-          "prompt": "Product plate of a Japanese katana with a worn black scabbard, red cord wrap, plain iron guard, nicked edge, lying on dark wood, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a Japanese katana with a worn black scabbard, red cord wrap, plain iron guard, nicked edge, lying on dark wood, 35mm film grain, no people, no text"
         }
       },
       {
@@ -324,8 +324,8 @@
         "appearance": "Tall black war banner, two white brush characters 鬼王, ragged lower edge, soot-stained pole",
         "reference": {
           "image": "refs/prop_king_banner",
-          "status": "to_generate",
-          "prompt": "Product plate of a tall black war banner with two white brush characters 鬼王, ragged lower edge, soot-stained pole, torchlight, 35mm film grain, no people"
+          "status": "ready",
+          "prompt": "Studio product photograph of a tall black war banner with two white brush characters 鬼王, ragged lower edge, soot-stained pole, torchlight, 35mm film grain, no people"
         }
       },
       {
@@ -334,8 +334,8 @@
         "appearance": "Massive black iron greatsword, chipped edge, horned guard, longer than a man",
         "reference": {
           "image": "refs/prop_greatsword",
-          "status": "to_generate",
-          "prompt": "Product plate of a massive black iron greatsword with a chipped edge and horned guard, longer than a man, resting against stone, torchlight, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a massive black iron greatsword with a chipped edge and horned guard, longer than a man, resting against stone, torchlight, 35mm film grain, no people, no text"
         }
       },
       {
@@ -344,8 +344,8 @@
         "appearance": "Crude iron-tipped spear, dark wooden shaft, leather grip, bent tip",
         "reference": {
           "image": "refs/prop_spear",
-          "status": "to_generate",
-          "prompt": "Product plate of a crude iron-tipped spear with a dark wooden shaft, leather grip, bent tip, morning light, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a crude iron-tipped spear with a dark wooden shaft, leather grip, bent tip, morning light, 35mm film grain, no people, no text"
         }
       },
       {
@@ -354,8 +354,8 @@
         "appearance": "Woven bamboo basket, rice cakes wrapped in green leaves, steam, coarse cloth cover",
         "reference": {
           "image": "refs/prop_basket",
-          "status": "to_generate",
-          "prompt": "Top-down plate of a woven bamboo basket with rice cakes wrapped in green leaves, faint steam, coarse cloth cover, mossy stone, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of a woven bamboo basket with rice cakes wrapped in green leaves, faint steam, coarse cloth cover, mossy stone, 35mm film grain, no people, no text"
         }
       },
       {
@@ -364,8 +364,8 @@
         "appearance": "Pitch-soaked wooden torch, iron basket, orange flame, smoke trail",
         "reference": {
           "image": "refs/prop_torch",
-          "status": "to_generate",
-          "prompt": "Product plate of a pitch-soaked wooden torch with an iron basket, orange flame and smoke trail, dark stone background, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a pitch-soaked wooden torch with an iron basket, orange flame and smoke trail, dark stone background, 35mm film grain, no people, no text"
         }
       },
       {
@@ -374,8 +374,8 @@
         "appearance": "Hand-sized playing cards, cream paper, peach-blossom emblem, worn corners",
         "reference": {
           "image": "refs/prop_cards",
-          "status": "to_generate",
-          "prompt": "Top-down plate of hand-sized playing cards with a peach-blossom emblem on cream paper, worn corners, lantern light, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of hand-sized playing cards with a peach-blossom emblem on cream paper, worn corners, lantern light, 35mm film grain, no people, no text"
         }
       },
       {
@@ -384,8 +384,8 @@
         "appearance": "Whole grilled fish on a skewer, charred skin, coarse salt, small ceramic plate",
         "reference": {
           "image": "refs/prop_fish",
-          "status": "to_generate",
-          "prompt": "Top-down plate of a whole grilled fish on a skewer with charred skin and coarse salt on a small ceramic plate, lantern light, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of a whole grilled fish on a skewer with charred skin and coarse salt on a small ceramic plate, lantern light, 35mm film grain, no people, no text"
         }
       }
     ],
@@ -396,7 +396,7 @@
         "description": "Weathered wooden dock, pilings, barrels, a tattered peach flag, bright sea",
         "reference": {
           "image": "refs/loc_dock",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a weathered wooden dock in a 90s Japanese seaside village, pilings, barrels, a tattered peach flag, sparkling blue sea, warm sunlight, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -406,7 +406,7 @@
         "description": "Old wooden veranda, sun-warmed slats, thatched house behind, mountain view",
         "reference": {
           "image": "refs/loc_veranda",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of an old Japanese farmhouse wooden veranda, sun-warmed slats, thatched roof behind, green mountains beyond, late afternoon light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -416,7 +416,7 @@
         "description": "Packed dirt road, stone steps, thatched roofs, a tall 桃太郎 banner, distant mountains",
         "reference": {
           "image": "refs/loc_village_gate",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a rural Japanese village entrance, packed dirt road, stone steps, thatched roofs, a tall 桃太郎 banner on a wooden pole, distant green mountains, golden hour, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -426,7 +426,7 @@
         "description": "Rustic shrine, mossy stone ledge, stone water spout and basin, wooden banner frame, forest",
         "reference": {
           "image": "refs/loc_shrine",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a rustic Japanese shrine, mossy stone ledge, stone water spout and basin, wooden banner frame, deep green forest, midday light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -436,7 +436,7 @@
         "description": "Shallow clear mountain stream, mossy boulders, small waterfall, sun-dappled forest",
         "reference": {
           "image": "refs/loc_stream",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a shallow clear mountain stream, mossy boulders, a small waterfall, sun-dappled forest, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -446,7 +446,7 @@
         "description": "Low inn veranda, worn planks, open sea view, hanging travel banners",
         "reference": {
           "image": "refs/loc_inn_veranda",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a low Japanese inn veranda, worn wooden planks, open view of a blue sea, hanging travel banners, hard sunlight, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -456,7 +456,7 @@
         "description": "Rocky mountain trail above the sea, weathered signpost, wind-bent grass, distant islands",
         "reference": {
           "image": "refs/loc_mountain_trail",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a rocky Japanese mountain trail above a blue sea, weathered wooden signpost, wind-bent grass, distant islands, bright daylight, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -466,7 +466,7 @@
         "description": "Rustic outdoor hot spring, steam, wooden bathhouse beams, stone pool edge, forest",
         "reference": {
           "image": "refs/loc_onsen",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a rustic Japanese outdoor hot spring, rising steam, wooden bathhouse beams, stone pool edge, forest behind, soft afternoon light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -476,7 +476,7 @@
         "description": "Lantern-lit inn dining room, low table, grilled fish, ceramic plates, paper screens",
         "reference": {
           "image": "refs/loc_inn_night",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a lantern-lit Japanese inn dining room at night, low table with grilled fish and ceramic plates, paper screens, warm amber light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -486,7 +486,7 @@
         "description": "Tatami bedroom, futon, low lantern, peach-print cards, paper walls",
         "reference": {
           "image": "refs/loc_inn_room",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a Japanese tatami bedroom at night, futon, low paper lantern, scattered peach-print cards, paper walls, warm amber light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -496,7 +496,7 @@
         "description": "Dark storehouse, brazier fire, hanging scroll 鬼ヶ島, old beams, long shadows",
         "reference": {
           "image": "refs/loc_warehouse",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a dark Japanese storehouse at night, brazier fire, hanging scroll marked 鬼ヶ島, old wooden beams, long shadows, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -506,7 +506,7 @@
         "description": "Crowded wooden harbor, small boats, paper curtain bunting 鬼ヶ島へ出発, white sail, bright sun",
         "reference": {
           "image": "refs/loc_harbor",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a crowded Japanese fishing harbor, wooden boats, paper curtain bunting reading 鬼ヶ島へ出発, a white sail, bright hard sunlight, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -516,7 +516,7 @@
         "description": "Open choppy sea, wooden boat deck and rail, skull-shaped mountain and smoking fortress ahead",
         "reference": {
           "image": "refs/loc_sea",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of open choppy sea from a wooden boat deck, a skull-shaped mountain with a dark smoking fortress on the horizon, bright hard sunlight, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -526,7 +526,7 @@
         "description": "Jungle ruins, fallen stone pillars, vine-wrapped corridor, glowing red footprints, a red-corded skull",
         "reference": {
           "image": "refs/loc_jungle_ruins",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of jungle ruins with fallen stone pillars, vine-wrapped corridor, faint glowing red footprints in the dirt, a red-corded skull in the foreground, dappled light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -536,7 +536,7 @@
         "description": "Massive wooden gate studded with sharp spikes, black oni banner, moss, dusty light shafts",
         "reference": {
           "image": "refs/loc_spiked_gate",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a massive wooden gate studded with sharp spikes, black oni banner above, moss-covered walls, dusty shafts of light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -546,7 +546,7 @@
         "description": "Night inside an oni fortress, huge wooden pillars, torchlight, rafters, deep shadow",
         "reference": {
           "image": "refs/loc_fortress_pillars",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of the interior of an oni fortress at night, huge wooden pillars, torchlight, heavy rafters, deep shadow, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -556,7 +556,7 @@
         "description": "Steep ancient stone fortress wall, cracks, vines, pre-dawn mist, forest below",
         "reference": {
           "image": "refs/loc_stone_wall",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a steep ancient stone fortress wall with cracks and vines, pre-dawn mist, dark forest below, cold blue light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -566,7 +566,7 @@
         "description": "Narrow wooden bridge between watchtowers, rope rails, deep drop, banner shadows",
         "reference": {
           "image": "refs/loc_bridge",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a narrow wooden bridge between two watchtowers, rope rails, deep drop below, hanging banner shadows, early light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -576,7 +576,7 @@
         "description": "Fortress wall base, watchtower above, packed earth, morning light, spear racks",
         "reference": {
           "image": "refs/loc_wall_base",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a fortress wall base with a watchtower above, packed earth, spear racks, morning light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -586,7 +586,7 @@
         "description": "Heavy corner gate, packed-earth yard, dappled forest light, oni banner",
         "reference": {
           "image": "refs/loc_corner_gate",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a heavy wooden corner gate in an oni fortress, packed-earth yard, dappled forest light, an oni banner, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -596,7 +596,7 @@
         "description": "Massive gate frame and crossbar, gap of torchlit corridor beyond, battle smoke",
         "reference": {
           "image": "refs/loc_gate_frame",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a massive wooden gate frame and crossbar, a narrow gap of torchlit corridor beyond, battle smoke, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -606,7 +606,7 @@
         "description": "Dark stone corridor, blood-streaked stone lantern, torch brackets, distant hall glow",
         "reference": {
           "image": "refs/loc_corridor",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a dark stone fortress corridor, a blood-streaked stone lantern, torch brackets, distant hall glow, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -616,7 +616,7 @@
         "description": "Broken fortress tower at night, charred post, view of the burning oni king hall above",
         "reference": {
           "image": "refs/loc_broken_tower",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a broken fortress tower at night, charred wooden post, view of a burning hall at the fortress peak, cold wind, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -626,7 +626,7 @@
         "description": "Dungeon of wooden bars, mud floor, torchlight, stone walls, chains",
         "reference": {
           "image": "refs/loc_dungeon",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a fortress dungeon with wooden bars, mud floor, torchlight, stone walls, hanging chains, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -636,7 +636,7 @@
         "description": "Long torch-lit stone passage, wooden beams, dust, distant hall entrance",
         "reference": {
           "image": "refs/loc_passage",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a long torch-lit stone passage inside a fortress, wooden beams, dust in the air, a distant hall entrance, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -646,7 +646,7 @@
         "description": "Vast vaulted hall, black timbers, torch sconces, semicircle of oni warriors, throne at the far end",
         "reference": {
           "image": "refs/loc_great_hall",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a vast vaulted oni king's hall, black timbers, torch sconces, a semicircle of empty armoured stands, a throne at the far end, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -656,7 +656,7 @@
         "description": "High stone throne dais, black iron throne, burning braziers, horned silhouettes",
         "reference": {
           "image": "refs/loc_throne_dais",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a high stone throne dais with a black iron throne, burning braziers, horned silhouettes carved into the wall, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -666,7 +666,7 @@
         "description": "Burnt fortress courtyard at dawn, embers, broken walls, grey sky, distant sea",
         "reference": {
           "image": "refs/loc_courtyard_dawn",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a burnt fortress courtyard at dawn, glowing embers, broken walls, grey sky, a distant strip of sea, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -676,7 +676,7 @@
         "description": "Abstract 90s title card, black background, projector grain, brush calligraphy",
         "reference": {
           "image": "refs/loc_endcard",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Abstract 90s Japanese film title card, deep black background, warm projector grain and faint dust, empty space for brush calligraphy, no text, 16:9"
         }
       }
@@ -733,7 +733,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "鬼退治のあとで。\nつまり、鬼を倒したあとってことね。\n勝ったけど、ちょっと疲れた。",
-          "voice_prompt": "Young Japanese woman, warm and tired but playful, close-mic, natural Japanese, slight smile in the voice"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Warm dusk village ambience, wooden railing creak, soft chewing, the dog's wet breathing close to the lens, a distant film-projector hum.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -792,7 +792,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "まだ撮るの。\nまた、どこかへ。",
-          "voice_prompt": "Young Japanese woman, warm and tired but playful, close-mic, natural Japanese, slight smile in the voice"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Warm dusk village ambience, wooden railing creak, soft chewing, the dog's wet breathing close to the lens, a distant film-projector hum.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -843,7 +843,7 @@
           "voice_prompt": "Measured Japanese narrator, warm and cinematic, broadcast-clear, slightly nostalgic"
         },
         "soundtrack_specification": "Non-diegetic narrator over a warm analog room tone; the projector hum rises as the poster locks up.",
-        "visual_sound_sync": "Lips remain sealed or nearly still; the voice is non-diegetic, no lip sync."
+        "visual_sound_sync": "No on-screen mouth movement; the narration is non-diegetic."
       }
     },
     {
@@ -971,7 +971,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "みんな、そろってる？",
-          "voice_prompt": "Young Japanese woman, bright teasing tone; a small boyish monkey voice, curious and deadpan"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Bright seaside ambience, waves against pilings, seagulls, flag fabric snapping, the dog's happy panting.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1039,7 +1039,7 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_gon",
         "target_ref": "prop_travel_orb",
         "description": "Gon leans further over Momo's shoulder and taps the white orb with one finger, dead serious; Shiro's ears turn toward him, Peach ruffles its wings."
       },
@@ -1055,7 +1055,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "その球、食って書いてもいい？",
-          "voice_prompt": "Young Japanese woman, bright teasing tone; a small boyish monkey voice, curious and deadpan"
+          "voice_prompt": "Small boyish monkey voice, bright and curious, deadpan, slightly raspy"
         },
         "soundtrack_specification": "Bright seaside ambience, waves against pilings, seagulls, flag fabric snapping, the dog's happy panting.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1139,7 +1139,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "旅って書いてこそ意味があるんだよ。\n行こう。\n俺たちの旅は、食べるためじゃないんだ。",
-          "voice_prompt": "Young Japanese woman, bright teasing tone; a small boyish monkey voice, curious and deadpan"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Bright seaside ambience, waves against pilings, seagulls, flag fabric snapping, the dog's happy panting.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1149,7 +1149,7 @@
       "id": "block_005_veranda_stretch",
       "timeframe": {
         "start_sec": 38,
-        "end_sec": 44
+        "end_sec": 45
       },
       "location_ref": "loc_veranda",
       "reference_images": [
@@ -1189,8 +1189,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "明日から、まだ見たことのない場所を、たくさん訪れるんだ。",
-          "voice_prompt": "Young Japanese woman, soft dreamy tone, close-mic, a small smile"
+          "original_text": "明日から、知らない場所へ。\nたくさん歩いて、たくさん見るんだ。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Quiet afternoon veranda, distant birds, leaves rustling, light cotton stretch, a soft exhale.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1199,8 +1199,8 @@
     {
       "id": "block_006_kneel_before_grandma",
       "timeframe": {
-        "start_sec": 44,
-        "end_sec": 50
+        "start_sec": 45,
+        "end_sec": 51
       },
       "location_ref": "loc_village_gate",
       "reference_images": [
@@ -1246,7 +1246,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "おばあちゃん。\nずっと言いたかったことがあるの。",
-          "voice_prompt": "Young Japanese woman, shy then earnest; an aged gentle Japanese grandmother, warm and frayed"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Rural village ambience, wind through leaves, banner flapping, a distant dog bark, soft dirt underfoot.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1255,8 +1255,8 @@
     {
       "id": "block_006_grandma_peach_tree",
       "timeframe": {
-        "start_sec": 50,
-        "end_sec": 55
+        "start_sec": 51,
+        "end_sec": 56
       },
       "location_ref": "loc_village_gate",
       "reference_images": [
@@ -1290,7 +1290,7 @@
       ],
       "present_props": [],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_grandma",
         "description": "Grandma steps closer and rests a weathered hand on Momo's shoulder; the banner snaps once above them, and the last sun catches the grey in her hair."
       },
       "referenced_blocks": [
@@ -1305,7 +1305,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "桃の木の下で、帰りを待っていた子だよ。",
-          "voice_prompt": "Young Japanese woman, shy then earnest; an aged gentle Japanese grandmother, warm and frayed"
+          "voice_prompt": "Aged Japanese grandmother, warm and frayed, fond and scolding"
         },
         "soundtrack_specification": "Rural village ambience, wind through leaves, banner flapping, a distant dog bark, soft dirt underfoot.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1314,8 +1314,8 @@
     {
       "id": "block_006_momo_promise",
       "timeframe": {
-        "start_sec": 55,
-        "end_sec": 63
+        "start_sec": 56,
+        "end_sec": 64
       },
       "location_ref": "loc_village_gate",
       "reference_images": [
@@ -1363,8 +1363,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "ちゃんと生きて帰ってくるから。\n帰ってきたら、泥だらけで何してるんだって、叱ってもらいたいの。",
-          "voice_prompt": "Young Japanese woman, shy then earnest; an aged gentle Japanese grandmother, warm and frayed"
+          "original_text": "ちゃんと生きて帰ってくるから。\n帰ってきたら、叱ってほしいの。\n泥だらけで何してるんだって。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Rural village ambience, wind through leaves, banner flapping, a distant dog bark, soft dirt underfoot.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1373,8 +1373,8 @@
     {
       "id": "block_007_grandma_shout",
       "timeframe": {
-        "start_sec": 63,
-        "end_sec": 67
+        "start_sec": 64,
+        "end_sec": 68
       },
       "location_ref": "loc_village_gate",
       "reference_images": [
@@ -1422,7 +1422,7 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_grandma",
         "target_ref": "prop_bundle",
         "description": "Momo walks the dirt path with her bundle, turning to call back; Grandma stands under the eaves waving hard, small against the thatched house; golden light, stone steps, distant mountains."
       },
@@ -1435,7 +1435,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "衣服破了自己補！\n別忘了帶飯糰！",
-          "voice_prompt": "Aged Japanese grandmother calling out, fond and scolding; young woman calling back, laughing"
+          "voice_prompt": "Aged Japanese grandmother, warm and frayed, fond and scolding"
         },
         "soundtrack_specification": "Golden-hour countryside, wind through paddy and bamboo, footsteps on dirt, a voice carried across the distance.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1444,8 +1444,8 @@
     {
       "id": "block_007_momo_calls_back",
       "timeframe": {
-        "start_sec": 67,
-        "end_sec": 71
+        "start_sec": 68,
+        "end_sec": 72
       },
       "location_ref": "loc_village_gate",
       "reference_images": [
@@ -1509,7 +1509,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "知道啦。",
-          "voice_prompt": "Aged Japanese grandmother calling out, fond and scolding; young woman calling back, laughing"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Golden-hour countryside, wind through paddy and bamboo, footsteps on dirt, a voice carried across the distance.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1518,8 +1518,8 @@
     {
       "id": "block_008_pat_shiro",
       "timeframe": {
-        "start_sec": 71,
-        "end_sec": 79
+        "start_sec": 72,
+        "end_sec": 80
       },
       "location_ref": "loc_mountain_trail",
       "reference_images": [
@@ -1569,8 +1569,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "これからは俺たち四人の旅だ。\nばあちゃんにも分かる旅の記録を、書いてみせよう。",
-          "voice_prompt": "Young Japanese woman, affectionate and steady, close-mic"
+          "original_text": "これからは俺たち四人の旅だ。\nばあちゃんにも分かるように。\n旅の記録を書いてみせよう。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Forest path ambience, leaves, a dog's soft tail wag against cloth, a bundle strap creaking.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1579,8 +1579,8 @@
     {
       "id": "block_009_shrine_drink",
       "timeframe": {
-        "start_sec": 79,
-        "end_sec": 86
+        "start_sec": 80,
+        "end_sec": 87
       },
       "location_ref": "loc_shrine",
       "reference_images": [
@@ -1653,8 +1653,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "あー、生き返った。\nゴン、お前はどうして毎回最初に一口齧るんだよ。",
-          "voice_prompt": "Young Japanese woman, relieved and teasing; small boyish monkey voice, utterly deadpan"
+          "original_text": "あー、生き返った。\nゴン、お前は毎回。\nどうして最初に一口齧るんだよ。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Shrine hush, trickling stone-spout water, cicadas, a long satisfied gulp, a monkey's soft crunch.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1663,8 +1663,8 @@
     {
       "id": "block_009_gon_taste_test",
       "timeframe": {
-        "start_sec": 86,
-        "end_sec": 90
+        "start_sec": 87,
+        "end_sec": 91
       },
       "location_ref": "loc_shrine",
       "reference_images": [
@@ -1725,7 +1725,7 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_gon",
         "target_ref": "prop_gourd",
         "description": "Gon chews with enormous dignity and swallows before answering; Momo stares at him, gourd forgotten in her hand."
       },
@@ -1741,7 +1741,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "毒見だ。",
-          "voice_prompt": "Young Japanese woman, relieved and teasing; small boyish monkey voice, utterly deadpan"
+          "voice_prompt": "Small boyish monkey voice, bright and curious, deadpan, slightly raspy"
         },
         "soundtrack_specification": "Shrine hush, trickling stone-spout water, cicadas, a long satisfied gulp, a monkey's soft crunch.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1750,8 +1750,8 @@
     {
       "id": "block_010_stream_rest",
       "timeframe": {
-        "start_sec": 90,
-        "end_sec": 96
+        "start_sec": 91,
+        "end_sec": 97
       },
       "location_ref": "loc_stream",
       "reference_images": [
@@ -1822,7 +1822,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "半日歩いたし、ここで休もう。\n水も甘いし、風も甘い。",
-          "voice_prompt": "Young Japanese woman, refreshed and light; the pheasant call is a bird call, not a voice"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Stream ambience, small waterfall, water drips, a pheasant's two-note call, soft cloth.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1831,8 +1831,8 @@
     {
       "id": "block_010_peach_agrees",
       "timeframe": {
-        "start_sec": 96,
-        "end_sec": 100
+        "start_sec": 97,
+        "end_sec": 101
       },
       "location_ref": "loc_stream",
       "reference_images": [
@@ -1906,7 +1906,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "ほら、ピーチだってそう言ってる。",
-          "voice_prompt": "Young Japanese woman, refreshed and light; the pheasant call is a bird call, not a voice"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Stream ambience, small waterfall, water drips, a pheasant's two-note call, soft cloth.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1915,8 +1915,8 @@
     {
       "id": "block_011_map_grandma",
       "timeframe": {
-        "start_sec": 100,
-        "end_sec": 108
+        "start_sec": 101,
+        "end_sec": 109
       },
       "location_ref": "loc_inn_veranda",
       "reference_images": [
@@ -1981,6 +1981,9 @@
         "target_ref": "prop_map",
         "description": "Low inn veranda in hard sunlight: Momo crouches over an old parchment map, fingertip tracing the sea to an island marked with a red cross and the characters 鬼ヶ島; a travel guide 旅の手引 lies open; Shiro, Gon and Peach crowd the edges."
       },
+      "referenced_blocks": [
+        "block_006_momo_promise"
+      ],
       "audio_control": {
         "audio_mode": "clean_dialogue_with_room_tone",
         "speech_present": true,
@@ -1989,8 +1992,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "おばあちゃんが言ってたんだ。\n私の桃も、鬼ヶ島の人たちと同じで、よそから来たものなんだって。",
-          "voice_prompt": "Young Japanese woman, thoughtful then resolved, close-mic"
+          "original_text": "おばあちゃんが言ってたんだ。\n俺の桃も、鬼ヶ島の人たちと同じで。\nよそから来たものなんだって。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Inn veranda in hard sunlight, wind, distant village, a single confident dog bark, parchment rustle.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -1999,8 +2002,8 @@
     {
       "id": "block_011_map_decision",
       "timeframe": {
-        "start_sec": 108,
-        "end_sec": 116
+        "start_sec": 109,
+        "end_sec": 117
       },
       "location_ref": "loc_inn_veranda",
       "reference_images": [
@@ -2076,8 +2079,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "よし、決めた。\n鬼ヶ島に行って、囚われている人たちを見てくる。\nそれから、帰ってくる。",
-          "voice_prompt": "Young Japanese woman, thoughtful then resolved, close-mic"
+          "original_text": "よし、決めた。\n鬼ヶ島に行って。\n囚われている人たちを見てくる。\nそれから、帰ってくる。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Inn veranda in hard sunlight, wind, distant village, a single confident dog bark, parchment rustle.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2086,8 +2089,8 @@
     {
       "id": "block_012_trail_depart",
       "timeframe": {
-        "start_sec": 116,
-        "end_sec": 120
+        "start_sec": 117,
+        "end_sec": 121
       },
       "location_ref": "loc_mountain_trail",
       "reference_images": [
@@ -2148,7 +2151,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "出発。",
-          "voice_prompt": "Young Japanese woman, bright and stubborn; small boyish monkey voice, muttering"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Mountain trail wind, seabirds, footsteps on gravel, a pack strap creaking.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2157,8 +2160,8 @@
     {
       "id": "block_012_gon_skeptic",
       "timeframe": {
-        "start_sec": 120,
-        "end_sec": 125
+        "start_sec": 121,
+        "end_sec": 126
       },
       "location_ref": "loc_mountain_trail",
       "reference_images": [
@@ -2206,7 +2209,7 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_gon",
         "target_ref": "prop_bundle",
         "description": "Gon mutters under his breath while shifting his bundle; Shiro glances back at him, tongue out."
       },
@@ -2222,7 +2225,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "お前、島がどんな姿か知らないんだろ。",
-          "voice_prompt": "Young Japanese woman, bright and stubborn; small boyish monkey voice, muttering"
+          "voice_prompt": "Small boyish monkey voice, bright and curious, deadpan, slightly raspy"
         },
         "soundtrack_specification": "Mountain trail wind, seabirds, footsteps on gravel, a pack strap creaking.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2231,8 +2234,8 @@
     {
       "id": "block_012_momo_answers",
       "timeframe": {
-        "start_sec": 125,
-        "end_sec": 129
+        "start_sec": 126,
+        "end_sec": 130
       },
       "location_ref": "loc_mountain_trail",
       "reference_images": [
@@ -2296,7 +2299,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "だからこそ、見に行くんだよ。",
-          "voice_prompt": "Young Japanese woman, bright and stubborn; small boyish monkey voice, muttering"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Mountain trail wind, seabirds, footsteps on gravel, a pack strap creaking.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2305,8 +2308,8 @@
     {
       "id": "block_013_onsen_bliss",
       "timeframe": {
-        "start_sec": 129,
-        "end_sec": 134
+        "start_sec": 130,
+        "end_sec": 135
       },
       "location_ref": "loc_onsen",
       "reference_images": [
@@ -2362,7 +2365,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "わあ、最高。\nこれがいい湯、いい島ってやつだね。",
-          "voice_prompt": "Young Japanese woman, blissful and lazy; small boyish monkey voice, flat and unimpressed"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Hot spring lapping, steam hush, a wooden sign creaking, a sleepy dog sigh.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2371,8 +2374,8 @@
     {
       "id": "block_013_gon_warning",
       "timeframe": {
-        "start_sec": 134,
-        "end_sec": 141
+        "start_sec": 135,
+        "end_sec": 142
       },
       "location_ref": "loc_onsen",
       "reference_images": [
@@ -2416,7 +2419,7 @@
       ],
       "present_props": [],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_gon",
         "description": "Gon lifts his chin from the pool edge and stares at her, steam curling between them; Shiro's ear twitches but the dog does not wake."
       },
       "referenced_blocks": [
@@ -2431,7 +2434,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "おい、もうすぐ鬼島だぞ。\nのん気に湯なんか浸かってていいのかよ。",
-          "voice_prompt": "Young Japanese woman, blissful and lazy; small boyish monkey voice, flat and unimpressed"
+          "voice_prompt": "Small boyish monkey voice, bright and curious, deadpan, slightly raspy"
         },
         "soundtrack_specification": "Hot spring lapping, steam hush, a wooden sign creaking, a sleepy dog sigh.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2440,8 +2443,8 @@
     {
       "id": "block_013_momo_onsen_answer",
       "timeframe": {
-        "start_sec": 141,
-        "end_sec": 147
+        "start_sec": 142,
+        "end_sec": 148
       },
       "location_ref": "loc_onsen",
       "reference_images": [
@@ -2500,7 +2503,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "だからこそ浸かるんだよ。\n力をためて、明日に備える。",
-          "voice_prompt": "Young Japanese woman, blissful and lazy; small boyish monkey voice, flat and unimpressed"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Hot spring lapping, steam hush, a wooden sign creaking, a sleepy dog sigh.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2509,8 +2512,8 @@
     {
       "id": "block_014_fish_offer",
       "timeframe": {
-        "start_sec": 147,
-        "end_sec": 152
+        "start_sec": 148,
+        "end_sec": 153
       },
       "location_ref": "loc_inn_night",
       "reference_images": [
@@ -2571,7 +2574,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "今日の収穫だよ。\n一口かじれば、海の味。",
-          "voice_prompt": "Young Japanese woman, playful presenter voice; small boyish monkey voice, mouth full and bored"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Lantern-lit inn, soft chatter, chopstick clinks, charcoal grill crackle, a dog licking its chops.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2580,8 +2583,8 @@
     {
       "id": "block_014_gon_third_time",
       "timeframe": {
-        "start_sec": 152,
-        "end_sec": 156
+        "start_sec": 153,
+        "end_sec": 157
       },
       "location_ref": "loc_inn_night",
       "reference_images": [
@@ -2629,7 +2632,7 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_gon",
         "target_ref": "prop_fish",
         "description": "Gon speaks around a mouthful of fish, deadpan; Momo freezes mid-offer, then laughs; Shiro licks its chops; lantern light sways."
       },
@@ -2645,7 +2648,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "もう三回目だぜ、その台詞。",
-          "voice_prompt": "Young Japanese woman, playful presenter voice; small boyish monkey voice, mouth full and bored"
+          "voice_prompt": "Small boyish monkey voice, bright and curious, deadpan, slightly raspy"
         },
         "soundtrack_specification": "Lantern-lit inn, soft chatter, chopstick clinks, charcoal grill crackle, a dog licking its chops.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2654,8 +2657,8 @@
     {
       "id": "block_015_card_promise",
       "timeframe": {
-        "start_sec": 156,
-        "end_sec": 164
+        "start_sec": 157,
+        "end_sec": 165
       },
       "location_ref": "loc_inn_room",
       "reference_images": [
@@ -2715,8 +2718,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "約束だよ。\n鬼ヶ島で、助けるべき人を助けて、それから四人で、もっと大きな海を見に行くんだ。",
-          "voice_prompt": "Young Japanese woman, playful then sincere; small boyish monkey voice, worried"
+          "original_text": "約束だよ。\n鬼ヶ島で、助けるべき人を助けて。\nそれから四人で、大きな海を見に行く。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Tatami room hush, paper-screen rustle, cards flicked onto straw, a lantern wick ticking.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2725,8 +2728,8 @@
     {
       "id": "block_015_gon_worry",
       "timeframe": {
-        "start_sec": 164,
-        "end_sec": 168
+        "start_sec": 165,
+        "end_sec": 169
       },
       "location_ref": "loc_inn_room",
       "reference_images": [
@@ -2774,7 +2777,7 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_gon",
         "target_ref": "prop_cards",
         "description": "Gon lowers his fan of cards, unconvinced; Shiro's ears prick; the lantern flame gutters."
       },
@@ -2790,7 +2793,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "鬼王がすごく強い相手だったら？",
-          "voice_prompt": "Young Japanese woman, playful then sincere; small boyish monkey voice, worried"
+          "voice_prompt": "Small boyish monkey voice, bright and curious, deadpan, slightly raspy"
         },
         "soundtrack_specification": "Tatami room hush, paper-screen rustle, cards flicked onto straw, a lantern wick ticking.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2799,8 +2802,8 @@
     {
       "id": "block_015_momo_card_answer",
       "timeframe": {
-        "start_sec": 168,
-        "end_sec": 173
+        "start_sec": 169,
+        "end_sec": 174
       },
       "location_ref": "loc_inn_room",
       "reference_images": [
@@ -2863,8 +2866,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "そのときは勝ってから、温泉に戻ってくるさ。",
-          "voice_prompt": "Young Japanese woman, playful then sincere; small boyish monkey voice, worried"
+          "original_text": "そのときは勝ってから。\n温泉に戻ってくるさ。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Tatami room hush, paper-screen rustle, cards flicked onto straw, a lantern wick ticking.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2873,8 +2876,8 @@
     {
       "id": "block_016_kiha_unfurls",
       "timeframe": {
-        "start_sec": 173,
-        "end_sec": 181
+        "start_sec": 174,
+        "end_sec": 182
       },
       "location_ref": "loc_warehouse",
       "reference_images": [
@@ -2932,10 +2935,13 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_kiha",
         "target_ref": "prop_oni_banner",
         "description": "Night storehouse lit by a brazier: Kiha, mud-caked and weathered, snaps open a torn banner embroidered with a red oni face and dark dried blood; Momo crouches before it, her smile gone; long shadows climb the walls."
       },
+      "referenced_blocks": [
+        "block_015_momo_card_answer"
+      ],
       "audio_control": {
         "audio_mode": "clean_dialogue_with_room_tone",
         "speech_present": true,
@@ -2944,8 +2950,8 @@
           "speaker_ref": "char_kiha",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "わしは若い頃、船で北へ向かって、鬼ヶ島へ流された。\nあの島は島なんかじゃない。\n城だ。",
-          "voice_prompt": "Old Japanese fisherman, rustic formal speech, gravelly and grave; young woman, quiet and steady"
+          "original_text": "わしは若い頃、船で北へ向かった。\n鬼ヶ島へ流された。\nあの島は島なんかじゃない。\n城だ。",
+          "voice_prompt": "Old Japanese fisherman, gravelly, rustic formal speech, grave and burdened"
         },
         "soundtrack_specification": "Brazier crackle, rough whisper of old cloth, a heavy silence after Kiha's words, distant night wind.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -2954,8 +2960,8 @@
     {
       "id": "block_016_kiha_describes_island",
       "timeframe": {
-        "start_sec": 181,
-        "end_sec": 189
+        "start_sec": 182,
+        "end_sec": 190
       },
       "location_ref": "loc_warehouse",
       "reference_images": [
@@ -3013,7 +3019,7 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_kiha",
         "target_ref": "prop_oni_banner",
         "description": "Kiha jabs a finger at the banner, then at a hanging scroll marked 鬼ヶ島; firelight catches the red oni face; Momo's hands tighten on her knees."
       },
@@ -3028,8 +3034,8 @@
           "speaker_ref": "char_kiha",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "島の真ん中に山があって、てっぺんは髑髏みたいな形をしている。\n鬼王は麓の人々をみな檻に閉じ込めて、石を運ばせているんだ。",
-          "voice_prompt": "Old Japanese fisherman, rustic formal speech, gravelly and grave; young woman, quiet and steady"
+          "original_text": "島の真ん中に山があって。\nてっぺんは髑髏みたいな形をしている。\n鬼王は麓の人々を檻に閉じ込めて。\n石を運ばせているんだ。",
+          "voice_prompt": "Old Japanese fisherman, gravelly, rustic formal speech, grave and burdened"
         },
         "soundtrack_specification": "Brazier crackle, rough whisper of old cloth, a heavy silence after Kiha's words, distant night wind.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3038,8 +3044,8 @@
     {
       "id": "block_016_momo_asks_island",
       "timeframe": {
-        "start_sec": 189,
-        "end_sec": 193
+        "start_sec": 190,
+        "end_sec": 194
       },
       "location_ref": "loc_warehouse",
       "reference_images": [
@@ -3113,7 +3119,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "島の人たち、みんな、まだ生きてるの？",
-          "voice_prompt": "Old Japanese fisherman, rustic formal speech, gravelly and grave; young woman, quiet and steady"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Brazier crackle, rough whisper of old cloth, a heavy silence after Kiha's words, distant night wind.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3122,8 +3128,8 @@
     {
       "id": "block_016_kiha_answer",
       "timeframe": {
-        "start_sec": 193,
-        "end_sec": 201
+        "start_sec": 194,
+        "end_sec": 202
       },
       "location_ref": "loc_warehouse",
       "reference_images": [
@@ -3181,7 +3187,7 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_kiha",
         "target_ref": "prop_oni_banner",
         "description": "Kiha's scarred hands clutch the banner; he looks at the fire, not at her; the room seems to contract around his voice."
       },
@@ -3196,8 +3202,8 @@
           "speaker_ref": "char_kiha",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "生きている者がひとりでもいれば、みんな生きているんだ。\nわしは泳いで戻ってきた。\n村で戻ってこられたのは、わし一人だけだった。",
-          "voice_prompt": "Old Japanese fisherman, rustic formal speech, gravelly and grave; young woman, quiet and steady"
+          "original_text": "生きている者がひとりでもいれば。\nみんな生きているんだ。\nわしは泳いで戻ってきた。\n村で戻ってこられたのは。\nわし一人だけだった。",
+          "voice_prompt": "Old Japanese fisherman, gravelly, rustic formal speech, grave and burdened"
         },
         "soundtrack_specification": "Brazier crackle, rough whisper of old cloth, a heavy silence after Kiha's words, distant night wind.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3206,8 +3212,8 @@
     {
       "id": "block_016_momo_takes_banner",
       "timeframe": {
-        "start_sec": 201,
-        "end_sec": 206
+        "start_sec": 202,
+        "end_sec": 207
       },
       "location_ref": "loc_warehouse",
       "reference_images": [
@@ -3281,7 +3287,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "この旗、借りていくよ。\n帰ってきたら返すから。",
-          "voice_prompt": "Old Japanese fisherman, rustic formal speech, gravelly and grave; young woman, quiet and steady"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Brazier crackle, rough whisper of old cloth, a heavy silence after Kiha's words, distant night wind.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3290,8 +3296,8 @@
     {
       "id": "block_017_villager_taunt",
       "timeframe": {
-        "start_sec": 206,
-        "end_sec": 210
+        "start_sec": 207,
+        "end_sec": 211
       },
       "location_ref": "loc_harbor",
       "reference_images": [
@@ -3349,7 +3355,7 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_villager",
         "target_ref": "prop_oni_sail",
         "description": "Crowded harbor under hard sun: Momo sits on the boat railing, arm flung wide, grinning back at a villager on the dock; Shiro and Gon beside her, Peach on the rail; a white sail with a huge red oni face begins to rise."
       },
@@ -3364,8 +3370,8 @@
           "speaker_ref": "char_villager",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "小桃！就你們四個能幹嘛！",
-          "voice_prompt": "Middle-aged Japanese fisherman, teasing shout; young woman, bright defiant shout"
+          "original_text": "小桃！\n四人だけで何ができるんだ！",
+          "voice_prompt": "Middle-aged Japanese fisherman, blunt and teasing, shouted across the dock"
         },
         "soundtrack_specification": "Bustling harbor, lapping water, rowdy crowd, canvas snapping, gulls.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3374,8 +3380,8 @@
     {
       "id": "block_017_momo_five",
       "timeframe": {
-        "start_sec": 210,
-        "end_sec": 218
+        "start_sec": 211,
+        "end_sec": 219
       },
       "location_ref": "loc_harbor",
       "reference_images": [
@@ -3448,8 +3454,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "私たちは五人だよ。\nシロ、ゴン、ピーチ、それに私。\nそれに、おばあちゃんが門で見てくれてるんだから。",
-          "voice_prompt": "Middle-aged Japanese fisherman, teasing shout; young woman, bright defiant shout"
+          "original_text": "俺たちは五人だよ。\nシロ、ゴン、ピーチ、それに俺。\nそれに、おばあちゃんもいる。\n門で見てくれてるんだから。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Bustling harbor, lapping water, rowdy crowd, canvas snapping, gulls.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3458,8 +3464,8 @@
     {
       "id": "block_018_skull_island",
       "timeframe": {
-        "start_sec": 218,
-        "end_sec": 225
+        "start_sec": 219,
+        "end_sec": 226
       },
       "location_ref": "loc_sea",
       "reference_images": [
@@ -3504,8 +3510,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "ほんとに、鬼みたいだ。\n分かってる。\n私たちはあの城を、壊しに行くんだ。",
-          "voice_prompt": "Young Japanese woman, hushed awe then hard resolve, close-mic against wind"
+          "original_text": "ほんとに、鬼みたいだ。\n分かってる。\n俺たちはあの城を、壊しに行くんだ。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Open sea wind, wave slap against the hull, rigging creak, one low long dog growl.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3514,8 +3520,8 @@
     {
       "id": "block_019_footprints",
       "timeframe": {
-        "start_sec": 225,
-        "end_sec": 233
+        "start_sec": 226,
+        "end_sec": 234
       },
       "location_ref": "loc_jungle_ruins",
       "reference_images": [
@@ -3571,7 +3577,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "この足跡、連れて行かれた人たちのもの？\nいや、深すぎる。\nこれは鬼の足跡だ。",
-          "voice_prompt": "Young Japanese woman, low wary whisper, close-mic"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Creeping jungle, dripping leaves, insect buzz, a low dog sniff, faint red-glow hum.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3580,8 +3586,8 @@
     {
       "id": "block_020_gate_count",
       "timeframe": {
-        "start_sec": 233,
-        "end_sec": 237
+        "start_sec": 234,
+        "end_sec": 238
       },
       "location_ref": "loc_spiked_gate",
       "reference_images": [
@@ -3605,7 +3611,7 @@
         {
           "entity_ref": "char_momo",
           "outfit": "Weathered cream sleeveless kimono-style tunic with peach motifs, short rust-red haori vest, dark sash with a peach pouch, red-and-black corded arm wraps, strappy straw sandals, katana at the left hip",
-          "facial_state": "Tense, eyes fixed forward, lips barely moving"
+          "facial_state": "Tense, eyes fixed forward, lips moving in a low whisper"
         },
         {
           "entity_ref": "char_shiro",
@@ -3627,7 +3633,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "一進門就有哨位。\n我數到三。",
-          "voice_prompt": "Young Japanese woman, tight tactical whisper, close-mic"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Hush of the forest floor, creaking wood, muffled wind over spikes, dust settling.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3636,8 +3642,8 @@
     {
       "id": "block_021_gon_reports",
       "timeframe": {
-        "start_sec": 237,
-        "end_sec": 241
+        "start_sec": 238,
+        "end_sec": 242
       },
       "location_ref": "loc_fortress_pillars",
       "reference_images": [
@@ -3675,7 +3681,7 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_gon",
         "target_ref": "prop_torch",
         "description": "Night inside the fortress: Momo crouches against a huge wooden pillar with a low torch; Gon hangs from a crossbeam above, pointing down the corridor."
       },
@@ -3688,7 +3694,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "壁の中に人がいる。\n二人。",
-          "voice_prompt": "Small boyish monkey voice, urgent whisper; young woman, calm command whisper"
+          "voice_prompt": "Small boyish monkey voice, bright and curious, deadpan, slightly raspy"
         },
         "soundtrack_specification": "Inner keep quiet, torch hiss, soft pad of footsteps, a faint pigeon rustle in the rafters.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3697,8 +3703,8 @@
     {
       "id": "block_021_momo_changes_route",
       "timeframe": {
-        "start_sec": 241,
-        "end_sec": 249
+        "start_sec": 242,
+        "end_sec": 250
       },
       "location_ref": "loc_fortress_pillars",
       "reference_images": [
@@ -3751,8 +3757,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "じゃあ、別の道を行こう。\n私たちは人を救いに来たんだ。\n起こしに来たんじゃない。",
-          "voice_prompt": "Small boyish monkey voice, urgent whisper; young woman, calm command whisper"
+          "original_text": "じゃあ、別の道を行こう。\n俺たちは人を救いに来たんだ。\n起こしに来たんじゃない。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Inner keep quiet, torch hiss, soft pad of footsteps, a faint pigeon rustle in the rafters.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3761,8 +3767,8 @@
     {
       "id": "block_022_wall_climb",
       "timeframe": {
-        "start_sec": 249,
-        "end_sec": 253
+        "start_sec": 250,
+        "end_sec": 254
       },
       "location_ref": "loc_stone_wall",
       "reference_images": [
@@ -3808,7 +3814,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "もう少し。\nこの壁の奥が城の中だ。",
-          "voice_prompt": "Young Japanese woman, breathless near-whisper, close-mic"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Gritty scrape of hands and claws on stone, ragged breathing, creaking vines, early birdsong.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3817,8 +3823,8 @@
     {
       "id": "block_023_bridge_count",
       "timeframe": {
-        "start_sec": 253,
-        "end_sec": 257
+        "start_sec": 254,
+        "end_sec": 259
       },
       "location_ref": "loc_bridge",
       "reference_images": [
@@ -3836,18 +3842,28 @@
           "role": "character",
           "entity_ref": "char_shiro",
           "image": "refs/char_shiro"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_oni_soldier",
+          "image": "refs/char_oni_soldier"
         }
       ],
       "present_characters": [
         {
           "entity_ref": "char_momo",
           "outfit": "Torn cream and rust sleeveless warrior outfit, dirt and blood stains, red ribbon, dark leather bracers, katana at the left hip",
-          "facial_state": "Barely breathing, lips moving in a whisper"
+          "facial_state": "Lips sealed tight, jaw motionless, eyes fixed forward"
         },
         {
           "entity_ref": "char_shiro",
           "outfit": "Small red leather armor vest with a red neck scarf",
           "facial_state": "Frozen, tail tucked"
+        },
+        {
+          "entity_ref": "char_oni_soldier",
+          "outfit": "Dark leather and iron scrap armor, short horns, torch or spear",
+          "facial_state": "Neutral, focused"
         }
       ],
       "present_props": [],
@@ -3864,17 +3880,17 @@
           "type": "internal_monologue",
           "language": "ja-JP",
           "original_text": "向こうへ行くまで待つ。\n一、二、三。",
-          "voice_prompt": "Young Japanese woman, barely audible ventriloquist whisper, close-mic, almost no breath"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Armoured feet on the deck below, wood groaning, held breath, a distant spear clink.",
-        "visual_sound_sync": "Lips remain sealed or nearly still; the voice is non-diegetic, no lip sync."
+        "visual_sound_sync": "Lips sealed tight, jaw motionless; the voice is internal, no lip sync."
       }
     },
     {
       "id": "block_024_offer_fruit",
       "timeframe": {
-        "start_sec": 257,
-        "end_sec": 263
+        "start_sec": 259,
+        "end_sec": 265
       },
       "location_ref": "loc_wall_base",
       "reference_images": [
@@ -3925,7 +3941,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "ほら、やるよ。\n戦わない。\n道を空けてくれればそれでいい。",
-          "voice_prompt": "Young Japanese woman, calm and friendly; small squeaky oni-cub voice, suspicious then sulky"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Morning stillness at the wall, a spear shaft clink, cloth rustle, a juicy bite.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3934,8 +3950,8 @@
     {
       "id": "block_024_cub_lets_them_pass",
       "timeframe": {
-        "start_sec": 263,
-        "end_sec": 267
+        "start_sec": 265,
+        "end_sec": 269
       },
       "location_ref": "loc_wall_base",
       "reference_images": [
@@ -3973,7 +3989,7 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_oni_cub",
         "target_ref": "prop_spear",
         "description": "The cub snatches the fruit and points its spear toward a side door, trying to look bored."
       },
@@ -3989,7 +4005,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "あっちの道を行け。",
-          "voice_prompt": "Young Japanese woman, calm and friendly; small squeaky oni-cub voice, suspicious then sulky"
+          "voice_prompt": "Small squeaky oni-cub voice, suspicious then sulky"
         },
         "soundtrack_specification": "Morning stillness at the wall, a spear shaft clink, cloth rustle, a juicy bite.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -3998,8 +4014,8 @@
     {
       "id": "block_024_momo_persimmon_quip",
       "timeframe": {
-        "start_sec": 267,
-        "end_sec": 272
+        "start_sec": 269,
+        "end_sec": 274
       },
       "location_ref": "loc_wall_base",
       "reference_images": [
@@ -4053,7 +4069,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "見ろよ、柿のほうが刀より役に立つんだ。",
-          "voice_prompt": "Young Japanese woman, calm and friendly; small squeaky oni-cub voice, suspicious then sulky"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Morning stillness at the wall, a spear shaft clink, cloth rustle, a juicy bite.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -4062,8 +4078,8 @@
     {
       "id": "block_025_oni_general_taunt",
       "timeframe": {
-        "start_sec": 272,
-        "end_sec": 276
+        "start_sec": 274,
+        "end_sec": 278
       },
       "location_ref": "loc_corner_gate",
       "reference_images": [
@@ -4121,7 +4137,7 @@
         }
       ],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_oni_general",
         "target_ref": "prop_katana",
         "description": "Corner gate: a horned oni general in heavy armor towers over Momo, arms like pillars; Momo squares off with her blade across her body; Shiro and Gon brace behind her."
       },
@@ -4134,7 +4150,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "小娘風情が、壁を壊そうってか。",
-          "voice_prompt": "Deep rumbling oni warrior voice; young Japanese woman, steady and unafraid"
+          "voice_prompt": "Deep rumbling oni warrior, contemptuous and slow"
         },
         "soundtrack_specification": "Tensed forest birds falling silent, gravel crunch, a blade leaving its sheath, a deep oni rumble.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -4143,8 +4159,8 @@
     {
       "id": "block_025_momo_first_answer",
       "timeframe": {
-        "start_sec": 276,
-        "end_sec": 282
+        "start_sec": 278,
+        "end_sec": 284
       },
       "location_ref": "loc_corner_gate",
       "reference_images": [
@@ -4217,8 +4233,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "ああ。\n壁の向こうの人たちを、連れ帰りに来たんだ。",
-          "voice_prompt": "Deep rumbling oni warrior voice; young Japanese woman, steady and unafraid"
+          "original_text": "ああ。\n壁の向こうの人たちを。\n連れ帰りに来たんだ。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Tensed forest birds falling silent, gravel crunch, a blade leaving its sheath, a deep oni rumble.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -4227,8 +4243,8 @@
     {
       "id": "block_026_gate_heave",
       "timeframe": {
-        "start_sec": 282,
-        "end_sec": 286
+        "start_sec": 284,
+        "end_sec": 288
       },
       "location_ref": "loc_gate_frame",
       "reference_images": [
@@ -4246,6 +4262,11 @@
           "role": "character",
           "entity_ref": "char_shiro",
           "image": "refs/char_shiro"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_oni_soldier",
+          "image": "refs/char_oni_soldier"
         }
       ],
       "present_characters": [
@@ -4258,6 +4279,11 @@
           "entity_ref": "char_shiro",
           "outfit": "Small red leather armor vest with a red neck scarf",
           "facial_state": "Fierce, guarding the stair"
+        },
+        {
+          "entity_ref": "char_oni_soldier",
+          "outfit": "Dark leather and iron scrap armor, short horns, torch or spear",
+          "facial_state": "Neutral, focused"
         }
       ],
       "present_props": [
@@ -4279,7 +4305,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "シロ、行け。",
-          "voice_prompt": "Young Japanese woman, shouted command through gritted teeth, close-mic"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Wood groaning under strain, torches crackling, distant oni shouts, a dog's snarling brace.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -4288,8 +4314,8 @@
     {
       "id": "block_027_box_recognition",
       "timeframe": {
-        "start_sec": 286,
-        "end_sec": 290
+        "start_sec": 288,
+        "end_sec": 292
       },
       "location_ref": "loc_corridor",
       "reference_images": [
@@ -4336,7 +4362,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "これ、ばあちゃんが話してた、あの家？",
-          "voice_prompt": "Young Japanese woman, stunned whisper then urgent resolve; a distant coarse oni soldier shout"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Dim corridor, distant drips, a wooden clasp click, cloth rustle, coarse oni shouts approaching.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -4345,8 +4371,8 @@
     {
       "id": "block_027_keep_the_box",
       "timeframe": {
-        "start_sec": 290,
-        "end_sec": 294
+        "start_sec": 292,
+        "end_sec": 296
       },
       "location_ref": "loc_corridor",
       "reference_images": [
@@ -4393,7 +4419,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "とにかく、これを守る。",
-          "voice_prompt": "Young Japanese woman, stunned whisper then urgent resolve; a distant coarse oni soldier shout"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Dim corridor, distant drips, a wooden clasp click, cloth rustle, coarse oni shouts approaching.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -4402,8 +4428,8 @@
     {
       "id": "block_028_tower_monologue",
       "timeframe": {
-        "start_sec": 294,
-        "end_sec": 302
+        "start_sec": 296,
+        "end_sec": 304
       },
       "location_ref": "loc_broken_tower",
       "reference_images": [
@@ -4427,7 +4453,7 @@
         {
           "entity_ref": "char_momo",
           "outfit": "Torn cream and rust sleeveless warrior outfit, dirt and blood stains, red ribbon, dark leather bracers, katana at the left hip",
-          "facial_state": "Quiet, wistful, lips barely moving"
+          "facial_state": "Lips sealed tight, jaw motionless, quiet wistful eyes"
         },
         {
           "entity_ref": "char_peach",
@@ -4456,18 +4482,18 @@
           "speaker_ref": "char_momo",
           "type": "internal_monologue",
           "language": "ja-JP",
-          "original_text": "ばあちゃんが言ってた。\n俺は桃の木の下で拾われたって。\nもしかしたら俺の家も、この城みたいに、もともと屋根があったのかもしれない。",
-          "voice_prompt": "Young Japanese woman, quiet internal voice, close-mic, reflective then hardening"
+          "original_text": "ばあちゃんが言ってた。\n俺は桃の木の下で拾われたって。\nもしかしたら俺の家も。\nこの城みたいに。\nもともと屋根があったのかもしれない。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Night wind over the broken tower, creaking post, distant torch crackle, a soft cloth press.",
-        "visual_sound_sync": "Lips remain sealed or nearly still; the voice is non-diegetic, no lip sync."
+        "visual_sound_sync": "Lips sealed tight, jaw motionless; the voice is internal, no lip sync."
       }
     },
     {
       "id": "block_028_tower_resolve",
       "timeframe": {
-        "start_sec": 302,
-        "end_sec": 308
+        "start_sec": 304,
+        "end_sec": 311
       },
       "location_ref": "loc_broken_tower",
       "reference_images": [
@@ -4521,17 +4547,17 @@
           "type": "internal_monologue",
           "language": "ja-JP",
           "original_text": "まあいい。\nまず戦いを終わらせる。\n明日の夜、中に入るぞ。",
-          "voice_prompt": "Young Japanese woman, quiet internal voice, close-mic, reflective then hardening"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Night wind over the broken tower, creaking post, distant torch crackle, a soft cloth press.",
-        "visual_sound_sync": "Lips remain sealed or nearly still; the voice is non-diegetic, no lip sync."
+        "visual_sound_sync": "Lips sealed tight, jaw motionless; the voice is internal, no lip sync."
       }
     },
     {
       "id": "block_029_momo_genzo_intro",
       "timeframe": {
-        "start_sec": 308,
-        "end_sec": 315
+        "start_sec": 311,
+        "end_sec": 318
       },
       "location_ref": "loc_dungeon",
       "reference_images": [
@@ -4586,8 +4612,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "あんたは島の向こう側の上老だろう？\n村から来たんだ。俺は桃だ。",
-          "voice_prompt": "Young Japanese woman, urgent and gentle; old trembling Japanese elder voice, desperate"
+          "original_text": "あんたは島の向こう側の上老だろう？\n村から来たんだ。\n俺は桃だ。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Dungeon hush, a single drip, the rasp of old hands on wood, chains rattling, torch hiss.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -4596,8 +4622,8 @@
     {
       "id": "block_029_genzo_warning",
       "timeframe": {
-        "start_sec": 315,
-        "end_sec": 321
+        "start_sec": 318,
+        "end_sec": 325
       },
       "location_ref": "loc_dungeon",
       "reference_images": [
@@ -4641,7 +4667,7 @@
       ],
       "present_props": [],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_genzo",
         "description": "Genzo grips her hands and pulls her closer to the bars, glancing down the cell block in panic."
       },
       "referenced_blocks": [
@@ -4655,8 +4681,8 @@
           "speaker_ref": "char_genzo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "桃、どうして入ってこられたんだ。\n早く逃げろ。鬼王に。",
-          "voice_prompt": "Young Japanese woman, urgent and gentle; old trembling Japanese elder voice, desperate"
+          "original_text": "桃、どうして入ってこられたんだ。\n早く逃げろ。\n鬼王に目をつけられるぞ。",
+          "voice_prompt": "Old Japanese island elder, trembling but dignified, desperate and proud"
         },
         "soundtrack_specification": "Dungeon hush, a single drip, the rasp of old hands on wood, chains rattling, torch hiss.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -4665,8 +4691,8 @@
     {
       "id": "block_029_momo_plan",
       "timeframe": {
-        "start_sec": 321,
-        "end_sec": 329
+        "start_sec": 325,
+        "end_sec": 333
       },
       "location_ref": "loc_dungeon",
       "reference_images": [
@@ -4724,8 +4750,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "逃げるなら皆で逃げる。\nまず牢の扉を斬り開けて、それから大殿へ話をつけに行く。",
-          "voice_prompt": "Young Japanese woman, urgent and gentle; old trembling Japanese elder voice, desperate"
+          "original_text": "逃げるなら皆で逃げる。\nまず牢の扉を斬り開けて。\nそれから大殿へ話をつけに行く。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Dungeon hush, a single drip, the rasp of old hands on wood, chains rattling, torch hiss.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -4734,8 +4760,8 @@
     {
       "id": "block_029_genzo_doubt",
       "timeframe": {
-        "start_sec": 329,
-        "end_sec": 334
+        "start_sec": 333,
+        "end_sec": 338
       },
       "location_ref": "loc_dungeon",
       "reference_images": [
@@ -4779,7 +4805,7 @@
       ],
       "present_props": [],
       "action": {
-        "subject_ref": "char_momo",
+        "subject_ref": "char_genzo",
         "description": "Genzo's chains rattle as he leans back; the torch throws their shadows across the stone."
       },
       "referenced_blocks": [
@@ -4794,7 +4820,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "あの大殿には、本物の鬼王がいるんだぞ。",
-          "voice_prompt": "Young Japanese woman, urgent and gentle; old trembling Japanese elder voice, desperate"
+          "voice_prompt": "Old Japanese island elder, trembling but dignified, desperate and proud"
         },
         "soundtrack_specification": "Dungeon hush, a single drip, the rasp of old hands on wood, chains rattling, torch hiss.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -4803,8 +4829,8 @@
     {
       "id": "block_029_momo_final_answer",
       "timeframe": {
-        "start_sec": 334,
-        "end_sec": 342
+        "start_sec": 338,
+        "end_sec": 346
       },
       "location_ref": "loc_dungeon",
       "reference_images": [
@@ -4862,8 +4888,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "分かってる。ばあちゃんも言ってた。\n鬼だって道理は通じる。\nこっちが先に手を出すならな。",
-          "voice_prompt": "Young Japanese woman, urgent and gentle; old trembling Japanese elder voice, desperate"
+          "original_text": "分かってる。\nばあちゃんも言ってた。\n鬼だって道理は通じる。\nこっちが先に手を出すならな。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Dungeon hush, a single drip, the rasp of old hands on wood, chains rattling, torch hiss.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -4872,8 +4898,8 @@
     {
       "id": "block_030_sprint",
       "timeframe": {
-        "start_sec": 342,
-        "end_sec": 347
+        "start_sec": 346,
+        "end_sec": 351
       },
       "location_ref": "loc_passage",
       "reference_images": [
@@ -4886,6 +4912,11 @@
           "role": "character",
           "entity_ref": "char_momo",
           "image": "refs/char_momo"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_oni_soldier",
+          "image": "refs/char_oni_soldier"
         }
       ],
       "present_characters": [
@@ -4893,6 +4924,11 @@
           "entity_ref": "char_momo",
           "outfit": "Torn cream and rust sleeveless warrior outfit, dirt and blood stains, red ribbon, dark leather bracers, katana at the left hip",
           "facial_state": "Mouth open, breath ragged, eyes locked ahead"
+        },
+        {
+          "entity_ref": "char_oni_soldier",
+          "outfit": "Dark leather and iron scrap armor, short horns, torch or spear",
+          "facial_state": "Neutral, focused"
         }
       ],
       "present_props": [
@@ -4919,8 +4955,8 @@
     {
       "id": "block_031_hall_walk",
       "timeframe": {
-        "start_sec": 347,
-        "end_sec": 353
+        "start_sec": 351,
+        "end_sec": 357
       },
       "location_ref": "loc_great_hall",
       "reference_images": [
@@ -4973,8 +5009,8 @@
     {
       "id": "block_032_draw_and_declare",
       "timeframe": {
-        "start_sec": 353,
-        "end_sec": 357
+        "start_sec": 357,
+        "end_sec": 361
       },
       "location_ref": "loc_great_hall",
       "reference_images": [
@@ -5025,7 +5061,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "鬼王、お前を、人間に戻してみせる。",
-          "voice_prompt": "Young Japanese woman, clear defiant declaration, close-mic, no shout"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Hall hush, many armoured bodies shifting, a blade drawing, a low collective oni growl.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -5034,8 +5070,8 @@
     {
       "id": "block_033_king_rises",
       "timeframe": {
-        "start_sec": 357,
-        "end_sec": 363
+        "start_sec": 361,
+        "end_sec": 367
       },
       "location_ref": "loc_throne_dais",
       "reference_images": [
@@ -5091,8 +5127,8 @@
     {
       "id": "block_034_blade_crossing",
       "timeframe": {
-        "start_sec": 363,
-        "end_sec": 367
+        "start_sec": 367,
+        "end_sec": 371
       },
       "location_ref": "loc_great_hall",
       "reference_images": [
@@ -5151,8 +5187,8 @@
     {
       "id": "block_034_landing_line",
       "timeframe": {
-        "start_sec": 367,
-        "end_sec": 372
+        "start_sec": 371,
+        "end_sec": 376
       },
       "location_ref": "loc_great_hall",
       "reference_images": [
@@ -5209,7 +5245,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "俺は人を連れて帰る。\nお前は、眠ってろ。",
-          "voice_prompt": "Young Japanese woman, exhausted and quiet, close-mic, almost gentle"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "A groaning rush of air, the shock ring of steel, a rolling crash of armour on stone, then her ragged breathing.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -5218,8 +5254,8 @@
     {
       "id": "block_035_victory_stand",
       "timeframe": {
-        "start_sec": 372,
-        "end_sec": 376
+        "start_sec": 376,
+        "end_sec": 380
       },
       "location_ref": "loc_great_hall",
       "reference_images": [
@@ -5278,8 +5314,8 @@
     {
       "id": "block_035_victory_whisper",
       "timeframe": {
-        "start_sec": 376,
-        "end_sec": 380
+        "start_sec": 380,
+        "end_sec": 384
       },
       "location_ref": "loc_great_hall",
       "reference_images": [
@@ -5336,7 +5372,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "ばあちゃん、ただいま。",
-          "voice_prompt": "Young Japanese woman, almost inaudible tender whisper, close-mic"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Dead quiet after the crash, a long dog howl, armour settling, embers popping, a barely audible tender breath.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -5345,8 +5381,8 @@
     {
       "id": "block_036_comfort_akita",
       "timeframe": {
-        "start_sec": 380,
-        "end_sec": 387
+        "start_sec": 384,
+        "end_sec": 391
       },
       "location_ref": "loc_courtyard_dawn",
       "reference_images": [
@@ -5395,7 +5431,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "お前も家に帰りたいんだろ。\n戦が終われば、みんな家に帰るんだ。",
-          "voice_prompt": "Young Japanese woman, soft warm whisper, close-mic, tearful but smiling"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Ember crackle, her hand against matted fur, a low long dog whine, morning wind over broken walls.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -5404,8 +5440,8 @@
     {
       "id": "block_036_home_speech",
       "timeframe": {
-        "start_sec": 387,
-        "end_sec": 395
+        "start_sec": 391,
+        "end_sec": 399
       },
       "location_ref": "loc_courtyard_dawn",
       "reference_images": [
@@ -5453,8 +5489,8 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "じゃあ俺たちも帰ろう。\nばあちゃんの湯に入って、桃の木の下に座って。\nこの旅の記録を、三日三晩話し尽くしても終わらない話にしよう。",
-          "voice_prompt": "Young Japanese woman, soft warm whisper, close-mic, tearful but smiling"
+          "original_text": "じゃあ俺たちも帰ろう。\nばあちゃんの湯に入って。\n桃の木の下に座って。\nこの旅の記録を。\n三日三晩話しても終わらない。\nそんな話にしよう。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Ember crackle, her hand against matted fur, a low long dog whine, morning wind over broken walls.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -5463,8 +5499,8 @@
     {
       "id": "block_036_dawn_wide",
       "timeframe": {
-        "start_sec": 395,
-        "end_sec": 400
+        "start_sec": 399,
+        "end_sec": 404
       },
       "location_ref": "loc_courtyard_dawn",
       "reference_images": [
@@ -5515,8 +5551,8 @@
     {
       "id": "block_037_railing_return",
       "timeframe": {
-        "start_sec": 400,
-        "end_sec": 405
+        "start_sec": 404,
+        "end_sec": 409
       },
       "location_ref": "loc_dock",
       "reference_images": [
@@ -5565,7 +5601,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "鬼退治のあとで。\n勝ったけど、ちょっと疲れた。",
-          "voice_prompt": "Young Japanese woman, tired but playful, close-mic, laughing under the words"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Warm dusk village ambience, wooden railing creak, a contented sigh, the dog's nose bumping the lens, projector hum returning.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -5574,8 +5610,8 @@
     {
       "id": "block_037_railing_push_lens",
       "timeframe": {
-        "start_sec": 405,
-        "end_sec": 410
+        "start_sec": 409,
+        "end_sec": 414
       },
       "location_ref": "loc_dock",
       "reference_images": [
@@ -5624,7 +5660,7 @@
           "type": "spoken_on_screen",
           "language": "ja-JP",
           "original_text": "まだ撮るの。\nもう終わりでしょ。\nまた、どこかへ。",
-          "voice_prompt": "Young Japanese woman, tired but playful, close-mic, laughing under the words"
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Warm dusk village ambience, wooden railing creak, a contented sigh, the dog's nose bumping the lens, projector hum returning.",
         "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
@@ -5633,8 +5669,8 @@
     {
       "id": "block_038_end_card",
       "timeframe": {
-        "start_sec": 410,
-        "end_sec": 415
+        "start_sec": 414,
+        "end_sec": 418
       },
       "location_ref": "loc_endcard",
       "reference_images": [
@@ -5659,11 +5695,11 @@
         "dialogue": {
           "type": "narration",
           "language": "ja-JP",
-          "original_text": "新たな冒険は、まだ終わっていない。\n新・桃太娘。",
+          "original_text": "新たな冒険は、まだ終わっていない。",
           "voice_prompt": "Measured Japanese narrator, warm and cinematic, soft finality"
         },
         "soundtrack_specification": "Non-diegetic narrator over a warm projector hum and a single sustained piano chord.",
-        "visual_sound_sync": "Lips remain sealed or nearly still; the voice is non-diegetic, no lip sync."
+        "visual_sound_sync": "No on-screen mouth movement; the narration is non-diegetic."
       }
     }
   ]

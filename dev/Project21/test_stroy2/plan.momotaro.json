@@ -5,12 +5,12 @@
   "source": {
     "file": "doc/story.md",
     "chapter": 0,
-    "chars": 5782,
-    "sha256": "08ea0d7cf0a8b7b4bbfd2e0644b61c7bff5c619152be38938f5d8087a69aff7c",
+    "chars": 5675,
+    "sha256": "8d83ebeef5ea3e76cc3b63a1ad9b3fec8fde17a6b2a5a73e965d98f646cb52d6",
     "eol": "lf",
     "range": {
       "start": 1255,
-      "end": 7037
+      "end": 6930
     }
   },
   "entities": {
@@ -28,7 +28,7 @@
         "first_seen": "seg_001",
         "reference": {
           "image": "refs/char_momo",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral front-facing portrait of a young Japanese woman about twenty, fair skin, long light-brown hair in a high ponytail tied with a red ribbon, straight bangs, large warm dark eyes, athletic slim build, calm determined expression, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -46,7 +46,7 @@
         "first_seen": "seg_001",
         "reference": {
           "image": "refs/char_shiro",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a Japanese Shiba Inu with tan and cream fur, pointed ears, bright intelligent eyes, curled tail, standing alert, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -63,7 +63,7 @@
         "first_seen": "seg_004",
         "reference": {
           "image": "refs/char_gon",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a Japanese macaque with reddish-brown fur and a pale face, expressive dark eyes, lean wiry body, curious alert posture, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -80,7 +80,7 @@
         "first_seen": "seg_004",
         "reference": {
           "image": "refs/char_peach",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a Japanese green pheasant with iridescent green and copper plumage, long sweeping tail, red face wattles, bright watchful eye, perched upright, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -96,7 +96,7 @@
         "first_seen": "seg_006",
         "reference": {
           "image": "refs/char_grandma",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral front-facing portrait of an elderly Japanese farm woman in her late seventies, silver hair in a low bun, deep kind wrinkles, weathered hands, small stooped frame, gentle steady eyes, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -113,7 +113,7 @@
         "first_seen": "seg_016",
         "reference": {
           "image": "refs/char_kiha",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral front-facing portrait of an old Japanese fisherman in his late sixties, wind-burnt weathered face, grey stubble, matted dark hair, broad work-hardened hands, wary deep-set eyes, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -130,7 +130,7 @@
         "first_seen": "seg_029",
         "reference": {
           "image": "refs/char_genzo",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral front-facing portrait of an old island elder in his late seventies, long white hair and beard, gaunt weathered face, deep scars and calluses, hollow but proud eyes, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -146,7 +146,7 @@
         "first_seen": "seg_033",
         "reference": {
           "image": "refs/char_oni_king",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a colossal oni king, deep red skin, two black curved horns, burning red eyes, heavy brow and tusks, mountain-like muscular build, standing still, plain dark-grey backdrop, dramatic low key light, 35mm film grain, no text"
         }
       },
@@ -163,7 +163,7 @@
         "first_seen": "seg_025",
         "reference": {
           "image": "refs/char_oni_general",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a horned oni warrior, red skin, one broken tusk, scarred face, pillar-thick arms, massive armoured build, standing still, plain dark-grey backdrop, dramatic low key light, 35mm film grain, no text"
         }
       },
@@ -179,7 +179,7 @@
         "first_seen": "seg_024",
         "reference": {
           "image": "refs/char_oni_cub",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a small monkey-like oni, red skin and fur, short horns, round yellow eyes, wiry body, nervous bravado, standing with a spear, plain dark-grey backdrop, dramatic low key light, 35mm film grain, no text"
         }
       },
@@ -192,10 +192,10 @@
           "鬼兵"
         ],
         "traits": "Red-skinned oni soldier, squat muscular body, short horns, tusks, dark leather and iron scrap armour",
-        "first_seen": "seg_031",
+        "first_seen": "seg_023",
         "reference": {
           "image": "refs/char_oni_soldier",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a red-skinned oni soldier, squat muscular body, short horns, tusks, dark leather and iron scrap armour, standing with a torch, plain dark-grey backdrop, dramatic low key light, 35mm film grain, no text"
         }
       },
@@ -211,7 +211,7 @@
         "first_seen": "seg_036",
         "reference": {
           "image": "refs/char_akita",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral full-body reference plate of a large Japanese Akita with thick brown and white coat, broad head, dark small eyes, heavy build, sitting calmly, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       },
@@ -227,7 +227,7 @@
         "first_seen": "seg_017",
         "reference": {
           "image": "refs/char_villager",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Neutral front-facing portrait of a middle-aged Japanese fisherman, weathered round face, short black hair, stubble, stocky build, work clothes, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
         }
       }
@@ -245,8 +245,8 @@
         "first_seen": "seg_004",
         "reference": {
           "image": "refs/prop_travel_orb",
-          "status": "to_generate",
-          "prompt": "Top-down product plate of a smooth white lacquered ball with one large black brush character 旅, slight wear, warm daylight, 35mm film grain, no people, no other text"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of a smooth white lacquered ball with one large black brush character 旅, slight wear, warm daylight, 35mm film grain, no people, no other text"
         }
       },
       {
@@ -262,8 +262,8 @@
         "first_seen": "seg_005",
         "reference": {
           "image": "refs/prop_bundle",
-          "status": "to_generate",
-          "prompt": "Product plate of a large peach-print cloth travel bundle lashed to a bamboo frame, small wooden writing box tucked in, warm daylight, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a large peach-print cloth travel bundle lashed to a bamboo frame, small wooden writing box tucked in, warm daylight, 35mm film grain, no people, no text"
         }
       },
       {
@@ -277,8 +277,8 @@
         "first_seen": "seg_009",
         "reference": {
           "image": "refs/prop_gourd",
-          "status": "to_generate",
-          "prompt": "Product plate of a large brown dried gourd water flask with a braided cord and stopper, water beading on the rim, warm daylight, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a large brown dried gourd water flask with a braided cord and stopper, water beading on the rim, warm daylight, 35mm film grain, no people, no text"
         }
       },
       {
@@ -293,8 +293,8 @@
         "first_seen": "seg_011",
         "reference": {
           "image": "refs/prop_map",
-          "status": "to_generate",
-          "prompt": "Top-down plate of an old parchment sea map with hand-inked coastlines, one island marked with a red cross and the characters 鬼ヶ島, worn edges, warm lamp light, 35mm film grain, no people"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of an old parchment sea map with hand-inked coastlines, one island marked with a red cross and the characters 鬼ヶ島, worn edges, warm lamp light, 35mm film grain, no people"
         }
       },
       {
@@ -309,8 +309,8 @@
         "first_seen": "seg_011",
         "reference": {
           "image": "refs/prop_travel_guide",
-          "status": "to_generate",
-          "prompt": "Top-down plate of a small worn Japanese travel guide with a cloth cover and the brush title 旅の手引, loose pages, warm daylight, 35mm film grain, no people"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of a small worn Japanese travel guide with a cloth cover and the brush title 旅の手引, loose pages, warm daylight, 35mm film grain, no people"
         }
       },
       {
@@ -325,8 +325,8 @@
         "first_seen": "seg_016",
         "reference": {
           "image": "refs/prop_oni_banner",
-          "status": "to_generate",
-          "prompt": "Product plate of a torn dark cloth war banner embroidered with a snarling red oni face and black horns, dark dried blood along the edges, firelight, 35mm film grain, no people, no other text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a torn dark cloth war banner embroidered with a snarling red oni face and black horns, dark dried blood along the edges, firelight, 35mm film grain, no people, no other text"
         }
       },
       {
@@ -341,8 +341,8 @@
         "first_seen": "seg_017",
         "reference": {
           "image": "refs/prop_oni_sail",
-          "status": "to_generate",
-          "prompt": "Product plate of a white canvas boat sail with a huge red oni face painted across it, rope seams, wind-filled, bright daylight, 35mm film grain, no people, no other text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a white canvas boat sail with a huge red oni face painted across it, rope seams, wind-filled, bright daylight, 35mm film grain, no people, no other text"
         }
       },
       {
@@ -357,8 +357,8 @@
         "first_seen": "seg_027",
         "reference": {
           "image": "refs/prop_wooden_box",
-          "status": "to_generate",
-          "prompt": "Top-down product plate of a small dark wooden box with the carved character 桃 on the lid, red tassel, worn brass clasp, firelight, 35mm film grain, no people"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of a small dark wooden box with the carved character 桃 on the lid, red tassel, worn brass clasp, firelight, 35mm film grain, no people"
         }
       },
       {
@@ -373,8 +373,8 @@
         "first_seen": "seg_027",
         "reference": {
           "image": "refs/prop_cloth_house",
-          "status": "to_generate",
-          "prompt": "Top-down plate of a small painted cloth showing a thatched house under a peach tree, faded inks, creased folds, warm lantern light, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of a small painted cloth showing a thatched house under a peach tree, faded inks, creased folds, warm lantern light, 35mm film grain, no people, no text"
         }
       },
       {
@@ -389,8 +389,8 @@
         "first_seen": "seg_003",
         "reference": {
           "image": "refs/prop_katana",
-          "status": "to_generate",
-          "prompt": "Product plate of a Japanese katana with a worn black scabbard, red cord wrap, plain iron guard, nicked edge, lying on dark wood, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a Japanese katana with a worn black scabbard, red cord wrap, plain iron guard, nicked edge, lying on dark wood, 35mm film grain, no people, no text"
         }
       },
       {
@@ -405,8 +405,8 @@
         "first_seen": "seg_035",
         "reference": {
           "image": "refs/prop_king_banner",
-          "status": "to_generate",
-          "prompt": "Product plate of a tall black war banner with two white brush characters 鬼王, ragged lower edge, soot-stained pole, torchlight, 35mm film grain, no people"
+          "status": "ready",
+          "prompt": "Studio product photograph of a tall black war banner with two white brush characters 鬼王, ragged lower edge, soot-stained pole, torchlight, 35mm film grain, no people"
         }
       },
       {
@@ -421,8 +421,8 @@
         "first_seen": "seg_033",
         "reference": {
           "image": "refs/prop_greatsword",
-          "status": "to_generate",
-          "prompt": "Product plate of a massive black iron greatsword with a chipped edge and horned guard, longer than a man, resting against stone, torchlight, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a massive black iron greatsword with a chipped edge and horned guard, longer than a man, resting against stone, torchlight, 35mm film grain, no people, no text"
         }
       },
       {
@@ -437,8 +437,8 @@
         "first_seen": "seg_024",
         "reference": {
           "image": "refs/prop_spear",
-          "status": "to_generate",
-          "prompt": "Product plate of a crude iron-tipped spear with a dark wooden shaft, leather grip, bent tip, morning light, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a crude iron-tipped spear with a dark wooden shaft, leather grip, bent tip, morning light, 35mm film grain, no people, no text"
         }
       },
       {
@@ -454,8 +454,8 @@
         "first_seen": "seg_009",
         "reference": {
           "image": "refs/prop_basket",
-          "status": "to_generate",
-          "prompt": "Top-down plate of a woven bamboo basket with rice cakes wrapped in green leaves, faint steam, coarse cloth cover, mossy stone, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of a woven bamboo basket with rice cakes wrapped in green leaves, faint steam, coarse cloth cover, mossy stone, 35mm film grain, no people, no text"
         }
       },
       {
@@ -470,8 +470,8 @@
         "first_seen": "seg_021",
         "reference": {
           "image": "refs/prop_torch",
-          "status": "to_generate",
-          "prompt": "Product plate of a pitch-soaked wooden torch with an iron basket, orange flame and smoke trail, dark stone background, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Studio product photograph of a pitch-soaked wooden torch with an iron basket, orange flame and smoke trail, dark stone background, 35mm film grain, no people, no text"
         }
       },
       {
@@ -486,8 +486,8 @@
         "first_seen": "seg_015",
         "reference": {
           "image": "refs/prop_cards",
-          "status": "to_generate",
-          "prompt": "Top-down plate of hand-sized playing cards with a peach-blossom emblem on cream paper, worn corners, lantern light, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of hand-sized playing cards with a peach-blossom emblem on cream paper, worn corners, lantern light, 35mm film grain, no people, no text"
         }
       },
       {
@@ -502,8 +502,8 @@
         "first_seen": "seg_014",
         "reference": {
           "image": "refs/prop_fish",
-          "status": "to_generate",
-          "prompt": "Top-down plate of a whole grilled fish on a skewer with charred skin and coarse salt on a small ceramic plate, lantern light, 35mm film grain, no people, no text"
+          "status": "ready",
+          "prompt": "Top-down studio photograph of a whole grilled fish on a skewer with charred skin and coarse salt on a small ceramic plate, lantern light, 35mm film grain, no people, no text"
         }
       }
     ],
@@ -520,7 +520,7 @@
         "first_seen": "seg_001",
         "reference": {
           "image": "refs/loc_dock",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a weathered wooden dock in a 90s Japanese seaside village, pilings, barrels, a tattered peach flag, sparkling blue sea, warm sunlight, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -536,7 +536,7 @@
         "first_seen": "seg_005",
         "reference": {
           "image": "refs/loc_veranda",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of an old Japanese farmhouse wooden veranda, sun-warmed slats, thatched roof behind, green mountains beyond, late afternoon light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -552,7 +552,7 @@
         "first_seen": "seg_006",
         "reference": {
           "image": "refs/loc_village_gate",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a rural Japanese village entrance, packed dirt road, stone steps, thatched roofs, a tall 桃太郎 banner on a wooden pole, distant green mountains, golden hour, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -568,7 +568,7 @@
         "first_seen": "seg_009",
         "reference": {
           "image": "refs/loc_shrine",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a rustic Japanese shrine, mossy stone ledge, stone water spout and basin, wooden banner frame, deep green forest, midday light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -584,7 +584,7 @@
         "first_seen": "seg_010",
         "reference": {
           "image": "refs/loc_stream",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a shallow clear mountain stream, mossy boulders, a small waterfall, sun-dappled forest, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -600,7 +600,7 @@
         "first_seen": "seg_011",
         "reference": {
           "image": "refs/loc_inn_veranda",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a low Japanese inn veranda, worn wooden planks, open view of a blue sea, hanging travel banners, hard sunlight, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -616,7 +616,7 @@
         "first_seen": "seg_008",
         "reference": {
           "image": "refs/loc_mountain_trail",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a rocky Japanese mountain trail above a blue sea, weathered wooden signpost, wind-bent grass, distant islands, bright daylight, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -632,7 +632,7 @@
         "first_seen": "seg_013",
         "reference": {
           "image": "refs/loc_onsen",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a rustic Japanese outdoor hot spring, rising steam, wooden bathhouse beams, stone pool edge, forest behind, soft afternoon light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -648,7 +648,7 @@
         "first_seen": "seg_014",
         "reference": {
           "image": "refs/loc_inn_night",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a lantern-lit Japanese inn dining room at night, low table with grilled fish and ceramic plates, paper screens, warm amber light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -664,7 +664,7 @@
         "first_seen": "seg_015",
         "reference": {
           "image": "refs/loc_inn_room",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a Japanese tatami bedroom at night, futon, low paper lantern, scattered peach-print cards, paper walls, warm amber light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -680,7 +680,7 @@
         "first_seen": "seg_016",
         "reference": {
           "image": "refs/loc_warehouse",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a dark Japanese storehouse at night, brazier fire, hanging scroll marked 鬼ヶ島, old wooden beams, long shadows, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -696,7 +696,7 @@
         "first_seen": "seg_017",
         "reference": {
           "image": "refs/loc_harbor",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a crowded Japanese fishing harbor, wooden boats, paper curtain bunting reading 鬼ヶ島へ出発, a white sail, bright hard sunlight, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -712,7 +712,7 @@
         "first_seen": "seg_018",
         "reference": {
           "image": "refs/loc_sea",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of open choppy sea from a wooden boat deck, a skull-shaped mountain with a dark smoking fortress on the horizon, bright hard sunlight, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -728,7 +728,7 @@
         "first_seen": "seg_019",
         "reference": {
           "image": "refs/loc_jungle_ruins",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of jungle ruins with fallen stone pillars, vine-wrapped corridor, faint glowing red footprints in the dirt, a red-corded skull in the foreground, dappled light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -744,7 +744,7 @@
         "first_seen": "seg_020",
         "reference": {
           "image": "refs/loc_spiked_gate",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a massive wooden gate studded with sharp spikes, black oni banner above, moss-covered walls, dusty shafts of light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -760,7 +760,7 @@
         "first_seen": "seg_021",
         "reference": {
           "image": "refs/loc_fortress_pillars",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of the interior of an oni fortress at night, huge wooden pillars, torchlight, heavy rafters, deep shadow, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -776,7 +776,7 @@
         "first_seen": "seg_022",
         "reference": {
           "image": "refs/loc_stone_wall",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a steep ancient stone fortress wall with cracks and vines, pre-dawn mist, dark forest below, cold blue light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -792,7 +792,7 @@
         "first_seen": "seg_023",
         "reference": {
           "image": "refs/loc_bridge",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a narrow wooden bridge between two watchtowers, rope rails, deep drop below, hanging banner shadows, early light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -808,7 +808,7 @@
         "first_seen": "seg_024",
         "reference": {
           "image": "refs/loc_wall_base",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a fortress wall base with a watchtower above, packed earth, spear racks, morning light, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -824,7 +824,7 @@
         "first_seen": "seg_025",
         "reference": {
           "image": "refs/loc_corner_gate",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a heavy wooden corner gate in an oni fortress, packed-earth yard, dappled forest light, an oni banner, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -840,7 +840,7 @@
         "first_seen": "seg_026",
         "reference": {
           "image": "refs/loc_gate_frame",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a massive wooden gate frame and crossbar, a narrow gap of torchlit corridor beyond, battle smoke, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -856,7 +856,7 @@
         "first_seen": "seg_027",
         "reference": {
           "image": "refs/loc_corridor",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a dark stone fortress corridor, a blood-streaked stone lantern, torch brackets, distant hall glow, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -872,7 +872,7 @@
         "first_seen": "seg_028",
         "reference": {
           "image": "refs/loc_broken_tower",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a broken fortress tower at night, charred wooden post, view of a burning hall at the fortress peak, cold wind, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -888,7 +888,7 @@
         "first_seen": "seg_029",
         "reference": {
           "image": "refs/loc_dungeon",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a fortress dungeon with wooden bars, mud floor, torchlight, stone walls, hanging chains, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -904,7 +904,7 @@
         "first_seen": "seg_030",
         "reference": {
           "image": "refs/loc_passage",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a long torch-lit stone passage inside a fortress, wooden beams, dust in the air, a distant hall entrance, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -920,7 +920,7 @@
         "first_seen": "seg_031",
         "reference": {
           "image": "refs/loc_great_hall",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a vast vaulted oni king's hall, black timbers, torch sconces, a semicircle of empty armoured stands, a throne at the far end, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -936,7 +936,7 @@
         "first_seen": "seg_033",
         "reference": {
           "image": "refs/loc_throne_dais",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a high stone throne dais with a black iron throne, burning braziers, horned silhouettes carved into the wall, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -952,7 +952,7 @@
         "first_seen": "seg_036",
         "reference": {
           "image": "refs/loc_courtyard_dawn",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Wide establishing plate of a burnt fortress courtyard at dawn, glowing embers, broken walls, grey sky, a distant strip of sea, 35mm film grain, 16:9, no people, no text"
         }
       },
@@ -968,7 +968,7 @@
         "first_seen": "seg_038",
         "reference": {
           "image": "refs/loc_endcard",
-          "status": "to_generate",
+          "status": "ready",
           "prompt": "Abstract 90s Japanese film title card, deep black background, warm projector grain and faint dust, empty space for brush calligraphy, no text, 16:9"
         }
       }
@@ -1013,7 +1013,7 @@
       "spoken_text": "「鬼退治のあとで……就是說，打完鬼以後囉。」\n「勝ったけど、ちょっと疲れた。」\n「まだ撮るの？」\n「また、どこかへ♡」",
       "char_count": 39,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 12,
+      "estimated_sec": 9,
       "render_blocks": 2,
       "references": []
     },
@@ -1155,8 +1155,8 @@
       "spoken_text": "「大家都到齊了吧？」\n『……那個球，可以寫「食」嗎。』\n「寫著『旅』才有意義嘛。走吧——我們的旅行，才不是為了吃。」",
       "char_count": 36,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 16,
-      "render_blocks": 3,
+      "estimated_sec": 9,
+      "render_blocks": 2,
       "references": []
     },
     {
@@ -1193,7 +1193,7 @@
       "spoken_text": "「明天開始，就要去很多很多沒見過的地方了。」",
       "char_count": 18,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 6,
+      "estimated_sec": 5,
       "render_blocks": 1,
       "references": []
     },
@@ -1235,8 +1235,8 @@
       "spoken_text": "「婆婆……那句話，我一直想說。」\n「坐在桃樹下等我回來的孩子啊。」\n『我會好好活著回來。活著回來，聽你罵我怎麼搞得到處都是泥。』",
       "char_count": 48,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 19,
-      "render_blocks": 3,
+      "estimated_sec": 11,
+      "render_blocks": 2,
       "references": []
     },
     {
@@ -1285,8 +1285,8 @@
       "spoken_text": "「衣服破了自己補！別忘了帶飯糰！」\n「知道啦——！」",
       "char_count": 16,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 8,
-      "render_blocks": 2,
+      "estimated_sec": 5,
+      "render_blocks": 1,
       "references": []
     },
     {
@@ -1329,7 +1329,7 @@
       "spoken_text": "「接下來就是我們四個人的旅途了。寫一篇讓婆婆也看得懂的『旅の記録』吧。」",
       "char_count": 30,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 8,
+      "estimated_sec": 7,
       "render_blocks": 1,
       "references": []
     },
@@ -1386,8 +1386,8 @@
       "spoken_text": "『啊——活過來了。ゴン，你為什麼每顆飯糰都要先偷咬一口。』\n『……試毒。』",
       "char_count": 24,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 11,
-      "render_blocks": 2,
+      "estimated_sec": 6,
+      "render_blocks": 1,
       "references": []
     },
     {
@@ -1442,7 +1442,7 @@
       "spoken_text": "「走了一上午，在這裡歇一下吧。水是甜的，風也是甜的。」\n「咕咕——！」\n「你看，連ピーチ都說好。」",
       "char_count": 32,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 10,
+      "estimated_sec": 8,
       "render_blocks": 2,
       "references": []
     },
@@ -1499,7 +1499,7 @@
       "spoken_text": "「婆婆說，我的『桃』和鬼島的那些人一樣，都是從『別的地方』來的。」\n「汪。」\n「……那就決定啦。先去鬼ヶ島，看看那些被關起來的人。然後——再回來。」",
       "char_count": 50,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 16,
+      "estimated_sec": 11,
       "render_blocks": 2,
       "references": [
         {
@@ -1555,8 +1555,8 @@
       "spoken_text": "「出發！」\n「（小小聲）……你連島長什麼樣都不知道。」\n「所以才更要去看看啊！」",
       "char_count": 25,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 13,
-      "render_blocks": 3,
+      "estimated_sec": 6,
+      "render_blocks": 1,
       "references": []
     },
     {
@@ -1603,8 +1603,8 @@
       "spoken_text": "『哇——好舒服。這就是『いい湯、いい島』吧。』\n『喂，前面就是鬼島了，你還有心情泡湯喔。』\n『就是了鬼島才要泡。把力氣存好，明天好上路。』",
       "char_count": 48,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 18,
-      "render_blocks": 3,
+      "estimated_sec": 11,
+      "render_blocks": 2,
       "references": []
     },
     {
@@ -1653,8 +1653,8 @@
       "spoken_text": "「這是今天的收穫！一口咬下去，海的味道——」\n「（帶著魚）你已經講第三遍了。」",
       "char_count": 27,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 9,
-      "render_blocks": 2,
+      "estimated_sec": 7,
+      "render_blocks": 1,
       "references": []
     },
     {
@@ -1703,8 +1703,8 @@
       "spoken_text": "「說好囉——去鬼ヶ島，把該救的人救回來，然後我們四個就一起去看更大的海。」\n「汪。」\n『要是鬼王很兇呢？』\n「那就打贏他，再回來泡湯。」",
       "char_count": 48,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 17,
-      "render_blocks": 3,
+      "estimated_sec": 11,
+      "render_blocks": 2,
       "references": []
     },
     {
@@ -1759,8 +1759,8 @@
       "spoken_text": "「老夫年輕時跟著船朝北走，被浪打上鬼ヶ島。那島啊——根本不是島，是『城堡』。島中央有座山，山頂像顆骷髏。鬼王把山下的人都關進籠子裡，替他搬石頭。」\n「那島上的人……都還在嗎？」\n『只要你還活著一只，就都還在。老夫是游水回來的，全村只有老夫一個人回來。』\n「這面旗，我借了。回來再還你。」",
       "char_count": 110,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 33,
-      "render_blocks": 5,
+      "estimated_sec": 23,
+      "render_blocks": 4,
       "references": [
         {
           "segment_ref": "seg_015",
@@ -1821,7 +1821,7 @@
       "spoken_text": "「小桃！就你們四個能幹嘛！」\n『我們有五個！シロ、ゴン、ピーチ，還有我——加上婆婆在門口看著呢！』",
       "char_count": 35,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 12,
+      "estimated_sec": 8,
       "render_blocks": 2,
       "references": [
         {
@@ -1869,7 +1869,7 @@
       "spoken_text": "『……真的好像鬼。』\n『我知道。我們是去把那座城，拆下來的。』",
       "char_count": 20,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 7,
+      "estimated_sec": 5,
       "render_blocks": 1,
       "references": []
     },
@@ -1917,7 +1917,7 @@
       "spoken_text": "『這些腳印……是那些被抓走的人留下的？不——太深了。這是鬼的腳印。』",
       "char_count": 25,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 8,
+      "estimated_sec": 6,
       "render_blocks": 1,
       "references": []
     },
@@ -1959,7 +1959,7 @@
       "spoken_text": "「一進門就有哨位。我數到三——」",
       "char_count": 11,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 4,
+      "estimated_sec": 5,
       "render_blocks": 1,
       "references": []
     },
@@ -2003,8 +2003,8 @@
       "spoken_text": "『牆內有人。兩個。』\n「那就換邊走。我們是來救人的，不是來吵醒人的。」",
       "char_count": 25,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 12,
-      "render_blocks": 2,
+      "estimated_sec": 6,
+      "render_blocks": 1,
       "references": []
     },
     {
@@ -2045,7 +2045,7 @@
       "spoken_text": "『再高一點……牆裡面就是城了。』\n「汪。」",
       "char_count": 12,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 4,
+      "estimated_sec": 5,
       "render_blocks": 1,
       "references": []
     },
@@ -2060,7 +2060,8 @@
       "location_ref": "loc_bridge",
       "character_refs": [
         "char_momo",
-        "char_shiro"
+        "char_shiro",
+        "char_oni_soldier"
       ],
       "prop_refs": [],
       "reference_images": [
@@ -2078,6 +2079,11 @@
           "role": "character",
           "ref": "char_shiro",
           "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_oni_soldier",
+          "note": "same identity plate across the chapter"
         }
       ],
       "context": "窄木橋上，桃與柴犬伏低，等兩名持刀鬼武士的影子走過去。",
@@ -2086,8 +2092,8 @@
       "voice_intent": "internal_monologue",
       "spoken_text": "『等他們走過去——一個，兩個，三個——』",
       "char_count": 12,
-      "rate_chars_per_sec": 5,
-      "estimated_sec": 4,
+      "rate_chars_per_sec": 4,
+      "estimated_sec": 5,
       "render_blocks": 1,
       "references": []
     },
@@ -2131,8 +2137,8 @@
       "spoken_text": "「給你。我們不打架，你讓路就好。」\n「……走那條路。」\n『你看，柿子比刀有用。』",
       "char_count": 24,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 15,
-      "render_blocks": 3,
+      "estimated_sec": 6,
+      "render_blocks": 1,
       "references": []
     },
     {
@@ -2187,8 +2193,8 @@
       "spoken_text": "「小娃娃也敢來拆牆？」\n『對。我來帶牆裡的人回家。』",
       "char_count": 18,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 10,
-      "render_blocks": 2,
+      "estimated_sec": 5,
+      "render_blocks": 1,
       "references": []
     },
     {
@@ -2202,7 +2208,8 @@
       "location_ref": "loc_gate_frame",
       "character_refs": [
         "char_momo",
-        "char_shiro"
+        "char_shiro",
+        "char_oni_soldier"
       ],
       "prop_refs": [
         "prop_katana"
@@ -2222,6 +2229,11 @@
           "role": "character",
           "ref": "char_shiro",
           "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_oni_soldier",
+          "note": "same identity plate across the chapter"
         }
       ],
       "context": "桃攀在門框上死命把城門撞開一條縫，對柴犬喊「行け」。",
@@ -2231,7 +2243,7 @@
       "spoken_text": "『シロ——好感！」",
       "char_count": 4,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 4,
+      "estimated_sec": 5,
       "render_blocks": 1,
       "references": [],
       "source_note": "原文「好感」疑為誤植；生成端以「シロ、行け。」配音。"
@@ -2271,8 +2283,8 @@
       "spoken_text": "『這是……婆婆說的，那間屋子？』\n『那孩子在那裡！』\n『總之——先保住這件東西。』",
       "char_count": 25,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 8,
-      "render_blocks": 2,
+      "estimated_sec": 6,
+      "render_blocks": 1,
       "references": [
         {
           "segment_ref": "seg_006",
@@ -2287,7 +2299,7 @@
       "source_start": 5494,
       "source_end": 5712,
       "source": "【圖 28 — 眺望鬼城】\n入夜，桃靠在殘塔的木柱上，仰頭看遠方——鬼城最上層白著火光，那就是「鬼王殿」。ピーチ停在她肩頭，替她看著背後。\n\n> 桃（自言自語）：『那個人（婆婆）說，我是從桃樹下被撿到的。會不會，我家也跟這座城一樣，原本也是有屋簷的。』\n> 她握緊懷中的布，目光變得堅定：「不管怎樣，先打完再說。明晚，我們就進去。」\n\n---\n\n### 第三幕｜破城與歸途（圖 29–37）\n\n#### 第七場·天牢重逢（圖 29）\n\n",
-      "kind": "narration",
+      "kind": "dialogue",
       "split_reason": "location_change",
       "location_ref": "loc_broken_tower",
       "character_refs": [
@@ -2320,7 +2332,7 @@
       "voice_intent": "internal_monologue",
       "spoken_text": "『那個人（婆婆）說，我是從桃樹下被撿到的。會不會，我家也跟這座城一樣，原本也是有屋簷的。』\n「不管怎樣，先打完再說。明晚，我們就進去。」",
       "char_count": 52,
-      "rate_chars_per_sec": 5,
+      "rate_chars_per_sec": 4,
       "estimated_sec": 14,
       "render_blocks": 2,
       "references": [
@@ -2375,8 +2387,8 @@
       "spoken_text": "「您是島另一頭的上老，是不是？我是從村子裡來的，我叫桃。」\n『桃……你怎麼進得來。快走！鬼王會把你——』\n『要走也是大家一起走。我先把牢門劈開，再往大殿去討個說法。』\n『那大殿上……可是真的鬼王啊。』\n『我知道。婆婆說過，鬼也是能講道理的——只要你先動手。』",
       "char_count": 94,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 34,
-      "render_blocks": 5,
+      "estimated_sec": 20,
+      "render_blocks": 3,
       "references": []
     },
     {
@@ -2389,7 +2401,8 @@
       "split_reason": "focus_change",
       "location_ref": "loc_passage",
       "character_refs": [
-        "char_momo"
+        "char_momo",
+        "char_oni_soldier"
       ],
       "prop_refs": [
         "prop_katana"
@@ -2403,6 +2416,11 @@
         {
           "role": "character",
           "ref": "char_momo",
+          "note": "same identity plate across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_oni_soldier",
           "note": "same identity plate across the chapter"
         }
       ],
@@ -2463,7 +2481,7 @@
       "spoken_text": null,
       "char_count": 0,
       "rate_chars_per_sec": null,
-      "estimated_sec": 6,
+      "estimated_sec": 5,
       "render_blocks": 1,
       "references": []
     },
@@ -2507,7 +2525,7 @@
       "spoken_text": "『鬼王——我要你做人。』",
       "char_count": 7,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 4,
+      "estimated_sec": 5,
       "render_blocks": 1,
       "references": []
     },
@@ -2551,7 +2569,7 @@
       "spoken_text": null,
       "char_count": 0,
       "rate_chars_per_sec": null,
-      "estimated_sec": 6,
+      "estimated_sec": 5,
       "render_blocks": 1,
       "references": []
     },
@@ -2596,8 +2614,8 @@
       "spoken_text": "『……我負責帶人回去。你負責，睡一覺。』",
       "char_count": 13,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 9,
-      "render_blocks": 2,
+      "estimated_sec": 5,
+      "render_blocks": 1,
       "references": [
         {
           "segment_ref": "seg_033",
@@ -2647,8 +2665,8 @@
       "spoken_text": "『婆婆——我回來囉。』",
       "char_count": 6,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 8,
-      "render_blocks": 2,
+      "estimated_sec": 5,
+      "render_blocks": 1,
       "references": []
     },
     {
@@ -2689,8 +2707,8 @@
       "spoken_text": "「……你也想家吧。打完仗的人，都是要回家的。」\n「那我們也回家吧。回去泡婆婆的湯，回去坐在桃樹下，把這趟『旅の記録』講成整整三天三夜都講不完的故事。」",
       "char_count": 59,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 20,
-      "render_blocks": 3,
+      "estimated_sec": 13,
+      "render_blocks": 2,
       "references": [
         {
           "segment_ref": "seg_027",
@@ -2737,7 +2755,7 @@
       "spoken_text": "「鬼退治のあとで。」\n「勝ったけど、ちょっと疲れた。」\n「まだ撮るの？收了啦——」\n「また、どこかへ♡」",
       "char_count": 33,
       "rate_chars_per_sec": 5,
-      "estimated_sec": 10,
+      "estimated_sec": 8,
       "render_blocks": 2,
       "references": [
         {
@@ -2751,8 +2769,8 @@
       "id": "seg_038",
       "order": 38,
       "source_start": 6900,
-      "source_end": 7037,
-      "source": "> 片尾字卡：**「新たな冒険は、まだ終わっていない。」**\n\n---\n\n## 4. 一句話主題\n\n> 「桃太郎」的故事總是在問：一個孩子能為別人的島做些什麼。\n> 這則故事裡，桃的回答是：先去，去完再回家。\n> **March. 因為不去看，永遠不知道海的那邊有什麼。**",
+      "source_end": 6930,
+      "source": "> 片尾字卡：**「新たな冒険は、まだ終わっていない。」**",
       "kind": "narration",
       "split_reason": "voice_change",
       "location_ref": "loc_endcard",

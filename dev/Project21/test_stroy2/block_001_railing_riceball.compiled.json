@@ -1,0 +1,116 @@
+{
+  "version": "1.12",
+  "project_title": "New_Momotaro_Girl",
+  "global_settings": {
+    "aspect_ratio": "16:9",
+    "style": "Photorealistic 90s retro-tech Japanese adventure film, 35mm film grain, warm analog color, deep shadows, practical torchlight, practical sea and forest atmospheres",
+    "default_audio_design": "Continuous warm analog room tone with vintage optical film hiss filling the frequency spectrum."
+  },
+  "entities": {
+    "characters": [
+      {
+        "id": "char_momo",
+        "name": "桃 (Momo)",
+        "identity_features": {
+          "ethnicity": "East Asian (Japanese)",
+          "age": "About 20",
+          "face_and_hair": "Fair skin, long light-brown hair in a high ponytail tied with a red ribbon, straight bangs, large warm dark eyes, light freckles",
+          "physique": "Athletic slim build",
+          "vibe": "Determined, open, warm, stubborn in a good way"
+        },
+        "reference": {
+          "image": "refs/char_momo",
+          "status": "ready",
+          "prompt": "Neutral front-facing portrait of a young Japanese woman about twenty, fair skin, long light-brown hair in a high ponytail tied with a red ribbon, straight bangs, large warm dark eyes, athletic slim build, calm determined expression, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
+        }
+      },
+      {
+        "id": "char_shiro",
+        "name": "シロ (Shiro)",
+        "identity_features": {
+          "ethnicity": "Japanese Shiba Inu",
+          "age": "Adult",
+          "face_and_hair": "Tan and cream fur, pointed ears, bright intelligent eyes, curled tail",
+          "physique": "Compact sturdy body",
+          "vibe": "Alert, loyal, quiet courage"
+        },
+        "reference": {
+          "image": "refs/char_shiro",
+          "status": "ready",
+          "prompt": "Neutral full-body reference plate of a Japanese Shiba Inu with tan and cream fur, pointed ears, bright intelligent eyes, curled tail, standing alert, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
+        }
+      }
+    ],
+    "props": [],
+    "locations": [
+      {
+        "id": "loc_dock",
+        "name": "木碼頭",
+        "description": "Weathered wooden dock, pilings, barrels, a tattered peach flag, bright sea",
+        "reference": {
+          "image": "refs/loc_dock",
+          "status": "ready",
+          "prompt": "Wide establishing plate of a weathered wooden dock in a 90s Japanese seaside village, pilings, barrels, a tattered peach flag, sparkling blue sea, warm sunlight, 35mm film grain, 16:9, no people, no text"
+        }
+      }
+    ]
+  },
+  "blocks": [
+    {
+      "id": "block_001_railing_riceball",
+      "timeframe": {
+        "start_sec": 0,
+        "end_sec": 8
+      },
+      "location_ref": "loc_dock",
+      "reference_images": [
+        {
+          "role": "scene",
+          "entity_ref": "loc_dock",
+          "image": "refs/loc_dock"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_momo",
+          "image": "refs/char_momo"
+        },
+        {
+          "role": "character",
+          "entity_ref": "char_shiro",
+          "image": "refs/char_shiro"
+        }
+      ],
+      "present_characters": [
+        {
+          "entity_ref": "char_momo",
+          "outfit": "Loose cream yukata with red floral patterns, red ribbon in her ponytail, bare feet",
+          "facial_state": "Tired but content, cheeks full, eyes crinkling with a small smile"
+        },
+        {
+          "entity_ref": "char_shiro",
+          "outfit": "No saddle, natural tan and cream coat",
+          "facial_state": "Bright-eyed, panting softly, nose pushed toward the lens"
+        }
+      ],
+      "present_props": [],
+      "action": {
+        "subject_ref": "char_momo",
+        "description": "Handheld close-up at the weathered dock railing: Momo sits with a rice ball at her lips, the Shiba's snout filling the left foreground in soft focus; warm dusk light, a tired but content smile, the red ribbon stirring."
+      },
+      "audio_control": {
+        "audio_mode": "clean_dialogue_with_room_tone",
+        "speech_present": true,
+        "lip_sync_enabled": true,
+        "dialogue": {
+          "speaker_ref": "char_momo",
+          "type": "spoken_on_screen",
+          "language": "ja-JP",
+          "original_text": "鬼退治のあとで。\nつまり、鬼を倒したあとってことね。\n勝ったけど、ちょっと疲れた。",
+          "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
+        },
+        "soundtrack_specification": "Warm dusk village ambience, wooden railing creak, soft chewing, the dog's wet breathing close to the lens, a distant film-projector hum.",
+        "visual_sound_sync": "Mouth moves in sync with the Japanese line; no other voice."
+      }
+    }
+  ]
+}
