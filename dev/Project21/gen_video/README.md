@@ -96,7 +96,7 @@ Key properties:
 - **`reference_images`** is the r2v slot order: scene first, then the block's own `reference_images`
   if declared, otherwise `present_characters` order. The r2v node takes up to 9 plates, so a
   submission built from `metadata.entities` can carry every entity in the shot (see
-  `test_stroy2/build/submit_block_035.mjs`).
+  `test_stroy2/render_block.mjs`).
 - `referenced_blocks` ids are validated and kept in `metadata`; the referenced blocks themselves are
   **not** merged into the prompt yet (section 6.1).
 
