@@ -1,6 +1,6 @@
 {
   "project": "test_stroy2",
-  "generated_at": "2026-11-04T09:17:14.238Z",
+  "generated_at": "2026-11-04T09:47:13.142Z",
   "settings": {
     "width": 608,
     "height": 352,
@@ -778,7 +778,7 @@
       "size": "608x352",
       "seed": 20261163,
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\test_stroy2\\block_033_king_rises_00001_.mp4",
-      "skipped_deleted": 0
+      "skipped_deleted": 1
     },
     {
       "index": 64,
@@ -790,7 +790,7 @@
       "size": "608x352",
       "seed": 20261164,
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\test_stroy2\\block_034_blade_crossing_00001_.mp4",
-      "skipped_deleted": 0
+      "skipped_deleted": 1
     },
     {
       "index": 65,
@@ -802,7 +802,7 @@
       "size": "608x352",
       "seed": 20261165,
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\test_stroy2\\block_034_landing_line_00001_.mp4",
-      "skipped_deleted": 0
+      "skipped_deleted": 1
     },
     {
       "index": 66,
@@ -838,7 +838,7 @@
       "size": "608x352",
       "seed": 20261168,
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\test_stroy2\\block_036_comfort_akita_00001_.mp4",
-      "skipped_deleted": 0
+      "skipped_deleted": 1
     },
     {
       "index": 69,
@@ -850,7 +850,7 @@
       "size": "608x352",
       "seed": 20261169,
       "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\test_stroy2\\block_036_home_speech_00001_.mp4",
-      "skipped_deleted": 0
+      "skipped_deleted": 2
     },
     {
       "index": 70,

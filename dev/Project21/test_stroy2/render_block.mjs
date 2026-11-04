@@ -1,29 +1,33 @@
 #!/usr/bin/env node
 /**
- * Compile one block and hand it to ComfyUI's MiniMax H3 r2v.
+ * Compile block(s) and hand them to ComfyUI's MiniMax H3 r2v.
  *
  *   node render_block.mjs momotaro.json block_035_victory_stand
  *   node render_block.mjs momotaro.json block_035_victory_stand --width 960 --height 544
- *   node render_block.mjs momotaro.json block_002_dock_zhao --wait
- *   node render_block.mjs momotaro.json block_035 --dry-run
+ *   node render_block.mjs momotaro.json                     # every block in the project
+ *   node render_block.mjs momotaro.json --limit 5           # first five blocks
+ *   node render_block.mjs momotaro.json block_002 --dry-run
  *
- * `block` accepts the full id or an unambiguous prefix. The block is compiled with
- * gen_video/compiler.mjs, and EVERY plate the block needs is uploaded — scene first, then
- * characters, then props — because identity survives only if the plate is actually attached.
- * The prompt opens with a slot legend so the model knows which plate is which.
+ * With no block name the whole project is submitted, one job per block, in story order. With a
+ * block name it is compiled with gen_video/compiler.mjs and EVERY plate that block needs is
+ * uploaded — scene first, then characters, then props — because identity survives only if the
+ * plate is actually attached. The prompt opens with a slot legend so the model knows which plate
+ * is which. `block` accepts a full id or an unambiguous prefix.
  *
  * Options (all optional):
  *   --width 608            --height 352          generation size, multiples of 32
- *   --duration 4           seconds; default = the block's own duration
+ *   --duration 4           seconds; default = each block's own duration
  *   --fps 24               --seed 20261166        default = 20261100 + block index
  *   --no-turbo             20 steps instead of the 4-step reference LoRA
- *   --wait                 block until the file is downloaded (default: return prompt_id)
+ *   --wait                 block until each file is downloaded (default: return prompt_ids)
  *   --timeout-sec 900      only meaningful with --wait
+ *   --limit 5              only the first N blocks (all-blocks mode)
+ *   --verbose              print the slot table and compiled payload for every block
  *   --output-dir <dir>     plate root; default = comfyui.output_dir from gen_video/metadata.json
- *   --filename-prefix <p>  default render/<project>/<block_id>
- *   --label-project <p>    ledger tag; default = the project file name without .json
- *   --allow-missing-refs   submit even when an entity has no plate (default: refuse)
- *   --dry-run              print the prompt + slot table, submit nothing
+ *   --filename-prefix <p>  default render/<project>/<block_id>; explicit value becomes the folder
+ *   --label-project <p>    ledger tag; default = the project's folder name
+ *   --allow-missing-refs   submit even when an entity has no plate (default: skip that block)
+ *   --dry-run              print what would be sent, submit nothing
  */
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
@@ -38,14 +42,17 @@ const PROJECT_ROOT = path.dirname(HERE);
 const METADATA_FILE = path.join(PROJECT_ROOT, "gen_video", "metadata.json");
 const MAX_REFS = 9;
 
-const USAGE = `usage: node render_block.mjs <project.json> <block_id|prefix> [options]
+const USAGE = `usage: node render_block.mjs <project.json> [block_id|prefix] [options]
 
+  no block name              submit every block in the project
   --width 608 --height 352   generation size (multiples of 32)
-  --duration 4 --fps 24      default: the block's own duration / 24
+  --duration 4 --fps 24      default: each block's own duration / 24
   --seed 20261166            default: 20261100 + block index
   --no-turbo                 use the 20-step sampler
   --wait                     block until the mp4 is downloaded
-  --dry-run                  print prompt + reference slots, submit nothing
+  --limit 5                  only the first N blocks
+  --verbose                  slot table + compiled payload for every block
+  --dry-run                  print what would be sent, submit nothing
   --allow-missing-refs       submit even if an entity plate is missing
   see the header of this file for the rest`;
 
@@ -140,109 +147,172 @@ function buildPrompt(prompt, slots) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const [projectArg, blockArg] = args._;
-  if (!projectArg || !blockArg) {
+  if (!projectArg) {
     console.error(USAGE);
     return 1;
   }
 
   const projectFile = resolveProject(projectArg);
   const project = JSON.parse(readFileSync(projectFile, "utf8"));
-  const blockId = resolveBlock(project, blockArg);
 
-  let compiled;
-  try {
-    compiled = compileBlock(project, blockId);
-  } catch (e) {
-    if (e instanceof CompilerError) throw new Error(`cannot compile ${blockId}: ${e.message}`);
-    throw e;
-  }
-  const { prompt, metadata } = compiled;
-
-  // Slot order: scene, then characters, then props — same order the legend prints.
-  const slots = [
-    ...metadata.entities.locations.map((e) => ({ kind: "scene", entity_ref: e.id, entity: e })),
-    ...metadata.entities.characters.map((e) => ({ kind: "character", entity_ref: e.id, entity: e })),
-    ...metadata.entities.props.map((e) => ({ kind: "prop", entity_ref: e.id, entity: e }))
-  ];
-
-  const root = plateRoot(args);
-  const missing = [];
-  for (const slot of slots) {
-    const found = newestPlate(root, slot.entity);
-    if (!found || !found.path) {
-      missing.push(`${slot.entity_ref}: ${found?.why ?? "no reference.image"}`);
-      slot.path = null;
-    } else {
-      slot.path = found.path;
-    }
-  }
-  if (missing.length > 0) {
-    console.error(`missing reference plates (${root}):\n  ${missing.join("\n  ")}`);
-    if (args["allow-missing-refs"] !== "true") {
-      console.error("\nrefusing to submit without them; pass --allow-missing-refs to go ahead anyway");
-      return 1;
-    }
-  }
-
-  const refs = slots.filter((s) => s.path);
-  if (refs.length === 0) throw new Error("no reference plate at all: r2v needs at least one image");
-  if (refs.length > MAX_REFS) {
-    throw new Error(`${refs.length} plates for one shot, MiniMax takes at most ${MAX_REFS}`);
-  }
-
+  const allBlocks = !blockArg;
+  const verbose = !allBlocks || args.verbose === "true";
+  const dryRun = args["dry-run"] === "true";
+  const allowMissing = args["allow-missing-refs"] === "true";
+  const turbo = args["no-turbo"] !== "true";
+  const wait = args.wait === "true";
   const width = number(args.width, 608, "width");
   const height = number(args.height, 352, "height");
-  const duration = number(args.duration, metadata.duration_sec, "duration");
   const fps = number(args.fps, 24, "fps");
-  const seed = number(args.seed, 20261100 + metadata.block_index, "seed");
+  const fixedDuration = args.duration === undefined ? null : number(args.duration, 0, "duration");
+  const fixedSeed = args.seed === undefined ? null : number(args.seed, 0, "seed");
+  const timeoutSec = number(args["timeout-sec"], 900, "timeout-sec");
   const projectDir = path.basename(path.dirname(projectFile));
-  const filenamePrefix =
-    (typeof args["filename-prefix"] === "string" && args["filename-prefix"]) || `render/${projectDir}/${blockId}`;
   const labelProject = typeof args["label-project"] === "string" ? args["label-project"] : projectDir;
-  const text = buildPrompt(prompt, refs);
+  const root = plateRoot(args);
 
-  for (const [i, slot] of refs.entries()) {
-    console.log(`slot ${i}  ${slot.kind.padEnd(9)} ${slot.entity_ref.padEnd(20)} ${slot.path}`);
+  let targets = allBlocks ? project.blocks.map((b) => b.id) : [resolveBlock(project, blockArg)];
+  if (args.limit !== undefined) targets = targets.slice(0, number(args.limit, targets.length, "limit"));
+  if (targets.length === 0) throw new Error("nothing to submit: the project has no blocks");
+
+  const pad = String(targets.length).length;
+  const counts = { submitted: 0, skipped: 0, failed: 0, ready: 0 };
+
+  if (allBlocks) {
+    console.log(
+      `${targets.length} blocks from ${path.basename(projectFile)}  ${width}x${height} ${fps}fps ` +
+        `turbo ${turbo}${dryRun ? "  (dry run)" : ""}`
+    );
   }
-  console.log(
-    `${blockId}  ${width}x${height}  ${fps}fps  ${duration}s  seed ${seed}  turbo ${args["no-turbo"] !== "true"}  ${refs.length} refs`
-  );
-  console.log(`out ${filenamePrefix}_#####_.mp4   label ${labelProject} / ${blockId}`);
 
-  if (args["dry-run"] === "true") {
-    console.log("\n--- prompt ---\n" + text);
-    return 0;
-  }
+  for (const [n, blockId] of targets.entries()) {
+    const tag = allBlocks ? `[${String(n + 1).padStart(pad)}/${targets.length}] ${blockId.padEnd(34)}` : blockId;
 
-  const result = await runTool(
-    "minimax_r2v",
-    {
-      prompt: text,
-      reference_images: refs.map((s) => s.path),
-      width,
-      height,
-      duration_sec: duration,
-      fps,
-      turbo: args["no-turbo"] !== "true",
-      seed,
-      filename_prefix: filenamePrefix
-    },
-    {
-      label: {
-        project: labelProject,
-        block_id: blockId,
-        refs: String(refs.length)
-      },
-      wait: args.wait === "true",
-      timeout_sec: number(args["timeout-sec"], 900, "timeout-sec")
+    let compiled;
+    try {
+      compiled = compileBlock(project, blockId);
+    } catch (e) {
+      counts.failed++;
+      const why = e instanceof CompilerError ? e.message : String(e);
+      console.error(`${tag}  COMPILE FAILED  ${why}`);
+      continue;
     }
-  );
+    const { prompt, metadata } = compiled;
 
-  console.log(JSON.stringify(result, null, 2));
-  if (result.status !== "success") {
-    console.log(`\ncollect it later: node ../comfyui_mcp/cli.mjs --job ${result.prompt_id} --wait true`);
+    // Slot order: scene, then characters, then props — same order the legend prints.
+    const slots = [
+      ...metadata.entities.locations.map((e) => ({ kind: "scene", entity_ref: e.id, entity: e })),
+      ...metadata.entities.characters.map((e) => ({ kind: "character", entity_ref: e.id, entity: e })),
+      ...metadata.entities.props.map((e) => ({ kind: "prop", entity_ref: e.id, entity: e }))
+    ];
+
+    const missing = [];
+    for (const slot of slots) {
+      const found = newestPlate(root, slot.entity);
+      if (!found || !found.path) {
+        missing.push(`${slot.entity_ref}: ${found?.why ?? "no reference.image"}`);
+        slot.path = null;
+      } else {
+        slot.path = found.path;
+      }
+    }
+    const refs = slots.filter((s) => s.path);
+
+    if (missing.length > 0 && !allowMissing) {
+      counts.skipped++;
+      console.error(`${tag}  SKIP  missing plates  ${missing.join(" | ")}`);
+      continue;
+    }
+    if (refs.length === 0) {
+      counts.failed++;
+      console.error(`${tag}  FAILED  no reference plate at all`);
+      continue;
+    }
+    if (refs.length > MAX_REFS) {
+      counts.failed++;
+      console.error(`${tag}  FAILED  ${refs.length} plates for one shot, MiniMax takes at most ${MAX_REFS}`);
+      continue;
+    }
+
+    const duration = fixedDuration ?? metadata.duration_sec;
+    const seed = fixedSeed ?? 20261100 + metadata.block_index;
+    const filenamePrefix =
+      typeof args["filename-prefix"] === "string" && args["filename-prefix"]
+        ? `${args["filename-prefix"]}/${blockId}`
+        : `render/${projectDir}/${blockId}`;
+    const text = buildPrompt(prompt, refs);
+
+    if (verbose) {
+      for (const [i, slot] of refs.entries()) {
+        console.log(`slot ${i}  ${slot.kind.padEnd(9)} ${slot.entity_ref.padEnd(20)} ${slot.path}`);
+      }
+      console.log(
+        `${blockId}  ${width}x${height}  ${fps}fps  ${duration}s  seed ${seed}  turbo ${turbo}  ${refs.length} refs`
+      );
+      console.log(`out ${filenamePrefix}_#####_.mp4   label ${labelProject} / ${blockId}`);
+      console.log("\n--- compiled payload ---");
+      console.log(JSON.stringify(compiled, null, 2));
+    }
+
+    if (dryRun) {
+      counts.ready++;
+      if (verbose) {
+        console.log("\n--- prompt sent ---\n" + text);
+      } else {
+        console.log(`${tag}  ${refs.length} refs  seed ${seed}  ${duration}s  ready`);
+      }
+      continue;
+    }
+
+    let result;
+    try {
+      result = await runTool(
+        "minimax_r2v",
+        {
+          prompt: text,
+          reference_images: refs.map((s) => s.path),
+          width,
+          height,
+          duration_sec: duration,
+          fps,
+          turbo,
+          seed,
+          filename_prefix: filenamePrefix
+        },
+        {
+          label: { project: labelProject, block_id: blockId, refs: String(refs.length) },
+          wait,
+          timeout_sec: timeoutSec
+        }
+      );
+    } catch (e) {
+      counts.failed++;
+      console.error(`${tag}  SUBMIT FAILED  ${e.message}`);
+      continue;
+    }
+
+    counts.submitted++;
+    if (verbose) {
+      console.log(JSON.stringify(result, null, 2));
+      if (result.status !== "success") {
+        console.log(`\ncollect it later: node ../comfyui_mcp/cli.mjs --job ${result.prompt_id} --wait true`);
+      }
+    } else {
+      const file = result.files?.[0]?.filename;
+      console.log(
+        `${tag}  ${refs.length} refs  seed ${seed}  ${duration}s  ${result.status}  ${result.prompt_id}` +
+          (file ? `  ${file}` : "")
+      );
+    }
   }
-  return 0;
+
+  if (allBlocks) {
+    const bits = [`${counts.submitted} submitted`, `${counts.skipped} skipped`, `${counts.failed} failed`];
+    if (dryRun) bits.push(`${counts.ready} ready`);
+    console.log(`\n${bits.join(", ")}`);
+  }
+
+  return counts.failed > 0 || counts.skipped > 0 ? 1 : 0;
 }
 
 try {
