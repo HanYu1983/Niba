@@ -71,7 +71,7 @@ Register once in `../opencode.json`:
 | `first_frame` | `workflow_first_frame.json` | image |
 | `last_frame` | `workflow_last_frame.json` | image |
 | `minimax_t2v` | `video_minimax_h3_t2v.json` | video + audio |
-| `minimax_r2v` | `video_minimax_h3_r2v.json` | video + audio (up to 3 reference images) |
+| `minimax_r2v` | `video_minimax_h3_r2v.json` | video + audio (up to 9 reference images) |
 | `upscale_video` | `utility-gan_upscaler.json` | video (4x) |
 | `text_gen` | `llm_qwen3_5_text_gen.json` | text (optionally about an image) |
 | `comfy_status` | — | reachability, GPU, queue, models, per-tool preflight |
@@ -220,9 +220,10 @@ comfy_job { "tool": "minimax_r2v", "limit": 50 }
 - **`minimax_t2v` without stills** — the `first_frame` / `last_frame` branches are removed from the
   graph (nodes dropped, links deleted) instead of pointing at empty images, so ComfyUI keeps
   validating cleanly. When stills are given they are rescaled to the generation size.
-- **`minimax_r2v`** — `reference_images` is ordered: slot 0/1/2 become `ref_image_0..2`. Unused slots
-  are dropped from the graph. `ref_image_size: "max"` keeps more identity detail but is several
-  times slower.
+- **`minimax_r2v`** — `reference_images` is ordered and variable-length: slot 0..8 become
+  `ref_image_0..8` (up to 9 plates). The template's three LoadImage nodes are discarded and one
+  fresh loader per image is wired in, so three, five or nine references all submit the same way.
+  `ref_image_size: "max"` keeps more identity detail but is several times slower.
 - **`z_image_t2i`** — distilled: 8 steps, cfg 1, and the negative branch is `ConditioningZeroOut`,
   so there is no negative prompt to set. Fastest drafts, and the only tool here whose prompt
   handling is a single string.

@@ -310,7 +310,9 @@ export async function buildMinimaxT2V(args, ctx) {
   };
 }
 
-/** workflow_minimax_h3_r2v.json — up to three reference images -> video+audio. */
+/** workflow_minimax_h3_r2v.json — up to nine reference images -> video+audio. */
+export const MAX_REF_IMAGES = 9;
+
 export async function buildMinimaxR2V(args, ctx) {
   const wf = loadWorkflow("video_minimax_h3_r2v.json");
   const width = assertSize(args.width, 352, "width");
@@ -327,8 +329,8 @@ export async function buildMinimaxR2V(args, ctx) {
   if (refs.length === 0) {
     throw new ComfyError("reference_images must hold at least one local path or ComfyUI input name");
   }
-  if (refs.length > 3) {
-    throw new ComfyError("the template has three reference slots", { got: refs.length });
+  if (refs.length > MAX_REF_IMAGES) {
+    throw new ComfyError(`reference_images holds at most ${MAX_REF_IMAGES} images`, { got: refs.length });
   }
 
   wf["136"].inputs.prompt = requirePrompt(args);
@@ -341,23 +343,7 @@ export async function buildMinimaxR2V(args, ctx) {
   wf["92"].inputs.filename_prefix = args.filename_prefix ?? "video/MiniMax_H3_r2v";
   const fps = setFps(wf, args.fps, "130");
 
-  const slots = [
-    { node: "137", key: "ref_images.ref_image_0" },
-    { node: "139", key: "ref_images.ref_image_1" },
-    { node: "147", key: "ref_images.ref_image_2" }
-  ];
-  const uploaded = [];
-  for (const [index, slot] of slots.entries()) {
-    const source = refs[index];
-    if (!source) {
-      dropInput(wf, "136", slot.key);
-      dropNodes(wf, [slot.node]);
-      continue;
-    }
-    const remote = await ctx.upload(source);
-    wf[slot.node].inputs.image = remote;
-    uploaded.push({ role: `ref_image_${index}`, name: remote });
-  }
+  const uploaded = await setReferenceImages(wf, "136", refs, ctx);
 
   return {
     workflow: wf,
@@ -373,6 +359,56 @@ export async function buildMinimaxR2V(args, ctx) {
       reference_images: uploaded
     }
   };
+}
+
+/**
+ * Rebuild the `ref_images.*` slots of a MiniMax node.
+ *
+ * The template ships three LoadImage nodes, but `ref_images` is a variable-length list — the
+ * node takes up to nine plates. Every loader that fed only a ref_image slot is dropped, then
+ * one fresh LoadImage per file is wired in slot order, so the count follows the caller.
+ */
+async function setReferenceImages(workflow, nodeId, files, ctx, max = MAX_REF_IMAGES) {
+  if (files.length > max) {
+    throw new ComfyError(`a MiniMax prompt holds at most ${max} reference images`, { got: files.length });
+  }
+  const target = workflow[nodeId];
+  if (!target) throw new ComfyError(`workflow has no node ${nodeId}`);
+
+  const slotNodes = new Set();
+  const otherLinks = new Set();
+  for (const [id, node] of Object.entries(workflow)) {
+    for (const [key, value] of Object.entries(node?.inputs ?? {})) {
+      if (!Array.isArray(value) || value.length !== 2) continue;
+      if (key.startsWith("ref_images.")) slotNodes.add(String(value[0]));
+      else otherLinks.add(String(value[0]));
+    }
+  }
+  for (const key of Object.keys(target.inputs)) {
+    if (key.startsWith("ref_images.")) delete target.inputs[key];
+  }
+  dropNodes(
+    workflow,
+    [...slotNodes].filter((id) => !otherLinks.has(id) && workflow[id]?.class_type === "LoadImage")
+  );
+
+  const used = new Set(Object.keys(workflow));
+  const nextId = () => {
+    let n = 900;
+    while (used.has(String(n))) n++;
+    used.add(String(n));
+    return String(n);
+  };
+
+  const uploaded = [];
+  for (const [index, file] of files.entries()) {
+    const remote = await ctx.upload(file);
+    const id = nextId();
+    workflow[id] = { inputs: { image: remote }, class_type: "LoadImage" };
+    target.inputs[`ref_images.ref_image_${index}`] = [id, 0];
+    uploaded.push({ role: `ref_image_${index}`, name: remote });
+  }
+  return uploaded;
 }
 
 /** utility-gan_upscaler.json — 4x a video, keeping its audio and frame rate. */

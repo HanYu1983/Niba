@@ -410,7 +410,7 @@ export function createMcpServer() {
     {
       title: "minimax_r2v",
       description:
-        "MiniMax H3 reference-to-video with audio (workflow_minimax_h3_r2v.json): up to three reference images " +
+        "MiniMax H3 reference-to-video with audio (workflow_minimax_h3_r2v.json): up to nine reference images " +
         "keep identity across the shot. This is the r2v path used for storyboards. turbo:true swaps in the " +
         "4-step reference LoRA.",
       inputSchema: {
@@ -418,8 +418,8 @@ export function createMcpServer() {
         reference_images: z
           .array(z.string())
           .min(1)
-          .max(3)
-          .describe("local paths to upload, or names already in ComfyUI's input folder; slot order = ref_image_0..2"),
+          .max(9)
+          .describe("local paths to upload, or names already in ComfyUI's input folder; slot order = ref_image_0..8"),
         width: z.number().int().positive().optional().describe("default 352; multiple of 32"),
         height: z.number().int().positive().optional().describe("default 608; multiple of 32"),
         duration_sec: z.number().positive().optional().describe("default 5; quantised to 17-frame blocks"),

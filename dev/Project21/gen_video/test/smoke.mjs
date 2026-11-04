@@ -54,24 +54,49 @@ function check(name, fn) {
   console.log(`ok  ${name}`);
 }
 
-// ---------- unit: compileBlock (1.4 shape) ----------
+// ---------- unit: compileBlock (prompt + metadata) ----------
 
-check("returns a project-shaped JSON holding exactly one block", () => {
+check("returns { prompt, metadata } and nothing else", () => {
   const out = compileBlock(project, "block_verdict_read");
-  assert.deepEqual(Object.keys(out), ["version", "project_title", "global_settings", "entities", "blocks"]);
-  assert.equal(out.version, "1.12");
-  assert.equal(out.project_title, "Judge_Xu_Single_Block_Example");
-  assert.equal(out.blocks.length, 1);
-  assert.equal(out.blocks[0].id, "block_verdict_read");
+  assert.deepEqual(Object.keys(out), ["prompt", "metadata"]);
+  assert.deepEqual(Object.keys(out.prompt), ["global_settings", "entities", "blocks"]);
+  assert.deepEqual(Object.keys(out.prompt.entities), ["characters", "props", "locations"]);
+  assert.equal(out.prompt.blocks.length, 1);
+  assert.equal(out.metadata.block_id, "block_verdict_read");
 });
 
-check("keeps entity_ref / referenced_blocks instead of hydrating text", () => {
+check("the prompt carries styling, entity looks and staging — no ids of the story around it", () => {
   const out = compileBlock(project, "block_verdict_read");
-  const block = out.blocks[0];
+  const block = out.prompt.blocks[0];
   assert.equal(block.present_characters[0].entity_ref, "char_judge_xu");
-  assert.equal(block.present_props[0].entity_ref, "prop_verdict");
-  assert.equal(block.location_ref, "loc_courtroom");
-  assert.equal(JSON.stringify(out).includes("Characters involved:"), false);
+  assert.deepEqual(Object.keys(block), ["present_characters", "action", "audio_control"]);
+  assert.equal(out.prompt.global_settings.aspect_ratio, undefined, "aspect_ratio is metadata, not prompt");
+  assert.equal(JSON.stringify(out.prompt).includes("Characters involved:"), false);
+});
+
+check("the prompt keeps only the look fields of each entity", () => {
+  const out = compileBlock(project, "block_verdict_read");
+  const [character] = out.prompt.entities.characters;
+  assert.deepEqual(Object.keys(character), ["id", "identity_features"]);
+  assert.equal(character.name, undefined, "names live in metadata");
+  assert.deepEqual(Object.keys(out.prompt.entities.props[0]), ["id", "appearance"]);
+  assert.equal(out.prompt.entities.locations[0].name, "肅穆法庭", "locations keep their name");
+});
+
+check("metadata carries timing, props, refs and the plate folders", () => {
+  const out = compileBlock(project, "block_verdict_read");
+  const m = out.metadata;
+  assert.equal(m.duration_sec, 6);
+  assert.deepEqual(m.source_timeframe, { start_sec: 0, end_sec: 6 });
+  assert.deepEqual(m.timeframe, { start_sec: 0, end_sec: 6 });
+  assert.equal(m.location_ref, "loc_courtroom");
+  assert.deepEqual(m.present_props, ["prop_verdict"]);
+  assert.deepEqual(m.global_settings, { aspect_ratio: "16:9" });
+  assert.deepEqual(
+    m.reference_images.map((r) => r.entity_ref),
+    ["loc_courtroom", "char_judge_xu", "char_defendant_ajie"]
+  );
+  assert.equal(m.entities.characters[0].name, "許法官 (Judge Xu)");
 });
 
 check("includes only the entities this block uses", () => {
@@ -81,28 +106,32 @@ check("includes only the entities this block uses", () => {
   wide.entities.locations.push({ id: "loc_extra", name: "走廊", description: "empty hallway" });
 
   const out = compileBlock(wide, "block_verdict_read");
-  assert.deepEqual(out.entities.characters.map((c) => c.id), ["char_judge_xu", "char_defendant_ajie"]);
-  assert.deepEqual(out.entities.props.map((p) => p.id), ["prop_verdict"]);
-  assert.deepEqual(out.entities.locations.map((l) => l.id), ["loc_courtroom"]);
+  assert.deepEqual(out.prompt.entities.characters.map((c) => c.id), ["char_judge_xu", "char_defendant_ajie"]);
+  assert.deepEqual(out.prompt.entities.props.map((p) => p.id), ["prop_verdict"]);
+  assert.deepEqual(out.prompt.entities.locations.map((l) => l.id), ["loc_courtroom"]);
   assert.equal(JSON.stringify(out).includes("char_extra"), false);
 });
 
 check("entities are deep copies (mutating output does not touch the project)", () => {
   const out = compileBlock(project, "block_verdict_read");
-  out.entities.characters[0].name = "changed";
-  out.blocks[0].action.description = "changed";
-  assert.equal(project.entities.characters[0].name, "許法官 (Judge Xu)");
+  out.prompt.entities.characters[0].identity_features.age = "changed";
+  out.prompt.blocks[0].action.description = "changed";
+  assert.equal(project.entities.characters[0].identity_features.age, "Late 50s");
   assert.match(project.blocks[0].action.description, /^Judge Xu lifts/);
 });
 
 check("timeframe is recalculated to start at 0 by default", () => {
   const late = structuredClone(project);
   late.blocks[0].timeframe = { start_sec: 19, end_sec: 25 };
-  assert.deepEqual(compileBlock(late, "block_verdict_read").blocks[0].timeframe, { start_sec: 0, end_sec: 6 });
+  assert.deepEqual(compileBlock(late, "block_verdict_read").metadata.timeframe, { start_sec: 0, end_sec: 6 });
   assert.deepEqual(
-    compileBlock(late, "block_verdict_read", { reset_timeframe: false }).blocks[0].timeframe,
+    compileBlock(late, "block_verdict_read", { reset_timeframe: false }).metadata.timeframe,
     { start_sec: 19, end_sec: 25 }
   );
+  assert.deepEqual(compileBlock(late, "block_verdict_read").metadata.source_timeframe, {
+    start_sec: 19,
+    end_sec: 25
+  });
 });
 
 check("referenced_blocks are preserved and validated", () => {
@@ -111,8 +140,8 @@ check("referenced_blocks are preserved and validated", () => {
   nested.blocks[1].referenced_blocks = ["block_verdict_read"];
 
   const out = compileBlock(nested, "block_second");
-  assert.deepEqual(out.blocks[0].referenced_blocks, ["block_verdict_read"]);
-  assert.equal(out.blocks.length, 1, "only the requested block is embedded");
+  assert.deepEqual(out.metadata.referenced_blocks, ["block_verdict_read"]);
+  assert.equal(out.prompt.blocks.length, 1, "only the requested block is embedded");
 
   nested.blocks[1].referenced_blocks = ["block_ghost"];
   assert.throws(() => compileBlock(nested, "block_second"), (e) => e.details.missing_refs[0] === "block_ghost");
@@ -252,8 +281,8 @@ const res = await client.callTool({
 });
 assert.equal(res.isError, undefined);
 const viaMcp = JSON.parse(res.content[0].text);
-assert.equal(viaMcp.blocks.length, 1);
-assert.equal(viaMcp.entities.characters.length, 2);
+assert.equal(viaMcp.prompt.blocks.length, 1);
+assert.equal(viaMcp.prompt.entities.characters.length, 2);
 assert.equal(viaMcp.project_file, undefined, "no extra top-level keys leak into the slice");
 console.log("ok  compile_block over MCP with project_file");
 
@@ -261,7 +290,7 @@ const inline = await client.callTool({
   name: "compile_block",
   arguments: { project, block_id: "block_verdict_read" }
 });
-assert.deepEqual(JSON.parse(inline.content[0].text).blocks[0].timeframe, { start_sec: 0, end_sec: 6 });
+assert.deepEqual(JSON.parse(inline.content[0].text).metadata.timeframe, { start_sec: 0, end_sec: 6 });
 console.log("ok  compile_block accepts an inline project object and resets the timeframe");
 
 const bad = await client.callTool({ name: "compile_block", arguments: { project, block_id: "nope" } });
@@ -386,7 +415,7 @@ const viaStdio = await stdio.callTool({
   name: "compile_block",
   arguments: { project_file: PROJECT_FILE, block_id: "block_verdict_read" }
 });
-assert.equal(JSON.parse(viaStdio.content[0].text).blocks[0].id, "block_verdict_read");
+assert.equal(JSON.parse(viaStdio.content[0].text).metadata.block_id, "block_verdict_read");
 console.log("ok  stdio server answers compile_block");
 
 const stdioEntity = await stdio.callTool({

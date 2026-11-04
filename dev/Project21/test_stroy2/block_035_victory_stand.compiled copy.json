@@ -1,0 +1,177 @@
+{
+  "prompt": {
+    "global_settings": {
+      "style": "Photorealistic 90s retro-tech Japanese adventure film, 35mm film grain, warm analog color, deep shadows, practical torchlight, practical sea and forest atmospheres",
+      "default_audio_design": "Continuous warm analog room tone with vintage optical film hiss filling the frequency spectrum."
+    },
+    "entities": {
+      "characters": [
+        {
+          "id": "char_momo",
+          "identity_features": {
+            "ethnicity": "East Asian (Japanese)",
+            "age": "About 20",
+            "face_and_hair": "Fair skin, long light-brown hair in a high ponytail tied with a red ribbon, straight bangs, large warm dark eyes, light freckles",
+            "physique": "Athletic slim build",
+            "vibe": "Determined, open, warm, stubborn in a good way"
+          }
+        },
+        {
+          "id": "char_shiro",
+          "identity_features": {
+            "ethnicity": "Japanese Shiba Inu",
+            "age": "Adult",
+            "face_and_hair": "Tan and cream fur, pointed ears, bright intelligent eyes, curled tail",
+            "physique": "Compact sturdy body",
+            "vibe": "Alert, loyal, quiet courage"
+          }
+        }
+      ],
+      "props": [
+        {
+          "id": "prop_katana",
+          "appearance": "Japanese katana, worn black scabbard, red cord wrap, plain iron guard, nicked edge"
+        },
+        {
+          "id": "prop_king_banner",
+          "appearance": "Tall black war banner, two white brush characters 鬼王, ragged lower edge, soot-stained pole"
+        }
+      ],
+      "locations": [
+        {
+          "id": "loc_great_hall",
+          "name": "鬼王殿",
+          "description": "Vast vaulted hall, black timbers, torch sconces, semicircle of oni warriors, throne at the far end"
+        }
+      ]
+    },
+    "blocks": [
+      {
+        "present_characters": [
+          {
+            "entity_ref": "char_momo",
+            "outfit": "Torn cream and rust sleeveless warrior outfit, dirt and blood stains, red ribbon, dark leather bracers, katana at the left hip",
+            "facial_state": "Tired, distant, eyes on the banner"
+          },
+          {
+            "entity_ref": "char_shiro",
+            "outfit": "Small red leather armor vest with a red neck scarf",
+            "facial_state": "Head thrown back, howling"
+          }
+        ],
+        "action": {
+          "subject_ref": "char_momo",
+          "target_ref": "prop_king_banner",
+          "description": "Momo stands on the fallen king's breastplate, katana raised; the black 鬼王 banner tears loose and flares in the torchlight; Shiro plants itself at her feet and howls."
+        },
+        "audio_control": {
+          "audio_mode": "vintage_film_room_tone",
+          "speech_present": false,
+          "lip_sync_enabled": false,
+          "soundtrack_specification": "Dead quiet after the crash, a long dog howl, armour settling, embers popping, a barely audible tender breath.",
+          "visual_sound_sync": "Purely mechanical and environmental acoustic design, closed sealed lips, zero vocalization, zero speech."
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "compiler_version": "0.5.1",
+    "version": "1.12",
+    "project_title": "New_Momotaro_Girl",
+    "block_id": "block_035_victory_stand",
+    "block_index": 66,
+    "duration_sec": 4,
+    "source_timeframe": {
+      "start_sec": 376,
+      "end_sec": 380
+    },
+    "timeframe": {
+      "start_sec": 0,
+      "end_sec": 4
+    },
+    "location_ref": "loc_great_hall",
+    "present_props": [
+      "prop_king_banner",
+      "prop_katana"
+    ],
+    "referenced_blocks": [
+      "block_034_landing_line"
+    ],
+    "global_settings": {
+      "aspect_ratio": "16:9"
+    },
+    "entities": {
+      "characters": [
+        {
+          "id": "char_momo",
+          "kind": "character",
+          "name": "桃 (Momo)",
+          "reference": {
+            "image": "refs/char_momo",
+            "status": "ready"
+          }
+        },
+        {
+          "id": "char_shiro",
+          "kind": "character",
+          "name": "シロ (Shiro)",
+          "reference": {
+            "image": "refs/char_shiro",
+            "status": "ready"
+          }
+        }
+      ],
+      "props": [
+        {
+          "id": "prop_katana",
+          "kind": "prop",
+          "name": "桃的刀",
+          "reference": {
+            "image": "refs/prop_katana",
+            "status": "ready"
+          }
+        },
+        {
+          "id": "prop_king_banner",
+          "kind": "prop",
+          "name": "鬼王大幡",
+          "reference": {
+            "image": "refs/prop_king_banner",
+            "status": "ready"
+          }
+        }
+      ],
+      "locations": [
+        {
+          "id": "loc_great_hall",
+          "kind": "location",
+          "name": "鬼王殿",
+          "reference": {
+            "image": "refs/loc_great_hall",
+            "status": "ready"
+          }
+        }
+      ]
+    },
+    "reference_images": [
+      {
+        "slot": 0,
+        "role": "scene",
+        "entity_ref": "loc_great_hall",
+        "image": "refs/loc_great_hall"
+      },
+      {
+        "slot": 1,
+        "role": "character",
+        "entity_ref": "char_momo",
+        "image": "refs/char_momo"
+      },
+      {
+        "slot": 2,
+        "role": "character",
+        "entity_ref": "char_shiro",
+        "image": "refs/char_shiro"
+      }
+    ]
+  }
+}

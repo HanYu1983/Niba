@@ -384,14 +384,18 @@ await check("minimax_t2v rejects sizes that are not multiples of 32", async () =
   await assert.rejects(() => buildMinimaxT2V({ prompt: "x", width: 500 }, { upload: noUpload }), /multiple of 32/);
 });
 
-await check("minimax_r2v fills the reference slots it was given and drops the rest", async () => {
+await check("minimax_r2v rebuilds one reference slot per image", async () => {
   const { workflow, summary } = await buildMinimaxR2V(
     { prompt: "two people", reference_images: ["C:/a.png", "C:/b.png"], duration_sec: 5, ref_image_size: "max" },
     { upload: noUpload }
   );
-  assert.equal(workflow["137"].inputs.image, "uploaded:C:/a.png");
-  assert.equal(workflow["139"].inputs.image, "uploaded:C:/b.png");
-  assert.equal(workflow["147"], undefined, "unused third slot removed");
+  assert.equal(workflow["137"], undefined, "template slot 0/1/2 are replaced, not reused");
+  assert.equal(workflow["139"], undefined);
+  assert.equal(workflow["147"], undefined);
+  assert.equal(workflow["136"].inputs["ref_images.ref_image_0"][0], "900");
+  assert.equal(workflow["136"].inputs["ref_images.ref_image_1"][0], "901");
+  assert.equal(workflow["900"].inputs.image, "uploaded:C:/a.png");
+  assert.equal(workflow["901"].inputs.image, "uploaded:C:/b.png");
   assert.equal("ref_images.ref_image_2" in workflow["136"].inputs, false);
   assert.equal(workflow["136"].inputs.ref_image_size, "max");
   assert.equal(workflow["136"].inputs.width, 352);
@@ -403,20 +407,30 @@ await check("minimax_r2v fills the reference slots it was given and drops the re
   assertNoDanglingLinks(workflow);
 });
 
+await check("minimax_r2v takes up to nine reference images", async () => {
+  const refs = ["a", "b", "c", "d", "e", "f", "g", "h", "i"].map((n) => `C:/${n}.png`);
+  const { workflow, summary } = await buildMinimaxR2V({ prompt: "nine up", reference_images: refs }, { upload: noUpload });
+  assert.equal(summary.reference_images.length, 9);
+  assert.equal(workflow["136"].inputs["ref_images.ref_image_8"][0], "908");
+  assert.equal(workflow["908"].inputs.image, "uploaded:C:/i.png");
+  assert.equal(Object.keys(workflow).filter((id) => workflow[id].class_type === "LoadImage").length, 9);
+  assertNoDanglingLinks(workflow);
+});
+
 await check("minimax_r2v guards the slot count", async () => {
   await assert.rejects(() => buildMinimaxR2V({ prompt: "x", reference_images: [] }, { upload: noUpload }), /at least one/);
   await assert.rejects(
-    () => buildMinimaxR2V({ prompt: "x", reference_images: ["a", "b", "c", "d"] }, { upload: noUpload }),
-    /three reference slots/
+    () => buildMinimaxR2V({ prompt: "x", reference_images: Array.from({ length: 10 }, (_, i) => `r${i}.png`) }, { upload: noUpload }),
+    /at most 9/
   );
 });
 
 await check("minimax_r2v accepts a single string reference (CLI shape)", async () => {
   const { workflow, summary } = await buildMinimaxR2V({ prompt: "x", reference_images: "C:/only.png" }, { upload: noUpload });
-  assert.equal(workflow["137"].inputs.image, "uploaded:C:/only.png");
+  assert.equal(workflow["900"].inputs.image, "uploaded:C:/only.png");
   assert.equal(summary.reference_images.length, 1);
-  assert.equal(workflow["139"], undefined);
-  assert.equal(workflow["147"], undefined);
+  assert.equal(workflow["137"], undefined);
+  assert.equal(workflow["901"], undefined);
 });
 
 await check("upscale_video uploads the clip and keeps audio/fps wiring", async () => {
@@ -665,7 +679,11 @@ await check("local input files are uploaded as multipart/form-data", async () =>
   assert.match(upload.contentType, /^multipart\/form-data; boundary=/);
   assert.match(upload.body, /not-really-a-png/, "file bytes went over the wire");
   const sent = fake.state.submitted.at(-1).body;
-  assert.equal(sent.prompt["137"].inputs.image, "mcp_uploaded.png");
+  const loaders = Object.entries(sent.prompt).filter(([, n]) => n.class_type === "LoadImage");
+  assert.equal(loaders.length, 1);
+  const [loaderId, loader] = loaders[0];
+  assert.equal(loader.inputs.image, "mcp_uploaded.png");
+  assert.equal(sent.prompt["136"].inputs["ref_images.ref_image_0"][0], loaderId);
 });
 
 await check("wait:false returns the prompt_id without downloading", async () => {

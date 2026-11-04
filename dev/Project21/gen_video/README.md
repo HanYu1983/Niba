@@ -13,7 +13,7 @@ reference implementation was ported to ESM. Behaviour is the same; only error ha
 
 | File | Role |
 |---|---|
-| `compiler.mjs` | `compileBlock()` (1.4 project slice) + `compilePayload()` (6.2 flat payload) + `entityPrompt()` (r2v plate prompt) |
+| `compiler.mjs` | `compileBlock()` (1.4 slice → `{ prompt, metadata }`) + `compilePayload()` (6.2 flat payload) + `entityPrompt()` (r2v plate prompt) |
 | `metadata.mjs` | server-side metadata: `comfyui.output_dir`, reference folder resolution, plate listing |
 | `metadata.json` | machine paths (gitignored; start from `metadata.example.json`) |
 | `mcp_core.mjs` | MCP registration (`compile_block`, `entity_prompt`, `metadata_get`, `metadata_set`) |
@@ -34,40 +34,71 @@ reference implementation was ported to ESM. Behaviour is the same; only error ha
 }
 ```
 
-Returns a **self-contained project JSON** in the section 1.4 shape:
+Returns `{ "prompt": { ... }, "metadata": { ... } }`:
+
+- `prompt` is the payload handed to the render model — the trimmed project JSON it has to read.
+- `metadata` is everything the renderer needs but the model should not parse (ids, timing, ref slots).
 
 ```json
 {
-  "version": "1.12",
-  "project_title": "Judge_Xu_Single_Block_Example",
-  "global_settings": { "aspect_ratio": "16:9", "style": "...", "default_audio_design": "..." },
-  "entities": {
-    "characters": [{ "id": "char_judge_xu", "name": "許法官 (Judge Xu)", "identity_features": { "...": "..." } }],
-    "props": [{ "id": "prop_verdict", "...": "..." }],
-    "locations": [{ "id": "loc_courtroom", "...": "..." }]
+  "prompt": {
+    "global_settings": { "style": "...", "default_audio_design": "..." },
+    "entities": {
+      "characters": [{ "id": "char_judge_xu", "identity_features": { "...": "..." } }],
+      "props": [{ "id": "prop_verdict", "appearance": "..." }],
+      "locations": [{ "id": "loc_courtroom", "name": "肅穆法庭", "description": "..." }]
+    },
+    "blocks": [
+      {
+        "present_characters": [{ "entity_ref": "char_judge_xu", "outfit": "...", "facial_state": "..." }],
+        "action": { "subject_ref": "char_judge_xu", "target_ref": "prop_verdict", "description": "..." },
+        "audio_control": { "audio_mode": "clean_dialogue_with_room_tone", "...": "..." }
+      }
+    ]
   },
-  "blocks": [
-    {
-      "id": "block_verdict_read",
-      "location_ref": "loc_courtroom",
-      "present_characters": [{ "entity_ref": "char_judge_xu", "outfit": "...", "facial_state": "..." }],
-      "present_props": [{ "entity_ref": "prop_verdict" }],
-      "action": { "subject_ref": "char_judge_xu", "target_ref": "prop_verdict", "description": "..." },
-      "audio_control": { "audio_mode": "clean_dialogue_with_room_tone", "...": "..." }
-    }
-  ]
+  "metadata": {
+    "compiler_version": "0.5.1",
+    "version": "1.12",
+    "project_title": "Judge_Xu_Single_Block_Example",
+    "block_id": "block_verdict_read",
+    "block_index": 0,
+    "duration_sec": 6,
+    "source_timeframe": { "start_sec": 0, "end_sec": 6 },
+    "timeframe": { "start_sec": 0, "end_sec": 6 },
+    "location_ref": "loc_courtroom",
+    "present_props": ["prop_verdict"],
+    "referenced_blocks": [],
+    "global_settings": { "aspect_ratio": "16:9" },
+    "entities": {
+      "characters": [{ "id": "char_judge_xu", "kind": "character", "name": "許法官 (Judge Xu)", "reference": { "image": "...", "status": "ready" } }],
+      "props": [], "locations": []
+    },
+    "reference_images": [{ "slot": 0, "role": "scene", "entity_ref": "loc_courtroom", "image": null }]
+  }
 }
 ```
 
 Key properties:
 
-- **Exactly one block** in `blocks`, copied verbatim: `entity_ref` / `referenced_blocks` stay as pointers.
+- **`prompt` is what the model reads.** Send the `prompt` field alone as the r2v prompt; `metadata`
+  is bookkeeping for the renderer.
+- **`prompt` carries no bookkeeping**: no `block.id`, `timeframe`, `location_ref`, `present_props`,
+  `referenced_blocks`. Props reach the model through `action` / `description` text.
+- **Entities keep only their look fields** — characters: `id` + `identity_features`, props:
+  `id` + `appearance`, locations: `id` + `name` + `description`. Names and reference plates move to
+  `metadata.entities`.
+- **`global_settings` splits**: `style` + `default_audio_design` stay in `prompt`; the rest
+  (`aspect_ratio`, …) goes to `metadata.global_settings`.
 - **Only the entities that block uses** are included (unused characters/props/locations are dropped).
 - **Deep copies** — mutating the result never touches the source project.
-- **Timeframe recalculated**: every slice is emitted as `start_sec: 0` with `end_sec` = original
-  duration (section 6.1). Pass `reset_timeframe: false` only when the original seconds are needed.
-- **No prompt string** — flattening is `compilePayload()`, kept for the ComfyUI adapter.
-- `referenced_blocks` ids are validated; the referenced blocks themselves are **not** embedded yet (section 6.1).
+- **Timing**: `metadata.source_timeframe` is the original position in the story;
+  `metadata.timeframe` is 0-based (section 6.1) unless `reset_timeframe: false`.
+- **`reference_images`** is the r2v slot order: scene first, then the block's own `reference_images`
+  if declared, otherwise `present_characters` order. The r2v node takes up to 9 plates, so a
+  submission built from `metadata.entities` can carry every entity in the shot (see
+  `test_stroy2/build/submit_block_035.mjs`).
+- `referenced_blocks` ids are validated and kept in `metadata`; the referenced blocks themselves are
+  **not** merged into the prompt yet (section 6.1).
 
 ### `entity_prompt`
 

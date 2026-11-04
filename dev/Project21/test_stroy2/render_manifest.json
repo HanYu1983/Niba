@@ -1,6 +1,6 @@
 {
   "project": "test_stroy2",
-  "generated_at": "2026-11-04T07:54:03.377Z",
+  "generated_at": "2026-11-04T09:08:54.705Z",
   "settings": {
     "width": 608,
     "height": 352,
@@ -808,12 +808,12 @@
       "index": 66,
       "block_id": "block_035_victory_stand",
       "seconds": 4,
-      "prompt_id": "143a1fd4-010d-4ec2-8d18-e006c4147b30",
+      "prompt_id": "ff978e33-c292-4c3e-9464-87a100903296",
       "status": "success",
       "frames": 107,
       "size": "608x352",
       "seed": 20261166,
-      "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\test_stroy2\\block_035_victory_stand_00001_.mp4",
+      "file": "D:\\han\\Niba\\dev\\Project21\\output\\render\\test_stroy2\\block_035_victory_stand_00002_.mp4",
       "skipped_deleted": 0
     },
     {

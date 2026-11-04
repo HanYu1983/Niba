@@ -3,8 +3,10 @@
  *
  * Two outputs, same source project:
  *
- *   compileBlock()    section 1.4 shape — a self-contained project JSON holding ONE block,
- *                     its referenced entities, and entity_ref / referenced_blocks intact.
+ *   compileBlock()    section 1.4 shape — `{ prompt, metadata }`. `prompt` is the trimmed
+ *                     project JSON the render model reads (style, entity looks, staging);
+ *                     `metadata` carries ids, timing and reference-image slots that the
+ *                     renderer needs but the model should not have to parse.
  *                     This is what the MCP `compile_block` tool returns.
  *
  *   compilePayload()  section 6.2 shape — the flat API payload (prompt string, duration_sec,
@@ -70,15 +72,21 @@ function assertTimeframe(block) {
 }
 
 /**
- * Compile one block into a project-shaped JSON (section 1.4).
+ * Compile one block into `{ prompt, metadata }` (section 1.4 shape, trimmed).
  *
- * The block is copied verbatim (entity_ref / referenced_blocks untouched) and every
- * entity it points at is pulled in, so the slice can be read without the rest of the story.
+ * `prompt` is exactly what the render model reads: global style, the identity features of
+ * every entity in the shot, the block's staging (present_characters + action + audio_control).
+ * Ids stay, so `entity_ref` still points at something.
+ *
+ * `metadata` carries everything a renderer needs but the model should not be asked to parse:
+ * the block id, where it sits in the story, its duration, the reference-image slot order, and
+ * the entity fields that were deliberately left out of the prompt (names, reference plates).
  *
  * @param {object} project parsed project JSON
  * @param {string} blockId block to extract
- * @param {{reset_timeframe?: boolean}} [opts] reset_timeframe defaults to true: each compiled slice
- *   starts at 0..duration (section 6.1), since the render API only sees one shot.
+ * @param {{reset_timeframe?: boolean}} [opts] reset_timeframe defaults to true: metadata.timeframe
+ *   starts at 0..duration (section 6.1), since the render API only sees one shot. The original
+ *   position is always kept as metadata.source_timeframe.
  */
 export function compileBlock(project, blockId, opts = {}) {
   if (!isObject(project)) throw new CompilerError("project must be a JSON object");
@@ -89,6 +97,7 @@ export function compileBlock(project, blockId, opts = {}) {
   const blocks = requireArray(project, "blocks", "project");
   const block = findBlock(blocks, blockId);
   const { start, end } = assertTimeframe(block);
+  const index = blocks.indexOf(block);
 
   const entities = isObject(project.entities) ? project.entities : {};
   const characters = requireArray(entities, "characters", "entities");
@@ -96,8 +105,9 @@ export function compileBlock(project, blockId, opts = {}) {
   const locations = requireArray(entities, "locations", "entities");
 
   // Every pointer must resolve, otherwise the slice would carry a dangling ref.
+  const presentCharacters = requireArray(block, "present_characters", `blocks[${blockId}]`);
   const usedCharacterIds = new Set();
-  for (const entry of requireArray(block, "present_characters", `blocks[${blockId}]`)) {
+  for (const entry of presentCharacters) {
     if (!isObject(entry) || typeof entry.entity_ref !== "string") {
       throw new CompilerError("present_characters entries need an entity_ref string", { entry });
     }
@@ -105,17 +115,18 @@ export function compileBlock(project, blockId, opts = {}) {
     usedCharacterIds.add(entry.entity_ref);
   }
 
-  const usedPropIds = new Set();
+  const presentProps = [];
   for (const entry of requireArray(block, "present_props", `blocks[${blockId}]`)) {
     if (!isObject(entry) || typeof entry.entity_ref !== "string") {
       throw new CompilerError("present_props entries need an entity_ref string", { entry });
     }
     indexById(props, entry.entity_ref, "prop");
-    usedPropIds.add(entry.entity_ref);
+    if (!presentProps.includes(entry.entity_ref)) presentProps.push(entry.entity_ref);
   }
   if (typeof block.action?.target_ref === "string" && props.some((p) => p?.id === block.action.target_ref)) {
-    usedPropIds.add(block.action.target_ref);
+    if (!presentProps.includes(block.action.target_ref)) presentProps.push(block.action.target_ref);
   }
+  const usedPropIds = new Set(presentProps);
 
   const usedLocationIds = new Set();
   if (typeof block.location_ref === "string") {
@@ -130,24 +141,138 @@ export function compileBlock(project, blockId, opts = {}) {
     throw new CompilerError(`block "${blockId}" references missing blocks`, { missing_refs: missingRefs });
   }
 
-  const outBlock = structuredClone(block);
-  if (opts.reset_timeframe !== false) outBlock.timeframe = { start_sec: 0, end_sec: end - start };
+  const pick = (list, used) => list.filter((x) => used.has(x?.id));
+  const usedCharacters = pick(characters, usedCharacterIds);
+  const usedProps = pick(props, usedPropIds);
+  const usedLocations = pick(locations, usedLocationIds);
 
-  const pick = (list, used) => list.filter((x) => used.has(x?.id)).map((x) => structuredClone(x));
+  // --- prompt: only what the model needs to read -----------------------------
+  const promptSettings = {};
+  if (isObject(project.global_settings)) {
+    for (const key of ["style", "default_audio_design"]) {
+      const value = project.global_settings[key];
+      if (typeof value === "string" && value.trim() !== "") promptSettings[key] = value;
+    }
+  }
 
-  const out = {
-    version: project.version ?? null,
-    project_title: project.project_title ?? null,
-    ...(isObject(project.global_settings) ? { global_settings: structuredClone(project.global_settings) } : {}),
+  const promptBlock = {
+    present_characters: presentCharacters.filter(isObject).map((c) => structuredClone(c)),
+    ...(isObject(block.action) ? { action: structuredClone(block.action) } : {}),
+    ...(isObject(block.audio_control) ? { audio_control: structuredClone(block.audio_control) } : {})
+  };
+  // present_props is a pointer, not staging: the model gets props through action/description,
+  // so they stay in metadata.present_props only.
+
+  const prompt = {
+    ...(Object.keys(promptSettings).length > 0 ? { global_settings: promptSettings } : {}),
     entities: {
-      characters: pick(characters, usedCharacterIds),
-      props: pick(props, usedPropIds),
-      locations: pick(locations, usedLocationIds)
+      characters: usedCharacters.map((c) => promptEntity(c, "character")),
+      props: usedProps.map((p) => promptEntity(p, "prop")),
+      locations: usedLocations.map((l) => promptEntity(l, "location"))
     },
-    blocks: [outBlock]
+    blocks: [promptBlock]
   };
 
-  return out;
+  // --- metadata: what the renderer needs, kept out of the model's text --------
+  const restSettings = {};
+  if (isObject(project.global_settings)) {
+    for (const [key, value] of Object.entries(project.global_settings)) {
+      if (!(key in promptSettings)) restSettings[key] = structuredClone(value);
+    }
+  }
+
+  const referenceImages = deriveReferenceImages(block, promptBlock.present_characters);
+
+  const metadata = {
+    compiler_version: VERSION,
+    version: project.version ?? null,
+    project_title: project.project_title ?? null,
+    block_id: block.id,
+    block_index: index,
+    duration_sec: end - start,
+    source_timeframe: { start_sec: start, end_sec: end },
+    timeframe:
+      opts.reset_timeframe === false ? { start_sec: start, end_sec: end } : { start_sec: 0, end_sec: end - start },
+    ...(typeof block.location_ref === "string" ? { location_ref: block.location_ref } : {}),
+    present_props: presentProps.slice(),
+    referenced_blocks: referenced.slice(),
+    ...(Object.keys(restSettings).length > 0 ? { global_settings: restSettings } : {}),
+    entities: {
+      characters: usedCharacters.map((c) => metadataEntity(c, "character")),
+      props: usedProps.map((p) => metadataEntity(p, "prop")),
+      locations: usedLocations.map((l) => metadataEntity(l, "location"))
+    },
+    reference_images: referenceImages
+  };
+
+  return { prompt, metadata };
+}
+
+/** The prompt-side view of an entity: the fields that describe how it looks, nothing else. */
+function promptEntity(entity, kind) {
+  if (kind === "character") {
+    if (isObject(entity.identity_features)) {
+      return { id: entity.id, identity_features: structuredClone(entity.identity_features) };
+    }
+    if (typeof entity.traits === "string" && entity.traits.trim() !== "") {
+      return { id: entity.id, traits: entity.traits };
+    }
+    return { id: entity.id };
+  }
+  if (kind === "prop") {
+    return { id: entity.id, ...(typeof entity.appearance === "string" ? { appearance: entity.appearance } : {}) };
+  }
+  return {
+    id: entity.id,
+    name: entity.name ?? entity.id,
+    ...(typeof entity.description === "string" ? { description: entity.description } : {})
+  };
+}
+
+/** The renderer-side view of an entity: its name and the plate the r2v job should upload. */
+function metadataEntity(entity, kind) {
+  return {
+    id: entity.id,
+    kind,
+    name: entity.name ?? entity.id,
+    ...(isObject(entity.reference)
+      ? {
+          reference: {
+            image: entity.reference.image ?? null,
+            status: entity.reference.status ?? null
+          }
+        }
+      : {})
+  };
+}
+
+/**
+ * Slot order for the r2v job: scene first, then characters in staging order. Falls back to
+ * location_ref / present_characters when a project predates `reference_images`.
+ */
+function deriveReferenceImages(block, characters) {
+  const declared = requireArray(block, "reference_images", `blocks[${block?.id}]`);
+  if (declared.length > 0) {
+    return declared
+      .filter((r) => isObject(r) && typeof r.entity_ref === "string")
+      .map((r, slot) => ({
+        slot,
+        role: r.role ?? (slot === 0 ? "scene" : "character"),
+        entity_ref: r.entity_ref,
+        image: r.image ?? null
+      }));
+  }
+
+  const derived = [];
+  if (typeof block?.location_ref === "string") {
+    derived.push({ role: "scene", entity_ref: block.location_ref, image: null });
+  }
+  for (const c of characters ?? []) {
+    if (isObject(c) && typeof c.entity_ref === "string") {
+      derived.push({ role: "character", entity_ref: c.entity_ref, image: null });
+    }
+  }
+  return derived.map((r, slot) => ({ slot, ...r }));
 }
 
 const ENTITY_KINDS = [

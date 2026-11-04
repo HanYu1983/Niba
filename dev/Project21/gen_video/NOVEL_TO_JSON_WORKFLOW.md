@@ -168,7 +168,7 @@
 * `reference_images[0]` **必須是 `scene`**。
 * `ref` 必須存在於 `entities`，且型別對得上：`scene` → `locations`、`character` → `characters`、`prop` → `props`。
 * 第二階段的 block 會把 `ref` 換成該實體的 `reference.image`，也就是那個**資料夾**——不要在段落裡另外寫檔名。
-* 一個 block 建議 1–3 張：場景必備，主講者次之，其他角色最後。超過模型上限時，砍角色不砍場景。
+* 一個 block 建議 1–9 張（r2v 節點的上限是 9 張圖）：場景必備，主講者次之，其他角色最後，道具排在最後。真要超過時，砍角色不砍場景。
 * **沒有實體場景的段落**（新聞蒙太奇、純字卡、抽象閃回）一樣要有 scene 參考：在 `entities.locations` 建一個抽象場景（例如 `loc_news_montage`），參考圖可以是一張空的新聞畫面質感板。
 * `note` 寫這一段的取景需求（低角度、只拍桌面、逆光），不要重複 `action.description`——那是第二階段的事。
 

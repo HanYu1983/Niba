@@ -38,7 +38,7 @@ const jobs = readdirSync(JOBS_DIR)
       return null;
     }
   })
-  .filter((j) => j && j.tool === "minimax_r2v" && j.label?.project === PROJECT_LABEL && j.label?.block_id);
+  .filter((j) => j && j.tool === "minimax_r2v" && String(j.label?.project ?? "").startsWith(PROJECT_LABEL) && j.label?.block_id);
 
 /** Newest success per block, keyed by block_id. */
 const keepers = new Map();
