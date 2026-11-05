@@ -732,7 +732,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "鬼退治のあとで。\nつまり、鬼を倒したあとってことね。\n勝ったけど、ちょっと疲れた。",
+          "original_text": "鬼退治のあとで。つまり、鬼を倒したあとってことね。勝ったけど、ちょっと疲れた。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Warm dusk village ambience, wooden railing creak, soft chewing, the dog's wet breathing close to the lens, a distant film-projector hum.",
@@ -791,7 +791,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "まだ撮るの。\nまた、どこかへ。",
+          "original_text": "まだ撮るの。また、どこかへ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Warm dusk village ambience, wooden railing creak, soft chewing, the dog's wet breathing close to the lens, a distant film-projector hum.",
@@ -839,7 +839,7 @@
         "dialogue": {
           "type": "narration",
           "language": "ja-JP",
-          "original_text": "新たな冒険は、まだ終わっていない。\n新・桃太娘。",
+          "original_text": "新たな冒険は、まだ終わっていない。新・桃太娘。",
           "voice_prompt": "Measured Japanese narrator, warm and cinematic, broadcast-clear, slightly nostalgic"
         },
         "soundtrack_specification": "Non-diegetic narrator over a warm analog room tone; the projector hum rises as the poster locks up.",
@@ -1138,7 +1138,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "旅って書いてこそ意味があるんだよ。\n行こう。\n俺たちの旅は、食べるためじゃないんだ。",
+          "original_text": "旅って書いてこそ意味があるんだよ。行こう。俺たちの旅は、食べるためじゃないんだ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Bright seaside ambience, waves against pilings, seagulls, flag fabric snapping, the dog's happy panting.",
@@ -1189,7 +1189,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "明日から、知らない場所へ。\nたくさん歩いて、たくさん見るんだ。",
+          "original_text": "明日から、知らない場所へ。たくさん歩いて、たくさん見るんだ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Quiet afternoon veranda, distant birds, leaves rustling, light cotton stretch, a soft exhale.",
@@ -1245,7 +1245,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "おばあちゃん。\nずっと言いたかったことがあるの。",
+          "original_text": "おばあちゃん。ずっと言いたかったことがあるの。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Rural village ambience, wind through leaves, banner flapping, a distant dog bark, soft dirt underfoot.",
@@ -1363,7 +1363,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "ちゃんと生きて帰ってくるから。\n帰ってきたら、叱ってほしいの。\n泥だらけで何してるんだって。",
+          "original_text": "ちゃんと生きて帰ってくるから。帰ってきたら、叱ってほしいの。泥だらけで何してるんだって。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Rural village ambience, wind through leaves, banner flapping, a distant dog bark, soft dirt underfoot.",
@@ -1434,7 +1434,7 @@
           "speaker_ref": "char_grandma",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "衣服破了自己補！\n別忘了帶飯糰！",
+          "original_text": "着物は自分で縫いな！おにぎりを忘れずに！",
           "voice_prompt": "Aged Japanese grandmother, warm and frayed, fond and scolding"
         },
         "soundtrack_specification": "Golden-hour countryside, wind through paddy and bamboo, footsteps on dirt, a voice carried across the distance.",
@@ -1508,7 +1508,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "知道啦。",
+          "original_text": "分かったよー！",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Golden-hour countryside, wind through paddy and bamboo, footsteps on dirt, a voice carried across the distance.",
@@ -1569,7 +1569,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "これからは俺たち四人の旅だ。\nばあちゃんにも分かるように。\n旅の記録を書いてみせよう。",
+          "original_text": "これからは俺たち四人の旅だ。ばあちゃんにも分かるように。旅の記録を書いてみせよう。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Forest path ambience, leaves, a dog's soft tail wag against cloth, a bundle strap creaking.",
@@ -1653,7 +1653,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "あー、生き返った。\nゴン、お前は毎回。\nどうして最初に一口齧るんだよ。",
+          "original_text": "あー、生き返った。ゴン、お前は毎回。どうして最初に一口齧るんだよ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Shrine hush, trickling stone-spout water, cicadas, a long satisfied gulp, a monkey's soft crunch.",
@@ -1821,7 +1821,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "半日歩いたし、ここで休もう。\n水も甘いし、風も甘い。",
+          "original_text": "半日歩いたし、ここで休もう。水も甘いし、風も甘い。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Stream ambience, small waterfall, water drips, a pheasant's two-note call, soft cloth.",
@@ -1992,7 +1992,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "おばあちゃんが言ってたんだ。\n俺の桃も、鬼ヶ島の人たちと同じで。\nよそから来たものなんだって。",
+          "original_text": "おばあちゃんが言ってたんだ。俺の桃も、鬼ヶ島の人たちと同じで。よそから来たものなんだって。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Inn veranda in hard sunlight, wind, distant village, a single confident dog bark, parchment rustle.",
@@ -2079,7 +2079,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "よし、決めた。\n鬼ヶ島に行って。\n囚われている人たちを見てくる。\nそれから、帰ってくる。",
+          "original_text": "よし、決めた。鬼ヶ島に行って。囚われている人たちを見てくる。それから、帰ってくる。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Inn veranda in hard sunlight, wind, distant village, a single confident dog bark, parchment rustle.",
@@ -2364,7 +2364,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "わあ、最高。\nこれがいい湯、いい島ってやつだね。",
+          "original_text": "わあ、最高。これがいい湯、いい島ってやつだね。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Hot spring lapping, steam hush, a wooden sign creaking, a sleepy dog sigh.",
@@ -2433,7 +2433,7 @@
           "speaker_ref": "char_gon",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "おい、もうすぐ鬼島だぞ。\nのん気に湯なんか浸かってていいのかよ。",
+          "original_text": "おい、もうすぐ鬼島だぞ。のん気に湯なんか浸かってていいのかよ。",
           "voice_prompt": "Small boyish monkey voice, bright and curious, deadpan, slightly raspy"
         },
         "soundtrack_specification": "Hot spring lapping, steam hush, a wooden sign creaking, a sleepy dog sigh.",
@@ -2502,7 +2502,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "だからこそ浸かるんだよ。\n力をためて、明日に備える。",
+          "original_text": "だからこそ浸かるんだよ。力をためて、明日に備える。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Hot spring lapping, steam hush, a wooden sign creaking, a sleepy dog sigh.",
@@ -2573,7 +2573,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "今日の収穫だよ。\n一口かじれば、海の味。",
+          "original_text": "今日の収穫だよ。一口かじれば、海の味。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Lantern-lit inn, soft chatter, chopstick clinks, charcoal grill crackle, a dog licking its chops.",
@@ -2718,7 +2718,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "約束だよ。\n鬼ヶ島で、助けるべき人を助けて。\nそれから四人で、大きな海を見に行く。",
+          "original_text": "約束だよ。鬼ヶ島で、助けるべき人を助けて。それから四人で、大きな海を見に行く。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Tatami room hush, paper-screen rustle, cards flicked onto straw, a lantern wick ticking.",
@@ -2866,7 +2866,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "そのときは勝ってから。\n温泉に戻ってくるさ。",
+          "original_text": "そのときは勝ってから。温泉に戻ってくるさ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Tatami room hush, paper-screen rustle, cards flicked onto straw, a lantern wick ticking.",
@@ -2950,7 +2950,7 @@
           "speaker_ref": "char_kiha",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "わしは若い頃、船で北へ向かった。\n鬼ヶ島へ流された。\nあの島は島なんかじゃない。\n城だ。",
+          "original_text": "わしは若い頃、船で北へ向かった。鬼ヶ島へ流された。あの島は島なんかじゃない。城だ。",
           "voice_prompt": "Old Japanese fisherman, gravelly, rustic formal speech, grave and burdened"
         },
         "soundtrack_specification": "Brazier crackle, rough whisper of old cloth, a heavy silence after Kiha's words, distant night wind.",
@@ -3034,7 +3034,7 @@
           "speaker_ref": "char_kiha",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "島の真ん中に山があって。\nてっぺんは髑髏みたいな形をしている。\n鬼王は麓の人々を檻に閉じ込めて。\n石を運ばせているんだ。",
+          "original_text": "島の真ん中に山があって。てっぺんは髑髏みたいな形をしている。鬼王は麓の人々を檻に閉じ込めて。石を運ばせているんだ。",
           "voice_prompt": "Old Japanese fisherman, gravelly, rustic formal speech, grave and burdened"
         },
         "soundtrack_specification": "Brazier crackle, rough whisper of old cloth, a heavy silence after Kiha's words, distant night wind.",
@@ -3202,7 +3202,7 @@
           "speaker_ref": "char_kiha",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "生きている者がひとりでもいれば。\nみんな生きているんだ。\nわしは泳いで戻ってきた。\n村で戻ってこられたのは。\nわし一人だけだった。",
+          "original_text": "生きている者がひとりでもいれば。みんな生きているんだ。わしは泳いで戻ってきた。村で戻ってこられたのは。わし一人だけだった。",
           "voice_prompt": "Old Japanese fisherman, gravelly, rustic formal speech, grave and burdened"
         },
         "soundtrack_specification": "Brazier crackle, rough whisper of old cloth, a heavy silence after Kiha's words, distant night wind.",
@@ -3286,7 +3286,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "この旗、借りていくよ。\n帰ってきたら返すから。",
+          "original_text": "この旗、借りていくよ。帰ってきたら返すから。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Brazier crackle, rough whisper of old cloth, a heavy silence after Kiha's words, distant night wind.",
@@ -3370,7 +3370,7 @@
           "speaker_ref": "char_villager",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "小桃！\n四人だけで何ができるんだ！",
+          "original_text": "小桃！四人だけで何ができるんだ！",
           "voice_prompt": "Middle-aged Japanese fisherman, blunt and teasing, shouted across the dock"
         },
         "soundtrack_specification": "Bustling harbor, lapping water, rowdy crowd, canvas snapping, gulls.",
@@ -3454,7 +3454,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "俺たちは五人だよ。\nシロ、ゴン、ピーチ、それに俺。\nそれに、おばあちゃんもいる。\n門で見てくれてるんだから。",
+          "original_text": "俺たちは五人だよ。シロ、ゴン、ピーチ、それに俺。それに、おばあちゃんもいる。門で見てくれてるんだから。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Bustling harbor, lapping water, rowdy crowd, canvas snapping, gulls.",
@@ -3510,7 +3510,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "ほんとに、鬼みたいだ。\n分かってる。\n俺たちはあの城を、壊しに行くんだ。",
+          "original_text": "ほんとに、鬼みたいだ。分かってる。俺たちはあの城を、壊しに行くんだ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Open sea wind, wave slap against the hull, rigging creak, one low long dog growl.",
@@ -3576,7 +3576,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "この足跡、連れて行かれた人たちのもの？\nいや、深すぎる。\nこれは鬼の足跡だ。",
+          "original_text": "この足跡、連れて行かれた人たちのもの？いや、深すぎる。これは鬼の足跡だ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Creeping jungle, dripping leaves, insect buzz, a low dog sniff, faint red-glow hum.",
@@ -3632,7 +3632,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "一進門就有哨位。\n我數到三。",
+          "original_text": "門をくぐればすぐに番兵がいる。三つ数える。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Hush of the forest floor, creaking wood, muffled wind over spikes, dust settling.",
@@ -3693,7 +3693,7 @@
           "speaker_ref": "char_gon",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "壁の中に人がいる。\n二人。",
+          "original_text": "壁の中に人がいる。二人。",
           "voice_prompt": "Small boyish monkey voice, bright and curious, deadpan, slightly raspy"
         },
         "soundtrack_specification": "Inner keep quiet, torch hiss, soft pad of footsteps, a faint pigeon rustle in the rafters.",
@@ -3757,7 +3757,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "じゃあ、別の道を行こう。\n俺たちは人を救いに来たんだ。\n起こしに来たんじゃない。",
+          "original_text": "じゃあ、別の道を行こう。俺たちは人を救いに来たんだ。起こしに来たんじゃない。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Inner keep quiet, torch hiss, soft pad of footsteps, a faint pigeon rustle in the rafters.",
@@ -3813,7 +3813,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "もう少し。\nこの壁の奥が城の中だ。",
+          "original_text": "もう少し。この壁の奥が城の中だ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Gritty scrape of hands and claws on stone, ragged breathing, creaking vines, early birdsong.",
@@ -3879,7 +3879,7 @@
           "speaker_ref": "char_momo",
           "type": "internal_monologue",
           "language": "ja-JP",
-          "original_text": "向こうへ行くまで待つ。\n一、二、三。",
+          "original_text": "向こうへ行くまで待つ。一、二、三。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Armoured feet on the deck below, wood groaning, held breath, a distant spear clink.",
@@ -3940,7 +3940,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "ほら、やるよ。\n戦わない。\n道を空けてくれればそれでいい。",
+          "original_text": "ほら、やるよ。戦わない。道を空けてくれればそれでいい。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Morning stillness at the wall, a spear shaft clink, cloth rustle, a juicy bite.",
@@ -4233,7 +4233,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "ああ。\n壁の向こうの人たちを。\n連れ帰りに来たんだ。",
+          "original_text": "ああ。壁の向こうの人たちを。連れ帰りに来たんだ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Tensed forest birds falling silent, gravel crunch, a blade leaving its sheath, a deep oni rumble.",
@@ -4482,7 +4482,7 @@
           "speaker_ref": "char_momo",
           "type": "internal_monologue",
           "language": "ja-JP",
-          "original_text": "ばあちゃんが言ってた。\n俺は桃の木の下で拾われたって。\nもしかしたら俺の家も。\nこの城みたいに。\nもともと屋根があったのかもしれない。",
+          "original_text": "ばあちゃんが言ってた。俺は桃の木の下で拾われたって。もしかしたら俺の家も。この城みたいに。もともと屋根があったのかもしれない。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Night wind over the broken tower, creaking post, distant torch crackle, a soft cloth press.",
@@ -4546,7 +4546,7 @@
           "speaker_ref": "char_momo",
           "type": "internal_monologue",
           "language": "ja-JP",
-          "original_text": "まあいい。\nまず戦いを終わらせる。\n明日の夜、中に入るぞ。",
+          "original_text": "まあいい。まず戦いを終わらせる。明日の夜、中に入るぞ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Night wind over the broken tower, creaking post, distant torch crackle, a soft cloth press.",
@@ -4612,7 +4612,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "あんたは島の向こう側の上老だろう？\n村から来たんだ。\n俺は桃だ。",
+          "original_text": "あんたは島の向こう側の上老だろう？村から来たんだ。俺は桃だ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Dungeon hush, a single drip, the rasp of old hands on wood, chains rattling, torch hiss.",
@@ -4681,7 +4681,7 @@
           "speaker_ref": "char_genzo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "桃、どうして入ってこられたんだ。\n早く逃げろ。\n鬼王に目をつけられるぞ。",
+          "original_text": "桃、どうして入ってこられたんだ。早く逃げろ。鬼王に目をつけられるぞ。",
           "voice_prompt": "Old Japanese island elder, trembling but dignified, desperate and proud"
         },
         "soundtrack_specification": "Dungeon hush, a single drip, the rasp of old hands on wood, chains rattling, torch hiss.",
@@ -4750,7 +4750,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "逃げるなら皆で逃げる。\nまず牢の扉を斬り開けて。\nそれから大殿へ話をつけに行く。",
+          "original_text": "逃げるなら皆で逃げる。まず牢の扉を斬り開けて。それから大殿へ話をつけに行く。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Dungeon hush, a single drip, the rasp of old hands on wood, chains rattling, torch hiss.",
@@ -4888,7 +4888,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "分かってる。\nばあちゃんも言ってた。\n鬼だって道理は通じる。\nこっちが先に手を出すならな。",
+          "original_text": "分かってる。ばあちゃんも言ってた。鬼だって道理は通じる。こっちが先に手を出すならな。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Dungeon hush, a single drip, the rasp of old hands on wood, chains rattling, torch hiss.",
@@ -5244,7 +5244,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "俺は人を連れて帰る。\nお前は、眠ってろ。",
+          "original_text": "俺は人を連れて帰る。お前は、眠ってろ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "A groaning rush of air, the shock ring of steel, a rolling crash of armour on stone, then her ragged breathing.",
@@ -5430,7 +5430,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "お前も家に帰りたいんだろ。\n戦が終われば、みんな家に帰るんだ。",
+          "original_text": "お前も家に帰りたいんだろ。戦が終われば、みんな家に帰るんだ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Ember crackle, her hand against matted fur, a low long dog whine, morning wind over broken walls.",
@@ -5489,7 +5489,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "じゃあ俺たちも帰ろう。\nばあちゃんの湯に入って。\n桃の木の下に座って。\nこの旅の記録を。\n三日三晩話しても終わらない。\nそんな話にしよう。",
+          "original_text": "じゃあ俺たちも帰ろう。ばあちゃんの湯に入って。桃の木の下に座って。この旅の記録を。三日三晩話しても終わらない。そんな話にしよう。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Ember crackle, her hand against matted fur, a low long dog whine, morning wind over broken walls.",
@@ -5600,7 +5600,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "鬼退治のあとで。\n勝ったけど、ちょっと疲れた。",
+          "original_text": "鬼退治のあとで。勝ったけど、ちょっと疲れた。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Warm dusk village ambience, wooden railing creak, a contented sigh, the dog's nose bumping the lens, projector hum returning.",
@@ -5659,7 +5659,7 @@
           "speaker_ref": "char_momo",
           "type": "spoken_on_screen",
           "language": "ja-JP",
-          "original_text": "まだ撮るの。\nもう終わりでしょ。\nまた、どこかへ。",
+          "original_text": "まだ撮るの。もう終わりでしょ。また、どこかへ。",
           "voice_prompt": "Young Japanese woman, warm and natural, close-mic, tired but playful when relaxed, steady and defiant in battle"
         },
         "soundtrack_specification": "Warm dusk village ambience, wooden railing creak, a contented sigh, the dog's nose bumping the lens, projector hum returning.",
