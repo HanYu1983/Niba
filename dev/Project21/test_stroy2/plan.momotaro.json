@@ -200,22 +200,6 @@
         }
       },
       {
-        "id": "char_akita",
-        "name": "秋田犬 (Akita)",
-        "aliases": [
-          "秋田犬",
-          "大狗",
-          "狗"
-        ],
-        "traits": "Large Japanese Akita, thick brown and white coat, broad head, dark small eyes, heavy build",
-        "first_seen": "seg_036",
-        "reference": {
-          "image": "refs/char_akita",
-          "status": "ready",
-          "prompt": "Neutral full-body reference plate of a large Japanese Akita with thick brown and white coat, broad head, dark small eyes, heavy build, sitting calmly, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
-        }
-      },
-      {
         "id": "char_villager",
         "name": "村民 (Villager)",
         "aliases": [
@@ -2680,7 +2664,7 @@
       "location_ref": "loc_courtyard_dawn",
       "character_refs": [
         "char_momo",
-        "char_akita"
+        "char_shiro"
       ],
       "prop_refs": [],
       "reference_images": [
@@ -2696,11 +2680,11 @@
         },
         {
           "role": "character",
-          "ref": "char_akita",
+          "ref": "char_shiro",
           "note": "same identity plate across the chapter"
         }
       ],
-      "context": "天亮前火還在燒，桃蹲下捧住秋田犬的下頷，說打完仗的人都要回家，然後決定回家。",
+      "context": "天亮前火還在燒，桃蹲下捧住シロ的下頷，說打完仗的人都要回家，然後決定回家。",
       "visual_context": "廢墟庭院、餘燼、桃衣角乾血、大狗毛上泥血；她一下一下撫著狗。",
       "continuity": "把「家」從婆婆擴大到所有打完仗的人；片尾返家。",
       "voice_intent": "spoken_on_screen",

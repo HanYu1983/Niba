@@ -185,22 +185,6 @@
         }
       },
       {
-        "id": "char_akita",
-        "name": "秋田犬 (Akita)",
-        "identity_features": {
-          "ethnicity": "Japanese Akita",
-          "age": "Adult",
-          "face_and_hair": "Thick brown and white coat, broad head, dark small eyes",
-          "physique": "Large heavy build",
-          "vibe": "Exhausted, gentle, loyal"
-        },
-        "reference": {
-          "image": "refs/char_akita",
-          "status": "ready",
-          "prompt": "Neutral full-body reference plate of a large Japanese Akita with thick brown and white coat, broad head, dark small eyes, heavy build, sitting calmly, plain warm-grey backdrop, soft key light, 35mm film grain, no text"
-        }
-      },
-      {
         "id": "char_villager",
         "name": "村民 (Villager)",
         "identity_features": {
@@ -5398,8 +5382,8 @@
         },
         {
           "role": "character",
-          "entity_ref": "char_akita",
-          "image": "refs/char_akita"
+          "entity_ref": "char_shiro",
+          "image": "refs/char_shiro"
         }
       ],
       "present_characters": [
@@ -5409,15 +5393,15 @@
           "facial_state": "Soft, grieving, eyes on the dog"
         },
         {
-          "entity_ref": "char_akita",
-          "outfit": "Matted brown and white fur, mud and dried blood",
+          "entity_ref": "char_shiro",
+          "outfit": "Matted tan and cream fur, mud and dried blood",
           "facial_state": "Exhausted, leaning into her hand"
         }
       ],
       "present_props": [],
       "action": {
         "subject_ref": "char_momo",
-        "description": "Before dawn in the burnt courtyard: Momo crouches, cupping the chin of a huge mud-and-blood-matted Akita; she strokes under its jaw; smoke and embers behind."
+        "description": "Before dawn in the burnt courtyard: Momo crouches, cupping the chin of a mud-and-blood-matted Shiba; she strokes under its jaw; smoke and embers behind."
       },
       "referenced_blocks": [
         "block_027_box_recognition"
@@ -5457,8 +5441,8 @@
         },
         {
           "role": "character",
-          "entity_ref": "char_akita",
-          "image": "refs/char_akita"
+          "entity_ref": "char_shiro",
+          "image": "refs/char_shiro"
         }
       ],
       "present_characters": [
@@ -5468,15 +5452,15 @@
           "facial_state": "Warm, tearful smile, eyes bright"
         },
         {
-          "entity_ref": "char_akita",
-          "outfit": "Matted brown and white fur, mud and dried blood",
+          "entity_ref": "char_shiro",
+          "outfit": "Matted tan and cream fur, mud and dried blood",
           "facial_state": "Mournful, pressed against her"
         }
       ],
       "present_props": [],
       "action": {
         "subject_ref": "char_momo",
-        "description": "Momo looks up at the grey sky, then back at the dog; the Akita leans into her knee with a low whine; dawn light spreads over the ruined walls."
+        "description": "Momo looks up at the grey sky, then back at the dog; the Shiba leans into her knee with a low whine; dawn light spreads over the ruined walls."
       },
       "referenced_blocks": [
         "block_036_comfort_akita"
@@ -5516,8 +5500,8 @@
         },
         {
           "role": "character",
-          "entity_ref": "char_akita",
-          "image": "refs/char_akita"
+          "entity_ref": "char_shiro",
+          "image": "refs/char_shiro"
         }
       ],
       "present_characters": [
@@ -5527,15 +5511,15 @@
           "facial_state": "Still, small, exhausted"
         },
         {
-          "entity_ref": "char_akita",
-          "outfit": "Matted brown and white fur, mud and dried blood",
+          "entity_ref": "char_shiro",
+          "outfit": "Matted tan and cream fur, mud and dried blood",
           "facial_state": "Sitting close beside her"
         }
       ],
       "present_props": [],
       "action": {
         "subject_ref": "char_momo",
-        "description": "Wide shot: Momo and the Akita small in the wrecked courtyard, dawn breaking over the fortress and a distant strip of sea; smoke thinning."
+        "description": "Wide shot: Momo and the Shiba small in the wrecked courtyard, dawn breaking over the fortress and a distant strip of sea; smoke thinning."
       },
       "referenced_blocks": [
         "block_036_home_speech"
