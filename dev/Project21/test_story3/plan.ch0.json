@@ -1,0 +1,3897 @@
+{
+  "version": "1.0",
+  "stage": "plan",
+  "project_title": "Chapter_00_Before_The_Sudden_Change",
+  "source": {
+    "file": "story_ch0.txt",
+    "original_file": "story_ch0.html",
+    "extraction": "extract_story.mjs: Penana <p> paragraphs, per-paragraph watermark spans and display:none blocks removed, paragraphs joined with LF; the txt has no trailing newline",
+    "chapter": 0,
+    "title": "序章：驟變之前",
+    "chars": 5111,
+    "sha256": "4326acca27be1fa7f0f5382171433974c593c96f30b762851c729a85a99a9783",
+    "eol": "lf",
+    "range": {
+      "start": 0,
+      "end": 5111
+    }
+  },
+  "entities": {
+    "characters": [
+      {
+        "id": "char_frost",
+        "name": "佛羅斯上校 (Colonel Frost)",
+        "aliases": [
+          "佛羅斯上校",
+          "佛羅斯",
+          "上校",
+          "老狐狸",
+          "老不修",
+          "死老頭"
+        ],
+        "traits": "Late 50s, broad-shouldered and barrel-chested, weathered square face, short iron-grey buzz cut, thick neck, heavy brows, booming voice, commanding presence",
+        "reference": {
+          "image": "refs/char_frost",
+          "status": "ready",
+          "prompt": "Head-and-shoulders reference photograph of a hardened 58-year-old East Asian man, deeply lined forehead, crow's feet, strong nasolabial folds, weathered leathery skin, grey stubble, short iron-grey buzz cut with a receding hairline, heavy brows, broad shoulders, thick neck, plain olive military uniform with no insignia, plain grey studio backdrop, soft key light, sharp focus, no text"
+        },
+        "first_seen": "seg_002"
+      },
+      {
+        "id": "char_taylor",
+        "name": "泰洛伊上士 (Staff Sergeant Taylor)",
+        "aliases": [
+          "泰洛伊上士",
+          "泰洛伊",
+          "大姑娘"
+        ],
+        "traits": "Mid 20s, athletic and lean, high black ponytail, sharp dark eyes, strong jaw, sun-tanned skin, upright military posture",
+        "reference": {
+          "image": "refs/char_taylor",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of a 25-year-old East Asian woman, athletic and lean, high black ponytail, sharp dark eyes, strong jaw, sun-tanned skin, plain olive military undershirt with no insignia, head-and-shoulders framing, plain grey backdrop, soft key light, sharp focus, no text"
+        },
+        "first_seen": "seg_006"
+      },
+      {
+        "id": "char_contractor",
+        "name": "女殺手 (The Contractor)",
+        "aliases": [
+          "女殺手",
+          "殺手"
+        ],
+        "traits": "Early 30s, lean and wiry, pale cold face, sharp cheekbones, flat dead eyes, short black hair tied back tight",
+        "reference": {
+          "image": "refs/char_contractor",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of a lean 32-year-old East Asian woman, pale cold face, sharp cheekbones, flat dead eyes, short black hair tied back tight, plain black tactical top, head-and-shoulders framing, plain grey backdrop, hard side light, sharp focus, no text"
+        },
+        "first_seen": "seg_017"
+      },
+      {
+        "id": "char_yang",
+        "name": "楊董 (Chairman Yang)",
+        "aliases": [
+          "楊董"
+        ],
+        "traits": "Late 50s, obese, round sweaty face, heavy jowls, thinning black hair combed over, small sharp eyes, expensive dark suit",
+        "reference": {
+          "image": "refs/char_yang",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of an obese 58-year-old East Asian man, round sweaty face, heavy jowls, thinning black hair combed over, small sharp eyes, expensive dark suit, head-and-shoulders framing, plain grey backdrop, soft key light, sharp focus, no text"
+        },
+        "first_seen": "seg_028"
+      },
+      {
+        "id": "char_xiao_liu",
+        "name": "小劉 (Xiao Liu)",
+        "aliases": [
+          "小劉"
+        ],
+        "traits": "Late 20s, slim, eager nervous face, short neat black hair, cheap ill-fitting navy suit",
+        "reference": {
+          "image": "refs/char_xiao_liu",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of a slim 28-year-old East Asian man, eager nervous face, short neat black hair, cheap ill-fitting navy suit, head-and-shoulders framing, plain grey backdrop, soft key light, sharp focus, no text"
+        },
+        "first_seen": "seg_028"
+      },
+      {
+        "id": "char_zhuang",
+        "name": "小莊 (Xiao Zhuang)",
+        "aliases": [
+          "小莊"
+        ],
+        "traits": "Early 30s, handsome, confident smirk, slicked-back black hair, tailored charcoal suit",
+        "reference": {
+          "image": "refs/char_zhuang",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of a handsome 32-year-old East Asian man, confident smirk, slicked-back black hair, tailored charcoal suit, head-and-shoulders framing, plain grey backdrop, soft key light, sharp focus, no text"
+        },
+        "first_seen": "seg_025"
+      },
+      {
+        "id": "char_engineer",
+        "name": "外骨骼技術員 (Exo Technician)",
+        "aliases": [
+          "技術員",
+          "工兵"
+        ],
+        "traits": "30s, stocky, close-cropped hair, grease-stained olive coveralls, safety goggles pushed up on the forehead",
+        "reference": {
+          "image": "refs/char_engineer",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of a stocky 35-year-old East Asian man, close-cropped hair, grease-stained olive coveralls, safety goggles pushed up on his forehead, head-and-shoulders framing, plain grey backdrop, soft key light, sharp focus, no text"
+        },
+        "first_seen": "seg_003"
+      },
+      {
+        "id": "char_father",
+        "name": "少女的父親 (The Father)",
+        "aliases": [
+          "父親",
+          "爸爸"
+        ],
+        "traits": "Late 40s, lean, gentle tired eyes, short greying black hair, thin rimless glasses, clean white research coat",
+        "reference": {
+          "image": "refs/char_father",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of a lean 48-year-old East Asian man, gentle tired eyes, short greying black hair, thin rimless glasses, clean white research coat, head-and-shoulders framing, plain grey backdrop, soft morning light, sharp focus, no text"
+        },
+        "first_seen": "seg_039"
+      },
+      {
+        "id": "char_daughter",
+        "name": "少女 (The Daughter)",
+        "aliases": [
+          "少女",
+          "小寶貝"
+        ],
+        "traits": "14, small and slight, shoulder-length black hair, round face, clear expressive eyes, plain grey hoodie",
+        "reference": {
+          "image": "refs/char_daughter",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of a fourteen-year-old East Asian girl, small and slight, shoulder-length black hair, round face, clear expressive eyes, plain grey hoodie, head-and-shoulders framing, plain grey backdrop, soft morning light, sharp focus, no text"
+        },
+        "first_seen": "seg_039"
+      },
+      {
+        "id": "char_taxi_driver",
+        "name": "計程車司機 (Taxi Driver)",
+        "aliases": [
+          "司機"
+        ],
+        "traits": "50s, heavyset, tired eyes, grey stubble, flat cap, plain grey jacket",
+        "reference": {
+          "image": "refs/char_taxi_driver",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of a heavyset 55-year-old East Asian man, tired eyes, grey stubble, flat cap, plain grey jacket, head-and-shoulders framing, plain grey backdrop, soft key light, sharp focus, no text"
+        },
+        "first_seen": "seg_045"
+      },
+      {
+        "id": "char_infected_driver",
+        "name": "肇事駕駛 (The Infected Driver)",
+        "aliases": [
+          "肇事駕駛",
+          "肇事者"
+        ],
+        "traits": "30s male, gaunt, grey-purple necrotic skin, bloodshot eyes, torn dark jacket, fresh road rash on one cheek",
+        "reference": {
+          "image": "refs/char_infected_driver",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of a gaunt 32-year-old East Asian man as a freshly turned infected, grey-purple necrotic skin, bloodshot eyes, torn dark jacket, road rash on one cheek, practical-effects makeup, head-and-shoulders framing, plain grey backdrop, hard overhead light, sharp focus, no text"
+        },
+        "first_seen": "seg_032"
+      },
+      {
+        "id": "char_bitten_rider",
+        "name": "外送員 (The Delivery Rider)",
+        "aliases": [
+          "外送員"
+        ],
+        "traits": "20s, slim, young frightened face, delivery uniform with reflective stripes, black helmet with visor",
+        "reference": {
+          "image": "refs/char_bitten_rider",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of a slim 23-year-old East Asian man in a reflective-striped delivery uniform, black helmet under one arm, young frightened face, head-and-shoulders framing, plain grey backdrop, hard street light, sharp focus, no text"
+        },
+        "first_seen": "seg_032"
+      },
+      {
+        "id": "char_crawling_man",
+        "name": "渾身是血的男子 (The Crawling Man)",
+        "aliases": [
+          "渾身是血的男子"
+        ],
+        "traits": "30s male, blood-soaked shirt, torn jeans, matted black hair, grey pallor after turning",
+        "reference": {
+          "image": "refs/char_crawling_man",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of a blood-soaked 32-year-old East Asian man, torn shirt and jeans, matted black hair, grey pallor, practical-effects blood, head-and-shoulders framing, plain grey backdrop, hard overhead light, sharp focus, no text"
+        },
+        "first_seen": "seg_060"
+      },
+      {
+        "id": "char_infected_attacker",
+        "name": "人形野獸 (The Infected Attacker)",
+        "aliases": [
+          "怪物",
+          "怪人",
+          "人形野獸",
+          "那人影"
+        ],
+        "traits": "Emaciated humanoid, grey-purple necrotic skin, deep open wounds with exposed sinew, bloodshot eyes, torn work clothes",
+        "reference": {
+          "image": "refs/char_infected_attacker",
+          "status": "ready",
+          "prompt": "Neutral front-facing reference portrait of an emaciated infected humanoid, grey-purple necrotic skin, deep open wounds with exposed sinew, bloodshot eyes, torn work clothes, practical-effects makeup, head-and-shoulders framing, plain grey backdrop, hard overhead light, sharp focus, no text"
+        },
+        "first_seen": "seg_060"
+      }
+    ],
+    "props": [
+      {
+        "id": "prop_leave_form",
+        "name": "休長假假單",
+        "aliases": [
+          "假單"
+        ],
+        "traits": "Printed military leave request form, typed rows, signature line, red stamp box",
+        "reference": {
+          "image": "refs/prop_leave_form",
+          "status": "ready",
+          "prompt": "Top-down plate of a printed military leave request form with typed rows and a signature line, no legible text, on a steel desk, 35mm film grain"
+        },
+        "first_seen": "seg_006"
+      },
+      {
+        "id": "prop_exo_suit",
+        "name": "外骨骼裝甲",
+        "aliases": [
+          "外骨骼裝甲",
+          "外骨骼"
+        ],
+        "traits": "Open hydraulic exoskeleton frame, olive drab metal, exposed cables and pistons, worn edges",
+        "reference": {
+          "image": "refs/prop_exo_suit",
+          "status": "ready",
+          "prompt": "Product plate of an open hydraulic exoskeleton frame, olive drab metal, exposed cables and pistons, worn edges, no person, no text, 35mm film grain"
+        },
+        "first_seen": "seg_003"
+      },
+      {
+        "id": "prop_exo_rifle",
+        "name": "特製大口徑步槍",
+        "aliases": [
+          "大口徑步槍",
+          "步槍"
+        ],
+        "traits": "Large-caliber rifle, long heavy barrel, matte black, oversized muzzle brake",
+        "reference": {
+          "image": "refs/prop_exo_rifle",
+          "status": "ready",
+          "prompt": "Side product plate of a large-caliber rifle with a long heavy barrel, matte black, oversized muzzle brake, no text, 35mm film grain"
+        },
+        "first_seen": "seg_004"
+      },
+      {
+        "id": "prop_target_sheet",
+        "name": "靶紙",
+        "aliases": [
+          "靶紙",
+          "靶心"
+        ],
+        "traits": "Paper target sheet, three bullet holes overlapping at the center, ragged edges",
+        "reference": {
+          "image": "refs/prop_target_sheet",
+          "status": "ready",
+          "prompt": "Top-down plate of a paper shooting target with three overlapping bullet holes at the center, ragged edges, no text, 35mm film grain"
+        },
+        "first_seen": "seg_004"
+      },
+      {
+        "id": "prop_whisky_glass",
+        "name": "威士忌杯",
+        "aliases": [
+          "威士忌",
+          "酒杯"
+        ],
+        "traits": "Crystal tumbler, two ice cubes, amber whisky, condensation on the glass",
+        "reference": {
+          "image": "refs/prop_whisky_glass",
+          "status": "ready",
+          "prompt": "Product plate of a crystal tumbler with two ice cubes and amber whisky, condensation on the glass, dark table, 35mm film grain"
+        },
+        "first_seen": "seg_014"
+      },
+      {
+        "id": "prop_vaccine_syringe",
+        "name": "疫苗針管",
+        "aliases": [
+          "疫苗",
+          "針管"
+        ],
+        "traits": "Prefilled medical syringe, amber liquid, capped needle, torn sterile packaging",
+        "reference": {
+          "image": "refs/prop_vaccine_syringe",
+          "status": "ready",
+          "prompt": "Top-down plate of a prefilled medical syringe with amber liquid, capped needle, torn sterile packaging, no legible text, 35mm film grain"
+        },
+        "first_seen": "seg_022"
+      },
+      {
+        "id": "prop_contractor_phone",
+        "name": "殺手的手機",
+        "aliases": [
+          "帳戶畫面"
+        ],
+        "traits": "Smartphone screen showing a blurred bank balance, a long row of glowing digits",
+        "reference": {
+          "image": "refs/prop_contractor_phone",
+          "status": "ready",
+          "prompt": "Close-up plate of a smartphone screen showing an abstract bank balance with a long row of glowing blurred digits, no legible text, dark room, 35mm film grain"
+        },
+        "first_seen": "seg_022"
+      },
+      {
+        "id": "prop_motorcycle",
+        "name": "黑色摩托車",
+        "aliases": [
+          "摩托車"
+        ],
+        "traits": "Black sport motorcycle, matte fairings, single headlight",
+        "reference": {
+          "image": "refs/prop_motorcycle",
+          "status": "ready",
+          "prompt": "Three-quarter product plate of a black sport motorcycle, matte fairings, single headlight, wet asphalt at night, no text, 35mm film grain"
+        },
+        "first_seen": "seg_023"
+      },
+      {
+        "id": "prop_qr_ticket",
+        "name": "方舟門票",
+        "aliases": [
+          "門票",
+          "二維碼"
+        ],
+        "traits": "Phone screen with a glowing blue QR code against a dark club background",
+        "reference": {
+          "image": "refs/prop_qr_ticket",
+          "status": "ready",
+          "prompt": "Close-up plate of a phone screen with a glowing blue QR code, no legible text, dark club background, 35mm film grain"
+        },
+        "first_seen": "seg_025"
+      },
+      {
+        "id": "prop_ark_phone",
+        "name": "新手機與行動電源",
+        "aliases": [
+          "新手機",
+          "行動電源",
+          "通行證"
+        ],
+        "traits": "Brand-new smartphone with a power bank, screen showing an abstract facility map and a pass icon",
+        "reference": {
+          "image": "refs/prop_ark_phone",
+          "status": "ready",
+          "prompt": "Top-down plate of a brand-new smartphone and a small power bank, screen showing an abstract underground facility map and a pass icon, no legible text, 35mm film grain"
+        },
+        "first_seen": "seg_041"
+      },
+      {
+        "id": "prop_steel_rod",
+        "name": "祖傳不鏽鋼棍",
+        "aliases": [
+          "不鏽鋼棍",
+          "棍子"
+        ],
+        "traits": "Long stainless steel rod, worn cloth grip, dull silver",
+        "reference": {
+          "image": "refs/prop_steel_rod",
+          "status": "ready",
+          "prompt": "Product plate of a long stainless steel rod with a worn cloth grip, dull silver, no text, 35mm film grain"
+        },
+        "first_seen": "seg_068"
+      },
+      {
+        "id": "prop_taylor_car",
+        "name": "泰洛伊的車",
+        "aliases": [
+          "車子",
+          "車"
+        ],
+        "traits": "Silver compact SUV, rental, mud on the wheel arches",
+        "reference": {
+          "image": "refs/prop_taylor_car",
+          "status": "ready",
+          "prompt": "Three-quarter plate of a silver compact SUV, mud on the wheel arches, no text, 35mm film grain"
+        },
+        "first_seen": "seg_051"
+      },
+      {
+        "id": "prop_news_feed",
+        "name": "手機新聞畫面",
+        "aliases": [
+          "新聞",
+          "新聞畫面"
+        ],
+        "traits": "Phone news feed texture, blurred thumbnails, red breaking-news bar",
+        "reference": {
+          "image": "refs/prop_news_feed",
+          "status": "ready",
+          "prompt": "Close-up plate of a phone news feed with blurred thumbnails and a red breaking-news bar, no legible text, 35mm film grain"
+        },
+        "first_seen": "seg_048"
+      },
+      {
+        "id": "prop_tactical_backpack",
+        "name": "戰術背包",
+        "aliases": [
+          "戰術背包",
+          "背包"
+        ],
+        "traits": "Black tactical backpack, straps and pouches, packed full",
+        "reference": {
+          "image": "refs/prop_tactical_backpack",
+          "status": "ready",
+          "prompt": "Product plate of a black tactical backpack, straps and pouches, packed full, no text, 35mm film grain"
+        },
+        "first_seen": "seg_072"
+      }
+    ],
+    "locations": [
+      {
+        "id": "loc_prologue_title",
+        "name": "序章字卡",
+        "aliases": [
+          "字卡"
+        ],
+        "traits": "Abstract black 35mm slate texture, dust, scratches, faint vignette",
+        "reference": {
+          "image": "refs/loc_prologue_title",
+          "status": "ready",
+          "prompt": "Abstract black 35mm film slate texture, dust motes, scratches, faint vignette, no text, no people, 16:9"
+        },
+        "first_seen": "seg_001"
+      },
+      {
+        "id": "loc_training_ground",
+        "name": "軍營操場",
+        "aliases": [
+          "操場",
+          "營區"
+        ],
+        "traits": "Wide military parade ground, obstacle course, shooting range, distant barracks, morning haze",
+        "reference": {
+          "image": "refs/loc_training_ground",
+          "status": "ready",
+          "prompt": "Wide establishing plate of a military parade ground at morning, obstacle course, shooting range, distant barracks, morning haze, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_002"
+      },
+      {
+        "id": "loc_colonel_lounge_night",
+        "name": "上校的深夜休息室",
+        "aliases": [
+          "休息室",
+          "深夜辦公室"
+        ],
+        "traits": "Dark officers' lounge, leather sofa, low table with whisky, tall windows over a city at night, one warm lamp",
+        "reference": {
+          "image": "refs/loc_colonel_lounge_night",
+          "status": "ready",
+          "prompt": "Wide establishing plate of a dark officers' lounge at night, leather sofa, low table with a whisky glass, tall windows over a city, single warm lamp, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_014"
+      },
+      {
+        "id": "loc_reservoir_night",
+        "name": "水庫夜景",
+        "aliases": [
+          "水庫"
+        ],
+        "traits": "Concrete dam edge, black water, mist, distant lights",
+        "reference": {
+          "image": "refs/loc_reservoir_night",
+          "status": "ready",
+          "prompt": "Wide establishing plate of a reservoir at night, concrete dam edge, black water, mist, distant lights, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_016"
+      },
+      {
+        "id": "loc_contractor_room",
+        "name": "殺手的安全屋",
+        "aliases": [
+          "安全屋",
+          "裝備間"
+        ],
+        "traits": "Dim room, gear laid out on a table, weapon crate, single bulb, map on the wall",
+        "reference": {
+          "image": "refs/loc_contractor_room",
+          "status": "ready",
+          "prompt": "Wide establishing plate of a dim safehouse room, gear laid out on a table, weapon crate, single bulb, map on the wall, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_017"
+      },
+      {
+        "id": "loc_club_penthouse",
+        "name": "俱樂部頂層",
+        "aliases": [
+          "俱樂部",
+          "頂層"
+        ],
+        "traits": "Luxury club top floor, pink neon haze, cigar smoke, floor-to-ceiling windows over the city, velvet booths",
+        "reference": {
+          "image": "refs/loc_club_penthouse",
+          "status": "ready",
+          "prompt": "Wide establishing plate of a luxury penthouse club, pink neon haze, cigar smoke, floor-to-ceiling windows over the city, velvet booths, no people, no legible text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_024"
+      },
+      {
+        "id": "loc_city_street_night",
+        "name": "夜晚街道",
+        "aliases": [
+          "夜晚街道",
+          "樓下街道"
+        ],
+        "traits": "Busy city street at night, neon signs, crosswalk, parked scooters, wet asphalt",
+        "reference": {
+          "image": "refs/loc_city_street_night",
+          "status": "ready",
+          "prompt": "Wide establishing plate of a busy East Asian city street at night, neon signs with no legible text, crosswalk, parked scooters, wet asphalt, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_032"
+      },
+      {
+        "id": "loc_apartment_morning",
+        "name": "清晨的公寓",
+        "aliases": [
+          "公寓",
+          "家裡"
+        ],
+        "traits": "Small modest apartment, rain-streaked window, table, coat rack, warm morning lamp",
+        "reference": {
+          "image": "refs/loc_apartment_morning",
+          "status": "ready",
+          "prompt": "Wide establishing plate of a small modest apartment on a rainy morning, rain-streaked window, table, coat rack, warm lamp, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_039"
+      },
+      {
+        "id": "loc_taxi_interior",
+        "name": "計程車內",
+        "aliases": [
+          "計程車",
+          "車內"
+        ],
+        "traits": "Rainy taxi rear seat, fogged windows, rear-view mirror, worn upholstery",
+        "reference": {
+          "image": "refs/loc_taxi_interior",
+          "status": "ready",
+          "prompt": "Wide plate of a rainy taxi interior, rear seat, fogged windows, rear-view mirror, worn upholstery, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_045"
+      },
+      {
+        "id": "loc_taylor_car_interior",
+        "name": "泰洛伊的車內",
+        "aliases": [
+          "車內",
+          "駕駛座"
+        ],
+        "traits": "Silver compact SUV interior, driver's seat, rain on the windshield, phone mount on the dash",
+        "reference": {
+          "image": "refs/loc_taylor_car_interior",
+          "status": "ready",
+          "prompt": "Wide plate of a silver compact SUV interior, driver's seat, rain on the windshield, phone mount on the dash, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_051"
+      },
+      {
+        "id": "loc_city_street_morning",
+        "name": "清晨雨街",
+        "aliases": [
+          "清晨街道",
+          "街上"
+        ],
+        "traits": "Rainy morning street, umbrellas, puddles, gutters, low clouds",
+        "reference": {
+          "image": "refs/loc_city_street_morning",
+          "status": "ready",
+          "prompt": "Wide establishing plate of a rainy morning city street, umbrellas, puddles, gutters, low clouds, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_044"
+      },
+      {
+        "id": "loc_bridge_traffic",
+        "name": "塞車的橋面",
+        "aliases": [
+          "橋面",
+          "橋上"
+        ],
+        "traits": "Long elevated bridge packed with cars and scooters, grey sky, city skyline",
+        "reference": {
+          "image": "refs/loc_bridge_traffic",
+          "status": "ready",
+          "prompt": "Wide establishing plate of a long elevated bridge packed with cars and scooters, grey sky, city skyline, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_050"
+      },
+      {
+        "id": "loc_bridge_collapse",
+        "name": "斷裂的橋面",
+        "aliases": [
+          "斷橋"
+        ],
+        "traits": "Bridge deck cracking and tilting, dust, falling debris, cars sliding",
+        "reference": {
+          "image": "refs/loc_bridge_collapse",
+          "status": "ready",
+          "prompt": "Wide plate of a collapsing bridge deck, deep cracks, dust, falling debris, cars sliding, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_056"
+      },
+      {
+        "id": "loc_riverbed_wreck",
+        "name": "河床殘骸",
+        "aliases": [
+          "河床",
+          "運河岸邊"
+        ],
+        "traits": "Dry riverbed under a broken bridge, rubble, overturned silver SUV, concrete debris, harsh noon light",
+        "reference": {
+          "image": "refs/loc_riverbed_wreck",
+          "status": "ready",
+          "prompt": "Wide establishing plate of a dry riverbed under a broken bridge, rubble, overturned silver SUV, concrete debris, harsh noon light, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_058"
+      },
+      {
+        "id": "loc_city_skyline_noon",
+        "name": "平靜的城市天際線",
+        "aliases": [
+          "城市天際線",
+          "艾伯塔市"
+        ],
+        "traits": "Distant calm city skyline at noon, haze, intact towers, no smoke",
+        "reference": {
+          "image": "refs/loc_city_skyline_noon",
+          "status": "ready",
+          "prompt": "Wide establishing plate of a distant calm city skyline at noon, haze, intact towers, no smoke, no people, no text, 35mm film grain, 16:9"
+        },
+        "first_seen": "seg_078"
+      }
+    ]
+  },
+  "segments": [
+    {
+      "id": "seg_001",
+      "order": 1,
+      "source_start": 0,
+      "source_end": 25,
+      "source": "———人工篩選———\n序章\n———驟變之前———\n",
+      "kind": "action",
+      "split_reason": "chapter_start",
+      "location_ref": "loc_prologue_title",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_prologue_title",
+          "note": "full-frame black slate texture, dust drifting"
+        }
+      ],
+      "context": "序章字卡：人工篩選、序章、驟變之前。",
+      "visual_context": "黑底字卡依序浮現，底片顆粒與刮痕緩慢流動，沒有人物；字卡文字後製疊加，參考板保持無字。",
+      "continuity": "定調：這是被篩選出來的前史，災變還沒發生。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_002",
+      "order": 2,
+      "source_start": 25,
+      "source_end": 103,
+      "source": "「一群菜雞！死老百姓！」\n操場上，一名體格壯碩的軍官對著長長的行軍隊伍扯開嗓子吆喝，聲音如雷鳴般刺耳，「跑起來！還敢掉隊啊？沒睡飽嗎？不想休假了是不是！」\n",
+      "kind": "dialogue",
+      "split_reason": "paragraph_break",
+      "location_ref": "loc_training_ground",
+      "character_refs": [
+        "char_frost"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_training_ground",
+          "note": "parade ground wide, column of trainees receding into haze"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "清晨操場，佛羅斯上校對著長長的行軍隊伍扯開嗓子咆哮。",
+      "visual_context": "低角度拍上校背影與看不見尾端的隊伍，口中蒸氣在冷空氣裡散開；切到上校臉部特寫。",
+      "continuity": "先建立上校的粗暴權威，後面的陰沉才有落差。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_frost",
+      "spoken_text": "一群菜雞！死老百姓！跑起來！還敢掉隊啊？沒睡飽嗎？不想休假了是不是！",
+      "char_count": 28,
+      "rate_chars_per_sec": 4.5,
+      "estimated_sec": 8,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_003",
+      "order": 3,
+      "source_start": 103,
+      "source_end": 177,
+      "source": "操場正中央，幾名工兵正圍繞著一名穿上外骨骼裝甲的技術員，神色凝重的調整著複雜的液壓管線。\n「好，試試看。」其中一人拍了拍手，示意操作員啟動機械臂。\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_training_ground",
+      "character_refs": [
+        "char_engineer"
+      ],
+      "prop_refs": [
+        "prop_exo_suit"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_training_ground",
+          "note": "center of the parade ground, exoskeleton rig under repair"
+        },
+        {
+          "role": "character",
+          "ref": "char_engineer",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_exo_suit",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "操場中央，工兵圍著外骨骼裝甲調整液壓管線，技術員示意啟動。",
+      "visual_context": "俯拍液壓接頭與沾滿油污的手；技術員拍手，機械臂待命。",
+      "continuity": "把注意力從人聲轉到機械，為下一拍的試射暖機。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_engineer",
+      "spoken_text": "好，試試看。",
+      "char_count": 4,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_004",
+      "order": 4,
+      "source_start": 177,
+      "source_end": 293,
+      "source": "一陣刺耳的金屬摩擦與馬達轟鳴聲驟然響起，巨大的金屬外殼彷彿注入了生命，精準抓起特製的大口徑步槍，指向百米外的靶心。\n砰——！砰——！砰——！\n那機械手臂就像擁有自律神經，自動定位、穩定擊發。三發子彈精準在靶紙正中央炸開，落點重合。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_training_ground",
+      "character_refs": [],
+      "prop_refs": [
+        "prop_exo_suit",
+        "prop_exo_rifle",
+        "prop_target_sheet"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_training_ground",
+          "note": "firing line at the edge of the ground, target downrange"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_exo_suit",
+          "note": "prop plate, shared across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_exo_rifle",
+          "note": "prop plate, shared across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_target_sheet",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "外骨骼啟動，抓起大口徑步槍，三發精準命中百米外的靶心。",
+      "visual_context": "金屬外殼像注入了生命般伸縮；機械臂抬起長槍，槍口幾乎不動；靶紙中央三孔重合。",
+      "continuity": "展示新玩具的絕對精準，這是上校驕傲的來源。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_005",
+      "order": 5,
+      "source_start": 293,
+      "source_end": 379,
+      "source": "一旁觀看的上校放下望遠鏡，臉上露出滿意的笑容，「嗯，真不錯。這新玩具把菜雞都變成戰神。」\n他轉向操作員，語氣帶著慣有的粗獷調侃：「以後你就穿著這玩意上廁所吧！哈哈哈哈！」\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_training_ground",
+      "character_refs": [
+        "char_frost",
+        "char_engineer"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_training_ground",
+          "note": "medium shot from the firing line, binoculars in the foreground"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_engineer",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "上校放下望遠鏡，滿意地調侃：這新玩具把菜雞都變成戰神。",
+      "visual_context": "上校把望遠鏡擱在胸前，笑到眼角起皺，伸手拍技術員肩膀。",
+      "continuity": "他的幽默裡帶著把人當工具的輕蔑。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_frost",
+      "spoken_text": "嗯，真不錯。這新玩具把菜雞都變成戰神。以後你就穿著這玩意上廁所吧！哈哈哈哈！",
+      "char_count": 33,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 8,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_006",
+      "order": 6,
+      "source_start": 379,
+      "source_end": 421,
+      "source": "「上校。」笑聲未落，身後傳來一聲清脆且平穩的嗓音，「這是休長假的假單，請您批准。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_training_ground",
+      "character_refs": [
+        "char_taylor",
+        "char_frost"
+      ],
+      "prop_refs": [
+        "prop_leave_form"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_training_ground",
+          "note": "over the colonel's shoulder, Taylor at attention"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_leave_form",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "泰洛伊從上校背後出現，軍姿筆挺，遞上休長假的假單。",
+      "visual_context": "上校笑聲未歇，泰洛伊立正站在他身後；雙手把假單遞到他面前。",
+      "continuity": "女主角正式進場，語氣平靜，與上校的粗魯成對比。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "上校。這是休長假的假單，請您批准。",
+      "char_count": 14,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_007",
+      "order": 7,
+      "source_start": 421,
+      "source_end": 495,
+      "source": "女子將假單遞到上校面前。他回過頭，挑了挑眉，「哎喲，我們的大姑娘要休長假了？妳這是打算直接休到退伍嗎？」\n他接過假單，從口袋摸出鋼筆流利地簽了名。\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_training_ground",
+      "character_refs": [
+        "char_taylor",
+        "char_frost"
+      ],
+      "prop_refs": [
+        "prop_leave_form"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_training_ground",
+          "note": "two-shot at the firing line, the form between them"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_leave_form",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "上校回頭挑眉調侃，接過假單，從口袋摸出鋼筆簽名。",
+      "visual_context": "他回頭挑眉，接過紙張；鋼筆在簽名欄流暢劃過，墨跡未乾。",
+      "continuity": "簽名讓休假成為既定事實，後面的災變才有反差。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_frost",
+      "spoken_text": "哎喲，我們的大姑娘要休長假了？妳這是打算直接休到退伍嗎？",
+      "char_count": 25,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_008",
+      "order": 8,
+      "source_start": 495,
+      "source_end": 593,
+      "source": "「是啊。把積假一次用完，回來剛好領退伍令。」女子盤著高高的馬尾，軍姿筆挺，語氣中帶著一絲藏不住的興奮。\n「不過……還沒想好要去哪裡玩呢。」她伸手接回假單，微微瞇起眼，思緒已經飄向了營區外的世界。\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_training_ground",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_leave_form"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_training_ground",
+          "note": "medium close-up, barracks wall behind her"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_leave_form",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "泰洛伊說要把積假一次用完，回來剛好領退伍令；還沒想好去哪。",
+      "visual_context": "她接回假單，視線越過營區圍牆，微微瞇起眼。",
+      "continuity": "她期待的只是一個普通假期，觀眾知道這個期待會落空。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "是啊。把積假一次用完，回來剛好領退伍令。不過……還沒想好要去哪裡玩呢。",
+      "char_count": 29,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 7,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_009",
+      "order": 9,
+      "source_start": 593,
+      "source_end": 675,
+      "source": "「這樣啊……那去一趟艾伯塔市怎麼樣？」上校彈了一個響指，語氣熱絡的提議：\n「那可是有名的恐龍之都，發現的化石數量全球之冠，一年一度的恐龍嘉年華也差不多要開始了。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_training_ground",
+      "character_refs": [
+        "char_frost"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_training_ground",
+          "note": "two-shot, colonel gesturing off-frame"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "上校彈響指，推薦艾伯塔市：恐龍之都、化石數量全球第一、恐龍嘉年華快開始了。",
+      "visual_context": "上校彈指，熱絡地比向遠方；背景是營區與灰藍天空。",
+      "continuity": "把「恐龍」種進觀眾心裡，後面背包的玩笑才有回聲。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_frost",
+      "spoken_text": "這樣啊……那去一趟艾伯塔市怎麼樣？那可是有名的恐龍之都，發現的化石數量全球之冠，一年一度的恐龍嘉年華也差不多要開始了。",
+      "char_count": 53,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 12,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_010",
+      "order": 10,
+      "source_start": 675,
+      "source_end": 728,
+      "source": "「喔……我對死掉的骨頭並不是那麼感興趣。」她收起假單，摸著下巴嘀咕著，「不過嘉年華的熱鬧倒是值得一看。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_training_ground",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_leave_form"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_training_ground",
+          "note": "medium close-up, hand on chin"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_leave_form",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "泰洛伊對化石沒興趣，但覺得嘉年華的熱鬧值得一看。",
+      "visual_context": "她收起假單，摸著下巴，眼神飄向營區外的世界。",
+      "continuity": "她決定去，是被「熱鬧」吸引，不是被恐龍吸引。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "喔……我對死掉的骨頭並不是那麼感興趣。不過嘉年華的熱鬧倒是值得一看。",
+      "char_count": 30,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 7,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_011",
+      "order": 11,
+      "source_start": 728,
+      "source_end": 783,
+      "source": "「那就這麼決定了！」上校拍了拍她的肩膀，比出一個讚的手勢，「記得，幫我帶個土產回來——綠色的暴龍造型背包！」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_training_ground",
+      "character_refs": [
+        "char_taylor",
+        "char_frost"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_training_ground",
+          "note": "two-shot, thumbs-up in the foreground"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "上校拍她肩膀、比讚，託她帶一個綠色暴龍造型背包。",
+      "visual_context": "上校咧嘴笑，比出大拇指；泰洛伊被拍得微微一晃。",
+      "continuity": "背包是後面電話調侃的伏筆。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_frost",
+      "spoken_text": "那就這麼決定了！記得，幫我帶個土產回來——綠色的暴龍造型背包！",
+      "char_count": 26,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 7,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_012",
+      "order": 12,
+      "source_start": 783,
+      "source_end": 832,
+      "source": "「嘖，你這是在私事公辦啊。」女子忍不住吐槽，嘴角卻掛著笑意，「行行行，幫你帶。我這就去收行李。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_training_ground",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_leave_form"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_training_ground",
+          "note": "medium shot, the form in her hand"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_leave_form",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "泰洛伊吐槽私事公辦，還是答應了，說這就去收行李。",
+      "visual_context": "她嘴上嫌棄，嘴角卻帶笑；假單夾在指間。",
+      "continuity": "全章最後一個輕鬆的對話。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "嘖，你這是在私事公辦啊。行行行，幫你帶。我這就去收行李。",
+      "char_count": 23,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_013",
+      "order": 13,
+      "source_start": 832,
+      "source_end": 880,
+      "source": "她轉身往寢室的方向走去，步履輕快。在她背後，上校看著她離去的背影，臉上的笑容逐漸變得複雜陰沉…\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_training_ground",
+      "character_refs": [
+        "char_taylor",
+        "char_frost"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_training_ground",
+          "note": "long lens across the parade ground, Taylor walking away"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "泰洛伊步履輕快地離開；上校目送，臉上的笑容逐漸變得複雜陰沉。",
+      "visual_context": "長焦拍她走遠的背影；焦點緩緩轉到前景的上校臉上，笑意一層層退去，眼神轉冷。",
+      "continuity": "全章第一個轉折：這場休假不是單純的休假。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_014",
+      "order": 14,
+      "source_start": 880,
+      "source_end": 959,
+      "source": "深夜———\n「嗯——就位了嗎？」沙發上的男子聲音低沉，帶著一種不容置疑的厚度。\n他面容略顯老態，但寬闊的肩膀將軍服撐得緊繃，像是一頭隨時準備撲殺的精壯猛獸。\n",
+      "kind": "dialogue",
+      "split_reason": "time_shift",
+      "location_ref": "loc_colonel_lounge_night",
+      "character_refs": [
+        "char_frost"
+      ],
+      "prop_refs": [
+        "prop_whisky_glass"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_colonel_lounge_night",
+          "note": "lounge wide, sofa by the window, whisky on the low table"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_whisky_glass",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "深夜，上校坐在休息室沙發上，晃著酒杯，對著電話確認行動是否就位。",
+      "visual_context": "昏暗休息室只有一盞檯燈與窗外城市光；冰塊碰撞杯壁的特寫，上校半張臉埋在陰影裡。",
+      "continuity": "同一個人換了空間與語氣，權威變成陰謀。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_frost",
+      "spoken_text": "嗯——就位了嗎？",
+      "char_count": 5,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_013",
+          "why": "白天目送泰洛伊離開時，上校的笑容轉為陰沉；這裡揭露他正在策劃什麼。",
+          "manifestation": "白天操場上那張笑意退去的臉"
+        }
+      ]
+    },
+    {
+      "id": "seg_015",
+      "order": 15,
+      "source_start": 959,
+      "source_end": 1032,
+      "source": "他悠閒晃動著杯中的冰塊，對著電話下達指令：「很好，直接投入。完事後趕緊撤，別讓人看見了。」\n男子嘴邊露出詭異的笑容，似乎在策劃一場不可告人的行動。",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_colonel_lounge_night",
+      "character_refs": [
+        "char_frost"
+      ],
+      "prop_refs": [
+        "prop_whisky_glass"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_colonel_lounge_night",
+          "note": "close-up on the colonel, city bokeh behind"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_whisky_glass",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "上校下令：直接投入，完事後趕緊撤，別讓人看見。",
+      "visual_context": "他對著話筒下令，語氣輕鬆；說完嘴角浮出詭異的笑。",
+      "continuity": "這是整場陰謀的第一道命令。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_frost",
+      "spoken_text": "很好，直接投入。完事後趕緊撤，別讓人看見了。",
+      "char_count": 18,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_016",
+      "order": 16,
+      "source_start": 1032,
+      "source_end": 1079,
+      "source": "隨著電話掛斷，數百公里外的水庫上方，兩名身著防護服的人員合力將一具腐敗乾枯的屍體拋入水庫中。\n",
+      "kind": "action",
+      "split_reason": "location_change",
+      "location_ref": "loc_reservoir_night",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_reservoir_night",
+          "note": "reservoir edge wide, two hazmat silhouettes, body over the rail"
+        }
+      ],
+      "context": "數百公里外，兩名穿防護服的人員把一具腐敗乾枯的屍體拋進水庫。",
+      "visual_context": "水庫夜景，兩盞頭燈掃過護欄；屍體翻落，砸進黑水，漣漪一圈圈擴散。",
+      "continuity": "觀眾第一次看到「存貨」是什麼——災變的種子被投進水源。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_017",
+      "order": 17,
+      "source_start": 1079,
+      "source_end": 1144,
+      "source": "穿著軍服的男子隨即撥通了另一組號碼。片刻後，電話另一頭傳來低沉且冷冽的女性聲音：\n「上校，我等你的電話一整天了。可以出發了嗎？」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_contractor_room",
+      "character_refs": [
+        "char_contractor",
+        "char_frost"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_contractor_room",
+          "note": "safehouse medium shot, gear table behind her"
+        },
+        {
+          "role": "character",
+          "ref": "char_contractor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "上校撥第二通電話；殺手在另一頭等了一整天，問能不能出發。",
+      "visual_context": "切到殺手的安全屋：她已著裝，手機貼耳，背後是攤開的裝備。",
+      "continuity": "雙線並置：命令者與執行者。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_contractor",
+      "spoken_text": "上校，我等你的電話一整天了。可以出發了嗎？",
+      "char_count": 18,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_018",
+      "order": 18,
+      "source_start": 1144,
+      "source_end": 1218,
+      "source": "「可以了。」男子一邊悠閒喝著酒，一邊囑咐道：「記得注射疫苗，一會那些傢伙瘋起來可是六親不認。找到目標就直接下手，別跟他廢話。存貨有多少全帶出來。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_colonel_lounge_night",
+      "character_refs": [
+        "char_frost"
+      ],
+      "prop_refs": [
+        "prop_whisky_glass"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_colonel_lounge_night",
+          "note": "close-up, glass and phone, warm lamp"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_whisky_glass",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "上校吩咐：記得注射疫苗、找到目標直接下手、存貨全部帶出來。",
+      "visual_context": "他啜一口酒，語氣像在談天氣；酒杯與話筒佔滿前景。",
+      "continuity": "「疫苗」暗示他完全知道那些傢伙會變成什麼。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_frost",
+      "spoken_text": "可以了。記得注射疫苗，一會那些傢伙瘋起來可是六親不認。找到目標就直接下手，別跟他廢話。存貨有多少全帶出來。",
+      "char_count": 47,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 11,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_019",
+      "order": 19,
+      "source_start": 1218,
+      "source_end": 1248,
+      "source": "電話那頭傳來一陣金屬刀具的摩擦聲：「那我們說好的酬勞……」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_contractor_room",
+      "character_refs": [
+        "char_contractor"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_contractor_room",
+          "note": "close-up on hands and blade, face in the background"
+        },
+        {
+          "role": "character",
+          "ref": "char_contractor",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "殺手一邊磨刀，一邊確認說好的酬勞。",
+      "visual_context": "刀刃在磨刀棒上滑過，她的臉半明半暗；手機夾在肩頸之間。",
+      "continuity": "把交易的本質挑明：這是一份工作。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_contractor",
+      "spoken_text": "那我們說好的酬勞……",
+      "char_count": 8,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_020",
+      "order": 20,
+      "source_start": 1248,
+      "source_end": 1281,
+      "source": "「放心，我已經先匯一半過去了。妳查一下戶頭，完事了再給另一半。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_colonel_lounge_night",
+      "character_refs": [
+        "char_frost"
+      ],
+      "prop_refs": [
+        "prop_whisky_glass"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_colonel_lounge_night",
+          "note": "medium close-up, city reflection on the window"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_whisky_glass",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "上校說已先匯一半，事成再給另一半。",
+      "visual_context": "他放下酒杯，指尖在桌面輕敲；窗外城市燈火在玻璃上重疊。",
+      "continuity": "錢先付一半，說明他篤定這件事會成。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_frost",
+      "spoken_text": "放心，我已經先匯一半過去了。妳查一下戶頭，完事了再給另一半。",
+      "char_count": 26,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 7,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_021",
+      "order": 21,
+      "source_start": 1281,
+      "source_end": 1309,
+      "source": "不等對方回應，他俐落切斷通話，似乎不願意透露更多訊息。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_colonel_lounge_night",
+      "character_refs": [
+        "char_frost"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_colonel_lounge_night",
+          "note": "insert on the phone, hand in shadow"
+        },
+        {
+          "role": "character",
+          "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "他不等對方回應就切斷通話，不願多說。",
+      "visual_context": "指尖按下掛斷，螢幕光熄滅；他把手機丟回沙發。",
+      "continuity": "他的謹慎與殘忍同時成立。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_022",
+      "order": 22,
+      "source_start": 1309,
+      "source_end": 1453,
+      "source": "「哼，老狐狸。」女子一邊整理著裝備，一邊將那管疫苗打進手臂。\n她嘴邊喃喃抱怨著，一邊滑著手機螢幕，確認帳戶裡的金額：「算了，殺人越貨，速戰速決……哎喲，這可真是大手筆……」\n她看著那一串令人屏息的零，嘴邊露出壓抑不住的笑容：「軍方的活，給錢真不是開玩笑！這種大單子再來兩筆就能退休了。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_contractor_room",
+      "character_refs": [
+        "char_contractor"
+      ],
+      "prop_refs": [
+        "prop_vaccine_syringe",
+        "prop_contractor_phone"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_contractor_room",
+          "note": "medium close-up, syringe and phone in the same frame"
+        },
+        {
+          "role": "character",
+          "ref": "char_contractor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_vaccine_syringe",
+          "note": "prop plate, shared across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_contractor_phone",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "殺手罵了一聲老狐狸，把疫苗打進手臂，滑手機確認入帳，露出貪婪的笑。",
+      "visual_context": "針頭刺入上臂；手機螢幕的餘額在黑暗中發亮；她壓不住嘴角。",
+      "continuity": "她不問任務內容只問價碼，這讓她後面的遭遇更像報應。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_contractor",
+      "spoken_text": "哼，老狐狸。算了，殺人越貨，速戰速決……哎喲，這可真是大手筆……軍方的活，給錢真不是開玩笑！這種大單子再來兩筆就能退休了。",
+      "char_count": 49,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 11,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_023",
+      "order": 23,
+      "source_start": 1453,
+      "source_end": 1510,
+      "source": "幾分鐘後，她已整裝完畢。換上一身黑色緊身戰鬥服，跨上摩托車。引擎的轟鳴聲劃破夜色，朝著艾伯塔市的方向疾馳而去……\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_contractor_room",
+      "character_refs": [
+        "char_contractor"
+      ],
+      "prop_refs": [
+        "prop_motorcycle"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_contractor_room",
+          "note": "garage exit at night, motorcycle headlight"
+        },
+        {
+          "role": "character",
+          "ref": "char_contractor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_motorcycle",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "她換上黑色緊身戰鬥服，跨上摩托車，朝艾伯塔市疾馳而去。",
+      "visual_context": "拉鍊拉上、手套收緊；引擎點火，尾燈拖出一條紅線消失在夜色裡。",
+      "continuity": "把兩個女人拉向同一個城市。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_024",
+      "order": 24,
+      "source_start": 1510,
+      "source_end": 1608,
+      "source": "———\n艾伯塔市中心———百層摩天大樓。\n奢華的俱樂部頂層，空氣中瀰漫著昂貴的雪茄味與粉色迷幻的燈光。舞者與服務生端著名貴紅酒穿梭其間，一群西裝筆挺的社會精英正低聲交談，臉上的笑意隱藏在酒杯後。\n",
+      "kind": "action",
+      "split_reason": "location_change",
+      "location_ref": "loc_club_penthouse",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_club_penthouse",
+          "note": "penthouse wide, pink haze, city lights beyond the glass"
+        }
+      ],
+      "context": "艾伯塔市中心，百層摩天大樓；俱樂部頂層，雪茄與粉色燈光，精英低聲交談。",
+      "visual_context": "城市天際線推向頂層落地窗；粉光、煙霧、酒杯反光，舞者與服務生穿梭。",
+      "continuity": "建立「上等人」的世界，與樓下街頭形成對照。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_025",
+      "order": 25,
+      "source_start": 1608,
+      "source_end": 1654,
+      "source": "「看到沒？哥們！我也搶到門票了。」一名男子秀出手機螢幕裡閃爍藍光的二維碼，語氣中難掩得意。\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_club_penthouse",
+      "character_refs": [
+        "char_zhuang"
+      ],
+      "prop_refs": [
+        "prop_qr_ticket"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_club_penthouse",
+          "note": "medium shot, phone screen glowing between faces"
+        },
+        {
+          "role": "character",
+          "ref": "char_zhuang",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_qr_ticket",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "小莊向同伴炫耀手機裡的藍光二維碼門票。",
+      "visual_context": "他把手機舉高，QR code 的藍光照亮得意的臉；周圍的人湊過來。",
+      "continuity": "門票就是方舟的入場資格，下一段楊董會解釋。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_zhuang",
+      "spoken_text": "看到沒？哥們！我也搶到門票了。",
+      "char_count": 12,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_026",
+      "order": 26,
+      "source_start": 1654,
+      "source_end": 1684,
+      "source": "「哎呀，小莊真有本事！」周圍的人一陣簇擁，眼神中滿是羨慕。\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_club_penthouse",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_club_penthouse",
+          "note": "group shot, anonymous admirers, faces partly out of focus"
+        }
+      ],
+      "context": "周圍的人簇擁著小莊，語氣裡滿是羨慕。",
+      "visual_context": "眾人的臉在半明半暗中湊近，舉杯致意；不給單一角色的特寫。",
+      "continuity": "群體的聲音把門票的價值抬高。",
+      "voice_intent": "spoken_on_screen",
+      "voice_note": "anonymous bystander voice, no on-screen speaker; frame the group/background with faces out of focus and keep lip-sync off",
+      "speaker_ref": null,
+      "spoken_text": "哎呀，小莊真有本事！",
+      "char_count": 8,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_027",
+      "order": 27,
+      "source_start": 1684,
+      "source_end": 1753,
+      "source": "「噓——低調點，這可是上流社會的秘密。」他壓低聲音，隨即爆發出一陣低促的笑聲：\n「哈哈哈哈，底層那些牛馬真是可憐，還在為房貸車貸拼命。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_club_penthouse",
+      "character_refs": [
+        "char_zhuang"
+      ],
+      "prop_refs": [
+        "prop_qr_ticket"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_club_penthouse",
+          "note": "two-shot, window lights behind, phone tucked away"
+        },
+        {
+          "role": "character",
+          "ref": "char_zhuang",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_qr_ticket",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "小莊壓低聲音，說這是上流社會的秘密，嘲笑底層還在為房貸車貸拼命。",
+      "visual_context": "他把手機收進西裝內袋，笑聲低促；鏡頭掃過窗外的城市燈海。",
+      "continuity": "他的優越感建立在「別人的災難與自己無關」之上。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_zhuang",
+      "spoken_text": "噓——低調點，這可是上流社會的秘密。哈哈哈哈，底層那些牛馬真是可憐，還在為房貸車貸拼命。",
+      "char_count": 37,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 9,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_028",
+      "order": 28,
+      "source_start": 1753,
+      "source_end": 1869,
+      "source": "角落裡，身材肥胖、叼著雪茄的楊董吐出一口煙霧，看著一旁唯唯諾諾的跟班:\n「小劉啊，兩天後方舟落成典禮，很多大人物會帶著家屬去劃位。我帶你走一趟，你把握機會去攀關係，看能不能也卡個位子。」楊董彈了彈菸灰，眼神中透著一股施捨般的傲慢。\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_club_penthouse",
+      "character_refs": [
+        "char_yang",
+        "char_xiao_liu"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_club_penthouse",
+          "note": "corner booth, cigar smoke, two-shot"
+        },
+        {
+          "role": "character",
+          "ref": "char_yang",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_xiao_liu",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "楊董在角落抽雪茄，告訴小劉兩天後方舟落成典禮，要帶他去攀關係。",
+      "visual_context": "楊董吐煙、彈菸灰；小劉躬身聆聽，手裡攥著酒杯。",
+      "continuity": "方舟不是傳說，是有落成典禮的具體設施。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_yang",
+      "spoken_text": "小劉啊，兩天後方舟落成典禮，很多大人物會帶著家屬去劃位。我帶你走一趟，你把握機會去攀關係，看能不能也卡個位子。",
+      "char_count": 49,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 11,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_029",
+      "order": 29,
+      "source_start": 1869,
+      "source_end": 1904,
+      "source": "「方舟？楊董，那是什麼？」他搔著頭，一臉疑惑，「這跟升遷有關係嗎？」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_club_penthouse",
+      "character_refs": [
+        "char_xiao_liu",
+        "char_yang"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_club_penthouse",
+          "note": "close two-shot, Xiao Liu leaning in"
+        },
+        {
+          "role": "character",
+          "ref": "char_xiao_liu",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_yang",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "小劉一頭霧水，問方舟是什麼、跟升遷有沒有關係。",
+      "visual_context": "小劉搔頭、身體前傾；楊董只是笑。",
+      "continuity": "用一個笨問題替觀眾問出答案。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_xiao_liu",
+      "spoken_text": "方舟？楊董，那是什麼？這跟升遷有關係嗎？",
+      "char_count": 16,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_030",
+      "order": 30,
+      "source_start": 1904,
+      "source_end": 2004,
+      "source": "「哼，傻小子。」楊董冷笑一聲，眼神看向窗外的萬家燈火，「那是給這座城市的精英階層打造的！應付未來可能發生的天災、海嘯或是全球疫情。總之，那是『上等人』的避難所。所以你啊，放聰明點，別說我沒照顧你。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_club_penthouse",
+      "character_refs": [
+        "char_yang",
+        "char_xiao_liu"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_club_penthouse",
+          "note": "window reflection, Yang in the foreground, city below"
+        },
+        {
+          "role": "character",
+          "ref": "char_yang",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_xiao_liu",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "楊董解釋：方舟是給精英打造、應付天災海嘯疫情的避難所，是上等人的特權。",
+      "visual_context": "他看向窗外萬家燈火，語氣像在施捨；小劉的表情從困惑變成嚮往。",
+      "continuity": "把「上等人」的定義說白：災難來時，他們有門。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_yang",
+      "spoken_text": "哼，傻小子。那是給這座城市的精英階層打造的！應付未來可能發生的天災、海嘯或是全球疫情。總之，那是上等人的避難所。所以你啊，放聰明點，別說我沒照顧你。",
+      "char_count": 64,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 14,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_031",
+      "order": 31,
+      "source_start": 2004,
+      "source_end": 2045,
+      "source": "「我的老天……」小劉驚訝得差點把杯中的威士忌噴出來，「那我可得好好把握機會了。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_club_penthouse",
+      "character_refs": [
+        "char_xiao_liu"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_club_penthouse",
+          "note": "close-up, glass at his lips"
+        },
+        {
+          "role": "character",
+          "ref": "char_xiao_liu",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "小劉驚訝得差點把威士忌噴出來，說要好好把握機會。",
+      "visual_context": "他被酒嗆到，連忙用手背擦嘴，眼睛發亮。",
+      "continuity": "他的興奮是自願走進避難所，也是自願走進後面的地獄。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_xiao_liu",
+      "spoken_text": "我的老天……那我可得好好把握機會了。",
+      "char_count": 15,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_030",
+          "why": "小劉的興奮直接回應上一段方舟的解釋。",
+          "manifestation": "窗外那片被稱為「上等人避難所」的萬家燈火"
+        }
+      ]
+    },
+    {
+      "id": "seg_032",
+      "order": 32,
+      "source_start": 2045,
+      "source_end": 2192,
+      "source": "與此同時，樓下的平行世界。\n夜晚的街道一如往常嘈雜。擁擠的車流、改裝機車的噪音，以及無數低著頭、對周遭漠不關心的趕路人群。\n「碰——！」\n一聲悶雷般的撞擊聲劃破了街頭的喧囂。忙碌的行人紛紛停下腳步，視線轉向路口。\n一台外送機車被撞翻，肇事者壓在外送員身上，地面迅速滲出一片令人膽寒的暗紅血跡。\n",
+      "kind": "action",
+      "split_reason": "location_change",
+      "location_ref": "loc_city_street_night",
+      "character_refs": [
+        "char_infected_driver",
+        "char_bitten_rider"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_city_street_night",
+          "note": "night street wide, then the crash at the crosswalk"
+        },
+        {
+          "role": "character",
+          "ref": "char_infected_driver",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_bitten_rider",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "樓下街道如常嘈雜；一聲撞擊，外送機車被撞翻，肇事者壓在外送員身上，血跡擴散。",
+      "visual_context": "車流與低頭人群的長鏡頭；撞擊瞬間切手持；血在柏油路上迅速滲開。",
+      "continuity": "「平行世界」把兩個階層放在同一棟樓的上下。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_033",
+      "order": 33,
+      "source_start": 2192,
+      "source_end": 2215,
+      "source": "「臥槽！快叫救護車！」\n「報警啊！先報警！」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_city_street_night",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_city_street_night",
+          "note": "handheld crowd shot, phone lights"
+        }
+      ],
+      "context": "路人驚慌大喊，有人叫救護車、有人報警。",
+      "visual_context": "人群圍攏，手機閃光燈一盞盞亮起；沒有人敢真的上前。",
+      "continuity": "圍觀取代了救援，這是城市第一次失效。",
+      "voice_intent": "spoken_on_screen",
+      "voice_note": "anonymous bystander voice, no on-screen speaker; frame the group/background with faces out of focus and keep lip-sync off",
+      "speaker_ref": null,
+      "spoken_text": "臥槽！快叫救護車！報警啊！先報警！",
+      "char_count": 13,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_034",
+      "order": 34,
+      "source_start": 2215,
+      "source_end": 2292,
+      "source": "人群開始騷動，肇事駕駛搖晃著從地上爬起，那動作不像是受傷的生還者，更像是一頭剛甦醒的野獸。他對著衝上來幫忙的路人張口就咬，現場瞬間爆發出一陣驚恐的尖叫。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_city_street_night",
+      "character_refs": [
+        "char_infected_driver"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_city_street_night",
+          "note": "low angle on the rising driver, crowd recoiling"
+        },
+        {
+          "role": "character",
+          "ref": "char_infected_driver",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "肇事駕駛像野獸般爬起，對衝上來幫忙的路人張口就咬，現場爆出尖叫。",
+      "visual_context": "他的關節角度不對，頭歪著；咬下去的瞬間人群炸開。",
+      "continuity": "第一個感染者不是怪物造型，而是一個「剛醒來的人」。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_035",
+      "order": 35,
+      "source_start": 2292,
+      "source_end": 2311,
+      "source": "「啊啊啊啊！媽的！你咬我幹嘛！操！」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_city_street_night",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_city_street_night",
+          "note": "close-up on the bitten bystander, no identity plate"
+        }
+      ],
+      "context": "被咬的路人奮力掙脫，罵出聲。",
+      "visual_context": "被咬者的肩膀滲血，他一腳踹開對方，臉因疼痛扭曲。",
+      "continuity": "疼痛證明他還是人，而咬他的人已經不是。",
+      "voice_intent": "spoken_on_screen",
+      "voice_note": "anonymous bystander voice, no on-screen speaker; frame the group/background with faces out of focus and keep lip-sync off",
+      "speaker_ref": null,
+      "spoken_text": "啊啊啊啊！媽的！你咬我幹嘛！操！",
+      "char_count": 12,
+      "rate_chars_per_sec": 4.5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_036",
+      "order": 36,
+      "source_start": 2311,
+      "source_end": 2409,
+      "source": "被咬的人奮力掙脫，那名駕駛隨即盯上另一個目標，報警的民眾走避不及，被硬生生逮個正著。\n肇事駕駛對著他的脖子一口咬下，大半塊肌肉被扯下，動脈的鮮血在半空中劃出一道弧形的血跡，濺落在冰冷的柏油路上。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_city_street_night",
+      "character_refs": [
+        "char_infected_driver"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_city_street_night",
+          "note": "ground-level insert, blood arc across wet asphalt"
+        },
+        {
+          "role": "character",
+          "ref": "char_infected_driver",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "駕駛盯上報警的民眾，咬住脖子，扯下肌肉，血濺在柏油路上。",
+      "visual_context": "鏡頭貼地，血弧劃過夜色；人群向後退成一個空圈。",
+      "continuity": "暴力升級，讓「咬人事件」不再只是單一事故。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_037",
+      "order": 37,
+      "source_start": 2409,
+      "source_end": 2436,
+      "source": "「靠！這是吸毒吸瘋了嗎？」\n「壓住他！別讓他跑了！」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_city_street_night",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_city_street_night",
+          "note": "medium crowd shot, phones raised"
+        }
+      ],
+      "context": "路人以為是吸毒發瘋，喊著要大家壓住他。",
+      "visual_context": "幾個人猶豫著上前又退一步；手機還舉著在拍。",
+      "continuity": "他們用「吸毒」解釋眼前的事，這是城市最後的理性。",
+      "voice_intent": "spoken_on_screen",
+      "voice_note": "anonymous bystander voice, no on-screen speaker; frame the group/background with faces out of focus and keep lip-sync off",
+      "speaker_ref": null,
+      "spoken_text": "靠！這是吸毒吸瘋了嗎？壓住他！別讓他跑了！",
+      "char_count": 17,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_038",
+      "order": 38,
+      "source_start": 2436,
+      "source_end": 2497,
+      "source": "混亂像瘟疫一樣擴散，現場交通瞬間癱瘓，刺耳的喇叭聲與慘叫聲交織在一起。\n一切似乎一如往常，混亂中帶著秩序，微妙的平衡著。\n",
+      "kind": "narration",
+      "split_reason": "focus_change",
+      "location_ref": "loc_city_street_night",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_city_street_night",
+          "note": "high angle over the intersection, red tail lights"
+        }
+      ],
+      "context": "混亂像瘟疫擴散，交通癱瘓；城市仍在微妙的平衡裡。",
+      "visual_context": "俯瞰路口：車陣、尖叫、閃爍的警燈；畫面慢慢拉遠。",
+      "continuity": "「一如往常」是反諷，也是災變前的最後一張全景。",
+      "voice_intent": "narrator",
+      "spoken_text": "混亂像瘟疫一樣擴散，現場交通瞬間癱瘓，刺耳的喇叭聲與慘叫聲交織在一起。一切似乎一如往常，混亂中帶著秩序，微妙的平衡著。",
+      "char_count": 53,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 12,
+      "render_blocks": 2,
+      "references": [
+        {
+          "segment_ref": "seg_032",
+          "why": "整段混亂源自路口的撞車與咬人事件。",
+          "manifestation": "路口那台被撞翻的外送機車"
+        }
+      ]
+    },
+    {
+      "id": "seg_039",
+      "order": 39,
+      "source_start": 2497,
+      "source_end": 2560,
+      "source": "———\n清晨，艾伯塔市。\n窗外下著綿密的細雨。少女看著父親換上整潔的研究袍，正低頭整理公事包，準備前往那個傳聞中的地下設施。\n",
+      "kind": "action",
+      "split_reason": "time_shift",
+      "location_ref": "loc_apartment_morning",
+      "character_refs": [
+        "char_father",
+        "char_daughter"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_apartment_morning",
+          "note": "apartment wide, rain on the window, father by the table"
+        },
+        {
+          "role": "character",
+          "ref": "char_father",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_daughter",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "清晨，艾伯塔市下著細雨；少女看著父親換上研究袍、低頭整理公事包。",
+      "visual_context": "窗上的雨痕、研究袍的白、公事包的金屬扣；少女靠在門框邊。",
+      "continuity": "從街頭的混亂切到一個安靜的家，反差讓後面的失去更重。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_040",
+      "order": 40,
+      "source_start": 2560,
+      "source_end": 2594,
+      "source": "她不悅的嘟著嘴，手指流利且快速的比劃著：\n（加班笨蛋！工作笨蛋！）\n",
+      "kind": "action",
+      "split_reason": "voice_change",
+      "location_ref": "loc_apartment_morning",
+      "character_refs": [
+        "char_daughter"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_apartment_morning",
+          "note": "close-up on the daughter's hands, father soft in the background"
+        },
+        {
+          "role": "character",
+          "ref": "char_daughter",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "少女嘟嘴，用手語快速比出「加班笨蛋！工作笨蛋！」",
+      "visual_context": "手指的特寫與她不高興的臉；父親在背景裡笑。",
+      "continuity": "她不說話，用手語——這個設定在後面的手機地圖裡還會回來。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_041",
+      "order": 41,
+      "source_start": 2594,
+      "source_end": 2808,
+      "source": "「哈哈，怎麼了？我的小寶貝。」男子停下動作，摸了摸少女的頭，笑著將一支全新的手機和行動電源塞進她手裡，「來，這個收好。這可是爸爸利用特權弄到的。裡面有我跟妳說過的那個避難所通行證，還有地圖和緊急逃生口，連那些大人物都不知道喔。」\n男子臉上洋溢著驕傲的笑容，似乎對自己參與建造的地下工程充滿信心。他一邊整理行李，一邊開心說到：「等落成典禮結束，爸爸馬上就趕回來陪妳。如果我真的加班太久，妳就順著地圖的路線，來我辦公的地方找我。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_apartment_morning",
+      "character_refs": [
+        "char_father",
+        "char_daughter"
+      ],
+      "prop_refs": [
+        "prop_ark_phone"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_apartment_morning",
+          "note": "two-shot at the table, phone glowing between them"
+        },
+        {
+          "role": "character",
+          "ref": "char_father",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_daughter",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_ark_phone",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "父親把手機與行動電源塞給她，說裡面有避難所通行證、地圖與緊急逃生口；承諾典禮結束就回來。",
+      "visual_context": "他摸她的頭，把新手機放進她手心；螢幕亮起抽象的地圖與通行證圖示。",
+      "continuity": "父親把特權變成女兒的保命符，也把災難的座標交到她手上。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_father",
+      "spoken_text": "哈哈，怎麼了？我的小寶貝。來，這個收好。這可是爸爸利用特權弄到的。裡面有我跟妳說過的那個避難所通行證，還有地圖和緊急逃生口，連那些大人物都不知道喔。等落成典禮結束，爸爸馬上就趕回來陪妳。如果我真的加班太久，妳就順著地圖的路線，來我辦公的地方找我。",
+      "char_count": 109,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 23,
+      "render_blocks": 4,
+      "references": []
+    },
+    {
+      "id": "seg_042",
+      "order": 42,
+      "source_start": 2808,
+      "source_end": 2853,
+      "source": "少女一邊聽著，一邊賭氣地將新手機接上充電。她的手語比劃得飛快：（笨蛋爸爸！絕對會黃牛！）\n",
+      "kind": "action",
+      "split_reason": "voice_change",
+      "location_ref": "loc_apartment_morning",
+      "character_refs": [
+        "char_daughter"
+      ],
+      "prop_refs": [
+        "prop_ark_phone"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_apartment_morning",
+          "note": "close-up on hands and charging cable, screen glow"
+        },
+        {
+          "role": "character",
+          "ref": "char_daughter",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_ark_phone",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "少女賭氣地把新手機接上充電，手語比出「笨蛋爸爸！絕對會黃牛！」",
+      "visual_context": "充電線插入，螢幕亮起；她的手指快速翻飛，嘴角往下。",
+      "continuity": "她把「黃牛」說出口，觀眾知道這是最後一次撒嬌。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_043",
+      "order": 43,
+      "source_start": 2853,
+      "source_end": 2920,
+      "source": "「哈哈哈，我的小寶貝生氣了。」出門前，他又回頭看了一眼，臉上的笑容在晨光中顯得格外燦爛，「好啦，這次絕對不黃牛。爸爸過兩天就回來。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_apartment_morning",
+      "character_refs": [
+        "char_father",
+        "char_daughter"
+      ],
+      "prop_refs": [
+        "prop_ark_phone"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_apartment_morning",
+          "note": "doorway two-shot, soft morning backlight"
+        },
+        {
+          "role": "character",
+          "ref": "char_father",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_daughter",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_ark_phone",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "父親笑著說這次絕對不黃牛，過兩天就回來。",
+      "visual_context": "他在門口回頭，晨光落在笑容上；少女在門內，手機還亮著。",
+      "continuity": "承諾越溫柔，後面的失約越殘酷。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_father",
+      "spoken_text": "哈哈哈，我的小寶貝生氣了。好啦，這次絕對不黃牛。爸爸過兩天就回來。",
+      "char_count": 28,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 7,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_044",
+      "order": 44,
+      "source_start": 2920,
+      "source_end": 2944,
+      "source": "語畢，他轉身關上門。計程車早已在路邊等候多時。\n",
+      "kind": "action",
+      "split_reason": "location_change",
+      "location_ref": "loc_city_street_morning",
+      "character_refs": [
+        "char_father"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_city_street_morning",
+          "note": "curbside in the rain, taxi waiting, apartment door behind"
+        },
+        {
+          "role": "character",
+          "ref": "char_father",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "他關上門，計程車早已在路邊等候。",
+      "visual_context": "門闔上；雨滴打在車頂與傘面；車尾燈在濕街上暈開。",
+      "continuity": "從家到街邊，離別開始倒數。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_045",
+      "order": 45,
+      "source_start": 2944,
+      "source_end": 2963,
+      "source": "「客人，去哪？」司機透過照後鏡問道。\n",
+      "kind": "dialogue",
+      "split_reason": "location_change",
+      "location_ref": "loc_taxi_interior",
+      "character_refs": [
+        "char_father",
+        "char_taxi_driver"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_taxi_interior",
+          "note": "taxi interior, rear-view mirror, rain on the windshield"
+        },
+        {
+          "role": "character",
+          "ref": "char_father",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_taxi_driver",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "司機透過後照鏡問去哪裡；父親坐在後座。",
+      "visual_context": "後照鏡裡司機的眼睛；雨刷劃過擋風玻璃；父親的半張臉在暗處。",
+      "continuity": "車內空間變窄，對話變成交易。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taxi_driver",
+      "spoken_text": "客人，去哪？",
+      "char_count": 4,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_046",
+      "order": 46,
+      "source_start": 2963,
+      "source_end": 2990,
+      "source": "男子指著手機螢幕上的一個座標，「這裡，那間舊書攤。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_taxi_interior",
+      "character_refs": [
+        "char_father"
+      ],
+      "prop_refs": [
+        "prop_ark_phone"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_taxi_interior",
+          "note": "over-the-shoulder on the phone map, driver mirrored"
+        },
+        {
+          "role": "character",
+          "ref": "char_father",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_ark_phone",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "父親指著手機上的一個座標，說去那間舊書攤。",
+      "visual_context": "指尖點在螢幕地圖的紅點上；司機從後照鏡看了一眼，沒多問。",
+      "continuity": "舊書攤是地下設施的入口，觀眾此時還不知道。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_father",
+      "spoken_text": "這裡，那間舊書攤。",
+      "char_count": 7,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_047",
+      "order": 47,
+      "source_start": 2990,
+      "source_end": 3073,
+      "source": "司機雖然覺得奇怪，但沒再多問。計程車緩緩駛離，輪胎壓過積水的聲音在空曠的街道顯得格外清晰。\n清晨的街道一如往常。\n忙碌的行人撐著傘、低頭趕路，對周遭的一切漠不關心。\n",
+      "kind": "action",
+      "split_reason": "location_change",
+      "location_ref": "loc_city_street_morning",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_city_street_morning",
+          "note": "rainy morning street, taxi pulling away, umbrellas"
+        }
+      ],
+      "context": "計程車緩緩駛離，輪胎壓過積水；清晨街道一如往常。",
+      "visual_context": "車尾燈在雨幕裡變小；行人撐傘低頭趕路，沒有人看它一眼。",
+      "continuity": "把父親送進雨裡，也把城市恢復成「正常」。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_048",
+      "order": 48,
+      "source_start": 3073,
+      "source_end": 3118,
+      "source": "手機螢幕上的新聞正播報著前一晚的「駕駛瘋狂咬人事件」，但大多數人只是隨手滑過，沒人在意。\n",
+      "kind": "narration",
+      "split_reason": "focus_change",
+      "location_ref": "loc_city_street_morning",
+      "character_refs": [],
+      "prop_refs": [
+        "prop_news_feed"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_city_street_morning",
+          "note": "close-up on a phone under an umbrella, blurred crowd"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_news_feed",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "手機新聞正播報前一晚的「駕駛瘋狂咬人事件」，但大多數人只是隨手滑過。",
+      "visual_context": "一隻手撐著傘，另一隻手滑過新聞；紅色breaking bar 在雨光裡反光。",
+      "continuity": "災變已經上新聞了，只是還沒有人願意相信。",
+      "voice_intent": "narrator",
+      "spoken_text": "手機螢幕上的新聞正播報著前一晚的駕駛瘋狂咬人事件，但大多數人只是隨手滑過，沒人在意。",
+      "char_count": 39,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 9,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_049",
+      "order": 49,
+      "source_start": 3118,
+      "source_end": 3151,
+      "source": "雨水正順著屋簷匯入排水系統。\n那是這座城市，最後一個平凡的早晨。\n",
+      "kind": "narration",
+      "split_reason": "focus_change",
+      "location_ref": "loc_city_street_morning",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_city_street_morning",
+          "note": "rain gutter insert, then sky above the street"
+        }
+      ],
+      "context": "雨水順著屋簷匯入排水系統；那是這座城市最後一個平凡的早晨。",
+      "visual_context": "雨水沿屋簷滴落、匯入排水孔；鏡頭慢慢抬向灰白天空。",
+      "continuity": "收束清晨段落，也替後面的斷橋留一個「最後」的標記。",
+      "voice_intent": "narrator",
+      "spoken_text": "雨水正順著屋簷匯入排水系統。那是這座城市，最後一個平凡的早晨。",
+      "char_count": 28,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 7,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_050",
+      "order": 50,
+      "source_start": 3151,
+      "source_end": 3264,
+      "source": "———\n叭————————————！\n刺耳的喇叭聲迴盪在四周，長長的車陣將橋面擠得水洩不通，連機車騎士都無法找到空隙穿越。\n進城的車隊、打算出城的當地居民，全都擠在了這一段路上。往外移動的人群各個神色緊張，貌似在逃避著什麼。\n",
+      "kind": "action",
+      "split_reason": "location_change",
+      "location_ref": "loc_bridge_traffic",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_bridge_traffic",
+          "note": "bridge wide, gridlocked lanes, grey sky"
+        }
+      ],
+      "context": "刺耳喇叭聲中，長長車陣把橋面擠得水洩不通；進城與出城的人全卡在同一段路上。",
+      "visual_context": "橋面長焦，車頂連成一條金屬河；出城的人神色緊張，像在逃離什麼。",
+      "continuity": "把「假期」變成「逃難」，同一條橋同時是入口與出口。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_051",
+      "order": 51,
+      "source_start": 3264,
+      "source_end": 3330,
+      "source": "「握了個……這都什麼跟什麼？」看著眼前完全沒打算移動的車潮和人潮，駕駛座上的女子忍不住抱怨，\n「什麼鬼度假勝地？這是塞車聖地吧？」\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_taylor_car_interior",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_taylor_car_interior",
+          "note": "driver's seat, windshield full of tail lights"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "泰洛伊坐在駕駛座，看著完全不動的車潮抱怨：這是塞車聖地吧。",
+      "visual_context": "車內視角，雨刷刮過擋風玻璃；前車的煞車燈紅成一片。",
+      "continuity": "她的假期從第一天就卡住，這是災變前的倒數。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "握了個……這都什麼跟什麼？什麼鬼度假勝地？這是塞車聖地吧？",
+      "char_count": 24,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_052",
+      "order": 52,
+      "source_start": 3330,
+      "source_end": 3400,
+      "source": "嘟嚕嚕——嘟嚕嚕——\n一陣手機鈴聲響起，她不耐煩的接起電話。\n「嘿喲～～～泰洛伊上士～我的大姑娘～休假順利嗎？」電話那頭，是那熟悉的問候。\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_taylor_car_interior",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_taylor_car_interior",
+          "note": "insert on the ringing phone, driver's hand"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "手機鈴響，她不耐煩地接起；電話那頭是佛羅斯上校熟悉的問候。",
+      "visual_context": "手機在中控台上震動，螢幕亮起「上校」；她翻了个白眼才接。",
+      "continuity": "一通普通的問候電話，馬上會變成催命符。",
+      "voice_intent": "remembered_voice",
+      "voice_note": "live voice through the phone speaker, not a flashback; lips stay off",
+      "speaker_ref": "char_frost",
+      "spoken_text": "嘿喲～～～泰洛伊上士～我的大姑娘～休假順利嗎？",
+      "char_count": 17,
+      "rate_chars_per_sec": 4.5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_011",
+          "why": "上校在電話裡重提恐龍背包，正是白天那段玩笑。",
+          "manifestation": "泰洛伊腦中閃過的那個綠色暴龍背包"
+        }
+      ]
+    },
+    {
+      "id": "seg_053",
+      "order": 53,
+      "source_start": 3400,
+      "source_end": 3483,
+      "source": "「佛羅斯上校……我轉視訊通話，你看看外面。」泰洛伊將手機轉到視訊模式，伸出車窗外。\n擁擠的人流和車流、吵雜混亂的畫面透過鏡頭一覽無遺。「老狐狸～難怪你叫我來這裡！」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_taylor_car_interior",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_taylor_car_interior",
+          "note": "phone held out of the window, traffic reflected in the glass"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "泰洛伊把通話轉成視訊，把手機伸出車窗外，讓上校看這片車海。",
+      "visual_context": "她把手機舉到窗外，鏡頭掃過擠滿人的橋面；她的臉被手機光照亮。",
+      "continuity": "她以為自己在展示倒楣，其實在展示災難的規模。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "佛羅斯上校……我轉視訊通話，你看看外面。老狐狸～難怪你叫我來這裡！",
+      "char_count": 27,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 7,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_054",
+      "order": 54,
+      "source_start": 3483,
+      "source_end": 3581,
+      "source": "「哈哈哈！我們的大姑娘真幽默！竟然特地排了休假來體驗塞車。」電話那頭像是算準了會塞車，一副理所當然的語氣接著調侃：「等等進城別忘了先幫我買恐龍背包啊！哈哈哈哈！那你慢慢塞，我就不打擾你休假了。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_taylor_car_interior",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_taylor_car_interior",
+          "note": "medium close-up in the car, phone at her ear"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "上校在電話那頭大笑，一副早就料到會塞車的語氣，還不忘提醒買恐龍背包。",
+      "visual_context": "泰洛伊把手機收回車內，表情從無奈變成火大；雨滴沿車窗滑下。",
+      "continuity": "他的笑聲裡有觀眾還聽不懂的篤定。",
+      "voice_intent": "remembered_voice",
+      "voice_note": "live voice through the phone speaker, not a flashback; lips stay off",
+      "speaker_ref": "char_frost",
+      "spoken_text": "哈哈哈！我們的大姑娘真幽默！竟然特地排了休假來體驗塞車。等等進城別忘了先幫我買恐龍背包啊！哈哈哈哈！那你慢慢塞，我就不打擾你休假了。",
+      "char_count": 59,
+      "rate_chars_per_sec": 4.5,
+      "estimated_sec": 15,
+      "render_blocks": 3,
+      "references": []
+    },
+    {
+      "id": "seg_055",
+      "order": 55,
+      "source_start": 3581,
+      "source_end": 3596,
+      "source": "「欸靠！老不修～你給我——」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_taylor_car_interior",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_taylor_car_interior",
+          "note": "close-up, phone in hand, mouth open"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "泰洛伊正要罵回去，話還沒說完。",
+      "visual_context": "她對著手機吼，眉頭皺緊；下一秒表情凍住。",
+      "continuity": "台詞被爆炸打斷，觀眾和角色同時失去控制。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "欸靠！老不修～你給我——",
+      "char_count": 8,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_056",
+      "order": 56,
+      "source_start": 3596,
+      "source_end": 3644,
+      "source": "轟—————————！\n她正想吐槽回去，橋下突然傳來一陣巨大的爆炸聲。接著是第二聲、第三聲……\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_bridge_collapse",
+      "character_refs": [],
+      "prop_refs": [
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_bridge_collapse",
+          "note": "under-bridge explosion, dust column, deck shuddering"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "橋下傳來巨大爆炸，接著第二聲、第三聲；橋面開始震動。",
+      "visual_context": "爆炸從橋墩竄起，塵土與火光沖上橋面；車陣像被抖了一下。",
+      "continuity": "災變第一擊不是病毒，是橋。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_057",
+      "order": 57,
+      "source_start": 3644,
+      "source_end": 3718,
+      "source": "隨著一連串的爆炸，橋面開始劇烈晃動、路面應聲斷裂。湧動的人群和車輛順著斷裂的橋面滑落，重重砸在底部的河床上。\n喧鬧聲在瞬間被撕心裂肺的慘叫聲取代。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_bridge_collapse",
+      "character_refs": [],
+      "prop_refs": [
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_bridge_collapse",
+          "note": "deck cracking and tilting, cars sliding into the gap"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "橋面斷裂，人群與車輛順著斷口滑落，砸在河床上；喧鬧被惨叫取代。",
+      "visual_context": "路面像餅乾一樣折斷；車與人一起往下滑，塵土吞掉畫面。",
+      "continuity": "上一段的「塞車地獄」瞬間變成真正的垂直落差。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_058",
+      "order": 58,
+      "source_start": 3718,
+      "source_end": 3792,
+      "source": "「我……靠……」\n泰洛伊的車子在經歷了一連串瘋狂的翻滾後，最終側翻傾倒，歪斜的躺在運河岸邊的碎石地上。四周瀰漫著汽油味與焦味，空氣沉重得讓人窒息。\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "overturned SUV on the riverbank, dust settling"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "泰洛伊的車翻滾多圈後側翻在運河岸邊；她只剩一句「我……靠……」。",
+      "visual_context": "車體在碎石上停下，塵土慢慢落下；她的手還扣在方向盤上。",
+      "continuity": "把主角從車陣裡丟到谷底，故事正式開始。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "我……靠……",
+      "char_count": 2,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_059",
+      "order": 59,
+      "source_start": 3792,
+      "source_end": 3973,
+      "source": "「什麼鬼……」她忍著劇烈的暈眩，掙扎著解開安全帶。身體失去支撐後重重撞在車頂上，她調整姿勢，整個人狼狽的翻了半圈才將身體回正。變形的車廂像個鐵籠將她困在其中，門框因撞擊嚴重卡死，連一絲縫隙都推不開。\n「沒受傷……真是幸運……啊不對，是真他媽倒楣！」泰洛伊一邊檢查四肢的活動度，一邊對著變形的儀表板小聲咒罵，「等我回去，一定要罵死那死老頭！嗯……那是什麽東西？」\n",
+      "kind": "dialogue",
+      "split_reason": "focus_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "inside the overturned cabin, cracked windshield"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "她解開安全帶、摔在車頂，門框卡死；一邊檢查四肢一邊咒罵上校，忽然看見不對勁的東西。",
+      "visual_context": "車內狹窄空間，碎玻璃在頭髮上；她翻身、踹門、停住，視線穿過裂痕。",
+      "continuity": "她的軍人本能先檢查自己，再檢查環境。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "沒受傷……真是幸運……啊不對，是真他媽倒楣！等我回去，一定要罵死那死老頭！嗯……那是什麽東西？",
+      "char_count": 36,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 9,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_060",
+      "order": 60,
+      "source_start": 3973,
+      "source_end": 4077,
+      "source": "她本想踢碎裂成蛛網狀的擋風玻璃逃生，卻在舉腳的瞬間，透過玻璃裂痕看到了不遠處的駭人景象——\n一名渾身是血的男子在地上艱難爬行，口中發出微弱且絕望的呼救聲。而在那男子身後，一道人影正伴隨著尖銳的嚎叫迅速逼近。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_taylor",
+        "char_crawling_man",
+        "char_infected_attacker"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "through the cracked windshield, two distant figures"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_crawling_man",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_infected_attacker",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "她舉腳要踢玻璃，卻透過裂痕看見遠處：一名渾身是血的男子在爬，身後一道人影迅速逼近。",
+      "visual_context": "她的腳停在半空；鏡頭順著她的視線穿過蛛網裂痕，遠景兩人一爬一追。",
+      "continuity": "逃生動作被好奇心打斷，這是她第一次看見「那個世界」。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_061",
+      "order": 61,
+      "source_start": 4077,
+      "source_end": 4094,
+      "source": "那人影……早已看不出人類的模樣。\n",
+      "kind": "narration",
+      "split_reason": "voice_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_infected_attacker"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "long lens, heat shimmer, distant silhouette"
+        },
+        {
+          "role": "character",
+          "ref": "char_infected_attacker",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "那道追上來的人影，早已看不出人類的模樣。",
+      "visual_context": "長焦壓縮空間，人影的輪廓在熱氣裡扭曲；他的動作不像人。",
+      "continuity": "用一句旁白把「怪物」正式命名。",
+      "voice_intent": "narrator",
+      "spoken_text": "那人影……早已看不出人類的模樣。",
+      "char_count": 13,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_062",
+      "order": 62,
+      "source_start": 4094,
+      "source_end": 4194,
+      "source": "他身上的衣服嚴重磨損，裸露出的皮膚呈現腐爛的灰紫色，身上布滿了觸目驚心的外傷。有些傷口又大又深，甚至能隱約看見翻出的內臟與蠕動的組織。然而，他卻彷彿感覺不到任何疼痛，雙眼充血，直勾勾盯著眼前的男子。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_infected_attacker",
+        "char_crawling_man"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "close on necrotic skin and wounds, crawling man soft behind"
+        },
+        {
+          "role": "character",
+          "ref": "char_infected_attacker",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_crawling_man",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "怪物的皮膚腐爛成灰紫色，傷口深到看見內臟；他感覺不到痛，充血的眼睛盯著地上的男子。",
+      "visual_context": "傷口與蠕動組織的特寫；他歪頭，像在聽獵物的呼吸。",
+      "continuity": "把「感染者」的生理規則一次講清楚：不怕痛、只追活人。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_063",
+      "order": 63,
+      "source_start": 4194,
+      "source_end": 4246,
+      "source": "他移動速度異常迅速，完全不像是一個重傷者該有的反應。靠近目標後，他立刻俯下身，對著男子的背部張口就咬。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_infected_attacker",
+        "char_crawling_man"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "low angle on the lunge, dust kicked up"
+        },
+        {
+          "role": "character",
+          "ref": "char_infected_attacker",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_crawling_man",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "怪物以重傷者不可能有的速度撲上，咬住男子的背部。",
+      "visual_context": "他俯身、張口、撕扯；男子的手指在碎石上抓出痕跡。",
+      "continuity": "速度落差是恐懼的來源。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_064",
+      "order": 64,
+      "source_start": 4246,
+      "source_end": 4276,
+      "source": "「啊啊啊啊啊——————！」\n「啊啊啊啊啊——————！」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_crawling_man"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "close-up on the screaming man, dust and blood"
+        },
+        {
+          "role": "character",
+          "ref": "char_crawling_man",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "被咬的男子發出撕心裂肺的惨叫。",
+      "visual_context": "他的臉貼著碎石，嘴張到極限；血沫噴在乾裂的河床上。",
+      "continuity": "惨叫把「遠處的事」變成「正在發生的事」。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_crawling_man",
+      "spoken_text": "啊啊啊啊啊——————！",
+      "char_count": 5,
+      "rate_chars_per_sec": 4.5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_065",
+      "order": 65,
+      "source_start": 4276,
+      "source_end": 4412,
+      "source": "悽慘的哀嚎聲刺破了河谷的死寂。怪物瘋狂撕扯，將男子背部肌肉一塊塊扯下、吞嚥，動作充滿了原始的飢渴。直到整條脊椎血淋淋裸露在外，那怪人才停止吞噬，緩緩起身。\n他歪著頭，像是在嗅聞空氣中的生氣，隨即朝著遠方傳來尖叫的方向再次挪動。動作矯健而詭異，宛如一頭披著腐肉的人形野獸。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_infected_attacker"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "wide on the feeding, harsh noon light"
+        },
+        {
+          "role": "character",
+          "ref": "char_infected_attacker",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "怪物一塊塊扯下、吞嚥背部的肌肉，直到整條脊椎裸露，才緩緩起身。",
+      "visual_context": "進食的動作原始而安靜；脊椎在陽光下反光；怪物慢慢站起。",
+      "continuity": "暴力不再是混亂，而是有節奏的進食。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_066",
+      "order": 66,
+      "source_start": 4412,
+      "source_end": 4457,
+      "source": "「媽的……這都什麼跟什麼？狂犬病？神經病？」泰洛伊屏住呼吸，軍人的本能讓她迅速壓低身體。\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "tight on Taylor inside the cabin, eyes over the dashboard"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "泰洛伊屏住呼吸，壓低身體，用狂犬病、神經病來解釋眼前的事。",
+      "visual_context": "她在車內縮成一團，從裂痕往外看；手慢慢摸向門把。",
+      "continuity": "她還在用舊世界的詞彙理解新世界。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "媽的……這都什麼跟什麼？狂犬病？神經病？",
+      "char_count": 15,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_067",
+      "order": 67,
+      "source_start": 4457,
+      "source_end": 4470,
+      "source": "救人？這情況根本是送死。\n",
+      "kind": "narration",
+      "split_reason": "voice_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "extreme close-up on her eyes, reflection of the riverbed"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "她腦中閃過「救人」的念頭，隨即被「送死」壓下去。",
+      "visual_context": "她的瞳孔縮了一下；手指停在門把上，沒有推。",
+      "continuity": "第一次道德計算：救不了，就別送。",
+      "voice_intent": "internal_monologue",
+      "spoken_text": "救人？這情況根本是送死。",
+      "char_count": 10,
+      "rate_chars_per_sec": 4,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_068",
+      "order": 68,
+      "source_start": 4470,
+      "source_end": 4527,
+      "source": "她冷靜看向後車廂，目光落在那個被固定住的長形包裹上，喃喃自語：「幸好把祖傳的不鏽鋼棍帶來了。等等可以派上用場。」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_steel_rod",
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "back seat, long parcel, hand on the strap"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_steel_rod",
+          "note": "prop plate, shared across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "她看向後車廂被固定住的長形包裹，喃喃說幸好帶了祖傳的不鏽鋼棍。",
+      "visual_context": "後照鏡裡映出長包裹；她的手伸向後座，解開固定帶。",
+      "continuity": "武器不是撿來的，是她自己帶來的——這是她的職業本能。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "幸好把祖傳的不鏽鋼棍帶來了。等等可以派上用場。",
+      "char_count": 21,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_069",
+      "order": 69,
+      "source_start": 4527,
+      "source_end": 4563,
+      "source": "「嚎——————」\n一聲淒厲的嚎叫，硬生生將她的注意力拉回殘酷的現實。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_infected_attacker"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "silhouette against the broken bridge, dust in the air"
+        },
+        {
+          "role": "character",
+          "ref": "char_infected_attacker",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "一聲淒厲的嚎叫，把泰洛伊的注意力拉回現實。",
+      "visual_context": "怪物仰頭長嚎，聲音在橋墩之間回盪；她的肩膀一震。",
+      "continuity": "嚎叫是它們的溝通方式，暗示不只一隻。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_070",
+      "order": 70,
+      "source_start": 4563,
+      "source_end": 4657,
+      "source": "方才那個被撕掉大半個身體、理應必死無疑的男子，此時竟在地上緩緩爬了起來。\n他的皮膚在短短幾秒內失去了所有血色，呈現出死人皮膚的灰白。他張開嘴，喉嚨裡發出了與剛才那怪物如出一轍的野獸低吼。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_crawling_man"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "low angle on the rising corpse, grey pallor spreading"
+        },
+        {
+          "role": "character",
+          "ref": "char_crawling_man",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "理應必死的男子竟緩緩爬起，皮膚在幾秒內失去血色，喉嚨發出同樣的野獸低吼。",
+      "visual_context": "他的手指先動，接著是頸椎；灰白從傷口往外擴散；低吼聲從喉嚨深處擠出。",
+      "continuity": "死亡不是終點，是傳染的下一步。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_065",
+          "why": "他剛剛才被怪物咬穿背部，現在卻站了起來。",
+          "manifestation": "背部仍敞開的傷口與裸露的脊椎"
+        }
+      ]
+    },
+    {
+      "id": "seg_071",
+      "order": 71,
+      "source_start": 4657,
+      "source_end": 4715,
+      "source": "男子空洞的眼神環伺著四周，毫無生氣，隨即僵硬的轉動肢體，跟上了前一個怪人的腳步，朝著遠方尖叫聲起伏的源頭狂奔而去。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_crawling_man"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "wide, the turned man running toward distant screams"
+        },
+        {
+          "role": "character",
+          "ref": "char_crawling_man",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "他空洞地環視，僵硬地轉動肢體，跟上前面那隻怪物，朝尖叫的方向狂奔。",
+      "visual_context": "他像被線拉著的木偶，關節一格一格轉；最後加速跑出畫面。",
+      "continuity": "災變的規模在這一刻從「一隻」變成「一群」。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_072",
+      "order": 72,
+      "source_start": 4715,
+      "source_end": 4812,
+      "source": "「武器……」泰洛伊看傻了眼，大腦像是當機了半晌才找回思考能力。她轉向後座，將打包的行李拆開，「棍子……還有水、隨身醫療包。馬的！沒想到會在這種地方用上這玩意！搞屁啊！就不能讓我好好休個假嗎！」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_steel_rod",
+        "prop_tactical_backpack",
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "trunk open, gear spread on the rocks"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_steel_rod",
+          "note": "prop plate, shared across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_tactical_backpack",
+          "note": "prop plate, shared across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "她愣了半晌才回神，拆開行李：棍子、水、隨身醫療包；一邊裝袋一邊崩潰抱怨假期沒了。",
+      "visual_context": "後車廂打開，補給品散在碎石上；她粗暴地往戰術背包裡塞。",
+      "continuity": "憤怒取代恐懼，她從休假士兵切換回戰鬥狀態。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "武器……棍子……還有水、隨身醫療包。馬的！沒想到會在這種地方用上這玩意！搞屁啊！就不能讓我好好休個假嗎！",
+      "char_count": 42,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 10,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_073",
+      "order": 73,
+      "source_start": 4812,
+      "source_end": 4872,
+      "source": "憤怒的情緒如烈火般灼燒，逐漸取代了剛才的驚恐。她一邊粗暴的將補給品塞進戰術背包，一邊不斷咒罵著慫恿她來這裡休假的上校。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_tactical_backpack"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "medium shot, backpack straps pulled tight"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_tactical_backpack",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "憤怒像火一樣燒掉驚恐；她一邊塞補給品，一邊咒罵慫恿她來休假的上校。",
+      "visual_context": "她拉緊背包帶，咬著牙；碎石被她踢開。",
+      "continuity": "把恐懼轉成動力，這是她活下來的理由。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_074",
+      "order": 74,
+      "source_start": 4872,
+      "source_end": 4885,
+      "source": "「準備好了——哈啊！！」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_taylor_car"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "low angle on the kick, glass bursting outward"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "她深吸一口氣，大喊一聲，一腳踹向龜裂的擋風玻璃。",
+      "visual_context": "她的腳跟砸在蛛網中心，玻璃整片爆開；她用手臂護住臉。",
+      "continuity": "她選擇自己破門，不等救援。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "準備好了——哈啊！！",
+      "char_count": 6,
+      "rate_chars_per_sec": 4.5,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_075",
+      "order": 75,
+      "source_start": 4885,
+      "source_end": 4959,
+      "source": "確認怪人走遠後，泰洛伊深吸一口氣，一腳狠狠踢向早已龜裂的擋風玻璃。\n碎玻璃如雨點般飛濺，她靈巧的從變形的車廂中鑽了出來，雙腳重新踏在乾枯的河床上。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_taylor_car",
+        "prop_steel_rod"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "wide on the riverbed, woman crawling out of the wreck"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_taylor_car",
+          "note": "prop plate, shared across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_steel_rod",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "確認怪物走遠，她踢碎玻璃鑽出車外，雙腳落在乾枯的河床上。",
+      "visual_context": "碎玻璃像雨一樣落下；她翻身爬出，膝蓋著地，抓起鋼棍。",
+      "continuity": "她正式離開「車」這個臨時庇護所。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_076",
+      "order": 76,
+      "source_start": 4959,
+      "source_end": 4999,
+      "source": "「好了……冷靜。先想辦法回到橋上。這鬼地方老娘一秒都不想待了！去你的恐龍包！」\n",
+      "kind": "dialogue",
+      "split_reason": "voice_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_steel_rod"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "medium wide, Taylor looking up at the broken deck"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_steel_rod",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "她對自己下令：冷靜，先想辦法回到橋上；這鬼地方一秒都不想待。",
+      "visual_context": "她站直，深呼吸，抬頭看斷橋的高度；鋼棍垂在身側。",
+      "continuity": "目標從「度假」變成「回到橋上」。",
+      "voice_intent": "spoken_on_screen",
+      "speaker_ref": "char_taylor",
+      "spoken_text": "好了……冷靜。先想辦法回到橋上。這鬼地方老娘一秒都不想待了！去你的恐龍包！",
+      "char_count": 31,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 8,
+      "render_blocks": 2,
+      "references": []
+    },
+    {
+      "id": "seg_077",
+      "order": 77,
+      "source_start": 4999,
+      "source_end": 5068,
+      "source": "她抓緊了那根厚實的不鏽鋼棍，棍身在正午的陽光下透著冷冽的銀光。她沿著河岸探路，警惕觀察著四周的廢墟，一邊思索著要如何爬回那段斷裂的橋面。\n",
+      "kind": "action",
+      "split_reason": "focus_change",
+      "location_ref": "loc_riverbed_wreck",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [
+        "prop_steel_rod"
+      ],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_riverbed_wreck",
+          "note": "low tracking shot along the riverbank, rod glinting"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_steel_rod",
+          "note": "prop plate, shared across the chapter"
+        }
+      ],
+      "context": "她抓緊鋼棍，棍身在正午陽光下透出冷冽銀光；沿河岸探路，觀察廢墟。",
+      "visual_context": "棍身反光掃過鏡頭；她踩過鋼筋與碎石，目光掃視橋墩。",
+      "continuity": "武器就位，下一步是往上爬。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 6,
+      "render_blocks": 1,
+      "references": []
+    },
+    {
+      "id": "seg_078",
+      "order": 78,
+      "source_start": 5068,
+      "source_end": 5098,
+      "source": "在泰洛伊眼前，整座艾伯塔市依然平靜，似乎與斷橋是兩個世界…\n",
+      "kind": "narration",
+      "split_reason": "focus_change",
+      "location_ref": "loc_city_skyline_noon",
+      "character_refs": [
+        "char_taylor"
+      ],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_city_skyline_noon",
+          "note": "foreground rubble, distant intact skyline"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
+          "note": "identity plate, same folder across the chapter"
+        }
+      ],
+      "context": "在她眼前，整座艾伯塔市依然平靜，似乎與斷橋是兩個世界。",
+      "visual_context": "從河床抬向遠方天際線：城市完好、無煙、無聲；前景是她與廢墟。",
+      "continuity": "災變只在腳下，城市還不知道——這是全章最後的溫差。",
+      "voice_intent": "narrator",
+      "spoken_text": "在泰洛伊眼前，整座艾伯塔市依然平靜，似乎與斷橋是兩個世界…",
+      "char_count": 26,
+      "rate_chars_per_sec": 5,
+      "estimated_sec": 7,
+      "render_blocks": 1,
+      "references": [
+        {
+          "segment_ref": "seg_063",
+          "why": "她在河床抬頭看城市，與腳下的斷橋形成兩個世界。",
+          "manifestation": "遠方完好無煙的天際線"
+        }
+      ]
+    },
+    {
+      "id": "seg_079",
+      "order": 79,
+      "source_start": 5098,
+      "source_end": 5111,
+      "source": "———地獄已悄然降臨———",
+      "kind": "action",
+      "split_reason": "paragraph_break",
+      "location_ref": "loc_prologue_title",
+      "character_refs": [],
+      "prop_refs": [],
+      "reference_images": [
+        {
+          "role": "scene",
+          "ref": "loc_prologue_title",
+          "note": "black slate texture, slow fade"
+        }
+      ],
+      "context": "收尾字卡：地獄已悄然降臨。",
+      "visual_context": "黑底字卡，底片顆粒；遠處的尖叫聲淡出；字卡文字後製疊加，參考板保持無字。",
+      "continuity": "把序章釘在「開始」而不是「結束」。",
+      "voice_intent": "none",
+      "spoken_text": null,
+      "char_count": 0,
+      "rate_chars_per_sec": null,
+      "estimated_sec": 5,
+      "render_blocks": 1,
+      "references": []
+    }
+  ]
+}

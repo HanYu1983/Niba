@@ -1,0 +1,17 @@
+integrated_multimodal_description: [Shot 1] Photorealistic 35mm film, fine grain, muted olive and cold grey palette, flat overcast dawn light, shallow depth of field, grounded documentary realism — not cinematic gloss, not an advertisement, not slow motion, no on-screen text. At the firing line on the gravel parade ground. Colonel Frost (S1), a broad-shouldered, barrel-chested 58-year-old East Asian man with a short iron-grey buzz cut, weathered square face, heavy brows, thick neck and a plain olive uniform with no insignia, lowers a pair of binoculars from his eyes and lets them hang against his chest on a strap. He is grinning, the corners of his eyes creasing, heavy brows lifted, entirely satisfied. A medium close-up from slightly below, the exoskeleton rig and the paper target soft behind him, the strap creaking as the binoculars settle. The camera pushes in slowly. Colonel Frost (S1) says:
+<d>
+[中文]
+嗯，真不錯。
+這新玩具把菜雞都變成戰神。
+</d>
+
+[Shot 2] At 00:03.000, the camera cuts to a medium two-shot at the firing line. Frost (S1) turns and brings his open palm down on the shoulder of the stocky engineer (S2), a 35-year-old East Asian man in grease-stained olive coveralls with safety goggles pushed up on his forehead — a heavy, friendly slap that jolts him forward half a step. Frost throws his head back and laughs, chest heaving. The engineer's goggles bob, and he offers a stiff, polite half-laugh with a small nod, unsure whether he has just been praised or mocked. The camera stays static with a faint handheld sway. Colonel Frost (S1) says:
+<d>
+[中文]
+以後你就穿著這玩意上廁所吧！
+哈哈哈哈！
+</d>
+
+overall_soundscape: Cold wind over the gravel ground, the exoskeleton's servos ticking as they cool, a distant shouted cadence and boots on the track, the creak of a binocular strap, a heavy palm slap landing on canvas, Frost's barking laugh, and the engineer's short nervous exhale. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The low parade-ground string drone, dropping almost to silence under Frost's laugh and easing back in as the shot settles.

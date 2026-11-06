@@ -1,0 +1,58 @@
+subject_definitions:
+<Subject 1> is the military parade ground from <Picture 1>: a wide gravel parade ground at cold dawn, obstacle course and shooting range fading into morning haze, low barracks blocks in the distance, flat overcast grey-blue sky, wet gravel, no people.
+<Subject 2> is Colonel Frost from <Picture 2>: a broad-shouldered, barrel-chested 58-year-old East Asian man, short iron-grey buzz cut, weathered square face with deep forehead lines, heavy brows, thick neck, plain olive military uniform with no insignia, gravelly booming baritone.
+
+summary:
+Cold dawn military parade ground, a shouting colonel at the edge of the running track, an endless column of trainees receding into haze.
+
+retention_analysis:
+<Subject 1>: fully_preserved.
+<Subject 2>: fully_preserved — face, age, iron-grey hair, heavy build and plain olive uniform.
+
+speaker_constraints:
+Only <Subject 2> speaks.
+No narration. No voice-over.
+No off-screen voice.
+Never Cantonese, never a Hong Kong accent, never any regional dialect.
+
+detailed_description:
+Photorealistic 35mm film, fine grain, muted olive and cold grey palette, flat overcast dawn light, shallow depth of field, grounded documentary realism, no cinematic gloss, no slow motion, no on-screen text.
+
+[Shot 1]
+00:00-00:03
+Action: Low angle from behind <Subject 2>, his boots planted at the edge of the wet gravel track, the column of trainees stretching away into the haze in front of him. He leans forward, chest out, and bellows down the line; thick vapour bursts from his mouth in the cold air. The camera pushes in slowly at low height, keeping his broad shoulders filling the left of frame.
+Dialogue:
+<Subject 2> says:
+<d>
+[中文]
+一群菜雞！
+死老百姓！
+</d>
+
+[Shot 2]
+00:03-00:05
+Action: Cut to a tight frontal close-up of <Subject 2>. His jaw is wide open mid-roar, neck tendons standing out, a fleck of spit at the corner of his mouth, breath fog rolling off his lips; his eyes stay locked on the runners past the lens. The camera is static with a faint handheld shudder.
+Dialogue:
+<Subject 2> says:
+<d>
+[中文]
+跑起來！
+還敢掉隊啊？
+</d>
+
+[Shot 3]
+00:05-00:08
+Action: Cut to a medium-wide profile shot tracking sideways with <Subject 2> as he pivots and stabs a finger down the track. Trainees in olive PT gear pound past in the background, boots striking gravel, some already breaking stride. The camera tracks at walking pace, Frost staying sharp in the foreground, the running column soft behind him.
+Dialogue:
+<Subject 2> says:
+<d>
+[中文]
+沒睡飽嗎？
+不想休假了是不是！
+</d>
+
+overall_soundscape:
+Cold open-air parade ground at dawn, gusting wind over wet gravel, dozens of boots striking the track in ragged unison, distant shouted cadence and gear rattle, Frost's heavy breath and the rasp of his voice pushing past the wind. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music:
+A low, ominous string drone with a single deep percussive hit under the first shout, restrained and sparse, sitting far below the voice and fading out at the end of the shot.

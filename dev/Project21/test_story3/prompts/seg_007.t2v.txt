@@ -1,0 +1,12 @@
+integrated_multimodal_description: [Shot 1] Photorealistic 35mm film, fine grain, muted olive and cold grey palette, flat overcast dawn light, shallow depth of field, grounded documentary realism — not cinematic gloss, not an advertisement, not slow motion, no on-screen text. A medium two-shot at the firing line. Colonel Frost (S1), broad-shouldered and barrel-chested, his short iron-grey buzz cut catching the flat light, turns his head from the engineer toward Staff Sergeant Taylor (S3) and raises one heavy eyebrow. He takes the printed leave request form from her hands, turning it toward himself, and looks her up and down with a teasing half-smile. She keeps her chin level, hands returning to her sides. The camera stays static with a slight handheld tremor. Colonel Frost (S1) says:
+<d>
+[中文]
+哎喲，我們的大姑娘要休長假了？
+妳這是打算直接休到退伍嗎？
+</d>
+
+[Shot 2] At 00:03.200, the camera cuts to a tight close-up of his hands. A steel fountain pen comes out of his breast pocket, the cap snaps off, and the nib draws one fluid signature across the line at the bottom of the form; the wet ink catches the grey light. His jaw and the corner of his smirk sit at the very edge of frame, out of focus. The camera holds static, the paper trembling slightly in the wind.
+
+overall_soundscape: Wind over the parade ground, the crisp flex of paper as the form changes hands, a pen cap clicking free, the nib scratching across the page, and the distant rhythm of boots on gravel. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A sparse, almost playful plucked string figure under his teasing line, gone by the time the pen touches paper.

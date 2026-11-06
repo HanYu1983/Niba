@@ -1,0 +1,20 @@
+{
+  "model": "moodyRealMix_zitV7.safetensors",
+  "output_dir": "D:\\han\\Niba\\dev\\Project21\\output",
+  "generated_at": "2026-11-06T13:38:38.822Z",
+  "total_plates_on_disk": 1,
+  "statuses_flipped": 0,
+  "runs": [
+    {
+      "id": "loc_bridge_collapse",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 15.7,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_bridge_collapse\\plate_00002_.png"
+      ],
+      "prompt_id": "2d44fc63-c340-49f3-b99f-f9cb91290654"
+    }
+  ]
+}

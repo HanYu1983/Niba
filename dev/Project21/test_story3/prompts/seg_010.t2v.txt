@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic 35mm film, fine grain, muted olive and cold grey palette, flat overcast dawn light, shallow depth of field, grounded documentary realism — not cinematic gloss, not an advertisement, not slow motion, no on-screen text. A close-up at the firing line. Staff Sergeant Taylor (S3), 25, high black ponytail, sharp dark eyes, strong jaw, sun-tanned skin, folds the signed leave request form in half along its crease and tucks it into the chest pocket of her olive uniform. Her expression is flat and unimpressed, mouth slightly down at one corner. Frost's sleeve and shoulder sit soft at the edge of frame. The camera holds static. Staff Sergeant Taylor (S3) says, dry and dismissive:
+<d>
+[中文]
+喔……
+我對死掉的骨頭並不是那麼感興趣。
+</d>
+
+[Shot 2] At 00:03.000, the camera cuts to a medium close-up, framed slightly low. Taylor (S3) rests two fingers against her chin, eyes drifting up and away from Frost, past the perimeter wall, to the low grey sky where the city haze sits. A small, private smile replaces the flatness as she considers something she has not said out loud. The camera drifts slowly to the right, following her eyeline. Staff Sergeant Taylor (S3) says, almost to herself:
+<d>
+[中文]
+不過嘉年華的熱鬧倒是值得一看。
+</d>
+
+overall_soundscape: Wind over gravel, the soft pat of a hand against a uniform pocket, a distant truck horn and muffled traffic from beyond the wall, the far-off ragged cadence of the running column, and a quiet hum from Taylor. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The warm piano note returns, joined by a low clarinet line, small and curious, fading as the shot ends.

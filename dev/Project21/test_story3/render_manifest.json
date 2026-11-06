@@ -1,0 +1,45 @@
+{
+  "version": "1.0",
+  "plan": "plan.ch0.json",
+  "segments": {
+    "seg_002": {
+      "segment_id": "seg_002",
+      "take": 1,
+      "prompt_id": "e5743cec-d282-4272-9359-10206ebadec1",
+      "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_002.r2v.txt",
+      "status": "success",
+      "seed": 1793974127,
+      "turbo": false,
+      "duration_sec": 8,
+      "frames": 192,
+      "references": [
+        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_training_ground\\plate_00001_.png",
+        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_frost\\plate_00002_.png"
+      ],
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\output\\render\\plan.ch0\\seg_002_00004_.mp4"
+      ],
+      "submitted_at": "2026-11-06T14:12:58.283Z"
+    },
+    "seg_003": {
+      "segment_id": "seg_003",
+      "take": 1,
+      "prompt_id": "31fa7de5-48d4-4948-8c66-88362ca3b613",
+      "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_003.t2v.txt",
+      "status": "success",
+      "seed": 1793974778,
+      "turbo": false,
+      "duration_sec": 5.17,
+      "frames": 124,
+      "references": [
+        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_training_ground\\plate_00001_.png",
+        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_engineer\\plate_00001_.png",
+        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_exo_suit\\plate_00001_.png"
+      ],
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\output\\render\\plan.ch0\\seg_003_00002_.mp4"
+      ],
+      "submitted_at": "2026-11-06T14:28:33.409Z"
+    }
+  }
+}

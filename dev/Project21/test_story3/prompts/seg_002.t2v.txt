@@ -1,0 +1,24 @@
+integrated_multimodal_description: [Shot 1] Photorealistic 35mm film, fine grain, muted olive and cold grey palette, flat overcast dawn light, shallow depth of field, grounded documentary realism — not cinematic gloss, not an advertisement, not slow motion, no on-screen text. A wide gravel military parade ground at cold dawn, obstacle course and shooting range fading into morning haze, low barracks blocks in the distance, wet gravel underfoot. Colonel Frost (S1), a broad-shouldered, barrel-chested East Asian man in his late fifties, short iron-grey buzz cut, weathered square face with deep forehead lines, heavy brows, thick neck, plain olive military uniform with no insignia, stands at the edge of the running track. Seen from a low angle behind him, his boots planted apart, the column of trainees stretches away into the haze ahead of him. He leans forward, chest out, and bellows down the line; thick vapour bursts from his mouth in the cold air. The camera pushes in slowly at low height, his broad shoulders filling the left of frame. Colonel Frost (S1) shouts:
+<d>
+[中文]
+一群菜雞！
+死老百姓！
+</d>
+
+[Shot 2] At 00:03.000, the camera cuts to a tight frontal close-up of Colonel Frost (S1). His jaw is wide open mid-roar, neck tendons standing out, a fleck of spit at the corner of his mouth, breath fog rolling off his lips, his eyes locked on the runners past the lens. The camera is static with a faint handheld shudder. Colonel Frost (S1) shouts:
+<d>
+[中文]
+跑起來！
+還敢掉隊啊？
+</d>
+
+[Shot 3] At 00:05.000, the camera cuts to a medium-wide profile shot tracking sideways with Colonel Frost (S1) as he pivots and stabs a finger down the track. Trainees in olive physical-training gear pound past in the background, boots striking gravel, a few already breaking stride. The camera tracks at walking pace; Frost stays sharp in the foreground while the running column blurs behind him. Colonel Frost (S1) shouts:
+<d>
+[中文]
+沒睡飽嗎？
+不想休假了是不是！
+</d>
+
+overall_soundscape: Cold open-air parade ground at dawn, gusting wind over wet gravel, dozens of boots striking the track in ragged unison, distant shouted cadence and gear rattle, Frost's heavy breathing and the rasp of his voice pushing past the wind. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A low, ominous string drone with a single deep percussive hit under the first shout, restrained and sparse, sitting far below the voice and fading out at the end.
