@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
-for /L %%i in (21, 1, 30) do (
+for /L %%i in (1, 1, 79) do (
     set "num=00%%i"
     set "seg=seg_!num:~-3!"
     REM prodoct
