@@ -5,11 +5,11 @@
     "seg_002": {
       "segment_id": "seg_002",
       "take": 1,
-      "prompt_id": "61320f7e-6f14-4c0a-8230-0447203b16de",
+      "prompt_id": "4d19cc86-b49b-466f-a9e9-1946ccc79960",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_002.t2v.txt",
-      "status": "queued",
+      "status": "running",
       "queued": true,
-      "seed": 1793980399,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 8,
       "frames": 192,
@@ -18,16 +18,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_frost\\plate_00002_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:20.555Z"
+      "submitted_at": "2026-11-06T16:49:27.920Z"
     },
     "seg_003": {
       "segment_id": "seg_003",
       "take": 1,
-      "prompt_id": "c1081510-18b2-4cfc-9091-c9c1bff91cd1",
+      "prompt_id": "c00a1daa-57c6-44c7-96a4-d18557ca68ed",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_003.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980400,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -37,16 +37,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_exo_suit\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:21.840Z"
+      "submitted_at": "2026-11-06T16:52:23.875Z"
     },
     "seg_004": {
       "segment_id": "seg_004",
       "take": 1,
-      "prompt_id": "8da3dd6a-c62d-40a1-a2de-27033fcad788",
+      "prompt_id": "cd823d66-10e3-459d-b551-8be5f8b16044",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_004.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980401,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -57,16 +57,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_target_sheet\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:23.850Z"
+      "submitted_at": "2026-11-06T16:52:26.720Z"
     },
     "seg_005": {
       "segment_id": "seg_005",
       "take": 1,
-      "prompt_id": "d0da4605-ed6b-4da0-a482-a39f52484852",
+      "prompt_id": "d5717334-292d-4024-814a-db48dc590210",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_005.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980403,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 8,
       "frames": 192,
@@ -76,16 +76,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_engineer\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:25.442Z"
+      "submitted_at": "2026-11-06T16:52:28.552Z"
     },
     "seg_006": {
       "segment_id": "seg_006",
       "take": 1,
-      "prompt_id": "73101a88-ca82-43d4-9496-75308ca1277b",
+      "prompt_id": "669a38df-fb0f-4f55-a655-b532762581b3",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_006.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980405,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -96,16 +96,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_leave_form\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:27.737Z"
+      "submitted_at": "2026-11-06T16:52:30.178Z"
     },
     "seg_001": {
       "segment_id": "seg_001",
       "take": 1,
-      "prompt_id": "052a16f5-c92b-4b1d-8e23-0fc4c83e090e",
+      "prompt_id": "d60fc78b-9221-4c1a-a0b7-072676407bd8",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_001.t2v.txt",
       "status": "running",
       "queued": true,
-      "seed": 1793980398,
+      "seed": 1793983207,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -113,16 +113,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_prologue_title\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:19.394Z"
+      "submitted_at": "2026-11-06T16:40:08.519Z"
     },
     "seg_007": {
       "segment_id": "seg_007",
       "take": 1,
-      "prompt_id": "8c3fa1e5-8bfa-4a37-88d8-e86e3a8ba87e",
+      "prompt_id": "bdb60225-1ff3-443f-9c50-dde9aea86fc2",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_007.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980407,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -133,16 +133,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_leave_form\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:29.784Z"
+      "submitted_at": "2026-11-06T16:52:31.801Z"
     },
     "seg_008": {
       "segment_id": "seg_008",
       "take": 1,
-      "prompt_id": "c0607636-e913-4268-968d-818fcd07a67d",
+      "prompt_id": "ba89c5b5-feff-4b6f-b94b-9c8a5c5f9f26",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_008.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980409,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 7.29,
       "frames": 175,
@@ -152,16 +152,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_leave_form\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:31.580Z"
+      "submitted_at": "2026-11-06T16:52:33.256Z"
     },
     "seg_009": {
       "segment_id": "seg_009",
       "take": 1,
-      "prompt_id": "1f7dc178-99af-43fe-bc86-23c7382788cb",
+      "prompt_id": "18c131dc-7784-4225-8360-b3207e47aadb",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_009.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980411,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 12.25,
       "frames": 294,
@@ -170,16 +170,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_frost\\plate_00002_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:32.700Z"
+      "submitted_at": "2026-11-06T16:52:35.371Z"
     },
     "seg_010": {
       "segment_id": "seg_010",
       "take": 1,
-      "prompt_id": "ff7e4bf6-5f50-497d-9472-a0c001b2e181",
+      "prompt_id": "bfa70dac-8d01-44b8-ae85-e0919d39f2a2",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_010.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980412,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 7.29,
       "frames": 175,
@@ -189,16 +189,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_leave_form\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:34.921Z"
+      "submitted_at": "2026-11-06T16:52:36.715Z"
     },
     "seg_011": {
       "segment_id": "seg_011",
       "take": 1,
-      "prompt_id": "c5ff9f57-ecc0-4e2f-95c0-fd050c06c89a",
+      "prompt_id": "eb7edd34-afb2-490a-b00c-1fa5ebb489bc",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_011.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980415,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 7.29,
       "frames": 175,
@@ -208,16 +208,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_frost\\plate_00002_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:38.381Z"
+      "submitted_at": "2026-11-06T16:52:37.798Z"
     },
     "seg_012": {
       "segment_id": "seg_012",
       "take": 1,
-      "prompt_id": "5caa9152-72bc-42f6-8a35-60bcd118a645",
+      "prompt_id": "4bf8c5ac-0bbd-499d-b164-5cd6e768f379",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_012.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980418,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -227,16 +227,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_leave_form\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:39.627Z"
+      "submitted_at": "2026-11-06T16:52:39.177Z"
     },
     "seg_014": {
       "segment_id": "seg_014",
       "take": 1,
-      "prompt_id": "3a444e48-d8a8-49fe-b6fc-6775258b574a",
+      "prompt_id": "7c663cea-f346-47bb-907f-9cc618086cdd",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_014.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980421,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -246,16 +246,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_whisky_glass\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:42.156Z"
+      "submitted_at": "2026-11-06T16:52:41.823Z"
     },
     "seg_015": {
       "segment_id": "seg_015",
       "take": 1,
-      "prompt_id": "c1274d99-b032-4d51-9b2b-8c6539525f69",
+      "prompt_id": "3285adce-ceb8-43d9-aea9-5857f1f57c0e",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_015.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980422,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -265,16 +265,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_whisky_glass\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:43.353Z"
+      "submitted_at": "2026-11-06T16:52:43.053Z"
     },
     "seg_016": {
       "segment_id": "seg_016",
       "take": 1,
-      "prompt_id": "4d04cb05-428f-429d-8195-503ee8b17525",
+      "prompt_id": "5ddc1156-fa47-4ccf-8171-342bbf9edd9f",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_016.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980423,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -282,16 +282,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_reservoir_night\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:44.257Z"
+      "submitted_at": "2026-11-06T16:52:43.741Z"
     },
     "seg_017": {
       "segment_id": "seg_017",
       "take": 1,
-      "prompt_id": "2a8302ae-cb83-41b6-baed-76d8fb234702",
+      "prompt_id": "2a0eee30-f7ca-417d-b12f-970915753597",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_017.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980424,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -301,16 +301,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_frost\\plate_00002_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:45.657Z"
+      "submitted_at": "2026-11-06T16:52:45.193Z"
     },
     "seg_018": {
       "segment_id": "seg_018",
       "take": 1,
-      "prompt_id": "b6c046f8-0c11-49a9-8be1-ea1d49a12d22",
+      "prompt_id": "fd5624bb-bc01-41e6-a099-98a1ba9bfcf9",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_018.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980425,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 11.54,
       "frames": 277,
@@ -320,16 +320,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_whisky_glass\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:47.027Z"
+      "submitted_at": "2026-11-06T16:52:46.851Z"
     },
     "seg_019": {
       "segment_id": "seg_019",
       "take": 1,
-      "prompt_id": "d6f5af81-7203-4626-8195-bb9c57cfeb3c",
+      "prompt_id": "c364c93e-9f09-419f-9a73-f59926d6add6",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_019.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980427,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -338,16 +338,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_contractor\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:48.741Z"
+      "submitted_at": "2026-11-06T16:52:47.758Z"
     },
     "seg_020": {
       "segment_id": "seg_020",
       "take": 1,
-      "prompt_id": "cc536370-1ffd-4c27-8454-c466699f658f",
+      "prompt_id": "9c7d1486-99e0-4b2d-ad7a-ec0b4eb42d89",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_020.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980428,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 7.29,
       "frames": 175,
@@ -357,16 +357,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_whisky_glass\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:50.494Z"
+      "submitted_at": "2026-11-06T16:52:49.050Z"
     },
     "seg_021": {
       "segment_id": "seg_021",
       "take": 1,
-      "prompt_id": "91cd3c31-d678-4c7b-89d6-1e40dc12b717",
+      "prompt_id": "2d27a01f-5597-4c7e-99f9-07c8f9f6cc72",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_021.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980430,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -375,16 +375,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_frost\\plate_00002_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:51.427Z"
+      "submitted_at": "2026-11-06T16:52:49.996Z"
     },
     "seg_022": {
       "segment_id": "seg_022",
       "take": 1,
-      "prompt_id": "b57e5024-fc51-4d21-817c-6d0859c20e91",
+      "prompt_id": "a02f28bc-019b-4fee-b2a6-c0fe893e3907",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_022.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980431,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 11.54,
       "frames": 277,
@@ -395,16 +395,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_contractor_phone\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:52.989Z"
+      "submitted_at": "2026-11-06T16:52:52.383Z"
     },
     "seg_023": {
       "segment_id": "seg_023",
       "take": 1,
-      "prompt_id": "cd3dc65f-0319-431e-8558-fe25be2d1120",
+      "prompt_id": "a213c400-04e5-4f9f-8be5-e6cd476ef06d",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_023.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980433,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -414,16 +414,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_motorcycle\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:54.458Z"
+      "submitted_at": "2026-11-06T16:52:53.784Z"
     },
     "seg_024": {
       "segment_id": "seg_024",
       "take": 1,
-      "prompt_id": "ae5ef9aa-4ec3-466d-a093-61bb61c56f93",
+      "prompt_id": "8a165791-347a-4ced-a00e-0a1acbd18ec3",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_024.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980434,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -431,16 +431,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_club_penthouse\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:55.353Z"
+      "submitted_at": "2026-11-06T16:52:54.483Z"
     },
     "seg_025": {
       "segment_id": "seg_025",
       "take": 1,
-      "prompt_id": "01838727-fef6-4a13-af17-5428fb3e4acd",
+      "prompt_id": "eb0fd876-b829-4836-bb61-735fad982167",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_025.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980435,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -450,16 +450,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_qr_ticket\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:56.682Z"
+      "submitted_at": "2026-11-06T16:52:56.016Z"
     },
     "seg_026": {
       "segment_id": "seg_026",
       "take": 1,
-      "prompt_id": "ea2a8f6f-8f13-4bf8-8cc4-efe4ae2e12af",
+      "prompt_id": "1b22414d-01aa-4a84-a641-bceeeef8645e",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_026.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980436,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -467,16 +467,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_club_penthouse\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:57.371Z"
+      "submitted_at": "2026-11-06T16:52:57.085Z"
     },
     "seg_027": {
       "segment_id": "seg_027",
       "take": 1,
-      "prompt_id": "6d6fc38e-9d1a-42be-a7a3-7917f61befa1",
+      "prompt_id": "36e4573e-a493-4d02-9b60-3c4ac9db06c6",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_027.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980437,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 9.42,
       "frames": 226,
@@ -486,16 +486,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_qr_ticket\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:58.905Z"
+      "submitted_at": "2026-11-06T16:52:58.485Z"
     },
     "seg_028": {
       "segment_id": "seg_028",
       "take": 1,
-      "prompt_id": "e4272287-93aa-4287-90dc-6052e8d22053",
+      "prompt_id": "e880396e-6cad-4fba-a598-059b99530936",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_028.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980438,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 11.54,
       "frames": 277,
@@ -505,16 +505,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_xiao_liu\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:00.225Z"
+      "submitted_at": "2026-11-06T16:52:59.895Z"
     },
     "seg_029": {
       "segment_id": "seg_029",
       "take": 1,
-      "prompt_id": "dc515c35-ce8f-407a-b493-ac1fb61c9078",
+      "prompt_id": "d3bbcfb3-8784-4389-8aa1-6223c166245f",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_029.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980440,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -524,16 +524,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_yang\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:01.545Z"
+      "submitted_at": "2026-11-06T16:53:01.630Z"
     },
     "seg_030": {
       "segment_id": "seg_030",
       "take": 1,
-      "prompt_id": "cb73dae2-a976-44a9-9015-ad5a72828f23",
+      "prompt_id": "38f5eefd-c1a8-47cc-98b4-764096723299",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_030.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980441,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 14.38,
       "frames": 345,
@@ -543,16 +543,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_xiao_liu\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:02.948Z"
+      "submitted_at": "2026-11-06T16:53:02.976Z"
     },
     "seg_013": {
       "segment_id": "seg_013",
       "take": 1,
-      "prompt_id": "5a3edbcf-728c-4db1-b64a-6136e9f6f293",
+      "prompt_id": "501e998c-4206-4f60-9f4d-05983e596de2",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_013.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980419,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -562,16 +562,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_frost\\plate_00002_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:53:40.896Z"
+      "submitted_at": "2026-11-06T16:52:40.472Z"
     },
     "seg_031": {
       "segment_id": "seg_031",
       "take": 1,
-      "prompt_id": "a83cca52-d113-4e62-9da1-b11b25ae76c6",
+      "prompt_id": "321e5e96-b734-4e53-a2b6-8d882449f89b",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_031.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980443,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -580,16 +580,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_xiao_liu\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:03.837Z"
+      "submitted_at": "2026-11-06T16:53:04.174Z"
     },
     "seg_032": {
       "segment_id": "seg_032",
       "take": 1,
-      "prompt_id": "f2ec0535-a966-4e38-81f8-dd8930122c92",
+      "prompt_id": "fd80ee65-8994-4c09-bf2e-da7069578763",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_032.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980443,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -599,16 +599,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_bitten_rider\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:05.407Z"
+      "submitted_at": "2026-11-06T16:53:05.661Z"
     },
     "seg_033": {
       "segment_id": "seg_033",
       "take": 1,
-      "prompt_id": "57a3df9a-17d7-4610-9309-bd6293aea5c0",
+      "prompt_id": "ef83b7fd-1cbf-4bf1-94fa-e83491422752",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_033.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980445,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -616,16 +616,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_city_street_night\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:06.119Z"
+      "submitted_at": "2026-11-06T16:53:06.588Z"
     },
     "seg_034": {
       "segment_id": "seg_034",
       "take": 1,
-      "prompt_id": "93872c6c-383c-4164-8ebb-4ef8f98fee3c",
+      "prompt_id": "f7467dd4-68ac-47ec-9229-e3678a6b9be4",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_034.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980446,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -634,16 +634,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_infected_driver\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:07.029Z"
+      "submitted_at": "2026-11-06T16:53:07.793Z"
     },
     "seg_035": {
       "segment_id": "seg_035",
       "take": 1,
-      "prompt_id": "3dfd6c2d-96fc-4929-8a7d-8e2cca6c05ca",
+      "prompt_id": "a752059d-6ba0-4ba6-b00b-0379f832a103",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_035.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980447,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -651,16 +651,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_city_street_night\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:07.733Z"
+      "submitted_at": "2026-11-06T16:53:08.535Z"
     },
     "seg_036": {
       "segment_id": "seg_036",
       "take": 1,
-      "prompt_id": "48ac0699-86b1-4ed0-8dec-d90d2c0deabe",
+      "prompt_id": "eecebc0f-bea3-4139-b6b7-43074103adc3",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_036.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980447,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -669,16 +669,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_infected_driver\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:08.681Z"
+      "submitted_at": "2026-11-06T16:53:09.821Z"
     },
     "seg_037": {
       "segment_id": "seg_037",
       "take": 1,
-      "prompt_id": "f6ea6eaa-9856-4bd2-910d-f0f8cb7dedce",
+      "prompt_id": "6b63333d-2427-4237-9077-1c037a1d2425",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_037.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980448,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -686,16 +686,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_city_street_night\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:09.458Z"
+      "submitted_at": "2026-11-06T16:53:10.775Z"
     },
     "seg_038": {
       "segment_id": "seg_038",
       "take": 1,
-      "prompt_id": "f22376be-ce07-4a76-9675-f5f2bbf940ff",
+      "prompt_id": "2b404598-11df-4a22-a82b-dd94b2466330",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_038.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980449,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 12.25,
       "frames": 294,
@@ -703,16 +703,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_city_street_night\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:10.193Z"
+      "submitted_at": "2026-11-06T16:53:11.676Z"
     },
     "seg_039": {
       "segment_id": "seg_039",
       "take": 1,
-      "prompt_id": "a91316cd-7a0d-4a26-a2e4-d8f05b544642",
+      "prompt_id": "4318d167-0473-4322-9acb-a972c664d8ac",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_039.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980450,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -722,16 +722,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_daughter\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:11.635Z"
+      "submitted_at": "2026-11-06T16:53:13.043Z"
     },
     "seg_040": {
       "segment_id": "seg_040",
       "take": 1,
-      "prompt_id": "470d730a-8ba8-42f2-a4e4-a89be594b144",
+      "prompt_id": "b355d389-9e87-4ced-8afd-88cae3a53344",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_040.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980451,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -740,16 +740,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_daughter\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:12.916Z"
+      "submitted_at": "2026-11-06T16:53:13.942Z"
     },
     "seg_041": {
       "segment_id": "seg_041",
       "take": 1,
-      "prompt_id": "f4fcb313-1312-4987-9b68-99cd044b2794",
+      "prompt_id": "b93a0f67-81a4-435a-9ec5-051a1a98db80",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_041.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980453,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 23.58,
       "frames": 566,
@@ -760,16 +760,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_ark_phone\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:14.876Z"
+      "submitted_at": "2026-11-06T16:53:15.483Z"
     },
     "seg_042": {
       "segment_id": "seg_042",
       "take": 1,
-      "prompt_id": "0b9ee41a-6991-49bd-85bf-042d4cf4a17a",
+      "prompt_id": "ad7b2c7b-1884-4bd4-8faf-33349cb900cd",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_042.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980455,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -779,16 +779,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_ark_phone\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:16.701Z"
+      "submitted_at": "2026-11-06T16:53:17.070Z"
     },
     "seg_043": {
       "segment_id": "seg_043",
       "take": 1,
-      "prompt_id": "a38906fc-05b8-4931-957b-920b9a49e76f",
+      "prompt_id": "1d5a2ef3-7b59-4995-86dc-92c8ba837f08",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_043.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980456,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 7.29,
       "frames": 175,
@@ -799,16 +799,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_ark_phone\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:18.392Z"
+      "submitted_at": "2026-11-06T16:53:19.155Z"
     },
     "seg_044": {
       "segment_id": "seg_044",
       "take": 1,
-      "prompt_id": "e8932044-6565-4f57-987a-c0830699d59f",
+      "prompt_id": "a6aaafe2-13c4-4381-b9c8-77b20511dd91",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_044.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980458,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -817,16 +817,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_father\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:19.682Z"
+      "submitted_at": "2026-11-06T16:53:20.097Z"
     },
     "seg_045": {
       "segment_id": "seg_045",
       "take": 1,
-      "prompt_id": "517e5fb4-979e-4761-bc62-de146aae8405",
+      "prompt_id": "ae58c27a-06f7-437d-be9d-31b84c7b68b7",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_045.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980459,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -836,16 +836,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_taxi_driver\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:21.213Z"
+      "submitted_at": "2026-11-06T16:53:21.536Z"
     },
     "seg_046": {
       "segment_id": "seg_046",
       "take": 1,
-      "prompt_id": "bb5d7a01-834b-4c2d-b157-e679019eb8bf",
+      "prompt_id": "26cfaa43-aac3-447e-8c4e-fa7d607500ef",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_046.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980461,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -855,16 +855,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_ark_phone\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:22.675Z"
+      "submitted_at": "2026-11-06T16:53:23.300Z"
     },
     "seg_047": {
       "segment_id": "seg_047",
       "take": 1,
-      "prompt_id": "1927fa47-a0b5-4806-8ad7-5d193fecde18",
+      "prompt_id": "e655cb7d-f700-4e92-af55-ea61f0081f40",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_047.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980462,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -872,16 +872,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_city_street_morning\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:23.509Z"
+      "submitted_at": "2026-11-06T16:53:24.097Z"
     },
     "seg_048": {
       "segment_id": "seg_048",
       "take": 1,
-      "prompt_id": "8c961b9a-7e73-4b10-af5a-cbd214d8cda8",
+      "prompt_id": "b1c45099-02da-41e8-b00f-d451a89366fa",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_048.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980463,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 9.42,
       "frames": 226,
@@ -890,16 +890,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_news_feed\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:25.008Z"
+      "submitted_at": "2026-11-06T16:53:25.132Z"
     },
     "seg_049": {
       "segment_id": "seg_049",
       "take": 1,
-      "prompt_id": "ac9a6f82-9c11-4716-896f-8cd573cf313b",
+      "prompt_id": "60b32563-c043-4166-b7f5-d769cdf954ec",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_049.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980465,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 7.29,
       "frames": 175,
@@ -907,16 +907,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_city_street_morning\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:25.779Z"
+      "submitted_at": "2026-11-06T16:53:25.830Z"
     },
     "seg_050": {
       "segment_id": "seg_050",
       "take": 1,
-      "prompt_id": "6e7cf163-f80c-47a5-b30d-3c73cb854452",
+      "prompt_id": "d4c3ad09-a973-4cbe-99bd-f525331fe822",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_050.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980465,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -924,16 +924,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_bridge_traffic\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:26.482Z"
+      "submitted_at": "2026-11-06T16:53:26.638Z"
     },
     "seg_051": {
       "segment_id": "seg_051",
       "take": 1,
-      "prompt_id": "d590d7d4-1b2e-4e0d-96dc-cc8502dfe3c0",
+      "prompt_id": "7612717c-df19-42e2-99b7-76e572d69ea0",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_051.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980466,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -943,16 +943,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:27.973Z"
+      "submitted_at": "2026-11-06T16:53:27.965Z"
     },
     "seg_052": {
       "segment_id": "seg_052",
       "take": 1,
-      "prompt_id": "0fa01431-1a53-4b96-9b62-829b468dc01e",
+      "prompt_id": "0a4bf826-a533-44ce-84cd-f0e579b7b4e3",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_052.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980468,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -962,16 +962,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:29.427Z"
+      "submitted_at": "2026-11-06T16:53:29.376Z"
     },
     "seg_053": {
       "segment_id": "seg_053",
       "take": 1,
-      "prompt_id": "59d3419d-8ac9-4ffc-85af-0b51d11b8355",
+      "prompt_id": "81e81a23-cc6c-471c-a301-ba24496e2b0d",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_053.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980469,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 7.29,
       "frames": 175,
@@ -981,16 +981,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:30.903Z"
+      "submitted_at": "2026-11-06T16:53:30.837Z"
     },
     "seg_054": {
       "segment_id": "seg_054",
       "take": 1,
-      "prompt_id": "fdb1519f-272d-4117-b8ed-3fcf883a9dba",
+      "prompt_id": "c88f70e2-b895-457c-952c-3cad691af058",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_054.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980471,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 15.08,
       "frames": 362,
@@ -1000,16 +1000,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:32.435Z"
+      "submitted_at": "2026-11-06T16:53:32.502Z"
     },
     "seg_055": {
       "segment_id": "seg_055",
       "take": 1,
-      "prompt_id": "050f565a-d2c7-46fd-9ae9-bdb3a4b61ee1",
+      "prompt_id": "1538f01c-5f85-4df8-87ea-5b02a2ec5abb",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_055.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980472,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -1019,16 +1019,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:33.869Z"
+      "submitted_at": "2026-11-06T16:53:34.004Z"
     },
     "seg_056": {
       "segment_id": "seg_056",
       "take": 1,
-      "prompt_id": "eec2e6cc-2dcd-4dee-9160-3b9294ffeeda",
+      "prompt_id": "b18eb5f6-9ebd-423e-a1e7-402a89841992",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_056.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980473,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -1037,16 +1037,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:35.048Z"
+      "submitted_at": "2026-11-06T16:53:35.135Z"
     },
     "seg_057": {
       "segment_id": "seg_057",
       "take": 1,
-      "prompt_id": "53b3b1e2-1fb3-4f96-b76e-8ff36c21b23d",
+      "prompt_id": "90e973f6-989a-48be-9122-2ecc817d1066",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_057.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980475,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -1055,16 +1055,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:36.175Z"
+      "submitted_at": "2026-11-06T16:53:36.289Z"
     },
     "seg_058": {
       "segment_id": "seg_058",
       "take": 1,
-      "prompt_id": "f66997a8-62be-40fc-9dfc-1afbddc61176",
+      "prompt_id": "606c6826-08aa-4ad0-a43d-58e4c6cc9c84",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_058.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980476,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -1074,16 +1074,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:37.704Z"
+      "submitted_at": "2026-11-06T16:53:38.200Z"
     },
     "seg_059": {
       "segment_id": "seg_059",
       "take": 1,
-      "prompt_id": "40c5f1e1-8d16-49a4-8672-7decd5f7b2b2",
+      "prompt_id": "36a78dab-f4d0-44b3-a7a1-24e3a2d3eff4",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_059.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980477,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 9.42,
       "frames": 226,
@@ -1093,16 +1093,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:39.248Z"
+      "submitted_at": "2026-11-06T16:53:40.377Z"
     },
     "seg_060": {
       "segment_id": "seg_060",
       "take": 1,
-      "prompt_id": "24490c66-7b40-49e3-80f8-131dcf1333b1",
+      "prompt_id": "043a151a-42d3-466d-8771-7b4028e5b85d",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_060.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980479,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -1113,16 +1113,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_infected_attacker\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:40.869Z"
+      "submitted_at": "2026-11-06T16:53:42.178Z"
     },
     "seg_061": {
       "segment_id": "seg_061",
       "take": 1,
-      "prompt_id": "c93b960d-a19b-4349-ab10-5a2f01db8f7b",
+      "prompt_id": "ac13fe56-9e06-4592-81f8-3e05c977c009",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_061.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980480,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -1131,16 +1131,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_infected_attacker\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:41.942Z"
+      "submitted_at": "2026-11-06T16:53:43.534Z"
     },
     "seg_062": {
       "segment_id": "seg_062",
       "take": 1,
-      "prompt_id": "150fccac-ce78-4b3f-9407-4e84e46f7b7f",
+      "prompt_id": "99936541-606b-4935-8f33-00a9e843702d",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_062.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980482,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -1150,16 +1150,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_crawling_man\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:43.524Z"
+      "submitted_at": "2026-11-06T16:53:44.853Z"
     },
     "seg_063": {
       "segment_id": "seg_063",
       "take": 1,
-      "prompt_id": "352c1a43-be98-4d2e-a76a-b839c627ffc9",
+      "prompt_id": "e6a6cecb-e201-4063-a6ca-8f93d739d0c1",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_063.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980483,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -1169,16 +1169,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_crawling_man\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:45.014Z"
+      "submitted_at": "2026-11-06T16:53:46.433Z"
     },
     "seg_064": {
       "segment_id": "seg_064",
       "take": 1,
-      "prompt_id": "7904ffb3-4dc4-43bb-a29d-6b14f878e251",
+      "prompt_id": "07d726ab-f590-460d-a07d-c526b163fd6f",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_064.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980485,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -1187,16 +1187,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_crawling_man\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:46.106Z"
+      "submitted_at": "2026-11-06T16:53:47.640Z"
     },
     "seg_065": {
       "segment_id": "seg_065",
       "take": 1,
-      "prompt_id": "d32f30a9-8c9c-4ca9-80a2-678779245193",
+      "prompt_id": "995d5d46-0396-4c86-a16a-d830daacd3f0",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_065.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980486,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -1205,16 +1205,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_infected_attacker\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:47.393Z"
+      "submitted_at": "2026-11-06T16:53:48.972Z"
     },
     "seg_066": {
       "segment_id": "seg_066",
       "take": 1,
-      "prompt_id": "c66c5096-a9ef-4391-a675-e802b65c640b",
+      "prompt_id": "8edd0cd7-715c-4d5d-ae3e-1736a523126e",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_066.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980487,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -1224,16 +1224,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:48.880Z"
+      "submitted_at": "2026-11-06T16:53:50.643Z"
     },
     "seg_067": {
       "segment_id": "seg_067",
       "take": 1,
-      "prompt_id": "4469af0c-dd1d-4420-9ec8-078cf117c3bc",
+      "prompt_id": "7dd44fed-e1c9-4f2b-a4a1-f8f87ce2a514",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_067.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980488,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -1242,16 +1242,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_taylor\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:49.932Z"
+      "submitted_at": "2026-11-06T16:53:52.174Z"
     },
     "seg_068": {
       "segment_id": "seg_068",
       "take": 1,
-      "prompt_id": "16a02641-10e0-47db-8562-eb1b740eff1e",
+      "prompt_id": "f6cebb88-da73-47ad-9ff2-ae80df15a1f9",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_068.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980490,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -1262,16 +1262,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:51.785Z"
+      "submitted_at": "2026-11-06T16:53:54.304Z"
     },
     "seg_069": {
       "segment_id": "seg_069",
       "take": 1,
-      "prompt_id": "e975ca95-b131-41f3-91f8-c56cbe46f618",
+      "prompt_id": "c1939054-8b26-4ea0-8ef9-6069729106b5",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_069.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980491,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -1280,16 +1280,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_infected_attacker\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:52.937Z"
+      "submitted_at": "2026-11-06T16:53:55.792Z"
     },
     "seg_070": {
       "segment_id": "seg_070",
       "take": 1,
-      "prompt_id": "77407ce7-2743-4698-aa6a-53da0949b002",
+      "prompt_id": "6fc26ed9-8630-4787-b169-86cb4207a080",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_070.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980493,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -1298,16 +1298,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_crawling_man\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:54.123Z"
+      "submitted_at": "2026-11-06T16:53:57.106Z"
     },
     "seg_071": {
       "segment_id": "seg_071",
       "take": 1,
-      "prompt_id": "e6c65ea8-e22c-4784-85d6-fcaff8fa614b",
+      "prompt_id": "15732e20-992d-4c8d-9f1d-d41f115024b2",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_071.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980494,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -1316,16 +1316,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_crawling_man\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:55.218Z"
+      "submitted_at": "2026-11-06T16:53:58.731Z"
     },
     "seg_072": {
       "segment_id": "seg_072",
       "take": 1,
-      "prompt_id": "7c9ee1be-e975-4f72-9d1a-974fde4d1beb",
+      "prompt_id": "fa3370c3-5415-4195-8535-9a6b47cbb7ed",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_072.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980495,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 10.13,
       "frames": 243,
@@ -1337,16 +1337,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:57.434Z"
+      "submitted_at": "2026-11-06T16:54:01.398Z"
     },
     "seg_073": {
       "segment_id": "seg_073",
       "take": 1,
-      "prompt_id": "001db8f4-090c-4f8a-8b9a-f4709474a592",
+      "prompt_id": "412984a8-56d4-4f63-98f6-eae61660c75e",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_073.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980497,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -1356,16 +1356,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_tactical_backpack\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:54:58.878Z"
+      "submitted_at": "2026-11-06T16:54:02.962Z"
     },
     "seg_074": {
       "segment_id": "seg_074",
       "take": 1,
-      "prompt_id": "de11609d-0bbf-40e7-b758-4b459886905f",
+      "prompt_id": "cf6620d9-acfa-4f92-87ec-6dc8a55fe9d5",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_074.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980498,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -1375,16 +1375,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:55:00.373Z"
+      "submitted_at": "2026-11-06T16:54:04.729Z"
     },
     "seg_075": {
       "segment_id": "seg_075",
       "take": 1,
-      "prompt_id": "d68df981-6e93-4daa-b381-91e9531f2781",
+      "prompt_id": "5006f59d-9722-4843-9659-f61b7d287784",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_075.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980500,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -1395,16 +1395,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_steel_rod\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:55:02.646Z"
+      "submitted_at": "2026-11-06T16:54:06.733Z"
     },
     "seg_076": {
       "segment_id": "seg_076",
       "take": 1,
-      "prompt_id": "43e6ee04-d46c-4943-a88c-4a03cd7c02b1",
+      "prompt_id": "5b994206-d807-48ce-97e8-e3e39f2afcf3",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_076.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980502,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 8,
       "frames": 192,
@@ -1414,16 +1414,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_steel_rod\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:55:04.195Z"
+      "submitted_at": "2026-11-06T16:54:08.327Z"
     },
     "seg_077": {
       "segment_id": "seg_077",
       "take": 1,
-      "prompt_id": "58064195-a05c-4efe-b676-3e47d6033e12",
+      "prompt_id": "a6957ea7-5288-4995-b250-1ab610b05cc8",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_077.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980504,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -1433,16 +1433,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_steel_rod\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:55:05.959Z"
+      "submitted_at": "2026-11-06T16:54:10.065Z"
     },
     "seg_078": {
       "segment_id": "seg_078",
       "take": 1,
-      "prompt_id": "3e2b84e0-8a26-48b6-bcf2-b514c04fb95b",
+      "prompt_id": "dc7d643f-8bf4-40ba-b3d3-60888412e3ab",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_078.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980506,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 7.29,
       "frames": 175,
@@ -1451,16 +1451,16 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_taylor\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:55:07.089Z"
+      "submitted_at": "2026-11-06T16:54:11.228Z"
     },
     "seg_079": {
       "segment_id": "seg_079",
       "take": 1,
-      "prompt_id": "4a3d377b-2c39-4e22-95ac-3d7c56853c08",
+      "prompt_id": "0cbb366d-36fd-43e7-ae87-52175fb8e45f",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_079.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 1793980507,
+      "seed": 100,
       "turbo": false,
       "duration_sec": 5.17,
       "frames": 124,
@@ -1468,7 +1468,7 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_prologue_title\\plate_00001_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-06T15:55:08.020Z"
+      "submitted_at": "2026-11-06T16:54:12.117Z"
     }
   }
 }
