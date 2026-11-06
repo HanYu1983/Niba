@@ -1,0 +1,12 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low grey daylight through rain-streaked glass, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside the silver compact SUV. A tight close-up of a phone lying in the dash mount, its screen lighting up and buzzing against the plastic, the word "上校" too small and blurred to read. The cabin darkens and brightens as the wipers pass. Taylor's (S3) hand enters frame and picks the phone up. The camera holds static, rain running down the windshield behind.
+
+[Shot 2] At 00:01.500, the camera cuts to a medium close-up of Taylor (S3), 25, high black ponytail, sharp dark eyes, plain dark jacket, phone pressed to her ear. She rolls her eyes hard, lips pressed thin, and keeps one hand on the wheel. Frost's voice comes through the phone speaker, live and off-screen; her lips stay closed while he talks. The camera holds static with a faint handheld sway. Colonel Frost (S1), through the phone speaker, says, singsong and delighted:
+<d>
+[中文]
+嘿喲～～～泰洛伊上士～
+我的大姑娘～休假順利嗎？
+</d>
+
+overall_soundscape: A phone buzzing against plastic, a ringtone cutting off mid-beat, rain on the roof, wipers slapping, idling engines, and Frost's voice compressed and bright through the small speaker, with the cabin's dry acoustic around it. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The comic traffic pulse thins to a single held note under the ringtone, then a dry plucked figure as she rolls her eyes.

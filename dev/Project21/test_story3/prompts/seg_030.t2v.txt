@@ -1,0 +1,23 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted cold grey palette with pink neon accents, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The corner booth of the luxury club penthouse. A medium close-up of Yang (S6), 58, obese, round sweaty face, heavy jowls, thinning black hair combed over, small sharp eyes, expensive dark suit, sneering around the cigar clamped in his teeth. He plucks it out and points it at Xiao Liu (S7) like a teacher correcting a slow student. His jowls shine with sweat under the pink neon. The camera holds static, smoke drifting between them. Yang (S6) says:
+<d>
+[中文]
+哼，傻小子。
+那是給這座城市的精英階層打造的！
+</d>
+
+[Shot 2] At 00:04.500, the camera cuts to a wider two-shot. Yang (S6) turns his head toward the floor-to-ceiling windows, the whole city spread out below in cold points of light, and gestures with the cigar at all of it, smoke curling off the ember. Xiao Liu (S7) follows his gaze, half turned in his seat. The camera drifts slowly toward the glass. Yang (S6) says, matter-of-fact:
+<d>
+[中文]
+應付未來可能發生的天災、海嘯或是全球疫情。
+</d>
+
+[Shot 3] At 00:09.500, the camera cuts back to a tight two-shot at the booth. Yang (S6) settles back and taps the cigar toward Xiao Liu (S7), his small sharp eyes flat and certain, the condescension now fully open. Xiao Liu's (S7) expression changes by degrees, confusion giving way to a hungry, calculating longing, his grip tightening on his glass. The camera holds static. Yang (S6) says:
+<d>
+[中文]
+總之，那是上等人的避難所。
+所以你啊，放聰明點，別說我沒照顧你。
+</d>
+
+overall_soundscape: A cigar being pulled from the teeth, smoke exhaled across the booth, the low club bass, glassware and distant laughter from the room, the soft hum of the city far below the windows, and Yang's voice fat with self-satisfaction. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A dark, slow string swell rises under the word "避難所", joined by a low brass note that holds through the final line and refuses to resolve.

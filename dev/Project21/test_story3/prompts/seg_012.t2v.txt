@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, flat overcast dawn light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A medium close-up at the firing line, the exoskeleton rig soft behind her. Staff Sergeant Taylor (S3), 25, athletic and lean, high black ponytail, sharp dark eyes, strong jaw, sun-tanned skin, plain olive military uniform with the sleeves rolled, clicks her tongue against her teeth and shakes her head slowly, the signed leave form held between two fingers. A reluctant smile pulls at the corner of her mouth despite herself. The camera holds static with a faint handheld sway. Staff Sergeant Taylor (S3) says:
+<d>
+[中文]
+嘖，你這是在私事公辦啊。
+</d>
+
+[Shot 2] At 00:03.000, the camera cuts to a slightly wider medium shot. Taylor (S3) shrugs one shoulder, folds the form once and tucks it into her chest pocket, then turns away toward the barracks, still smirking, her ponytail swinging. The camera pans a few degrees with her shoulder and stops, letting her walk out of the near frame while the parade ground stays flat and grey behind. Staff Sergeant Taylor (S3) says:
+<d>
+[中文]
+行行行，幫你帶。
+我這就去收行李。
+</d>
+
+overall_soundscape: A dry tongue click, paper folding, cold wind over open gravel, boots turning on the stones, and the distant ragged cadence of the running column. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The playful clarinet figure continues, a little lighter now, and drops away as she turns her back.

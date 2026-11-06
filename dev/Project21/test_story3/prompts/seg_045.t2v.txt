@@ -1,0 +1,11 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low grey daylight through fogged glass, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside a rainy taxi. A tight close-up of the rear-view mirror: the taxi driver (S9), 55, heavyset, tired eyes, grey stubble, flat cap, plain grey jacket, glances up into the mirror. Rainlight from the windshield washes one side of his face. Beyond the mirror glass, the wipers sweep once across the fogged windshield, clearing a bright arc of grey street. The camera holds static, the mirror frame sharp. The taxi driver (S9) says, flat and tired:
+<d>
+[中文]
+客人，去哪？
+</d>
+
+[Shot 2] At 00:02.500, the camera cuts to the back seat. The father (S8), 48, lean, thin rimless glasses, white research coat, sits with the briefcase on his knees, half his face in shadow, the other half lit by the passing street. He is already looking down at the phone in his hand. Fogged glass and worn upholstery frame him. The camera holds static, the wipers beating a slow rhythm off frame.
+
+overall_soundscape: Rain drumming on the taxi roof, wipers dragging across wet glass, the low idle of the engine, water thrown up by passing tyres, a loose panel rattling softly, and the driver's tired voice over it. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A low, sparse piano note under the rain, almost lost in the road noise.

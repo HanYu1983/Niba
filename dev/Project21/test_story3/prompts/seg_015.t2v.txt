@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dark officers' lounge at night. A medium close-up of Colonel Frost (S1), 58, broad-shouldered, barrel-chested, short iron-grey buzz cut, weathered square face, heavy brows, thick neck, plain olive uniform with no insignia, sitting back in the leather sofa with a phone pressed to his ear and the whisky glass balanced in his other hand. He swirls the drink once, ice turning, and speaks with the casual tone of a man discussing the weather, eyes half-lidded. The lamp carves warm light down one side of his face. The camera holds static with a faint handheld sway. Colonel Frost (S1) says:
+<d>
+[中文]
+很好，直接投入。
+</d>
+
+[Shot 2] At 00:02.600, the camera cuts to a tight close-up from a slightly low angle. Frost (S1) lifts the glass and takes a small sip, swallows, then the corner of his mouth curls into a slow, wrong smile that never reaches his eyes. Ice shifts in the tumbler; the city lights sit cold and small in the window behind his shoulder. The camera pushes in a few centimetres. Colonel Frost (S1) says, light and offhand:
+<d>
+[中文]
+完事後趕緊撤，別讓人看見了。
+</d>
+
+overall_soundscape: Ice clinking softly against crystal, a small sip and swallow, the creak of leather, the low hum of the building at night, distant traffic beyond the glass, and his calm voice with no tension in it at all. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The low cello note continues, joined by a thin high string harmonic that rises slightly under the smile and does not resolve.

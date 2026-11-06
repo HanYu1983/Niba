@@ -1,0 +1,11 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low grey daylight through rain-streaked glass, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside the SUV. A tight close-up of Taylor (S3), 25, high black ponytail, sharp dark eyes, plain dark jacket, phone jammed to her ear, brows drawn down, mouth open mid-shout. The wipers sweep behind her head. The camera is handheld and close, a little unsteady. Taylor (S3) shouts into the phone:
+<d>
+[中文]
+欸靠！老不修～你給我——
+</d>
+
+[Shot 2] At 00:02.500, the camera holds on her face as the shout dies in her throat. Her expression freezes, eyes flicking up and past the lens toward the windshield. The phone stays at her ear, but her hand loosens. The rain sound seems to drop away. The camera pushes in slowly, holding on her widening eyes.
+
+overall_soundscape: Her shout cut short, rain on the roof, wipers slapping, idling engines, and then a low, distant rumble building under the floor of the car, felt more than heard. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The strings cut out on her last word, leaving a single sub-bass tone that swells slowly through the freeze.

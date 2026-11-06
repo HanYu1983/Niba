@@ -1,0 +1,7 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, soft overcast rainy morning light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A rainy city street in the early morning. A wide shot from the pavement as the taxi pulls away, its red taillight shrinking in the grey rain, tyres pressing long ripples out of a puddle. The street is quiet, the buildings fading into low cloud. The camera holds static, rain streaking the frame.
+
+[Shot 2] At 00:03.000, the camera cuts to the sidewalk. A stream of pedestrians comes toward the lens under black umbrellas, heads down, shoulders hunched, eyes on phones or on the wet pavement. Nobody looks up at the departing car, at the sky, or at each other. A gutter runs fast beside their shoes. The camera holds static at chest height, letting the umbrellas pass and blot out the background one by one.
+
+overall_soundscape: Rain on umbrellas and asphalt, tyres hissing through water, a gutter rushing, footsteps in a wet crowd, a distant bus braking, and the low, muffled hum of a city going to work. No dialogue.
+
+non_diegetic_music: A slow, muted string line under the rain, moving with the umbrellas and fading as the last one passes.

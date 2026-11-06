@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, soft overcast rainy morning light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A rainy city sidewalk. A tight close-up of a phone held under the edge of a black umbrella: the news feed scrolls, blurred thumbnails sliding past, a red breaking-news bar glowing across the top. The screen shows no legible text, only shapes and colour. A thumb flicks upward once, then again, dismissing each item without reading it. Rain beads on the umbrella ribs above. The camera holds static, the screen sharp. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+手機螢幕上的新聞正播報著前一晚的駕駛瘋狂咬人事件，
+</d>
+
+[Shot 2] At 00:04.500, the camera cuts to a wider shot. The phone's owner is an anonymous figure under the umbrella, face out of focus and turned away, one hand holding the umbrella and the other scrolling. Around them other umbrellas pass without pausing, shoes splashing through shallow water. The red glow of the news bar flickers across the underside of the canopy. The camera drifts slowly with the crowd. The narrator continues:
+<d>
+[中文]
+但大多數人只是隨手滑過，沒人在意。
+</d>
+
+overall_soundscape: Rain on umbrella fabric, a thumb brushing glass, footsteps and water underfoot, distant traffic and a bus door hissing, muffled voices, and the narrator's voice calm and close over all of it. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A low, even string bed sits under the narration, unbothered, almost indifferent.

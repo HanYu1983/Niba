@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dry riverbed, close on the crawling man's hand lying palm-down in the gravel. The fingers twitch once, twice, then press flat and take his weight. The wrist turns. A few centimetres away, his forehead drags against the stones as his neck begins to lift, the movement wrong and segmented, vertebra by vertebra. The camera holds static, very close, the pale stones sharp.
+
+[Shot 2] At 00:02.000, the camera cuts to a wider shot. The man pushes himself up onto all fours, head hanging, spine bent at an angle that should not hold. The colour is draining out of his skin from the wounds outward, the living flush replaced by a flat grey pallor in seconds. His hands hang with the fingers curled. The camera holds static, the empty riverbed behind him.
+
+[Shot 3] At 00:04.000, the camera cuts to a medium close-up. He lifts his head. The eyes are open but empty, focused on nothing. His jaw drops and a low, wet growl comes out of him, the same sound the attacker made, shaped by the same ruined throat. The camera holds static, his chest not rising or falling.
+
+overall_soundscape: Gravel grinding under a hand, a joint clicking, cloth dragging, a long slow breath that does not sound like breathing, and then a low animal growl climbing out of his throat. No dialogue.
+
+non_diegetic_music: A sub-bass tone rises under the transformation, with a thin high whine over it, both holding through the growl.

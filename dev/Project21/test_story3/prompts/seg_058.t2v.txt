@@ -1,0 +1,11 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat light through thinning rain, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dry riverbed under the broken bridge. A wide shot of the silver compact SUV lying on its side in the rubble, one wheel still turning, steam rising from the crumpled hood, dust settling slowly around it in the flat grey light. Chunks of concrete and twisted rebar are scattered across the stones. The camera holds static, the wreck small and wrong in the empty riverbed, the broken bridge hanging above.
+
+[Shot 2] At 00:02.000, the camera cuts to the interior, seen through the cracked side window, then inside. Taylor (S3), 25, high black ponytail, sharp dark eyes, plain dark jacket, hangs sideways against the seatbelt in the tilted cabin, one hand still locked around the steering wheel, dust in her hair. She blinks, breathes, and lets her head fall back against the seat. The camera holds static, the cracked windshield filling the upper frame. Taylor (S3) says, barely audible:
+<d>
+[中文]
+我……靠……
+</d>
+
+overall_soundscape: Metal ticking as it cools, steam hissing from the hood, rubble settling somewhere in the riverbed, a slow drip, wind over the broken bridge above, and her ragged breathing close in the cabin. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A high tinnitus tone over near-silence, with no melody at all.

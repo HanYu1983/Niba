@@ -1,0 +1,23 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted cold grey palette with pink neon accents, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A corner booth of the luxury club penthouse, pink neon and layered cigar smoke. A medium two-shot. Yang (S6), 58, obese, round sweaty face, heavy jowls, thinning black hair combed over, small sharp eyes, expensive dark suit, leans back in the velvet with a thick cigar between two fingers and lets a long stream of smoke escape his lips, watching Xiao Liu (S7), 28, slim, eager nervous face, short neat black hair, cheap ill-fitting navy suit, who sits forward gripping his glass with both hands. The camera holds static, the city lights soft behind them. Yang (S6) says, slow and generous:
+<d>
+[中文]
+小劉啊，兩天後方舟落成典禮，
+</d>
+
+[Shot 2] At 00:04.000, the camera cuts to a closer shot of Yang's (S6) hand as he taps the ash from his cigar into a crystal tray, the ember brightening, then lifts the cigar toward the room and the windows beyond. His face sits at the edge of frame, one small sharp eye catching the pink light. Xiao Liu's (S7) shoulder and ear are soft in the foreground. Yang (S6) says:
+<d>
+[中文]
+很多大人物會帶著家屬去劃位。
+我帶你走一趟，
+</d>
+
+[Shot 3] At 00:08.000, the camera cuts to a low angle on Yang (S6). He settles back, cigar smoke curling around his heavy jowls, and gives Xiao Liu (S7) a look of pure, lazy condescension, the kind of generosity that costs him nothing. Xiao Liu nods quickly, twice, already eager. The camera holds static. Yang (S6) says:
+<d>
+[中文]
+你把握機會去攀關係，
+看能不能也卡個位子。
+</d>
+
+overall_soundscape: A cigar drawing and crackling, ash tapping into crystal, ice in a glass, the low club bass and distant laughter, leather creaking as Yang leans back, and Xiao Liu's quick, nervous swallow. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A low sustained string note under the whole exchange, with a soft bass pulse on each of Yang's gestures, unhurried and slightly ominous.

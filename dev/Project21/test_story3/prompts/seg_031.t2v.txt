@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted cold grey palette with pink neon accents, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The corner booth of the luxury club penthouse, pink neon and cigar smoke. A medium close-up of Xiao Liu (S7), 28, slim, eager nervous face, short neat black hair, cheap ill-fitting navy suit, caught mid-sip as the words land. He chokes, whisky sputtering past his lips, and slaps the back of his hand over his mouth, coughing into it, eyes wide and watering. The glass wobbles in his other hand. Yang's (S6) cigar smoke drifts through the foreground. The camera holds static with a faint handheld sway. Xiao Liu (S7) says, half-strangled:
+<d>
+[中文]
+我的老天……
+</d>
+
+[Shot 2] At 00:02.600, the camera cuts to a slightly wider shot. Xiao Liu (S7) thumps the glass down on the table, wipes his mouth with the back of his hand, and leans forward, eyes shining with sudden greedy excitement, his whole posture changing. The pink neon catches the wet corner of his mouth. Yang's (S6) heavy shoulder stays soft at the edge of frame. The camera pushes in a few centimetres. Xiao Liu (S7) says, grinning:
+<d>
+[中文]
+那我可得好好把握機會了。
+</d>
+
+overall_soundscape: A wet cough and sputter, a hand slapping against a mouth, a glass thumping on wood, a chair creaking as he leans in, low club bass, distant laughter, and his voice shifting from shock to eager greed. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The plucked figure returns for two notes, stumbles on the cough, then picks up again with a brighter, greedier lilt on his second line.

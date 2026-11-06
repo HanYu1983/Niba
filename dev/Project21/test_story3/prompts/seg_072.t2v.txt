@@ -1,0 +1,23 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dry riverbed beside the overturned SUV, the rear hatch forced open, luggage split across the stones. A medium shot of Taylor (S3), 25, high black ponytail, sharp dark eyes, plain dark jacket, kneeling among her own scattered things, staring at the long cloth-wrapped bundle in her hands. A stainless steel rod lies half-exposed, dull silver, worn cloth grip. She looks dazed for a beat, then her hands start moving. The camera is handheld and close. Taylor (S3) says, cataloguing out loud:
+<d>
+[中文]
+武器……棍子……
+還有水、隨身醫療包。
+</d>
+
+[Shot 2] At 00:03.000, the camera cuts to a close shot of her hands stuffing items into a black tactical backpack: a water bottle, a small medical pouch, a folded jacket, the rod slid down along the side. She moves fast and rough, not careful. The camera holds static, the backpack straps swinging. Taylor (S3) says, furious:
+<d>
+[中文]
+馬的！沒想到會在這種地方用上這玩意！
+</d>
+
+[Shot 3] At 00:06.500, the camera cuts to a medium close-up of her face. She yanks the backpack zipper shut, jaw clenched, and glares out at the riverbed as if it personally insulted her. Dust sits in her ponytail. The camera pushes in slightly. Taylor (S3) says, almost shouting:
+<d>
+[中文]
+搞屁啊！
+就不能讓我好好休個假嗎！
+</d>
+
+overall_soundscape: Luggage being torn open, a water bottle thumping into canvas, a medical pouch zipping, a steel rod sliding into place, stones grinding under her knees, and her voice getting louder with every sentence. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A hard, driving percussion figure enters with the packing and builds under her anger, cutting out on the last word.

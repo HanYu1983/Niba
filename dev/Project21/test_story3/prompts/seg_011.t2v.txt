@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, flat overcast dawn light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A medium two-shot at the firing line, the exoskeleton rig and the paper target soft behind them. Colonel Frost (S1), 58, broad-shouldered, short iron-grey buzz cut, weathered square face, heavy brows, thick neck, plain olive uniform with no insignia, grins wide and brings his open palm down on Taylor's shoulder. Staff Sergeant Taylor (S3), 25, athletic and lean, high black ponytail, sharp dark eyes, strong jaw, sun-tanned skin, plain olive military uniform with the sleeves rolled, rocks half a step under the weight of it and recovers her stance, chin still level. Frost thrusts a thumbs-up into the frame between them, arm stiff with enthusiasm. The camera stays static with a faint handheld sway. Colonel Frost (S1) says:
+<d>
+[中文]
+那就這麼決定了！
+</d>
+
+[Shot 2] At 00:03.000, the camera cuts to a tight close-up on the raised thumb, Frost's grinning face filling the space behind it, then racks focus to Taylor's profile at the edge of frame, her expression flat and unconvinced. Frost leans in, mock-serious now, and wags the thumb toward her like a man closing a deal. Wind moves the loose fabric of his sleeve. The camera holds static, the gray sky flat behind them. Colonel Frost (S1) says:
+<d>
+[中文]
+記得，幫我帶個土產回來——
+綠色的暴龍造型背包！
+</d>
+
+overall_soundscape: Cold wind over the gravel ground, a heavy palm landing on uniform fabric, the scuff of a boot as Taylor absorbs the shove, a short amused exhale from Frost under his words, and the distant ragged cadence of the running column. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The clarinet figure from the previous beat returns, light and playful, with a soft plucked accompaniment that cuts out on the last word.

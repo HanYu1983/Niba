@@ -1,0 +1,17 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dry riverbed at the foot of the broken bridge. A medium shot of Taylor (S3), 25, high black ponytail, sharp dark eyes, plain dark jacket, standing upright with the stainless steel rod hanging at her side, her chest still rising hard. She lifts her head and looks up at the broken span overhead, the torn edge of the deck hanging far above her. Dust drifts through the flat light. The camera holds static, the height of the bridge reading in the frame. Taylor (S3) says, steadying herself:
+<d>
+[中文]
+好了……冷靜。
+先想辦法回到橋上。
+</d>
+
+[Shot 2] At 00:04.000, the camera cuts to a closer shot from slightly below. Taylor (S3) tightens her grip on the rod, jaw set, and looks along the riverbed toward the bridge piers. Anger replaces the fear in her face. The camera pushes in slowly. Taylor (S3) says, biting off each word:
+<d>
+[中文]
+這鬼地方老娘一秒都不想待了！
+去你的恐龍包！
+</d>
+
+overall_soundscape: Wind across the riverbed, the broken bridge groaning softly overhead, grit shifting under her boots, her breathing slowing down, and the distant screams thinning out. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The low pulse settles into a slow, determined rhythm under her orders, with a dry string accent on "恐龍包".

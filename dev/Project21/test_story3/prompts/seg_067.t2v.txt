@@ -1,0 +1,12 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light through cracked glass, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside the overturned SUV. An extreme close-up of Taylor's (S3) eye, dust on her lashes, the pupil contracting as she looks through the cracks. The reflection of the pale riverbed sits in her iris. Her breathing is shallow and controlled. The camera holds static, the cracked glass throwing a faint web across her cheek. Taylor's (S3) voice, internal and close, her lips not moving:
+<d>
+[中文]
+救人？
+這情況根本是送死。
+</d>
+
+[Shot 2] At 00:02.500, the camera cuts to her hand resting on the door handle. The fingers tighten, then stop, and do not push. Dust motes drift through the blade of light across her knuckles. The camera pushes in slowly until the handle fills the frame, her hand still.
+
+overall_soundscape: Her breath, slow and measured, the tick of cooling metal, glass grit shifting under her knee, wind outside, and a distant wet feeding sound that stops, then starts again. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The low note thins to a high harmonic under her thought, then fades to nothing on the still hand.

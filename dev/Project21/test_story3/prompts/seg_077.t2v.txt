@@ -1,0 +1,7 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dry riverbed. A tight close-up of the stainless steel rod as Taylor (S3) turns it in her hand; the worn cloth grip slides under her palm, and the bare metal catches the noon sun, throwing a hard silver flare that sweeps across the lens. Dust hangs in the beam. The camera holds static, the glare blooming and then passing.
+
+[Shot 2] At 00:03.000, the camera cuts to a low wide shot from behind her. Taylor (S3) walks along the base of the broken bridge, stepping over twisted rebar and slabs of fallen concrete, the rod resting against her shoulder. She stops, tips her head back, and studies the towering pier, the broken deck above, and the gap between them. The camera holds static, her figure small against the concrete.
+
+overall_soundscape: The rod turning in her grip, boots on gravel and rebar, concrete fragments rolling, wind moving through the gap in the bridge, and the distant city hum beyond it. No dialogue.
+
+non_diegetic_music: A low, patient pulse under her walk, with a single metallic note as the sun flares off the rod.

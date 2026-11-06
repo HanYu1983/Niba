@@ -1,0 +1,7 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dry riverbed. A tight close-up of Taylor's (S3) hands pulling the black tactical backpack straps tight, the webbing biting into her shoulders, buckles snapping shut. Her jaw is clenched, a tendon standing in her neck. A steel rod is strapped along the side of the pack, its worn grip near her hand. The camera holds static, dust on her knuckles.
+
+[Shot 2] At 00:02.500, the camera cuts to a low shot of her boot kicking a chunk of broken concrete out of the way, gravel spraying. She steps forward, weight settling, and the camera tracks with her feet as she walks toward the base of the broken bridge. The overturned SUV sits behind her, already small.
+
+overall_soundscape: Webbing pulled tight, buckles snapping, a boot scuffing, concrete skittering across stones, her steady breathing, and the distant screams carrying across the riverbed. No dialogue.
+
+non_diegetic_music: The driving percussion returns, low and steady, matching her stride.

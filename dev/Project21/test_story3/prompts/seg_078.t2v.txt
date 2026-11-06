@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dry riverbed under the broken bridge. A low shot from behind Taylor (S3), 25, high black ponytail, plain dark jacket, the steel rod loose in one hand, the black tactical backpack on her shoulders. She stands still among the rubble and lifts her head, looking past the torn edge of the bridge toward the horizon. The wrecked SUV and the scattered debris sit in the foreground. Dust drifts. The camera holds static. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+在泰洛伊眼前，整座艾伯塔市依然平靜，
+</d>
+
+[Shot 2] At 00:03.000, the camera tilts up and away from her, over the broken concrete, until the distant skyline fills the frame: intact towers, pale haze, glass catching the noon light, no smoke, no fire, no sign at all that anything has happened. The city is completely calm. The camera holds at the top of the tilt, the broken bridge edge just visible at the bottom of frame. The narrator continues:
+<d>
+[中文]
+似乎與斷橋是兩個世界…
+</d>
+
+overall_soundscape: Wind over the riverbed, a distant city hum, a far-off siren that sounds routine rather than urgent, rubble settling, and the narrator's voice low and even. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A wide, cold string chord swells gently as the skyline appears and holds, beautiful and completely indifferent.

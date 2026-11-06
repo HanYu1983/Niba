@@ -1,0 +1,22 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat light through thinning rain, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside the overturned SUV. A medium close-up of Taylor (S3), 25, high black ponytail, sharp dark eyes, plain dark jacket, glass glittering in her hair, thumb pressing the seatbelt release. The belt lets go and she drops heavily onto the door panel below, catching herself with one forearm, then twists her body around until she is upright in the cramped space. Dust hangs in the air. The camera is handheld and close, tilting with the cabin. Taylor (S3) mutters, breathless:
+<d>
+[中文]
+沒受傷……真是幸運……
+啊不對，是真他媽倒楣！
+</d>
+
+[Shot 2] At 00:03.000, the camera cuts to a wider interior shot. Taylor (S3) plants both feet on the warped door frame and kicks once, twice; the frame does not move. She tries the handle, shoves it with her shoulder, and it stays jammed. She sits back, chest heaving, and glares at the dashboard. The camera shakes slightly with each kick. Taylor (S3) says, furious:
+<d>
+[中文]
+等我回去，一定要罵死那死老頭！
+</d>
+
+[Shot 3] At 00:06.000, the camera cuts to a tight close-up of her face. Her anger stops mid-breath. She goes still, eyes lifting past the lens, and turns her head slowly toward the spiderwebbed windshield. Dust drifts across the light. The camera holds static, her reflection faint in the cracked glass. Taylor (S3) says, quiet and uncertain:
+<d>
+[中文]
+嗯……那是什麽東西？
+</d>
+
+overall_soundscape: A seatbelt release clicking, her body dropping against the door panel, boots kicking a jammed frame, the metal refusing to give, her breathing loud in the small space, and then a distant, wrong sound from outside that makes her stop. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The tinnitus tone continues under the first two shots, then a low pulse begins and stops dead on her question.

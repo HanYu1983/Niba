@@ -1,0 +1,7 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, flat storm-grey daylight, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A wide shot from the crowded bridge deck. Below the guardrail, the space under the bridge flashes orange as an explosion blooms from a support pier; dust and fire punch upward through the gap between the road sections, and a shockwave of grit blows across the deck. Cars and scooters bounce on their suspension. Umbrellas tear out of hands. The camera shakes hard and holds.
+
+[Shot 2] At 00:02.500, the camera cuts to a tighter handheld shot along the deck. Drivers half-out of their cars, one man thrown against a door, a scooter falling over. Another explosion blooms under the far span, then a third, each one closer, each one throwing a column of dust and fire up past the rail. The deck shudders visibly, cracks opening in the asphalt. The camera jerks and staggers, the horizon tilting.
+
+overall_soundscape: Three deep explosions in sequence, each one punching the air, the crack and groan of stressed concrete, car alarms, shattering glass, engines screaming, and the crowd's panic rising into a single wall of sound. No dialogue.
+
+non_diegetic_music: A sub-bass hit with each explosion, then a low brass cluster that holds and grinds under the noise.

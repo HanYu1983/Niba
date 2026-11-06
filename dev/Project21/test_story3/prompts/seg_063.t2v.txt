@@ -1,0 +1,7 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dry riverbed. A low tracking shot follows the infected attacker as it crosses the stones toward the crawling man, and the speed is wrong: a body that damaged should not move like that. Its bare feet find every gap in the rubble, the damaged arm swinging freely, the head locked forward. Dust kicks up behind it. The camera tracks fast and low, struggling to keep pace.
+
+[Shot 2] At 00:03.000, the camera cuts to a close shot from behind a slab of broken concrete. The infected attacker drops onto the crawling man's back and bites down between his shoulder blades. The man's fingers claw at the gravel, gouging four short lines, his body arching under the weight. The attacker's shoulders work with a slow, rhythmic motion. The camera holds static behind the concrete, the violence partly hidden by the slab.
+
+overall_soundscape: Feet slapping flat stones, rubble skittering, a body hitting the ground, cloth tearing, a wet bite, and fingers scraping hard through gravel, then a first choked breath before the scream. No dialogue.
+
+non_diegetic_music: A hard percussive hit on the bite, then a low grinding string note that holds and does not resolve.

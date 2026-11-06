@@ -1,0 +1,11 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dry riverbed under the broken bridge. A long lens compresses the distance into one flat plane: the infected attacker is a small dark figure moving across the pale stones, and the air between the camera and the figure shimmers with heat, bending its outline. The broken span hangs above in the background, dust still drifting from it. The camera holds static, the figure growing slowly larger in the compressed frame.
+
+[Shot 2] At 00:02.500, the camera cuts to a tighter long-lens shot. The figure is closer now, and the shape is wrong: one shoulder rides higher than the other, the head hangs forward, the arms swing without rhythm, the gait hitching and too fast. Heat shimmer warps the edges of the body. The camera holds static, the rubble sharp in the foreground. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+那人影……早已看不出人類的模樣。
+</d>
+
+overall_soundscape: Wind over the dry riverbed, grit ticking against concrete, the distant groan of the broken bridge settling, a low insect hum, and something dragging itself across stones far away. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A thin, high string note stretched over the heat shimmer, wavering slightly, with no rhythm beneath it.

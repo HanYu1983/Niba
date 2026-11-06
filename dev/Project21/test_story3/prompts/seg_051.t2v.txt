@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low grey daylight through rain-streaked glass, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside a silver compact SUV, the driver's seat. A medium close-up of Staff Sergeant Taylor (S3), 25, athletic and lean, high black ponytail, sharp dark eyes, strong jaw, sun-tanned skin, out of uniform now in a plain dark jacket, both hands on the wheel, leaning forward to see past the wipers. Through the windshield the traffic is a solid wall of red brake lights stretching into the rain haze. The wipers drag across the glass, clearing an arc and losing it again. The camera holds static, the dashboard and phone mount soft in the foreground. Taylor (S3) says, exasperated:
+<d>
+[中文]
+握了個……這都什麼跟什麼？
+</d>
+
+[Shot 2] At 00:03.000, the camera cuts to a slightly wider shot from the passenger side. Taylor (S3) sags back against the seat, one hand lifting off the wheel to gesture at the windshield, palm up, then letting it fall. Ahead, a scooter inches between two cars and stops. The rain doubles on the roof. The camera holds static. Taylor (S3) says, disgusted:
+<d>
+[中文]
+什麼鬼度假勝地？
+這是塞車聖地吧？
+</d>
+
+overall_soundscape: Rain drumming on the SUV roof, wipers dragging and slapping back, a hundred idling engines, a horn somewhere ahead, a scooter ticking over beside the car, radio traffic reports muffled under the glass, and her voice sharp with frustration. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A low, comic traffic pulse, a plucked bass note on each wiper sweep, light and irritable.

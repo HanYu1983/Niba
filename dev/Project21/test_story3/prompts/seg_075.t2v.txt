@@ -1,0 +1,7 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Outside the overturned SUV. A low shot at the open windshield frame as Taylor (S3) pushes herself out through the broken glass. Shards fall around her like rain, catching the noon light, tinkling onto the stones. She comes out shoulder-first, twists, and lands on her hands and knees on the dry riverbed, ponytail swinging forward. The camera is handheld and low, glass fragments bright in the foreground.
+
+[Shot 2] At 00:03.000, the camera cuts to a close shot of her hand closing around the stainless steel rod where it lies on the stones. She grips it, lifts it, and plants one end against the ground as she pushes herself up. Her knees are dark with dust. The overturned SUV sits behind her, steam still rising from the hood. The camera holds static, the rod sharp against the pale rubble.
+
+overall_soundscape: Glass raining and shattering on stone, her body sliding out of the frame, boots and knees hitting gravel, breath driven out of her, the steel rod ringing softly as she lifts it, and the distant screams continuing beyond the bridge. No dialogue.
+
+non_diegetic_music: The ringing glass tone fades into a low, steady pulse as her hand finds the rod.

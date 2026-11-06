@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The night street at the crosswalk, the fallen scooter's headlight still burning in the background. A medium-wide shot of the crowd gathering: a ring of people in dark coats and office clothes, their faces deliberately out of focus and turned at angles, no lips clearly visible. Phone flashlights pop on one by one, blue-white rectangles lifting above the shoulders, each one lighting a chin or a cheek from below. Nobody steps forward. The camera drifts slowly across the ring at chest height. An anonymous voice shouts from somewhere in the crowd, off-screen, with no single visible speaker:
+<d>
+[中文]
+臥槽！快叫救護車！
+</d>
+
+[Shot 2] At 00:02.600, the camera cuts to a tighter shot inside the ring. Lowered faces glow blue behind raised phones, all of them soft and anonymous, none of them shaping words. In the gap between their shoulders the overturned scooter and the two men on the asphalt stay just visible. A hand pulls another person back by the sleeve. The camera holds static. The same anonymous voice calls out, further off:
+<d>
+[中文]
+報警啊！先報警！
+</d>
+
+overall_soundscape: A jammed scooter horn, a crowd's startled shuffle on wet asphalt, phone camera shutters and the electronic chime of a recording starting, overlapping panicked voices, and the two shouts cutting clearly over the top. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese; both are off-screen crowd voices with lip-sync off.
+
+non_diegetic_music: None. The street is loud enough, and the score stays out of it.

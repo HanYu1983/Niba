@@ -1,0 +1,11 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted cold grey palette with pink neon accents, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The luxury club penthouse, pink neon and cigar smoke. A medium shot framed on the group rather than any one face: three or four men in dark suits crowd around the raised phone of Zhuang, the man in the charcoal suit, their faces deliberately out of focus and turned at angles, no lips clearly visible. The blue QR glow lights their collars and the rims of their glasses. One man claps another on the shoulder. The camera drifts slowly across the cluster, keeping the glowing screen and the raised glasses sharp while the faces stay soft. An anonymous voice calls out from the group, off-screen, with no single visible speaker:
+<d>
+[中文]
+哎呀，小莊真有本事！
+</d>
+
+[Shot 2] At 00:02.600, the camera cuts to a tighter shot of hands and glassware: several tumblers lift toward the phone, clink, and tilt. The faces stay out of focus at the top of frame, only jaws and collars visible, none of them shaping words. Beyond them the floor-to-ceiling windows hold the city lights. Zhuang's smirk is the only sharp face at the edge of frame, though he does not speak. The camera holds static.
+
+overall_soundscape: Glasses clinking, low club bass, cigar smoke and murmured approval, a short impressed laugh from the group, and the anonymous voice landing clearly over the top of the room. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese; the line is off-screen group chatter with lip-sync off.
+
+non_diegetic_music: The plucked figure continues, joined by a soft brushed snare, warm and congratulatory, fading under the toast.

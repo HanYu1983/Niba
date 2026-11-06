@@ -1,0 +1,17 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted cold grey palette with pink neon accents, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The luxury club penthouse. A medium close-up of Zhuang (S5), 32, handsome, confident smirk, slicked-back black hair, tailored charcoal suit, lowering the phone, tapping it once against his palm, and sliding it into the inside pocket of his jacket. He raises one finger to his lips and leans in toward the men around him, eyes glinting under the pink neon. His voice drops to a conspiratorial hush. The camera pushes in slightly, the blurred booth and shoulders soft behind him. Zhuang (S5) says:
+<d>
+[中文]
+噓——低調點，
+這可是上流社會的秘密。
+</d>
+
+[Shot 2] At 00:04.000, the camera cuts to a medium shot from the side. Zhuang (S5) tips his head back and laughs, short and low, shoulders shaking, then turns toward the floor-to-ceiling windows. The camera drifts past him to the glass, where the whole city lies in cold points of light and his faint reflection smirks back over the skyline. He raises his glass to the window, not to anyone in the room. The camera holds on the reflection. Zhuang (S5) says, still laughing:
+<d>
+[中文]
+哈哈哈哈，底層那些牛馬真是可憐，
+還在為房貸車貸拼命。
+</d>
+
+overall_soundscape: A phone tapping against a palm, fabric as it slides into a pocket, a low conspiratorial laugh close to the microphone, club bass and distant glassware, and the soft hiss of the city beyond the glass. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The smug plucked figure sours into a low brass note under the laugh and holds, cold and sustained, over the city lights.

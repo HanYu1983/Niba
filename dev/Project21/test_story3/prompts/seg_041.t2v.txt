@@ -1,0 +1,34 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, soft overcast rainy morning light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The small apartment on a rainy morning, the father (S8), 48, lean, gentle tired eyes, short greying black hair, thin rimless glasses, clean white research coat, stops mid-packing and turns to the door frame. He laughs, crosses to his daughter, 14, small and slight, shoulder-length black hair, round face, plain grey hoodie, and rubs the top of her head with one palm. With the other hand he presses a brand-new smartphone and a small power bank into her hands, closing her fingers around them. The warm lamp and the grey rain light meet on the two of them. The camera holds static in a medium two-shot. The father (S8) says, warm and amused:
+<d>
+[中文]
+哈哈，怎麼了？我的小寶貝。
+來，這個收好。
+</d>
+
+[Shot 2] At 00:06.000, the camera cuts to a close-up of the phone in the girl's palms. The screen wakes and shows an abstract underground facility map, pale lines and chambers, with a simple pass icon in one corner; no legible text anywhere. The father's fingertip taps the screen once, then tilts it toward her. His white cuff and rimless glasses sit soft at the edge of frame. The camera pushes in slightly. The father (S8) says, proud of himself:
+<d>
+[中文]
+這可是爸爸利用特權弄到的。
+裡面有我跟妳說的那個避難所通行證，
+還有地圖和緊急逃生口，
+連那些大人物都不知道喔。
+</d>
+
+[Shot 3] At 00:12.000, the camera cuts to a medium shot by the table. The father (S8) zips the leather briefcase shut one-handed, still smiling, and lifts it from the table. His research coat is very white against the dim room. The daughter stands just behind his shoulder, phone held against her chest, watching him. Rain runs down the window behind them. The camera tracks a few centimetres with him. The father (S8) says, bright and certain:
+<d>
+[中文]
+等落成典禮結束，
+爸爸馬上就趕回來陪妳。
+</d>
+
+[Shot 4] At 00:18.000, the camera cuts to a wider shot from inside the apartment. The father (S8) pauses in the open doorway, briefcase in hand, and looks back over his shoulder, his smile soft now. The daughter is small in the middle of the room, the phone still glowing faintly in her hands. The rain light falls between them across the floorboards. The camera holds static, letting the distance between them read. The father (S8) says, gentle:
+<d>
+[中文]
+如果我真的加班太久，
+妳就順著地圖的路線，
+來我辦公的地方找我。
+</d>
+
+overall_soundscape: Rain on the window, fabric as he crosses the room, a hand rubbing through short hair, the soft chime of a phone waking, a briefcase zipper running shut, the metal clasp snapping, a floorboard creaking, and the low hum of the apartment under everything. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The warm piano from the previous scene continues, joined by a low, soft string pad that swells gently under the promise and holds through the open doorway.

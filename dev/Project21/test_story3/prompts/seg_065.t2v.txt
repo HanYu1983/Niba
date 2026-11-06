@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dry riverbed. A low shot from behind a ridge of rubble, the feeding mostly hidden: the infected attacker's hunched back, the slow rhythm of its shoulders, a torn shirt hanging in strips, one bare foot braced against the stones. Dust drifts across the flat light. The camera holds static, the foreground rubble soft and dark.
+
+[Shot 2] At 00:02.200, the camera cuts to a close, patient shot of the crawling man's back. The shirt is gone, and the long pale line of his spine lies bare in the sun, blood dark around it, the movement beneath the skin stopped. The attacker's hand rests on the stones beside him, fingers relaxed. The camera holds static, the image quiet and almost still.
+
+[Shot 3] At 00:04.000, the camera cuts to the infected attacker rising slowly, one hand on its knee, its head tilting back. It stands upright, sniffs the air with its whole chest, turns its head toward the distant sound of screams, and starts walking, then loping, out of frame. The camera holds on the empty riverbed and the body left behind.
+
+overall_soundscape: A wet, rhythmic feeding sound, stones shifting, a long slow inhale through a ruined throat, wind over the riverbed, and the distant screams rising again somewhere beyond the bridge. No dialogue.
+
+non_diegetic_music: A low drone with a slow, steady pulse, almost like breathing, that continues after the creature leaves frame.

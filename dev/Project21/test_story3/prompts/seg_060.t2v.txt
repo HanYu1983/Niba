@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat light through thinning rain, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside the overturned SUV. A tight shot of Taylor's (S3) boot raised to kick the spiderwebbed windshield, frozen mid-air. Beyond the glass, the riverbed is a pale blur. Her hand grips the door frame, knuckles white. The camera holds static, the cracked glass filling the frame, dust drifting.
+
+[Shot 2] At 00:02.500, the camera cuts to her point of view through the cracks in the windshield. Far across the rubble, a man in a blood-soaked shirt and torn jeans, matted black hair, grey pallor, drags himself forward on his forearms, one leg useless behind him, leaving a dark trail on the stones. He lifts one hand toward the bridge and his mouth moves with a faint, desperate sound. The camera holds static, the cracks dividing the image.
+
+[Shot 3] At 00:04.500, the camera cuts to a tighter view through a different shard of the windshield. Behind the crawling man, a figure is already running: emaciated, grey-purple skin, torn work clothes, deep wounds open on its arms, moving with a fast, wrong, loping gait. It closes the distance in three strides. The crawling man's hand drops. The camera holds, the glass edge sharp in the foreground.
+
+overall_soundscape: Her held breath inside the cabin, glass ticking as it settles, wind across the riverbed, a faint scraping of limbs on stones, a weak cry for help, and then a sharp, rising shriek from something much closer. No dialogue.
+
+non_diegetic_music: A low sub-bass drone rises under the point of view, with a single scraping string note as the running figure enters frame.

@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, soft overcast rainy morning light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The apartment doorway on a rainy morning. A medium close-up of the father (S8), 48, lean, gentle tired eyes, short greying black hair, thin rimless glasses, clean white research coat, half turned back into the room, briefcase in one hand. He laughs, eyes crinkling, rain light from the window falling across his smile. The camera holds static with a faint handheld sway. The father (S8) says, laughing:
+<d>
+[中文]
+哈哈哈，我的小寶貝生氣了。
+</d>
+
+[Shot 2] At 00:03.000, the camera cuts to a slightly wider shot from inside the apartment, the door frame on the left of frame. The father (S8) leans back around the door, one hand on the jamb, and gives his daughter a small, sincere nod, the smile still there but quieter now. Behind him the stairwell is grey and empty. In the foreground the daughter's shoulder and the lit phone are soft at the edge of frame. The camera holds static. The father (S8) says, warm:
+<d>
+[中文]
+好啦，這次絕對不黃牛。
+爸爸過兩天就回來。
+</d>
+
+overall_soundscape: Rain outside, a briefcase handle creaking, a hand resting on the door jamb, a quiet laugh, the low hum of the apartment, and the distant sound of a car passing on wet asphalt below. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The warm string pad holds under his laugh, then thins to a single piano note on "不黃牛", as if the score already knows better.

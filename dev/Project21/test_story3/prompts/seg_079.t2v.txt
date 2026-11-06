@@ -1,0 +1,5 @@
+integrated_multimodal_description: [Shot 1] Photorealistic 35mm film slate filling the entire frame in pure black, fine silver grain drifting slowly across the surface, individual dust motes and short hairs catching the light, a few hairline scratches running vertically, faint gate weave and a soft vignette breathing at the edges. The texture is physical film, not a flat digital black; the blacks stay deep but never crushed, with a very slight warm cast in the highlights of the dust. The camera is completely static, no subject and no movement other than the drifting grain. The frame carries no lettering, no numbers, no logos, no watermark and no on-screen text of any kind; the slate stays empty so titles can be laid over it in post.
+
+overall_soundscape: Near silence. A faint optical film hiss, the last distant screams thinning out into the wind and disappearing, a low rumble of settling concrete far away, and then only room tone.
+
+non_diegetic_music: The cold string chord from the skyline sinks into a single sustained sub-bass note, with one soft metallic hit near the middle of the shot, holding to the end without resolving.

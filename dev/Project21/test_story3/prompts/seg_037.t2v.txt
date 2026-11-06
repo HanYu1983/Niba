@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The night street, the crowd pulled back into a loose ring, neon and phone light on every face. A medium shot framed on the group rather than any one person: several men and women in office clothes and coats, faces deliberately out of focus and angled away, no lips clearly visible. One man half-steps forward with both hands raised, then stops and shifts his weight back. Behind him a phone is still held up, filming, its screen bright. The camera drifts slowly along the front of the ring. An anonymous voice calls out from the crowd, off-screen:
+<d>
+[中文]
+靠！這是吸毒吸瘋了嗎？
+</d>
+
+[Shot 2] At 00:02.500, the camera cuts to a wider shot of the ring. Nobody moves. Shoes shift on the wet asphalt, a woman covers her mouth, a man lowers his phone and then raises it again. At the edge of frame the infected driver's shadow thrashes against the neon. The camera holds static, the empty space in the middle of the crowd growing. The same anonymous voice shouts, angrier now:
+<d>
+[中文]
+壓住他！別讓他跑了！
+</d>
+
+overall_soundscape: A crowded street gone quiet except for a jammed horn, nervous shoes on wet asphalt, a phone recording chime, overlapping frightened breathing, the scuffle of the infected man at the edge of frame, and two shouts from the crowd. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese; both are off-screen crowd voices with lip-sync off.
+
+non_diegetic_music: A low held string sits under the ring, thin and tense, with no rhythm at all.

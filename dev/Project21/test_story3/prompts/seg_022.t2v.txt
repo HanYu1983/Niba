@@ -1,0 +1,23 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dim safehouse room, one bare bulb above the table. A tight close-up of the contractor (S4), 32, lean and wiry, pale cold face, sharp cheekbones, short black hair tied back tight, black tactical top, swabbing the side of her upper arm with an alcohol pad, then sliding a prefilled syringe into the muscle and pressing the plunger down slowly with her thumb. Her face shows nothing at all. The torn sterile packaging lies open on the table beside a weapon crate. The camera holds static, the needle and her steady hand sharp in the foreground. The contractor (S4) mutters, barely above her breath:
+<d>
+[中文]
+哼，老狐狸。
+</d>
+
+[Shot 2] At 00:03.400, the camera cuts to a close-up over her shoulder. She pulls the needle out, presses a cotton pad to the spot, and lifts a smartphone with her other hand; the screen wakes in the dark, a long row of glowing blurred digits lighting her jaw and cheekbones from below. Her thumb scrolls once, then stops. The bare bulb is now the only other light in the room. The camera pushes in slightly. The contractor (S4) says, half to herself:
+<d>
+[中文]
+算了，殺人越貨，速戰速決……
+哎喲，這可真是大手筆……
+</d>
+
+[Shot 3] At 00:07.400, the camera cuts to a tight close-up of her face. The screen glow sits under her chin, and the corner of her mouth lifts into a smile she cannot suppress, her flat eyes fixed on the number. She lets out a short, greedy breath of a laugh. The camera holds static. The contractor (S4) says, brightening:
+<d>
+[中文]
+軍方的活，給錢真不是開玩笑！
+這種大單子再來兩筆就能退休了。
+</d>
+
+overall_soundscape: The click of a syringe cap, a sharp breath through the nose at the injection, the soft pop of the needle leaving skin, a phone waking with a faint chime, a thumb scrolling on glass, the bare bulb humming, and her low muttering turning into a satisfied laugh. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A sparse metallic pulse returns under the injection and picks up a dry pizzicato figure as the balance appears, turning almost jaunty on her last line before cutting out.

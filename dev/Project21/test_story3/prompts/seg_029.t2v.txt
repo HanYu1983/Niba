@@ -1,0 +1,12 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted cold grey palette with pink neon accents, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The corner booth of the luxury club penthouse. A medium close-up of Xiao Liu (S7), 28, slim, eager nervous face, short neat black hair, cheap ill-fitting navy suit, scratching the back of his head with one hand and leaning further forward with the other elbow on the table. His brow is furrowed in genuine confusion, his glass forgotten. Yang's (S6) heavy shoulder and cigar smoke sit soft at the edge of frame. The camera holds static, the pink neon catching the sheen on Xiao Liu's forehead. Xiao Liu (S7) says:
+<d>
+[中文]
+方舟？楊董，那是什麼？
+這跟升遷有關係嗎？
+</d>
+
+[Shot 2] At 00:02.800, the camera cuts to Yang (S6), 58, obese, round sweaty face, heavy jowls, thinning black hair combed over, small sharp eyes, expensive dark suit, who does not answer. He simply draws on the cigar, the tip glowing, and lets the smoke out through a small, patient smile, watching Xiao Liu over the ember. The camera holds static, the city lights cold behind him. No dialogue.
+
+overall_soundscape: A chair creaking as Xiao Liu leans in, fingers scratching through short hair, a cigar drawing and crackling, the low club bass, distant laughter, and a long, unhurried exhale of smoke. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A small, almost comic woodwind figure under the question, stopping dead on Yang's smile and leaving only the room.

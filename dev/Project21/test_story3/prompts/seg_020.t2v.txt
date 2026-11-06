@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dark officers' lounge at night. A medium close-up of Colonel Frost (S1), 58, broad-shouldered, barrel-chested, short iron-grey buzz cut, weathered square face, heavy brows, thick neck, plain olive uniform with no insignia, lowering the crystal tumbler onto the low table with a soft click, his fingertips resting on the rim. The phone stays at his ear. He speaks reasonably, almost kindly, the lamp warm on one side of his face and the city lights cold in the window behind. The camera holds static with a faint handheld sway. Colonel Frost (S1) says:
+<d>
+[中文]
+放心，我已經先匯一半過去了。
+</d>
+
+[Shot 2] At 00:03.400, the camera cuts to a close-up of the low table and the tall window. His fingertips tap twice on the dark wood beside the glass, unhurried; beyond the glass the city lights layer over his faint reflection, two images of the same face sliding across each other. His voice continues from off frame, calm and final. The camera holds static. Colonel Frost (S1) says:
+<d>
+[中文]
+妳查一下戶頭，完事了再給另一半。
+</d>
+
+overall_soundscape: A tumbler settling on wood, two slow fingertip taps, ice shifting faintly inside the glass, the low night hum of the building, distant traffic beyond the window, and his voice carrying easily from just off frame. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A quiet piano note enters under the first line and repeats, unaccompanied, fading before the second tap.

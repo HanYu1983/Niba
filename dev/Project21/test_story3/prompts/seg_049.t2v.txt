@@ -1,0 +1,12 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, soft overcast rainy morning light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The edge of a city roof in the rain. A tight shot of water running along a concrete ledge, gathering at the lip, and falling in a thin, steady thread into a gutter below. The drain swallows it without a sound of its own. Rain crosses the frame in fine grey lines. The camera holds static, the concrete dark and slick.
+
+[Shot 2] At 00:03.500, the camera begins to tilt up slowly, following the falling water back to the ledge, then past it into the flat white-grey sky. The rooftops of the city slide into frame at the edges, all of them wet and quiet under the low cloud. The rain keeps falling into the lens. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+雨水正順著屋簷匯入排水系統。
+那是這座城市，最後一個平凡的早晨。
+</d>
+
+overall_soundscape: Rain on concrete and metal, water threading into a drain, a gutter running full, distant traffic softened by the rain, a single bird somewhere, and the narrator's voice low and even. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A slow piano note repeats under the water, joined by a low string that rises as the camera tilts into the white sky and holds, unresolved.

@@ -1,0 +1,11 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light through cracked glass, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside the overturned SUV. A medium close-up of Taylor (S3), 25, high black ponytail, sharp dark eyes, plain dark jacket, braced with her back against the seat and both feet planted on the spiderwebbed windshield. Dust in her hair, jaw set, eyes fixed on the centre of the cracks. She takes one sharp breath and shouts. The camera is handheld, close, the cabin tilted around her. Taylor (S3) shouts:
+<d>
+[中文]
+準備好了——哈啊！！
+</d>
+
+[Shot 2] At 00:02.000, the camera cuts to a low angle behind her boots as her heel slams into the centre of the spiderweb. The glass bursts outward in a single bright sheet and then into a rain of fragments; her forearm comes up across her face. Daylight floods the cabin. The camera shakes hard with the impact and holds, glass still falling.
+
+overall_soundscape: One sharp breath, a boot heel cracking glass, the whole windshield letting go at once, fragments raining onto stone and metal, her grunt of effort, and wind rushing into the open cabin. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A hard percussive hit on the kick, then a bright ringing tone as the glass falls.

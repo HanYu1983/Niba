@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, flat storm-grey daylight, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The bridge deck from a high handheld angle. The road surface folds and breaks along a line of cracks, asphalt splitting like a dry biscuit, rebar snapping out of the concrete in bright whips. A whole section of deck tilts away from the camera, cars sliding toward the gap, brake lights spinning. Dust boils up through the crack. The camera shakes violently and loses the horizon.
+
+[Shot 2] At 00:02.200, the camera cuts to a lower angle at the edge of the break. Vehicles and people slide down the tilted slab together, a scooter cartwheeling, a car rolling onto its roof, umbrellas and bags tumbling into the gap. The noise of the city is replaced by individual screams. The camera holds at the lip of the break, tilted, dust rushing past the lens.
+
+[Shot 3] At 00:04.200, the camera cuts to a wide shot from the bank as the collapsing span hits the riverbed below. A wall of grey dust and spray bursts upward and rolls over everything, swallowing the wreck and the screaming in one slow wave. The camera holds static, the dust cloud filling the frame, debris clattering down inside it.
+
+overall_soundscape: Concrete tearing and rebar snapping, the long groan of the span giving way, engines revving uselessly, metal crushing on impact far below, and dozens of screams cut off by the rising roar of dust and water. No dialogue.
+
+non_diegetic_music: The brass cluster collapses with the bridge, then cuts to a single low tone under the dust, ringing and hollow.

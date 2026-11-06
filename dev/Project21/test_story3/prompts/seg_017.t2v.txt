@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A dim safehouse room: a weapon crate, gear laid out on a table, a map pinned to the wall, one bare bulb hanging above. The contractor (S4), 32, lean and wiry, pale cold face, sharp cheekbones, flat dead eyes, short black hair tied back tight, black tactical top, stands at the table with a phone pressed to her ear, her free hand checking the strap of a holster on her thigh. Her head is tilted slightly, listening. The bulb throws hard shadows down her cheekbones. The camera holds static in a medium shot, the open crate and the map soft behind her. The contractor (S4) says, flat and cold:
+<d>
+[中文]
+上校，我等你的電話一整天了。
+</d>
+
+[Shot 2] At 00:02.400, the camera cuts to a close-up of her face in three-quarter profile, one eye lit by the bulb and the other lost in shadow. She does not blink, and her jaw stays still around the words. Behind her the map and the open crate blur into darkness. The camera holds static. The contractor (S4) says:
+<d>
+[中文]
+可以出發了嗎？
+</d>
+
+overall_soundscape: A bare bulb humming, the click of a holster strap, gear shifting on the table, the distant murmur of a night street through thin walls, and her low, level voice close to the phone. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A sparse metallic pulse, like a struck rod, marking time under her voice and stopping on the question.

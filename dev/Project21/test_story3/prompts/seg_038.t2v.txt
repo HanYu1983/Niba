@@ -1,0 +1,23 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A high angle over a city intersection at night: gridlocked traffic in every direction, scooters down on the wet road, a crowd swirling around the centre of the junction, police lights strobing red and blue across the neon. The camera begins to rise slowly, the tangle of cars and people opening out beneath it. A calm narrator's voice, off-screen and detached, speaks over the scene:
+<d>
+[中文]
+混亂像瘟疫一樣擴散，
+現場交通瞬間癱瘓，
+</d>
+
+[Shot 2] At 00:04.500, the camera cuts to street level, drifting laterally at walking pace: screaming faces out of focus, a taxi stopped crooked across two lanes, a traffic light cycling green to red over an empty crossing, a dropped shoe. The camera keeps moving, never settling on one face.
+<d>
+[中文]
+刺耳的喇叭聲與慘叫聲交織在一起。
+</d>
+
+[Shot 3] At 00:08.500, the camera cuts to an extreme high wide shot, pulling back and up until the intersection becomes one bright knot in the dark grid of the city, streets running away in every direction, traffic still creeping, lights still cycling, the whole machine still apparently working. The camera holds at the top of the move.
+<d>
+[中文]
+一切似乎一如往常，
+混亂中帶著秩序，微妙的平衡著。
+</d>
+
+overall_soundscape: Layered car horns, distant sirens, a crowd's panic rising and falling, engines revving and stalling, wet tyres, and the narrator's voice calm and level above all of it. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A slow, wide string line enters under the narration, cold and even, swelling gently as the camera rises and holding one long note over the final wide shot.

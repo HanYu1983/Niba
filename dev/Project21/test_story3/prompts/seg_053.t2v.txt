@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low grey daylight through rain-streaked glass, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside the silver compact SUV. A medium close-up of Taylor (S3), 25, athletic, high black ponytail, sharp dark eyes, plain dark jacket, pulling the phone away from her ear, tapping the screen to switch to video, then pushing the phone out through the open window. Rain spots the lens immediately. The camera holds static, her face lit cold by the screen. Taylor (S3) says, flat and tired:
+<d>
+[中文]
+佛羅斯上校……
+我轉視訊通話，你看看外面。
+</d>
+
+[Shot 2] At 00:03.000, the camera cuts to a view past her hand and the phone, out over the bridge. The deck is packed solid with cars, scooters and pedestrians, umbrellas jammed together, brake lights smeared red in the rain, nobody moving. The phone's screen glow lights the underside of her fingers. Her face sits at the edge of frame, half lit, watching the call. The camera drifts slowly across the gridlock, then settles back on her. Taylor (S3) says, with a bitter laugh:
+<d>
+[中文]
+老狐狸～難怪你叫我來這裡！
+</d>
+
+overall_soundscape: Rain on the car roof and the open window frame, a wall of idling engines, horns, a hundred muffled voices, water dripping from the phone, and her voice raised over the noise. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A playful string figure under the video call, with a low ominous undertow that does not match it.

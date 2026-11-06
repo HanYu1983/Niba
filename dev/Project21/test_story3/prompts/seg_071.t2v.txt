@@ -1,0 +1,7 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dry riverbed. A medium shot of the newly turned man standing motionless, head hanging, arms at his sides. Then the head lifts and turns, joint by joint, like a puppet pulled on strings: the neck first, then the shoulder, then the hips, each movement arriving a beat late. His empty eyes sweep the riverbed without recognising anything. The camera holds static, the broken bridge above him.
+
+[Shot 2] At 00:03.000, the camera cuts to a wider shot. The man's body snaps into motion, all at once, and he sprints across the rubble toward the distant sound of screams, his gait too fast and too loose, arms swinging wide. He passes out of frame in three strides. Dust hangs where he was. The camera holds on the empty riverbed, then pans slightly to follow the sound.
+
+overall_soundscape: Rubble shifting under a turning foot, a joint popping, a short guttural breath, then a burst of running feet on stones, fading fast toward the distant screams, and wind returning to the empty riverbed. No dialogue.
+
+non_diegetic_music: A sharp percussive hit on the first step, then a fast low pulse that chases him out of frame and cuts off.

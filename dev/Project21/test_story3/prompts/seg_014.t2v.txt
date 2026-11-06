@@ -1,0 +1,11 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A dark officers' lounge late at night: a leather sofa, a low table, tall windows holding a scatter of city lights, one warm lamp pooling on the desk. In the foreground a crystal tumbler with two ice cubes and amber whisky turns slowly in a thick, weathered hand; the ice knocks softly against the glass and condensation slides down the facets. The lamp rims the glass in gold while the rest of the room stays in cold shadow. The camera holds static in a tight macro shot.
+
+[Shot 2] At 00:02.200, the camera cuts to a medium close-up of Colonel Frost (S1), 58, broad-shouldered, barrel-chested, short iron-grey buzz cut, weathered square face, heavy brows, thick neck, plain olive uniform with no insignia, seated deep in the leather sofa. Half his face is buried in shadow, the lamp lighting only one cheek and the line of his jaw. He holds a phone to his ear, elbow on the armrest, the tumbler resting against his knee. His eyes are flat and patient, looking at nothing. The camera pushes in a few centimetres, slow and steady. Colonel Frost (S1) says, low and unhurried:
+<d>
+[中文]
+嗯——就位了嗎？
+</d>
+
+overall_soundscape: Ice shifting in a heavy crystal tumbler, leather creaking under his weight, the faint hum of a building at night, muffled traffic far below the windows, a clock ticking somewhere off frame, and Frost's low voice close to the microphone. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A single low cello note held under the room tone, barely audible, with a soft pulse as he speaks.

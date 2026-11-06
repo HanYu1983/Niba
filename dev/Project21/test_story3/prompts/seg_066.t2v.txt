@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light through cracked glass, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside the overturned SUV. A tight close-up of Taylor (S3), 25, high black ponytail, sharp dark eyes, plain dark jacket, crouched low against the door panel, knees drawn up, back pressed to the seat. Her breath is held, her lips barely moving, one cheek lit by a blade of light through the spiderwebbed windshield. Dust hangs in the cabin. The camera is handheld and very close. Taylor (S3) whispers, barely audible:
+<d>
+[中文]
+媽的……這都什麼跟什麼？
+</d>
+
+[Shot 2] At 00:02.500, the camera cuts to a close shot of her hand sliding slowly along the door panel toward the handle, fingers spread, careful not to make a sound. Her face stays at the edge of frame, eyes fixed through the cracks in the glass. Outside, the riverbed is a white blur. The camera holds static, the hand the only movement. Taylor (S3) whispers:
+<d>
+[中文]
+狂犬病？神經病？
+</d>
+
+overall_soundscape: Her held breath, a slow careful hand sliding over plastic, glass ticking as it settles, wind outside, and the distant wet sounds of the feeding carrying faintly through the shell of the car. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A single low held note under the whispers, so quiet it is almost room tone.

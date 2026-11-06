@@ -1,0 +1,12 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted cold grey palette with pink neon accents, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The luxury club penthouse, pink neon haze and cigar smoke. A medium close-up of Zhuang (S5), 32, handsome, confident smirk, slicked-back black hair, tailored charcoal suit, raising his phone at chest height and tilting the screen toward the men around him. The glowing blue QR code throws cold light up onto his jaw and the bridge of his nose, cutting through the pink. He taps the screen once with his thumb, chin lifted, entirely pleased with himself. The camera holds static, the velvet booth and blurred shoulders soft behind him. Zhuang (S5) says, loud enough for the group:
+<d>
+[中文]
+看到沒？哥們！
+我也搶到門票了。
+</d>
+
+[Shot 2] At 00:02.600, the camera cuts to an over-the-shoulder shot from behind Zhuang (S5). Two or three men in dark suits lean in toward the glowing screen, their faces out of focus, the blue light catching on their cheeks and collars as their glasses tilt toward the phone. One of them reaches out to steady Zhuang's wrist. The camera drifts a few centimetres across the group, keeping the QR code sharp and the faces soft.
+
+overall_soundscape: Low club bass under the room, ice shifting in glasses, fabric brushing as the men lean in, a soft impressed murmur from the group, and Zhuang's confident voice cutting through the smoke. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A smug, light plucked figure enters under his line, all swagger, and continues quietly into the lean-in.

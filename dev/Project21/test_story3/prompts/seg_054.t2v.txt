@@ -1,0 +1,23 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low grey daylight through rain-streaked glass, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside the SUV, phone pulled back in through the window and held in her lap. A medium close-up of Taylor (S3), 25, high black ponytail, sharp dark eyes, plain dark jacket, listening with her jaw set, rain beading on her sleeve. Frost's voice comes through the phone speaker, live and off-screen; her lips stay closed. The camera holds static with a faint handheld sway. Colonel Frost (S1), through the phone speaker, says, roaring with laughter:
+<d>
+[中文]
+哈哈哈！我們的大姑娘真幽默！
+竟然特地排了休假來體驗塞車。
+</d>
+
+[Shot 2] At 00:05.000, the camera cuts to a tighter close-up from the passenger side. Taylor (S3) stares at the phone in her lap, then at the wall of brake lights ahead, her eyes narrowing. Rain slides down the side window in long threads behind her. Frost keeps talking, the small speaker rattling slightly. Her lips stay closed. The camera pushes in a few centimetres. Colonel Frost (S1), through the phone speaker, says, still laughing:
+<d>
+[中文]
+等等進城別忘了先幫我買恐龍背包啊！
+哈哈哈哈！
+</d>
+
+[Shot 3] At 00:10.000, the camera cuts to a slightly wider shot. Taylor (S3) lifts her head and looks at the phone, her expression shifting from tired resignation into real anger; her knuckles whiten on the wheel. The phone sits in her lap, still lit. Frost's voice winds down, pleased with itself, and the line goes quiet. The camera holds static. Colonel Frost (S1), through the phone speaker, says:
+<d>
+[中文]
+那你慢慢塞，我就不打擾你休假了。
+</d>
+
+overall_soundscape: Frost's compressed laughter rattling the phone speaker, rain on the roof, wipers slapping, idling engines and distant horns, and Taylor's slow breath through her nose as her grip tightens on the wheel. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The playful strings continue under his laughter, then sink into a low held note as her expression hardens and his voice fades out.

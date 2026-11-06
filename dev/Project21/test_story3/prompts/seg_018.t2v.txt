@@ -1,0 +1,23 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, low-key practical night lighting, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The dark officers' lounge at night, the leather sofa and tall windows held in cold shadow, one warm lamp on the desk. A medium close-up of Colonel Frost (S1), 58, broad-shouldered, barrel-chested, short iron-grey buzz cut, weathered square face, heavy brows, thick neck, plain olive uniform with no insignia, phone at his ear and the whisky glass loose in his other hand. He answers without shifting his posture, eyes fixed on the middle distance. The camera holds static with a faint handheld sway. Colonel Frost (S1) says:
+<d>
+[中文]
+可以了。
+</d>
+
+[Shot 2] At 00:03.500, the camera cuts to a slightly tighter shot, the rim of the whisky glass and the phone held in the foreground, his face behind them. He takes a slow sip, sets his jaw, and speaks evenly, as if reading out a schedule. Ice knocks once against the crystal as he lowers the glass. The camera pushes in slowly. Colonel Frost (S1) says:
+<d>
+[中文]
+記得注射疫苗，
+一會那些傢伙瘋起來可是六親不認。
+</d>
+
+[Shot 3] At 00:07.000, the camera cuts to a low angle. Frost (S1) leans forward, elbow on his knee, the glass hanging from his fingers, and his voice drops into something harder and more precise. The lamp lights the underside of his heavy brows and leaves his eyes in shadow. The city sits cold and distant in the tall windows behind him. The camera holds static. Colonel Frost (S1) says:
+<d>
+[中文]
+找到目標就直接下手，別跟他廢話。
+存貨有多少全帶出來。
+</d>
+
+overall_soundscape: Ice shifting in crystal, a slow sip, leather creaking as he leans forward, the low night hum of the building, distant traffic beyond the glass, and his voice moving from conversational to clipped and hard. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The cello drone thickens under the first two shots, then drops away entirely at the low angle, leaving only room tone and his voice.
