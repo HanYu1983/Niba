@@ -8,15 +8,25 @@
  *   node render_block_frames.mjs momotaro.json block_020 --window 7 --width 544 --height 960
  *   node render_block_frames.mjs momotaro.json                       # every block in the project
  *
- * Which frames: the number in the block id picks the centre. `block_005` uses frame03, frame04,
- * frame05, frame06, frame07 — five frames in total, two before and two after. A frame that does
- * not exist is simply not attached (the end of the story only has up to frame37, so block_038
- * gets two frames instead of five). Everything else — compiling, slot order, seed, output
- * filename, ledger label — is the same as render_block.mjs.
+ * Which frames: by default the number in the block id picks the centre. `block_005` uses frame03,
+ * frame04, frame05, frame06, frame07 — five frames in total, two before and two after. A frame
+ * that does not exist is simply not attached (the end of the story only has up to frame37, so
+ * block_038 gets two frames instead of five).
+ *
+ * The frames can also be named explicitly, and then every block uses that same set — the id
+ * number is no longer looked up, only used as a label:
+ *   --frames 3,4,5,6,7      explicit list, kept in the order given (max 9)
+ *   --start 3 --count 5     frame03..frame07
+ *   --start 3 --end 7       same range, written with an inclusive end
+ * Numbers only; missing files are still skipped. Everything else — compiling, slot order, seed,
+ * output filename, ledger label — is the same as render_block.mjs.
  *
  * Options (all optional):
  *   --frames-dir doc/image_story   where frameNN.jpg lives
  *   --window 5                     total number of frames around the block number
+ *   --frames a,b,c                 explicit frame numbers (max 9)
+ *   --start N --count N            first frame + how many
+ *   --start N --end N              first frame + last frame (inclusive)
  *   --width 608            --height 352          generation size, multiples of 32
  *   --duration 4           seconds; default = each block's own duration
  *   --fps 24               --seed 20261166        default = 20261100 + block index
@@ -45,6 +55,9 @@ const USAGE = `usage: node render_block_frames.mjs <project.json> [block_id|pref
   no block name              submit every block in the project
   --frames-dir doc/image_story  storyboard frame folder
   --window 5                 total frames around the block number (2 before + 2 after)
+  --frames 3,4,5,6,7         explicit frame numbers, same for every block
+  --start 3 --count 5        first frame + how many
+  --start 3 --end 7          first frame + last frame (inclusive)
   --width 608 --height 352   generation size (multiples of 32)
   --duration 4 --fps 24      default: each block's own duration / 24
   --seed 20261166            default: 20261100 + block index
@@ -124,15 +137,78 @@ function findFrame(dir, frameNumber) {
   return hit ? path.join(dir, hit) : null;
 }
 
+/** A positive integer option, or null when the flag was not given. */
+function positiveInt(args, key, what) {
+  const raw = args[key];
+  if (raw === undefined) return null;
+  const n = Number(raw);
+  if (!Number.isInteger(n) || n < 1) throw new Error(`--${key} must be a positive ${what}, got "${raw}"`);
+  return n;
+}
+
+/** "3,4,5,6,7" -> [3,4,5,6,7]. Spaces and full-width commas are accepted too. */
+function parseFrameList(value) {
+  const parts = String(value)
+    .split(/[,，\s]+/)
+    .filter(Boolean);
+  if (parts.length === 0) throw new Error("--frames needs at least one frame number");
+  const numbers = parts.map((part) => {
+    const n = Number(part);
+    if (!Number.isInteger(n) || n < 1) throw new Error(`--frames: "${part}" is not a positive frame number`);
+    return n;
+  });
+  return [...new Set(numbers)];
+}
+
 /**
- * The frames around a block number: `window` of them, centred on it. Frames before 1 and past the
- * end of the folder simply fall away, so the first and last shots end up with fewer references.
+ * null -> use the window around the block number. Anything else -> the exact numbers to attach,
+ * in order, for every block.
  */
-function framesAround(dir, centre, window) {
-  const half = Math.floor(window / 2);
+function resolveFrameSpec(args) {
+  const explicit = ["frames", "start", "count", "end"].some((key) => args[key] !== undefined);
+  if (!explicit) return null;
+  if (args.window !== undefined) {
+    throw new Error("use either --window or --frames/--start/--count/--end, not both");
+  }
+
+  if (args.frames !== undefined) {
+    if (["start", "count", "end"].some((key) => args[key] !== undefined)) {
+      throw new Error("--frames cannot be combined with --start/--count/--end");
+    }
+    const numbers = parseFrameList(args.frames);
+    if (numbers.length > MAX_REFS) {
+      throw new Error(`--frames lists ${numbers.length} frames; MiniMax takes at most ${MAX_REFS}`);
+    }
+    return { numbers, label: `frames ${numbers.join(",")}` };
+  }
+
+  const start = positiveInt(args, "start", "frame number");
+  if (start === null) throw new Error("--count/--end need --start <first frame>");
+  const count = positiveInt(args, "count", "count");
+  const end = positiveInt(args, "end", "frame number");
+  if (count === null && end === null) throw new Error("--start needs --count or --end");
+  if (count !== null && end !== null && start + count - 1 !== end) {
+    throw new Error(`--start ${start} --count ${count} ends at ${start + count - 1}, but --end is ${end}`);
+  }
+  const total = count ?? end - start + 1;
+  if (total < 1) throw new Error(`--end ${end} is before --start ${start}`);
+  if (total > MAX_REFS) throw new Error(`asked for ${total} frames; MiniMax takes at most ${MAX_REFS}`);
+  const numbers = Array.from({ length: total }, (_, i) => start + i);
+  return { numbers, label: count !== null ? `start ${start} count ${count}` : `start ${start} end ${end}` };
+}
+
+/** [3,4,5,6,7] for centre 5 / window 5; anything below 1 falls away. */
+function windowNumbers(centre, window) {
+  const first = centre - Math.floor(window / 2);
+  const numbers = [];
+  for (let n = first; n < first + window; n++) if (n >= 1) numbers.push(n);
+  return numbers;
+}
+
+/** One slot per frame file that exists; a missing number is silently left out. */
+function frameSlots(dir, numbers) {
   const slots = [];
-  for (let n = centre - half; n < centre - half + window; n++) {
-    if (n < 1) continue;
+  for (const n of numbers) {
     const file = findFrame(dir, n);
     if (file) slots.push({ kind: "storyboard", entity_ref: `frame${String(n).padStart(2, "0")}`, frame: n, path: file });
   }
@@ -173,6 +249,7 @@ async function main() {
     typeof args["frames-dir"] === "string" ? path.resolve(args["frames-dir"]) : path.join(HERE, "doc", "image_story");
   const projectDir = path.basename(path.dirname(projectFile));
   const labelProject = typeof args["label-project"] === "string" ? args["label-project"] : projectDir;
+  const spec = resolveFrameSpec(args);
 
   if (!Number.isInteger(window) || window < 1 || window > MAX_REFS) {
     throw new Error(`--window must be an integer from 1 to ${MAX_REFS}, got "${window}"`);
@@ -189,7 +266,8 @@ async function main() {
   if (allBlocks) {
     console.log(
       `${targets.length} blocks from ${path.basename(projectFile)}  ${width}x${height} ${fps}fps ` +
-        `turbo ${turbo}  ${window} frames from ${path.relative(HERE, framesDir)}${dryRun ? "  (dry run)" : ""}`
+        `turbo ${turbo}  ${spec ? spec.label : `${window} frames around each block number`} ` +
+        `from ${path.relative(HERE, framesDir)}${dryRun ? "  (dry run)" : ""}`
     );
   }
 
@@ -207,24 +285,30 @@ async function main() {
     }
     const { prompt, metadata } = compiled;
 
-    // The block number is the centre of the storyboard window; missing frames are just dropped.
-    const centre = blockNumber(blockId);
-    if (centre === null) {
-      counts.failed++;
-      console.error(`${tag}  FAILED  the id has no block_NN number to look frames up by`);
-      continue;
+    // Either the block number is the centre of the storyboard window, or the caller named the
+    // frames; missing frames are just dropped.
+    let numbers;
+    if (spec) {
+      numbers = spec.numbers;
+    } else {
+      const centre = blockNumber(blockId);
+      if (centre === null) {
+        counts.failed++;
+        console.error(`${tag}  FAILED  the id has no block_NN number to look frames up by`);
+        continue;
+      }
+      numbers = windowNumbers(centre, window);
     }
-    const refs = framesAround(framesDir, centre, window);
+    const refs = frameSlots(framesDir, numbers);
 
-    const written = centre - Math.floor(window / 2);
-    const wanted = [];
-    for (let f = Math.max(1, written); f < written + window; f++) wanted.push(f);
     const have = new Set(refs.map((s) => s.frame));
-    const missing = wanted.filter((f) => !have.has(f));
+    const missing = numbers.filter((f) => !have.has(f));
 
     if (refs.length === 0) {
       counts.failed++;
-      console.error(`${tag}  FAILED  no frame${centre} window in ${framesDir}`);
+      console.error(
+        `${tag}  FAILED  none of frame${numbers.join(", frame")} exist in ${framesDir}`
+      );
       continue;
     }
     if (refs.length > MAX_REFS) {
@@ -247,7 +331,7 @@ async function main() {
       }
       console.log(
         `${blockId}  ${width}x${height}  ${fps}fps  ${duration}s  seed ${seed}  turbo ${turbo}  ` +
-          `${refs.length}/${wanted.length} frames${missing.length ? `  (no frame${missing.join(", frame")})` : ""}`
+          `${refs.length}/${numbers.length} frames${missing.length ? `  (no frame${missing.join(", frame")})` : ""}`
       );
       console.log(`out ${filenamePrefix}_#####_.mp4   label ${labelProject} / ${blockId}`);
       console.log("\n--- compiled payload ---");
