@@ -13,6 +13,12 @@
  * Dry run prints the resolved job without touching the GPU:
  *
  *   node render_segment.mjs --plan … --seg seg_002 --prompt … --dry-run
+ *
+ * Submit-and-return (queue it, print the prompt_id, exit immediately):
+ *
+ *   node render_segment.mjs --plan … --seg seg_002 --prompt … --async
+ *
+ * The clip still runs on the box; collect it later with the printed `comfy_job` command.
  */
 
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
@@ -83,6 +89,8 @@ if (!planFile || !segId || !promptFile || !existsSync(planFile) || !existsSync(p
       "  --prefix P         default render/<plan name>/<seg id>",
       "  --ref-size match|max  default match",
       "  --no-turbo         full 20-step sampler instead of the 4-step ref LoRA",
+      "  --async            submit, print the prompt_id and return immediately (alias: --submit-only)",
+      "  --wait false       same as --async, kept for symmetry",
       "  --dry-run          resolve plates + payload, do not submit",
       "  --force            submit even if the <Picture N> count mismatches the slots"
     ].join("\n")
@@ -146,7 +154,9 @@ if (wrongSlots.length > 0 || (referenced.size > 0 && referenced.size !== slots.l
   if (!args.force) throw new Error(`${detail} — fix the prompt or pass --force`);
   console.warn(`WARN ${detail}`);
 }
-if (!/<d>/i.test(prompt)) console.warn(`WARN ${segId}: prompt has no <d> block`);
+// An action beat has no dialogue; anything else without a <d> block is probably unfinished.
+if (!/<d>/i.test(prompt) && segment.kind !== "action") console.warn(`WARN ${segId}: prompt has no <d> block`);
+if (/<d>/i.test(prompt) && segment.kind === "action") console.warn(`WARN ${segId}: action segment carries a <d> block`);
 
 /* ------------------------------------------------------------------ timing */
 
@@ -167,7 +177,15 @@ const prefix = String(args.prefix ?? `render/${planName}/${segId}`);
 const width = Number(args.width ?? 608);
 const height = Number(args.height ?? 352);
 const turbo = boolArg(args, "turbo", true);
-const wait = boolArg(args, "wait", true);
+
+/**
+ * `--async` (alias `--submit-only`) queues the job and returns without polling. `--wait false`
+ * means the same thing, so both spellings share one code path instead of drifting apart.
+ */
+const submitOnly =
+  boolArg(args, "async", false) || boolArg(args, "submit-only", false) || !boolArg(args, "wait", true);
+const wait = !submitOnly;
+const pollCommand = (id) => `node comfyui_mcp/cli.mjs --job --prompt_id ${id} --wait true`;
 
 const job = {
   tool: "minimax_r2v",
@@ -197,7 +215,8 @@ console.log(
       seed,
       take,
       turbo,
-      prefix
+      prefix,
+      ...(wait ? {} : { mode: "submit-only" })
     },
     null,
     2
@@ -229,6 +248,7 @@ manifest.segments[segment.id] = {
   prompt_id: result.prompt_id,
   prompt_file: promptFile,
   status: result.status,
+  queued: result.status === "queued" || result.status === "running",
   seed,
   turbo,
   duration_sec: job.duration_sec,
@@ -239,6 +259,7 @@ manifest.segments[segment.id] = {
 };
 writeFileSync(manifestFile, JSON.stringify(manifest, null, 2) + "\n", "utf8");
 
+const queued = result.status === "queued" || result.status === "running";
 console.log(
   JSON.stringify(
     {
@@ -246,10 +267,12 @@ console.log(
       prompt_id: result.prompt_id,
       seconds: Math.round((Date.now() - started) / 100) / 10,
       files: (result.files ?? []).map((f) => f.path),
+      ...(queued ? { queue_position: result.queue_position ?? null, poll: pollCommand(result.prompt_id) } : {}),
       manifest: manifestFile
     },
     null,
     2
   )
 );
-process.exitCode = result.status === "success" ? 0 : 1;
+// Queued is a success for submit-only: the job exists, we just chose not to wait for it.
+process.exitCode = result.status === "success" || (submitOnly && queued) ? 0 : 1;

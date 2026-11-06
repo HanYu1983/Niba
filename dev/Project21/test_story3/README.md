@@ -17,7 +17,8 @@
 | `verify_plan.mjs` | Independent re-check of hash / contiguity / scene-first / first_seen |
 | `generate_refs.mjs` | Generates every `to_generate` reference plate with `moodyRealMix_zitV7` |
 | `refs_report.json` | Result of the last plate run (model, sizes, files, failures) |
-| `prompts/seg_002.r2v.txt` | Six-field r2v prompt for `seg_002` (also `.t2v.txt`, three-field) |
+| `prompts/seg_002.r2v.txt` | Six-field r2v prompt for `seg_002` |
+| `prompts/seg_0NN.t2v.txt` | Three-field t2v prompts (001–010) |
 | `render_manifest.json` | One entry per rendered segment: prompt_id, seed, plates, mp4 |
 
 Rebuild:
@@ -67,6 +68,23 @@ the folder only. `generate_refs.mjs` renders the missing ones with
 Character prompts name an explicit age and wrinkles rather than "late fifties": the model
 under-ages when only a decade is given. Entity `status` flips to `ready` once a file exists.
 
+## Prompt style lock (t2v)
+
+Per `ai_edit_story/mcp_server_guide.md` §4B, t2v cells do **not** bind reference plates: identity
+and medium are locked by repeating text. Every `[Shot 1]` opens with the same sentence:
+
+```text
+Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography,
+muted olive and cold grey palette, flat overcast dawn light, shallow depth of field, grounded
+documentary realism — not anime, not cartoon, not illustration, not cel shading, not an
+advertisement, not slow motion, no on-screen text.
+```
+
+Character anchors are copied from the entity's t2i plate prompt (`data_entities.mjs`), so the
+text and the reference plate describe the same person. `(S1)` Frost, `(S2)` engineer, `(S3)`
+Taylor, numbered by first speech in the chapter. `seg_001` is the exception: it is a black
+slate card, so it carries the film-texture half of the lock and no figure description.
+
 ## Rendering a segment
 
 `gen_video/render_segment.mjs` takes a plan, a segment id and a prompt file, resolves every
@@ -82,6 +100,15 @@ Add `--dry-run` to see the resolved slots/duration without touching the GPU, `--
 record a retake, `--seed N` to pin the sampler. Duration comes from the segment's
 `estimated_sec` and is quantised to H3's 17k+5 frame grid at 24 fps. Each submission appends
 to `render_manifest.json`; clips land in `output/render/<plan name>/`.
+
+`--async` (alias `--submit-only`, or `--wait false`) returns as soon as ComfyUI accepts the
+job — it prints the `prompt_id`, the queue position and the exact poll command, then exits 0:
+
+```powershell
+node gen_video/render_segment.mjs --plan test_story3/plan.ch0.json --seg seg_002 `
+     --prompt test_story3/prompts/seg_002.r2v.txt --async
+# → poll: node comfyui_mcp/cli.mjs --job --prompt_id <id> --wait true
+```
 
 ## Still to do (stage 2)
 
