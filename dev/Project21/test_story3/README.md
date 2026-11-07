@@ -18,7 +18,7 @@
 | `generate_refs.mjs` | Generates every `to_generate` reference plate with `moodyRealMix_zitV7` |
 | `refs_report.json` | Result of the last plate run (model, sizes, files, failures) |
 | `prompts/seg_002.r2v.txt` | Six-field r2v prompt for `seg_002` |
-| `prompts/seg_0NN.t2v.txt` | Three-field t2v prompts (001–010) |
+| `prompts/seg_0NN.t2v.txt` | Three-field t2v prompts (001–079, full chapter) |
 | `render_manifest.json` | One entry per rendered segment: prompt_id, seed, plates, mp4 |
 
 Rebuild:
@@ -81,9 +81,19 @@ advertisement, not slow motion, no on-screen text.
 ```
 
 Character anchors are copied from the entity's t2i plate prompt (`data_entities.mjs`), so the
-text and the reference plate describe the same person. `(S1)` Frost, `(S2)` engineer, `(S3)`
-Taylor, numbered by first speech in the chapter. `seg_001` is the exception: it is a black
-slate card, so it carries the film-texture half of the lock and no figure description.
+text and the reference plate describe the same person. Speaker numbers are assigned by first
+speech across the whole chapter: `(S1)` Frost, `(S2)` engineer, `(S3)` Taylor, `(S4)`
+contractor, `(S5)` Zhuang, `(S6)` Yang, `(S7)` Xiao Liu, `(S8)` father, `(S9)` taxi driver.
+Anonymous crowd lines, narration and internal monologue carry **no** number, and keep faces
+out of focus with lip-sync off. `seg_001` and `seg_079` are the exceptions: they are black
+slate cards, so they carry the film-texture description and no figure.
+
+The light clause is the only part of the lock that changes with the scene, so a night interior
+does not get described as dawn. Current variants: `flat overcast dawn light` (parade ground),
+`low-key practical night lighting` (lounge, safehouse, street), `muted cold grey palette with
+pink neon accents` (club), `soft overcast rainy morning light` (apartment, rain street),
+`flat storm-grey daylight` (bridge collapse), `harsh flat noon light` (riverbed). The negative
+guard list (`not anime … no on-screen text.`) stays identical in every file.
 
 ## Rendering a segment
 
