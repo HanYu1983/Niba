@@ -181,7 +181,7 @@
     "seg_009": {
       "segment_id": "seg_009",
       "take": 1,
-      "prompt_id": "18c131dc-7784-4225-8360-b3207e47aadb",
+      "prompt_id": "f03d1ee2-220f-4477-ac7d-3a3b14ed2eef",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_009.t2v.txt",
       "status": "success",
       "queued": false,
@@ -191,13 +191,14 @@
       "frames": 294,
       "references": [
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_training_ground\\plate_00001_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_frost\\plate_00002_.png"
+        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_frost\\plate_00002_.png",
+        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_taylor\\plate_00001_.png"
       ],
       "files": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\render\\plan.ch0\\seg_009_00002_.mp4"
+        "D:\\han\\Niba\\dev\\Project21\\output\\render\\plan.ch0\\seg_009_00004_.mp4"
       ],
-      "submitted_at": "2026-11-06T16:52:35.371Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "submitted_at": "2026-11-07T11:10:30.817Z",
+      "downloaded_at": "2026-11-07T11:35:54.638Z"
     },
     "seg_010": {
       "segment_id": "seg_010",
@@ -1079,11 +1080,11 @@
     "seg_051": {
       "segment_id": "seg_051",
       "take": 1,
-      "prompt_id": "7612717c-df19-42e2-99b7-76e572d69ea0",
+      "prompt_id": "87dfa50e-be32-47c5-998a-6fe1237ea1f0",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_051.t2v.txt",
       "status": "success",
       "queued": false,
-      "seed": 100,
+      "seed": 1001,
       "turbo": false,
       "duration_sec": 6.58,
       "frames": 158,
@@ -1093,10 +1094,10 @@
         "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_taylor_car\\plate_00001_.png"
       ],
       "files": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\render\\plan.ch0\\seg_051_00001_.mp4"
+        "D:\\han\\Niba\\dev\\Project21\\output\\render\\plan.ch0\\seg_051_00002_.mp4"
       ],
-      "submitted_at": "2026-11-06T16:53:27.965Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "submitted_at": "2026-11-07T11:25:49.146Z",
+      "downloaded_at": "2026-11-07T11:35:54.638Z"
     },
     "seg_052": {
       "segment_id": "seg_052",

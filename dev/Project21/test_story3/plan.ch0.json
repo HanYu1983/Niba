@@ -1021,7 +1021,8 @@
       "split_reason": "voice_change",
       "location_ref": "loc_training_ground",
       "character_refs": [
-        "char_frost"
+        "char_frost",
+        "char_taylor"
       ],
       "prop_refs": [],
       "reference_images": [
@@ -1033,6 +1034,11 @@
         {
           "role": "character",
           "ref": "char_frost",
+          "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "character",
+          "ref": "char_taylor",
           "note": "identity plate, same folder across the chapter"
         }
       ],
