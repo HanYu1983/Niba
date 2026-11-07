@@ -120,6 +120,20 @@ node gen_video/render_segment.mjs --plan test_story3/plan.ch0.json --seg seg_002
 # → poll: node comfyui_mcp/cli.mjs --job --prompt_id <id> --wait true
 ```
 
+## Assembling the chapter
+
+`test_story3/concat_renders.mjs` builds the concat list from `render_manifest.json` (segment
+order, not directory sort), verifies every file exists, and merges in one pass:
+
+```powershell
+node test_story3/concat_renders.mjs              # stream copy, lossless and fast
+node test_story3/concat_renders.mjs --reencode   # H.264 CRF 18 + AAC 192k, if joins drift
+```
+
+Output: `output/video/plan.ch0_full_<WxH>.mp4`, with the concat list kept beside it. All 79
+clips share 352×608 / 24 fps / H.264 High / AAC 32 kHz, so copy mode joins cleanly — the
+merged file decodes to exactly the sum of the segment frame counts (13,383).
+
 ## Still to do (stage 2)
 
 1. Write `<chapter>.json` blocks from this plan only — do not re-read the novel.
