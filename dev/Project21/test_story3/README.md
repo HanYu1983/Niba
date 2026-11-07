@@ -134,6 +134,28 @@ Output: `output/video/plan.ch0_full_<WxH>.mp4`, with the concat list kept beside
 clips share 352×608 / 24 fps / H.264 High / AAC 32 kHz, so copy mode joins cleanly — the
 merged file decodes to exactly the sum of the segment frame counts (13,383).
 
+## Subtitles
+
+`test_story3/build_subtitles.mjs` writes a YouTube-ready Traditional Chinese track. Timing is
+derived from the plan rather than from transcription:
+
+- segment offsets use the same cumulative clip durations that `concat_renders.mjs` lays down,
+  so a cue cannot drift against the merged film;
+- each `<d>` block sits at its shot's `At MM:SS.mmm` cut time, and lines inside one block are
+  spaced at 6.2 characters per second;
+- an alignment pass then reads each clip's RMS envelope with ffmpeg and moves any cue that
+  would land in silence onto the nearest speech onset within 3 s (15 of 141 cues here). This
+  matters because the model often holds a beat of room tone before the first line.
+
+```powershell
+node test_story3/build_subtitles.mjs            # prompt timing + audio alignment
+node test_story3/build_subtitles.mjs --no-audio # prompt timing only
+```
+
+Output: `output/video/plan.ch0_full_352x608.zh-Hant.srt` plus a `.vtt` with the same cues.
+Rules: max 15 characters per line, max two lines, no speaker labels, narration and internal
+monologue in `<i>`, and line breaks scored so they never split a name or a compound word.
+
 ## Still to do (stage 2)
 
 1. Write `<chapter>.json` blocks from this plan only — do not re-read the novel.
