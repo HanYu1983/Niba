@@ -1,18 +1,18 @@
-integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, flat overcast dawn light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A medium close-up at the firing line. Colonel Frost (S1), 58, broad-shouldered, short iron-grey buzz cut, weathered square face, heavy brows, thick neck, plain olive uniform with no insignia, snaps his fingers once, the sound sharp in the cold air, then tips his head back and raises a thumb over his shoulder toward the horizon beyond the perimeter wall. His grin turns conspiratorial, the earlier mockery folding into genuine enthusiasm. The camera pushes in slightly. Colonel Frost (S1) says, warm and offhand:
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, flat overcast dawn light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A medium close-up at the firing line. Colonel Frost (S1), 58, broad-shouldered, short iron-grey buzz cut with a receding hairline, weathered square face, weathered leathery skin, grey stubble, heavy brows, thick neck, plain olive uniform with no insignia, snaps his fingers once, the sound sharp in the cold air, then tips his head back and raises a thumb over his shoulder toward the horizon beyond the perimeter wall. His grin turns conspiratorial, the earlier mockery folding into genuine enthusiasm. The camera pushes in slightly. Colonel Frost (S1) says, warm and offhand:
 <d>
 [中文]
 這樣啊……
 那去一趟艾伯塔市怎麼樣？
 </d>
 
-[Shot 2] At 00:03.000, the camera cuts to a medium two-shot, Frost (S1) in profile and Taylor (S3) listening in the foreground, still holding the folded form. Frost turns his hand over and begins counting points off on his thick fingers, one, two, three, like a man reciting a well-worn sales pitch. Behind them the low barracks blocks and the grey-blue sky sit flat and quiet. The camera tracks slowly to the side with him. Colonel Frost (S1) says:
+[Shot 2] At 00:03.000, the camera cuts to a medium two-shot, Frost (S1), the broad-shouldered colonel with the iron-grey buzz cut, in profile, and Staff Sergeant Taylor (S3), 25, athletic and lean, high black ponytail, sharp dark eyes, strong jaw, sun-tanned skin, in a plain olive uniform with the sleeves rolled, listening in the foreground, still holding the folded form. Frost turns his hand over and begins counting points off on his thick fingers, one, two, three, like a man reciting a well-worn sales pitch. Behind them the low barracks blocks and the grey-blue sky sit flat and quiet. The camera tracks slowly to the side with him. Colonel Frost (S1) says:
 <d>
 [中文]
 那可是有名的恐龍之都，
 發現的化石數量全球之冠，
 </d>
 
-[Shot 3] At 00:07.200, the camera cuts to a wide shot from behind the two of them. Frost (S1) sweeps one arm out toward the wall and the pale sky above it, his silhouette small against the empty parade ground, Taylor (S3) a head shorter beside him, both of them facing away from the lens. Wind moves the loose fabric of his sleeve. The camera holds static, the ground stretching emptily to the barracks. Colonel Frost (S1) says:
+[Shot 3] At 00:07.200, the camera cuts to a wide shot from behind the two of them. Frost (S1), the broad-shouldered colonel with the iron-grey buzz cut, sweeps one arm out toward the wall and the pale sky above it, his silhouette small against the empty parade ground, Taylor (S3), lean and ponytailed, a head shorter beside him, both of them facing away from the lens. Wind moves the loose fabric of his sleeve. The camera holds static, the ground stretching emptily to the barracks. Colonel Frost (S1) says:
 <d>
 [中文]
 一年一度的恐龍嘉年華也差不多要開始了。
