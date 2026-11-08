@@ -1164,65 +1164,66 @@
     "seg_056": {
       "segment_id": "seg_056",
       "take": 1,
-      "mode": "t2v",
-      "prompt_id": "fd9e9eea-076e-46c3-8e07-280fb6299bea",
+      "mode": "r2v",
+      "prompt_id": "4678416a-03ac-4b21-967a-c3052beca7eb",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_056.t2v.txt",
-      "status": "success",
-      "queued": false,
-      "seed": 100,
+      "status": "running",
+      "queued": true,
+      "seed": 1794129637,
       "turbo": false,
       "width": 352,
       "height": 608,
       "duration_sec": 6.58,
       "frames": 158,
-      "references": [],
-      "files": [
-        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_056_00002_.mp4"
+      "references": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_bridge_collapse\\plate_00003_.png",
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_taylor_car\\plate_00002_.png"
       ],
-      "submitted_at": "2026-11-08T03:45:17.211Z",
-      "downloaded_at": "2026-11-08T09:19:24.337Z"
+      "files": [],
+      "submitted_at": "2026-11-08T09:20:38.795Z"
     },
     "seg_057": {
       "segment_id": "seg_057",
       "take": 1,
-      "mode": "t2v",
-      "prompt_id": "5f3a8d79-a031-4e12-9cb3-fc24b73dc939",
+      "mode": "r2v",
+      "prompt_id": "e29eb5cf-d77d-4872-b988-5d033a7e9a79",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_057.t2v.txt",
-      "status": "success",
-      "queued": false,
-      "seed": 100,
+      "status": "queued",
+      "queued": true,
+      "seed": 1794129647,
       "turbo": false,
       "width": 352,
       "height": 608,
       "duration_sec": 6.58,
       "frames": 158,
-      "references": [],
-      "files": [
-        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_057_00002_.mp4"
+      "references": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_bridge_collapse\\plate_00003_.png",
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_taylor_car\\plate_00002_.png"
       ],
-      "submitted_at": "2026-11-08T03:45:17.288Z",
-      "downloaded_at": "2026-11-08T09:19:24.337Z"
+      "files": [],
+      "submitted_at": "2026-11-08T09:20:49.627Z"
     },
     "seg_058": {
       "segment_id": "seg_058",
       "take": 1,
-      "mode": "t2v",
-      "prompt_id": "63356b77-24d7-4930-9229-8067ba4de97e",
+      "mode": "r2v",
+      "prompt_id": "820f926b-21bb-41b8-ae96-8b7d69e83671",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_058.t2v.txt",
-      "status": "success",
-      "queued": false,
-      "seed": 100,
+      "status": "queued",
+      "queued": true,
+      "seed": 1794129657,
       "turbo": false,
       "width": 352,
       "height": 608,
       "duration_sec": 5.17,
       "frames": 124,
-      "references": [],
-      "files": [
-        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_058_00002_.mp4"
+      "references": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbed_wreck\\plate_00002_.png",
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png",
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_taylor_car\\plate_00002_.png"
       ],
-      "submitted_at": "2026-11-08T03:45:17.359Z",
-      "downloaded_at": "2026-11-08T09:19:24.337Z"
+      "files": [],
+      "submitted_at": "2026-11-08T09:20:58.825Z"
     },
     "seg_059": {
       "segment_id": "seg_059",
