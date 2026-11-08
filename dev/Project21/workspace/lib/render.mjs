@@ -62,7 +62,7 @@ export async function renderSegment(story, plan, segment, opts = {}) {
   const detected = formatOf(prompt);
   let mode = opts.mode && opts.mode !== true ? String(opts.mode) : null;
   if (!mode) mode = detected !== "unknown" ? detected : pick.mode ?? "t2v";
-  if (opts.firstFrame) mode = "i2v";
+  if (opts.firstFrame && mode !== "r2v") mode = "i2v";
 
   const warnings = [];
   if (pick.mode && detected !== "unknown" && pick.mode !== detected && pick.mode !== "i2v") {
@@ -111,7 +111,7 @@ export async function renderSegment(story, plan, segment, opts = {}) {
     seed,
     filename_prefix: prefix,
     ...(mode === "r2v" ? { reference_images: slots.map((s) => s.path), ref_image_size: String(opts.refSize ?? "match") } : {}),
-    ...(opts.firstFrame ? { first_frame: resolve(String(opts.firstFrame)) } : {}),
+    ...(opts.firstFrame && mode !== "r2v" ? { first_frame: resolve(String(opts.firstFrame)) } : {}),
     ...(opts.lastFrame ? { last_frame: resolve(String(opts.lastFrame)) } : {})
   };
 

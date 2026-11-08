@@ -81,6 +81,11 @@ for (const [i, entity] of todo.entries()) {
     console.log(`${tag} SKIP no reference.prompt`);
     continue;
   }
+  if (prefix.includes(":") || prefix.startsWith("/")) {
+    report.push({ id: entity.id, kind: entity.kind, status: "skipped", reason: "reference.image is absolute" });
+    console.log(`${tag} SKIP reference.image is absolute; set a path relative to the asset root`);
+    continue;
+  }
   if (dryRun) {
     console.log(`${tag} ${size.width}x${size.height} -> ${prefix}/plate`);
     continue;

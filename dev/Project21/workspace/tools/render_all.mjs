@@ -14,7 +14,7 @@ import { existsSync } from "node:fs";
 
 import { boolArg, listArg, numArg, parseArgs, usage } from "../lib/args.mjs";
 import { readManifest } from "../lib/manifest.mjs";
-import { loadPlan, segmentById, segmentsOf } from "../lib/plan.mjs";
+import { loadPlan, segmentsOf } from "../lib/plan.mjs";
 import { keeperFile } from "../lib/manifest.mjs";
 import { renderSegment } from "../lib/render.mjs";
 import { describeStory, loadStory } from "../lib/story.mjs";
@@ -34,14 +34,14 @@ const submitOnly = boolArg(args, "async", false) || boolArg(args, "submit-only",
 let queue = segmentsOf(plan);
 if (only.length) queue = queue.filter((s) => only.includes(s.id));
 if (from) {
-  const anchor = segmentById(plan, from);
-  if (!anchor) usage(`--from ${from} is not in the plan`, []);
-  queue = queue.filter((s) => s.order >= anchor.order);
+  const idx = queue.findIndex((s) => s.id === from);
+  if (idx < 0) usage(`--from ${from} is not in the plan`, []);
+  queue = queue.slice(idx);
 }
 if (to) {
-  const anchor = segmentById(plan, to);
-  if (!anchor) usage(`--to ${to} is not in the plan`, []);
-  queue = queue.filter((s) => s.order <= anchor.order);
+  const idx = queue.findIndex((s) => s.id === to);
+  if (idx < 0) usage(`--to ${to} is not in the plan`, []);
+  queue = queue.slice(0, idx + 1);
 }
 
 const pending = [];

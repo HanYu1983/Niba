@@ -15,7 +15,7 @@ import { basename, resolve } from "node:path";
 import { boolArg, parseArgs } from "../lib/args.mjs";
 import { readManifest } from "../lib/manifest.mjs";
 import { probe, concat } from "../lib/media.mjs";
-import { loadPlan, segmentById, segmentsOf } from "../lib/plan.mjs";
+import { loadPlan, segmentsOf } from "../lib/plan.mjs";
 import { describeStory, loadStory } from "../lib/story.mjs";
 
 const args = parseArgs();
@@ -25,14 +25,14 @@ const manifest = readManifest(story.manifestFile, story.planFile);
 
 let segments = segmentsOf(plan);
 if (args.from && args.from !== true) {
-  const a = segmentById(plan, String(args.from));
-  if (!a) throw new Error(`--from ${args.from} is not in the plan`);
-  segments = segments.filter((s) => s.order >= a.order);
+  const idx = segments.findIndex((s) => s.id === String(args.from));
+  if (idx < 0) throw new Error(`--from ${args.from} is not in the plan`);
+  segments = segments.slice(idx);
 }
 if (args.to && args.to !== true) {
-  const a = segmentById(plan, String(args.to));
-  if (!a) throw new Error(`--to ${args.to} is not in the plan`);
-  segments = segments.filter((s) => s.order <= a.order);
+  const idx = segments.findIndex((s) => s.id === String(args.to));
+  if (idx < 0) throw new Error(`--to ${args.to} is not in the plan`);
+  segments = segments.slice(0, idx + 1);
 }
 
 const clips = [];

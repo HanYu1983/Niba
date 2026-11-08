@@ -38,7 +38,7 @@ const files = {
       plan: "plan.ch0.json",
       prompts: "prompts",
       output: "output",
-      render: { width: 608, height: 352, fps: 24, turbo: true },
+      render: { width: 352, height: 608, fps: 24, turbo: true },
       subtitles: { lang: "zh-Hant", rate: 6.2, maxLine: 15, protect: [] }
     },
     null,

@@ -72,7 +72,10 @@ for (const seg of plan.segments) {
   const shots = splitShots(text);
   if (!shots.length) row.issues.push("no [Shot N] markers");
   const anchors = shots.map((s) => s.anchor);
-  if (shots[0] && /\bAt\s+\d/.test(shots[0].text.split("[Shot 2]")[0])) row.issues.push("[Shot 1] carries a timestamp");
+  const head = shots[0]?.body ?? "";
+  if (format !== "r2v" && /^\s*(?:At\s+)?(?:(?:\d{2}):)?\d{2}:\d{2}\.\d{3}|^\s*\d{2}:\d{2}\s*[-–]/.test(head)) {
+    row.issues.push("[Shot 1] carries a timestamp");
+  }
   for (let i = 1; i < anchors.length; i++) {
     if (anchors[i] <= anchors[i - 1]) row.issues.push(`[Shot ${i + 1}] timestamp is not increasing`);
   }
@@ -96,7 +99,13 @@ for (const seg of plan.segments) {
   }
 
   const symbols = spokenSymbolIssues(text);
-  for (const s of symbols) row.issues.push(`spoken symbols ${s.symbols.join("/")} in "${s.line.slice(0, 24)}"`);
+  for (const s of symbols) {
+    // An em-dash is a deliberate pause in this voice; the other symbols are read aloud.
+    const hard = s.symbols.filter((x) => x !== "em-dash");
+    const msg = `spoken symbols ${s.symbols.join("/")} in "${s.line.slice(0, 24)}"`;
+    if (hard.length) row.issues.push(msg);
+    else row.warnings.push(msg);
+  }
 
   if (format !== "r2v" && /<Picture\s+\d+>/i.test(text)) row.issues.push("<Picture N> in a t2v prompt");
   if (format === "r2v") {

@@ -56,7 +56,7 @@ export function loadStory(opts = {}) {
     videoDir: resolve(outputDir, "video"),
     assetRoot,
     comfy,
-    render: { width: 608, height: 352, fps: 24, turbo: true, ...(config.render ?? {}) },
+    render: { width: 352, height: 608, fps: 24, turbo: true, ...(config.render ?? {}) },
     subtitles: { lang: "zh-Hant", rate: 6.2, maxLine: 15, ...(config.subtitles ?? {}) }
   };
 }
@@ -122,9 +122,12 @@ export function newestFilm(story) {
     .filter((f) => /\.mp4$/i.test(f))
     .map((f) => {
       const path = resolve(story.videoDir, f);
-      return { path, mtime: statSync(path).mtimeMs };
+      // A hand-made duplicate ("… - 複製.mp4", "… copy.mp4") is newer than the real film but
+      // is not the film the subtitles should be named after.
+      const copy = /(?:copy|複製|副本)/i.test(f) ? 0 : 1;
+      return { path, copy, mtime: statSync(path).mtimeMs };
     })
-    .sort((a, b) => b.mtime - a.mtime);
+    .sort((a, b) => b.copy - a.copy || b.mtime - a.mtime);
   if (!files.length) return null;
   const full = files.filter((x) => /_full_/i.test(basename(x.path)));
   return (full[0] ?? files[0]).path;

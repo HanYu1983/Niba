@@ -1,14 +1,9 @@
 @echo off
-setlocal enabledelayedexpansion
+setlocal
+cd /d "%~dp0.."
 
-for /L %%i in (2, 1, 79) do (
-    set "num=00%%i"
-    set "seg=seg_!num:~-3!"
-    REM prodoct
-    node gen_video/render_segment.mjs --plan test_story3/plan.ch0.json --seg !seg! --prompt .\test_story3\prompts\!seg!.t2v.txt --async --no-turbo --seed 100 --width 352 --height 608
-    
-    REM test
-    REM node gen_video/render_segment.mjs --plan test_story3/plan.ch0.json --seg !seg! --prompt .\test_story3\prompts\!seg!.t2v.txt --async
-)
+REM Sequential submit for the whole plan. Segments already in render_manifest.json
+REM are skipped unless you add --force. Collection: audit_renders + download_renders.
+node workspace\tools\render_all.mjs --story test_story3 --from seg_002 --async --no-turbo --seed 100
 
 endlocal

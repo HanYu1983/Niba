@@ -6,28 +6,29 @@
 
 | File | Role |
 |---|---|
+| `story.json` | Story config: plan/prompts/output paths, 352×608 @ 24 fps, subtitle protect list |
 | `story_ch0.html` | Original Penana export (contains per-paragraph watermark spans) |
 | `story_ch0.txt` | Clean novel text extracted from the HTML; this is the slice source |
-| `extract_story.mjs` | HTML → `story_ch0.txt` (drops watermark spans / `display:none`) |
 | `data_entities.mjs` | Character / prop / location inventory + reference-image prompts |
 | `data_segments_a.mjs` | Segments 1–23: training ground → night calls |
 | `data_segments_b.mjs` | Segments 24–49: penthouse → street → last ordinary morning |
 | `data_segments_c.mjs` | Segments 50–79: bridge → collapse → riverbed |
 | `build_plan.mjs` | Slices by anchor, derives timing, validates, writes `plan.ch0.json` |
-| `verify_plan.mjs` | Independent re-check of hash / contiguity / scene-first / first_seen |
-| `generate_refs.mjs` | Generates every `to_generate` reference plate with `moodyRealMix_zitV7` |
 | `refs_report.json` | Result of the last plate run (model, sizes, files, failures) |
 | `prompts/seg_002.r2v.txt` | Six-field r2v prompt for `seg_002` |
 | `prompts/seg_0NN.t2v.txt` | Three-field t2v prompts (001–079, full chapter) |
-| `render_manifest.json` | One entry per rendered segment: prompt_id, seed, plates, mp4 |
+| `render_manifest.json` | One entry per rendered segment: mode, prompt_id, seed, plates, mp4 |
+| `output/` | `render/plan.ch0/` (clips) and `video/` (merged film + subtitles); gitignored |
+
+Everything generic lives in `../workspace/` — see `../workspace/README.md` for the full tool list.
 
 Rebuild:
 
 ```powershell
-node extract_story.mjs
-node build_plan.mjs
-node verify_plan.mjs
-node generate_refs.mjs      # optional: reference plates (needs ComfyUI reachable)
+node ../workspace/tools/extract_penana.mjs --story .   # story_ch0.html -> story_ch0.txt
+node build_plan.mjs                                    # data_*.mjs -> plan.ch0.json
+node ../workspace/tools/verify_plan.mjs --story .
+node ../workspace/tools/generate_refs.mjs --story .    # optional: needs ComfyUI reachable
 ```
 
 ## What the plan covers
@@ -54,10 +55,11 @@ node generate_refs.mjs      # optional: reference plates (needs ComfyUI reachabl
 
 ## Reference plates
 
-Every entity owns `output/refs/<entity_id>/`; ComfyUI names the files, so the plan records
-the folder only. `generate_refs.mjs` renders the missing ones with
-`moodyRealMix_zitV7.safetensors` (Z-Image Turbo: 8 steps, cfg 1, shift 3, `res_multistep` /
-`simple`), one plate per entity:
+Every entity owns `refs/<entity_id>/` under the shared asset root
+(`comfyui_mcp/metadata.json → comfyui.output_dir`, i.e. `../output`); ComfyUI names the files,
+so the plan records the folder only. `workspace/tools/generate_refs.mjs` renders the missing
+ones with `moodyRealMix_zitV7.safetensors` (Z-Image Turbo: 8 steps, cfg 1, shift 3,
+`res_multistep` / `simple`), one plate per entity:
 
 | kind | size | framing |
 |---|---|---|
@@ -97,13 +99,12 @@ guard list (`not anime … no on-screen text.`) stays identical in every file.
 
 ## Rendering a segment
 
-`gen_video/render_segment.mjs` takes a plan, a segment id and a prompt file, resolves every
-`reference_images` entry to the newest plate in that entity's folder (scene slot first), and
-submits the r2v job:
+`workspace/tools/render_segment.mjs` takes the story folder and a segment id; it finds the
+prompt (`<seg>.t2v.txt` or `.r2v.txt`), resolves every `reference_images` entry to the newest
+plate in that entity's folder (scene slot first), and submits the job:
 
 ```powershell
-node gen_video/render_segment.mjs --plan test_story3/plan.ch0.json --seg seg_002 `
-     --prompt test_story3/prompts/seg_002.r2v.txt
+node ../workspace/tools/render_segment.mjs --seg seg_002
 ```
 
 Add `--dry-run` to see the resolved slots/duration without touching the GPU, `--take N` to
@@ -115,19 +116,26 @@ to `render_manifest.json`; clips land in `output/render/<plan name>/`.
 job — it prints the `prompt_id`, the queue position and the exact poll command, then exits 0:
 
 ```powershell
-node gen_video/render_segment.mjs --plan test_story3/plan.ch0.json --seg seg_002 `
-     --prompt test_story3/prompts/seg_002.r2v.txt --async
+node ../workspace/tools/render_segment.mjs --seg seg_002 --async
 # → poll: node comfyui_mcp/cli.mjs --job --prompt_id <id> --wait true
 ```
 
-## Assembling the chapter
-
-`test_story3/concat_renders.mjs` builds the concat list from `render_manifest.json` (segment
-order, not directory sort), verifies every file exists, and merges in one pass:
+The whole chapter, in plan order, skipping segments already in the manifest:
 
 ```powershell
-node test_story3/concat_renders.mjs              # stream copy, lossless and fast
-node test_story3/concat_renders.mjs --reencode   # H.264 CRF 18 + AAC 192k, if joins drift
+node ../workspace/tools/render_all.mjs --from seg_002 --async --no-turbo --seed 100
+```
+
+`render_all.bat` / `render_one.bat` are thin wrappers around these two commands.
+
+## Assembling the chapter
+
+`workspace/tools/concat_renders.mjs` builds the concat list from `render_manifest.json`
+(segment order, not directory sort), verifies every file exists, and merges in one pass:
+
+```powershell
+node ../workspace/tools/concat_renders.mjs              # stream copy, lossless and fast
+node ../workspace/tools/concat_renders.mjs --reencode   # H.264 CRF 18 + AAC 192k, if joins drift
 ```
 
 Output: `output/video/plan.ch0_full_<WxH>.mp4`, with the concat list kept beside it. All 79
@@ -136,8 +144,8 @@ merged file decodes to exactly the sum of the segment frame counts (13,383).
 
 ## Subtitles
 
-`test_story3/build_subtitles.mjs` writes a YouTube-ready Traditional Chinese track. Timing is
-derived from the plan rather than from transcription:
+`workspace/tools/build_subtitles.mjs` writes a YouTube-ready Traditional Chinese track. Timing
+is derived from the plan rather than from transcription:
 
 - segment offsets use the same cumulative clip durations that `concat_renders.mjs` lays down,
   so a cue cannot drift against the merged film;
@@ -148,13 +156,14 @@ derived from the plan rather than from transcription:
   matters because the model often holds a beat of room tone before the first line.
 
 ```powershell
-node test_story3/build_subtitles.mjs            # prompt timing + audio alignment
-node test_story3/build_subtitles.mjs --no-audio # prompt timing only
+node ../workspace/tools/build_subtitles.mjs            # prompt timing + audio alignment
+node ../workspace/tools/build_subtitles.mjs --no-audio # prompt timing only
 ```
 
 Output: `output/video/plan.ch0_full_352x608.zh-Hant.srt` plus a `.vtt` with the same cues.
 Rules: max 15 characters per line, max two lines, no speaker labels, narration and internal
 monologue in `<i>`, and line breaks scored so they never split a name or a compound word.
+The word list for line breaking lives in `story.json → subtitles.protect`, not in the tool.
 
 ## Still to do (stage 2)
 

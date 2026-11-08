@@ -40,10 +40,14 @@ export function splitShots(text) {
   const parts = text.split(/(?=\[Shot \d+\])/).slice(1);
   const shots = [];
   for (const part of parts) {
-    const index = Number((part.match(/^\[Shot (\d+)\]/) ?? [])[1] ?? 0);
+    const header = part.match(/^\[Shot (\d+)\]/);
+    const index = Number(header?.[1] ?? 0);
+    // r2v puts the range on the line right after the header; strip the header before looking
+    // for it, otherwise the leading `[Shot N]` hides the `00:00-00:05`.
+    const body = header ? part.slice(header[0].length) : part;
     const at = part.match(/\bAt\s+(?:(\d{2}):)?(\d{2}):(\d{2})\.(\d{3})/);
     const shortAt = at ? null : part.match(/\bAt\s+(\d{2}):(\d{2})\.(\d{3})/);
-    const range = at || shortAt ? null : part.match(/^\s*(\d{2}):(\d{2})\s*[-–]/);
+    const range = at || shortAt ? null : body.match(/^\s*(\d{2}):(\d{2})\s*[-–]/);
 
     let anchor = 0;
     if (at) anchor = (Number(at[1] ?? 0) * 3600) + Number(at[2]) * 60 + Number(at[3]) + Number(at[4]) / 1000;
@@ -51,7 +55,7 @@ export function splitShots(text) {
     else if (range) anchor = Number(range[1]) * 60 + Number(range[2]);
 
     const lines = dLines(part);
-    shots.push({ index, anchor, lines, text: part });
+    shots.push({ index, anchor, lines, text: part, body });
   }
   return shots;
 }
@@ -79,8 +83,7 @@ export function spokenChars(text) {
 }
 
 /** The opening of [Shot 1], used to compare the style lock across a whole story. */
-export function shotOneOpening(text, chars = 120) {
-  const i = text.indexOf("[Shot 1]");
+export function shotOneOpening(text, chars = 120) {  const i = text.indexOf("[Shot 1]");
   if (i === -1) return "";
   const body = text.slice(i + "[Shot 1]".length).trimStart();
   return [...body].slice(0, chars).join("");

@@ -92,7 +92,10 @@ export function buildCues({ story, plan, manifest, rate = 6.2 }) {
   const segDur = new Map();
   let cursor = 0;
 
-  for (const seg of plan.segments) {
+  // Same order concat_renders lays the clips down, so a cue cannot drift against the film.
+  const ordered = [...plan.segments].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+  for (const seg of ordered) {
     const rec = manifest.segments[seg.id];
     if (!rec) throw new Error(`${seg.id}: missing from ${story.manifestFile}`);
     const duration = rec.duration_sec ?? seg.estimated_sec;
