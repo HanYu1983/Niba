@@ -8,8 +8,8 @@
       "mode": "t2v",
       "prompt_id": "56eb6a2a-e83d-4005-873f-13caf44f059b",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_002.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -17,8 +17,11 @@
       "duration_sec": 8,
       "frames": 192,
       "references": [],
-      "files": [],
-      "submitted_at": "2026-11-08T03:45:12.322Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_002_00012_.mp4"
+      ],
+      "submitted_at": "2026-11-08T03:45:12.322Z",
+      "downloaded_at": "2026-11-08T05:16:23.346Z"
     },
     "seg_003": {
       "segment_id": "seg_003",
@@ -150,11 +153,11 @@
       "segment_id": "seg_009",
       "take": 1,
       "mode": "t2v",
-      "prompt_id": "2d0978ad-b6bf-4b17-90cd-4aba65122906",
+      "prompt_id": "080a2949-9c03-4c9c-8e7a-70e50e439f99",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_009.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 100,
+      "seed": 1794115120,
       "turbo": false,
       "width": 352,
       "height": 608,
@@ -162,7 +165,7 @@
       "frames": 294,
       "references": [],
       "files": [],
-      "submitted_at": "2026-11-08T03:45:13.999Z"
+      "submitted_at": "2026-11-08T05:18:41.755Z"
     },
     "seg_010": {
       "segment_id": "seg_010",
@@ -438,11 +441,11 @@
       "segment_id": "seg_026",
       "take": 1,
       "mode": "t2v",
-      "prompt_id": "c2ce21fb-71d6-47ca-a2a3-7de7e657aa8f",
+      "prompt_id": "374d2abe-04ed-4c79-8520-33a14931eac1",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_026.t2v.txt",
       "status": "queued",
       "queued": true,
-      "seed": 100,
+      "seed": 1794115147,
       "turbo": false,
       "width": 352,
       "height": 608,
@@ -450,7 +453,7 @@
       "frames": 124,
       "references": [],
       "files": [],
-      "submitted_at": "2026-11-08T03:45:15.114Z"
+      "submitted_at": "2026-11-08T05:19:08.116Z"
     },
     "seg_027": {
       "segment_id": "seg_027",
@@ -908,8 +911,8 @@
       "mode": "t2v",
       "prompt_id": "e5c9990a-e582-4467-adaa-b2ea49f855fa",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_051.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -917,8 +920,11 @@
       "duration_sec": 6.58,
       "frames": 158,
       "references": [],
-      "files": [],
-      "submitted_at": "2026-11-08T03:45:16.848Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_051_00002_.mp4"
+      ],
+      "submitted_at": "2026-11-08T03:45:16.848Z",
+      "downloaded_at": "2026-11-08T05:16:23.347Z"
     },
     "seg_052": {
       "segment_id": "seg_052",
