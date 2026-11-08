@@ -66,7 +66,7 @@ console.log(
     {
       ...describeStory(story),
       planned: queue.length,
-      skipped: skipped.length,
+      skipped: skipped,
       submitting: batch.length,
       mode: args.mode ?? "auto",
       async: submitOnly,

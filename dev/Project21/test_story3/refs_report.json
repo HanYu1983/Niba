@@ -1,20 +1,327 @@
 {
-  "model": "moodyRealMix_zitV7.safetensors",
-  "output_dir": "D:\\han\\Niba\\dev\\Project21\\output",
-  "generated_at": "2026-11-06T13:38:38.822Z",
-  "total_plates_on_disk": 1,
-  "statuses_flipped": 0,
+  "model": "zImageUltimateNSFW_v20.safetensors",
+  "asset_root": "D:\\han\\Niba\\dev\\Project21\\test_story3\\output",
+  "generated_at": "2026-11-08T03:13:50.767Z",
+  "statuses_flipped": 29,
   "runs": [
+    {
+      "id": "char_frost",
+      "kind": "character",
+      "size": "832x1024",
+      "status": "success",
+      "seconds": 12.3,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_frost\\plate_00004_.png"
+      ],
+      "prompt_id": "7f9d2777-2e21-4657-9dba-85ead255c5b8"
+    },
+    {
+      "id": "prop_exo_suit",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.1,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_exo_suit\\plate_00003_.png"
+      ],
+      "prompt_id": "cf47f014-58f6-461d-87b6-92ac53e71570"
+    },
+    {
+      "id": "prop_exo_rifle",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.3,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_exo_rifle\\plate_00002_.png"
+      ],
+      "prompt_id": "c1451817-5158-4797-8f91-aace2206bfec"
+    },
+    {
+      "id": "prop_target_sheet",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.2,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_target_sheet\\plate_00002_.png"
+      ],
+      "prompt_id": "0483c91b-31ad-414b-b4d2-f32b43ba7159"
+    },
+    {
+      "id": "prop_whisky_glass",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.1,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_whisky_glass\\plate_00002_.png"
+      ],
+      "prompt_id": "abe42e8b-5d58-45c5-a7d5-4c9403343aa1"
+    },
+    {
+      "id": "prop_vaccine_syringe",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.2,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_vaccine_syringe\\plate_00002_.png"
+      ],
+      "prompt_id": "d68d6286-6a51-4786-8ba1-9de0fc0cf9a8"
+    },
+    {
+      "id": "prop_contractor_phone",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.2,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_contractor_phone\\plate_00002_.png"
+      ],
+      "prompt_id": "3ac9a691-e9d2-4798-a01c-c8ea72c0cf1b"
+    },
+    {
+      "id": "prop_motorcycle",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.5,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_motorcycle\\plate_00002_.png"
+      ],
+      "prompt_id": "6762f8e7-dd0a-4680-8eda-f05c9aad12c0"
+    },
+    {
+      "id": "prop_qr_ticket",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.7,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_qr_ticket\\plate_00002_.png"
+      ],
+      "prompt_id": "84cb8c4d-3c91-4624-87c7-e56acf124dac"
+    },
+    {
+      "id": "prop_ark_phone",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 16.1,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_ark_phone\\plate_00002_.png"
+      ],
+      "prompt_id": "9aa545d3-1b0b-4f70-9c0b-f249e85340a9"
+    },
+    {
+      "id": "prop_steel_rod",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 13.8,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
+      ],
+      "prompt_id": "56dbf769-8442-4590-b5de-96c7005259a5"
+    },
+    {
+      "id": "prop_taylor_car",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.5,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_taylor_car\\plate_00002_.png"
+      ],
+      "prompt_id": "7373d567-2f6a-4eef-934f-4269427feb5b"
+    },
+    {
+      "id": "prop_news_feed",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.3,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_news_feed\\plate_00002_.png"
+      ],
+      "prompt_id": "1b39f6b0-6930-4a17-94d6-10c854711b33"
+    },
+    {
+      "id": "prop_tactical_backpack",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.5,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
+      ],
+      "prompt_id": "cfe4fbd0-39c0-4d43-818d-b9223f5c037c"
+    },
+    {
+      "id": "loc_prologue_title",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 13.7,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_prologue_title\\plate_00002_.png"
+      ],
+      "prompt_id": "e97a9525-b5d2-4c8b-97c5-d63ea11b8037"
+    },
+    {
+      "id": "loc_training_ground",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 13.7,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_training_ground\\plate_00002_.png"
+      ],
+      "prompt_id": "259c5321-5062-467f-a62d-9b0253f55cba"
+    },
+    {
+      "id": "loc_colonel_lounge_night",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 13.9,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_colonel_lounge_night\\plate_00002_.png"
+      ],
+      "prompt_id": "593efff3-8771-4ca8-8a16-7fe2b2d763df"
+    },
+    {
+      "id": "loc_reservoir_night",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 16.9,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_reservoir_night\\plate_00002_.png"
+      ],
+      "prompt_id": "48500ca7-2c8f-4df9-b932-5e4a485d05cc"
+    },
+    {
+      "id": "loc_contractor_room",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 13.7,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_contractor_room\\plate_00002_.png"
+      ],
+      "prompt_id": "8131d3e0-822f-4214-a150-b3acc4dd9ed3"
+    },
+    {
+      "id": "loc_club_penthouse",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14.3,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_club_penthouse\\plate_00002_.png"
+      ],
+      "prompt_id": "6805cb68-9720-4cd4-b463-f97d2a6cda45"
+    },
+    {
+      "id": "loc_city_street_night",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 13.9,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_city_street_night\\plate_00002_.png"
+      ],
+      "prompt_id": "dd853847-385d-43f8-84b8-ae524d8944f6"
+    },
+    {
+      "id": "loc_apartment_morning",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 13.6,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_apartment_morning\\plate_00002_.png"
+      ],
+      "prompt_id": "eeacfbbd-b57f-453a-a996-f74ddd0b86f3"
+    },
+    {
+      "id": "loc_taxi_interior",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14.4,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_taxi_interior\\plate_00002_.png"
+      ],
+      "prompt_id": "e09be8ff-f4a8-4c54-96c0-c1e9a3ca1657"
+    },
+    {
+      "id": "loc_taylor_car_interior",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_taylor_car_interior\\plate_00002_.png"
+      ],
+      "prompt_id": "747fa838-640a-472b-ba20-e53fb2439636"
+    },
+    {
+      "id": "loc_city_street_morning",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 13.5,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_city_street_morning\\plate_00002_.png"
+      ],
+      "prompt_id": "086aecae-0b91-46ed-a8d9-5a6008f0546c"
+    },
+    {
+      "id": "loc_bridge_traffic",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 13.7,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_bridge_traffic\\plate_00002_.png"
+      ],
+      "prompt_id": "fb9f6046-29b1-4f08-8ced-45154120c011"
+    },
     {
       "id": "loc_bridge_collapse",
       "kind": "location",
       "size": "1344x768",
       "status": "success",
-      "seconds": 15.7,
+      "seconds": 14.3,
       "files": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_bridge_collapse\\plate_00002_.png"
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_bridge_collapse\\plate_00003_.png"
       ],
-      "prompt_id": "2d44fc63-c340-49f3-b99f-f9cb91290654"
+      "prompt_id": "79394310-cf8a-4090-afa0-bb9af51d6026"
+    },
+    {
+      "id": "loc_riverbed_wreck",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14.3,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbed_wreck\\plate_00002_.png"
+      ],
+      "prompt_id": "b1148e04-9fb8-45ac-8de9-eb9216d4a93e"
+    },
+    {
+      "id": "loc_city_skyline_noon",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14.2,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_city_skyline_noon\\plate_00002_.png"
+      ],
+      "prompt_id": "1492c0b2-5360-4eaa-8b6d-2abe263d3c94"
     }
   ]
 }

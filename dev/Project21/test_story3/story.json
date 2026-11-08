@@ -25,5 +25,10 @@
       "一樣", "其實", "然後", "緊張", "老頭", "上校", "倒是", "還在", "先幫",
       "看不出", "城市", "慘叫聲", "交織", "喇叭", "背包", "嘉年"
     ]
+  },
+  "refs": {
+    "root": "output",
+    "model": "zImageUltimateNSFW_v20.safetensors",
+    "sizes": { "character": { "width": 832, "height": 1024 } }
   }
 }

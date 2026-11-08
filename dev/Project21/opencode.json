@@ -9,7 +9,7 @@
     "video-compiler": {
       "type": "local",
       "command": ["node", "D:\\han\\Niba\\dev\\Project21\\gen_video\\mcp_server_stdio.mjs"],
-      "enabled": true
+      "enabled": false
     },
     "comfyui": {
       "type": "local",

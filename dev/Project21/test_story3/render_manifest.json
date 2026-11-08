@@ -5,23 +5,26 @@
     "seg_002": {
       "segment_id": "seg_002",
       "take": 1,
-      "prompt_id": "4d19cc86-b49b-466f-a9e9-1946ccc79960",
+      "mode": "r2v",
+      "prompt_id": "73cc7f7c-162f-45e9-ab1d-d95d5e0ddf5b",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_002.t2v.txt",
       "status": "success",
       "queued": false,
-      "seed": 100,
+      "seed": 1794108397,
       "turbo": false,
+      "width": 352,
+      "height": 608,
       "duration_sec": 8,
       "frames": 192,
       "references": [
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_training_ground\\plate_00001_.png",
-        "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_frost\\plate_00002_.png"
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_training_ground\\plate_00002_.png",
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_frost\\plate_00004_.png"
       ],
       "files": [
-        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_002_00009_.mp4"
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_002_00012_.mp4"
       ],
-      "submitted_at": "2026-11-06T16:49:27.920Z",
-      "downloaded_at": "2026-11-07T01:34:44.674Z"
+      "submitted_at": "2026-11-08T03:26:38.527Z",
+      "downloaded_at": "2026-11-08T03:41:53.712Z"
     },
     "seg_003": {
       "segment_id": "seg_003",
@@ -43,7 +46,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_003_00004_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:23.875Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.336Z"
     },
     "seg_004": {
       "segment_id": "seg_004",
@@ -66,7 +69,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_004_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:26.720Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.336Z"
     },
     "seg_005": {
       "segment_id": "seg_005",
@@ -88,7 +91,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_005_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:28.552Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.336Z"
     },
     "seg_006": {
       "segment_id": "seg_006",
@@ -111,7 +114,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_006_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:30.178Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.336Z"
     },
     "seg_001": {
       "segment_id": "seg_001",
@@ -131,7 +134,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_001_00004_.mp4"
       ],
       "submitted_at": "2026-11-06T16:40:08.519Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_007": {
       "segment_id": "seg_007",
@@ -154,7 +157,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_007_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:31.801Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_008": {
       "segment_id": "seg_008",
@@ -176,7 +179,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_008_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:33.256Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_009": {
       "segment_id": "seg_009",
@@ -198,7 +201,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_009_00004_.mp4"
       ],
       "submitted_at": "2026-11-07T11:10:30.817Z",
-      "downloaded_at": "2026-11-07T11:35:54.638Z"
+      "downloaded_at": "2026-11-08T03:41:53.713Z"
     },
     "seg_010": {
       "segment_id": "seg_010",
@@ -220,7 +223,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_010_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:36.715Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_011": {
       "segment_id": "seg_011",
@@ -242,7 +245,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_011_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:37.798Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_012": {
       "segment_id": "seg_012",
@@ -264,7 +267,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_012_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:39.177Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_014": {
       "segment_id": "seg_014",
@@ -286,7 +289,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_014_00003_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:41.823Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_015": {
       "segment_id": "seg_015",
@@ -308,7 +311,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_015_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:43.053Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_016": {
       "segment_id": "seg_016",
@@ -328,7 +331,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_016_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:43.741Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_017": {
       "segment_id": "seg_017",
@@ -372,7 +375,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_018_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:46.851Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_019": {
       "segment_id": "seg_019",
@@ -393,7 +396,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_019_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:47.758Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_020": {
       "segment_id": "seg_020",
@@ -415,7 +418,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_020_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:49.050Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_021": {
       "segment_id": "seg_021",
@@ -436,7 +439,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_021_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:49.996Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_022": {
       "segment_id": "seg_022",
@@ -459,7 +462,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_022_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:52.383Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_023": {
       "segment_id": "seg_023",
@@ -481,7 +484,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_023_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:53.784Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_024": {
       "segment_id": "seg_024",
@@ -501,7 +504,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_024_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:54.483Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_025": {
       "segment_id": "seg_025",
@@ -523,7 +526,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_025_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:56.016Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_026": {
       "segment_id": "seg_026",
@@ -543,7 +546,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_026_00002_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:57.085Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_027": {
       "segment_id": "seg_027",
@@ -565,7 +568,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_027_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:58.485Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_028": {
       "segment_id": "seg_028",
@@ -587,7 +590,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_028_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:59.895Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_029": {
       "segment_id": "seg_029",
@@ -609,7 +612,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_029_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:01.630Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_030": {
       "segment_id": "seg_030",
@@ -631,7 +634,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_030_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:02.976Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_013": {
       "segment_id": "seg_013",
@@ -653,7 +656,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_013_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:52:40.472Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_031": {
       "segment_id": "seg_031",
@@ -674,7 +677,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_031_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:04.174Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_032": {
       "segment_id": "seg_032",
@@ -696,7 +699,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_032_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:05.661Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.337Z"
     },
     "seg_033": {
       "segment_id": "seg_033",
@@ -716,7 +719,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_033_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:06.588Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_034": {
       "segment_id": "seg_034",
@@ -737,7 +740,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_034_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:07.793Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_035": {
       "segment_id": "seg_035",
@@ -757,7 +760,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_035_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:08.535Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_036": {
       "segment_id": "seg_036",
@@ -778,7 +781,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_036_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:09.821Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_037": {
       "segment_id": "seg_037",
@@ -798,7 +801,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_037_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:10.775Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_038": {
       "segment_id": "seg_038",
@@ -818,7 +821,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_038_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:11.676Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_039": {
       "segment_id": "seg_039",
@@ -840,7 +843,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_039_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:13.043Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_040": {
       "segment_id": "seg_040",
@@ -861,7 +864,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_040_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:13.942Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_041": {
       "segment_id": "seg_041",
@@ -884,7 +887,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_041_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:15.483Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_042": {
       "segment_id": "seg_042",
@@ -906,7 +909,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_042_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:17.070Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_043": {
       "segment_id": "seg_043",
@@ -929,7 +932,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_043_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:19.155Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_044": {
       "segment_id": "seg_044",
@@ -950,7 +953,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_044_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:20.097Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_045": {
       "segment_id": "seg_045",
@@ -972,7 +975,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_045_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:21.536Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_046": {
       "segment_id": "seg_046",
@@ -994,7 +997,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_046_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:23.300Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_047": {
       "segment_id": "seg_047",
@@ -1014,7 +1017,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_047_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:24.097Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_048": {
       "segment_id": "seg_048",
@@ -1035,7 +1038,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_048_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:25.132Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_049": {
       "segment_id": "seg_049",
@@ -1055,7 +1058,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_049_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:25.830Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_050": {
       "segment_id": "seg_050",
@@ -1075,7 +1078,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_050_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:26.638Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_051": {
       "segment_id": "seg_051",
@@ -1097,7 +1100,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_051_00002_.mp4"
       ],
       "submitted_at": "2026-11-07T11:25:49.146Z",
-      "downloaded_at": "2026-11-07T11:35:54.638Z"
+      "downloaded_at": "2026-11-08T03:41:53.713Z"
     },
     "seg_052": {
       "segment_id": "seg_052",
@@ -1119,7 +1122,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_052_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:29.376Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_053": {
       "segment_id": "seg_053",
@@ -1141,7 +1144,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_053_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:30.837Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_054": {
       "segment_id": "seg_054",
@@ -1163,7 +1166,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_054_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:32.502Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_055": {
       "segment_id": "seg_055",
@@ -1185,7 +1188,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_055_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:34.004Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_056": {
       "segment_id": "seg_056",
@@ -1206,7 +1209,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_056_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:35.135Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_057": {
       "segment_id": "seg_057",
@@ -1227,7 +1230,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_057_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:36.289Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_058": {
       "segment_id": "seg_058",
@@ -1249,7 +1252,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_058_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:38.200Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_059": {
       "segment_id": "seg_059",
@@ -1271,7 +1274,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_059_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:40.377Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.338Z"
     },
     "seg_060": {
       "segment_id": "seg_060",
@@ -1294,7 +1297,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_060_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:42.178Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_061": {
       "segment_id": "seg_061",
@@ -1315,7 +1318,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_061_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:43.534Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_062": {
       "segment_id": "seg_062",
@@ -1337,7 +1340,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_062_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:44.853Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_063": {
       "segment_id": "seg_063",
@@ -1359,7 +1362,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_063_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:46.433Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_064": {
       "segment_id": "seg_064",
@@ -1380,7 +1383,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_064_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:47.640Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_065": {
       "segment_id": "seg_065",
@@ -1401,7 +1404,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_065_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:48.972Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_066": {
       "segment_id": "seg_066",
@@ -1423,7 +1426,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_066_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:50.643Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_067": {
       "segment_id": "seg_067",
@@ -1444,7 +1447,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_067_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:52.174Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_068": {
       "segment_id": "seg_068",
@@ -1467,7 +1470,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_068_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:54.304Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_069": {
       "segment_id": "seg_069",
@@ -1488,7 +1491,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_069_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:55.792Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_070": {
       "segment_id": "seg_070",
@@ -1509,7 +1512,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_070_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:57.106Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_071": {
       "segment_id": "seg_071",
@@ -1530,7 +1533,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_071_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:53:58.731Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_072": {
       "segment_id": "seg_072",
@@ -1554,7 +1557,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_072_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:54:01.398Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_073": {
       "segment_id": "seg_073",
@@ -1576,7 +1579,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_073_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:54:02.962Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_074": {
       "segment_id": "seg_074",
@@ -1598,7 +1601,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_074_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:54:04.729Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_075": {
       "segment_id": "seg_075",
@@ -1621,7 +1624,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_075_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:54:06.733Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_076": {
       "segment_id": "seg_076",
@@ -1643,7 +1646,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_076_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:54:08.327Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_077": {
       "segment_id": "seg_077",
@@ -1665,7 +1668,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_077_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:54:10.065Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_078": {
       "segment_id": "seg_078",
@@ -1686,7 +1689,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_078_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:54:11.228Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     },
     "seg_079": {
       "segment_id": "seg_079",
@@ -1706,7 +1709,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_079_00001_.mp4"
       ],
       "submitted_at": "2026-11-06T16:54:12.117Z",
-      "downloaded_at": "2026-11-07T01:34:44.676Z"
+      "downloaded_at": "2026-11-08T03:39:51.339Z"
     }
   }
 }
