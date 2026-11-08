@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-08T08:48:16.322Z",
+  "checked_at": "2026-11-08T09:18:50.714Z",
   "comfyui": "http://100.106.154.88:8000",
   "plan": "plan.ch0",
   "total": 79,
@@ -144,13 +144,13 @@
     },
     {
       "seg": "seg_009",
-      "prompt_id": "74bc53bc-60ac-4470-87de-a440335604bc",
-      "mode": "t2v",
+      "prompt_id": "3c18af13-6735-434d-b208-8bad3dfd327a",
+      "mode": "r2v",
       "status": "success",
       "in_history": true,
       "outputs": [
         {
-          "filename": "seg_009_00007_.mp4",
+          "filename": "seg_009_00009_.mp4",
           "subfolder": "render\\plan.ch0",
           "type": "output",
           "key": "images"
