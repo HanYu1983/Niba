@@ -1,20 +1,20 @@
 {
-  "checked_at": "2026-11-08T09:18:50.714Z",
+  "checked_at": "2026-11-08T12:24:12.009Z",
   "comfyui": "http://100.106.154.88:8000",
   "plan": "plan.ch0",
   "total": 79,
-  "with_outputs": 79,
-  "without_outputs": 0,
+  "with_outputs": 8,
+  "without_outputs": 71,
   "segments": [
     {
       "seg": "seg_002",
-      "prompt_id": "56eb6a2a-e83d-4005-873f-13caf44f059b",
-      "mode": "t2v",
+      "prompt_id": "2c5b368a-38de-4ca6-bbcc-556aae9648c6",
+      "mode": "r2v",
       "status": "success",
       "in_history": true,
       "outputs": [
         {
-          "filename": "seg_002_00013_.mp4",
+          "filename": "seg_002_00014_.mp4",
           "subfolder": "render\\plan.ch0",
           "type": "output",
           "key": "images"
@@ -25,13 +25,13 @@
     },
     {
       "seg": "seg_003",
-      "prompt_id": "96dc354e-4e8a-4b7d-9589-96127323fe3c",
-      "mode": "t2v",
+      "prompt_id": "f1b9f4e5-555e-41b2-aacd-e759f5461633",
+      "mode": "r2v",
       "status": "success",
       "in_history": true,
       "outputs": [
         {
-          "filename": "seg_003_00005_.mp4",
+          "filename": "seg_003_00007_.mp4",
           "subfolder": "render\\plan.ch0",
           "type": "output",
           "key": "images"
@@ -42,13 +42,13 @@
     },
     {
       "seg": "seg_004",
-      "prompt_id": "e03342f5-70f9-4aa4-9eb5-3a83cb9ed35d",
-      "mode": "t2v",
+      "prompt_id": "517dce74-9592-4ee2-9cc2-6a975b17912b",
+      "mode": "r2v",
       "status": "success",
       "in_history": true,
       "outputs": [
         {
-          "filename": "seg_004_00003_.mp4",
+          "filename": "seg_004_00005_.mp4",
           "subfolder": "render\\plan.ch0",
           "type": "output",
           "key": "images"
@@ -59,13 +59,13 @@
     },
     {
       "seg": "seg_005",
-      "prompt_id": "cacdf790-28cd-4e0e-9e2a-9d4cee7e4b68",
-      "mode": "t2v",
+      "prompt_id": "4178a5a3-5a3e-4814-b1d1-1e99f227ad2b",
+      "mode": "r2v",
       "status": "success",
       "in_history": true,
       "outputs": [
         {
-          "filename": "seg_005_00003_.mp4",
+          "filename": "seg_005_00005_.mp4",
           "subfolder": "render\\plan.ch0",
           "type": "output",
           "key": "images"
@@ -76,13 +76,13 @@
     },
     {
       "seg": "seg_006",
-      "prompt_id": "663dcc45-1cdc-47cd-8ab4-fb168452ab4d",
-      "mode": "t2v",
+      "prompt_id": "eba5e9dd-4950-4ce9-b290-161676f59afd",
+      "mode": "r2v",
       "status": "success",
       "in_history": true,
       "outputs": [
         {
-          "filename": "seg_006_00003_.mp4",
+          "filename": "seg_006_00004_.mp4",
           "subfolder": "render\\plan.ch0",
           "type": "output",
           "key": "images"
@@ -93,13 +93,13 @@
     },
     {
       "seg": "seg_001",
-      "prompt_id": "28cbb1ae-aa3a-40fd-98e4-23301b9c5b4d",
-      "mode": "t2v",
+      "prompt_id": "602fcf9a-12d3-40cd-b113-bb0ef8738350",
+      "mode": "r2v",
       "status": "success",
       "in_history": true,
       "outputs": [
         {
-          "filename": "seg_001_00005_.mp4",
+          "filename": "seg_001_00006_.mp4",
           "subfolder": "render\\plan.ch0",
           "type": "output",
           "key": "images"
@@ -110,13 +110,13 @@
     },
     {
       "seg": "seg_007",
-      "prompt_id": "f2f9f012-bba5-4dac-8b14-1f4f151fcffa",
-      "mode": "t2v",
+      "prompt_id": "7291f63e-4ca8-4c24-bb3e-9f7ef1c5b3db",
+      "mode": "r2v",
       "status": "success",
       "in_history": true,
       "outputs": [
         {
-          "filename": "seg_007_00003_.mp4",
+          "filename": "seg_007_00004_.mp4",
           "subfolder": "render\\plan.ch0",
           "type": "output",
           "key": "images"
@@ -127,13 +127,13 @@
     },
     {
       "seg": "seg_008",
-      "prompt_id": "b32f1cb8-7deb-4c23-a68f-47b505f6b410",
-      "mode": "t2v",
+      "prompt_id": "0c3219bd-9135-40f9-b698-4e2d71d7d851",
+      "mode": "r2v",
       "status": "success",
       "in_history": true,
       "outputs": [
         {
-          "filename": "seg_008_00003_.mp4",
+          "filename": "seg_008_00004_.mp4",
           "subfolder": "render\\plan.ch0",
           "type": "output",
           "key": "images"
@@ -144,1210 +144,643 @@
     },
     {
       "seg": "seg_009",
-      "prompt_id": "3c18af13-6735-434d-b208-8bad3dfd327a",
+      "prompt_id": "7872f0e1-b186-4f28-b572-4d63a35f6a9f",
       "mode": "r2v",
       "status": "success",
       "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_009_00009_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "outputs": [],
+      "comfy_status": "error",
+      "completed": false
     },
     {
       "seg": "seg_010",
-      "prompt_id": "caf666c1-542f-48e9-9d2d-36f34c3a602d",
-      "mode": "t2v",
+      "prompt_id": "242b6357-58e5-4d67-99ad-990f9791fa96",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_010_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_011",
-      "prompt_id": "89f36849-f91a-4ae2-a767-73620912e793",
-      "mode": "t2v",
+      "prompt_id": "b9306ef5-1bbb-4525-840e-499b4671d220",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_011_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_012",
-      "prompt_id": "7b3cc3dc-ea1e-45db-a8d1-a9c8e98d02b2",
-      "mode": "t2v",
+      "prompt_id": "f1f652a8-a654-4b0d-a7e4-67fdb0d972a3",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_012_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_014",
-      "prompt_id": "9329b35e-dca8-465e-b111-3d73bb24a935",
-      "mode": "t2v",
+      "prompt_id": "5969cc84-c8f3-472a-9977-3b31d1551200",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_014_00004_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_015",
-      "prompt_id": "48b6f9c3-5370-48db-9c69-955282b45384",
-      "mode": "t2v",
+      "prompt_id": "58fa5aad-ae3f-4ba2-b8c6-ebdbefce5aff",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_015_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_016",
-      "prompt_id": "f7bf3cb4-8981-44e3-952c-916c0191530d",
-      "mode": "t2v",
+      "prompt_id": "b68236c8-ccc7-483d-b448-e73703641cbb",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_016_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_017",
-      "prompt_id": "3a0975b3-42f7-46cc-900a-7b3f91ce12d8",
-      "mode": "t2v",
+      "prompt_id": "15859fd0-86ba-4473-829c-d9209bcd670a",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_017_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_018",
-      "prompt_id": "d3e1670d-86d2-4fc7-a44a-807ff01f9226",
-      "mode": "t2v",
+      "prompt_id": "ff67c66c-9e87-4058-a3c1-d77e859c779c",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_018_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_019",
-      "prompt_id": "30ce16a8-dc35-4cf9-894f-2b4f9fe69b13",
-      "mode": "t2v",
+      "prompt_id": "7dab170e-5179-4cee-bebd-e802fdc03791",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_019_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_020",
-      "prompt_id": "6ee89186-008e-43c3-aa21-9ef157ace917",
-      "mode": "t2v",
+      "prompt_id": "5c20eebe-e40a-46b0-acc6-09bb05bbd812",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_020_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_021",
-      "prompt_id": "0fbf653d-906c-4975-87a5-c33912cef031",
-      "mode": "t2v",
+      "prompt_id": "fc674bfc-6824-4ca7-9997-e42850ca4d35",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_021_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_022",
-      "prompt_id": "3fc205d0-f561-45a2-be7f-64e0d4734ff9",
-      "mode": "t2v",
+      "prompt_id": "d82fbf86-614e-43b8-be65-9025ae2da269",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_022_00004_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_023",
-      "prompt_id": "db497c57-fb35-4bd3-83a9-ecc2b0408001",
-      "mode": "t2v",
+      "prompt_id": "cb63a26f-a3ed-463b-b5cd-8664877e0114",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_023_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_024",
-      "prompt_id": "9a478397-982d-4496-8ec4-e14b66cc9c5d",
-      "mode": "t2v",
+      "prompt_id": "a606b3df-6e0a-4a88-bf8d-d5ab470b3d40",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_024_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_025",
-      "prompt_id": "5135ea89-3a5c-4533-9691-cc14973dc308",
-      "mode": "t2v",
+      "prompt_id": "35d1ca8e-3070-4ef9-8e77-3ff1f0adc690",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_025_00003_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_026",
-      "prompt_id": "374d2abe-04ed-4c79-8520-33a14931eac1",
-      "mode": "t2v",
+      "prompt_id": "77f9e132-437b-4e80-9b58-87f23dbc97e0",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_026_00004_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_027",
-      "prompt_id": "3009d0e5-b4c5-43c4-b6e2-1433d049ded8",
-      "mode": "t2v",
+      "prompt_id": "29f61be7-d83f-4be6-94aa-7a53ae6ed475",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_027_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_028",
-      "prompt_id": "5d82e03d-aa57-468d-ae08-00d8aa3baad9",
-      "mode": "t2v",
+      "prompt_id": "70562009-3209-42f4-a35d-1111c43dbb51",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_028_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_029",
-      "prompt_id": "56c78767-a45a-49da-a164-cb7db89e2c50",
-      "mode": "t2v",
+      "prompt_id": "684c9413-6de9-4208-981e-4a7f5e6f6c97",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_029_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_030",
-      "prompt_id": "3c643d1b-fbab-4689-928c-5421bc1d1ca7",
-      "mode": "t2v",
+      "prompt_id": "a32c019f-dd6c-41c9-a2ab-cbe6afb5689f",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_030_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_013",
-      "prompt_id": "b7577e7b-ab60-4c34-b491-654cc64fb33a",
-      "mode": "t2v",
+      "prompt_id": "31e48fa4-d6dc-4bc4-94e9-0439f4bcfe80",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_013_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_031",
-      "prompt_id": "80bc80a9-cfa9-4354-a628-67f0bacbba21",
-      "mode": "t2v",
+      "prompt_id": "1858c453-a18f-4347-884f-a00bc81d24ae",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_031_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_032",
-      "prompt_id": "0fe45da0-726d-4c8c-9fda-dd2a15c77b72",
-      "mode": "t2v",
+      "prompt_id": "78882a75-0383-4237-99d1-eedd7043bd9c",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_032_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_033",
-      "prompt_id": "36989e63-c830-4070-8c65-001166be6f5f",
-      "mode": "t2v",
+      "prompt_id": "0450e972-c275-4b04-9a32-e0d9cb90247e",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_033_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_034",
-      "prompt_id": "36ac03f9-2b33-4bf3-94a5-28a99bf3c4b5",
-      "mode": "t2v",
+      "prompt_id": "f07d9ea5-4dae-4428-972b-795f62bb6e38",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_034_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_035",
-      "prompt_id": "2439f25d-e1d6-4bd0-9dde-b470667e26b9",
-      "mode": "t2v",
+      "prompt_id": "e8fdc707-b78e-432b-8e14-cb588ed7a5d6",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_035_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_036",
-      "prompt_id": "5dce9585-8964-46e3-a076-ed05f9f4564e",
-      "mode": "t2v",
+      "prompt_id": "803f56df-e819-45ee-8e22-338dc85cad1f",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_036_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_037",
-      "prompt_id": "424c434e-717b-4a37-8311-bc009acca922",
-      "mode": "t2v",
+      "prompt_id": "5ae9388c-2828-44ad-8163-5fe73c7225e0",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_037_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_038",
-      "prompt_id": "4f59629c-8f10-4f43-9e3e-fd0e0c7b6221",
-      "mode": "t2v",
+      "prompt_id": "963a3f8b-89a9-4f60-aec4-ae26accd629d",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_038_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_039",
-      "prompt_id": "d12f3e5d-1e23-4253-83e3-2059b9186321",
-      "mode": "t2v",
+      "prompt_id": "140f7750-3f53-48e7-a325-2668450754f8",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_039_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_040",
-      "prompt_id": "8c262bf6-20b0-4931-8bde-8a44f189a640",
-      "mode": "t2v",
+      "prompt_id": "3a0c58ea-0f71-4b0b-a935-6d5ff9ccd1cf",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_040_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_041",
-      "prompt_id": "5bdfd64d-85f8-42ff-b9b0-0a265ef1756b",
-      "mode": "t2v",
+      "prompt_id": "85e6e355-50c2-4317-b2d9-e409f5177b79",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_041_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_042",
-      "prompt_id": "4460886f-26e1-494c-bf44-6a5c8b7ff3cf",
-      "mode": "t2v",
+      "prompt_id": "a6378674-e0f9-4b5f-a28d-d77869e3f966",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_042_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_043",
-      "prompt_id": "91dffbbb-cb73-4b9b-b2f9-e76813476d34",
-      "mode": "t2v",
+      "prompt_id": "76f703c5-deae-4363-9589-76294cecc187",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_043_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_044",
-      "prompt_id": "3dc8ef20-4bcb-4f17-a48c-b65ea5fd478b",
-      "mode": "t2v",
+      "prompt_id": "86df8344-8974-40cd-9a3f-1a6bdba769d2",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_044_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_045",
-      "prompt_id": "c35a7314-0858-4f09-b34c-8e36333c04b5",
-      "mode": "t2v",
+      "prompt_id": "0cdadc17-fdae-4f0e-8fda-cdea2c54b7a9",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_045_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_046",
-      "prompt_id": "ed6f56e2-6d28-4214-a75d-1442b949bb32",
-      "mode": "t2v",
+      "prompt_id": "a8db1784-7198-4c2a-ae35-82bdd8fa7813",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_046_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_047",
-      "prompt_id": "d4445551-8bd6-4e6d-9125-3f6cf2486913",
-      "mode": "t2v",
+      "prompt_id": "01340510-ba04-4734-8d8b-0bdf06583704",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_047_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_048",
-      "prompt_id": "7e75e5e9-0774-4fb6-837a-e2fe19b7951f",
-      "mode": "t2v",
+      "prompt_id": "234fb2fa-1346-45ec-ba09-0c89bba5dee8",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_048_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_049",
-      "prompt_id": "2836c905-abb2-4947-b3f2-d2a812cfc926",
-      "mode": "t2v",
+      "prompt_id": "fbdd4dab-1ba9-48b2-ae85-634d23024d97",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_049_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_050",
-      "prompt_id": "16659def-db8c-4b63-9735-acfe08be1f87",
-      "mode": "t2v",
+      "prompt_id": "fed8c923-1c09-4276-93aa-34d3a0b3d733",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_050_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_051",
-      "prompt_id": "9fb38427-1612-4c31-8e4d-b9b073d0c600",
-      "mode": "t2v",
+      "prompt_id": "8a63f508-f753-498e-8d76-4a238a51bc3c",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_051_00004_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_052",
-      "prompt_id": "658d0750-1354-4d1a-a613-ddc84f226795",
-      "mode": "t2v",
+      "prompt_id": "edd40eab-6ba4-4bef-abf3-c0e066f3fb7a",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_052_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_053",
-      "prompt_id": "df72af6d-dfc6-4b0f-ad55-617fe930f459",
-      "mode": "t2v",
+      "prompt_id": "1eb2bae6-342f-4436-b4ae-b2ae5be9e305",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_053_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_054",
-      "prompt_id": "b4b19692-e5c9-4822-bb6b-6fc45de7bbee",
-      "mode": "t2v",
+      "prompt_id": "06307191-e712-4fed-84b1-6981425781f2",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_054_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_055",
-      "prompt_id": "298170a0-bb22-4938-b93a-beec0f6fb146",
-      "mode": "t2v",
+      "prompt_id": "b0ccd50f-0640-4358-a7f1-c3371b9610d8",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_055_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_056",
-      "prompt_id": "fd9e9eea-076e-46c3-8e07-280fb6299bea",
-      "mode": "t2v",
+      "prompt_id": "e6f049ee-d1c6-4e2c-98ed-5ba125402d78",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_056_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_057",
-      "prompt_id": "5f3a8d79-a031-4e12-9cb3-fc24b73dc939",
-      "mode": "t2v",
+      "prompt_id": "a3c90aee-71db-48a7-9faa-ad6dbf90622c",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_057_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_058",
-      "prompt_id": "63356b77-24d7-4930-9229-8067ba4de97e",
-      "mode": "t2v",
+      "prompt_id": "e0d33f3c-6261-47f6-8d6e-20f8c2091001",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_058_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_059",
-      "prompt_id": "c719df9e-b1d3-42aa-b06d-a21ecbde1e97",
-      "mode": "t2v",
+      "prompt_id": "570bb7a8-3e7c-4843-8908-d887949effd3",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_059_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_060",
-      "prompt_id": "d141c43e-f29e-4f4c-b339-384b547b9123",
-      "mode": "t2v",
+      "prompt_id": "071ecee2-bd8b-4bfe-87d1-3b211f799ba9",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_060_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_061",
-      "prompt_id": "6f4c60dd-b668-4d74-a237-67b9fbbc71a2",
-      "mode": "t2v",
+      "prompt_id": "9b1108d5-8f00-478d-8ab9-5e047db857cb",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_061_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_062",
-      "prompt_id": "7c665673-cd2d-4cff-bcb2-0c35348c005e",
-      "mode": "t2v",
+      "prompt_id": "eb2bf9a7-f1c6-4419-ab4a-da4f420bd677",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_062_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_063",
-      "prompt_id": "817b590c-8099-4b0c-a0a6-d9b0d32dc62c",
-      "mode": "t2v",
+      "prompt_id": "48edcf6e-73e0-4d83-b222-faf33ba78ffa",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_063_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_064",
-      "prompt_id": "f5c1f299-922f-4d00-84c5-6de1225c5a01",
-      "mode": "t2v",
+      "prompt_id": "8e9c1357-1d06-4298-8abc-885a6f7e24f9",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_064_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_065",
-      "prompt_id": "8441d473-569d-449e-878c-52c825112f13",
-      "mode": "t2v",
+      "prompt_id": "265ba802-d61f-4460-8c7e-393097e7943a",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_065_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_066",
-      "prompt_id": "d05ab831-d8b9-40c1-a06a-2ef75dd996a8",
-      "mode": "t2v",
+      "prompt_id": "9f7568b4-098f-4547-bda4-0e2afc577a26",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_066_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_067",
-      "prompt_id": "4b2f69b0-1fbf-4f8d-b381-a08edcc93815",
-      "mode": "t2v",
+      "prompt_id": "107aea0c-ad8f-4ef2-9fa8-b2f5be35f581",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_067_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_068",
-      "prompt_id": "fcc57e58-98d9-4178-b88e-dca067fff16e",
-      "mode": "t2v",
+      "prompt_id": "4f2edde1-943e-4487-a45b-bc81e492088d",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_068_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_069",
-      "prompt_id": "02b83704-2cc5-4295-8085-54aabf93112a",
-      "mode": "t2v",
+      "prompt_id": "d43636cc-9c5f-4fb4-9d2d-5f63b435e307",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_069_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_070",
-      "prompt_id": "99aed304-3618-4d7e-80d3-ab9746296984",
-      "mode": "t2v",
+      "prompt_id": "67fb21c5-5861-4d4b-bb9f-475440d537db",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_070_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_071",
-      "prompt_id": "2fe34983-01b8-42b3-bb23-94ec4c9f38ec",
-      "mode": "t2v",
+      "prompt_id": "881b714f-be72-488f-8651-956b0476fc78",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_071_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_072",
-      "prompt_id": "23f94bca-040e-4030-937e-08c299d1cfa9",
-      "mode": "t2v",
+      "prompt_id": "7f2dfec1-18b3-4fc7-9d5d-5533a1a3ca28",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_072_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_073",
-      "prompt_id": "8344b846-b451-4602-9c6c-1b7fd0812c40",
-      "mode": "t2v",
+      "prompt_id": "e9d54e54-3904-4a4e-b386-f7f5faed4b1b",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_073_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_074",
-      "prompt_id": "530122f9-6ea3-40eb-af1c-1278c22f49d3",
-      "mode": "t2v",
+      "prompt_id": "e81361e5-2985-44cd-8773-ba7bdf6cd30e",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_074_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_075",
-      "prompt_id": "5d913e55-0def-4288-acad-14d1db0d7254",
-      "mode": "t2v",
+      "prompt_id": "97e52c2c-7771-4cec-b7c6-f0a3319392fe",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_075_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_076",
-      "prompt_id": "e101408b-0cea-44e7-ab80-8f32ff21cb08",
-      "mode": "t2v",
+      "prompt_id": "45409f27-2a76-466b-b625-fd1e5e027a04",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_076_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_077",
-      "prompt_id": "d5174c25-4883-4d04-8536-afe0dfc8032d",
-      "mode": "t2v",
+      "prompt_id": "69a5d168-318b-494e-ae62-1abd7bad1f03",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_077_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_078",
-      "prompt_id": "77ae87e7-222b-4e34-9f7d-961d12b1a5c2",
-      "mode": "t2v",
+      "prompt_id": "99a8f1da-bb66-4adf-ac0d-da4ddcceb8a1",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_078_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     },
     {
       "seg": "seg_079",
-      "prompt_id": "5c154144-9f5d-433a-8ba7-48ce130fec94",
-      "mode": "t2v",
+      "prompt_id": "50d5380b-ae85-4125-8eb3-71a24d46c055",
+      "mode": "r2v",
       "status": "success",
-      "in_history": true,
-      "outputs": [
-        {
-          "filename": "seg_079_00002_.mp4",
-          "subfolder": "render\\plan.ch0",
-          "type": "output",
-          "key": "images"
-        }
-      ],
-      "comfy_status": "success",
-      "completed": true
+      "in_history": false,
+      "outputs": [],
+      "comfy_status": null
     }
   ]
 }

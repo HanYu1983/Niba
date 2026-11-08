@@ -99,6 +99,14 @@ export function platePrefix(story, entity) {
 export function promptFileFor(story, segId, mode) {
   if (mode && mode !== true) {
     const file = resolve(story.promptsDir, `${segId}.${mode}.txt`);
+    // 不存在就找其它的
+    const exists = existsSync(file)
+    if(exists != true){
+      for (const m of PROMPT_MODES) {
+        const file = resolve(story.promptsDir, `${segId}.${m}.txt`);
+        if (existsSync(file)) return { mode: m, file, exists: true };
+      }
+    }
     return { mode, file, exists: existsSync(file) };
   }
   for (const m of PROMPT_MODES) {

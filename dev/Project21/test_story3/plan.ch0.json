@@ -837,7 +837,9 @@
         "char_frost",
         "char_engineer"
       ],
-      "prop_refs": [],
+      "prop_refs": [
+        "prop_exo_suit"
+      ],
       "reference_images": [
         {
           "role": "scene",
@@ -853,6 +855,11 @@
           "role": "character",
           "ref": "char_engineer",
           "note": "identity plate, same folder across the chapter"
+        },
+        {
+          "role": "prop",
+          "ref": "prop_exo_suit",
+          "note": "prop plate, shared across the chapter"
         }
       ],
       "context": "上校放下望遠鏡，滿意地調侃：這新玩具把菜雞都變成戰神。",
