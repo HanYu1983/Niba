@@ -1,23 +1,33 @@
-integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, flat overcast dawn light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A medium close-up at the firing line. Colonel Frost (S1), 58, broad-shouldered, short iron-grey buzz cut with a receding hairline, weathered square face, weathered leathery skin, grey stubble, heavy brows, thick neck, plain olive uniform with no insignia, snaps his fingers once, the sound sharp in the cold air, then tips his head back and raises a thumb over his shoulder toward the horizon beyond the perimeter wall. His grin turns conspiratorial, the earlier mockery folding into genuine enthusiasm. The camera pushes in slightly. Colonel Frost (S1) says, warm and offhand:
+整合多模態描述：[鏡頭 1] 逼真的實景拍攝，35 毫米膠片，細膩的顆粒，自然的皮膚紋理，真實世界的攝影，柔和的橄欖綠和冷灰色調，陰沉的晨光，淺景深，寫實的紀錄片風格——非動畫，非卡通，非插畫，非賽璐珞著色，非廣告，非慢璐動作，無螢幕文字。射擊線上的中近景。弗羅斯特上校（S1），58 歲，肩寬體闊，一頭鐵灰色的寸頭，髮際線後移，飽經風霜的方臉，粗糙的皮膚，灰色的胡茬，濃密的眉毛，粗壯的脖子，身穿沒有徽章的純橄欖綠制服，打了個響指，聲音在寒冷的空氣中顯得格外脆清肩膀，然後越過肩膀，指向外牆的肩膀。他的笑容變得神秘莫測，之前的嘲諷變成了真誠的熱情。鏡頭略微推進。佛洛斯特上校（S1）語氣輕鬆隨意地說：
+
 <d>
+
 [中文]
-這樣啊……
+
+就是這樣啊…
+
 那去一趟艾伯塔市怎麼樣？
+
 </d>
 
-[Shot 2] At 00:03.000, the camera cuts to a medium two-shot, Frost (S1), the broad-shouldered colonel with the iron-grey buzz cut, in profile, and Staff Sergeant Taylor (S3), 25, athletic and lean, high black ponytail, sharp dark eyes, strong jaw, sun-tanned skin, in a plain olive uniform with the sleeves rolled, listening in the foreground, still holding the folded form. Frost turns his hand over and begins counting points off on his thick fingers, one, two, three, like a man reciting a well-worn sales pitch. Behind them the low barracks blocks and the grey-blue sky sit flat and quiet. The camera tracks slowly to the side with him. Colonel Frost (S1) says:
+[鏡頭2] 00:03.000，鏡頭切換到一個中景雙人鏡頭：弗羅斯特上校（S1），這位肩寬體闊、留著鐵灰色寸頭的軍官，側臉示人；泰勒中士（S3），她25歲，身材健美苗條，扎著高高的黑色馬尾辮，還戴了小麥飾品，她站在皮膚上的袖子中想要折色，身穿純色，穿著橄欖色手還握成了一件綠色的前景。弗羅斯特翻過手掌，開始用粗壯的手指數著點數，一、二、三，就像一個背誦老套推銷話術的人。他們身後是低矮的營房和灰藍色的天空，一片寂靜。鏡頭緩緩地跟著他往側面移動。弗羅斯特上校（S1）說：
+
 <d>
+
 [中文]
+
 那可是有名的恐龍之都，
+
 發現的化石數量全球之冠，
+
 </d>
 
-[Shot 3] At 00:07.200, the camera cuts to a wide shot from behind the two of them. Frost (S1), the broad-shouldered colonel with the iron-grey buzz cut, sweeps one arm out toward the wall and the pale sky above it, his silhouette small against the empty parade ground, Taylor (S3), lean and ponytailed, a head shorter beside him, both of them facing away from the lens. Wind moves the loose fabric of his sleeve. The camera holds static, the ground stretching emptily to the barracks. Colonel Frost (S1) says:
+[鏡頭3] 00:07.200，鏡頭切換到兩人身後的遠景。弗羅斯特上校（S1），這位肩寬體力闊、留著鐵灰色寸頭的軍官，伸出一隻手臂指向牆壁和上方蒼白的天空，他的身影在空曠的操場上顯得渺小。泰勒（S3）身材精瘦，綁著馬尾辮，比他矮一個頭，站在他身旁，兩人都背對著鏡頭。風吹動著他寬鬆的袖子。鏡頭靜止不動，空曠的地面一直延伸到營房。弗羅斯特上校（S1）說：
 <d>
 [中文]
-一年一度的恐龍嘉年華也差不多要開始了。
+恐龍的一年大約要開始於嘉年華。
 </d>
 
-overall_soundscape: A sharp finger snap, cold wind crossing open gravel, distant boots and a shouted cadence from the running column, fabric snapping in the breeze, and Frost's breath fogging between sentences. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+整體音景：尖銳的打響指的聲音，冷風吹過開闊的礫石路，遠處的靴子和奔跑的隊伍中傳來的喊叫節奏，織物在微風中折斷，弗羅斯特的呼吸在句子之間霧化。所有台詞均以台灣腔普通話進行，不含粵語。
 
-non_diegetic_music: The low drone lifts into a slow, distant brass swell as he gestures at the horizon, suggesting a place the audience has not seen yet, then settles again.
+non_diegetic_music：當他指向地平線時，低沉的嗡嗡聲升入緩慢而遙遠的銅管樂聲，暗示觀眾還沒有看到過一個地方，然後又平靜下來。
