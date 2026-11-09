@@ -28,6 +28,8 @@ node .\workspace\tools\download_renders.mjs --story .\test_story3\ --manifest .\
 
 node .\workspace\tools\build_subtitles.mjs --story .\test_story3\ --manifest .\test_story3\render_manifest.ch1.json
 
+node .\workspace\tools\concat_renders.mjs --story .\test_story3\ --manifest .\test_story3\render_manifest.ch1.json
+
 node .\workspace\tools\new_story.mjs --name test_story4 --title test4
 
 node .\workspace\tools\extract_penana.mjs --html .\test_story3\story_ch1.html --out story_ch1.txt
