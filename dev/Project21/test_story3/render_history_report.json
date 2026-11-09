@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-11-09T11:28:27.337Z",
+  "checked_at": "2026-11-09T11:33:41.564Z",
   "comfyui": "http://100.106.154.88:8000",
   "plan": "plan.ch1",
   "total": 81,
-  "with_outputs": 80,
-  "without_outputs": 1,
+  "with_outputs": 81,
+  "without_outputs": 0,
   "segments": [
     {
       "seg": "seg_003",
@@ -1351,12 +1351,20 @@
     },
     {
       "seg": "seg_001",
-      "prompt_id": "ebed55de-d855-4720-9b00-c2d590c1b0f9",
+      "prompt_id": "daf2fd26-60d0-4018-b0ab-b51aa7937250",
       "mode": "r2v",
-      "status": "queued",
-      "in_history": false,
-      "outputs": [],
-      "comfy_status": null
+      "status": "running",
+      "in_history": true,
+      "outputs": [
+        {
+          "filename": "seg_001_00003_.mp4",
+          "subfolder": "render\\plan.ch1",
+          "type": "output",
+          "key": "images"
+        }
+      ],
+      "comfy_status": "success",
+      "completed": true
     },
     {
       "seg": "seg_002",
