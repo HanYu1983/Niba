@@ -1,0 +1,5 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. The knife buried to the guard, a muffled crack travelling through the skull. His hands continue to rake the gravel, heels kicking, chest still working. The camera holds on the impossible movement.
+
+overall_soundscape: A muffled internal crack, nails scraping stone, heels drumming, and his wet broken breathing.
+
+non_diegetic_music: A sustained low cluster, rising very slowly.

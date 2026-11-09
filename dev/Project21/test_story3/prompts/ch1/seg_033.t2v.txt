@@ -1,0 +1,5 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. The rod becomes a blur, stroke after stroke, blood and grey tissue spattering Taylor's face and collar. The camera stays close and never looks away. After the last blow the frame holds only on her back, heaving, the rod hanging at her side.
+
+overall_soundscape: A long series of heavy impacts, wet bursts, gravel scattering, her ragged breathing, then nothing but breath.
+
+non_diegetic_music: Percussion building with the blows, then cutting to one sustained low tone.

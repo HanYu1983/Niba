@@ -1,0 +1,23 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor's pupils lose focus. The camera stays on her face, close and steady, while the sound field separates: a woman crying, an old man's last wet sob, overlapping roars, each one distinct. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+更詭異的是，她的大腦竟然能自動解析這些雜亂的音訊。
+</d>
+
+[Shot 2] At 00:05.000, the camera cuts to a tight shot of her eyes moving as if tracking several things at once, none of them visible in frame. The bank behind her is unchanged and ordinary.
+<d>
+[中文]
+那是女人的哭喊、那是老人臨終前的抽咽、
+甚至連怪物重疊的嚎叫聲，
+</d>
+
+[Shot 3] At 00:10.000, the camera cuts to a tight profile, her ear filling the edge of frame, the tendon in her jaw tight. The image remains completely realistic, with no visual effects.
+<d>
+[中文]
+她都能精準辨識出是幾頭在吼叫、
+是男是女。
+</d>
+
+overall_soundscape: Distinct layers in the mix: a woman's sobbing, an old man's rattling last breath, and several roars at different distances, each one locatable. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A cluster of separate sustained tones, one per sound layer, slowly detuning.

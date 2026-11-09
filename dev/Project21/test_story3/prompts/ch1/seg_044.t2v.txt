@@ -1,0 +1,17 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor's hands turn the body's arm, then its chest, then its neck. The skin is intact apart from the raw abrasions on the forearms where he dragged himself. Her fingers are careful and clinical. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+除了那雙被車輪捲爛、血肉模糊的雙腳，
+以及被她親手砸爛的腦殼外，
+</d>
+
+[Shot 2] At 00:07.000, the camera cuts to a closer angle on the intact throat and collarbone, then the ruined legs at the edge of frame. The contrast is the point: everything above the knees is unmarked.
+<d>
+[中文]
+這名男子身上竟然完全沒有任何其他傷口。
+除了他剛剛在地上爬行時，手臂上磨出的傷痕。
+</d>
+
+overall_soundscape: Fabric and skin moving under her hands, flies, her controlled breathing, and a low wind. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A quiet held string, almost still.

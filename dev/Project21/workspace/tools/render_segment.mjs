@@ -40,7 +40,7 @@ if (!segId) {
   ]);
 }
 
-const story = loadStory({ story: storyArg, plan: args.plan });
+const story = loadStory({ story: storyArg, plan: args.plan, prompts: args.prompts, manifest: args.manifest });
 const plan = loadPlan(story.planFile);
 const segment = segmentById(plan, segId);
 if (!segment) {

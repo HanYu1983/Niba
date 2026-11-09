@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor turns her head slowly toward her other shoulder, and the second wound enters frame. The purple veins there mirror the first almost exactly. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+泰洛伊強壓著幾乎崩潰的情緒，
+轉頭看向另一側的肩膀。
+</d>
+
+[Shot 2] At 00:04.500, the camera cuts to a two-shot of both shoulders in the same frame, the symmetrical spread unmistakable. Her hands hang at her sides.
+<d>
+[中文]
+一樣的紫色血管、一樣的擴散進度。
+</d>
+
+overall_soundscape: Fabric shifting, her breath shallow and fast, wind, and a distant roar. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: Two identical tones, slightly out of phase.

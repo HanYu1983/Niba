@@ -15,7 +15,7 @@ import { readManifest } from "../lib/manifest.mjs";
 import { describeStory, loadStory } from "../lib/story.mjs";
 
 const args = parseArgs();
-const story = loadStory({ story: args.story ?? args._[0], plan: args.plan });
+const story = loadStory({ story: args.story ?? args._[0], plan: args.plan, prompts: args.prompts, manifest: args.manifest });
 const manifest = readManifest(story.manifestFile, story.planFile);
 const base = String(args.url ?? story.comfy.url ?? "").replace(/\/+$/, "");
 if (!base) {

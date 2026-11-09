@@ -1,0 +1,5 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. The blade flashes in a short reverse arc and his left thumb spins away with a thread of blood. His grip collapses; Taylor pitches forward and throws him off her back onto the gravel.
+
+overall_soundscape: A short blade slice, a body hitting the ground, gravel spraying, and his limbs flopping loose.
+
+non_diegetic_music: One sharp hit on the slice, then a low accelerating pulse.

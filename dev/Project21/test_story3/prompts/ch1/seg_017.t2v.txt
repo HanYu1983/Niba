@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. The tourniquet cinched high at his thigh, the strap pulled hard and locked. His fingers claw into the mud, his throat fighting to keep the sound in. Her hands stay completely steady, working with practised speed. The injured man (S10), a gaunt 30-something East Asian man with a bloodless face, sweat-soaked short black hair and a blood-soaked work shirt grinds out, jaw clamped:
+<d>
+[中文]
+嗚、嗚恩恩恩！！
+</d>
+
+overall_soundscape: The strap creaking as it tightens, a choked groan, fingers scraping wet mud, and her controlled breathing. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A low sustained tone under the strain.

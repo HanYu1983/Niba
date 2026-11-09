@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor stays on her knees, head down, breathing gradually evening out. The camera holds on her back and the scattered wrappers. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+絕望如潮水般襲來，但幾分鐘後，
+</d>
+
+[Shot 2] At 00:04.500, the camera cuts to her face lifting. The panic is gone; what replaces it is cold and deliberate, and her eyes have stopped looking for a way out.
+<d>
+[中文]
+眼中的焦慮消退，取而代之的是一抹異樣且狠戾的光芒。
+</d>
+
+overall_soundscape: Her breathing settling, wind returning, a distant roar, and the gravel shifting under her knees. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A low drone resolving into a single hard note.

@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor stands and rotates the knife sheath around to the front of her hip. She checks the draw angle twice, then a third time, movements neat and methodical, like she is adjusting a uniform. Taylor (S3) says, to herself:
+<d>
+[中文]
+最後一刀，就留給我自己吧。
+</d>
+
+overall_soundscape: The sheath clip turning, the knife settling, fabric adjusted, and her steady breath. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A slow, deliberate pulse marking each check.

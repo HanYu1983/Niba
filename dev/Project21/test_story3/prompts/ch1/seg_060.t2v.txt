@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Empty wrappers and a flattened bottle spread across the gravel. Taylor licks her lips and looks around for more, one hand still turning a torn packet over. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+短短數分鐘，足以維持整天體力的糧食被一掃而空。
+</d>
+
+[Shot 2] At 00:05.000, the camera cuts to a close shot of her face: crumbs at the corner of her mouth, eyes still searching, not satisfied. The hunger has not gone anywhere.
+<d>
+[中文]
+她意猶未盡的舔了一下嘴唇，
+感覺似乎還可以再吃一點。
+</d>
+
+overall_soundscape: A last wrapper crumpling, her tongue against dry lips, wind, and the distant roar of the bank. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A low pulse that does not resolve.

@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The wide canal at harsh noon: turbid green-brown water, broken concrete bridge debris, survivors and pale figures thrashing near the bank, unnatural dark red blooms thinning in the current. An over-the-shoulder view past Taylor's ponytail and shoulder, down the bank to the canal. Dozens of heads bob in the turbid green-brown water, arms reaching for the concrete edge. The camera pushes in slowly, losing her shoulder, until the water fills the frame. A calm narrator's voice, off-screen, speaks. Taylor's lips stay closed:
+<d>
+[中文]
+她轉頭看向河面，直到這時才注意到那些在大橋斷裂時落水的人。
+</d>
+
+[Shot 2] At 00:06.500, the camera cuts to a closer angle low over the water: among the survivors, several faces have no colour left at all, grey-white and slack, turned away from the lens as they drift with the current. Broken bridge debris knocks softly against the bank.
+<d>
+[中文]
+不少倖存者正拼命朝岸邊靠近，
+但其中混雜著許多已經失去血色的影子。
+</d>
+
+overall_soundscape: Water slapping concrete, ragged breathing and splashing, debris knocking, and the low constant roar of the current. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A cold sustained string note, almost motionless, with a faint pulse under the second shot.

@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. A lateral pan that starts on the treeline and drags across the path to the canal: survivors and pale figures crowd the bank, climbing over one another, hands hooked on the concrete lip. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+另一側是寬大的運河，河水裡的倖存者與怪物正不停往岸上擠，
+</d>
+
+[Shot 2] At 00:04.500, the camera cuts to Taylor's hands tightening on the rod, then tilting up to her face as she reads the water and dismisses it. Behind her the canal stays crowded and loud.
+<d>
+[中文]
+走水路逃生看來是完全不可能了。
+</d>
+
+overall_soundscape: Water and bodies scraping concrete, overlapping cries, and the rod's grip creaking under her fingers. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A low pulse under the pan, stopping as she turns away from the water.

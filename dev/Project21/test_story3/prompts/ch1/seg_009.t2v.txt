@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor slows, the rod lifting slightly in her grip. Dense bushes press in on both sides of the path, and deep inside the green something shivers and settles, though nothing is visible. The camera stays just behind her shoulder. A calm narrator's voice, off-screen, speaks. Taylor's lips stay closed:
+<d>
+[中文]
+兩旁茂密的樹叢不時傳出樹枝被撥動的沙沙聲，
+</d>
+
+[Shot 2] At 00:05.500, the camera cuts to a tighter shot of the treeline. Leaves tremble, then a thin branch springs back into place. In the foreground her shoulder tightens, fabric pulling at the sudden movement.
+<d>
+[中文]
+令她不自覺繃緊了神經，感覺隨時會有那種怪物從暗處衝出來。
+</d>
+
+overall_soundscape: Dry rustle and branches ticking, insects sawing in the heat, then one deliberate snap deep in the brush. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A sparse high string, held and wavering, with silence around it.

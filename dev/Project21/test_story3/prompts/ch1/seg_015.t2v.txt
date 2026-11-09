@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. An insert that begins on his crushed lower legs, white bone showing through mud and blood, then tilts slowly up the long red trail that leads back into the brush and finally to his white lips. Flies are already at the wound. The injured man (S10), a gaunt 30-something East Asian man with a bloodless face, sweat-soaked short black hair and a blood-soaked work shirt says, voice shaking apart:
+<d>
+[中文]
+車……車子翻了……我的腳被捲進去……
+</d>
+
+overall_soundscape: Flies circling, his wet uneven breath, a weak voice, and the canal very far away. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A low held cello note, barely moving.

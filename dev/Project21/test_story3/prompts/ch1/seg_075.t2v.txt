@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside the flooded three-level fishing boat: a narrow wet wooden corridor, turbid water rising in the lowest deck, peeling paint and dim light falling through open hatches. An extreme close-up of a ripple crossing the flooded floorboards, then Taylor's ear as she tilts her head to follow it. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+她的聽覺在此刻發揮了聲納般的奇效，
+</d>
+
+[Shot 2] At 00:05.500, the camera cuts to a low tracking shot that creeps forward along the corridor, past closed doors and dark openings, as if tracing floor lines only she can see.
+<d>
+[中文]
+甚至能藉由河水在地面流動的頻率，
+在腦海中勾勒出整艘船的內部結構。
+</d>
+
+overall_soundscape: Every ripple and drip isolated and clear, the hull ticking, and her slow breathing. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A high sustained tone with a second tone answering it.

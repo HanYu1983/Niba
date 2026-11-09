@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. An extreme close-up of the lower half of Taylor's face, her back teeth clenched so hard the jaw muscle stands out. Tree shadows sweep across her cheek as she walks, and a bead of sweat cuts through the dust on her skin. Her lips do not move. Taylor's voice, close and internal, off-screen:
+<d>
+[中文]
+看來絕對不能被咬到……
+</d>
+
+overall_soundscape: Wind muffled as if heard through concentration, her footsteps distant, and a slow heartbeat-like thud under the ambience. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A single low pulse, almost inaudible, synced to the heartbeat.

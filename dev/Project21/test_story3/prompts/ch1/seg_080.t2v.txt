@@ -1,0 +1,11 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A small derelict captain's cabin: a white door with a faded Chinese nameplate, a rotting wooden floor, scattered charts and a sailor's corpse. Taylor (S3), the same lean 25-year-old East Asian woman with the high black ponytail and sharp dark eyes, now with two fresh claw wounds across both shoulders, a torn olive shirt and blood-streaked, mud-caked skin crashes through the doorway, the steel rod already swinging. The girl (S11), a slight 14-to-16-year-old East Asian girl with shoulder-length black hair, a dirt-smudged face, deathly grey hands and a ragged hoodie is still turned away, the green T-rex backpack filling the centre of frame, and the rod blurs toward the back of her head. Taylor (S3) roars:
+<d>
+[中文]
+午餐結束啦！
+小妞！
+看棒————！！
+</d>
+
+overall_soundscape: Boots breaking boards, the rod cutting air, and a single sharp intake of breath from the girl. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A hard percussion hit on the swing, cut off before impact.

@@ -1,0 +1,10 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. The steel rod slides into the side pocket of a black tactical backpack, the straps pulled tight across her chest. Taylor crouches, drags the man's arm over her shoulder and stands; her knees dip under the weight before she finds her balance. Taylor (S3) says, already out of breath:
+<d>
+[中文]
+那接下來要麻煩你指路了，老兄。
+我是遊客，這城市我一點都不熟。
+</d>
+
+overall_soundscape: The rod sliding into canvas, buckles tightening, his weight settling against her back, and one hard exhale as she stands. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: Low strings under the physical effort, then a steady walking pulse.

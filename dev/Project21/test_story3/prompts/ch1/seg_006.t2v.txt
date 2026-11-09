@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor (S3), 25, a lean athletic East Asian woman with a high black ponytail, sharp dark eyes, a strong jaw and sun-tanned skin walks fast along the bank, her knuckles pale around the rod. The camera tracks beside the rod at hip height, the dull steel filling the foreground, then tilts up to her face as she speaks without breaking stride. Taylor (S3) says, half to herself:
+<d>
+[中文]
+握槽……還好我落地的點靠近岸邊。
+</d>
+
+overall_soundscape: Boots crunching gravel in a fast rhythm, the rod humming faintly as it swings, water behind her, and her breath still catching up. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The same low pulse, tighter now, matching her stride.

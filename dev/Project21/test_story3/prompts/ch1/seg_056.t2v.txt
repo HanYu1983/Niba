@@ -1,0 +1,17 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. An extreme close-up of Taylor's hands pressed over her ears, the skin blanched at the knuckles. The vein at her temple stands out and pulses visibly. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+即便如此，那種聲音依然穿透了掌心，
+直接在腦殼內迴盪。
+</d>
+
+[Shot 2] At 00:06.500, the camera cuts to her face from the side, eyes squeezed shut, jaw locked. The sounds stay bright and close, completely unmuffled by her palms.
+<d>
+[中文]
+她的太陽穴瘋狂跳動，大腦像是要在頭頂撞出一個洞，
+急著想從頭蓋骨裡鑽出來。
+</d>
+
+overall_soundscape: The full layered mix unchanged, as if her hands were not there, plus the pulse in her temple audible. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A high sustained tone beating slowly against a lower one.

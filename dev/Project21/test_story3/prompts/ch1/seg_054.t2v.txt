@@ -1,0 +1,10 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor staggers half a step and claps a hand behind her ear. The camera shakes faintly with her balance, then settles. No visual distortion, no effects; only her body reacting. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+雙耳在瞬間接收了爆炸般的訊息量，
+震得她腦袋嗡嗡作響。
+</d>
+
+overall_soundscape: A dense wash of layered voices and roars, a high ringing tone, and her pained breath close to the microphone. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A dissonant swell pressing against the top of the mix.

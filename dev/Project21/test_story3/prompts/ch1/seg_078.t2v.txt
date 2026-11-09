@@ -1,0 +1,10 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A small derelict captain's cabin: a white door with a faded Chinese nameplate, a rotting wooden floor, scattered charts and a sailor's corpse. Taylor (S3), the same lean 25-year-old East Asian woman with the high black ponytail and sharp dark eyes, now with two fresh claw wounds across both shoulders, a torn olive shirt and blood-streaked, mud-caked skin steps back half a pace and drives her boot into the rotten door. The wood bursts inward, splinters and dust blowing into the cabin light. Taylor (S3) shouts, low and savage:
+<d>
+[中文]
+來吧！
+老娘來超渡你啦！
+</d>
+
+overall_soundscape: A boot heel striking wood, the door splitting, splinters clattering across the floor, and dust settling. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: One hard hit, then a low sustained tone.

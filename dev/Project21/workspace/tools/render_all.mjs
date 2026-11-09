@@ -20,7 +20,7 @@ import { renderSegment } from "../lib/render.mjs";
 import { describeStory, loadStory } from "../lib/story.mjs";
 
 const args = parseArgs();
-const story = loadStory({ story: args.story ?? args._[0], plan: args.plan });
+const story = loadStory({ story: args.story ?? args._[0], plan: args.plan, prompts: args.prompts, manifest: args.manifest });
 const plan = loadPlan(story.planFile);
 const manifest = readManifest(story.manifestFile, story.planFile);
 

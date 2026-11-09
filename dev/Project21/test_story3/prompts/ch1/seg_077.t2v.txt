@@ -1,0 +1,5 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. Inside the flooded three-level fishing boat: a narrow wet wooden corridor, turbid water rising in the lowest deck, peeling paint and dim light falling through open hatches. Her boots push through standing water, each step pulling a sticky creak from the boards. The camera follows her up the narrow stairs, the light changing as she climbs, and stops behind her at a white door with a faded nameplate.
+
+overall_soundscape: Water sloshing, wet soles peeling off wood, the rod ticking against a rail, and the scrape on the other side of the door.
+
+non_diegetic_music: A single low note per step.

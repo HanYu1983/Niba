@@ -1,0 +1,10 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor looks up from the body to the water, then to the air above the bank, then back to the corpse. The knife is still in her hand, hanging loose. The camera holds on her eyes as the question lands. Taylor (S3) says, working it out:
+<d>
+[中文]
+沒傷口……所以說不只是要小心被咬，
+還有其他傳染途徑？
+</d>
+
+overall_soundscape: Water moving, flies, wind, and a distant cry that might be human. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A single sustained note with a faint dissonant overtone.

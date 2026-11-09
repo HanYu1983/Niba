@@ -1,0 +1,18 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor's fist closes around the bloodstained steel rod, squeezing blood out from between her fingers. She starts walking and does not stop. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+泰洛伊眼中燃起熊熊怒火，
+打算趁著理智尚未崩斷前，
+進行一場最後的殊死戰，能殺多少算多少。
+</d>
+
+[Shot 2] At 00:07.000, the camera cuts to a wide shot from behind: her small figure crossing the open bank toward the tilted boat, rod hanging from one hand, stride even and unhurried.
+<d>
+[中文]
+她再度握緊那根沾滿血跡的不鏽鋼棍，
+大步朝漁船走去。
+</d>
+
+overall_soundscape: Steady boots on gravel, the rod swinging, wind, and the scrape from the boat growing clearer. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A low percussive march, gaining weight.

@@ -1,0 +1,5 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor rears back and strikes again, then again. Blood and spit fly from his mouth, but his fingers only hook deeper into her shoulders. The camera stays tight, refusing to cut away from the work.
+
+overall_soundscape: Repeated dull impacts, wet breath, a low gurgle, and the gravel shifting under their combined weight.
+
+non_diegetic_music: A relentless mid-tempo percussion figure, no melody.

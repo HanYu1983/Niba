@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor's mouth is full, but her head keeps turning: left, right, behind, tracking sounds only she can place. Her eyes scan the treeline while her hands keep feeding her. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+在瘋狂吞噬的過程中，她的耳朵依然像雷達般豎起，
+</d>
+
+[Shot 2] At 00:05.500, the camera cuts to a wide shot of her crouched over the scattered food, small on the open bank, head snapping from side to side like a radar dish.
+<d>
+[中文]
+神經質的監控著方圓百米內的所有頻率，
+確保那些怪物沒有靠近。
+</d>
+
+overall_soundscape: Chewing and swallowing, wrapper crackle, and the layered distant sounds being sorted in real time. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A nervous ticking under a low sustained tone.

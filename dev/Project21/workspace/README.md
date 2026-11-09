@@ -99,6 +99,10 @@ Project21/
 
 解析順序：`--story` > 目前目錄；`--plan` > `story.json.plan` > 目錄裡唯一的 `plan.*.json`。
 
+`--prompts <資料夾>` 與 `--manifest <檔案>` 可覆寫 `story.json` 的設定，讓同一故事的每一章
+各自擁有 prompt 與 manifest（`seg_001` 會重複，混用會誤跳過已渲染的段落）。兩者都相對於目前
+目錄解析，和 `--plan` 一致。
+
 ## 工具
 
 所有工具都接受 `--story <資料夾>`，省略時用目前目錄。`--dry-run`、`--force` 在各工具語意

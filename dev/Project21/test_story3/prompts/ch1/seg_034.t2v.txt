@@ -1,0 +1,10 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor (S3), the same lean 25-year-old East Asian woman with the high black ponytail and sharp dark eyes, now with two fresh claw wounds across both shoulders, a torn olive shirt and blood-streaked, mud-caked skin wipes the sweat from her neck and yanks the pack straps straight. Her face twistsmid-motion. The camera drops to her shoulder: the shirt is torn open and several claw marks bead bright red against the skin. Taylor (S3) says, breathless and disgusted:
+<d>
+[中文]
+真他媽難搞！
+腦袋中刀都還死不透……
+</d>
+
+overall_soundscape: Her breath slowing, a strap pulled tight, fabric parting, and the gravel settling. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The low tone thins out, leaving a faint pulse.

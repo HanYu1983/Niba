@@ -1,0 +1,13 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor drops to one knee, presses a finger to her lips, sets the rod on the gravel and takes the man's wrists. She hauls him backward, boots braced, and the camera follows her gaze down his body to what is left of his legs. Taylor (S3) says, sharp and low:
+<d>
+[中文]
+欸！
+老兄！
+小聲點！
+臥槽！
+你這什麼情形……
+</d>
+
+overall_soundscape: Gravel scraping under his weight, cloth tearing, her short effortful breaths, and the rod ringing softly as it hits the ground. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A low pulse that stops on the wordless beat at the end of her line.

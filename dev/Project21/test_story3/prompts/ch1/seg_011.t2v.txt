@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. A high overhead shot: Taylor's shadow has shrunk to a dark coin at her boots. The gravel bank is completely open, heat shimmer twisting the far treeline, dry grass bleached pale at the edges. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+正中午的陽光在頭頂毒辣地照射著，
+腳下的影子縮成了一小圈。
+</d>
+
+[Shot 2] At 00:06.000, the camera cuts to a very wide shot from the bank, Taylor a small upright figure between the dense green on one side and the crowded canal on the other, nothing overhead but white noon sky.
+<d>
+[中文]
+日光提供了絕佳的視野，卻也讓她在這片毫無遮蔽的河岸上無所遁形。
+</d>
+
+overall_soundscape: Cicadas sawing without pause, a low heat hum, gravel shifting, and the canal sounds pushed far back. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A thin, dry drone with a faint irregular pulse.

@@ -31,9 +31,13 @@ export function loadStory(opts = {}) {
   const config = existsSync(configFile) ? JSON.parse(readFileSync(configFile, "utf8")) : {};
 
   const planFile = resolvePlanFile(dir, config, opts.plan);
-  const promptsDir = resolve(dir, config.prompts ?? "prompts");
+  const promptsDir = opts.prompts
+    ? resolve(String(opts.prompts))
+    : resolve(dir, config.prompts ?? "prompts");
   const outputDir = resolve(dir, config.output ?? "output");
-  const manifestFile = resolve(dir, config.manifest ?? "render_manifest.json");
+  const manifestFile = opts.manifest
+    ? resolve(String(opts.manifest))
+    : resolve(dir, config.manifest ?? "render_manifest.json");
   const name = config.name ?? basename(dir);
   const planBase = basename(planFile).replace(/\.json$/i, "");
 

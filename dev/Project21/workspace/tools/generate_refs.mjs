@@ -21,7 +21,7 @@ import { entitiesOf, loadPlan } from "../lib/plan.mjs";
 import { describeStory, loadStory, plateDir, platePrefix } from "../lib/story.mjs";
 
 const args = parseArgs();
-const story = loadStory({ story: args.story ?? args._[0], plan: args.plan });
+const story = loadStory({ story: args.story ?? args._[0], plan: args.plan, prompts: args.prompts, manifest: args.manifest });
 const plan = loadPlan(story.planFile);
 
 const IMAGE_RE = /\.(png|jpe?g|webp)$/i;

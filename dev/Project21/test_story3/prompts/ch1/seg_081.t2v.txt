@@ -1,0 +1,5 @@
+integrated_multimodal_description: [Shot 1] Photorealistic 35mm film slate filling the entire frame in pure black, fine silver grain drifting slowly across the surface, individual dust motes and short hairs catching the light, a few hairline scratches running vertically, faint gate weave and a soft vignette breathing at the edges. The texture is physical film, not a flat digital black; the blacks stay deep but never crushed. The frame carries no lettering, no numbers, no logos, no watermark and no on-screen text of any kind; the slate stays empty so titles can be laid over it in post. The grain drifts slowly through the black, with dust motes and a few fine scratches catching the light. The camera holds completely static. There is no lettering and no image of any kind; the slate stays empty so the end title can be laid over it in post.
+
+overall_soundscape: Near silence. A faint optical film hiss, a distant low rumble, and the last of the boat's metal ticks dying away.
+
+non_diegetic_music: The low sub-bass drone returns, louder than the opening, then drops away to one sustained note and stops.

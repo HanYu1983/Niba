@@ -1,0 +1,16 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor's hand pats the side of the pack, locating the water bottle by feel. Her lips are dry and cracked, and she swallows once with visible effort. Taylor's voice, close and internal, off-screen:
+<d>
+[中文]
+飲水……背包裡的礦泉水剩多少？
+是要豪邁喝足一口氣趕路，
+</d>
+
+[Shot 2] At 00:06.000, the camera cuts to a close profile as she walks: the sun on her cheek, the tendon in her neck moving with the swallow, her eyes fixed ahead. She does not open the pack.
+<d>
+[中文]
+還是維持最低限度的生理需求以保持清醒？
+</d>
+
+overall_soundscape: The bottle knocking softly inside canvas, dry gravel, cicadas, and her dry swallow close to the microphone. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The ticking pulse continues, slower.

@@ -1,0 +1,5 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A small derelict captain's cabin: a white door with a faded Chinese nameplate, a rotting wooden floor, scattered charts and a sailor's corpse. The door falls away and the dust clears: a slight girl crouches beside a sailor's corpse, her hands deathly grey, rifling the dead man's pockets in quick frantic movements. An oversized bright green T-rex backpack covers most of her back, its plush head slumped against her shoulder. The camera holds from the doorway.
+
+overall_soundscape: The door settling flat, dust sifting, quick hands patting cloth, and the girl's fast shallow breathing.
+
+non_diegetic_music: A high suspended note, refusing to resolve.

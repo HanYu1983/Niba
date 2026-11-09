@@ -1,0 +1,5 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. An empty stretch of bank, leaves trembling at the edge of the brush. A hand parts the green, then a man drags himself out on his elbows, legs trailing. Taylor stops dead in the foreground, the rod coming up across her body. The camera holds, letting the distance between them read.
+
+overall_soundscape: Brush snapping back, cloth dragging over gravel, a laboured wet breath, and the rod ticking against her belt as she stops.
+
+non_diegetic_music: One low struck note on the hand, then a held suspense tone.

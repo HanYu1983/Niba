@@ -1,0 +1,15 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor's gaze sweeps the canal, then the treeline, then the distant city. Each direction holds a different threat: pale bodies in the water, dark green cover, smoke on the skyline. A calm narrator's voice, off-screen, speaks:
+<d>
+[中文]
+那些吃人的瘋子、脫水的虛弱、
+</d>
+
+[Shot 2] At 00:04.000, the camera cuts to her face as she takes all three in and settles on the city. The camera holds static, the heat shimmer moving behind her.
+<d>
+[中文]
+以及城裡未知的變數，全都是會要命的真傢伙。
+</d>
+
+overall_soundscape: Water, wind in leaves, a distant siren and a far-off roar, all mixed at the same low level. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: Three low notes, one per direction, sustaining under the last shot.

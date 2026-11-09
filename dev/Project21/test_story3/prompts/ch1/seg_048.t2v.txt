@@ -1,0 +1,10 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor stands and wipes the blood from her palms down her trousers. She looks at the distant city, which still looks calm from here, and her jaw tightens. Taylor (S3) says, rueful, then flat:
+<d>
+[中文]
+早知道當初就去考醫官了。
+總之，盡量避免非必要的交戰吧。
+</d>
+
+overall_soundscape: Hands brushing cloth, gravel, wind, and the city's low continuous murmur far away. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A tired two-note figure that resolves downward.

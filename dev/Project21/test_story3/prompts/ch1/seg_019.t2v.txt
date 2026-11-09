@@ -1,0 +1,10 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor stuffs the remaining gauze back into the pouch and pulls the zip shut. She looks at him directly now, her tone somewhere between comfort and an order, and shifts her weight to stand. Taylor (S3) says, firm:
+<d>
+[中文]
+行了！
+撐著點，我帶你去醫院。
+</d>
+
+overall_soundscape: The pouch zip closing, gauze compressing, a boot finding purchase in the gravel, and his shallow breathing. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: The pulse lifts a half-step, then settles.

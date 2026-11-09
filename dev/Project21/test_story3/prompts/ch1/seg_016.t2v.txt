@@ -1,0 +1,10 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side and the wide canal on the other, hard short shadows and no shelter. Taylor presses one hand flat on his shoulder and pulls the olive medical pouch open with the other. She strips out a roll of gauze and a black tourniquet, eyes on the wound, never looking up at his face. The camera holds close on her hands. Taylor (S3) says, flat and quick:
+<d>
+[中文]
+你有被咬嗎？
+會有點痛，你忍一下。
+</d>
+
+overall_soundscape: A zip tearing open, gauze unwinding, the tourniquet's metal buckle clicking, and his ragged breathing under her voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A tight low pulse, businesslike and steady.

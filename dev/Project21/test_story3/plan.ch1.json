@@ -47,7 +47,7 @@
         "reference": {
           "image": "refs/char_taylor_wounded",
           "prompt": "Neutral front-facing reference portrait of the same 25-year-old East Asian woman as the base Taylor plate, athletic and lean, high black ponytail, sharp dark eyes, strong jaw, sun-tanned skin; now two fresh claw wounds across both shoulders, torn olive military shirt, blood beads and streaks, river mud and sweat, dishevelled ponytail, grim exhausted expression, head-and-shoulders framing, plain grey backdrop, hard overhead light, sharp focus, no text",
-          "status": "to_generate"
+          "status": "ready"
         },
         "first_seen": "seg_034"
       },
@@ -63,7 +63,7 @@
         "reference": {
           "image": "refs/char_injured_man",
           "prompt": "Neutral front-facing reference portrait of a 30-something East Asian man, gaunt pale face, bloodless lips, sweat-soaked short black hair, blood-soaked work shirt, grey with shock, head-and-shoulders framing, plain grey backdrop, hard overhead light, sharp focus, no text",
-          "status": "to_generate"
+          "status": "ready"
         },
         "first_seen": "seg_013"
       },
@@ -81,7 +81,7 @@
         "reference": {
           "image": "refs/char_injured_man_turned",
           "prompt": "Neutral front-facing reference portrait of the same 30-something East Asian man as the injured-man plate, now turned: bloodshot eyes, grey-purple necrotic skin, broken jaw with shattered teeth, blood-flecked mouth, torn blood-soaked work shirt, practical-effects makeup, head-and-shoulders framing, plain grey backdrop, hard overhead light, sharp focus, no text",
-          "status": "to_generate"
+          "status": "ready"
         },
         "first_seen": "seg_024"
       },
@@ -96,7 +96,7 @@
         "reference": {
           "image": "refs/char_boat_girl",
           "prompt": "Neutral front-facing reference portrait of a 14-16-year-old East Asian girl, small and slight, shoulder-length black hair, dirt-smudged face, deathly pale grey hands, ragged hoodie and shorts, feral guarded expression, head-and-shoulders framing, plain grey backdrop, hard overhead light, sharp focus, no text",
-          "status": "to_generate"
+          "status": "ready"
         },
         "first_seen": "seg_079"
       }
@@ -144,7 +144,7 @@
         "reference": {
           "image": "refs/prop_dino_backpack",
           "prompt": "Product plate of an oversized bright green T-rex shaped backpack, plush cartoon head and tail, worn seams, mud at the base, no text, 35mm film grain",
-          "status": "to_generate"
+          "status": "ready"
         },
         "first_seen": "seg_079"
       },
@@ -160,7 +160,7 @@
         "reference": {
           "image": "refs/prop_medical_kit",
           "prompt": "Product plate of a small olive field medical pouch, opened, gauze rolls and a black tourniquet, bloodstained, no text, 35mm film grain",
-          "status": "to_generate"
+          "status": "ready"
         },
         "first_seen": "seg_016"
       },
@@ -175,7 +175,7 @@
         "reference": {
           "image": "refs/prop_military_knife",
           "prompt": "Product plate of a black tactical fixed-blade knife, worn grip, blood on the blade, no text, 35mm film grain",
-          "status": "to_generate"
+          "status": "ready"
         },
         "first_seen": "seg_029"
       }
@@ -222,7 +222,7 @@
         "reference": {
           "image": "refs/loc_canal_water_noon",
           "prompt": "Wide establishing plate of canal water at harsh noon, survivors and infected thrashing near the bank, dark red blooms in the turbid current, concrete bridge debris, no people in the foreground, no text, 35mm film grain, 16:9",
-          "status": "to_generate"
+          "status": "ready"
         },
         "first_seen": "seg_004"
       },
@@ -238,7 +238,7 @@
         "reference": {
           "image": "refs/loc_riverbank_noon",
           "prompt": "Wide establishing plate of a riverside embankment at harsh noon, dense green tree line on one side, wide canal on the other, gravel and dry grass, hard short shadows, no people, no text, 35mm film grain, 16:9",
-          "status": "to_generate"
+          "status": "ready"
         },
         "first_seen": "seg_003"
       },
@@ -253,7 +253,7 @@
         "reference": {
           "image": "refs/loc_fishing_boat_exterior",
           "prompt": "Wide establishing plate of a large derelict fishing trawler grounded and half-tilted on a riverbank, barnacles crusting the hull, rusted rails, muddy waterline, harsh noon light, no people, no text, 35mm film grain, 16:9",
-          "status": "to_generate"
+          "status": "ready"
         },
         "first_seen": "seg_073"
       },
@@ -268,7 +268,7 @@
         "reference": {
           "image": "refs/loc_fishing_boat_deck",
           "prompt": "Wide establishing plate of a flooded three-level fishing boat interior, narrow wet wooden corridor, turbid water rising in the lowest deck, peeling paint, dim light from hatch openings, no people, no text, 35mm film grain, 16:9",
-          "status": "to_generate"
+          "status": "ready"
         },
         "first_seen": "seg_074"
       },
@@ -283,7 +283,7 @@
         "reference": {
           "image": "refs/loc_boat_captain_cabin",
           "prompt": "Wide establishing plate of a small derelict captain's cabin, white door with a faded Chinese nameplate, rotting wooden floor, scattered charts, dim green-grey light, no people, no text, 35mm film grain, 16:9",
-          "status": "to_generate"
+          "status": "ready"
         },
         "first_seen": "seg_078"
       }
