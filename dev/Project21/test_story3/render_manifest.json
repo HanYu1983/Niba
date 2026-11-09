@@ -8,8 +8,8 @@
       "mode": "r2v",
       "prompt_id": "bc79c402-ea04-4306-8cae-2e9664503a4d",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_002.t2v.txt",
-      "status": "running",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 1794200685,
       "turbo": false,
       "width": 352,
@@ -19,8 +19,11 @@
       "references": [
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_city_skyline_noon\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:04:46.402Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_002_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:04:46.402Z",
+      "downloaded_at": "2026-11-09T11:11:37.001Z"
     },
     "seg_003": {
       "segment_id": "seg_003",
@@ -45,7 +48,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_003_00007_.mp4"
       ],
       "submitted_at": "2026-11-08T11:36:09.485Z",
-      "downloaded_at": "2026-11-08T12:24:32.719Z"
+      "downloaded_at": "2026-11-09T11:11:37.002Z"
     },
     "seg_004": {
       "segment_id": "seg_004",
@@ -71,7 +74,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_004_00005_.mp4"
       ],
       "submitted_at": "2026-11-08T11:36:20.488Z",
-      "downloaded_at": "2026-11-08T12:24:32.720Z"
+      "downloaded_at": "2026-11-09T11:11:37.002Z"
     },
     "seg_005": {
       "segment_id": "seg_005",
@@ -97,7 +100,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_005_00005_.mp4"
       ],
       "submitted_at": "2026-11-08T12:05:03.485Z",
-      "downloaded_at": "2026-11-08T12:24:32.720Z"
+      "downloaded_at": "2026-11-09T11:11:37.002Z"
     },
     "seg_006": {
       "segment_id": "seg_006",
@@ -123,7 +126,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_006_00004_.mp4"
       ],
       "submitted_at": "2026-11-08T09:43:03.504Z",
-      "downloaded_at": "2026-11-08T12:24:32.720Z"
+      "downloaded_at": "2026-11-09T11:11:37.002Z"
     },
     "seg_001": {
       "segment_id": "seg_001",
@@ -131,8 +134,8 @@
       "mode": "r2v",
       "prompt_id": "bd96a9ac-9871-4519-9514-bbfecadc4c4e",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_001.t2v.txt",
-      "status": "running",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 1794200549,
       "turbo": false,
       "width": 352,
@@ -142,8 +145,11 @@
       "references": [
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_prologue_title\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:02:31.423Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_001_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:02:31.423Z",
+      "downloaded_at": "2026-11-09T11:11:37.002Z"
     },
     "seg_007": {
       "segment_id": "seg_007",
@@ -169,7 +175,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_007_00004_.mp4"
       ],
       "submitted_at": "2026-11-08T09:43:05.043Z",
-      "downloaded_at": "2026-11-08T12:24:32.720Z"
+      "downloaded_at": "2026-11-09T11:11:37.002Z"
     },
     "seg_008": {
       "segment_id": "seg_008",
@@ -194,7 +200,7 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_008_00004_.mp4"
       ],
       "submitted_at": "2026-11-08T09:43:06.201Z",
-      "downloaded_at": "2026-11-08T12:24:32.720Z"
+      "downloaded_at": "2026-11-09T11:11:37.002Z"
     },
     "seg_009": {
       "segment_id": "seg_009",

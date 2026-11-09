@@ -22,6 +22,12 @@ node .\workspace\tools\render_segment.mjs --story .\test_story3\ --prompt .\test
 
 node workspace/tools/render_all.mjs --story test_story3 --plan test_story3/plan.ch1.json --prompts test_story3/prompts/ch1 --manifest test_story3/render_manifest.ch1.json --async --no-turbo --seed 100 --mode r2v --force --from seg_003 --to seg_010
 
+node .\workspace\tools\audit_renders.mjs --story .\test_story3\ --manifest .\test_story3\render_manifest.ch1.json
+
+node .\workspace\tools\download_renders.mjs --story .\test_story3\ --manifest .\test_story3\render_manifest.ch1.json
+
+node .\workspace\tools\build_subtitles.mjs --story .\test_story3\ --manifest .\test_story3\render_manifest.ch1.json
+
 node .\workspace\tools\new_story.mjs --name test_story4 --title test4
 
 node .\workspace\tools\extract_penana.mjs --html .\test_story3\story_ch1.html --out story_ch1.txt

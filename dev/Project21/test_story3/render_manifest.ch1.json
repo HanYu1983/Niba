@@ -8,8 +8,8 @@
       "mode": "r2v",
       "prompt_id": "99531ced-0465-498a-8a38-2fee6b63341f",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_003.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -21,8 +21,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:10:48.494Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_003_00002_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:10:48.494Z",
+      "downloaded_at": "2026-11-09T11:26:11.343Z"
     },
     "seg_004": {
       "segment_id": "seg_004",
@@ -30,8 +33,8 @@
       "mode": "r2v",
       "prompt_id": "18fbe24b-2953-4e10-b74b-53157fd1ede2",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_004.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -42,8 +45,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_canal_water_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:10:49.503Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_004_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:10:49.503Z",
+      "downloaded_at": "2026-11-09T11:26:11.344Z"
     },
     "seg_005": {
       "segment_id": "seg_005",
@@ -51,8 +57,8 @@
       "mode": "r2v",
       "prompt_id": "0b618c92-fa7a-42a7-bbc5-2dd2aabeb587",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_005.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -62,8 +68,11 @@
       "references": [
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_canal_water_noon\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:10:50.395Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_005_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:10:50.395Z",
+      "downloaded_at": "2026-11-09T11:26:11.344Z"
     },
     "seg_006": {
       "segment_id": "seg_006",
@@ -71,8 +80,8 @@
       "mode": "r2v",
       "prompt_id": "2a95d643-6931-40b0-9566-daffad3ef022",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_006.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -84,8 +93,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:10:53.343Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_006_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:10:53.343Z",
+      "downloaded_at": "2026-11-09T11:26:11.344Z"
     },
     "seg_007": {
       "segment_id": "seg_007",
@@ -93,8 +105,8 @@
       "mode": "r2v",
       "prompt_id": "df5a6880-e69a-4811-a8f4-d2c704a49283",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_007.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -106,8 +118,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:10:55.094Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_007_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:10:55.094Z",
+      "downloaded_at": "2026-11-09T11:26:11.344Z"
     },
     "seg_008": {
       "segment_id": "seg_008",
@@ -115,8 +130,8 @@
       "mode": "r2v",
       "prompt_id": "fe4701f7-8195-4e01-8304-43e3c9bce642",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_008.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -128,8 +143,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:10:57.998Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_008_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:10:57.998Z",
+      "downloaded_at": "2026-11-09T11:26:11.344Z"
     },
     "seg_009": {
       "segment_id": "seg_009",
@@ -137,8 +155,8 @@
       "mode": "r2v",
       "prompt_id": "3a0d3bb2-2d7e-4a01-888f-b4ced3a107c2",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_009.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -150,8 +168,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:10:59.911Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_009_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:10:59.911Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_010": {
       "segment_id": "seg_010",
@@ -159,8 +180,8 @@
       "mode": "r2v",
       "prompt_id": "e8c125c1-6690-407a-969a-52cb054569e3",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_010.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -171,8 +192,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:11:01.637Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_010_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:11:01.637Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_011": {
       "segment_id": "seg_011",
@@ -180,8 +204,8 @@
       "mode": "r2v",
       "prompt_id": "a97fbc87-1d3a-4452-abe6-2c4a580ced9e",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_011.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -192,8 +216,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:41:47.210Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_011_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:41:47.210Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_012": {
       "segment_id": "seg_012",
@@ -201,8 +228,8 @@
       "mode": "r2v",
       "prompt_id": "a504019d-2914-4fdf-a604-21c1a5ab400c",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_012.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -214,8 +241,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:41:48.701Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_012_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:41:48.701Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_013": {
       "segment_id": "seg_013",
@@ -223,8 +253,8 @@
       "mode": "r2v",
       "prompt_id": "d285daf8-f8b9-46d1-ac9d-4fb80f2b45c5",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_013.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -236,8 +266,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:41:50.243Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_013_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:41:50.243Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_014": {
       "segment_id": "seg_014",
@@ -245,8 +278,8 @@
       "mode": "r2v",
       "prompt_id": "dd4c8889-dc33-4900-abe3-618dfb86fad7",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_014.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -259,8 +292,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:41:52.662Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_014_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:41:52.662Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_015": {
       "segment_id": "seg_015",
@@ -268,8 +304,8 @@
       "mode": "r2v",
       "prompt_id": "d1c5f3c9-5f9f-4408-ba0c-918ba8f369aa",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_015.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -281,8 +317,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:41:55.000Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_015_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:41:55.000Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_016": {
       "segment_id": "seg_016",
@@ -290,8 +329,8 @@
       "mode": "r2v",
       "prompt_id": "253a0638-7d54-4122-a670-5759e3179345",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_016.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -304,8 +343,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_medical_kit\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:41:56.822Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_016_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:41:56.822Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_017": {
       "segment_id": "seg_017",
@@ -313,8 +355,8 @@
       "mode": "r2v",
       "prompt_id": "bd85de77-d053-44af-b256-8d8db69d93ff",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_017.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -327,8 +369,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_medical_kit\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:41:58.683Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_017_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:41:58.683Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_018": {
       "segment_id": "seg_018",
@@ -336,8 +381,8 @@
       "mode": "r2v",
       "prompt_id": "f4ec11ff-ac68-40d0-9889-e330430f89a0",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_018.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -349,8 +394,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:00.212Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_018_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:00.212Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_019": {
       "segment_id": "seg_019",
@@ -358,8 +406,8 @@
       "mode": "r2v",
       "prompt_id": "f82a7697-69fe-413c-98ee-b97441a1d2fe",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_019.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -372,8 +420,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_medical_kit\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:01.884Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_019_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:01.884Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_020": {
       "segment_id": "seg_020",
@@ -381,8 +432,8 @@
       "mode": "r2v",
       "prompt_id": "94e60536-717e-4670-b47c-1c4ee74ccd47",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_020.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -396,8 +447,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:04.190Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_020_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:04.190Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_021": {
       "segment_id": "seg_021",
@@ -405,8 +459,8 @@
       "mode": "r2v",
       "prompt_id": "b150d561-a7da-42c6-bb61-5ef449ebab57",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_021.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -419,8 +473,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:05.616Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_021_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:05.616Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_022": {
       "segment_id": "seg_022",
@@ -428,8 +485,8 @@
       "mode": "r2v",
       "prompt_id": "e99da05a-ac02-4e4d-a889-f2f3517d88c2",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_022.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -442,8 +499,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:07.263Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_022_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:07.263Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_023": {
       "segment_id": "seg_023",
@@ -451,8 +511,8 @@
       "mode": "r2v",
       "prompt_id": "0c8d87c5-2a97-4ca9-838d-51466acfb060",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_023.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -465,8 +525,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:08.975Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_023_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:08.975Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_024": {
       "segment_id": "seg_024",
@@ -474,8 +537,8 @@
       "mode": "r2v",
       "prompt_id": "744f7d52-c43a-46bb-94b2-f17208562f71",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_024.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -488,8 +551,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:10.588Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_024_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:10.588Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_025": {
       "segment_id": "seg_025",
@@ -497,8 +563,8 @@
       "mode": "r2v",
       "prompt_id": "7d071fd0-cc8a-4a1e-b036-542be25b043b",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_025.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -511,8 +577,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:12.360Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_025_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:12.360Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_026": {
       "segment_id": "seg_026",
@@ -520,8 +589,8 @@
       "mode": "r2v",
       "prompt_id": "4c46d105-7976-40b6-9435-edf72e9bbe9e",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_026.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -534,8 +603,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:13.939Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_026_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:13.939Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_027": {
       "segment_id": "seg_027",
@@ -543,8 +615,8 @@
       "mode": "r2v",
       "prompt_id": "abb32c7d-2f42-49ee-b70e-66fe1121ce8b",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_027.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -557,8 +629,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:15.826Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_027_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:15.826Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_028": {
       "segment_id": "seg_028",
@@ -566,8 +641,8 @@
       "mode": "r2v",
       "prompt_id": "d61607b8-001e-4ab7-9ecd-07141969789a",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_028.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -579,8 +654,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor\\plate_00003_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:16.829Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_028_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:16.829Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_029": {
       "segment_id": "seg_029",
@@ -588,8 +666,8 @@
       "mode": "r2v",
       "prompt_id": "1862e058-431e-491c-bb0f-a92f27735ce8",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_029.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -602,8 +680,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_military_knife\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:18.353Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_029_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:18.353Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_030": {
       "segment_id": "seg_030",
@@ -611,8 +692,8 @@
       "mode": "r2v",
       "prompt_id": "df9216db-2279-48ca-a7e0-ff8aa19e8695",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_030.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -625,8 +706,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_military_knife\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:19.704Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_030_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:19.704Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_031": {
       "segment_id": "seg_031",
@@ -634,8 +718,8 @@
       "mode": "r2v",
       "prompt_id": "52398f44-c1a4-4221-a6df-376e7920c266",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_031.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -648,8 +732,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_military_knife\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:21.441Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_031_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:21.441Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_032": {
       "segment_id": "seg_032",
@@ -657,8 +744,8 @@
       "mode": "r2v",
       "prompt_id": "e1e3fdcb-5165-484a-9c5e-21d81d06a376",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_032.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -671,8 +758,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:22.820Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_032_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:22.820Z",
+      "downloaded_at": "2026-11-09T11:26:11.345Z"
     },
     "seg_033": {
       "segment_id": "seg_033",
@@ -680,8 +770,8 @@
       "mode": "r2v",
       "prompt_id": "566c0886-351b-48a8-8e33-1860857b9d87",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_033.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -694,8 +784,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:24.493Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_033_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:24.493Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_034": {
       "segment_id": "seg_034",
@@ -703,8 +796,8 @@
       "mode": "r2v",
       "prompt_id": "337f7c70-bdff-4a0d-a214-1fa24dd0b4cf",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_034.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -716,8 +809,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:25.599Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_034_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:25.599Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_035": {
       "segment_id": "seg_035",
@@ -725,8 +821,8 @@
       "mode": "r2v",
       "prompt_id": "fd4826a5-0c63-4b37-a104-845158b3835b",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_035.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -738,8 +834,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:27.035Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_035_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:27.035Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_036": {
       "segment_id": "seg_036",
@@ -747,8 +846,8 @@
       "mode": "r2v",
       "prompt_id": "b02c9989-632a-4a04-b446-9891b85b5a96",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_036.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -760,8 +859,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:28.224Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_036_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:28.224Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_037": {
       "segment_id": "seg_037",
@@ -769,8 +871,8 @@
       "mode": "r2v",
       "prompt_id": "1d0243bc-b60a-41df-a1d2-45f70d32bf07",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_037.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -782,8 +884,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:29.479Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_037_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:29.479Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_038": {
       "segment_id": "seg_038",
@@ -791,8 +896,8 @@
       "mode": "r2v",
       "prompt_id": "4426c645-2ae9-4bb4-8946-2f9fa9825efe",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_038.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -804,8 +909,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:30.636Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_038_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:30.636Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_039": {
       "segment_id": "seg_039",
@@ -813,8 +921,8 @@
       "mode": "r2v",
       "prompt_id": "59dccea6-d0a7-45a9-9c5c-0fca9c6b3e56",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_039.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -826,8 +934,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:31.863Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_039_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:31.863Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_040": {
       "segment_id": "seg_040",
@@ -835,8 +946,8 @@
       "mode": "r2v",
       "prompt_id": "a2834467-4e48-48cb-820c-28b10f915b89",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_040.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -848,8 +959,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:33.317Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_040_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:33.317Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_041": {
       "segment_id": "seg_041",
@@ -857,8 +971,8 @@
       "mode": "r2v",
       "prompt_id": "2c857f5a-e6d2-45f4-a19c-639a8fe1b7a0",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_041.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -870,8 +984,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:34.754Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_041_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:34.754Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_042": {
       "segment_id": "seg_042",
@@ -879,8 +996,8 @@
       "mode": "r2v",
       "prompt_id": "82d16ff1-ea66-46c2-bbbd-f931efd45cf3",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_042.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -892,8 +1009,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:36.132Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_042_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:36.132Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_043": {
       "segment_id": "seg_043",
@@ -901,8 +1021,8 @@
       "mode": "r2v",
       "prompt_id": "746d3256-4e2e-4a17-be18-4853b1539728",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_043.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -915,8 +1035,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:37.730Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_043_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:37.730Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_044": {
       "segment_id": "seg_044",
@@ -924,8 +1047,8 @@
       "mode": "r2v",
       "prompt_id": "deab59e2-2913-4cd0-9469-4684805ddc41",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_044.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -937,8 +1060,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:39.003Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_044_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:39.003Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_045": {
       "segment_id": "seg_045",
@@ -946,8 +1072,8 @@
       "mode": "r2v",
       "prompt_id": "4b852721-c764-4c36-9b95-bd63f94fa543",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_045.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -960,8 +1086,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_military_knife\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:40.684Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_045_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:40.684Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_046": {
       "segment_id": "seg_046",
@@ -969,8 +1098,8 @@
       "mode": "r2v",
       "prompt_id": "a267f7f4-622c-4805-9b8f-768d3a7c0bbb",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_046.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -983,8 +1112,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_injured_man_turned\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_military_knife\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:42.449Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_046_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:42.449Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_047": {
       "segment_id": "seg_047",
@@ -992,8 +1124,8 @@
       "mode": "r2v",
       "prompt_id": "0e99a2e0-a707-4531-869a-6d91f342f34f",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_047.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1004,8 +1136,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:43.381Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_047_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:43.381Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_048": {
       "segment_id": "seg_048",
@@ -1013,8 +1148,8 @@
       "mode": "r2v",
       "prompt_id": "c8359b48-5f45-452a-9cfe-3fa99da46a07",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_048.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1026,8 +1161,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:44.881Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_048_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:44.881Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_049": {
       "segment_id": "seg_049",
@@ -1035,8 +1173,8 @@
       "mode": "r2v",
       "prompt_id": "4b306cd4-5d40-4d1d-ad8d-2f7d68494163",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_049.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1048,8 +1186,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:46.582Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_049_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:46.582Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_050": {
       "segment_id": "seg_050",
@@ -1057,8 +1198,8 @@
       "mode": "r2v",
       "prompt_id": "0448fd96-4bd1-4443-9e36-5976121679fb",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_050.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1070,8 +1211,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:48.001Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_050_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:48.001Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_051": {
       "segment_id": "seg_051",
@@ -1079,8 +1223,8 @@
       "mode": "r2v",
       "prompt_id": "feb1d5e7-476c-417a-bf49-64418d0456fe",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_051.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1092,8 +1236,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:49.518Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_051_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:49.518Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_052": {
       "segment_id": "seg_052",
@@ -1101,8 +1248,8 @@
       "mode": "r2v",
       "prompt_id": "b9a1a10b-8e03-47ff-acd0-e64c56d41018",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_052.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1113,8 +1260,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:50.376Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_052_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:50.376Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_053": {
       "segment_id": "seg_053",
@@ -1122,8 +1272,8 @@
       "mode": "r2v",
       "prompt_id": "6537cd3a-4586-48fa-9b2c-561742534e93",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_053.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1134,8 +1284,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:51.315Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_053_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:51.315Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_054": {
       "segment_id": "seg_054",
@@ -1143,8 +1296,8 @@
       "mode": "r2v",
       "prompt_id": "02cd155a-6a95-4f17-9a74-f973f56881f7",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_054.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1155,8 +1308,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:52.213Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_054_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:52.213Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_055": {
       "segment_id": "seg_055",
@@ -1164,8 +1320,8 @@
       "mode": "r2v",
       "prompt_id": "88aeb942-140e-4c1d-bf67-65010dd7e2e2",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_055.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1178,8 +1334,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:53.699Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_055_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:53.699Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_056": {
       "segment_id": "seg_056",
@@ -1187,8 +1346,8 @@
       "mode": "r2v",
       "prompt_id": "e42e45b9-cf2f-4304-adbf-2a96d104c5a6",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_056.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1200,8 +1359,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:54.908Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_056_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:54.908Z",
+      "downloaded_at": "2026-11-09T11:26:11.346Z"
     },
     "seg_057": {
       "segment_id": "seg_057",
@@ -1209,8 +1371,8 @@
       "mode": "r2v",
       "prompt_id": "6afb8c32-05ec-4468-a79a-35bfc34d3a4a",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_057.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1222,8 +1384,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:56.092Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_057_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:56.092Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_058": {
       "segment_id": "seg_058",
@@ -1231,8 +1396,8 @@
       "mode": "r2v",
       "prompt_id": "3468c2c2-470d-4030-acdf-f1441ff3e184",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_058.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1244,8 +1409,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:57.562Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_058_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:57.562Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_059": {
       "segment_id": "seg_059",
@@ -1253,8 +1421,8 @@
       "mode": "r2v",
       "prompt_id": "a552c176-3ac3-45ca-a303-34d1b025e5a9",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_059.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1266,8 +1434,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:42:58.692Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_059_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:42:58.692Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_060": {
       "segment_id": "seg_060",
@@ -1275,8 +1446,8 @@
       "mode": "r2v",
       "prompt_id": "5b287163-9487-4b52-bcc2-fb17c99dce0c",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_060.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1288,8 +1459,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:00.102Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_060_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:00.102Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_061": {
       "segment_id": "seg_061",
@@ -1297,8 +1471,8 @@
       "mode": "r2v",
       "prompt_id": "2921af16-1d5e-490a-a46a-03f2abbbe360",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_061.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1309,8 +1483,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:01.229Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_061_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:01.229Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_062": {
       "segment_id": "seg_062",
@@ -1318,8 +1495,8 @@
       "mode": "r2v",
       "prompt_id": "b2499d5b-4b39-45e9-9246-8b19c69737a7",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_062.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1330,8 +1507,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:02.449Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_062_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:02.449Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_063": {
       "segment_id": "seg_063",
@@ -1339,8 +1519,8 @@
       "mode": "r2v",
       "prompt_id": "ad006a0b-3e2a-4f83-9431-25da5df1e089",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_063.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1351,8 +1531,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:03.424Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_063_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:03.424Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_064": {
       "segment_id": "seg_064",
@@ -1360,8 +1543,8 @@
       "mode": "r2v",
       "prompt_id": "ebad0e6d-c36d-4977-8a31-33a175450be7",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_064.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1372,8 +1555,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:04.374Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_064_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:04.374Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_065": {
       "segment_id": "seg_065",
@@ -1381,8 +1567,8 @@
       "mode": "r2v",
       "prompt_id": "1e0cf91c-ef58-407e-9b78-ebbffa5bf985",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_065.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1393,8 +1579,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:05.429Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_065_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:05.429Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_066": {
       "segment_id": "seg_066",
@@ -1402,8 +1591,8 @@
       "mode": "r2v",
       "prompt_id": "029da10a-239d-42dc-b8b8-26b70a008452",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_066.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1414,8 +1603,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:06.361Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_066_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:06.361Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_067": {
       "segment_id": "seg_067",
@@ -1423,8 +1615,8 @@
       "mode": "r2v",
       "prompt_id": "4f6f46ba-20c6-4861-a30d-af3505038972",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_067.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1435,8 +1627,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:07.330Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_067_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:07.330Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_068": {
       "segment_id": "seg_068",
@@ -1444,8 +1639,8 @@
       "mode": "r2v",
       "prompt_id": "2f33b54a-7e15-432e-bb9a-980180215a33",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_068.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1456,8 +1651,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:08.274Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_068_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:08.274Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_069": {
       "segment_id": "seg_069",
@@ -1465,8 +1663,8 @@
       "mode": "r2v",
       "prompt_id": "925e4fde-fb52-42b1-975d-878daf43145e",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_069.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1477,8 +1675,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_riverbank_noon\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:09.362Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_069_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:09.362Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_070": {
       "segment_id": "seg_070",
@@ -1486,8 +1687,8 @@
       "mode": "r2v",
       "prompt_id": "19c55982-40b6-41c1-b214-a5a4de0823ad",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_070.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1499,8 +1700,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_military_knife\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:10.559Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_070_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:10.559Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_071": {
       "segment_id": "seg_071",
@@ -1508,8 +1712,8 @@
       "mode": "r2v",
       "prompt_id": "f4db0a8b-7d61-41f6-bddc-781f596cc457",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_071.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1521,8 +1725,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:11.788Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_071_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:11.788Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_072": {
       "segment_id": "seg_072",
@@ -1530,8 +1737,8 @@
       "mode": "r2v",
       "prompt_id": "efe4ca5c-2653-4a9e-a97b-3e690da9fa7f",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_072.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1544,8 +1751,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_tactical_backpack\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:13.192Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_072_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:13.192Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_073": {
       "segment_id": "seg_073",
@@ -1553,8 +1763,8 @@
       "mode": "r2v",
       "prompt_id": "4fdda6c9-9f6a-4633-8d20-231a7aa2048e",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_073.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1566,8 +1776,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:14.404Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_073_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:14.404Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_074": {
       "segment_id": "seg_074",
@@ -1575,8 +1788,8 @@
       "mode": "r2v",
       "prompt_id": "7fff8449-bddb-48cf-82ac-2958db874553",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_074.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1588,8 +1801,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:15.538Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_074_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:15.538Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_075": {
       "segment_id": "seg_075",
@@ -1597,8 +1813,8 @@
       "mode": "r2v",
       "prompt_id": "0d683411-6290-415d-9929-bfd375cf882c",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_075.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1610,8 +1826,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:16.656Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_075_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:16.656Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_076": {
       "segment_id": "seg_076",
@@ -1619,8 +1838,8 @@
       "mode": "r2v",
       "prompt_id": "b1b1a679-dc99-4aa1-8b44-81e4f6749dfe",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_076.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1632,8 +1851,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:17.696Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_076_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:17.696Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_077": {
       "segment_id": "seg_077",
@@ -1641,8 +1863,8 @@
       "mode": "r2v",
       "prompt_id": "218748c2-d592-497d-91fd-3149da4a21a5",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_077.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1654,8 +1876,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:18.874Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_077_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:18.874Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_078": {
       "segment_id": "seg_078",
@@ -1663,8 +1888,8 @@
       "mode": "r2v",
       "prompt_id": "28ab0e83-b000-4d60-8e2a-bcbcc8135bfb",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_078.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1676,8 +1901,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_taylor_wounded\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:20.102Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_078_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:20.102Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_079": {
       "segment_id": "seg_079",
@@ -1685,8 +1913,8 @@
       "mode": "r2v",
       "prompt_id": "18bcdd50-a9b8-4e85-9611-488792a677cb",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_079.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1699,8 +1927,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_boat_girl\\plate_00001_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_dino_backpack\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:21.752Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_079_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:21.752Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_080": {
       "segment_id": "seg_080",
@@ -1708,8 +1939,8 @@
       "mode": "r2v",
       "prompt_id": "9cec51db-9c6e-426f-a883-0c5da87f516c",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_080.t2v.txt",
-      "status": "queued",
-      "queued": true,
+      "status": "success",
+      "queued": false,
       "seed": 100,
       "turbo": false,
       "width": 352,
@@ -1723,8 +1954,11 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_steel_rod\\plate_00002_.png",
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\prop_dino_backpack\\plate_00001_.png"
       ],
-      "files": [],
-      "submitted_at": "2026-11-09T05:43:23.421Z"
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_080_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:23.421Z",
+      "downloaded_at": "2026-11-09T11:26:11.347Z"
     },
     "seg_081": {
       "segment_id": "seg_081",
@@ -1732,6 +1966,29 @@
       "mode": "r2v",
       "prompt_id": "0a4e0c74-ffd2-49c0-a05d-bc442d00e8dd",
       "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_081.t2v.txt",
+      "status": "success",
+      "queued": false,
+      "seed": 100,
+      "turbo": false,
+      "width": 352,
+      "height": 608,
+      "duration_sec": 5.17,
+      "frames": 124,
+      "references": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_prologue_title\\plate_00002_.png"
+      ],
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_081_00001_.mp4"
+      ],
+      "submitted_at": "2026-11-09T05:43:23.910Z",
+      "downloaded_at": "2026-11-09T11:26:11.348Z"
+    },
+    "seg_001": {
+      "segment_id": "seg_001",
+      "take": 1,
+      "mode": "r2v",
+      "prompt_id": "ebed55de-d855-4720-9b00-c2d590c1b0f9",
+      "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_001.t2v.txt",
       "status": "queued",
       "queued": true,
       "seed": 100,
@@ -1744,7 +2001,30 @@
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_prologue_title\\plate_00002_.png"
       ],
       "files": [],
-      "submitted_at": "2026-11-09T05:43:23.910Z"
+      "submitted_at": "2026-11-09T11:19:54.004Z"
+    },
+    "seg_002": {
+      "segment_id": "seg_002",
+      "take": 1,
+      "mode": "r2v",
+      "prompt_id": "deb5ac07-34ed-4c30-b86a-e9f41324be23",
+      "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_002.t2v.txt",
+      "status": "success",
+      "queued": false,
+      "seed": 100,
+      "turbo": false,
+      "width": 352,
+      "height": 608,
+      "duration_sec": 5.17,
+      "frames": 124,
+      "references": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_city_skyline_noon\\plate_00002_.png"
+      ],
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch1\\seg_002_00002_.mp4"
+      ],
+      "submitted_at": "2026-11-09T11:21:46.461Z",
+      "downloaded_at": "2026-11-09T11:26:11.348Z"
     }
   }
 }
