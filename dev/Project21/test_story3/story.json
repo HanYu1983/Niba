@@ -2,7 +2,7 @@
   "version": 1,
   "name": "test_story3",
   "title": "序章：驟變之前",
-  "plan": "plan.ch0.json",
+  "plan": "plan.ch1.json",
   "prompts": "prompts",
   "output": "output",
   "manifest": "render_manifest.json",

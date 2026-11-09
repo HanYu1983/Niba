@@ -6,25 +6,21 @@
       "segment_id": "seg_002",
       "take": 1,
       "mode": "r2v",
-      "prompt_id": "2c5b368a-38de-4ca6-bbcc-556aae9648c6",
-      "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_002.t2v.txt",
-      "status": "success",
-      "queued": false,
-      "seed": 1000,
+      "prompt_id": "bc79c402-ea04-4306-8cae-2e9664503a4d",
+      "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_002.t2v.txt",
+      "status": "running",
+      "queued": true,
+      "seed": 1794200685,
       "turbo": false,
-      "width": 544,
-      "height": 960,
-      "duration_sec": 8,
-      "frames": 192,
+      "width": 352,
+      "height": 608,
+      "duration_sec": 5.17,
+      "frames": 124,
       "references": [
-        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_training_ground\\plate_00002_.png",
-        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\char_frost\\plate_00004_.png"
+        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_city_skyline_noon\\plate_00002_.png"
       ],
-      "files": [
-        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_002_00014_.mp4"
-      ],
-      "submitted_at": "2026-11-08T09:42:57.941Z",
-      "downloaded_at": "2026-11-08T12:24:32.718Z"
+      "files": [],
+      "submitted_at": "2026-11-09T05:04:46.402Z"
     },
     "seg_003": {
       "segment_id": "seg_003",
@@ -133,24 +129,21 @@
       "segment_id": "seg_001",
       "take": 1,
       "mode": "r2v",
-      "prompt_id": "602fcf9a-12d3-40cd-b113-bb0ef8738350",
-      "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\seg_001.t2v.txt",
-      "status": "success",
-      "queued": false,
-      "seed": 1000,
+      "prompt_id": "bd96a9ac-9871-4519-9514-bbfecadc4c4e",
+      "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story3\\prompts\\ch1\\seg_001.t2v.txt",
+      "status": "running",
+      "queued": true,
+      "seed": 1794200549,
       "turbo": false,
-      "width": 544,
-      "height": 960,
+      "width": 352,
+      "height": 608,
       "duration_sec": 5.17,
       "frames": 124,
       "references": [
         "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\refs\\loc_prologue_title\\plate_00002_.png"
       ],
-      "files": [
-        "D:\\han\\Niba\\dev\\Project21\\test_story3\\output\\render\\plan.ch0\\seg_001_00006_.mp4"
-      ],
-      "submitted_at": "2026-11-08T09:42:56.880Z",
-      "downloaded_at": "2026-11-08T12:24:32.720Z"
+      "files": [],
+      "submitted_at": "2026-11-09T05:02:31.423Z"
     },
     "seg_007": {
       "segment_id": "seg_007",
