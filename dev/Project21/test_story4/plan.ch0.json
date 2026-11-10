@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "stage": "plan",
+  "project_title": "test_story4",
+  "source": {
+    "file": null,
+    "sha256": null,
+    "chars": 0
+  },
+  "entities": {
+    "characters": [],
+    "props": [],
+    "locations": []
+  },
+  "segments": []
+}
