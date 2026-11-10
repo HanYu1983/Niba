@@ -1,0 +1,77 @@
+REFERENCE IMAGES (upload order): 1 = the great hall, 2 = Momo, 3 = Shiro the dog, 4 = Momo's katana, 5 = the 鬼王 banner.
+
+{
+  "global_settings": {
+    "style": "Photorealistic 90s retro-tech Japanese adventure film, 35mm film grain, warm analog color, deep shadows, practical torchlight, practical sea and forest atmospheres",
+    "default_audio_design": "Continuous warm analog room tone with vintage optical film hiss filling the frequency spectrum."
+  },
+  "entities": {
+    "characters": [
+      {
+        "id": "char_momo",
+        "identity_features": {
+          "ethnicity": "East Asian (Japanese)",
+          "age": "About 20",
+          "face_and_hair": "Fair skin, long light-brown hair in a high ponytail tied with a red ribbon, straight bangs, large warm dark eyes, light freckles",
+          "physique": "Athletic slim build",
+          "vibe": "Determined, open, warm, stubborn in a good way"
+        }
+      },
+      {
+        "id": "char_shiro",
+        "identity_features": {
+          "ethnicity": "Japanese Shiba Inu",
+          "age": "Adult",
+          "face_and_hair": "Tan and cream fur, pointed ears, bright intelligent eyes, curled tail",
+          "physique": "Compact sturdy body",
+          "vibe": "Alert, loyal, quiet courage"
+        }
+      }
+    ],
+    "props": [
+      {
+        "id": "prop_katana",
+        "appearance": "Japanese katana, worn black scabbard, red cord wrap, plain iron guard, nicked edge"
+      },
+      {
+        "id": "prop_king_banner",
+        "appearance": "Tall black war banner, two white brush characters 鬼王, ragged lower edge, soot-stained pole"
+      }
+    ],
+    "locations": [
+      {
+        "id": "loc_great_hall",
+        "name": "鬼王殿",
+        "description": "Vast vaulted hall, black timbers, torch sconces, semicircle of oni warriors, throne at the far end"
+      }
+    ]
+  },
+  "blocks": [
+    {
+      "present_characters": [
+        {
+          "entity_ref": "char_momo",
+          "outfit": "Torn cream and rust sleeveless warrior outfit, dirt and blood stains, red ribbon, dark leather bracers, katana at the left hip",
+          "facial_state": "Tired, distant, eyes on the banner"
+        },
+        {
+          "entity_ref": "char_shiro",
+          "outfit": "Small red leather armor vest with a red neck scarf",
+          "facial_state": "Head thrown back, howling"
+        }
+      ],
+      "action": {
+        "subject_ref": "char_momo",
+        "target_ref": "prop_king_banner",
+        "description": "Momo stands on the fallen king's breastplate, katana raised; the black 鬼王 banner tears loose and flares in the torchlight; Shiro plants itself at her feet and howls."
+      },
+      "audio_control": {
+        "audio_mode": "vintage_film_room_tone",
+        "speech_present": false,
+        "lip_sync_enabled": false,
+        "soundtrack_specification": "Dead quiet after the crash, a long dog howl, armour settling, embers popping, a barely audible tender breath.",
+        "visual_sound_sync": "Purely mechanical and environmental acoustic design, closed sealed lips, zero vocalization, zero speech."
+      }
+    }
+  ]
+}

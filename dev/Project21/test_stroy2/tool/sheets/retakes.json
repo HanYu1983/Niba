@@ -1,0 +1,82 @@
+[
+  {
+    "label": "char_peach [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_peach\\plate_00002_.png"
+  },
+  {
+    "label": "char_oni_king [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\char_oni_king\\plate_00002_.png"
+  },
+  {
+    "label": "prop_wooden_box [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_wooden_box\\plate_00002_.png"
+  },
+  {
+    "label": "prop_cards [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\prop_cards\\plate_00002_.png"
+  },
+  {
+    "label": "loc_onsen [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_onsen\\plate_00002_.png"
+  },
+  {
+    "label": "loc_warehouse [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_warehouse\\plate_00002_.png"
+  },
+  {
+    "label": "loc_harbor [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_harbor\\plate_00002_.png"
+  },
+  {
+    "label": "loc_sea [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_sea\\plate_00002_.png"
+  },
+  {
+    "label": "loc_spiked_gate [plate_00003_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_spiked_gate\\plate_00003_.png"
+  },
+  {
+    "label": "loc_fortress_pillars [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_fortress_pillars\\plate_00002_.png"
+  },
+  {
+    "label": "loc_stone_wall [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_stone_wall\\plate_00002_.png"
+  },
+  {
+    "label": "loc_bridge [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_bridge\\plate_00002_.png"
+  },
+  {
+    "label": "loc_corner_gate [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_corner_gate\\plate_00002_.png"
+  },
+  {
+    "label": "loc_gate_frame [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_gate_frame\\plate_00002_.png"
+  },
+  {
+    "label": "loc_dungeon [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_dungeon\\plate_00002_.png"
+  },
+  {
+    "label": "loc_passage [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_passage\\plate_00002_.png"
+  },
+  {
+    "label": "loc_great_hall [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_great_hall\\plate_00002_.png"
+  },
+  {
+    "label": "loc_throne_dais [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_throne_dais\\plate_00002_.png"
+  },
+  {
+    "label": "loc_courtyard_dawn [plate_00002_.png]",
+    "path": "D:\\han\\Niba\\dev\\Project21\\output\\refs\\loc_courtyard_dawn\\plate_00002_.png"
+  },
+  {
+    "label": "build/sheets/retakes.json [none]",
+    "path": ""
+  }
+]
