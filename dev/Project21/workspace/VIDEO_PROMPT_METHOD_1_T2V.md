@@ -1,23 +1,31 @@
 # 視頻提示詞方法 1：純文字驅動 T2V（備圖，預設不綁定）
 
 來源：`dev/Project20/ai_edit_story/mcp_server_guide.md` §4B、`dev/Project20/video_prompt_guide.md` §3.1–§3.4，
-加上本專案 `test_story3`（79 格、9:17 成片）的實作結果。
+加上本專案 `test_story3`（79 格、9:17 成片）的實作結果，以及 `workspace/IDEA.md` 的三條現場觀察
+（角色指稱、純色 plate 的背景注意力、plan 階段的發聲分類）。
 
 ---
 
 ## 0. 一句話
 
-**參考圖先做好，但不掛進 prompt；一致性靠「風格鎖 + 角色外觀錨」在每一格逐字重複。**
+**參考圖先做好，但不掛進 prompt；一致性靠「風格鎖 + 角色特徵錨 + 場景錨」逐字重複。
+背景要進畫面，靠前置與景別；誰在說話，plan 階段就要分清楚。**
 
 t2v 是純文字路線：畫面細節、構圖、鏡頭運動由文字決定，模型不看圖，所以不會被某張肖像的
 角度與表情「拉回」固定姿勢。代價是——**沒有任何共通錨時，它會自己漂**：同一角色每格換一張臉，
 同一部片有的寫實有的動畫。方法 1 的全部紀律，就是在補這個洞。
 
+本版新增三條（§2.2、§2.4、§5.5）：
+
+1. 角色**不寫名字**，只寫「職能 (S1) + 從 plate 抽出的生理特徵」，特徵順序固定。
+2. 純色背景的 plate 會讓模型把場景吃掉；背景必須**前置、給畫幅、與人物發生接觸**。
+3. 對白／旁白／**內心獨白**要在 plan 就分開，內心的聲線跟著 POV 角色的性別與年齡。
+
 | | 方法 1（t2v，本文件） | 方法 2（r2v） |
 |---|---|---|
 | 驅動方式 | 純文字 | 參考圖 `<Picture N>` |
 | 參考圖 | 先備好，**預設不掛** | 必掛，進 `refs` |
-| 一致性靠 | 每格重複的風格句 + 外觀句 | 參考圖 + `subject_definitions` |
+| 一致性靠 | 每格重複的風格句 + 特徵句 | 參考圖 + `subject_definitions` |
 | 構圖自由 | 高 | 低（會被 plate 的取景牽引） |
 | 欄位數 | 3 | 6 |
 
@@ -62,7 +70,7 @@ t2v 是純文字路線：畫面細節、構圖、鏡頭運動由文字決定，�
 
 ---
 
-## 2. 三個錨：缺一個就會漂
+## 2. 三個錨：缺一個就會漂（＋§2.4 背景補丁）
 
 ### 2.1 錨一：風格鎖（必鎖，逐字相同）
 
@@ -99,14 +107,38 @@ not slow motion, no on-screen text.
   模型會挑一個，每格挑的還不一樣。
 - **改稿前先對照上一格**。跨格改風格句是整片重做的等級，不是局部微調。
 
-### 2.2 錨二：角色外觀錨（簡短、可重複、與 plate 同源）
+### 2.2 錨二：角色特徵錨（不寫名字，8–15 詞，與 plate 同源）
 
-每個角色準備**一句**外觀句，全片重複使用。長度以「一句、約 8–15 個英文詞」為上限。
+**名字不要進 prompt。** 模型不認識你的角色，名字只是佔位符；更糟的是名字有字面意義時，
+模型會照字面畫。`桃` 會多一顆桃子，`白` 會多一片白。音譯名更危險——`泰洛伊` 這種拼法會把
+東亞臉拉成西方臉，直接跟 plate 打架；`大姑娘` 這種別名則會被畫成一個大姑娘。
+角色一律用「職能＋編號」指稱（`the woman (S1)`、`the contractor (S4)`），
+辨識度全部放在後面的特徵句。
+
+每個角色準備**一句**特徵句，全片重複使用。長度以「一句、約 8–15 個英文詞」為上限。
 
 ```text
 The contractor (S4), 32, lean and wiry, pale cold face, sharp cheekbones, flat dead eyes,
 short black hair tied back tight.
 ```
+
+**特徵怎麼抽。** 從角色 plate 的 t2i 提示詞裡，只取「看得到的生理特徵」，排成固定順序：
+
+| 抽這些 | 丟掉這些 |
+|---|---|
+| 性別、年齡感、族裔／膚色、臉型、髮長髮色髮型、體型、一個辨識點（疤、痣、眼型） | 鏡頭、景別、機位、光線、背景、姿勢、表情、解析度、`sharp focus` |
+
+順序固定，跨格不換位（換位＝模型重新分配注意力）：
+
+```text
+the woman (S1), mid-20s, East Asian, sun-tanned, athletic and lean, strong jaw,
+sharp dark eyes, high black ponytail.
+```
+
+以本專案 `char_taylor` 為例：plate 裡該留的是
+`25-year-old East Asian woman, athletic and lean, high black ponytail, sharp dark eyes,
+strong jaw, sun-tanned skin`；`head-and-shoulders framing, plain grey backdrop, soft key light,
+sharp focus` 一個字都不要帶進場景。
 
 三個常見錯誤：
 
@@ -131,6 +163,55 @@ one bare bulb hanging above
 
 不要這格寫 `safehouse`、下格寫 `hideout`、再下格寫 `underground room`；模型會給你三個房間。
 **場景漂移比換臉更難察覺，也更難修**，因為觀眾只覺得「怪」但說不出哪裡怪。
+
+### 2.4 純色 plate 的副作用：背景會被吃掉
+
+角色 plate 是「半身、置中、純色背景、柔光」的攝影棚肖像。它不掛進 t2v，但它的**構圖慣性**
+會留在你寫的特徵句裡；而純文字路線的注意力順序是「先寫的權重高」，所以主體句越長、越前面，
+背景就越容易被壓成一片牆或整片散景。走 r2v 綁圖時更直接——那塊純色背景會真的被吸進畫面。
+
+要讓模型把注意力分給背景，三件事一起做：
+
+**1. 背景前置（front-loading）**
+場景句放在風格鎖之後、主體之前，而且要用具體名詞，不要用形容詞堆氣氛：
+
+```text
+<風格鎖> The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line
+on one side, the wide canal on the other, hard short shadows and no shelter.
+<主體錨> …
+```
+
+地名 ＋ 2–3 個固定物件 ＋ 一個深度線索（`the tree line recedes into haze`、`the canal widens
+toward the bridge`）。模型處理文本前段的權重最高，這段要搶在人物之前。
+
+**2. 給背景畫幅（camera framing）**
+背景重要時，不要用 `tight close-up`、`holds tight on both faces`、`pushes in on her face`——
+那等於直接叫模型刪背景。改成 `a wide-to-medium profile shot`、`a medium shot with the canal
+filling the left third`；真的需要特寫，就把環境留在過肩或景深裡：
+`past her shoulder, the grey canal water stays sharp`。
+
+**3. 讓人與環境接觸，並共用同一道光**
+人物要「碰到」場景，光要同時落在人與背景上：
+
+```text
+her boots sink into the wet gravel; under the open, shelterless sky, the same harsh noon light
+falls across her shoulders and the cracked bank behind her
+```
+
+`under the open, shelterless sky` 這類句子是在強制模型把光源作用到整個空間，而不是只打在人臉上。
+
+| 症狀 | 原因 | 修法 |
+|---|---|---|
+| 背景變成一堵灰牆、或整片糊掉 | 主體句在前，背景只有一個地名 | 背景前置，補 2–3 個物件與深度線索 |
+| 背景整個不見，只剩臉 | `tight close-up`、`holds tight on both faces` | 改 wide-to-medium；特寫留過肩或景深 |
+| 人像剪貼在背景上 | 人與環境沒有接觸，光只打在人身上 | 加接觸動作＋共用光源句 |
+| 背景有東西，但每格都不一樣 | 場景名詞輪替 | 固定名詞組（§2.3） |
+
+本專案已標記的案例（`test_story3` ch1 的 024、028、029、032、044、052、053、059）都是同一種病：
+背景句其實寫了，但鏡頭是 `holds tight on both faces` 或 `pushes in`，背景沒有畫幅。
+**背景句不是護身符，景別才是。**
+
+> 一句話記法：**背景要進畫面，先進句子；要留在畫面，鏡頭得讓位。**
 
 ---
 
@@ -190,12 +271,14 @@ non_diegetic_music: …
 寫作順序（照這個順序寫，讀起來自然、模型也好抓）：
 
 1. **風格鎖**（§2.1，逐字）
-2. **場景**：這是哪裡、有什麼固定物件
-3. **主體**：誰／什麼，外觀錨（§2.2）
+2. **場景**：這是哪裡、有什麼固定物件；背景前置（§2.4），一定排在主體前面
+3. **主體**：誰／什麼，特徵錨（§2.2），用「職能 (S1)」不寫名字
 4. **動作**：可觀察的動作、微表情、狀態轉變
 5. **光**：具體的光源與方向（不是「氣氛很好」）
 6. **鏡頭**：機位、景別、運動
 7. **對白**：`<d>` 區塊（§5）
+
+場景排在主體前面不是文筆問題，是注意力順序：寫在後面的背景，模型通常不會畫。
 
 要寫得**可觀察**：`her jaw stays still around the words` 可以拍，`she feels conflicted` 拍不出來。
 
@@ -275,9 +358,70 @@ The contractor (S4) says, flat and cold:
 每個有對白的格子都要交代**誰發聲、誰閉嘴**：
 
 - 對白：`The contractor (S4) says:` + 其他人「嘴唇不動」的狀態寫在動作裡。
-- 旁白：`A calm narrator's voice, off-screen, speaks:`，畫面裡的人**不張嘴**。
+- 旁白：`A single narrator's voice, off-screen, low and even, the same voice throughout the film, speaks:`，畫面裡的人**不張嘴**。
+- 內心獨白：`Taylor's inner voice, close and dry, a young woman's voice inside her own head, her lips do not move:`（§5.5）。
 - 電話另一頭：`her voice through the phone, off-screen`，畫面裡的人閉唇聽。
 - 場景格：**完全不寫 `<d>`**。寫了就會有人聲。
+
+### 5.5 四種發聲：對白、旁白、內心、無聲
+
+小說的「旁白」常常不是旁白。先把每一格的發聲類型釘死，再寫 prompt；寫完再回頭猜，
+一定錯，因為聲音是 TTS 參數，不是文字修辭。
+
+| 類型 | plan `kind` | 聲音屬於誰 | 畫面人物動嘴 | prompt 句式 |
+|---|---|---|---|---|
+| 對白 | `dialogue` | 畫面中的角色 | 是 | `Taylor (S1) says, …:` |
+| 旁白 | `narration` | 全片同一個旁白 | 否 | `A single narrator's voice, off-screen, …, speaks:` |
+| 內心 | `inner` | 該格 POV 角色的內心 | 否 | `Taylor's inner voice, …, her lips do not move:` |
+| 無聲 | `scene` / `action` | 沒有人聲 | 否 | 不寫 `<d>` |
+
+**plan 階段就要分。** 每格建議帶：
+
+```json
+"voice": {
+  "kind": "inner",          // dialogue | narration | inner | scene
+  "speaker": "char_taylor", // inner 時是 POV，不是發話者
+  "pov": "char_taylor",
+  "gender": "female",       // 聲線跟著角色，不跟旁白
+  "age": "mid 20s",
+  "timbre": "low, close, slightly hoarse"
+}
+```
+
+`kind` 只准這四個值。`narration` 的 speaker 全片固定；`inner` 的 speaker 必須等於該格的主體
+（或明確的 POV 角色），性別、年齡也必須跟角色一致。
+
+**小說裡怎麼分。** 六個判準：
+
+| 判準 | 對白 | 旁白 | 內心 |
+|---|---|---|---|
+| 引號／說話動詞 | 有 | 無 | 無 |
+| 人稱 | 第一／第二 | 第三 | 第一，或貼近角色的第三 |
+| 攝影機拍得到嗎 | 拍得到（嘴在動） | 拍得到的事實 | **拍不到** |
+| 感知動詞（覺得、想、知道、發現、聽見） | 少 | 少 | 多 |
+| 評價、猶豫、反問 | 有 | 無 | 有 |
+| 跨角色通用嗎 | — | 是，全片一致 | 否，綁 POV |
+
+最實用的一條是第三個判準：**「這句話攝影機拍得到嗎？」**
+`她瞬間明白了一切` 拍不到 → 內心；`雨落在她肩上` 拍得到 → 旁白。
+自由間接引語（第三人稱、卻是角色的主觀判斷）一律判給內心，POV 給那個角色。
+
+**本專案的實例。** `test_story3` ch1 的 054、056、066 原文是第一人稱身體感受
+（「震得她腦袋嗡嗡作響」「泰洛伊瞬間明白了一切」），plan 標成 `narration`，
+prompt 寫 `A calm narrator's voice`，結果用一把中性旁白唸角色的痛覺——視角與性別都不對。
+正確是 `inner`，POV 與聲線都綁 Taylor。
+
+**三個禁令：**
+
+1. **旁白句跨格逐字相同。** `calm` / `low` / `warm` 輪替＝換人唸；旁白只能有一把聲音。
+2. **內心獨白不可用異性的聲音。** 聲線描述要跟 POV 角色的性別、年齡一致；`a young woman's
+   voice inside her own head` 這種話要寫出來，不要只寫 `inner voice`。
+3. **內心獨白不可讓畫面人物動嘴。** 動作句要明寫 `her lips do not move`／`her jaw stays still`。
+
+**聽感也要分開：** 內心獨白乾、近、沒有空間殘響（`close and dry, no room reverb`）；
+旁白可以帶一點空間感。文字像的時候，靠這句把兩者推開。
+
+同一格不要混兩種發聲。真要在一格裡換，就拆 shot 或拆句，各自標清楚。
 
 ---
 
@@ -303,12 +447,14 @@ All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔�
 依 plan 順序，一格一格來：
 
 1. **回想劇情**：這一段在講什麼、前後發生什麼。
-2. **讀 plan 該格**：`voice`（決定音訊寫法）、`duration`（決定 shot 預算）、
-   `lines`（`<d>` 的唯一真相）、`source`（原文段落，情緒與細節以此為準）。
-3. **讀上一格已寫好的 prompt**：對照風格句、角色外觀句、場景名詞、光線子句。
+2. **讀 plan 該格**：`voice.kind`／`pov`（是對白、旁白、內心還是無聲；聲線跟著誰）、
+   `duration`（決定 shot 預算）、`lines`（`<d>` 的唯一真相）、`source`（原文段落，情緒與細節以此為準）。
+3. **定三個錨**：角色特徵句（職能＋生理特徵，不寫名字）、場景名詞＋背景句、光線子句。
+   背景句要在主體句之前；背景重要的格子先決定景別。
+4. **讀上一格已寫好的 prompt**：對照風格句、特徵句、場景名詞、光線子句、旁白句。
    **這是防止漂移最有效的一步**——不是重寫，是複製貼上再改。
-4. **選路線**：預設 t2v。真的需要鎖死才升 r2v（§1.3）。
-5. **寫三欄位**，然後跑 §8 檢查表。
+5. **選路線**：預設 t2v。真的需要鎖死才升 r2v（§1.3）。
+6. **寫三欄位**，然後跑 §8 檢查表。
 
 「一次寫完 79 格」幾乎一定斷裂：第 20 格開始角色形容就走鐘，第 50 格風格句就少了一半。
 寧可慢，一格對一格。
@@ -326,9 +472,14 @@ All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔�
 
 **角色與場景**
 
-- [ ] 角色外觀句與 t2i plate 提示詞同源，且與上一格相同
+- [ ] 全程沒有出現角色本名或別名；指稱是「職能 (S1)」
+- [ ] 特徵句只含生理特徵，順序與上一格相同
+- [ ] 特徵句與 t2i plate 提示詞同源，且與上一格相同
 - [ ] 沒有把 plate 的攝影棚語彙（`studio backdrop`、`soft key light`）帶進場景
 - [ ] 場景名詞與前幾格一致（`safehouse` 不會變 `hideout`）
+- [ ] 背景句在主體之前，且有 2–3 個具體物件與一個深度線索
+- [ ] 背景重要的格子不是 `tight close-up`；鏡頭有給背景畫幅
+- [ ] 人物有與環境接觸的動作，光線同時落在人與背景
 - [ ] 換裝有明寫過渡，不是靜默替換
 - [ ] 角色編號 `(S1)(S2)…` 與全片一致
 
@@ -345,6 +496,10 @@ All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔�
 - [ ] `<d>` 外沒有任何中文完整句
 - [ ] 台詞一句一行
 - [ ] `%`、數字、引號、全形冒號、`——`、英文都已改寫
+- [ ] plan 的 `voice.kind` 與 prompt 句式一致（dialogue / narration / inner / scene）
+- [ ] 內心獨白綁對 POV，聲線性別、年齡與角色一致，畫面人物不張嘴
+- [ ] 旁白句跨格逐字相同，沒有換形容詞
+- [ ] 一格沒有混用兩種發聲
 - [ ] 有交代誰發聲、誰閉嘴；旁白格畫面裡的人不張嘴
 - [ ] 場景格完全沒有 `<d>`
 - [ ] `overall_soundscape` 有環境音 + 腔調錨點句，且沒有複述對白
@@ -377,7 +532,7 @@ All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔�
 ### 10.1 對白格
 
 ```text
-integrated_multimodal_description: [Shot 1] <風格鎖> <場景 + 固定物件>. <主體 (S1), 外觀錨> <動作、微表情>. <光源與方向>. The camera <機位/景別/運動>. <角色> says, <語氣>:
+integrated_multimodal_description: [Shot 1] <風格鎖> <場景 + 固定物件>. <主體 (S1), 特徵錨> <動作、微表情>. <光源與方向>. The camera <機位/景別/運動>. <角色> says, <語氣>:
 <d>
 [中文]
 第一句台詞。
@@ -398,7 +553,7 @@ non_diegetic_music: <樂器、節奏、動態>.
 ### 10.2 場景格（無對白）
 
 ```text
-integrated_multimodal_description: [Shot 1] <風格鎖> <場景>. <主體/物件> <動作>. <光>. The camera <運動>, <收在什麼畫面>.
+integrated_multimodal_description: [Shot 1] <風格鎖> <場景：地名、2–3 個固定物件、深度線索>. <主體/物件> <動作>. <同一道光落在什麼與什麼上>. The camera <wide-to-medium 或運動>, <收在什麼畫面>.
 
 overall_soundscape: <環境音>、<動作聲>。No dialogue.
 
@@ -425,16 +580,57 @@ overall_soundscape: A bare bulb humming, the click of a holster strap, gear shif
 non_diegetic_music: A sparse metallic pulse, like a struck rod, marking time under her voice and stopping on the question.
 ```
 
+### 10.4 內心獨白格
+
+```text
+integrated_multimodal_description: [Shot 1] <風格鎖> <場景：地名、固定物件、深度線索>. <主體 (S1) 特徵錨> <動作，嘴唇閉著、下顎不動>. <同一道光落在人與背景>. The camera <景別/運動>. <角色> 的內心獨白，聲線綁 POV：
+<d>
+[中文]
+第一句。
+第二句。
+</d>
+
+overall_soundscape: <環境音>, <呼吸/心跳>. No narrator. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: <配樂> 或 N/A
+```
+
+實例（改寫自本專案 `seg_054`：原文是 Taylor 的第一人稱感受，不是旁白）：
+
+```text
+integrated_multimodal_description: [Shot 1] Photorealistic live-action 35mm film, fine grain, natural skin texture, real-world photography, muted olive and cold grey palette, harsh flat noon light, shallow depth of field, grounded documentary realism — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The riverside embankment at harsh noon: gravel and dry grass, a dense green tree line on one side, the wide canal on the other, hard short shadows and no shelter. The woman (S1), mid-20s, East Asian, sun-tanned, athletic and lean, strong jaw, sharp dark eyes, high black ponytail, stands still with blood drying at her temple, her lips closed and her jaw tight. The same harsh noon light falls across her shoulders and the cracked bank behind her. The camera holds a medium shot from the side, the canal filling the left third. Taylor's inner voice, close and dry, a young woman's voice inside her own head, her lips do not move:
+<d>
+[中文]
+雙耳在瞬間接收了爆炸般的訊息量。
+震得她腦袋嗡嗡作響。
+</d>
+
+overall_soundscape: Her slow breath, water lapping at the bank, wind through dry grass, a high ringing tone just under everything. No narrator. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese.
+
+non_diegetic_music: A single low held note, no rhythm.
+```
+
+### 10.5 背景優先格（背景是敘事主體時）
+
+```text
+integrated_multimodal_description: [Shot 1] <風格鎖> <地點：地名、2–3 個固定物件、一個深度線索>. <主體 (S1) 特徵錨> <與環境接觸的動作：踩進、扶著、穿過、被風吹動>. <同一道光同時落在人與背景>. The camera holds a wide-to-medium shot, <背景佔哪一側>, <運動>.
+```
+
+規則：背景句只留名詞，刪掉形容詞；一個句子塞超過三個物件，模型會只畫第一個。
+
 ---
 
 ## 11. 一頁摘要
 
 1. t2i 先做好，**預設不掛**；素材庫是外觀字典，不是輸入。
 2. **風格鎖**逐字寫在每個 `[Shot 1]` 開頭，負面排除句不可省。
-3. **角色外觀句**簡短、與 plate 同源、跨格相同；服裝可換但要寫過渡。
+3. **角色特徵句**簡短、與 plate 同源、跨格相同；**不寫名字**，用「職能 (S1) + 生理特徵」。
 4. **場景名詞**固定，不要同義詞輪替。
 5. 三欄位：畫面時間軸 / 環境音 + 腔調句 / 配樂，**兩個音訊欄位都不可省**。
 6. 台詞逐字進 `<d>[中文]`，一句一行，`<d>` 外不寫中文完整句。
 7. `[Shot 1]` 無時間戳，後續 `At MM:SS.mmm` 遞增；小幅變化用鏡頭運動不用 cut。
 8. 一格一支、一個主要事件；**不要一次寫完所有格**，每格對照上一格。
 9. 要綁圖就整格升級成 r2v（六欄位），不要半套。
+10. **背景要進畫面**：背景句前置、景別給畫幅、人物與環境接觸並共用一道光。`holds tight on both faces` 就是叫模型刪背景。
+11. **發聲在 plan 就分四類**：dialogue / narration / inner / scene。旁白全片同一把聲音；內心綁 POV 的性別與年齡，而且畫面人物不張嘴。
+12. 小說判 inner 與 narration 只用一句話：**「這句話攝影機拍得到嗎？」** 拍不到的就是內心。
