@@ -2,6 +2,7 @@
  * Render one plan segment.
  *
  *   node workspace/tools/render_segment.mjs --story test_story3 --seg seg_017
+ *   node workspace/tools/render_segment.mjs --story test_story3 --plan plan.ch1.json --seg seg_001
  *   node workspace/tools/render_segment.mjs --story test_story3 --seg seg_002 --mode r2v
  *   node workspace/tools/render_segment.mjs --story test_story3 --seg seg_017 --dry-run
  *   node workspace/tools/render_segment.mjs --story test_story3 --seg seg_017 --async
@@ -23,6 +24,9 @@ if (!segId) {
   usage("missing --seg", [
     "usage: node workspace/tools/render_segment.mjs --story <dir> --seg <seg_id> [options]",
     "",
+    "  --plan FILE          default: story.json.plan, else the only plan.*.json",
+    "  --prompts DIR        default: <story>/prompts",
+    "  --manifest FILE      default: <story>/render_manifest.json",
     "  --mode t2v|r2v|i2v   default: inferred from the prompt file name",
     "  --prompt FILE        default: <story>/prompts/<seg>.<mode>.txt",
     "  --take N             manifest take number (default 1)",
