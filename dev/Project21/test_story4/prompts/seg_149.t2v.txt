@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the same low amber dusk light comes through the window and lies across the table, the open box and her hands — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A boat cabin at dusk: a wooden interior, a wide window framing water and distant hills, a low table with a map, scrolls, jade bracelets and an incense burner, and the cabin door standing open to the deck. The palette stays dusk amber, dark wood and river grey. The market woman (S1), 24, East Asian, sun-touched, same face as the princess, long black braid with cloth strips, grey-blue patchwork, in a mended robe, a cloth bundle against her chest; the princess (S2), 24, East Asian, tall and slender, pale, sharp phoenix eyes, long black hair in a high gold-crowned updo, in a crimson robe, a cat-painted round fan on her knee. The market woman (S1) watches her chew and answers with her chin on her hand, one eyebrow lifted. The camera holds a medium shot on her, the table and the opened bundle in the foreground. The market woman (S1) says, soft and unhurried:
+<d>
+[中文]
+大人沒吃過苦，當然嫌甜。
+</d>
+
+overall_soundscape: The hull, water, her voice. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+
+non_diegetic_music: N/A

@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the same flat dawn light comes under the awnings and sits on the wet paving, the greens and her hands alike — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A morning market street: vegetable stalls leaning in from both sides, steam rising off a food pot, cloth awnings overhead, baskets stacked on the wet stone paving, and the street narrowing away into the crowd. The palette stays grey-blue, rice white and ochre. The market woman (S1), 24, East Asian, sun-touched, same face as the princess, long black braid with cloth strips, grey-blue patchwork, in a mended robe, a full basket of greens on her hip; the vegetable vendor (S6), 60s, East Asian, stout and weathered, grey stubble, deep laugh lines, straw hat pushed back, in a brown cotton jacket, hands still wet from the water jar. The market woman (S1) answers without smiling, thumbing a leaf off the bundle and putting it back on his pile. The camera holds a medium shot, both faces in profile at the stall edge, the street still moving behind them. The market woman (S1) says, soft and unhurried:
+<d>
+[中文]
+秤不準，日子才要準。
+</d>
+
+overall_soundscape: A leaf snapping off, the basket shifting, cart wheels on stone nearby. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+
+non_diegetic_music: N/A

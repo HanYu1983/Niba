@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the same single candle lights the map, her hands and the edge of the table, then falls away into black — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A candlelit study at night: a low wooden table, a hand-drawn map held flat by a brush rest, scrolls and an ink stone at the edge, a chessboard half out of frame, and the dark room falling off behind the candle. The palette stays warm candle amber, black and aged paper. The market woman (S1), 24, East Asian, sun-touched, same face as the princess, long black braid with cloth strips, grey-blue patchwork, in a mended robe; the princess (S2), 24, East Asian, tall and slender, pale, sharp phoenix eyes, long black hair in a high gold-crowned updo, in a crimson robe, sleeves rolled back. The market woman (S1) takes her chin off her hand and leans over the map, her finger resting on the arrow's tip. The camera holds a medium shot from her side, the map and the candle between them, the cat's paw holding the corner. The market woman (S1) says, soft and unhurried:
+<d>
+[中文]
+要是初四天亮，我死了呢？
+</d>
+
+overall_soundscape: A stool creaking, paper under a fingertip, the candle. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+
+non_diegetic_music: A single low pluck.

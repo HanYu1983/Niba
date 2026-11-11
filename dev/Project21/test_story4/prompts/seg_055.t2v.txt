@@ -1,0 +1,10 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the same cool daylight comes over the balustrade and falls on the steps, the armour and both women at once — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The white stone palace stairs: wide steps climbing out of frame, carved balustrades on both sides, cherry trees shedding petals overhead, guards standing along the edges, and the steps receding upward into pale haze. The palette stays white stone, crimson and gold against grey-blue cloth. The princess (S2), 24, East Asian, tall and slender, pale, sharp phoenix eyes, long black hair in a high gold-crowned updo, in a twelve-fold crimson and gold robe, the cat-ear gold crown on her head; the maid (S4), 18, East Asian, small and round-faced, neat double bun, quick careful eyes, teal palace robe, with her hands folded, holding a tray. The princess (S2) turns her head slightly toward the maid without taking her eyes off the woman below, and speaks quietly. The camera holds a medium two-shot from behind the maid's shoulder, the princess and the stair behind her. The princess (S2) says, low and clipped:
+<d>
+[中文]
+……青禾，退下。
+所有人都退下。
+</d>
+
+overall_soundscape: A tray shifting in the maid's hands, wind, the retreat of a guard's boot. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+
+non_diegetic_music: N/A

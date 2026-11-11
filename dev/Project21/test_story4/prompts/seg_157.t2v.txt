@@ -1,0 +1,10 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the same low lamp light lies across her shoulder, the gauze and the rim of the bronze mirror behind her — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A princess's dressing room at night: a bronze mirror on a dark wood table, a row of jewellery boxes, red gauze curtains at the window, a low couch with one cushion, and the room falling away into lamp shadow behind it. The palette stays deep crimson, black and gold. The princess (S2), 24, East Asian, tall and slender, pale, sharp phoenix eyes, long black hair in a high gold-crowned updo, in a plain crimson robe, a ring on her finger; the market woman (S1), 24, East Asian, sun-touched, same face as the princess, long black braid with cloth strips, grey-blue patchwork, in the crimson and gold court robe, her hair half pinned. The princess (S2) crosses to the mirror, takes the weight of the crown off its stand, and speaks to the reflection rather than to the woman in the robe. The camera holds a medium shot with the mirror splitting the frame, her reflection on one side and the laced robe on the other. The princess (S2) says, low and clipped:
+<d>
+[中文]
+不是慢。
+是不能走快——走快了，頭上的東西會掉；掉了一地，撿的人比看的人多。
+</d>
+
+overall_soundscape: Gold on wood, a hairpin ticking the stand, silk being smoothed. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+
+non_diegetic_music: A single low pluck under the line.

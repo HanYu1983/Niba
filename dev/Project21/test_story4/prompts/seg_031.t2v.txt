@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the same low lantern light and moon wash touch the railing, her sleeve and the roofs below — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A high palace balcony at night: a carved stone railing in the foreground, hanging lanterns along the eaves, a large moon low over the roofs, and the city lights spread out far below. The palette stays cold blue-black, warm lantern amber and gold. The grey-white long-haired Persian cat (S3), flat face, amber eyes, red ribbon bow and gold bell at the neck. The cat turns its head toward her, ears forward, mouth closed, and stays looking at her face. The camera holds a medium shot at cat height, her sleeve and the railing both sharp in the same plane. The grey-white Persian cat's inner voice, close and dry, a man's low voice, amused, no room reverb, the cat's mouth closed:
+<d>
+[中文]
+那妳怎麼不出去？
+</d>
+
+overall_soundscape: A tail tapping stone twice, wind, a lantern creak. No narrator. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+
+non_diegetic_music: N/A

@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the same flat dawn light comes through the paper window and lies across her shoulder, the gauze and the rim of the bronze mirror behind her — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A princess's dressing room before dawn: a bronze mirror on a dark wood table, a row of jewellery boxes, red gauze curtains at the window, a low couch with one cushion, and the room falling away into warm shadow behind it. The palette stays deep crimson, black and gold. The maid (S4), 18, East Asian, small and round-faced, neat double bun, quick careful eyes, teal palace robe, with her hands folded at her waist. The maid (S4) lifts her head quickly, then lowers it again, her mouth closing on the answer. The camera holds a medium shot, the lattice window behind her throwing soft bars across the wall. The maid (S4) says, light and careful:
+<d>
+[中文]
+郡主沒有姊妹。
+</d>
+
+overall_soundscape: Her sharp intake of breath, the tray edge knocking her sleeve. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+
+non_diegetic_music: N/A

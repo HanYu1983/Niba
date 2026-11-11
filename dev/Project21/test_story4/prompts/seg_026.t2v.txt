@@ -1,0 +1,11 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the same low warm shaft light and incense haze cross the carpet, the throne and the shoulders of everyone standing there — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The deep throne hall: red lacquer columns, a gold dragon throne on a raised dais, twelve steps of red-gold carpet running down to the camera, and incense smoke hanging in the shafts of light above the dais. The palette stays deep crimson, black and gold. The grey-white long-haired Persian cat (S3), flat face, amber eyes, red ribbon bow and gold bell at the neck; the court eunuch (S5), 50s, East Asian, thin and tall, pale narrow face, thin moustache, black gauze cap, in a dark red eunuch's robe, sleeves folded; the princess (S2), 24, East Asian, tall and slender, pale, sharp phoenix eyes, long black hair in a high gold-crowned updo, in a twelve-fold crimson and gold court robe, the cat-ear gold crown on her head, a round silk fan in her hand. The cat sits upright on its cushion, nose lifted, whiskers forward, mouth closed, and does not look at either of them while the words run under the image. The camera holds a low close-to-medium shot at cat height, the eunuch's red sleeve and the princess's skirt soft behind it. The grey-white Persian cat's inner voice, close and dry, a man's low voice, amused, no room reverb, the cat's mouth closed:
+<d>
+[中文]
+本座聞到了。
+他袖口有鐵味，還有孝布的漿味。
+左邊的，妳的婚禮會有人流血。
+</d>
+
+overall_soundscape: A cat sniffing twice, the bell at its neck touching once, incense, cloth. No narrator. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+
+non_diegetic_music: A dry plucked note, then a low held tone.

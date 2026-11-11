@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the same small lamp sways between them, and the passing lights run across the wood and both faces — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The inside of a six-horse carriage at night: dark wood panelling, two padded benches facing each other, a small hanging lamp between them, and windows on both sides where the city lights slide past. The palette stays dark lacquer, amber lamp and moving gold lights. The princess (S2), 24, East Asian, tall and slender, pale, sharp phoenix eyes, long black hair in a high gold-crowned updo, in a crimson robe, the crown set aside on the bench; the market woman (S1), 24, East Asian, sun-touched, same face as the princess, long black braid with cloth strips, grey-blue patchwork, in a mended robe. The princess (S2) answers without turning from the window, one finger lifting in a small gesture at the ceiling. The camera holds a medium shot on her, the window light moving across her profile. The princess (S2) says, low and clipped:
+<d>
+[中文]
+六匹馬拉的，當然穩。
+</d>
+
+overall_soundscape: Hooves, the lamp ticking, cloth. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+
+non_diegetic_music: N/A

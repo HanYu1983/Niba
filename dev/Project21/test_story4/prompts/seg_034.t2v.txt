@@ -1,0 +1,9 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the same flat dawn light comes under the awnings and sits on the wet paving, the greens and her hands alike — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A morning market street: vegetable stalls leaning in from both sides, steam rising off a food pot, cloth awnings overhead, baskets stacked on the wet stone paving, and the street narrowing away into the crowd. The palette stays grey-blue, rice white and ochre. The vegetable vendor (S6), 60s, East Asian, stout and weathered, grey stubble, deep laugh lines, straw hat pushed back, in a brown cotton jacket, hands still wet from the water jar; the market woman (S1), 24, East Asian, sun-touched, same face as the princess, long black braid with cloth strips, grey-blue patchwork, in a mended robe, a full basket of greens on her hip. The vegetable vendor (S6) lifts a bundle of greens off the pile and holds it out, water running off his wrist, grinning at her. The camera holds a medium shot from her side, his stall and the hanging awnings filling the background, the wet stone at the bottom of frame. The vegetable vendor (S6) says, rough and warm:
+<d>
+[中文]
+阿念，今天的菜新鮮，給妳留了最嫩的一把。
+</d>
+
+overall_soundscape: Water dripping off a hand, greens rustling, a stall board creaking. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+
+non_diegetic_music: The plucked pattern continues under his voice.

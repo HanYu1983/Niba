@@ -1,0 +1,10 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the same cool daylight comes over the balustrade and falls on the steps, the armour and both women at once — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The white stone palace stairs: wide steps climbing out of frame, carved balustrades on both sides, cherry trees shedding petals overhead, guards standing along the edges, and the steps receding upward into pale haze. The palette stays white stone, crimson and gold against grey-blue cloth. The guard captain (S7), 30s, East Asian, broad and square-faced, short black beard, dark lamellar armour, with one hand on the hilt at his waist; the market woman (S1), 24, East Asian, sun-touched, same face as the princess, long black braid with cloth strips, grey-blue patchwork, in a mended patched robe, a vegetable basket beside her knees. The guard captain (S7) steps in and slams his palm onto the kneeling woman's shoulder, forcing her lower; his other hand stays on the hilt. The camera holds a low medium shot from the side, the steps rising steeply behind them, armour filling the left of frame. The guard captain (S7) says, hard and loud, parade-ground:
+<d>
+[中文]
+跪下！
+見長公主，還不跪！
+</d>
+
+overall_soundscape: A palm on cloth, armour plates clashing, a boot grinding stone. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+
+non_diegetic_music: The drum strikes once with the hand.

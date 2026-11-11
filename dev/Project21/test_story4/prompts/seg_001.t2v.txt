@@ -1,0 +1,5 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the light is only what the two lines carry — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. The frame is pure black, with no texture, no edge and no object in it. A thin crimson line and a thin grey-blue line rest together on the exact centre of the black, then draw slowly apart, opening a widening black gap between them. No figures and no lettering. The camera holds dead still, full frame, and lets the two lines separate by themselves.
+
+overall_soundscape: A near-silent room tone, one soft fabric shift, and nothing else. No dialogue.
+
+non_diegetic_music: A single low bowed note, held without vibrato, fading as the gap opens.

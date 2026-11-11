@@ -1,0 +1,13 @@
+integrated_multimodal_description: [Shot 1] Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism, the same soft poster light falls flat and even across both halves, the chair and the railing to the same value — not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text. A split poster frame: on the left a deep crimson ground with gold silk and an empty wooden chair, on the right a grey-blue ground of patched cloth and a low stone railing, the two halves meeting on the centre line, and one embroidered cushion set exactly on the seam. The palette stays crimson and gold on one side, grey-blue and rice white on the other. The market woman (S1), 24, East Asian, sun-touched, same face as the princess, long black braid with cloth strips, grey-blue patchwork, in a mended robe, a market basket resting on her knees; the grey-white long-haired Persian cat (S3), flat face, amber eyes, red ribbon bow and gold bell at the neck, with a small blank plaque hanging beneath the bell, no legible text. The market woman (S1) sits on the low stone railing with the basket on her knees, her eyes on something off frame, her lips together and her jaw still while the words run under the image. The camera holds a medium shot from the grey-blue side, the cat and the cushion sharp between her and the empty chair.
+
+[Shot 2] At 00:06.000, closer on the railing: her hand resting flat on the basket lid, the cat's eyes opening and settling on her, the crimson chair just inside the frame, her mouth still closed. The camera drifts slowly along the railing, keeping the cat and her hand in the same plane, the empty chair soft at the edge. The market woman's inner voice, close and dry, a woman's voice inside her own head, no room reverb, her lips do not move:
+<d>
+[中文]
+我娘說，撿到我的那天，天上沒下雨，地上卻全是水。
+我問她為什麼。
+她說，因為有人在宮裡哭，哭了一整夜。
+</d>
+
+overall_soundscape: A market street far away, a basket creaking once, her slow breath. No narrator. All spoken lines are delivered in Taiwan-accented Standard Mandarin (台灣腔普通話), no Cantonese, no English.
+
+non_diegetic_music: A single plucked string under the voice, no rhythm.
