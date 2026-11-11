@@ -34,3 +34,9 @@ node .\workspace\tools\new_story.mjs --name test_story4 --title test4
 
 node .\workspace\tools\extract_penana.mjs --html .\test_story3\story_ch1.html --out story_ch1.txt
 ```
+
+
+```
+node .\workspace\tools\generate_refs.mjs --story .\test_story4\
+
+```

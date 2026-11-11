@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "plan": null,
+  "segments": {
+    "seg_001": {
+      "segment_id": "seg_001",
+      "take": 1,
+      "mode": "r2v",
+      "prompt_id": "4fe79b8a-712a-4974-8edd-c7a11ded182c",
+      "prompt_file": "D:\\han\\Niba\\dev\\Project21\\test_story4\\prompts\\seg_001.t2v.txt",
+      "status": "running",
+      "queued": true,
+      "seed": 100,
+      "turbo": true,
+      "width": 352,
+      "height": 608,
+      "duration_sec": 4.46,
+      "frames": 107,
+      "references": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_poster_split\\plate_00001_.png"
+      ],
+      "files": [],
+      "submitted_at": "2026-11-11T02:18:51.125Z"
+    }
+  }
+}

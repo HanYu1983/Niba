@@ -16,5 +16,10 @@
     "rate": 6.2,
     "maxLine": 15,
     "protect": []
+  },
+  "refs": {
+    "root": "output",
+    "model": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+    "sizes": { "character": { "width": 832, "height": 1024 } }
   }
 }

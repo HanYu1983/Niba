@@ -1,0 +1,349 @@
+{
+  "model": "beretMixZIT_v50Bf16Fp8Int8.safetensors",
+  "asset_root": "D:\\han\\Niba\\dev\\Project21\\test_story4\\output",
+  "generated_at": "2026-11-11T02:11:03.944Z",
+  "statuses_flipped": 31,
+  "runs": [
+    {
+      "id": "char_anian",
+      "kind": "character",
+      "size": "832x1024",
+      "status": "success",
+      "seconds": 21.5,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\char_anian\\plate_00001_.png"
+      ],
+      "prompt_id": "10f23085-9e64-4de0-a9d6-93ff6a69acd8"
+    },
+    {
+      "id": "char_zhaoning",
+      "kind": "character",
+      "size": "832x1024",
+      "status": "success",
+      "seconds": 11.6,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\char_zhaoning\\plate_00001_.png"
+      ],
+      "prompt_id": "c376ed46-cc53-4a93-82b2-af8f7f06e2fa"
+    },
+    {
+      "id": "char_cat",
+      "kind": "character",
+      "size": "832x1024",
+      "status": "success",
+      "seconds": 11.7,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\char_cat\\plate_00001_.png"
+      ],
+      "prompt_id": "874afe0e-7804-4304-b4f6-0ffe2adb545f"
+    },
+    {
+      "id": "char_qinghe",
+      "kind": "character",
+      "size": "832x1024",
+      "status": "success",
+      "seconds": 12,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\char_qinghe\\plate_00001_.png"
+      ],
+      "prompt_id": "661580a6-23b4-4206-989a-3b473ec8d453"
+    },
+    {
+      "id": "char_cui",
+      "kind": "character",
+      "size": "832x1024",
+      "status": "success",
+      "seconds": 12,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\char_cui\\plate_00001_.png"
+      ],
+      "prompt_id": "50ae862e-4316-4081-a802-7a95049f9dc8"
+    },
+    {
+      "id": "char_vendor",
+      "kind": "character",
+      "size": "832x1024",
+      "status": "success",
+      "seconds": 11.6,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\char_vendor\\plate_00001_.png"
+      ],
+      "prompt_id": "608f3288-38c4-4d52-b02c-224cddee308f"
+    },
+    {
+      "id": "char_guard",
+      "kind": "character",
+      "size": "832x1024",
+      "status": "success",
+      "seconds": 12.2,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\char_guard\\plate_00001_.png"
+      ],
+      "prompt_id": "63d070ce-d15e-4bbc-b995-0a11b7c45a19"
+    },
+    {
+      "id": "prop_jade_half",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.5,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\prop_jade_half\\plate_00001_.png"
+      ],
+      "prompt_id": "92ea9828-1071-4f14-a589-5a25f8d0893e"
+    },
+    {
+      "id": "prop_jade_tokens",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.9,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\prop_jade_tokens\\plate_00001_.png"
+      ],
+      "prompt_id": "1bea6752-c01b-45b2-a29a-7a15d0b6752c"
+    },
+    {
+      "id": "prop_fan_cat",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 13.8,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\prop_fan_cat\\plate_00001_.png"
+      ],
+      "prompt_id": "bfb5b2e4-6a73-4401-9355-a383a716c0db"
+    },
+    {
+      "id": "prop_umbrella_red",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.1,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\prop_umbrella_red\\plate_00001_.png"
+      ],
+      "prompt_id": "f36ce91c-91fe-4a1f-b0af-71c92d0f33f6"
+    },
+    {
+      "id": "prop_umbrella_paper",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\prop_umbrella_paper\\plate_00001_.png"
+      ],
+      "prompt_id": "29771cbe-df36-44db-8521-839334562a43"
+    },
+    {
+      "id": "prop_letter_summon",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 13.9,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\prop_letter_summon\\plate_00001_.png"
+      ],
+      "prompt_id": "31758712-56a5-4397-b52e-fbddfc8d5edc"
+    },
+    {
+      "id": "prop_map_portraits",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 15,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\prop_map_portraits\\plate_00001_.png"
+      ],
+      "prompt_id": "b14aeda4-de03-46b2-b817-b970d0fae1f7"
+    },
+    {
+      "id": "prop_cat_mask",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.4,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\prop_cat_mask\\plate_00001_.png"
+      ],
+      "prompt_id": "82f71e5c-7645-4f17-9fdc-c557741a3e38"
+    },
+    {
+      "id": "prop_basket_greens",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 14.7,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\prop_basket_greens\\plate_00001_.png"
+      ],
+      "prompt_id": "52a84d04-4651-4b76-aa14-23ea0853d575"
+    },
+    {
+      "id": "prop_osmanthus_candy",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 13.8,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\prop_osmanthus_candy\\plate_00001_.png"
+      ],
+      "prompt_id": "c5937d87-e633-4374-a754-82f18dd90c2d"
+    },
+    {
+      "id": "prop_sewing_scissors",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 13.8,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\prop_sewing_scissors\\plate_00001_.png"
+      ],
+      "prompt_id": "ee01b446-9bfe-460c-bf43-cf71274c3bfa"
+    },
+    {
+      "id": "prop_cat_ear_crown",
+      "kind": "prop",
+      "size": "1024x1024",
+      "status": "success",
+      "seconds": 13.9,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\prop_cat_ear_crown\\plate_00001_.png"
+      ],
+      "prompt_id": "50b170d9-c6b6-4917-a4aa-8157db278571"
+    },
+    {
+      "id": "loc_poster_split",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14.3,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_poster_split\\plate_00001_.png"
+      ],
+      "prompt_id": "8a9bbeaf-91bc-4ba6-8d0e-9bf5ed1b5d20"
+    },
+    {
+      "id": "loc_mirror_room",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14.1,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_mirror_room\\plate_00001_.png"
+      ],
+      "prompt_id": "5a181b95-c4b9-466c-ab78-017219372268"
+    },
+    {
+      "id": "loc_palace_hall",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14.3,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_palace_hall\\plate_00001_.png"
+      ],
+      "prompt_id": "1b0feb2f-1600-4a39-8f33-232f009fa366"
+    },
+    {
+      "id": "loc_balcony_night",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_balcony_night\\plate_00001_.png"
+      ],
+      "prompt_id": "837a56f8-9033-4b2e-be43-3957a9bd4a1a"
+    },
+    {
+      "id": "loc_market_day",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 13.8,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_market_day\\plate_00001_.png"
+      ],
+      "prompt_id": "a5a96562-b651-440e-8e41-85a96850aff9"
+    },
+    {
+      "id": "loc_embroidery",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14.3,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_embroidery\\plate_00001_.png"
+      ],
+      "prompt_id": "b4aeece5-3ac0-48a9-acee-65fb0351a789"
+    },
+    {
+      "id": "loc_palace_steps",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 13.8,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_palace_steps\\plate_00001_.png"
+      ],
+      "prompt_id": "2fc9abb5-04ec-4d7d-baf7-0fac9eb0deca"
+    },
+    {
+      "id": "loc_market_night",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 13.7,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_market_night\\plate_00001_.png"
+      ],
+      "prompt_id": "d30e655a-692f-4985-a501-29ce5359a6ce"
+    },
+    {
+      "id": "loc_rain_steps",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 13.9,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_rain_steps\\plate_00001_.png"
+      ],
+      "prompt_id": "da496eb7-0fb2-40fd-804b-f30cfef6aae4"
+    },
+    {
+      "id": "loc_study_night",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14.3,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_study_night\\plate_00001_.png"
+      ],
+      "prompt_id": "f1311732-208f-4359-86b5-2fddabbb7f56"
+    },
+    {
+      "id": "loc_carriage",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_carriage\\plate_00001_.png"
+      ],
+      "prompt_id": "daf44990-5ecf-4cb0-baa3-141f638a707a"
+    },
+    {
+      "id": "loc_boat_cabin",
+      "kind": "location",
+      "size": "1344x768",
+      "status": "success",
+      "seconds": 14.8,
+      "files": [
+        "D:\\han\\Niba\\dev\\Project21\\test_story4\\output\\refs\\loc_boat_cabin\\plate_00001_.png"
+      ],
+      "prompt_id": "df4cd9b5-337c-41ed-9b27-1fc59ca14e93"
+    }
+  ]
+}
