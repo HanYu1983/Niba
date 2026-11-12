@@ -68,11 +68,23 @@ export async function renderSegment(story, plan, segment, opts = {}) {
   if (pick.mode && detected !== "unknown" && pick.mode !== detected && pick.mode !== "i2v") {
     warnings.push(`${segment.id}: file says ${pick.mode} but fields say ${detected}`);
   }
+  // `--mode r2v` on a chapter written for t2v silently renders from the t2v file; say so
+  // instead of letting the caller believe the plates were used.
+  if (
+    opts.mode && opts.mode !== true && opts.mode !== "i2v" &&
+    pick.mode && pick.mode !== String(opts.mode)
+  ) {
+    warnings.push(`${segment.id}: asked for ${opts.mode} but the only prompt is ${pick.mode} (${basename(promptFile)})`);
+  }
 
   const slots = mode === "r2v" ? resolveSlots(story, plan, segment) : [];
   if (mode === "r2v") {
     if (slots.length === 0) throw new Error(`${segment.id}: r2v needs at least one reference image`);
     const referenced = new Set([...prompt.matchAll(/<Picture\s+(\d+)>/gi)].map((m) => Number(m[1])));
+    if (referenced.size === 0) {
+      // Plates attached but never named in the text: the model has no reason to look at them.
+      warnings.push(`${segment.id}: r2v with ${slots.length} plate(s) but the prompt never mentions <Picture N>`);
+    }
     const wrong = [...referenced].filter((n) => n < 1 || n > slots.length);
     if (wrong.length || (referenced.size > 0 && referenced.size !== slots.length)) {
       const detail = `${segment.id}: prompt references ${referenced.size} picture(s) [${[...referenced].sort((a, b) => a - b).join(", ")}], plan has ${slots.length} slot(s)`;

@@ -77,4 +77,6 @@ writeFileSync(
 
 console.log(JSON.stringify({ ...describeStory(story), total: report.length, with_outputs: done, without_outputs: missing, report: reportFile }, null, 2));
 if (report.some((r) => r.error)) console.log(`fetch errors: ${report.filter((r) => r.error).length} (see report)`);
-process.exit(missing ? 1 : 0);
+// process.exitCode, not process.exit(): the history fetches above leave keep-alive sockets
+// closing, and a hard exit can abort inside libuv on Windows before stdout is flushed.
+process.exitCode = missing ? 1 : 0;

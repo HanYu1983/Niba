@@ -142,4 +142,8 @@ console.log(
     2
   )
 );
-process.exit(failures.length ? 1 : 0);
+// Set the code instead of calling process.exit(): by now the ComfyUI fetch keep-alive
+// sockets and the fs threadpool are still settling, and a hard exit on Windows can abort
+// inside libuv ("Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), src\win\async.c")
+// before the last line of stdout is flushed.
+process.exitCode = failures.length ? 1 : 0;

@@ -170,4 +170,6 @@ if (!dryRun) {
 
 const failed = report.filter((r) => r.status !== "success" && r.status !== "skipped");
 console.log(JSON.stringify({ finished: report.length, failed: failed.map((f) => f.id), report: dryRun ? null : reportFile }, null, 2));
-process.exit(failed.length ? 1 : 0);
+// process.exitCode, not process.exit(): the submissions above leave keep-alive sockets
+// closing, and a hard exit can abort inside libuv on Windows before stdout is flushed.
+process.exitCode = failed.length ? 1 : 0;
