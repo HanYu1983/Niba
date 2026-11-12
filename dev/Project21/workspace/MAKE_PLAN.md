@@ -116,9 +116,30 @@
 
 ## 1.3 段落切分（segments）
 
-### 切分依據：指南第一章 1.2
+### 主要依據：15 秒上限（`VIDEO_PROMPT_METHOD_2_JSON.md` Step 1 的 15-Second Rule）
 
-滿足任一條就切新段落：
+一個 segment 的硬上限是 **15 秒**，這是唯一必要的切分依據。切點不是「哪裡有變化就切」，而是在 15 秒的預算內**盡量把一個完整的敘事節拍講完**：
+
+* 先看這一段的 `spoken_text` 唸完要幾秒（見 1.7）。
+* **能塞進 15 秒就不要再切**：同一場景、同一個敘事節拍，即使中間有時空推移、機位變化、有人插話，都留成一段。
+* **只有超過 15 秒才切**，且切在句子／停頓邊界，讓前後段各自接近佔滿 15 秒，而不是平均對半分。
+* 反過來也不必硬併：`spoken_text` 只有一句話、明顯不到 5 秒的節拍，讓它獨立成段就好。
+
+換算參考（`VIDEO_PROMPT_METHOD_2_JSON.md`）：繁中旁白約 **3.5 字／秒**，15 秒 ≈ **52 字**，所以 25–55 字是可用的區間。**低於 25 字通常撐不滿一個鏡頭，高於 55 字則一定超過 15 秒**，該切段或精簡。
+
+### （選用）指南第一章 1.2 的三條切點
+
+這三條過去是「滿足任一條就切」，現在降為**選用**。第二階段的 JSON 已經有欄位承接這些變化，不必再靠切 segment 表達：
+
+| 變化 | 第二階段用什麼表達 |
+|---|---|
+| 時間轉折 | `transition_to_next`（fade / match cut）＋ `keyframe_anchors` |
+| 空間切換 | `camera_movement`、`consistency_anchors.environment` |
+| 視覺焦點／主體變換 | `camera_movement`（推、拉、rack focus）、`beat_timeline` |
+
+只有在變化大到單一鏡頭承載不了時才切。實務上最常見的例外是 r2v：一個 segment 綁一張 `scene` plate，若真的換到另一個空間（需要另一張場景圖），還是得切——這是參考圖的限制，不是敘事的要求。
+
+這三條的典型例子（列出僅供辨識，不再是觸發條件）：
 
 1. **時間轉折**：宣判日 → 數年後。
 2. **空間切換**：法庭 → 深夜辦公室 → 偏遠分院。
@@ -135,7 +156,7 @@
 
 判斷原則：**能用 `dialogue_lines` 解決的，就不要切 segment。** 切得越碎，`estimated_sec` 越短、`render_blocks` 越多，第二階段的鏡頭與剪接負擔也越重。
 
-**切點落在段落邊界。** 一個 segment 就是一個「敘事節拍」：小說的一個段落、或一個明顯換氣的地方。一章通常切成 10–20 段，長度不必剛好 5–7 秒——段落比 7 秒長時，用 `render_blocks`（見 1.7）告訴第二階段這一段要拆成幾個鏡頭。硬把長段落壓成一個 7 秒鏡頭，只會讓旁白唸不完。
+**切點落在段落邊界。** 一個 segment 就是一個「敘事節拍」：小說的一個段落、或一個明顯換氣的地方。段數由內容和 15 秒預算決定，不要為了湊段數而切。段落超過 7 秒時，用 `render_blocks`（見 1.7）告訴第二階段這一段要拆成幾個鏡頭；單一鏡頭仍以 7 秒為舒適上限。
 
 ### `split_reason` 只能是這幾種
 
@@ -246,24 +267,28 @@ if (sha256(joined) !== plan.source.sha256) throw new Error("hash mismatch");
 只數**中文字與英數字**，標點與空白不計。
 
 ```
-estimated_sec = max( 5 , ceil(char_count / rate) + 1 )
+estimated_sec = max( 5 , ceil(char_count / rate) + 1 )   // 驗證：必須 ≤ 15
 render_blocks = ceil(estimated_sec / 7)
 ```
 
 | `voice_intent` | `rate`（字／秒） | 說明 |
 |---|---|---|
-| `spoken_on_screen` | 5.0 | 一般語速 |
-| `spoken_on_screen`（咆哮／情緒） | 4.5 | 情緒拉長 |
-| `remembered_voice` | 4.5 | 回想中的台詞，略慢 |
-| `internal_monologue` | 4.0 | 獨白較慢、有停頓 |
-| `narrator` | 5.0 | 旁白穩定 |
+| `spoken_on_screen` | 3.5 | 一般語速（`VIDEO_PROMPT_METHOD_2_JSON.md` 的基準） |
+| `spoken_on_screen`（咆哮／情緒） | 3.0 | 情緒拉長 |
+| `remembered_voice` | 3.0 | 回想中的台詞，略慢 |
+| `internal_monologue` | 2.8 | 獨白較慢、有停頓 |
+| `narrator` | 3.5 | 旁白穩定 |
 | `none`（action） | — | 以「動作節拍」估，1 拍 ≈ 5 秒，上限 6 |
 
-`estimated_sec` 是**這一段實際需要幾秒**，不是鏡頭長度。單一鏡頭上限 7 秒，所以用 `render_blocks = ceil(estimated_sec / 7)` 表示第二階段要把這段話拆成幾個 block 才唸得完（`action` 段固定為 1）。
+`estimated_sec` 是**這一段實際需要幾秒**，不是鏡頭長度，硬上限 15 秒。**目標是盡量貼近 15 秒**：同一拍的情節不要提早切斷，讓旁白／對白把 15 秒的預算用完。
 
-實例：第四章結尾那句「好險，好險我那天沒讓那種『想當英雄的癮頭』給毀了。好險我只是個冷酷的、看見事實的人。」共 36 字，36 / 5.0 = 7.2 → 8 + 1 = 9 秒 → `render_blocks: 2`。
+寫完後回頭檢查：超過 15 秒就是切錯了，只有兩條路——精簡文字，或依停頓切成兩段（`split_reason: "duration_split"`），每段各自落在 15 秒內。也可以反過來用字數把關：`char_count` 超過 `rate × 14`（一般語速約 49 字）就一定唸不完 15 秒。
 
-只有在同一段台詞內部有**明顯停頓或語氣轉折**、值得讓它成為獨立敘事節拍時，才切成兩個 segment（`split_reason: "duration_split"`）；單純因為字數超長，用 `render_blocks` 就好，不要為了湊 7 秒把一句話切碎。
+單一鏡頭上限仍是 7 秒，所以用 `render_blocks = ceil(estimated_sec / 7)` 表示第二階段要把這段話拆成幾個 block 才唸得完（`action` 段固定為 1）。若第二階段走的是一段一鏡（METHOD_2 的 15 秒段落），把 `render_blocks` 遮掉即可。
+
+實例：第四章結尾那句「好險，好險我那天沒讓那種『想當英雄的癮頭』給毀了。好險我只是個冷酷的、看見事實的人。」共 36 字，36 / 3.5 = 10.3 → 11 + 1 = 12 秒 → 還沒滿 15 秒，`render_blocks: 2`。
+
+只有在同一段台詞內部有**明顯停頓或語氣轉折**、值得讓它成為獨立敘事節拍時，才切成兩個 segment；單純因為太短，不要硬併進前後段，也不要為了湊 15 秒把一句話切碎。
 
 ## 1.8 指涉關係（`references`）
 
@@ -329,9 +354,9 @@ render_blocks = ceil(estimated_sec / 7)
   ],
   "spoken_text": "趙立廷，無罪。本件關鍵匯款紀錄與銀行斷線時間不符，證據不足。",
   "char_count": 30,
-  "rate_chars_per_sec": 5.0,
-  "estimated_sec": 7,
-  "render_blocks": 1
+  "rate_chars_per_sec": 3.5,
+  "estimated_sec": 10,
+  "render_blocks": 2
 }
 ```
 
