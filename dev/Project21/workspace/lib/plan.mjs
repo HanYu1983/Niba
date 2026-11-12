@@ -47,7 +47,9 @@ export function quantiseFrames(seconds, fps = 24) {
 }
 
 const KINDS = new Set(["dialogue", "narration", "action"]);
-const VOICES = new Set(["spoken_on_screen", "spoken_on_screen_intense", "internal_monologue", "remembered_voice", "narrator", "none"]);
+// "mixed" = several delivery modes inside one segment; the per-line truth is in
+// segment.utterances[].kind (see MAKE_PLAN.md §1.6).
+const VOICES = new Set(["spoken_on_screen", "spoken_on_screen_intense", "internal_monologue", "remembered_voice", "narrator", "mixed", "none"]);
 
 /**
  * Structural checks that apply to every story. Story-specific rules (anchor slicing,

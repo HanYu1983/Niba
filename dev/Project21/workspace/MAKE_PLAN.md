@@ -125,7 +125,7 @@
 * **只有超過 15 秒才切**，且切在句子／停頓邊界，讓前後段各自接近佔滿 15 秒，而不是平均對半分。
 * 反過來也不必硬併：`spoken_text` 只有一句話、明顯不到 5 秒的節拍，讓它獨立成段就好。
 
-換算參考（`VIDEO_PROMPT_METHOD_2_JSON.md`）：繁中旁白約 **3.5 字／秒**，15 秒 ≈ **52 字**，所以 25–55 字是可用的區間。**低於 25 字通常撐不滿一個鏡頭，高於 55 字則一定超過 15 秒**，該切段或精簡。
+換算參考（`VIDEO_PROMPT_METHOD_2_JSON.md`）：繁中旁白約 **3.5 字／秒**，15 秒 ≈ **52 字**；扣掉 1 秒緩衝後，一段大約裝得下 **45–50 字**。所以 25–55 字是可用的區間：**低於 25 字通常撐不滿一個鏡頭，高於 55 字則一定超過 15 秒**，該切段或精簡。
 
 ### （選用）指南第一章 1.2 的三條切點
 
@@ -282,7 +282,7 @@ if (sha256(joined) !== plan.source.sha256) throw new Error("hash mismatch");
 |---|---|
 | `spoken_text` | `utterances` 依 `order` 的 `text` 串接；`action` 為 `null` |
 | `char_count` | 各句 `char_count` 總和（無聲節拍不計） |
-| `estimated_sec` | 各句 `estimated_sec` 總和，加上無聲節拍；上限 15 |
+| `estimated_sec` | 各句 `line_sec` 總和＋無聲動作秒數＋1 秒緩衝；上限 15 |
 | `kind` | 任一句 `lipsync: true` → `dialogue`；否則有台詞 → `narration`；`utterances: []` → `action` |
 | `voice_intent` | 段內一致就用該值；混合多種 → `"mixed"` |
 | `voice` / `speaker_ref` | 主講者（第一句或台詞最多者）的側寫，供舊工具與單句段落相容 |
@@ -317,8 +317,8 @@ if (sha256(joined) !== plan.source.sha256) throw new Error("hash mismatch");
   "voice_intent": "mixed",
   "spoken_text": "我娘說，撿到我的那天，天上沒下雨。郡主，該上朝了。她聽不見我。",
   "char_count": 25,
-  "rate_chars_per_sec": 3.4,
-  "estimated_sec": 11,
+  "rate_chars_per_sec": 3.1,
+  "estimated_sec": 9,
   "render_blocks": 2,
   "voice": { "kind": "dialogue", "speaker": "char_qinghe", "pov": null },
   "speaker_ref": "char_qinghe",
@@ -332,7 +332,7 @@ if (sha256(joined) !== plan.source.sha256) throw new Error("hash mismatch");
       "tone": "quiet, remembering, steady",
       "char_count": 14,
       "rate_chars_per_sec": 3.5,
-      "estimated_sec": 5,
+      "estimated_sec": 4,
       "lipsync": false
     },
     {
@@ -344,7 +344,7 @@ if (sha256(joined) !== plan.source.sha256) throw new Error("hash mismatch");
       "tone": "light and quick, careful, always a little out of breath",
       "char_count": 6,
       "rate_chars_per_sec": 3.5,
-      "estimated_sec": 3,
+      "estimated_sec": 2,
       "lipsync": true
     },
     {
@@ -356,7 +356,7 @@ if (sha256(joined) !== plan.source.sha256) throw new Error("hash mismatch");
       "tone": "close, dry, no room reverb",
       "char_count": 5,
       "rate_chars_per_sec": 2.8,
-      "estimated_sec": 3,
+      "estimated_sec": 2,
       "lipsync": false
     }
   ]
@@ -368,20 +368,23 @@ if (sha256(joined) !== plan.source.sha256) throw new Error("hash mismatch");
 只數**中文字與英數字**，標點與空白不計。
 
 ```
-estimated_sec = max( 5 , ceil(char_count / rate) + 1 )   // 驗證：必須 ≤ 15
-render_blocks = ceil(estimated_sec / 7)
+line_sec      = ceil( char_count / rate )                       // 逐句，不加緩衝
+estimated_sec = max( 5 , sum(line_sec) + action_sec + 1 )       // 驗證：必須 ≤ 15
+render_blocks = ceil( estimated_sec / 7 )
 ```
 
-公式對 `utterances[]` **逐句套用**：每句有自己的 `char_count`、`rate`、`estimated_sec`，段級 `estimated_sec` 是各句加總（無聲節拍另外加），所以一段混了旁白與對白時，不會被單一語速算歪。
+公式對 `utterances[]` **逐句**算 `line_sec`，段級再把各句相加、加上無聲動作的秒數與 **一次** 1 秒緩衝。不要把 `+1` 加在每一句——三句的段落會平白多算 3 秒，15 秒的額度就被吃掉了。
 
 | `voice_intent`／`utterances[].kind` | `rate`（字／秒） | 說明 |
 |---|---|---|
 | `spoken_on_screen` / `dialogue` | 3.5 | 一般語速（`VIDEO_PROMPT_METHOD_2_JSON.md` 的基準） |
 | `spoken_on_screen_intense`（咆哮／情緒） | 3.0 | 情緒拉長 |
 | `remembered_voice` | 3.0 | 回想中的台詞，略慢 |
-| `internal_monologue` / `inner` | 2.8 | 獨白較慢、有停頓 |
+| `internal_monologue` / `inner` | 3.5（慢速 2.8） | 獨白；正常語速 3.5，確定拖長才用 2.8 |
 | `narrator` / `narration` | 3.5 | 旁白穩定 |
 | `none`（action） | — | 以「動作節拍」估，1 拍 ≈ 5 秒，上限 6 |
+
+`rate` 是**每一句自己的欄位**：預設 3.5，只有確定要放慢（拖長、停頓明顯）才往下調。不要因為是內心戲就一律填 2.8——15 秒會裝不下 40 字。
 
 `estimated_sec` 是**這一段實際需要幾秒**，不是鏡頭長度，硬上限 15 秒。**目標是盡量貼近 15 秒**：同一拍的情節不要提早切斷，讓旁白／對白把 15 秒的預算用完。
 
@@ -471,7 +474,7 @@ render_blocks = ceil(estimated_sec / 7)
       "tone": "measured, tired, each clause landing flat",
       "char_count": 30,
       "rate_chars_per_sec": 3.5,
-      "estimated_sec": 10,
+      "estimated_sec": 9,
       "lipsync": true
     }
   ]
