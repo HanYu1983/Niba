@@ -234,7 +234,9 @@ if (joined !== originalChapter) throw new Error("segments do not reassemble the 
 if (sha256(joined) !== plan.source.sha256) throw new Error("hash mismatch");
 ```
 
-## 1.6 段落類型（`kind`）
+## 1.6 段落類型（`kind`）與發聲單元（`utterances`）
+
+### 段落的 `kind`
 
 每段必須標記三種之一：
 
@@ -244,23 +246,122 @@ if (sha256(joined) !== plan.source.sha256) throw new Error("hash mismatch");
 | `narration` | 旁白敘事（非畫面角色發聲） | 背景交代、時序過場 |
 | `action` | 無台詞的動作／純視覺 | 翻卷宗、發現時間差、鏡前崩潰 |
 
-`dialogue`／`narration` 必須再記 `spoken_text`：**這一段會被唸出來的全部文字**（只記唸出來的部分，動作描述不算）。`action` 的 `spoken_text` 固定為 `null`。
+`dialogue`／`narration` 必須有台詞，`action` 沒有。但 15 秒的段落常會混到兩種以上發聲，所以 `kind` 只回答**「這段有沒有台詞」**；「誰、用什麼方式、唸哪一句」交給底下的 `utterances`。
 
-> 內心獨白、回想中的台詞都歸在 `narration` 或 `dialogue`（依段落主體是「只有聲音」還是「畫面中有人說話」），再用 `voice_intent` 區分實際發聲方式；`kind` 只回答「這段有沒有台詞」。
+### `utterances`：段內逐句的發聲單元
 
-另外建議記 `voice_intent`，讓第二階段知道聲音往哪裡放：
+15 秒的段落可以同時有旁白、對白、心聲。第二階段的 `voiceover.dialogue_lines` 是逐句的，所以 plan 也必須逐句記——只留一個 `spoken_text` 字串，第二階段就得回頭猜哪一句是誰說的。
+
+每句一個元素：
+
+| 欄位 | 說明 |
+|---|---|
+| `order` | 段內順序，從 1 開始 |
+| `kind` | `dialogue`（畫面人物出聲）／`inner`（POV 心聲，閉唇）／`narration`（客觀旁白） |
+| `speaker_ref` | `entities.characters` 的 id；`narration` 填 `null`（第二階段補 `"Narrator"`） |
+| `text` | 逐字台詞，可含標點，必須能在 `source` 裡找到 |
+| `clean_text` | TTS 版：去掉所有標點、引號、破折號，停頓以單一空格代替（METHOD_2 Step 2） |
+| `tone` | 英文的語氣與節奏描述，第二階段直接放進 `dialogue_lines[].tone` |
+| `char_count` / `rate_chars_per_sec` / `estimated_sec` | 這一**句**的字數與時長（算法同 1.7） |
+| `lipsync` | 畫面人物是否張嘴；`inner` 與 `narration` 一律 `false` |
+
+對映到第二階段是一對一：
+
+| plan `utterances[]` | METHOD_2 `dialogue_lines[]` |
+|---|---|
+| `kind: "dialogue"` | `type: "dialogue_spoken"` |
+| `kind: "inner"` | `type: "monologue_internal"` |
+| `kind: "narration"` | `type: "narrator"`，`speaker: "Narrator"` |
+| `speaker_ref` → `entities.characters[].name` | `speaker` |
+| `clean_text` | `text` |
+| `tone` | `tone` |
+
+### 段級欄位是彙總，不是第二份真相
+
+| 段級欄位 | 由 `utterances` 推導 |
+|---|---|
+| `spoken_text` | `utterances` 依 `order` 的 `text` 串接；`action` 為 `null` |
+| `char_count` | 各句 `char_count` 總和（無聲節拍不計） |
+| `estimated_sec` | 各句 `estimated_sec` 總和，加上無聲節拍；上限 15 |
+| `kind` | 任一句 `lipsync: true` → `dialogue`；否則有台詞 → `narration`；`utterances: []` → `action` |
+| `voice_intent` | 段內一致就用該值；混合多種 → `"mixed"` |
+| `voice` / `speaker_ref` | 主講者（第一句或台詞最多者）的側寫，供舊工具與單句段落相容 |
+| `voice_note` | 整段的發聲限制（例：inner 段「畫面人物不張嘴、不加旁白」）；逐句的語氣寫在 `utterances[].tone` |
+
+`voice` 保持**單一物件**，不要改成陣列：它是主講者的側寫（性別、年齡、音色），本質上屬於角色實體；逐句的差異（誰說、怎麼說）已經在 `utterances` 裡，重複一份只會讓兩邊不同步。
+
+`voice_intent` 的值：
 
 * `spoken_on_screen`：現場對白（對嘴），含獨自一人在房裡出聲說話
+* `spoken_on_screen_intense`：情緒拉長、放慢的現場對白
 * `internal_monologue`：內心獨白（閉唇）
 * `remembered_voice`：閃回／回想中的他人台詞（畫面可能是回憶，不對嘴）
 * `narrator`：客觀旁白
+* `mixed`：同一段內有多種發聲方式（此時逐句看 `utterances[].kind`）
 * `none`：純動作
+
+**單句段落不必手動展開**：`utterances` 只有一個元素，和舊寫法等價；舊 plan 沒有 `utterances` 時，讀取端補一個元素即可，不必重寫。
 
 判斷內在還是出聲，看原文的書寫慣例。本專案的小說用：
 
 * `*「…」*`（斜體＋引號）→ 內心獨白
 * `「…」`（一般引號，常伴隨「輕聲說」「笑了」等動作）→ 出聲對白
 * 敘述句轉述「他心想」「他覺得」→ 純視覺或旁白，由你決定要不要配音
+
+混合段落的長相（一段裡有旁白、對白、貓的心聲）：
+
+```json
+{
+  "id": "seg_010",
+  "kind": "dialogue",
+  "voice_intent": "mixed",
+  "spoken_text": "我娘說，撿到我的那天，天上沒下雨。郡主，該上朝了。她聽不見我。",
+  "char_count": 25,
+  "rate_chars_per_sec": 3.4,
+  "estimated_sec": 11,
+  "render_blocks": 2,
+  "voice": { "kind": "dialogue", "speaker": "char_qinghe", "pov": null },
+  "speaker_ref": "char_qinghe",
+  "utterances": [
+    {
+      "order": 1,
+      "kind": "narration",
+      "speaker_ref": null,
+      "text": "我娘說，撿到我的那天，天上沒下雨。",
+      "clean_text": "我娘說 撿到我的那天 天上沒下雨",
+      "tone": "quiet, remembering, steady",
+      "char_count": 14,
+      "rate_chars_per_sec": 3.5,
+      "estimated_sec": 5,
+      "lipsync": false
+    },
+    {
+      "order": 2,
+      "kind": "dialogue",
+      "speaker_ref": "char_qinghe",
+      "text": "郡主，該上朝了。",
+      "clean_text": "郡主 該上朝了",
+      "tone": "light and quick, careful, always a little out of breath",
+      "char_count": 6,
+      "rate_chars_per_sec": 3.5,
+      "estimated_sec": 3,
+      "lipsync": true
+    },
+    {
+      "order": 3,
+      "kind": "inner",
+      "speaker_ref": "char_cat",
+      "text": "她聽不見我。",
+      "clean_text": "她聽不見我",
+      "tone": "close, dry, no room reverb",
+      "char_count": 5,
+      "rate_chars_per_sec": 2.8,
+      "estimated_sec": 3,
+      "lipsync": false
+    }
+  ]
+}
+```
 
 ## 1.7 用字數推估時長
 
@@ -271,13 +372,15 @@ estimated_sec = max( 5 , ceil(char_count / rate) + 1 )   // 驗證：必須 ≤ 
 render_blocks = ceil(estimated_sec / 7)
 ```
 
-| `voice_intent` | `rate`（字／秒） | 說明 |
+公式對 `utterances[]` **逐句套用**：每句有自己的 `char_count`、`rate`、`estimated_sec`，段級 `estimated_sec` 是各句加總（無聲節拍另外加），所以一段混了旁白與對白時，不會被單一語速算歪。
+
+| `voice_intent`／`utterances[].kind` | `rate`（字／秒） | 說明 |
 |---|---|---|
-| `spoken_on_screen` | 3.5 | 一般語速（`VIDEO_PROMPT_METHOD_2_JSON.md` 的基準） |
-| `spoken_on_screen`（咆哮／情緒） | 3.0 | 情緒拉長 |
+| `spoken_on_screen` / `dialogue` | 3.5 | 一般語速（`VIDEO_PROMPT_METHOD_2_JSON.md` 的基準） |
+| `spoken_on_screen_intense`（咆哮／情緒） | 3.0 | 情緒拉長 |
 | `remembered_voice` | 3.0 | 回想中的台詞，略慢 |
-| `internal_monologue` | 2.8 | 獨白較慢、有停頓 |
-| `narrator` | 3.5 | 旁白穩定 |
+| `internal_monologue` / `inner` | 2.8 | 獨白較慢、有停頓 |
+| `narrator` / `narration` | 3.5 | 旁白穩定 |
 | `none`（action） | — | 以「動作節拍」估，1 拍 ≈ 5 秒，上限 6 |
 
 `estimated_sec` 是**這一段實際需要幾秒**，不是鏡頭長度，硬上限 15 秒。**目標是盡量貼近 15 秒**：同一拍的情節不要提早切斷，讓旁白／對白把 15 秒的預算用完。
@@ -333,6 +436,7 @@ render_blocks = ceil(estimated_sec / 7)
   "continuity": "承接法庭上「準備判有罪」的心證，這裡第一次鬆動。",
   "voice_intent": "none",
   "spoken_text": null,
+  "utterances": [],
   "char_count": 0,
   "rate_chars_per_sec": null,
   "estimated_sec": 6,
@@ -341,7 +445,7 @@ render_blocks = ceil(estimated_sec / 7)
 }
 ```
 
-對白段的差別：
+對白段的差別（單句時 `utterances` 只有一個元素）：
 
 ```json
 {
@@ -356,8 +460,24 @@ render_blocks = ceil(estimated_sec / 7)
   "char_count": 30,
   "rate_chars_per_sec": 3.5,
   "estimated_sec": 10,
-  "render_blocks": 2
+  "render_blocks": 2,
+  "utterances": [
+    {
+      "order": 1,
+      "kind": "dialogue",
+      "speaker_ref": "char_judge_xu",
+      "text": "趙立廷，無罪。本件關鍵匯款紀錄與銀行斷線時間不符，證據不足。",
+      "clean_text": "趙立廷 無罪 本件關鍵匯款紀錄與銀行斷線時間不符 證據不足",
+      "tone": "measured, tired, each clause landing flat",
+      "char_count": 30,
+      "rate_chars_per_sec": 3.5,
+      "estimated_sec": 10,
+      "lipsync": true
+    }
+  ]
 }
 ```
+
+`action` 段則固定 `"spoken_text": null`、`"utterances": []`。
 
 > `plan.json` 到這裡為止。**不要**寫 `prompt`、`action.description`、`soundtrack_specification`、`facial_state` 這些給模型的文字——那些是第二階段的事。
