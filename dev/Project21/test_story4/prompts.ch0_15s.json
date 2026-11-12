@@ -1,0 +1,458 @@
+[
+  {
+    "segment_id": "01",
+    "estimated_duration_seconds": 10,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "",
+      "tone": "silent: no voiceover, no breathing, no lip movement; music and design carry the segment"
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Sealed black room tone",
+        "description": "A near-silent room tone with no early reflections, so the frame reads as a sealed black card.",
+        "timing": "00:00 to 00:04"
+      },
+      {
+        "category": "Foley",
+        "name": "Cloth settling",
+        "description": "One soft fabric shift close to the microphone as the two colour lines part.",
+        "timing": "00:04 to 00:05"
+      },
+      {
+        "category": "SFX",
+        "name": "Single small bell",
+        "description": "A single faint gold bell from the cat's collar, dry and close, with no tail.",
+        "timing": "00:08 to 00:09"
+      }
+    ],
+    "camera_movement": {
+      "type": "Locked full frame, then a slow lateral drift",
+      "description": "Holds dead still on the black title card while a crimson line and a grey-blue line separate on the exact centre line; at 00:04 a hard cut to a wide symmetrical poster plate with the seam and cushion on the centre line, then a drift a few centimetres closer without changing the axis."
+    },
+    "beat_timeline": [
+      {
+        "time": "00:00-00:04",
+        "action": "Pure black frame with no texture and no edge; one thin crimson line and one thin grey-blue line rest together on the exact centre, then draw slowly apart, opening a widening black gap. No figures, no lettering."
+      },
+      {
+        "time": "00:04-00:07",
+        "action": "Hard cut to the wide poster plate: two women sit back to back on the wooden chair, one in twelve-fold crimson and gold with a cat-ear crown, one in grey-blue patchwork; the grey-white Persian cat sits on the embroidered cushion exactly on the seam, a blank plaque under its bell."
+      },
+      {
+        "time": "00:07-00:10",
+        "action": "The camera drifts a few centimetres closer; the cat's tail settles once, the blank plaque catches the flat light, both women hold still and look past each other; the frame holds to the cut."
+      }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Full-frame black with no texture, one thin crimson line and one thin grey-blue line touching on the exact centre line, no lettering, no figure, flat poster light from the two lines only.",
+      "end_frame": "Wide symmetrical poster plate: the left half a deep crimson ground with gold silk and an empty wooden chair, the right half a grey-blue ground of patched cloth and a low stone railing, the two women seated back to back on the seam, the grey-white long-haired Persian cat on the embroidered cushion at centre, a blank plaque hanging under its bell."
+    },
+    "acting_micro_expressions": {
+      "facial": "No face in the title card; in the poster plate both women hold neutral, unsmiling expressions with their eyes on different off-frame directions, no blink in the final second.",
+      "body_language": "The princess sits upright with a straight spine and squared shoulders; the market woman sits looser with the basket on her knees, one hand curled around the handle; neither turns toward the other."
+    },
+    "environmental_physics": {
+      "particles": "The black card has none; in the poster plate a faint dust drift crosses the flat light and settles without swirling.",
+      "fluid_and_fabric": "The two colour lines separate cleanly with no ripple; the crimson silk and the grey-blue patchwork hang without wind, and the cat's long fur barely moves."
+    },
+    "transition_to_next": {
+      "visual_cut": "Hard cut from the drift to a medium shot from the grey-blue side, keeping the cat and cushion on the same screen axis.",
+      "audio_bridge": "The last zither note decays under the cut; the distant market tone fades up half a second before the new frame (J-cut)."
+    },
+    "consistency_anchors": {
+      "character": [
+        {
+          "name": "the market woman (S1)",
+          "appearance": "24, East Asian, sun-touched skin, the same face as the princess, clear round eyes, soft jaw, small and quick, long black braid wound with cloth strips and dried flowers",
+          "outfit": "A mended grey-blue patchwork robe, a market basket on her knees, no jewellery"
+        },
+        {
+          "name": "the princess (S2)",
+          "appearance": "24, East Asian, the same face as the market woman, tall and slender, pale skin, sharp phoenix eyes, straight nose, thin lips, long black hair in a high gold-crowned updo",
+          "outfit": "A twelve-fold crimson and gold robe, the cat-ear gold crown on her head, no fan"
+        },
+        {
+          "name": "the grey-white long-haired Persian cat (S3)",
+          "appearance": "Long-haired grey-white Persian, flat face, amber eyes, heavy and calm, red ribbon bow and small gold bell at the neck",
+          "outfit": "A small blank plaque hanging under the bell, no legible text anywhere"
+        }
+      ],
+      "environment": {
+        "location": "Split poster space: a crimson-and-gold left half with an empty wooden chair, a grey-blue right half with a low stone railing, and one embroidered cushion set exactly on the centre seam.",
+        "lighting": "Soft flat poster light, even across both halves, the chair and the railing at the same value, no directional key, no shadow falloff.",
+        "key_elements": "Wooden chair, low stone railing, embroidered cushion on the seam, market basket, blank plaque under the cat's bell."
+      },
+      "art_style": "Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism; not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text."
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Photorealistic live-action Chinese period drama, 35mm film, fine grain, flat poster light, grounded historical realism, no on-screen text. [Scene & Environment] A split poster frame: a deep crimson ground with gold silk and an empty wooden chair on the left, a grey-blue ground of patched cloth and a low stone railing on the right, one embroidered cushion on the centre seam. [Subject] Two women back to back, one in a twelve-fold crimson and gold robe with a cat-ear gold crown, one in grey-blue patchwork with a long black braid wound with cloth strips; a grey-white long-haired Persian cat with a red ribbon bow, gold bell and blank plaque sits on the cushion at centre. [Shot & Action] Wide symmetrical poster plate, the seam and the cushion on the centre line, both women still and looking past each other, the cat's tail settling, faint dust in the flat light."
+    }
+  },
+  {
+    "segment_id": "02",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "monologue_internal",
+      "speaker": "the market woman (S1)",
+      "text": "我娘說 撿到我的那天 天上沒下雨 地上卻全是水 我問她為什麼 她說 因為有人在宮裡哭 哭了一整夜",
+      "tone": "soft and warm, unhurried, close and dry, no room reverb, Taiwan-accented Standard Mandarin; lips stay still"
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Market street, far away",
+        "description": "A low distant market murmur with no individual voices, sitting behind the inner monologue like a memory of another street.",
+        "timing": "00:00 to 00:13"
+      },
+      {
+        "category": "Foley",
+        "name": "Basket creak",
+        "description": "One dry wicker creak from the basket lid as her hand settles on it, close and intimate.",
+        "timing": "00:04 to 00:05"
+      },
+      {
+        "category": "Foley",
+        "name": "Slow breath",
+        "description": "Her own slow exhale, unvoiced, right under the words.",
+        "timing": "00:08 to 00:10"
+      }
+    ],
+    "camera_movement": {
+      "type": "Medium shot, slow lateral drift, then a closer hold",
+      "description": "Starts as a medium shot from the grey-blue side with the cat and cushion sharp between her and the empty crimson chair; drifts slowly along the railing keeping the cat and her hand in the same plane; at 00:06 eases into a closer hold on her hand on the basket lid, the cat's eyes opening and settling on her, the empty chair soft at the edge."
+    },
+    "beat_timeline": [
+      {
+        "time": "00:00-00:04",
+        "action": "The market woman sits on the low stone railing with the basket on her knees, the grey-blue half behind her, the crimson chair just inside frame; her eyes rest on something off frame and her lips stay together."
+      },
+      {
+        "time": "00:04-00:08",
+        "action": "Her hand comes flat onto the basket lid; the wicker gives one creak; the cat's eyes open and settle on her without turning its head."
+      },
+      {
+        "time": "00:08-00:13",
+        "action": "She breathes out slowly, blinks once, and her gaze drifts further off frame; the words run under the image and her jaw never moves; hold to the cut."
+      }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Medium shot from the grey-blue side: the market woman seated on the low stone railing, basket on her knees, grey-blue patchwork robe and braided hair; the grey-white cat on the cushion between her and the empty crimson chair, all in soft flat poster light.",
+      "end_frame": "Closer on the railing: her hand flat on the basket lid, the cat's amber eyes open and fixed on her, the crimson chair soft at the frame edge, her mouth still closed."
+    },
+    "acting_micro_expressions": {
+      "facial": "Eyes unfocused past the frame with a slow blink at 00:05; lips pressed together without tension, jaw still, no lip sync at any point.",
+      "body_language": "Shoulders low and relaxed, spine soft against the railing, one hand flat on the basket lid and the other loose in her lap, breathing slow and shallow."
+    },
+    "environmental_physics": {
+      "particles": "Faint dust drifts through the flat light from the left, visible only against the grey-blue ground.",
+      "fluid_and_fabric": "Loose strands of the braid and the sleeve edge stir once; the cat's fur lifts slightly along the spine as it opens its eyes; the basket cloth does not move."
+    },
+    "transition_to_next": {
+      "visual_cut": "Match cut on her eye-line to the princess on the crimson side, keeping the same off-frame direction so the two women seem to look at the same unseen point.",
+      "audio_bridge": "Her last word is cut off by the crimson-side room tone, which arrives a full second early (L-cut)."
+    },
+    "consistency_anchors": {
+      "character": [
+        {
+          "name": "the market woman (S1)",
+          "appearance": "24, East Asian, sun-touched skin, the same face as the princess, clear round eyes, soft jaw, small and quick, long black braid wound with cloth strips and dried flowers",
+          "outfit": "A mended grey-blue patchwork robe, a market basket on her knees, no jewellery"
+        },
+        {
+          "name": "the grey-white long-haired Persian cat (S3)",
+          "appearance": "Long-haired grey-white Persian, flat face, amber eyes, heavy and calm, red ribbon bow and small gold bell at the neck",
+          "outfit": "A small blank plaque hanging under the bell, no legible text anywhere"
+        }
+      ],
+      "environment": {
+        "location": "The grey-blue half of the poster space: a low stone railing, patched cloth ground, one embroidered cushion at the seam, the empty crimson chair kept just inside frame.",
+        "lighting": "The same soft flat poster light, no key direction, the chair and railing at the same value.",
+        "key_elements": "Low stone railing, market basket with a wicker lid, embroidered cushion, blank plaque under the cat's bell."
+      },
+      "art_style": "Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism; not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text."
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Photorealistic live-action Chinese period drama, 35mm film, fine grain, soft flat poster light, grounded historical realism, shallow depth of field, no on-screen text. [Scene & Environment] The grey-blue half of a split poster set: a low stone railing, patched cloth ground, one embroidered cushion on the centre seam, an empty crimson-and-gold chair kept just inside frame. [Subject] The market woman (S1), 24, East Asian, sun-touched, same face as the princess, long black braid with cloth strips and dried flowers, in a mended grey-blue patchwork robe, seated on the railing with a wicker basket on her knees; the grey-white long-haired Persian cat with a red bow, gold bell and blank plaque on the cushion beside her. [Shot & Action] Medium shot from the grey-blue side, lips closed and jaw still, eyes on something off frame, one hand coming flat onto the basket lid, the cat's amber eyes opening."
+    }
+  },
+  {
+    "segment_id": "03",
+    "estimated_duration_seconds": 11,
+    "voiceover": {
+      "type": "monologue_internal",
+      "speaker": "the princess (S2)",
+      "text": "我從十四歲開始穿這件衣裳 它教會我怎麼站 怎麼看人 怎麼在笑的時候不動眼睛",
+      "tone": "low and clipped, hard consonants, little breath, close and dry, no room reverb, Taiwan-accented Standard Mandarin; lips stay still"
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Crimson-side room tone",
+        "description": "A dry interior tone with a long, dark tail, warmer than the grey-blue side and almost empty.",
+        "timing": "00:00 to 00:11"
+      },
+      {
+        "category": "Foley",
+        "name": "Gold silk shift",
+        "description": "One heavy silk fold sliding against itself as her shoulder settles, close and weighty.",
+        "timing": "00:03 to 00:04"
+      },
+      {
+        "category": "SFX",
+        "name": "Bell tail",
+        "description": "The tail of the cat's small bell bleeding in from the previous frame, thin and distant.",
+        "timing": "00:09 to 00:10"
+      }
+    ],
+    "camera_movement": {
+      "type": "Slow push-in, medium close",
+      "description": "A slow push on the crimson side from a medium shot to a medium close-up, the empty wooden chair held in the foreground and the gold crown near the top of frame; the axis never crosses the centre line, so the poster split still reads."
+    },
+    "beat_timeline": [
+      {
+        "time": "00:00-00:04",
+        "action": "The princess sits upright on the crimson side, chin level, eyes fixed off frame; her shoulder settles and one heavy silk fold slides into place."
+      },
+      {
+        "time": "00:04-00:08",
+        "action": "The push-in continues; she swallows once, the gold crown catching the flat light, her expression unchanged and her lips together."
+      },
+      {
+        "time": "00:08-00:11",
+        "action": "Her chin lifts a fraction as the last words land; she does not blink; hold to the cut."
+      }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Medium shot on the crimson side: the princess upright on the wooden chair, twelve-fold crimson and gold robe, cat-ear gold crown, the grey-blue half just visible past the centre seam, flat poster light.",
+      "end_frame": "Medium close-up on the crimson side: her face three-quarters to camera, chin lifted a fraction, lips closed, sharp phoenix eyes fixed off frame, the gold crown bright at the top edge, the empty chair soft in the foreground."
+    },
+    "acting_micro_expressions": {
+      "facial": "Eyes locked on a point past the lens, no blink in eleven seconds, a single slow swallow at 00:05, lips closed and still, jaw held tight.",
+      "body_language": "Spine straight, shoulders squared and immobile, hands out of frame; only the shoulder and throat move, everything else held like a portrait."
+    },
+    "environmental_physics": {
+      "particles": "Dust caught in the flat light above her shoulder, drifting slowly toward the grey-blue half.",
+      "fluid_and_fabric": "Heavy gold-threaded silk settles once and then holds; a single loose hair moves against her cheek and stops; no wind anywhere."
+    },
+    "transition_to_next": {
+      "visual_cut": "Cut on the edge of the gold crown from the close framing to the same chair seen wide, so the crown stays in the same screen position across the cut.",
+      "audio_bridge": "The bell tail carries over the cut and lands under the wide frame before her next line begins (J-cut)."
+    },
+    "consistency_anchors": {
+      "character": [
+        {
+          "name": "the princess (S2)",
+          "appearance": "24, East Asian, the same face as the market woman, tall and slender, pale skin, sharp phoenix eyes, straight nose, thin lips, long black hair in a high gold-crowned updo",
+          "outfit": "A twelve-fold crimson and gold robe, the cat-ear gold crown on her head, no fan"
+        }
+      ],
+      "environment": {
+        "location": "The crimson half of the poster space: a deep crimson ground with gold silk and the empty wooden chair, the centre seam just inside frame.",
+        "lighting": "The same soft flat poster light, even and shadowless, gold thread catching it without specular flare.",
+        "key_elements": "Wooden chair, gold silk, cat-ear gold crown, the centre seam of the poster."
+      },
+      "art_style": "Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism; not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text."
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Photorealistic live-action Chinese period drama, 35mm film, fine grain, flat poster light, grounded historical realism, shallow depth of field, no on-screen text. [Scene & Environment] A deep crimson ground with gold silk and an empty wooden chair, the centre seam of a split poster just inside frame. [Subject] The princess (S2), 24, East Asian, tall and slender, pale, sharp phoenix eyes, straight nose, thin lips, long black hair in a high gold-crowned updo, in a twelve-fold crimson and gold robe with the cat-ear gold crown. [Shot & Action] Medium close-up three-quarters to camera, chin lifted a fraction, lips closed, eyes fixed off frame, the empty chair soft in the foreground, dust drifting in the flat light."
+    }
+  },
+  {
+    "segment_id": "04",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "monologue_internal",
+      "speaker": "the princess (S2)",
+      "text": "它唯一沒教我的 是怎麼把一個和自己一樣的人 從地上扶起來",
+      "tone": "quiet, lower than before, the first crack in the order, close and dry, no room reverb, Taiwan-accented Standard Mandarin; lips stay still"
+    },
+    "sound_effects": [
+      {
+        "category": "Foley",
+        "name": "Fingers on lacquer",
+        "description": "Her fingertips tightening against the chair arm, a small dry lacquer tick close to the microphone.",
+        "timing": "00:00 to 00:04"
+      },
+      {
+        "category": "Ambience",
+        "name": "Wide poster room tone",
+        "description": "The flat, even tone of the wide plate, wider than the close framing and with no interior tail.",
+        "timing": "00:08 to 00:14"
+      },
+      {
+        "category": "Foley",
+        "name": "Cat breath and cushion",
+        "description": "One soft cat breath and the embroidered cushion compressing as the cat lifts its head.",
+        "timing": "00:11 to 00:13"
+      }
+    ],
+    "camera_movement": {
+      "type": "Tight hold, then a hard cut to a locked wide two-shot",
+      "description": "Holds tight on her hand and sleeve over the chair arm while the line plays; at 00:08 a hard cut to the locked wide two-shot of the chair and railing, both women in frame; the wide then holds without movement so the silence has somewhere to sit."
+    },
+    "beat_timeline": [
+      {
+        "time": "00:00-00:08",
+        "action": "Tight on the princess's hand and crimson sleeve against the carved chair arm; her fingers tighten by degrees, the gold thread compressing under them, her face out of frame and her lips unseen."
+      },
+      {
+        "time": "00:08-00:11",
+        "action": "Hard cut to the wide two-shot: the princess upright on the chair, the market woman on the stone railing with the basket, the cat on the cushion between them; neither looks at the other."
+      },
+      {
+        "time": "00:11-00:14",
+        "action": "The cat lifts its head and looks off frame; a single breath moves its chest; the two women hold absolutely still; the frame holds to the cut."
+      }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Extreme close-up on the princess's hand and crimson sleeve over the carved chair arm, gold thread catching the flat light, fingers tensed, no face in frame.",
+      "end_frame": "Locked wide two-shot: the princess upright on the wooden chair, the market woman on the low stone railing with the basket, the grey-white cat on the embroidered cushion between them, both women looking past each other, flat poster light on everything."
+    },
+    "acting_micro_expressions": {
+      "facial": "No face in the first eight seconds; in the wide, both women hold neutral expressions and do not blink together, the princess's jaw tight and the market woman's mouth soft.",
+      "body_language": "The princess's fingers tighten slowly against the chair arm, wrist stiff; in the wide her spine stays straight while the market woman's shoulders stay low; the cat's head lifts without moving its body."
+    },
+    "environmental_physics": {
+      "particles": "Dust hangs in the flat light above the cushion and drifts a few centimetres during the wide hold.",
+      "fluid_and_fabric": "The crimson sleeve creases where her fingers press; the grey-blue patchwork hangs dead still; the cat's long fur separates along the neck as the head lifts."
+    },
+    "transition_to_next": {
+      "visual_cut": "No cut at the end: the cat's head lift leads the eye into the next segment, which opens on the same wide framing.",
+      "audio_bridge": "Her last word decays into the wide room tone; the cat's breath is mixed in one second before the next line (J-cut)."
+    },
+    "consistency_anchors": {
+      "character": [
+        {
+          "name": "the princess (S2)",
+          "appearance": "24, East Asian, the same face as the market woman, tall and slender, pale skin, sharp phoenix eyes, straight nose, thin lips, long black hair in a high gold-crowned updo",
+          "outfit": "A twelve-fold crimson and gold robe, the cat-ear gold crown on her head"
+        },
+        {
+          "name": "the market woman (S1)",
+          "appearance": "24, East Asian, sun-touched skin, the same face as the princess, clear round eyes, soft jaw, small and quick, long black braid wound with cloth strips and dried flowers",
+          "outfit": "A mended grey-blue patchwork robe, a market basket on her knees"
+        },
+        {
+          "name": "the grey-white long-haired Persian cat (S3)",
+          "appearance": "Long-haired grey-white Persian, flat face, amber eyes, heavy and calm, red ribbon bow and small gold bell at the neck",
+          "outfit": "A small blank plaque hanging under the bell, no legible text anywhere"
+        }
+      ],
+      "environment": {
+        "location": "The poster space seen wide: the wooden chair on the crimson side, the low stone railing on the grey-blue side, the embroidered cushion on the centre seam.",
+        "lighting": "Soft flat poster light from edge to edge, no key direction, no falloff, the same value on the chair, the railing and both faces.",
+        "key_elements": "Wooden chair with a carved arm, gold silk, low stone railing, embroidered cushion, market basket, blank plaque under the cat's bell."
+      },
+      "art_style": "Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism; not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text."
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Photorealistic live-action Chinese period drama, 35mm film, fine grain, flat poster light, grounded historical realism, shallow depth of field, no on-screen text. [Scene & Environment] A split poster set: a deep crimson ground with an empty wooden chair on the left, a low stone railing on the right, one embroidered cushion on the centre seam. [Subject] The princess (S2), 24, East Asian, pale, sharp phoenix eyes, long black hair in a high gold-crowned updo, twelve-fold crimson and gold robe; the market woman (S1), 24, sun-touched, same face, long black braid, grey-blue patchwork robe with a basket; the grey-white long-haired Persian cat with red bow, gold bell and blank plaque. [Shot & Action] Locked wide two-shot of the chair and railing, both women still and looking past each other, the cat lifting its head, dust in the flat light."
+    }
+  },
+  {
+    "segment_id": "05",
+    "estimated_duration_seconds": 15,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "the grey-white long-haired Persian cat (S3)",
+          "type": "monologue_internal",
+          "text": "左邊那個坐得太直 右邊那個坐得太隨意 本座坐在中間 剛好",
+          "tone": "low, amused, close and dry, a little theatrical, no room reverb, Taiwan-accented Standard Mandarin; the cat's mouth does not open"
+        },
+        {
+          "speaker": "the market woman (S1)",
+          "type": "dialogue_spoken",
+          "text": "大人 你說 天底下真有長得一模一樣的兩個人嗎",
+          "tone": "easy and curious, half-laughing, soft and warm, unhurried, Taiwan-accented Standard Mandarin; lips move on screen"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Foley",
+        "name": "Cushion and tail",
+        "description": "The embroidered cushion compressing and the cat's tail brushing the fabric once, close and dry.",
+        "timing": "00:00 to 00:03"
+      },
+      {
+        "category": "Ambience",
+        "name": "Wide poster room tone",
+        "description": "The same flat, even tone as the wide plate, with no voices and no interior echo.",
+        "timing": "00:00 to 00:15"
+      },
+      {
+        "category": "SFX",
+        "name": "Small bell",
+        "description": "A single faint gold bell as the cat settles, marking the hand-off from the inner voice to the spoken line.",
+        "timing": "00:07 to 00:08"
+      }
+    ],
+    "camera_movement": {
+      "type": "Locked wide two-shot, then a slow push and rack focus",
+      "description": "Starts on the locked wide of chair, railing and cushion; from 00:00 to 00:08 pushes very slowly in toward the cat on the cushion; at 00:08 racks focus from the cat to the market woman's face as she speaks and holds there, the princess soft at the edge of frame."
+    },
+    "beat_timeline": [
+      {
+        "time": "00:00-00:08",
+        "action": "The cat sits on the cushion between the two women, tail curled over the embroidery; it blinks slowly and looks from the princess to the market woman and back to centre while the inner voice runs; neither woman reacts to the cat."
+      },
+      {
+        "time": "00:08-00:12",
+        "action": "The market woman turns her head a fraction toward the cat and speaks, her lips moving clearly; the princess stays still, eyes still off frame."
+      },
+      {
+        "time": "00:12-00:15",
+        "action": "She finishes the question with a small half-smile; the cat's tail lifts once; the frame holds on her face with the cat soft in the foreground."
+      }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Locked wide two-shot: the princess upright on the wooden chair at left, the market woman on the low stone railing at right with the basket, the grey-white Persian cat on the embroidered cushion at centre, flat poster light on all three.",
+      "end_frame": "Closer on the market woman's face as she finishes speaking, a small half-smile forming, lips slightly parted, the cat soft and out of focus in the foreground, the crimson chair edge at the frame margin."
+    },
+    "acting_micro_expressions": {
+      "facial": "The cat gives one slow blink that lasts nearly two seconds, then holds its amber eyes on the woman; the market woman's brow lifts a fraction at 00:09, one corner of her mouth rises at 00:13 and stays; the princess does not blink or turn.",
+      "body_language": "The cat sits heavy and square on the cushion, tail curling and lifting once; the market woman keeps the basket on her knees and only her head and shoulders turn; the princess stays a straight vertical line in the frame."
+    },
+    "environmental_physics": {
+      "particles": "Dust drifts slowly across the flat light between the two halves, thickening slightly as the camera pushes in.",
+      "fluid_and_fabric": "The cat's long fur separates along its spine as it blinks and settles; the red ribbon stirs once against its chest; the grey-blue sleeve and the crimson silk stay motionless except for her turn."
+    },
+    "transition_to_next": {
+      "visual_cut": "Cut on her last word to the mirror room of the next scene, from her face to the bronze mirror at the same screen height.",
+      "audio_bridge": "The question tails off under the cut; the dawn room tone of the mirror room fades in one second early (J-cut)."
+    },
+    "consistency_anchors": {
+      "character": [
+        {
+          "name": "the grey-white long-haired Persian cat (S3)",
+          "appearance": "Long-haired grey-white Persian, flat face, amber eyes, heavy and calm, red ribbon bow and small gold bell at the neck",
+          "outfit": "A small blank plaque hanging under the bell, no legible text anywhere"
+        },
+        {
+          "name": "the market woman (S1)",
+          "appearance": "24, East Asian, sun-touched skin, the same face as the princess, clear round eyes, soft jaw, small and quick, long black braid wound with cloth strips and dried flowers",
+          "outfit": "A mended grey-blue patchwork robe, a market basket on her knees"
+        },
+        {
+          "name": "the princess (S2)",
+          "appearance": "24, East Asian, the same face as the market woman, tall and slender, pale skin, sharp phoenix eyes, straight nose, thin lips, long black hair in a high gold-crowned updo",
+          "outfit": "A twelve-fold crimson and gold robe, the cat-ear gold crown on her head"
+        }
+      ],
+      "environment": {
+        "location": "The poster space seen wide: the wooden chair on the crimson side, the low stone railing on the grey-blue side, the embroidered cushion on the centre seam.",
+        "lighting": "Soft flat poster light, even across the frame, no key direction, the same value on the cat, both women and the chair.",
+        "key_elements": "Wooden chair, low stone railing, embroidered cushion, market basket, blank plaque and gold bell on the cat's collar."
+      },
+      "art_style": "Photorealistic live-action Chinese period drama, 35mm film, fine grain, natural skin texture, real-world photography, shallow depth of field, grounded historical realism; not anime, not cartoon, not illustration, not cel shading, not an advertisement, not slow motion, no on-screen text."
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Photorealistic live-action Chinese period drama, 35mm film, fine grain, flat poster light, grounded historical realism, shallow depth of field, no on-screen text. [Scene & Environment] A split poster set: crimson-and-gold ground and wooden chair on the left, grey-blue patched cloth and low stone railing on the right, one embroidered cushion on the centre seam. [Subject] The grey-white long-haired Persian cat with a red ribbon bow, gold bell and blank plaque sits on the cushion at centre; the market woman (S1) on the railing with a wicker basket, long black braid, grey-blue patchwork robe; the princess (S2) upright on the chair, twelve-fold crimson and gold robe, cat-ear gold crown. [Shot & Action] Locked wide two-shot, slow push toward the cat, then a rack focus to the market woman as she speaks, the princess still at the edge, dust in the flat light."
+    }
+  }
+]
