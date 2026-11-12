@@ -39,4 +39,13 @@ node .\workspace\tools\extract_penana.mjs --html .\test_story3\story_ch1.html --
 ```
 node .\workspace\tools\generate_refs.mjs --story .\test_story4\
 
+node .\workspace\tools\render_all.mjs --story .\test_story4\ --async --seed 100 --mode r2v --from seg_001 --to seg_030
+
+node .\workspace\tools\audit_renders.mjs --story .\test_story4\
+
+node .\workspace\tools\download_renders.mjs --story .\test_story4\
+
+node .\workspace\tools\concat_renders.mjs --story .\test_story4\ --manifest .\test_story4\render_manifest.json --from seg_001 --to seg_030
+
+node .\workspace\tools\build_subtitles.mjs --story .\test_story4\ --manifast .\test_story4\render_manifest.json
 ```
