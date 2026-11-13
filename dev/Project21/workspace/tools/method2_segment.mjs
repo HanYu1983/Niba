@@ -12,7 +12,9 @@
  * `--image` submits `segment.image_generation_prompt.english` to z_image_t2i.
  * `--video` submits minimax_r2v at `segment.estimated_duration_seconds`; the prompt is the
  * segment object minus `segment_id` / `estimated_duration_seconds` / `image_generation_prompt` /
- * `keyframe_anchors`, serialised as JSON.
+ * `sound_effects`, serialised as JSON. `--mode` picks the workflow without changing the prompt:
+ * `r2v` (default) sends the reference stills, `i2v` sends the segment's newest still as
+ * `first_frame` to minimax_t2v, and `t2v` sends minimax_t2v with no stills at all.
  *
  * `--seconds N` is a delta on that estimate, applied to every selected segment: `-3` renders a
  * 5 s segment as 2 s. An estimate that would land on or below zero is an error, not a clamp.
@@ -70,6 +72,7 @@ const KNOWN_FLAGS = new Set([
   "to-index",
   "image",
   "video",
+  "mode",
   "ref",
   "ref-root",
   "ref-spread",
@@ -149,6 +152,8 @@ if (!jsonArg || jsonArg === true) {
     "                        (0 is the first segment; either end is optional)",
     "  --image               z_image_t2i from image_generation_prompt.english",
     "  --video               minimax_r2v from estimated_duration_seconds",
+    "  --mode r2v|i2v|t2v    video workflow (default r2v): r2v = reference images,",
+    "                        i2v = newest still as first_frame, t2v = text only",
     "  --seconds N           add N seconds to every clip (negative shortens), default 0",
     "  --ref PATH[,PATH]     reference image(s) for --video (repeatable, max 9)",
     "                        default: the newest images in that segment's folder",
@@ -385,6 +390,30 @@ if (refSpread > 0 && explicitRefPaths.length) {
   process.exit(2);
 }
 
+const VIDEO_MODES = ["r2v", "i2v", "t2v"];
+const videoMode = args.mode === undefined ? "r2v" : String(args.mode).toLowerCase();
+if (!VIDEO_MODES.includes(videoMode)) {
+  console.error(`--mode must be one of ${VIDEO_MODES.join(", ")}, got ${JSON.stringify(args.mode)}`);
+  process.exit(2);
+}
+if (doImage && args.mode !== undefined) {
+  console.error("--mode only applies to --video");
+  process.exit(2);
+}
+if (videoMode !== "r2v" && refSpread > 0) {
+  const takes = videoMode === "i2v" ? "one still" : "no stills";
+  console.error(`--ref-spread only applies to --mode r2v (${videoMode} takes ${takes})`);
+  process.exit(2);
+}
+if (videoMode === "t2v" && explicitRefPaths.length) {
+  console.error("--mode t2v sends no reference images; drop --ref");
+  process.exit(2);
+}
+if (videoMode === "i2v" && explicitRefPaths.length > 1) {
+  console.error(`--mode i2v binds exactly one first frame, got ${explicitRefPaths.length} --ref images`);
+  process.exit(2);
+}
+
 function imagesIn(dir) {
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
@@ -441,7 +470,35 @@ function buildJob(segment, id, position) {
 
   let refs;
   let refSource;
-  if (explicitRefPaths.length) {
+
+  if (videoMode === "t2v") {
+    refs = [];
+    refSource = "none";
+  } else if (videoMode === "i2v") {
+    // One still becomes the opening frame. The lookup matches r2v: --ref wins, otherwise the
+    // newest take in the segment's own folder.
+    if (explicitRefPaths.length) {
+      refs = explicitRefPaths.slice(0, 1);
+      refSource = "flag";
+      if (!existsSync(refs[0])) {
+        warnings.push(`first frame not found locally, passing through as a ComfyUI input name: ${refs[0]}`);
+      }
+    } else {
+      const refDir = refDirFor(segment);
+      const found = imagesIn(refDir);
+      refSource = "segment_folder";
+      refs = found.slice(0, 1);
+      if (found.length === 0) {
+        if (dryRun) {
+          warnings.push(`${id}: no images in ${refDir} yet (run --image for this segment first)`);
+        } else {
+          throw new Error(`${id}: --mode i2v needs a first frame and none is in ${refDir} — run --image for this segment first`);
+        }
+      } else if (found.length > 1) {
+        warnings.push(`${id}: ${found.length} images in ${refDir}, using the newest take ${basename(found[0])}; pass --ref to choose another`);
+      }
+    }
+  } else if (explicitRefPaths.length) {
     if (explicitRefPaths.length > 9) {
       throw new Error(`${id}: minimax_r2v accepts at most 9 reference images, got ${explicitRefPaths.length}`);
     }
@@ -504,33 +561,44 @@ function buildJob(segment, id, position) {
     estimated_duration_seconds: _duration,
     image_generation_prompt: _imagePrompt,
     //keyframe_anchors: _keyframeAnchors,
-    sound_effects: _sound_effects,
+    //sound_effects: _sound_effects,
+    //beat_timeline: _beat_timeline,
+    acting_micro_expressions: _acting_micro_expressions,
+    environmental_physics: _environmental_physics,
+    transition_to_next: _transition_to_next,
     ...shot
   } = segment;
   const prompt = JSON.stringify(shot);
 
+  const payload = {
+    prompt,
+    width,
+    height,
+    duration_sec: requested,
+    frames,
+    fps,
+    turbo,
+    seed,
+    filename_prefix: `method2/${jsonBase}/${folder}`
+  };
+  if (videoMode === "r2v") {
+    payload.reference_images = refs;
+    payload.ref_image_size = String(args["ref-size"] ?? "match");
+  }
+  // i2v on the t2v graph: the still is the opening frame, not a reference slot.
+  if (videoMode === "i2v" && refs.length) payload.first_frame = refs[0];
+
   return {
-    tool: "minimax_r2v",
+    tool: videoMode === "r2v" ? "minimax_r2v" : "minimax_t2v",
     prompt,
     warnings,
     refs,
     refSource,
+    videoMode,
     estimated,
     duration: requested,
     frames,
-    payload: {
-      prompt,
-      width,
-      height,
-      duration_sec: requested,
-      frames,
-      fps,
-      turbo,
-      seed,
-      filename_prefix: `method2/${jsonBase}/${folder}`,
-      reference_images: refs,
-      ref_image_size: String(args["ref-size"] ?? "match")
-    }
+    payload
   };
 }
 
@@ -579,6 +647,7 @@ for (const [position, segment] of selected.entries()) {
     ...(job.warnings.length ? { warnings: job.warnings } : {}),
     ...(doVideo
       ? {
+          video_mode: job.videoMode,
           seconds: {
             ...(secondsDelta ? { estimated: job.estimated, delta: secondsDelta } : {}),
             requested: job.duration,
@@ -589,7 +658,7 @@ for (const [position, segment] of selected.entries()) {
           references_from: job.refSource
         }
       : {}),
-    ...(verbose ? { prompt: job.prompt } : {})
+    ...(verbose ? { prompt: job.prompt, ...(dryRun ? { payload: job.payload } : {}) } : {})
   };
 
   if (dryRun) {
@@ -610,7 +679,7 @@ for (const [position, segment] of selected.entries()) {
   let keepStage = false;
   try {
     const result = await runTool(job.tool, job.payload, {
-      label: { project: jsonBase, segment_id: id, mode },
+      label: { project: jsonBase, segment_id: id, mode, ...(doVideo ? { video_mode: videoMode } : {}) },
       output_dir: stage,
       wait: true,
       timeout_sec: timeoutSec
@@ -680,7 +749,7 @@ console.log(
     {
       json: jsonFile,
       mode,
-      tool: doImage ? "z_image_t2i" : "minimax_r2v",
+      tool: doImage ? "z_image_t2i" : videoMode === "r2v" ? "minimax_r2v" : "minimax_t2v",
       layout: exactOut ? "file" : "json_segment_folder",
       out: exactOut ?? folderRoot,
       size: `${width}x${height}`,
@@ -690,12 +759,16 @@ console.log(
         : {
             fps,
             turbo,
+            video_mode: videoMode,
             ...(secondsDelta ? { seconds_delta: secondsDelta } : {}),
-            refs_from: explicitRefs.length
-              ? "flag"
-              : refSpread
-                ? "segment_folder_and_neighbours"
-                : "segment_folder",
+            refs_from:
+              videoMode === "t2v"
+                ? "none"
+                : explicitRefs.length
+                  ? "flag"
+                  : refSpread
+                    ? "segment_folder_and_neighbours"
+                    : "segment_folder",
             ...(refSpread ? { ref_spread: refSpread } : {})
           }),
       ...(dryRun ? { dry_run: true } : {}),
