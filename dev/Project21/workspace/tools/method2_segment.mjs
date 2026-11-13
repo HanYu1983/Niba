@@ -14,6 +14,11 @@
  * segment object minus `segment_id` / `estimated_duration_seconds` / `image_generation_prompt` /
  * `keyframe_anchors`, serialised as JSON.
  *
+ * `--seconds N` is a delta on that estimate, applied to every selected segment: `-3` renders a
+ * 5 s segment as 2 s. An estimate that would land on or below zero is an error, not a clamp.
+ * `--ref-spread N` widens the automatically collected reference stills to the N previous and N
+ * following segments (N=1 -> up to three stills), which helps a look carry across a cut.
+ *
  * Output layout: when `--out` is a folder (or omitted), each segment gets
  *   <out>/<json basename>/<segment_id>/<comfyui filename>
  * using the segment's own id, verbatim (no padding, no `seg_` prefix). `--out` ending in a
@@ -21,8 +26,9 @@
  *
  * `--ref` (comma-separated or repeated, up to nine) applies to every selected segment. Without
  * it, `--video` uses the newest still sitting in that segment's own folder, which is what a
- * preceding `--image` run leaves behind; `--ref-root` points that lookup at a different output
- * root (refs/ when the clips go to video/).
+ * preceding `--image` run leaves behind, plus any neighbours asked for with `--ref-spread`;
+ * `--ref-root` points that lookup at a different output root (refs/ when the clips go to
+ * video/).
  *
  * Both modes download into a scratch folder first, then move the result, because ComfyUI names
  * its own files (`..._00001_.png`); the job ledger is patched to the final path afterwards.
@@ -52,6 +58,84 @@ import { quantiseFrames } from "../lib/plan.mjs";
 
 const argv = process.argv.slice(2);
 const args = parseArgs(argv);
+
+/**
+ * A typo like `--to-idnex` used to be silently ignored (parseArgs keeps every key), which made
+ * the tool select the wrong range or look in the wrong folder. Reject unknown flags instead.
+ */
+const KNOWN_FLAGS = new Set([
+  "json",
+  "segment",
+  "from-index",
+  "to-index",
+  "image",
+  "video",
+  "ref",
+  "ref-root",
+  "ref-spread",
+  "out",
+  "story",
+  "seconds",
+  "seed",
+  "width",
+  "height",
+  "fps",
+  "turbo",
+  "no-turbo",
+  "ref-size",
+  "model",
+  "clip",
+  "vae",
+  "steps",
+  "cfg",
+  "shift",
+  "sampler",
+  "scheduler",
+  "timeout-sec",
+  "force",
+  "dry-run",
+  "verbose"
+]);
+
+function editDistance(a, b) {
+  const row = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    let diagonal = row[0];
+    row[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const above = row[j];
+      row[j] = Math.min(row[j] + 1, row[j - 1] + 1, diagonal + (a[i - 1] === b[j - 1] ? 0 : 1));
+      diagonal = above;
+    }
+  }
+  return row[b.length];
+}
+
+/** `--root-ref` is `--ref-root` with the words swapped; `--to-idnex` is one edit away. */
+function closestFlag(name) {
+  const tokens = (value) => value.split("-").sort().join("-");
+  for (const known of KNOWN_FLAGS) if (tokens(known) === tokens(name)) return known;
+  let best = null;
+  let bestDistance = 3;
+  for (const known of KNOWN_FLAGS) {
+    const distance = editDistance(name, known);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      best = known;
+    }
+  }
+  return best;
+}
+
+const unknownFlags = Object.keys(args).filter((key) => key !== "_" && !KNOWN_FLAGS.has(key));
+if (unknownFlags.length) {
+  for (const key of unknownFlags) {
+    const hint = closestFlag(key);
+    console.error(`unknown flag: --${key}${hint ? ` (did you mean --${hint}?)` : ""}`);
+  }
+  process.exit(2);
+}
+
 const jsonArg = args.json ?? args._[0];
 
 if (!jsonArg || jsonArg === true) {
@@ -59,14 +143,17 @@ if (!jsonArg || jsonArg === true) {
     "usage: node workspace/tools/method2_segment.mjs --json <prompts.json> (--segment ID | --from-index N --to-index N) (--image | --video)",
     "",
     "  --json FILE           METHOD_2 JSON: an array, or an object with segments[]",
-    "  --segment ID          one segment by segment_id (01/1/seg_01 all match)",
+    "  --segment ID          one segment by segment_id (exact match, no normalising)",
     "  --from-index N / --to-index N",
     "                        inclusive range by 0-based position in the json array",
     "                        (0 is the first segment; either end is optional)",
     "  --image               z_image_t2i from image_generation_prompt.english",
     "  --video               minimax_r2v from estimated_duration_seconds",
+    "  --seconds N           add N seconds to every clip (negative shortens), default 0",
     "  --ref PATH[,PATH]     reference image(s) for --video (repeatable, max 9)",
     "                        default: the newest images in that segment's folder",
+    "  --ref-spread N        also use the newest still of the N previous and N next",
+    "                        segments (max 4, so at most 9 references)",
     "  --ref-root DIR        where --image wrote, if different from --out",
     "                        (looks in <DIR>/<json basename>/<segment_id>/)",
     "  --out PATH            folder root, or an exact file for a single segment",
@@ -125,10 +212,8 @@ if (doImage === doVideo) {
 }
 const mode = doImage ? "image" : "video";
 
-/** `01`, `1` and `seg_01` name the same segment. */
-const normaliseId = (value) =>
-  String(value ?? "").trim().replace(/^seg[_-]?/i, "").replace(/^0+(?=\d)/, "");
-const idOf = (segment) => normaliseId(segment.segment_id ?? segment.id);
+/** The segment's own id, verbatim; `--segment` compares with this string exactly. */
+const idOf = (segment) => String(segment.segment_id ?? segment.id ?? "");
 
 const raw = JSON.parse(readFileSync(jsonFile, "utf8"));
 const segments = Array.isArray(raw)
@@ -154,7 +239,7 @@ if (hasSegment) {
     console.error("use --segment for one segment, or --from-index/--to-index for a range, not both");
     process.exit(2);
   }
-  const found = segments.find((s) => idOf(s) === normaliseId(args.segment));
+  const found = segments.find((s) => idOf(s) === String(args.segment));
   if (!found) {
     console.error(`segment not found: ${args.segment}\nthis json has: ${listIds()}`);
     process.exit(2);
@@ -239,6 +324,11 @@ const folderNameOf = (segment) => {
 };
 const dirFor = (segment) => resolve(folderRoot, folderNameOf(segment));
 
+// Where a segment's own stills live. `--ref-root` matters when --image wrote refs/ and the
+// clips now go to video/: the layout is the same, only the root differs.
+const refRoot = refRootArg ?? outRoot;
+const refDirFor = (segment) => resolve(refRoot, jsonBase, folderNameOf(segment));
+
 // Reject a hostile/empty id before the first submission, not after half a batch.
 for (const segment of selected) {
   try {
@@ -255,6 +345,46 @@ const explicitRefPaths = explicitRefs.map((ref) => {
   return existsSync(local) ? local : ref;
 });
 
+/** `--seconds -3` is a delta, so a bare flag with no value is always a mistake. */
+function numberFlag(name) {
+  const value = args[name];
+  if (value === undefined) return null;
+  if (value === true) {
+    console.error(`--${name} needs a number`);
+    process.exit(2);
+  }
+  const n = Number(value);
+  if (!Number.isFinite(n)) {
+    console.error(`--${name} must be a number, got ${JSON.stringify(value)}`);
+    process.exit(2);
+  }
+  return n;
+}
+
+const secondsDelta = numberFlag("seconds") ?? 0;
+const refSpread = numberFlag("ref-spread") ?? 0;
+
+if (doImage && secondsDelta !== 0) {
+  console.error("--seconds only applies to --video (a still has no duration)");
+  process.exit(2);
+}
+if (doImage && refSpread !== 0) {
+  console.error("--ref-spread only applies to --video (it widens the reference list)");
+  process.exit(2);
+}
+if (!Number.isInteger(refSpread) || refSpread < 0) {
+  console.error(`--ref-spread must be a whole number >= 0, got ${JSON.stringify(args["ref-spread"])}`);
+  process.exit(2);
+}
+if (1 + refSpread * 2 > 9) {
+  console.error(`--ref-spread ${refSpread} would ask for up to ${1 + refSpread * 2} references, but minimax_r2v takes at most 9 (so 0..4)`);
+  process.exit(2);
+}
+if (refSpread > 0 && explicitRefPaths.length) {
+  console.error("--ref-spread builds the list from the segment folders; use either --ref or --ref-spread, not both");
+  process.exit(2);
+}
+
 function imagesIn(dir) {
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
@@ -266,7 +396,7 @@ function imagesIn(dir) {
 
 /* -------------------------------------------------------------------- payload */
 
-function buildJob(segment, id, dir) {
+function buildJob(segment, id, position) {
   const warnings = [];
   const folder = folderNameOf(segment);
 
@@ -297,9 +427,15 @@ function buildJob(segment, id, dir) {
     };
   }
 
-  const requested = Number(segment.estimated_duration_seconds);
-  if (!Number.isFinite(requested) || requested <= 0) {
+  const estimated = Number(segment.estimated_duration_seconds);
+  if (!Number.isFinite(estimated) || estimated <= 0) {
     throw new Error(`${id}: estimated_duration_seconds is missing or not a positive number`);
+  }
+  const requested = Number((estimated + secondsDelta).toFixed(3));
+  if (requested <= 0) {
+    throw new Error(
+      `${id}: estimated_duration_seconds ${estimated} with --seconds ${secondsDelta} is ${requested}, which cannot be rendered`
+    );
   }
   const frames = quantiseFrames(requested, fps);
 
@@ -319,7 +455,7 @@ function buildJob(segment, id, dir) {
   } else {
     // The reference stills may have been written under a different --out root than the clips
     // (refs/ vs video/), so let --ref-root point at where --image wrote them.
-    const refDir = refRootArg ? resolve(refRootArg, jsonBase, folder) : dir;
+    const refDir = refDirFor(segment);
     const found = imagesIn(refDir);
     refSource = "segment_folder";
     refs = found.slice(0, 1);
@@ -332,6 +468,34 @@ function buildJob(segment, id, dir) {
     } else if (found.length > 1) {
       warnings.push(`${id}: ${found.length} images in ${refDir}, using the newest take ${basename(found[0])}; pass --ref to choose others`);
     }
+
+    if (refSpread > 0) {
+      // Keep the json's own order — previous segments, this one, following ones — so the clip
+      // reads as a slice of the story instead of the anchor always sitting first.
+      const before = [];
+      const after = [];
+      for (let offset = -refSpread; offset <= refSpread; offset++) {
+        if (offset === 0) continue;
+        const neighbour = segments[position + offset];
+        if (!neighbour) continue;
+        const neighbourId = idOf(neighbour);
+        const neighbourDir = refDirFor(neighbour);
+        const images = imagesIn(neighbourDir);
+        if (images.length === 0) {
+          warnings.push(`${id}: neighbour ${neighbourId} has no images in ${neighbourDir}`);
+          continue;
+        }
+        if (images.length > 1) {
+          warnings.push(`${id}: neighbour ${neighbourId} has ${images.length} images, using the newest take ${basename(images[0])}`);
+        }
+        (offset < 0 ? before : after).push(images[0]);
+      }
+      refSource = "segment_folder_and_neighbours";
+      refs = unique([...before, ...refs, ...after]);
+      if (refs.length > 9) {
+        throw new Error(`${id}: ${refs.length} reference images after --ref-spread ${refSpread}; minimax_r2v takes at most 9`);
+      }
+    }
   }
 
   // Everything except the four keys the tool derives itself. The rest is the shot.
@@ -339,7 +503,8 @@ function buildJob(segment, id, dir) {
     segment_id: _segmentId,
     estimated_duration_seconds: _duration,
     image_generation_prompt: _imagePrompt,
-    keyframe_anchors: _keyframeAnchors,
+    //keyframe_anchors: _keyframeAnchors,
+    sound_effects: _sound_effects,
     ...shot
   } = segment;
   const prompt = JSON.stringify(shot);
@@ -350,6 +515,7 @@ function buildJob(segment, id, dir) {
     warnings,
     refs,
     refSource,
+    estimated,
     duration: requested,
     frames,
     payload: {
@@ -396,7 +562,7 @@ for (const [position, segment] of selected.entries()) {
 
   let job;
   try {
-    job = buildJob(segment, id, dir);
+    job = buildJob(segment, id, segments.indexOf(segment));
   } catch (e) {
     failed++;
     results.push({ segment_id: id, status: "failed", error: e.message });
@@ -413,7 +579,12 @@ for (const [position, segment] of selected.entries()) {
     ...(job.warnings.length ? { warnings: job.warnings } : {}),
     ...(doVideo
       ? {
-          seconds: { requested: job.duration, frames: job.frames, actual: Number((job.frames / fps).toFixed(2)) },
+          seconds: {
+            ...(secondsDelta ? { estimated: job.estimated, delta: secondsDelta } : {}),
+            requested: job.duration,
+            frames: job.frames,
+            actual: Number((job.frames / fps).toFixed(2))
+          },
           references: job.refs,
           references_from: job.refSource
         }
@@ -516,7 +687,17 @@ console.log(
       seed,
       ...(doImage
         ? { model: String(args.model ?? refsCfg.model ?? "moodyRealMix_zitV7.safetensors"), steps: numArg(args, "steps", 8) }
-        : { fps, turbo, refs_from: explicitRefs.length ? "flag" : "segment_folder" }),
+        : {
+            fps,
+            turbo,
+            ...(secondsDelta ? { seconds_delta: secondsDelta } : {}),
+            refs_from: explicitRefs.length
+              ? "flag"
+              : refSpread
+                ? "segment_folder_and_neighbours"
+                : "segment_folder",
+            ...(refSpread ? { ref_spread: refSpread } : {})
+          }),
       ...(dryRun ? { dry_run: true } : {}),
       totals: { selected: selected.length, succeeded: selected.length - failed, failed },
       ...(warnings.length ? { warnings } : {}),
