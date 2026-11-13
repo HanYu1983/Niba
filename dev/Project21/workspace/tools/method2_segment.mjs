@@ -20,8 +20,9 @@
  * media extension is an exact file and is only accepted for a single segment.
  *
  * `--ref` (comma-separated or repeated, up to nine) applies to every selected segment. Without
- * it, `--video` uses the newest images already sitting in that segment's own folder, which is
- * what a preceding `--image` run leaves behind.
+ * it, `--video` uses the newest still sitting in that segment's own folder, which is what a
+ * preceding `--image` run leaves behind; `--ref-root` points that lookup at a different output
+ * root (refs/ when the clips go to video/).
  *
  * Both modes download into a scratch folder first, then move the result, because ComfyUI names
  * its own files (`..._00001_.png`); the job ledger is patched to the final path afterwards.
@@ -66,6 +67,8 @@ if (!jsonArg || jsonArg === true) {
     "  --video               minimax_r2v from estimated_duration_seconds",
     "  --ref PATH[,PATH]     reference image(s) for --video (repeatable, max 9)",
     "                        default: the newest images in that segment's folder",
+    "  --ref-root DIR        where --image wrote, if different from --out",
+    "                        (looks in <DIR>/<json basename>/<segment_id>/)",
     "  --out PATH            folder root, or an exact file for a single segment",
     "                        default: <json dir>/output/<json basename>/<segment_id>/",
     "  --story DIR           optional story.json for refs/render defaults",
@@ -211,6 +214,7 @@ const IMAGE_RE = /\.(png|jpe?g|webp)$/i;
 
 const jsonBase = basename(jsonFile, ".json");
 const outArg = args.out && args.out !== true ? resolve(String(args.out)) : null;
+const refRootArg = args["ref-root"] && args["ref-root"] !== true ? resolve(String(args["ref-root"])) : null;
 const exactOut =
   outArg && (MEDIA_RE.test(outArg) || (existsSync(outArg) && statSync(outArg).isFile())) ? outArg : null;
 
@@ -313,18 +317,20 @@ function buildJob(segment, id, dir) {
       }
     }
   } else {
-    refs = imagesIn(dir);
+    // The reference stills may have been written under a different --out root than the clips
+    // (refs/ vs video/), so let --ref-root point at where --image wrote them.
+    const refDir = refRootArg ? resolve(refRootArg, jsonBase, folder) : dir;
+    const found = imagesIn(refDir);
     refSource = "segment_folder";
-    if (refs.length === 0) {
+    refs = found.slice(0, 1);
+    if (found.length === 0) {
       if (dryRun) {
-        warnings.push(`${id}: no images in ${dir} yet (run --image for this segment first)`);
+        warnings.push(`${id}: no images in ${refDir} yet (run --image for this segment first)`);
       } else {
-        throw new Error(`${id}: no --ref given and no images in ${dir} — run --image for this segment first`);
+        throw new Error(`${id}: no --ref given and no images in ${refDir} — run --image for this segment first`);
       }
-    }
-    if (refs.length > 9) {
-      warnings.push(`${id}: ${refs.length} images in ${dir}, using the newest 9`);
-      refs = refs.slice(0, 9);
+    } else if (found.length > 1) {
+      warnings.push(`${id}: ${found.length} images in ${refDir}, using the newest take ${basename(found[0])}; pass --ref to choose others`);
     }
   }
 

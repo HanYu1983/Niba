@@ -1,6 +1,6 @@
 [
   {
-    "segment_id": "01",
+    "segment_id": "seg_01",
     "estimated_duration_seconds": 10,
     "voiceover": {
       "type": "narrator",
@@ -92,7 +92,7 @@
     }
   },
   {
-    "segment_id": "02",
+    "segment_id": "seg_02",
     "estimated_duration_seconds": 13,
     "voiceover": {
       "type": "monologue_internal",
@@ -179,7 +179,7 @@
     }
   },
   {
-    "segment_id": "03",
+    "segment_id": "seg_03",
     "estimated_duration_seconds": 11,
     "voiceover": {
       "type": "monologue_internal",
@@ -261,7 +261,7 @@
     }
   },
   {
-    "segment_id": "04",
+    "segment_id": "seg_04",
     "estimated_duration_seconds": 14,
     "voiceover": {
       "type": "monologue_internal",
@@ -353,7 +353,7 @@
     }
   },
   {
-    "segment_id": "05",
+    "segment_id": "seg_05",
     "estimated_duration_seconds": 15,
     "voiceover": {
       "type": "dialogue_spoken",
