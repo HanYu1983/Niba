@@ -15,7 +15,7 @@
  * `keyframe_anchors`, serialised as JSON.
  *
  * Output layout: when `--out` is a folder (or omitted), each segment gets
- *   <out>/<json basename>/<segment_id>/<comfyui filename>
+ *   <out>/<json basename>/seg_001/<comfyui filename>
  * so a batch run can never mix two segments. `--out` ending in a media extension is an exact
  * file and is only accepted for a single segment.
  *
@@ -215,7 +215,16 @@ if (exactOut && selected.length > 1) {
 
 const outRoot = exactOut ? dirname(exactOut) : outArg ?? resolve(dirname(jsonFile), "output");
 const folderRoot = resolve(outRoot, jsonBase);
-const dirFor = (id) => resolve(folderRoot, id);
+
+/**
+ * Folder name for a segment: `seg_001`, like the plan ids, whatever the json calls it
+ * (`01`, `1` or `seg_01` all become `seg_001`).
+ */
+const folderIdOf = (segment) => {
+  const key = idOf(segment);
+  return /^\d+$/.test(key) ? `seg_${key.padStart(3, "0")}` : `seg_${key}`;
+};
+const dirFor = (segment) => resolve(folderRoot, folderIdOf(segment));
 
 const explicitRefs = unique(splitList(repeatedArg(argv, "ref").length ? repeatedArg(argv, "ref") : listArg(args, "ref")));
 const explicitRefPaths = explicitRefs.map((ref) => {
@@ -236,6 +245,7 @@ function imagesIn(dir) {
 
 function buildJob(segment, id, dir) {
   const warnings = [];
+  const folder = folderIdOf(segment);
 
   if (doImage) {
     const prompt = segment.image_generation_prompt?.english;
@@ -258,7 +268,7 @@ function buildJob(segment, id, dir) {
         unet_name: String(args.model ?? refsCfg.model ?? "moodyRealMix_zitV7.safetensors"),
         clip_name: String(args.clip ?? refsCfg.clip ?? "qwen_3_4b.safetensors"),
         vae_name: String(args.vae ?? refsCfg.vae ?? "ae.safetensors"),
-        filename_prefix: `method2/${jsonBase}/${id}`,
+        filename_prefix: `method2/${jsonBase}/${folder}`,
         seed
       }
     };
@@ -326,7 +336,7 @@ function buildJob(segment, id, dir) {
       fps,
       turbo,
       seed,
-      filename_prefix: `method2/${jsonBase}/${id}`,
+      filename_prefix: `method2/${jsonBase}/${folder}`,
       reference_images: refs,
       ref_image_size: String(args["ref-size"] ?? "match")
     }
@@ -355,8 +365,9 @@ let failed = 0;
 
 for (const [position, segment] of selected.entries()) {
   const id = String(segment.segment_id ?? segment.id);
-  const dir = dirFor(id);
-  const tag = `[${position + 1}/${selected.length}] ${id}`;
+  const folder = folderIdOf(segment);
+  const dir = dirFor(segment);
+  const tag = `[${position + 1}/${selected.length}] ${folder}`;
 
   let job;
   try {
@@ -370,6 +381,7 @@ for (const [position, segment] of selected.entries()) {
 
   const entry = {
     segment_id: id,
+    folder,
     out: exactOut ?? null,
     out_dir: dir,
     prompt_chars: job.prompt.length,
