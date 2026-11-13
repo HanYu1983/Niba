@@ -24,6 +24,7 @@ Project21/
 │     ├─ check_prompts.mjs
 │     ├─ generate_refs.mjs
 │     ├─ check_refs.mjs
+│     ├─ method2_segment.mjs    METHOD_2 JSON → 單段參考圖 / r2v 影片
 │     ├─ render_segment.mjs
 │     ├─ render_all.mjs
 │     ├─ audit_renders.mjs
