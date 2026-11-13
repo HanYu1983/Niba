@@ -15,9 +15,9 @@
  * `keyframe_anchors`, serialised as JSON.
  *
  * Output layout: when `--out` is a folder (or omitted), each segment gets
- *   <out>/<json basename>/seg_001/<comfyui filename>
- * so a batch run can never mix two segments. `--out` ending in a media extension is an exact
- * file and is only accepted for a single segment.
+ *   <out>/<json basename>/<segment_id>/<comfyui filename>
+ * using the segment's own id, verbatim (no padding, no `seg_` prefix). `--out` ending in a
+ * media extension is an exact file and is only accepted for a single segment.
  *
  * `--ref` (comma-separated or repeated, up to nine) applies to every selected segment. Without
  * it, `--video` uses the newest images already sitting in that segment's own folder, which is
@@ -58,8 +58,10 @@ if (!jsonArg || jsonArg === true) {
     "usage: node workspace/tools/method2_segment.mjs --json <prompts.json> (--segment ID | --from ID --to ID) (--image | --video)",
     "",
     "  --json FILE           METHOD_2 JSON: an array, or an object with segments[]",
-    "  --segment ID          one segment (01, 1, seg_01 all match)",
-    "  --from ID / --to ID   inclusive range in JSON order (either end is optional)",
+    "  --segment ID          one segment (exact id, or 01/1/seg_01 all match)",
+    "  --from ID / --to ID   inclusive range by segment_id (either end optional)",
+    "  --from-index N / --to-index N",
+    "                        inclusive range by 1-based position in the json array",
     "  --image               z_image_t2i from image_generation_prompt.english",
     "  --video               minimax_r2v from estimated_duration_seconds",
     "  --ref PATH[,PATH]     reference image(s) for --video (repeatable, max 9)",
@@ -142,11 +144,18 @@ const listIds = () => segments.map((s) => s.segment_id ?? "(no id)").join(", ");
 const hasSegment = args.segment !== undefined && args.segment !== true;
 const hasFrom = args.from !== undefined && args.from !== true;
 const hasTo = args.to !== undefined && args.to !== true;
+const hasFromIndex = args["from-index"] !== undefined && args["from-index"] !== true;
+const hasToIndex = args["to-index"] !== undefined && args["to-index"] !== true;
+
+if ((hasFrom || hasTo) && (hasFromIndex || hasToIndex)) {
+  console.error("use --from/--to (segment ids) or --from-index/--to-index (positions), not both");
+  process.exit(2);
+}
 
 let selected;
 if (hasSegment) {
-  if (hasFrom || hasTo) {
-    console.error("use --segment for one segment, or --from/--to for a range, not both");
+  if (hasFrom || hasTo || hasFromIndex || hasToIndex) {
+    console.error("use --segment for one segment, or a range, not both");
     process.exit(2);
   }
   const found = segments.find((s) => idOf(s) === normaliseId(args.segment));
@@ -156,21 +165,47 @@ if (hasSegment) {
   }
   selected = [found];
 } else {
-  if (!hasFrom && !hasTo) {
-    console.error(`missing --segment or --from/--to\nthis json has: ${listIds()}`);
+  const positional = hasFrom || hasTo;
+  const numbered = hasFromIndex || hasToIndex;
+  if (!positional && !numbered) {
+    console.error(`missing --segment or a range\nthis json has: ${listIds()}`);
     process.exit(2);
   }
-  const indexOf = (value, fallback) => {
-    if (value === undefined) return fallback;
+
+  // Positions are 1-based and validated, so `--from-index 1 --to-index 5` is unambiguous even
+  // when segment ids are not numbers.
+  const positionOf = (value) => {
+    const n = Number(value);
+    if (!Number.isInteger(n) || n < 1 || n > segments.length) {
+      console.error(`--from-index/--to-index must be 1..${segments.length}, got ${JSON.stringify(value)}`);
+      process.exit(2);
+    }
+    return n - 1;
+  };
+  const idIndexOf = (value) => {
     const at = segments.findIndex((s) => idOf(s) === normaliseId(value));
     if (at < 0) {
-      console.error(`segment not found: ${value}\nthis json has: ${listIds()}`);
+      console.error(`segment not found: ${value}\nthis json has: ${listIds()}\nuse --from-index/--to-index to address by position instead`);
       process.exit(2);
     }
     return at;
   };
-  const from = indexOf(hasFrom ? args.from : undefined, 0);
-  const to = indexOf(hasTo ? args.to : undefined, segments.length - 1);
+
+  const from = numbered
+    ? hasFromIndex
+      ? positionOf(args["from-index"])
+      : 0
+    : hasFrom
+      ? idIndexOf(args.from)
+      : 0;
+  const to = numbered
+    ? hasToIndex
+      ? positionOf(args["to-index"])
+      : segments.length - 1
+    : hasTo
+      ? idIndexOf(args.to)
+      : segments.length - 1;
+
   if (from > to) {
     console.error(`--from is after --to (${from} > ${to})`);
     process.exit(2);
@@ -217,14 +252,27 @@ const outRoot = exactOut ? dirname(exactOut) : outArg ?? resolve(dirname(jsonFil
 const folderRoot = resolve(outRoot, jsonBase);
 
 /**
- * Folder name for a segment: `seg_001`, like the plan ids, whatever the json calls it
- * (`01`, `1` or `seg_01` all become `seg_001`).
+ * The folder is the segment's own id, verbatim. No zero-padding, no `seg_` prefix: the json
+ * already says what the segment is called.
  */
-const folderIdOf = (segment) => {
-  const key = idOf(segment);
-  return /^\d+$/.test(key) ? `seg_${key.padStart(3, "0")}` : `seg_${key}`;
+const folderNameOf = (segment) => {
+  const id = String(segment.segment_id ?? segment.id ?? "").trim();
+  if (!id || id === "." || id === ".." || /[\\/:*?"<>|]/.test(id)) {
+    throw new Error(`segment_id ${JSON.stringify(id)} cannot be used as a folder name`);
+  }
+  return id;
 };
-const dirFor = (segment) => resolve(folderRoot, folderIdOf(segment));
+const dirFor = (segment) => resolve(folderRoot, folderNameOf(segment));
+
+// Reject a hostile/empty id before the first submission, not after half a batch.
+for (const segment of selected) {
+  try {
+    folderNameOf(segment);
+  } catch (e) {
+    console.error(e.message);
+    process.exit(2);
+  }
+}
 
 const explicitRefs = unique(splitList(repeatedArg(argv, "ref").length ? repeatedArg(argv, "ref") : listArg(args, "ref")));
 const explicitRefPaths = explicitRefs.map((ref) => {
@@ -245,7 +293,7 @@ function imagesIn(dir) {
 
 function buildJob(segment, id, dir) {
   const warnings = [];
-  const folder = folderIdOf(segment);
+  const folder = folderNameOf(segment);
 
   if (doImage) {
     const prompt = segment.image_generation_prompt?.english;
@@ -365,7 +413,7 @@ let failed = 0;
 
 for (const [position, segment] of selected.entries()) {
   const id = String(segment.segment_id ?? segment.id);
-  const folder = folderIdOf(segment);
+  const folder = folderNameOf(segment);
   const dir = dirFor(segment);
   const tag = `[${position + 1}/${selected.length}] ${folder}`;
 
