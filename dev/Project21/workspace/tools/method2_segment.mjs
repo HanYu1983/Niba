@@ -2,11 +2,11 @@
  * Generate reference stills or reference-to-video clips from a METHOD_2 prompts JSON.
  *
  *   node workspace/tools/method2_segment.mjs \
- *     --json test_story4/prompts.ch0_15s.json --from 01 --to 05 --image \
+ *     --json test_story4/prompts.ch0_15s.json --from-index 0 --to-index 4 --image \
  *     --out test_story4/output/refs/ch0_15s
  *
  *   node workspace/tools/method2_segment.mjs \
- *     --json test_story4/prompts.ch0_15s.json --from 01 --to 05 --video \
+ *     --json test_story4/prompts.ch0_15s.json --from-index 0 --to-index 4 --video \
  *     --out test_story4/output/video/ch0_15s
  *
  * `--image` submits `segment.image_generation_prompt.english` to z_image_t2i.
@@ -55,13 +55,13 @@ const jsonArg = args.json ?? args._[0];
 
 if (!jsonArg || jsonArg === true) {
   usage("missing --json", [
-    "usage: node workspace/tools/method2_segment.mjs --json <prompts.json> (--segment ID | --from ID --to ID) (--image | --video)",
+    "usage: node workspace/tools/method2_segment.mjs --json <prompts.json> (--segment ID | --from-index N --to-index N) (--image | --video)",
     "",
     "  --json FILE           METHOD_2 JSON: an array, or an object with segments[]",
-    "  --segment ID          one segment (exact id, or 01/1/seg_01 all match)",
-    "  --from ID / --to ID   inclusive range by segment_id (either end optional)",
+    "  --segment ID          one segment by segment_id (01/1/seg_01 all match)",
     "  --from-index N / --to-index N",
-    "                        inclusive range by 1-based position in the json array",
+    "                        inclusive range by 0-based position in the json array",
+    "                        (0 is the first segment; either end is optional)",
     "  --image               z_image_t2i from image_generation_prompt.english",
     "  --video               minimax_r2v from estimated_duration_seconds",
     "  --ref PATH[,PATH]     reference image(s) for --video (repeatable, max 9)",
@@ -142,20 +142,13 @@ if (!segments) {
 
 const listIds = () => segments.map((s) => s.segment_id ?? "(no id)").join(", ");
 const hasSegment = args.segment !== undefined && args.segment !== true;
-const hasFrom = args.from !== undefined && args.from !== true;
-const hasTo = args.to !== undefined && args.to !== true;
 const hasFromIndex = args["from-index"] !== undefined && args["from-index"] !== true;
 const hasToIndex = args["to-index"] !== undefined && args["to-index"] !== true;
 
-if ((hasFrom || hasTo) && (hasFromIndex || hasToIndex)) {
-  console.error("use --from/--to (segment ids) or --from-index/--to-index (positions), not both");
-  process.exit(2);
-}
-
 let selected;
 if (hasSegment) {
-  if (hasFrom || hasTo || hasFromIndex || hasToIndex) {
-    console.error("use --segment for one segment, or a range, not both");
+  if (hasFromIndex || hasToIndex) {
+    console.error("use --segment for one segment, or --from-index/--to-index for a range, not both");
     process.exit(2);
   }
   const found = segments.find((s) => idOf(s) === normaliseId(args.segment));
@@ -165,52 +158,30 @@ if (hasSegment) {
   }
   selected = [found];
 } else {
-  const positional = hasFrom || hasTo;
-  const numbered = hasFromIndex || hasToIndex;
-  if (!positional && !numbered) {
-    console.error(`missing --segment or a range\nthis json has: ${listIds()}`);
+  if (!hasFromIndex && !hasToIndex) {
+    console.error(`missing --segment or --from-index/--to-index\nthis json has: ${listIds()}`);
     process.exit(2);
   }
 
-  // Positions are 1-based and validated, so `--from-index 1 --to-index 5` is unambiguous even
-  // when segment ids are not numbers.
-  const positionOf = (value) => {
+  // 0-based positions, used as given: index 0 is the first element of the json array.
+  const lastIndex = segments.length - 1;
+  const positionOf = (value, name) => {
     const n = Number(value);
-    if (!Number.isInteger(n) || n < 1 || n > segments.length) {
-      console.error(`--from-index/--to-index must be 1..${segments.length}, got ${JSON.stringify(value)}`);
+    if (!Number.isInteger(n) || n < 0 || n > lastIndex) {
+      console.error(`--${name} must be 0..${lastIndex} (0 is the first segment), got ${JSON.stringify(value)}`);
       process.exit(2);
     }
-    return n - 1;
-  };
-  const idIndexOf = (value) => {
-    const at = segments.findIndex((s) => idOf(s) === normaliseId(value));
-    if (at < 0) {
-      console.error(`segment not found: ${value}\nthis json has: ${listIds()}\nuse --from-index/--to-index to address by position instead`);
-      process.exit(2);
-    }
-    return at;
+    return n;
   };
 
-  const from = numbered
-    ? hasFromIndex
-      ? positionOf(args["from-index"])
-      : 0
-    : hasFrom
-      ? idIndexOf(args.from)
-      : 0;
-  const to = numbered
-    ? hasToIndex
-      ? positionOf(args["to-index"])
-      : segments.length - 1
-    : hasTo
-      ? idIndexOf(args.to)
-      : segments.length - 1;
+  const from = hasFromIndex ? positionOf(args["from-index"], "from-index") : 0;
+  const to = hasToIndex ? positionOf(args["to-index"], "to-index") : lastIndex;
 
   if (from > to) {
-    console.error(`--from is after --to (${from} > ${to})`);
+    console.error(`--from-index is after --to-index (${from} > ${to})`);
     process.exit(2);
   }
-  selected = segments.slice(from, to + 1);
+  selected = segments.filter((_, index) => index >= from && index <= to);
 }
 
 /* ------------------------------------------------------------------ defaults */
