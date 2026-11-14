@@ -13,6 +13,7 @@ import { resolve } from "node:path";
 import { parseArgs } from "../lib/args.mjs";
 import { readManifest } from "../lib/manifest.mjs";
 import { describeStory, loadStory } from "../lib/story.mjs";
+import { exit } from "node:process";
 
 const args = parseArgs();
 const story = loadStory({ story: args.story ?? args._[0], plan: args.plan, prompts: args.prompts, manifest: args.manifest });
@@ -31,6 +32,7 @@ let missing = 0;
 for (const item of entries) {
   const entry = { seg: item.segment_id, prompt_id: item.prompt_id, mode: item.mode ?? null, status: item.status, in_history: false, outputs: [], comfy_status: null };
   try {
+    console.log(`handle: ${item.segment_id}`)
     const res = await fetch(`${base}/history/${item.prompt_id}`);
     if (res.ok) {
       const body = await res.json();
@@ -46,9 +48,14 @@ for (const item of entries) {
             }
           }
         }
+      } else{
+        console("rec not found")
       }
+    } else {
+      console.log("res.ok not true")
     }
   } catch (e) {
+    console.log(e.message)
     entry.error = e.message;
   }
   if (entry.outputs.length) done++;
