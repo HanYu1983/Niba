@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "pixel-studio": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "D:\\han\\Niba\\dev\\Project22\\dist\\index.js"
+      ]
+    }
+  }
+}

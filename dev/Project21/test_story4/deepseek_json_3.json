@@ -1,0 +1,615 @@
+[
+  {
+    "segment_id": "21",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "林默把影片連結傳給蘇晚的那天 是個星期三的晚上 他傳完之後 立刻把手機丟到沙發另一頭",
+      "tone": "Nervous, light, a quick anxious rhythm"
+    },
+    "sound_effects": [
+      {
+        "category": "SFX",
+        "name": "Message Sent Whoosh",
+        "description": "Soft digital send tone, then a muffled thud of a phone landing on a sofa cushion",
+        "timing": "00:00 to 00:13"
+      },
+      {
+        "category": "Ambience",
+        "name": "Quiet Apartment Night",
+        "description": "Low refrigerator hum, faint clock tick, distant city hush",
+        "timing": "00:00 to 00:13"
+      }
+    ],
+    "camera_movement": {
+      "type": "Handheld follow to static",
+      "description": "Handheld follows Lin Mo's hand tossing the phone onto the sofa, then static on the phone glowing face-down"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Close-up of thumb tapping send on a phone screen" },
+      { "time": "00:04-00:09", "action": "Hand tosses phone, it lands face-down on sofa" },
+      { "time": "00:09-00:13", "action": "Static on the phone, faint glow bleeding from beneath" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Close-up of a thumb tapping send on a glowing phone screen in a dark room",
+      "end_frame": "Face-down phone on a sofa cushion, faint screen glow leaking at the edges"
+    },
+    "acting_micro_expressions": {
+      "facial": "Not visible; tension in the hand",
+      "body_language": "Quick flick of the wrist, then a still hand retreating"
+    },
+    "environmental_physics": {
+      "particles": "Dust motes in faint screen glow",
+      "fluid_and_fabric": "Sofa cushion fabric settling after impact, hoodie sleeve swinging"
+    },
+    "transition_to_next": {
+      "visual_cut": "Cut to Lin Mo walking into the kitchen",
+      "audio_bridge": "J-Cut: water pouring fades in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo",
+        "appearance": "East Asian male, early 30s, messy black hair, tired dark eyes",
+        "outfit": "Grey hoodie, worn jeans"
+      },
+      "environment": {
+        "location": "Small apartment living room at night",
+        "lighting": "Dim warm lamp, cool phone glow",
+        "key_elements": "Sofa, phone, coffee table"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, nervous intimate mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, nervous intimate mood, shallow depth of field. [Scene & Environment] Small apartment living room at night, dim warm lamp and cool phone glow. [Subject] East Asian man early 30s, grey hoodie, hand tossing a glowing phone onto a sofa. [Shot & Action] Handheld follow of the toss, static on the face-down phone with light leaking from beneath."
+    }
+  },
+  {
+    "segment_id": "22",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "他又走回客廳 拿起手機 看到蘇晚還沒有讀訊息 他打開對話紀錄 往上滑 他們上一次對話是三個禮拜前",
+      "tone": "Restless, self-conscious, a slow sinking on the last clause"
+    },
+    "sound_effects": [
+      {
+        "category": "Foley",
+        "name": "Phone Pickup and Scroll",
+        "description": "Soft phone pickup, finger scrolling on glass, faint UI tick",
+        "timing": "00:00 to 00:14"
+      }
+    ],
+    "camera_movement": {
+      "type": "Close-up over-the-shoulder scroll",
+      "description": "Over Lin Mo's shoulder on the phone screen, chat log scrolling up, old messages appearing, then a close-up of his face"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Over-shoulder view, thumb scrolling chat log upward" },
+      { "time": "00:05-00:10", "action": "Old message from Su Wan appears, dated three weeks ago" },
+      { "time": "00:10-00:14", "action": "Close-up of his face, eyes fixed on the old message" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Over-the-shoulder view of a phone screen, thumb scrolling a chat log upward",
+      "end_frame": "Close-up of Lin Mo's face in phone glow, eyes fixed with quiet regret"
+    },
+    "acting_micro_expressions": {
+      "facial": "Brow furrowing slightly, jaw tightening, eyes unmoving",
+      "body_language": "Shoulders curling inward, thumb pausing mid-scroll"
+    },
+    "environmental_physics": {
+      "particles": "Phone glow particles on his face, faint screen flicker",
+      "fluid_and_fabric": "Hoodie fabric bunched at wrist, slow breath"
+    },
+    "transition_to_next": {
+      "visual_cut": "Cut to a library book return counter",
+      "audio_bridge": "L-Cut: a book thudding onto a counter leads in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo",
+        "appearance": "East Asian male, early 30s, messy black hair, tired dark eyes",
+        "outfit": "Grey hoodie"
+      },
+      "environment": {
+        "location": "Small apartment living room at night",
+        "lighting": "Cool phone glow, dim warm lamp behind",
+        "key_elements": "Phone chat screen, sofa, old messages"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, restless melancholy mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, restless melancholy mood, shallow depth of field. [Scene & Environment] Small apartment living room at night, cool phone glow against dim warm lamp. [Subject] East Asian man early 30s, messy black hair, grey hoodie, scrolling an old chat log, face tightening with regret. [Shot & Action] Over-the-shoulder phone screen scroll cutting to a close-up of his face in phone glow."
+    }
+  },
+  {
+    "segment_id": "23",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "蘇晚問他圖書館系統顯示這本書在你那裡是嗎 他回對 我明天拿去還 他記得那天他其實已經看完那本書了 但他故意多留了一個禮拜",
+      "tone": "Wry, self-aware, softening into quiet embarrassment"
+    },
+    "sound_effects": [
+      {
+        "category": "Foley",
+        "name": "Book on Table",
+        "description": "A closed book set down on a wooden table, faint page rustle",
+        "timing": "00:00 to 00:13"
+      }
+    ],
+    "camera_movement": {
+      "type": "Macro book to slow tilt",
+      "description": "Macro of a closed library book on a desk, a hand resting on it; tilt up to Lin Mo's face in lamplight"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Macro of a closed book, fingers resting on the cover" },
+      { "time": "00:04-00:09", "action": "Tilt up to Lin Mo's face, faint sheepish smile" },
+      { "time": "00:09-00:13", "action": "His eyes drop, a small exhale" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Macro of a closed library book on a wooden desk, a hand resting on the cover",
+      "end_frame": "Medium close-up of Lin Mo's face in lamplight, faint sheepish smile, eyes lowered"
+    },
+    "acting_micro_expressions": {
+      "facial": "Faint self-mocking smile, eyes dropping, a small exhale",
+      "body_language": "Hand resting flat on the book, shoulders easing"
+    },
+    "environmental_physics": {
+      "particles": "Lamp dust motes, faint paper fiber in the air",
+      "fluid_and_fabric": "Sleeve fabric settling, slow breath movement"
+    },
+    "transition_to_next": {
+      "visual_cut": "Dissolve from the book to a phone screen glowing in darkness",
+      "audio_bridge": "J-Cut: a faint phone vibration fades in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo",
+        "appearance": "East Asian male, early 30s, messy black hair, tired dark eyes",
+        "outfit": "Grey hoodie"
+      },
+      "environment": {
+        "location": "Cluttered apartment workspace at night",
+        "lighting": "Warm desk lamp, dim room",
+        "key_elements": "Library book, wooden desk, lamp"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, wry tender mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, wry tender mood, shallow depth of field. [Scene & Environment] Cluttered apartment workspace at night with warm desk lamp. [Subject] East Asian man early 30s, messy black hair, grey hoodie, faint sheepish smile, hand resting on a closed library book. [Shot & Action] Macro of the book tilting up to a medium close-up of his face in lamplight."
+    }
+  },
+  {
+    "segment_id": "24",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "他忽然覺得自己很可悲 在這個時代 向別人推薦電影是一種冒犯 每個人每天都能看到無數高水準的作品 沒有人有義務花時間看你的",
+      "tone": "Cold self-judgment, then a flat bleak widening on the last clause"
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Endless Media Stream",
+        "description": "A faint wash of overlapping video intros and notification pings, overwhelming and hollow",
+        "timing": "00:00 to 00:14"
+      }
+    ],
+    "camera_movement": {
+      "type": "Rapid montage to static close-up",
+      "description": "Rapid cuts of infinite video thumbnails scrolling on walls of screens, then a hard stop on Lin Mo's still face in darkness"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Rapid montage of countless thumbnails scrolling" },
+      { "time": "00:05-00:10", "action": "Overlapping screens filling the frame, overwhelming" },
+      { "time": "00:10-00:14", "action": "Hard cut to Lin Mo's face in darkness, eyes open" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Wall of screens scrolling endless video thumbnails in rapid succession",
+      "end_frame": "Close-up of Lin Mo's face in near darkness, eyes open and hollow"
+    },
+    "acting_micro_expressions": {
+      "facial": "Eyes hollow and unfocused, lips slightly parted, jaw slack",
+      "body_language": "Head leaning back against a wall, arms limp"
+    },
+    "environmental_physics": {
+      "particles": "Screen light flicker, faint digital glitch sparks",
+      "fluid_and_fabric": "Hoodie fabric pressed against wall, slow breath"
+    },
+    "transition_to_next": {
+      "visual_cut": "Slow fade from darkness to the phone screen lighting up",
+      "audio_bridge": "L-Cut: a phone notification chime breaks in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo",
+        "appearance": "East Asian male, early 30s, messy black hair, tired dark eyes",
+        "outfit": "Grey hoodie"
+      },
+      "environment": {
+        "location": "Dark apartment corner and abstract wall of screens",
+        "lighting": "Overwhelming screen flicker cutting to near darkness",
+        "key_elements": "Infinite thumbnails, dark wall"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, bleak overwhelming mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, bleak overwhelming mood, shallow depth of field. [Scene & Environment] Rapid montage of a wall of screens scrolling endless video thumbnails, then near darkness. [Subject] East Asian man early 30s, messy black hair, grey hoodie, face hollow and still in darkness. [Shot & Action] Rapid cuts of scrolling screens hard-cutting to a static close-up of his hollow face."
+    }
+  },
+  {
+    "segment_id": "25",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "在這個注意力比黃金還稀缺的時代 那幾乎等同於要求別人把生命的一部分交給你 林默在訊息裡寫著 我拍了一部片 八十七分鐘",
+      "tone": "Solemn, weighty, then dropping into a vulnerable message tone"
+    },
+    "sound_effects": [
+      {
+        "category": "SFX",
+        "name": "Message Typing",
+        "description": "Slow deliberate key taps on a phone screen, each character landing with weight",
+        "timing": "00:00 to 00:14"
+      }
+    ],
+    "camera_movement": {
+      "type": "Macro phone screen to slow pull-back",
+      "description": "Macro of a message being typed on a phone, words appearing; pull back to Lin Mo's face half-lit by the screen"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Macro of the message text appearing word by word" },
+      { "time": "00:05-00:10", "action": "Cursor blinking, thumb hovering over send" },
+      { "time": "00:10-00:14", "action": "Pull back to his face, screen light on his eyes" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Macro of a phone screen with a message being typed, cursor blinking",
+      "end_frame": "Medium close-up of Lin Mo's face half-lit by phone glow, thumb hovering"
+    },
+    "acting_micro_expressions": {
+      "facial": "Brow tense, lips pressed thin, a slow swallow",
+      "body_language": "Thumb frozen above the screen, shoulders stiff"
+    },
+    "environmental_physics": {
+      "particles": "Phone glow particles, faint screen reflection on his eyes",
+      "fluid_and_fabric": "Hoodie fabric shifting with a tense breath"
+    },
+    "transition_to_next": {
+      "visual_cut": "Cut to a dark bedroom ceiling",
+      "audio_bridge": "J-Cut: a clock ticking fades in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo",
+        "appearance": "East Asian male, early 30s, messy black hair, tired dark eyes",
+        "outfit": "Grey hoodie"
+      },
+      "environment": {
+        "location": "Small apartment, dark room",
+        "lighting": "Cool phone glow against darkness",
+        "key_elements": "Phone screen, message text, blinking cursor"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, vulnerable solemn mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, vulnerable solemn mood, shallow depth of field. [Scene & Environment] Dark small apartment with cool phone glow. [Subject] East Asian man early 30s, messy black hair, grey hoodie, thumb hovering over a message on his phone, eyes tense. [Shot & Action] Macro of the message being typed pulling back to a medium close-up of his half-lit face."
+    }
+  },
+  {
+    "segment_id": "26",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "他傳出去之後 盯著螢幕看了整整二十分鐘 蘇晚沒有回 他把手機鎖屏 又解鎖 又鎖屏 他躺到床上 覺得自己像一個站在月台上的人",
+      "tone": "Anxious, repetitive, a hollow drifting on the final image"
+    },
+    "sound_effects": [
+      {
+        "category": "SFX",
+        "name": "Phone Lock and Unlock",
+        "description": "Repeated soft lock clicks and unlock tones, then a body settling onto a mattress",
+        "timing": "00:00 to 00:13"
+      }
+    ],
+    "camera_movement": {
+      "type": "Static time-lapse to slow tilt",
+      "description": "Static on the phone screen in the dark, time-lapse of lock and unlock, then slow tilt to Lin Mo lying on his bed staring at the ceiling"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Static phone screen, lock then unlock, repeated" },
+      { "time": "00:04-00:09", "action": "Tilt up to Lin Mo lying on his bed, eyes open" },
+      { "time": "00:09-00:13", "action": "Wide shot of him alone in the dark room" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Static close-up of a phone screen in darkness, lock screen flickering on and off",
+      "end_frame": "Wide overhead shot of Lin Mo lying on his bed in a dark room, staring at the ceiling"
+    },
+    "acting_micro_expressions": {
+      "facial": "Eyes open and empty, lips neutral, a faint blink",
+      "body_language": "Lying flat, arms at his sides, chest barely rising"
+    },
+    "environmental_physics": {
+      "particles": "Faint phone glow fading, dust in the dark",
+      "fluid_and_fabric": "Bedsheet wrinkles, hoodie fabric spread on the mattress"
+    },
+    "transition_to_next": {
+      "visual_cut": "Cut to a phone screen lighting up on a bedside table",
+      "audio_bridge": "J-Cut: a notification chime rings out in the dark"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo",
+        "appearance": "East Asian male, early 30s, messy black hair, tired dark eyes",
+        "outfit": "Grey hoodie"
+      },
+      "environment": {
+        "location": "Small dark bedroom at night",
+        "lighting": "Near darkness, faint phone glow",
+        "key_elements": "Phone, bed, ceiling"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, anxious hollow mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, anxious hollow mood, shallow depth of field. [Scene & Environment] Small dark bedroom at night with faint phone glow. [Subject] East Asian man early 30s, messy black hair, grey hoodie, lying flat on his bed staring at the ceiling. [Shot & Action] Static close-up of a phone lock screen flickering, tilting up to a wide overhead shot of him alone."
+    }
+  },
+  {
+    "segment_id": "27",
+    "estimated_duration_seconds": 12,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "凌晨一點 手機響了 蘇晚回了一個字",
+          "tone": "Hushed, suspended, a held breath before the answer"
+        },
+        {
+          "speaker": "Su Wan",
+          "type": "dialogue_spoken",
+          "text": "好",
+          "tone": "Soft, single syllable, quiet but certain"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "SFX",
+        "name": "Phone Notification in Darkness",
+        "description": "A single soft notification chime cutting through deep night silence",
+        "timing": "00:00 to 00:12"
+      }
+    ],
+    "camera_movement": {
+      "type": "Macro screen to close-up",
+      "description": "Macro of a phone screen lighting up in the dark, a single message appearing; slow push to the glowing word"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Dark frame, a phone screen suddenly lights up" },
+      { "time": "00:04-00:08", "action": "Macro of the screen, a single character message appears" },
+      { "time": "00:08-00:12", "action": "Slow push to the glowing word, screen light filling frame" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Dark bedroom frame with a phone screen suddenly glowing on a bedside table",
+      "end_frame": "Extreme close-up of a single glowing message on the phone screen"
+    },
+    "acting_micro_expressions": {
+      "facial": "None visible; emotion carried by the glowing word",
+      "body_language": "None; stillness of the dark room"
+    },
+    "environmental_physics": {
+      "particles": "Phone glow scattering in the dark, faint dust motes",
+      "fluid_and_fabric": "Bedsheet fabric faintly lit at the edges"
+    },
+    "transition_to_next": {
+      "visual_cut": "Cut to a dim lamp switching on in a room",
+      "audio_bridge": "L-Cut: a soft click of a lamp switch leads in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Su Wan",
+        "appearance": "East Asian female, late 20s, long dark hair",
+        "outfit": "Soft home clothes"
+      },
+      "environment": {
+        "location": "Dark bedroom at night",
+        "lighting": "Near darkness, single phone glow",
+        "key_elements": "Phone screen, bedside table, single message"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, suspended tender mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, suspended tender mood, shallow depth of field. [Scene & Environment] Dark bedroom at night, a phone screen suddenly glowing on a bedside table. [Subject] A single glowing message on the phone screen, no human face. [Shot & Action] Macro of the screen lighting up slowly pushing in to extreme close-up of the glowing word."
+    }
+  },
+  {
+    "segment_id": "28",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "蘇晚點開連結的時候 房間裡只開了一盞小燈 她把螢幕調暗 戴上耳機 按下播放鍵 第一分鐘 畫面是黑的 只有聲音 一個小孩的呼吸聲 很輕 很淺",
+      "tone": "Intimate, hushed, slowing into the darkness of the first frame"
+    },
+    "sound_effects": [
+      {
+        "category": "Foley",
+        "name": "Earphones and Playback",
+        "description": "Soft earphone rustle, a screen dimming click, then a very light child's breathing",
+        "timing": "00:00 to 00:14"
+      },
+      {
+        "category": "Ambience",
+        "name": "Dim Room Quiet",
+        "description": "Very low room tone with a single small lamp's faint hum",
+        "timing": "00:00 to 00:14"
+      }
+    ],
+    "camera_movement": {
+      "type": "Close-up to black screen",
+      "description": "Close-up of Su Wan's hands dimming the screen and putting on earphones, then cut to a black screen with only sound"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Close-up of hands dimming screen, earphones sliding in" },
+      { "time": "00:05-00:10", "action": "Her finger presses play, screen fades to black" },
+      { "time": "00:10-00:14", "action": "Pure black frame, faint child's breathing" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Close-up of Su Wan's hands dimming a screen in a softly lit room, earphones nearby",
+      "end_frame": "Completely black screen with a faint rim of lamp light at the frame edge"
+    },
+    "acting_micro_expressions": {
+      "facial": "Profile only: calm, focused, lips relaxed",
+      "body_language": "Hands deliberate and gentle, head tilting slightly to listen"
+    },
+    "environmental_physics": {
+      "particles": "Small lamp glow dust motes, faint screen dimming",
+      "fluid_and_fabric": "Earphone cable drifting, soft fabric of her sleeve"
+    },
+    "transition_to_next": {
+      "visual_cut": "Slow fade up from black to a dusk kitchen",
+      "audio_bridge": "L-Cut: the child's breathing continues over the fade"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Su Wan",
+        "appearance": "East Asian female, late 20s, long dark hair, calm gentle face",
+        "outfit": "Soft home clothes"
+      },
+      "environment": {
+        "location": "Small dim bedroom with one lamp",
+        "lighting": "Single small warm lamp, screen dimming to black",
+        "key_elements": "Screen, earphones, lamp"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, intimate hushed mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, intimate hushed mood, shallow depth of field. [Scene & Environment] Small dim bedroom with a single warm lamp, a screen being dimmed. [Subject] East Asian woman late 20s, long dark hair, hands adjusting earphones and dimming the screen. [Shot & Action] Close-up of her hands and earphones, cutting to a completely black screen with faint lamp light at the edge."
+    }
+  },
+  {
+    "segment_id": "29",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "然後畫面慢慢亮起來 是一個廚房 一個女人背對著鏡頭在切菜 光線是黃昏的那種橘色 蘇晚第一個念頭是 這畫面好慢 現在的電影不會這麼慢",
+      "tone": "Observing, slightly unsettled, a quiet note of awe on the last line"
+    },
+    "sound_effects": [
+      {
+        "category": "Foley",
+        "name": "Slow Chopping",
+        "description": "Deliberate, unhurried knife on cutting board, each chop spaced wide apart",
+        "timing": "00:00 to 00:14"
+      }
+    ],
+    "camera_movement": {
+      "type": "Slow fade-up to static wide",
+      "description": "Frame fades up from black to a dusk kitchen, static wide shot of a woman's back at the counter, chopping slowly"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Black fades up to orange dusk kitchen light" },
+      { "time": "00:05-00:10", "action": "Static wide of a woman's back, slow chopping" },
+      { "time": "00:10-00:14", "action": "Camera holds, dust drifting in the orange light" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Black frame with a faint warm glow beginning to bloom at the center",
+      "end_frame": "Static wide shot of a woman's back at a kitchen counter, chopping slowly in orange dusk light"
+    },
+    "acting_micro_expressions": {
+      "facial": "Not visible; back to camera",
+      "body_language": "Relaxed shoulders, slow steady arm movement"
+    },
+    "environmental_physics": {
+      "particles": "Dust motes drifting in warm orange dusk light",
+      "fluid_and_fabric": "Apron fabric shifting with each chop, faint steam"
+    },
+    "transition_to_next": {
+      "visual_cut": "Slow push toward the cutting board",
+      "audio_bridge": "J-Cut: a wet drip sound fades in early"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Mother",
+        "appearance": "East Asian woman, 30s, dark hair tied back, back to camera",
+        "outfit": "Faded apron over simple dress"
+      },
+      "environment": {
+        "location": "Modest home kitchen at dusk",
+        "lighting": "Warm orange dusk light, soft long shadows",
+        "key_elements": "Cutting board, knife, kitchen window"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, slow dreamlike mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, slow dreamlike mood, shallow depth of field. [Scene & Environment] Modest home kitchen at dusk with warm orange light and drifting dust. [Subject] East Asian woman in her 30s, faded apron, dark hair tied back, back to camera, chopping slowly. [Shot & Action] Slow fade-up from black to a static wide shot of her back at the counter."
+    }
+  },
+  {
+    "segment_id": "30",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "第二分鐘 女人切到手指 血滴在砧板上 她沒有包紮 只是看著窗外 蘇晚發現自己的呼吸變慢了 好像被那顆鏡頭的節奏牽著走",
+      "tone": "Quiet dread, slowing further, the audience's breath caught with the character's"
+    },
+    "sound_effects": [
+      {
+        "category": "Foley",
+        "name": "Blood Drip on Board",
+        "description": "A single soft wet drip, then total stillness, no bandaging, no reaction",
+        "timing": "00:00 to 00:14"
+      }
+    ],
+    "camera_movement": {
+      "type": "Macro static hold",
+      "description": "Macro of the hand and cutting board, blood drop falling; camera holds perfectly still on the hand as she stares out the window"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Macro of the knife pausing, hand still" },
+      { "time": "00:05-00:10", "action": "A blood drop falls onto the board, hand unmoving" },
+      { "time": "00:10-00:14", "action": "Camera holds, window light beyond, no reaction" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Macro of a woman's hand and knife paused on a cutting board in dusk light",
+      "end_frame": "Macro of the still hand on the board with a single blood drop, warm window light beyond"
+    },
+    "acting_micro_expressions": {
+      "facial": "Not visible; emotion conveyed by the motionless hand",
+      "body_language": "Frozen, no flinch, no reach for a bandage"
+    },
+    "environmental_physics": {
+      "particles": "Dusk dust motes in window light, faint steam",
+      "fluid_and_fabric": "A single blood drop falling, apron fabric entirely still"
+    },
+    "transition_to_next": {
+      "visual_cut": "Cut to a boy appearing in the kitchen doorway",
+      "audio_bridge": "L-Cut: a soft footstep leads in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Mother",
+        "appearance": "East Asian woman, 30s, dark hair tied back, hand in frame",
+        "outfit": "Faded apron over simple dress"
+      },
+      "environment": {
+        "location": "Modest home kitchen at dusk",
+        "lighting": "Warm orange dusk window light",
+        "key_elements": "Cutting board, knife, single blood drop, window"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, macro shallow depth of field, quiet dread mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, quiet dread mood, macro shallow depth of field. [Scene & Environment] Modest home kitchen at dusk with warm orange window light. [Subject] Macro of an East Asian woman's still hand on a cutting board with a single blood drop, no reaction. [Shot & Action] Macro static hold as a blood drop falls, hand unmoving against the window light."
+    }
+  }
+]

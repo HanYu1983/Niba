@@ -1,0 +1,596 @@
+[
+  {
+    "segment_id": "11",
+    "estimated_duration_seconds": 12,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "他決定拍一部電影 不是為平台 不是為流量 是為她一個人 他花了三個月",
+      "tone": "Firm, quietly resolute, a beat of silence before the final line"
+    },
+    "sound_effects": [
+      {
+        "category": "SFX",
+        "name": "Calendar Pages Flipping",
+        "description": "Rapid soft page flips marking passing months, layered with a low synth pulse",
+        "timing": "00:00 to 00:12"
+      }
+    ],
+    "camera_movement": {
+      "type": "Time-lapse montage",
+      "description": "Time-lapse of Lin Mo at his desk through changing light, day to night, prompt editor filling with paragraphs of text"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Time-lapse morning light, Lin Mo typing at desk" },
+      { "time": "00:04-00:08", "action": "Light shifts to night, screen filling with text blocks" },
+      { "time": "00:08-00:12", "action": "Calendar pages fly through air, his silhouette still" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Lin Mo at his desk in morning light, prompt editor open, fingers on keyboard",
+      "end_frame": "Lin Mo's silhouette against a night monitor, calendar pages mid-flip in the air"
+    },
+    "acting_micro_expressions": {
+      "facial": "Face steady, eyes fixed on screen, slight frown of focus",
+      "body_language": "Posture locked in place, only fingers and breath moving"
+    },
+    "environmental_physics": {
+      "particles": "Sunlight dust shifting into monitor glow particles",
+      "fluid_and_fabric": "Hoodie sleeve shifting with typing, curtain breathing in draft"
+    },
+    "transition_to_next": {
+      "visual_cut": "Match cut from monitor glow to a child's bedroom nightlight",
+      "audio_bridge": "J-Cut: a child's soft breathing fades in early"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo",
+        "appearance": "East Asian male, early 30s, messy black hair, tired dark eyes",
+        "outfit": "Grey hoodie"
+      },
+      "environment": {
+        "location": "Cluttered apartment workspace",
+        "lighting": "Shifting daylight to monitor glow, low-key",
+        "key_elements": "Prompt editor screen, stacked notebooks, calendar"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, determined quiet mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, determined quiet mood, shallow depth of field. [Scene & Environment] Cluttered apartment workspace shifting from morning daylight to night monitor glow, prompt editor filling with text. [Subject] East Asian man early 30s, messy black hair, grey hoodie, fixed focus at desk. [Shot & Action] Time-lapse montage of him typing, ending on his silhouette with calendar pages flying."
+    }
+  },
+  {
+    "segment_id": "12",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "第一個月的提示詞 寫滿了他的童年 他六歲那年 父親離家 母親在廚房裡切菜切到手指 血滴在砧板上 她卻只是看著窗外 一動不動",
+      "tone": "Hushed, fragile, slow and heavy like a memory surfacing"
+    },
+    "sound_effects": [
+      {
+        "category": "Foley",
+        "name": "Knife on Cutting Board",
+        "description": "Rhythmic chopping that suddenly stops, a soft wet drip, then silence",
+        "timing": "00:00 to 00:14"
+      },
+      {
+        "category": "Ambience",
+        "name": "Distant Kitchen Hum",
+        "description": "Faint refrigerator hum and outside wind through a window",
+        "timing": "00:00 to 00:14"
+      }
+    ],
+    "camera_movement": {
+      "type": "Static wide to macro close-up",
+      "description": "Static wide of a kitchen in dusk light, then slow push to a woman's hand on the cutting board, blood drop falling"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Wide kitchen, woman's back to camera, chopping" },
+      { "time": "00:05-00:10", "action": "Chop stops, hand still, a drop of blood falls on board" },
+      { "time": "00:10-00:14", "action": "Macro of the still hand, she stares out the window" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Wide dusk-lit kitchen, a woman's back facing camera at a counter, knife mid-chop",
+      "end_frame": "Macro close-up of a still hand on a cutting board, a single blood drop, window light beyond"
+    },
+    "acting_micro_expressions": {
+      "facial": "Not visible; tension conveyed through stillness of the hand",
+      "body_language": "Frozen posture, shoulders motionless, no flinch"
+    },
+    "environmental_physics": {
+      "particles": "Dusk dust motes in window light, faint steam",
+      "fluid_and_fabric": "Blood drop forming and falling, apron fabric still"
+    },
+    "transition_to_next": {
+      "visual_cut": "Hard cut from blood drop to a pitch-dark storage room",
+      "audio_bridge": "L-Cut: a child's heartbeat rises in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Mother",
+        "appearance": "East Asian woman, 30s, dark hair tied back, weary profile",
+        "outfit": "Faded apron over simple dress"
+      },
+      "environment": {
+        "location": "Modest home kitchen at dusk",
+        "lighting": "Orange dusk window light, long shadows",
+        "key_elements": "Cutting board, knife, kitchen window"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, painful nostalgic mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, painful nostalgic mood, shallow depth of field. [Scene & Environment] Modest home kitchen at dusk with orange window light and long shadows, cutting board and knife on counter. [Subject] East Asian woman in her 30s, faded apron, back to camera then macro close-up of her still hand with a single blood drop. [Shot & Action] Static wide shot slowly pushing to macro close-up of the frozen hand."
+    }
+  },
+  {
+    "segment_id": "13",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "他十歲那年 在學校被同學鎖在儲藏室裡 黑暗裡他聽見自己的心跳 像有人在敲一面很小的鼓",
+      "tone": "Tense, claustrophobic, hushed as if inside the dark"
+    },
+    "sound_effects": [
+      {
+        "category": "SFX",
+        "name": "Heartbeat in Darkness",
+        "description": "Close, amplified heartbeat, muffled door thuds, tight breathing",
+        "timing": "00:00 to 00:13"
+      }
+    ],
+    "camera_movement": {
+      "type": "Handheld claustrophobic push-in",
+      "description": "Near-black frame with a sliver of light under a door; handheld camera creeps toward it, breathing audible"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Near-black frame, sliver of light under door" },
+      { "time": "00:04-00:09", "action": "Handheld push toward the light, heartbeat rising" },
+      { "time": "00:09-00:13", "action": "Extreme close-up of the light line, a small hand pressed to door" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Almost black frame with a thin line of light under a storage room door",
+      "end_frame": "Extreme close-up of a small child's hand pressed against the lit door seam"
+    },
+    "acting_micro_expressions": {
+      "facial": "Not visible; fear conveyed by breath and hand tremor",
+      "body_language": "Small hand pressed flat, fingers trembling"
+    },
+    "environmental_physics": {
+      "particles": "Dust in the thin light seam, faint dust falling from ceiling",
+      "fluid_and_fabric": "Breath fog near the door, sleeve fabric trembling"
+    },
+    "transition_to_next": {
+      "visual_cut": "Hard cut to a bright school gate in daylight",
+      "audio_bridge": "J-Cut: distant schoolyard noise fades in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Young Lin Mo",
+        "appearance": "East Asian boy, age 10, short black hair, thin frame",
+        "outfit": "School uniform, slightly dusty"
+      },
+      "environment": {
+        "location": "Dark school storage room",
+        "lighting": "Near-total darkness, thin door light seam",
+        "key_elements": "Storage door, sliver of light, dusty floor"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, claustrophobic tense mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, claustrophobic tense mood, shallow depth of field. [Scene & Environment] Near-total darkness of a school storage room with a thin sliver of light under the door. [Subject] East Asian boy age 10, short black hair, school uniform, small trembling hand pressed to the lit door seam. [Shot & Action] Handheld claustrophobic push-in from near-black frame to extreme close-up of the hand."
+    }
+  },
+  {
+    "segment_id": "14",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "他十五歲那年 第一次喜歡一個人 那個女生轉學離開 他站在校門口 看著她的背影消失在巷口 然後回家寫了一篇沒人看的日記",
+      "tone": "Soft, wistful, a fading cadence on the final phrase"
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "School Gate Afternoon",
+        "description": "Distant schoolyard chatter fading, footsteps receding, wind in trees",
+        "timing": "00:00 to 00:13"
+      }
+    ],
+    "camera_movement": {
+      "type": "Static long shot with slow push",
+      "description": "Long shot of a teenage boy at a school gate, a girl's back receding down an alley; camera slowly pushes toward the boy"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Long shot, girl's back walking away down alley" },
+      { "time": "00:04-00:09", "action": "Boy stands still at gate, hands at sides" },
+      { "time": "00:09-00:13", "action": "Push to close-up of his face, eyes lowered" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Long shot of a school gate, a girl's silhouette receding down a narrow alley",
+      "end_frame": "Close-up of a teenage boy's face, eyes lowered, afternoon light on his cheek"
+    },
+    "acting_micro_expressions": {
+      "facial": "Eyes lowered, jaw tight, a faint swallow",
+      "body_language": "Still posture, fists loose at his sides"
+    },
+    "environmental_physics": {
+      "particles": "Afternoon dust in golden light, leaves drifting",
+      "fluid_and_fabric": "Uniform shirt stirring in wind, hair shifting"
+    },
+    "transition_to_next": {
+      "visual_cut": "Dissolve from his face to a diary page under lamplight",
+      "audio_bridge": "L-Cut: pen scratching on paper fades in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Teen Lin Mo",
+        "appearance": "East Asian boy, age 15, short black hair, thin frame, solemn eyes",
+        "outfit": "White school shirt, dark trousers"
+      },
+      "environment": {
+        "location": "School gate and narrow alley",
+        "lighting": "Warm golden afternoon light, long shadows",
+        "key_elements": "School gate, alley, trees"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, wistful melancholic mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, wistful melancholic mood, shallow depth of field. [Scene & Environment] School gate and narrow alley in warm golden afternoon light, long shadows, trees. [Subject] East Asian boy age 15, short black hair, white school shirt, standing still with lowered eyes as a girl's silhouette recedes. [Shot & Action] Static long shot slowly pushing to close-up of his face."
+    }
+  },
+  {
+    "segment_id": "15",
+    "estimated_duration_seconds": 12,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "這些東西 他從來沒有跟任何人說過 第二個月 他寫愛情",
+      "tone": "Quiet confession, then a slight lift of hope on the final phrase"
+    },
+    "sound_effects": [
+      {
+        "category": "Foley",
+        "name": "Pen on Paper",
+        "description": "Soft pen scratching on a diary page, gentle page turn",
+        "timing": "00:00 to 00:12"
+      }
+    ],
+    "camera_movement": {
+      "type": "Top-down macro to slow tilt",
+      "description": "Top-down macro of a handwritten diary page, then tilt up to Lin Mo's face lit by a desk lamp"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Top-down macro of handwriting filling a page" },
+      { "time": "00:04-00:08", "action": "Tilt up along the desk lamp light to his face" },
+      { "time": "00:08-00:12", "action": "His eyes lift slightly, a new thought forming" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Top-down macro of a handwritten diary page under warm lamplight",
+      "end_frame": "Medium close-up of Lin Mo's face lit by desk lamp, eyes lifting with faint hope"
+    },
+    "acting_micro_expressions": {
+      "facial": "Brow relaxes, eyes lift, lips part slightly",
+      "body_language": "Hand rests on pen, shoulders easing from tension"
+    },
+    "environmental_physics": {
+      "particles": "Lamp dust motes, faint paper fiber shimmer",
+      "fluid_and_fabric": "Sleeve fabric shifting with the tilt, breath subtle"
+    },
+    "transition_to_next": {
+      "visual_cut": "Match cut from diary page to a library reading room",
+      "audio_bridge": "J-Cut: soft library ambience fades in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo",
+        "appearance": "East Asian male, early 30s, messy black hair, tired dark eyes",
+        "outfit": "Grey hoodie"
+      },
+      "environment": {
+        "location": "Cluttered apartment workspace at night",
+        "lighting": "Warm desk lamp, dim room",
+        "key_elements": "Handwritten diary, pen, desk lamp"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, intimate confessional mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, intimate confessional mood, shallow depth of field. [Scene & Environment] Cluttered apartment workspace at night under a warm desk lamp. [Subject] East Asian man early 30s, messy black hair, grey hoodie, hand on pen over a handwritten diary, eyes lifting with faint hope. [Shot & Action] Top-down macro of the diary page tilting up to a medium close-up of his face."
+    }
+  },
+  {
+    "segment_id": "16",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "他寫蘇晚在圖書館角落看書的側臉 寫她偶爾抬頭時眼睛裡那種淡薄的光 寫他每次走進閱覽室時胸口那種沉悶的 像是溺水前的緊繃感",
+      "tone": "Tender and breathless, tightening on the drowning metaphor"
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Library Hush",
+        "description": "Deep quiet reading room tone, faint distant page turns",
+        "timing": "00:00 to 00:14"
+      },
+      {
+        "category": "SFX",
+        "name": "Muffled Heartbeat",
+        "description": "Low internal heartbeat rising subtly under the ambience",
+        "timing": "00:08 to 00:14"
+      }
+    ],
+    "camera_movement": {
+      "type": "Slow dolly through reading room",
+      "description": "Camera glides through the reading room toward Su Wan's corner, settling on her profile as she looks up"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Dolly through aisles toward the corner" },
+      { "time": "00:05-00:10", "action": "Su Wan's profile in window light, she looks up" },
+      { "time": "00:10-00:14", "action": "Close-up of her eyes, thin cool light in them" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Dolly view through library aisles toward a sunlit corner",
+      "end_frame": "Close-up of Su Wan's eyes lifting from a book, thin window light reflected"
+    },
+    "acting_micro_expressions": {
+      "facial": "Su Wan: calm brow, eyes lifting slowly, lips neutral",
+      "body_language": "Head tilting up from the page, hand pausing on the book"
+    },
+    "environmental_physics": {
+      "particles": "Dust motes in window beams, soft light scattering",
+      "fluid_and_fabric": "Hair strand drifting, sweater folds shifting"
+    },
+    "transition_to_next": {
+      "visual_cut": "Match cut from her eyes to Lin Mo's eyes in the reading room",
+      "audio_bridge": "L-Cut: a low tense string sustains into the next shot"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Su Wan",
+        "appearance": "East Asian female, late 20s, long dark hair, calm gentle face",
+        "outfit": "Cream knit sweater"
+      },
+      "environment": {
+        "location": "Old library reading room",
+        "lighting": "Warm window backlight with thin cool highlights",
+        "key_elements": "Bookshelves, reading tables, yellowed book"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, tender aching mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, tender aching mood, shallow depth of field. [Scene & Environment] Old library reading room with warm window backlight and dust beams through aisles. [Subject] East Asian woman late 20s, long dark hair, cream knit sweater, looking up from a book with thin cool light in her eyes. [Shot & Action] Slow dolly through the reading room settling into a close-up of her lifting eyes."
+    }
+  },
+  {
+    "segment_id": "17",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "他寫他們之間那些短暫的對話 每一句都像石頭投進水裡 他記得每一個漣漪",
+      "tone": "Soft, reverent, lingering on the ripple image"
+    },
+    "sound_effects": [
+      {
+        "category": "SFX",
+        "name": "Stone into Water",
+        "description": "A single stone plop into still water, ripples spreading with a soft resonant tone",
+        "timing": "00:00 to 00:13"
+      }
+    ],
+    "camera_movement": {
+      "type": "Macro water surface with slow pull-back",
+      "description": "Macro of a stone hitting still water, ripples expanding; pull back to reveal the reflection of a library window on the surface"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Macro of a stone striking still water, ripple begins" },
+      { "time": "00:04-00:09", "action": "Ripples expand, distorting a reflected window" },
+      { "time": "00:09-00:13", "action": "Pull back, reflection settles back to calm" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Macro of a stone breaking the surface of still dark water, first ripple ring",
+      "end_frame": "Wide macro of calm water reflecting a warm library window, faint residual ripples"
+    },
+    "acting_micro_expressions": {
+      "facial": "None; emotion carried by water metaphor",
+      "body_language": "None; stillness after impact"
+    },
+    "environmental_physics": {
+      "particles": "Water droplets scattering upward, fine mist",
+      "fluid_and_fabric": "Concentric ripples, reflected light wavering on the surface"
+    },
+    "transition_to_next": {
+      "visual_cut": "Dissolve from water reflection to a night sky over a coastal town",
+      "audio_bridge": "J-Cut: distant waves fade in early"
+    },
+    "consistency_anchors": {
+      "character": { "name": "None", "appearance": "None", "outfit": "None" },
+      "environment": {
+        "location": "Still water surface reflecting a library window",
+        "lighting": "Warm reflected window light on dark water",
+        "key_elements": "Stone, ripples, reflected window"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, macro shallow depth of field, poetic tender mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, poetic tender macro mood, shallow depth of field. [Scene & Environment] Still dark water surface reflecting a warm library window. [Subject] A stone striking the water, concentric ripples distorting the reflection. [Shot & Action] Macro of the impact slowly pulling back to a wide macro of calming water and reflected light."
+    }
+  },
+  {
+    "segment_id": "18",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "第三個月 他寫未來 他寫一個沒有發生的未來 他們住在一個靠海的小鎮 每天早上一起去買麵包",
+      "tone": "Dreamy, warm, a gentle lift as if entering a fantasy"
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Seaside Morning",
+        "description": "Distant gentle waves, seagulls, soft morning street bustle",
+        "timing": "00:00 to 00:14"
+      }
+    ],
+    "camera_movement": {
+      "type": "Aerial descending to street level",
+      "description": "Aerial of a small coastal town in morning light, descending to a quiet street where a bakery glows warm"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Aerial over coastal town, sea shimmering" },
+      { "time": "00:05-00:10", "action": "Descend toward a narrow street, bakery sign glowing" },
+      { "time": "00:10-00:14", "action": "Settle at street level, warm bakery window in focus" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Aerial view of a small coastal town at morning, sea shimmering beyond rooftops",
+      "end_frame": "Street-level view of a warm bakery window on a quiet coastal street"
+    },
+    "acting_micro_expressions": {
+      "facial": "None; fantasy space before characters appear",
+      "body_language": "None; environmental warmth"
+    },
+    "environmental_physics": {
+      "particles": "Sea mist, morning light scattering, drifting salt haze",
+      "fluid_and_fabric": "Waves rolling, laundry stirring on lines"
+    },
+    "transition_to_next": {
+      "visual_cut": "Match cut from bakery window to a couple walking inside",
+      "audio_bridge": "L-Cut: a soft bell over the bakery door rings in"
+    },
+    "consistency_anchors": {
+      "character": { "name": "None", "appearance": "None", "outfit": "None" },
+      "environment": {
+        "location": "Small coastal town street with a bakery",
+        "lighting": "Warm morning sunlight, sea haze, golden tones",
+        "key_elements": "Bakery window, narrow street, sea beyond rooftops"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, dreamy warm mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, dreamy warm mood, shallow depth of field. [Scene & Environment] Small coastal town at morning, sea shimmering beyond rooftops, narrow street with a warm glowing bakery. [Subject] No characters yet, the fantasy space itself. [Shot & Action] Aerial descending from the sea to street level settling on the bakery window."
+    }
+  },
+  {
+    "segment_id": "19",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "他會幫她擦掉嘴角的麵包屑 她會笑著說你很煩 這個未來沒有任何依據 完全是他一個人的妄想",
+      "tone": "Warm and playful, then cooling into quiet sadness on the final line"
+    },
+    "sound_effects": [
+      {
+        "category": "Foley",
+        "name": "Bakery Bag Rustle",
+        "description": "Paper bag crinkle, soft laughter, gentle morning street ambience",
+        "timing": "00:00 to 00:13"
+      }
+    ],
+    "camera_movement": {
+      "type": "Medium two-shot to slow push-in",
+      "description": "Medium two-shot of a man and woman walking from the bakery, he brushes her lip, she laughs; push to close-up of her smile, then pull to reveal only him alone"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Two-shot walking out of bakery, paper bag in hand" },
+      { "time": "00:04-00:09", "action": "He brushes a crumb from her lip, she laughs" },
+      { "time": "00:09-00:13", "action": "Pull back: the woman fades, only he remains" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Medium two-shot of a man and woman walking out of a bakery in morning light, paper bag in hand",
+      "end_frame": "Wide shot of the man alone on the street, the woman's figure dissolving into light"
+    },
+    "acting_micro_expressions": {
+      "facial": "Woman: bright laugh, eyes crinkling; Man: soft shy smile",
+      "body_language": "Gentle reach to her lip, her head tilting with laughter, then his hand lowering alone"
+    },
+    "environmental_physics": {
+      "particles": "Morning dust in warm light, faint flour motes from the bakery",
+      "fluid_and_fabric": "Bag crinkling, hair stirring, clothing shifting with movement"
+    },
+    "transition_to_next": {
+      "visual_cut": "Dissolve from his lonely figure to a monitor rendering the film",
+      "audio_bridge": "J-Cut: a rendering hum fades in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo and Su Wan",
+        "appearance": "East Asian man early 30s and woman late 20s, warm morning light",
+        "outfit": "Man: light shirt; Woman: soft summer dress"
+      },
+      "environment": {
+        "location": "Coastal town bakery street",
+        "lighting": "Warm morning sunlight, golden haze",
+        "key_elements": "Bakery doorway, paper bag, narrow street"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, bittersweet fantasy mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, bittersweet fantasy mood, shallow depth of field. [Scene & Environment] Coastal town bakery street in warm golden morning light. [Subject] East Asian man early 30s in light shirt brushing a crumb from an East Asian woman late 20s in a summer dress, she laughs, then she dissolves leaving him alone. [Shot & Action] Medium two-shot slowly pushing in on her smile then pulling back to reveal him alone."
+    }
+  },
+  {
+    "segment_id": "20",
+    "estimated_duration_seconds": 12,
+    "voiceover": {
+      "type": "narrator",
+      "speaker": "Narrator",
+      "text": "他把這些東西 全部塞進提示詞裡 然後交給AI去生成 生成了八十七分鐘",
+      "tone": "Quietly awed, a suspended breath on the final number"
+    },
+    "sound_effects": [
+      {
+        "category": "SFX",
+        "name": "Render Completion Tone",
+        "description": "A rising synthetic render hum resolving into a soft chime, then silence",
+        "timing": "00:00 to 00:12"
+      }
+    ],
+    "camera_movement": {
+      "type": "Screen macro to slow pull-back",
+      "description": "Macro of a progress bar filling to 100%, a title card appearing; pull back to reveal Lin Mo's face lit by the screen"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Macro of a progress bar racing to 100 percent" },
+      { "time": "00:04-00:08", "action": "Title card appears: 87 minutes, soft glow" },
+      { "time": "00:08-00:12", "action": "Pull back to Lin Mo's face, screen light on his eyes" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Macro of a digital progress bar at 100 percent, soft blue glow",
+      "end_frame": "Medium close-up of Lin Mo's face lit by the screen, a title card glowing in reflection"
+    },
+    "acting_micro_expressions": {
+      "facial": "Eyes wide and still, lips parted, faint disbelief",
+      "body_language": "Shoulders frozen, hands resting motionless on the desk"
+    },
+    "environmental_physics": {
+      "particles": "Screen glow particles, faint reflection on his pupils",
+      "fluid_and_fabric": "Hoodie fabric still, a slow breath shifting his chest"
+    },
+    "transition_to_next": {
+      "visual_cut": "Hard cut to a phone screen glowing in a dark room",
+      "audio_bridge": "L-Cut: a phone notification hum leads in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo",
+        "appearance": "East Asian male, early 30s, messy black hair, tired dark eyes",
+        "outfit": "Grey hoodie"
+      },
+      "environment": {
+        "location": "Cluttered apartment workspace at night",
+        "lighting": "Cool screen glow, dim room",
+        "key_elements": "Render progress bar, title card, monitor"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, quiet awe mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, quiet awe mood, shallow depth of field. [Scene & Environment] Cluttered apartment workspace at night with cool screen glow. [Subject] East Asian man early 30s, messy black hair, grey hoodie, face lit by screen with wide still eyes. [Shot & Action] Macro of a render progress bar at 100 percent pulling back to a medium close-up of his face reflecting a glowing title card."
+    }
+  }
+]

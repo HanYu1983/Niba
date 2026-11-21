@@ -1,0 +1,275 @@
+[
+  {
+    "segment_id": "01",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "凌晨兩點的街角投幣洗衣間 慘白的日光燈管發出微弱嗡鳴",
+          "tone": "Quiet, late-night slice-of-life narration, gentle pacing"
+        },
+        {
+          "speaker": "22-year-old East Asian female, long black hair in a messy high bun, bright playful dimples, white cropped graphic tee, faded denim overalls, canvas sneakers",
+          "type": "dialogue_spoken",
+          "text": "啊 抱歉 吵醒你了嗎",
+          "tone": "Apologetic yet cheerful, soft hushed voice"
+        },
+        {
+          "speaker": "22-year-old East Asian female, shoulder-length chestnut brown hair with loose bangs, sleepy gentle eyes, oversized pastel yellow knit sweater, light blue denim shorts, white crew socks",
+          "type": "dialogue_spoken",
+          "text": "沒事 我本來也快睡著了",
+          "tone": "Sleepy, warm, polite gentle laugh"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Atmosphere / Ambience",
+        "name": "Late Night Laundromat Hum",
+        "description": "Low fluorescent light tube buzz paired with steady rhythmic tumbling of distant washing machines.",
+        "timing": "00:00 to 00:13"
+      },
+      {
+        "category": "Foley / Door",
+        "name": "Glass Door Chime Bell",
+        "description": "Crisp metallic shop bell jingling gently as the glass door swings open into the quiet room.",
+        "timing": "00:04 to 00:06"
+      },
+      {
+        "category": "Foley / Action",
+        "name": "Heavy Laundry Bag Thud",
+        "description": "Soft rustling of fabric and a muted thud as a large canvas laundry bag is set down on tiled floor.",
+        "timing": "00:06 to 00:08"
+      }
+    ],
+    "camera_movement": {
+      "type": "Slow push-in to over-the-shoulder two-shot",
+      "description": "Starts with a wide establishing shot down the empty fluorescent-lit laundromat aisle where Chloe dozes on a bench, slowly pushing in as the glass door opens behind her, cutting to a warm medium two-shot as Chloe blinks awake and exchanges an awkward, friendly smile with Mia."
+    },
+    "beat_timeline": [
+      {
+        "time": "00:00-00:04",
+        "action": "Chloe sits hunched on a wooden bench hugging a plastic laundry basket, head nodding slightly in sleep"
+      },
+      {
+        "time": "00:04-00:09",
+        "action": "Mia pushes open the glass entrance door carrying a bulky canvas laundry bag; the door chime rings and Chloe startles awake"
+      },
+      {
+        "time": "00:09-00:13",
+        "action": "Both girls lock eyes across the aisle, pause awkwardly for a beat, then break into warm, polite smiles"
+      }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Medium wide shot inside a quiet late-night coin laundromat under cool fluorescent lights; Chloe sitting on a bench hugging a laundry basket with eyes closed dozing off",
+      "end_frame": "Medium two-shot of Chloe looking up from the bench with a sleepy gentle smile and Mia standing near the glass entrance holding a large laundry bag with a friendly apologetic grin"
+    },
+    "acting_micro_expressions": {
+      "facial": "Chloe's heavy eyelids flutter open in brief surprise before softening into a shy, warm smile; Mia raises her eyebrows apologetically with a bright dimpled grin",
+      "body_language": "Chloe straightens her slumped posture defensively around her basket; Mia shifts the heavy laundry bag onto one hip with a slight polite bow"
+    },
+    "environmental_physics": {
+      "particles": "Faint dust motes drifting under the cool overhead fluorescent tubes",
+      "fluid_and_fabric": "Loose strands of Chloe's chestnut hair shifting as she lifts her head; glass entrance door swinging back gently; canvas laundry bag wrinkling"
+    },
+    "transition_to_next": {
+      "visual_cut": "Whip pan right (rapidly panning across the row of machines directly toward the lone empty dryer at the end)",
+      "audio_bridge": "J-Cut (bring in the synchronized squeak of sneakers hurrying across the tiled floor 0.8 seconds before the cut)"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Chloe & Mia",
+        "appearance": "Chloe (22-year-old East Asian female, shoulder-length chestnut brown hair with loose bangs, sleepy gentle eyes); Mia (22-year-old East Asian female, long black hair in a messy high bun, bright playful dimples)",
+        "outfit": "Chloe wearing an oversized pastel yellow knit sweater, light blue denim shorts, and white crew socks; Mia wearing a white cropped graphic tee, faded denim overalls, and canvas sneakers"
+      },
+      "environment": {
+        "location": "Late-night neighborhood coin laundromat",
+        "lighting": "Interplay of stark cool white fluorescent ceiling lights and warm amber glow from dryer glass drums, quiet midnight atmosphere",
+        "key_elements": "Rows of stainless steel washing machines and dryers, wooden waiting bench, colorful plastic laundry baskets, tiled floor"
+      },
+      "art_style": "Cinematic slice-of-life film still, gritty yet cozy nocturnal realism, 8k resolution, photorealistic, shallow depth of field"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic slice-of-life film still, nocturnal realism, interplay of stark cool fluorescent ceiling lights and warm dryer amber glow, 8k resolution, photorealistic, shallow depth of field. [Scene & Environment] Empty late-night neighborhood coin laundromat with rows of stainless steel machines and tiled floor. [Subject] Two 22-year-old East Asian girls meeting at midnight: Chloe (shoulder-length chestnut hair, oversized pastel yellow knit sweater, denim shorts) sitting on a wooden bench hugging a plastic laundry basket after just waking up, exchanging an awkward friendly smile with Mia (messy black hair bun, white graphic tee, faded denim overalls) standing by the glass entrance holding a large laundry bag. [Shot & Action] Medium realistic composition, capturing their candid first encounter under quiet midnight lights."
+    }
+  },
+  {
+    "segment_id": "02",
+    "estimated_duration_seconds": 12,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "22-year-old East Asian female, shoulder-length chestnut brown hair with loose bangs, sleepy gentle eyes, oversized pastel yellow knit sweater, light blue denim shorts, white crew socks",
+          "type": "dialogue_spoken",
+          "text": "那個 這台烘衣機是我先看到的喔",
+          "tone": "Playfully stubborn, soft yet insistent"
+        },
+        {
+          "speaker": "22-year-old East Asian female, long black hair in a messy high bun, bright playful dimples, white cropped graphic tee, faded denim overalls, canvas sneakers",
+          "type": "dialogue_spoken",
+          "text": "可是我的手已經摸到門把了 要不我們一人一半",
+          "tone": "Cheeky, upbeat, bursting into laughter"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Foley / Action",
+        "name": "Dual Hand Slap on Metal Handle",
+        "description": "Simultaneous crisp thud of two hands grabbing a heavy chrome dryer door handle at the exact same millisecond.",
+        "timing": "00:02 to 00:04"
+      },
+      {
+        "category": "Foley / Footsteps",
+        "name": "Sneaker Squeak Halt",
+        "description": "Quick rubber sneaker squeaks stopping abruptly on linoleum tiles.",
+        "timing": "00:00 to 00:02"
+      },
+      {
+        "category": "Foley / Voice",
+        "name": "Overlapping Girls Laughter",
+        "description": "Synchronized burst of bright, lighthearted youthful giggles echoing slightly in the tiled room.",
+        "timing": "00:08 to 00:12"
+      }
+    ],
+    "camera_movement": {
+      "type": "Dynamic two-shot standoff to macro hand close-up",
+      "description": "Starts with a brisk medium tracking shot following both girls reaching the last empty dryer simultaneously, cuts to a tight close-up of their hands overlapping on the chrome handle, then pulls back to a lively medium two-shot as their three-second staredown breaks into laughter."
+    },
+    "beat_timeline": [
+      {
+        "time": "00:00-00:03",
+        "action": "Both Chloe and Mia step up to the last available dryer simultaneously, slapping their hands onto the same chrome door handle"
+      },
+      {
+        "time": "00:03-00:07",
+        "action": "Frozen in a comedic three-second standoff, Chloe clutches her basket with her left arm while Mia grips her laundry bag with her right, staring intently at each other"
+      },
+      {
+        "time": "00:07-00:12",
+        "action": "The tension snaps; both burst out laughing simultaneously and nod in agreement to share the dryer"
+      }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Medium two-shot in front of the last empty stainless steel dryer; Chloe and Mia frozen side by side, both reaching out and grabbing the exact same dryer door handle while staring at each other in mock rivalry",
+      "end_frame": "Warm medium close-up two-shot of Chloe and Mia laughing heartily together in front of the dryer, hands still resting cooperatively on the handle"
+    },
+    "acting_micro_expressions": {
+      "facial": "Wide eyes and puffed cheeks in mock stubbornness during the staredown, quickly dissolving into crinkled eyes and wide, unguarded smiles",
+      "body_language": "Leaning forward in comedic deadlock—Chloe hugging her plastic basket tightly with one arm, Mia refusing to let go of her canvas bag—before relaxing their shoulders in laughter"
+    },
+    "environmental_physics": {
+      "particles": "Subtle air turbulence from their sudden stop stirring tiny lint fibers in the cool fluorescent light",
+      "fluid_and_fabric": "Oversized knit sweater sleeve bunching at Chloe's wrist; Mia's messy bun bobbing as she laughs"
+    },
+    "transition_to_next": {
+      "visual_cut": "Match cut on motion (cut from their hands opening the dryer door directly to their hands tossing colorful socks onto the bench)",
+      "audio_bridge": "L-Cut (carry their cheerful laughter 1 second over the start of the bench sorting scene)"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Chloe & Mia",
+        "appearance": "Chloe (22-year-old East Asian female, shoulder-length chestnut brown hair with loose bangs, sleepy gentle eyes); Mia (22-year-old East Asian female, long black hair in a messy high bun, bright playful dimples)",
+        "outfit": "Chloe wearing an oversized pastel yellow knit sweater, light blue denim shorts, and white crew socks; Mia wearing a white cropped graphic tee, faded denim overalls, and canvas sneakers"
+      },
+      "environment": {
+        "location": "In front of the last empty dryer in the late-night coin laundromat",
+        "lighting": "Stark cool overhead fluorescent light contrasting with warm amber glow from neighboring dryers",
+        "key_elements": "Stainless steel commercial dryer with glass door, plastic laundry basket, canvas laundry bag"
+      },
+      "art_style": "Cinematic slice-of-life film still, nocturnal realism, 8k resolution, photorealistic, shallow depth of field"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic slice-of-life film still, nocturnal realism, stark fluorescent lighting mixed with warm dryer glow, 8k resolution, photorealistic, shallow depth of field. [Scene & Environment] In front of the last empty commercial dryer in a late-night coin laundromat. [Subject] Chloe (chestnut hair, oversized pastel yellow knit sweater, denim shorts) hugging a plastic basket with her left arm, and Mia (messy black hair bun, white graphic tee, denim overalls) holding a canvas bag with her right hand, both reaching out simultaneously to grab the exact same chrome dryer handle, locked in a comedic staredown before bursting into laughter. [Shot & Action] Dynamic medium two-shot capturing their playful standoff and genuine laughter."
+    }
+  },
+  {
+    "segment_id": "03",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "22-year-old East Asian female, long black hair in a messy high bun, bright playful dimples, white cropped graphic tee, faded denim overalls, canvas sneakers",
+          "type": "dialogue_spoken",
+          "text": "奇怪 為什麼我的襪子永遠只剩單隻",
+          "tone": "Puzzled, comedic exaggeration, holding socks up"
+        },
+        {
+          "speaker": "22-year-old East Asian female, shoulder-length chestnut brown hair with loose bangs, sleepy gentle eyes, oversized pastel yellow knit sweater, light blue denim shorts, white crew socks",
+          "type": "dialogue_spoken",
+          "text": "哈哈 你看 你的另一隻跑到我籃子裡啦",
+          "tone": "Delighted, triumphant, bright celebratory laugh"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Foley / Fabric",
+        "name": "Soft Clothes Rustling",
+        "description": "Crisp, cozy rustling of freshly washed cotton garments being sorted on a wooden bench.",
+        "timing": "00:00 to 00:06"
+      },
+      {
+        "category": "Foley / Action",
+        "name": "Crisp High-Five Clap",
+        "description": "Bright, sharp skin-on-skin high-five slap resonating playfully in the quiet laundromat.",
+        "timing": "00:08 to 00:10"
+      }
+    ],
+    "camera_movement": {
+      "type": "Eye-level bench medium shot with upward tilt",
+      "description": "Starts at an eye-level medium shot of both girls sitting side by side on the wooden bench sorting laundry, panning slightly as Chloe pulls out a matching sock, then tilting upward to capture their celebratory high-five as mismatched socks flutter in mid-air."
+    },
+    "beat_timeline": [
+      {
+        "time": "00:00-00:05",
+        "action": "Seated side by side on the bench, Mia holds up two completely mismatched patterned socks with a baffled expression"
+      },
+      {
+        "time": "00:05-00:09",
+        "action": "Chloe rummages through her own basket, triumphantly pulls out the exact matching striped sock, and holds it next to Mia's"
+      },
+      {
+        "time": "00:09-00:13",
+        "action": "Both girls execute an enthusiastic high-five while tossing their other colorful socks playfully into the air"
+      }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Medium shot of Mia and Chloe sitting side by side on a wooden laundromat bench surrounded by baskets; Mia holding up two mismatched socks in confusion under fluorescent lights",
+      "end_frame": "Dynamic medium shot capturing Chloe and Mia giving each other an energetic high-five on the bench with colorful cotton socks frozen mid-air around them"
+    },
+    "acting_micro_expressions": {
+      "facial": "Mia's brow furrows in comical confusion before lighting up in amazement; Chloe beams proudly with sparkling eyes and an open joyful smile",
+      "body_language": "Leaning toward each other over the pile of clothes, arms raised high in celebratory synergy"
+    },
+    "environmental_physics": {
+      "particles": "Tiny cotton lint particles catching the overhead fluorescent light as clothes are shaken out",
+      "fluid_and_fabric": "Colorful striped and polka-dot cotton socks tumbling weightlessly in mid-air with natural fabric creases"
+    },
+    "transition_to_next": {
+      "visual_cut": "Smash cut (cut abruptly from floating socks directly to overflowing white soap suds spilling onto the floor)",
+      "audio_bridge": "J-Cut (introduce the frantic glugging sound of liquid detergent pouring too fast 0.5 seconds before the cut)"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Chloe & Mia",
+        "appearance": "Chloe (22-year-old East Asian female, shoulder-length chestnut brown hair with loose bangs, sleepy gentle eyes); Mia (22-year-old East Asian female, long black hair in a messy high bun, bright playful dimples)",
+        "outfit": "Chloe wearing an oversized pastel yellow knit sweater, light blue denim shorts, and white crew socks; Mia wearing a white cropped graphic tee, faded denim overalls, and canvas sneakers"
+      },
+      "environment": {
+        "location": "Wooden waiting bench in the late-night coin laundromat",
+        "lighting": "Bright overhead cool fluorescent lights illuminating colorful laundry",
+        "key_elements": "Wooden bench, plastic laundry baskets, scattered single patterned socks"
+      },
+      "art_style": "Cinematic slice-of-life film still, nocturnal realism, 8k resolution, photorealistic, shallow depth of field"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic slice-of-life film still, nocturnal realism, bright cool fluorescent lights, candid playful energy, 8k resolution, photorealistic, shallow depth of field. [Scene & Environment] Wooden waiting bench inside a late-night coin laundromat surrounded by laundry baskets. [Subject] Mia (messy black bun, denim overalls) and Chloe (chestnut hair, pastel yellow sweater, denim shorts) sitting side by side; Mia holds up a patterned sock while Chloe pulls its matching twin from her basket, both girls celebrating with a joyful high-five as socks fly through the air. [Shot & Action] Dynamic medium shot freezing the airborne socks and their bright, victorious expressions."
+    }
+  }
+]

@@ -1,0 +1,658 @@
+[
+  {
+    "segment_id": "01",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "這個世界不缺電影 根據統計 全球影音平台每天新增的影片數量 換算成觀看時數 大約是整個人類文明史總和的四千倍",
+          "tone": "Calm documentary-style narration, measured and slightly detached"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Digital City Hum",
+        "description": "Low continuous electronic hum of an over-saturated media world, distant data stream crackle",
+        "timing": "00:00 to 00:13"
+      }
+    ],
+    "camera_movement": {
+      "type": "Slow orbital push-in",
+      "description": "Camera drifts through a dark server room of glowing screens, reflections of countless video thumbnails scrolling across glass panels"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Darkness, faint screen glow emerging from left" },
+      { "time": "00:05-00:09", "action": "Camera glides past rows of flickering video thumbnails" },
+      { "time": "00:09-00:13", "action": "Push toward a single dim empty screen at the end of the hall" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Pitch-black frame with a faint blue glow creeping in from the left edge",
+      "end_frame": "A lone dark monitor at the end of a corridor of glowing screens, centered composition"
+    },
+    "acting_micro_expressions": {
+      "facial": "No human face; abstract atmospheric tension",
+      "body_language": "None; environmental stillness with subtle light pulses"
+    },
+    "environmental_physics": {
+      "particles": "Floating dust motes catching screen light, faint digital glitch sparks",
+      "fluid_and_fabric": "Slow drifting haze, screen reflection shimmer on glass surfaces"
+    },
+    "transition_to_next": {
+      "visual_cut": "Fade through black into a warm kitchen interior",
+      "audio_bridge": "J-Cut: kitchen ambience fades in 1s early"
+    },
+    "consistency_anchors": {
+      "character": { "name": "None", "appearance": "None", "outfit": "None" },
+      "environment": {
+        "location": "Dark server corridor of media platform",
+        "lighting": "Cold blue screen glow, low-key volumetric haze",
+        "key_elements": "Rows of flickering video thumbnails, glass panels"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, melancholic sci-fi mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, melancholic sci-fi, shallow depth of field. [Scene & Environment] A dark server corridor lined with glowing screens showing countless video thumbnails, cold blue volumetric haze. [Subject] No human subject, a lone empty monitor at the corridor end. [Shot & Action] Slow orbital push-in, wide-to-medium framing, drifting dust motes."
+    }
+  },
+  {
+    "segment_id": "02",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "好萊塢等級的特效 奧斯卡水準的配樂 諾貝爾文學獎等級的劇本 這些東西在兩百年前需要數百人耗費數年才能完成",
+          "tone": "Crisp, historical, building momentum"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Archive Room Tone",
+        "description": "Soft paper rustle and old film projector click, fading into digital hum",
+        "timing": "00:00 to 00:13"
+      }
+    ],
+    "camera_movement": {
+      "type": "Cross-dissolve montage",
+      "description": "Dissolve from old film reels and crowded soundstages to a single person speaking to empty air, a finished film materializing"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Old film reels and busy soundstage, hundreds of workers" },
+      { "time": "00:04-00:09", "action": "Dissolve to one man speaking to empty air" },
+      { "time": "00:09-00:13", "action": "Holographic film frames bloom and resolve" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Sepia-toned soundstage with crowds of workers and film reels",
+      "end_frame": "A single man in a dim room facing blooming holographic film frames"
+    },
+    "acting_micro_expressions": {
+      "facial": "Workers blurred; lone man relaxed and bored",
+      "body_language": "Crowd bustle dissolving into one loose casual gesture"
+    },
+    "environmental_physics": {
+      "particles": "Film dust and reel sparks dissolving into holographic light particles",
+      "fluid_and_fabric": "Old curtains and costumes dissolving into modern loose shirt"
+    },
+    "transition_to_next": {
+      "visual_cut": "Whip pan from hologram to a crowded platform homepage",
+      "audio_bridge": "L-Cut: narrator voice carries over ambient swell"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Unnamed Man",
+        "appearance": "East Asian male, late 20s, short black hair, tired eyes",
+        "outfit": "Plain grey t-shirt"
+      },
+      "environment": {
+        "location": "Transition from old soundstage to minimalist apartment",
+        "lighting": "Warm sepia dissolving to cool hologram glow",
+        "key_elements": "Film reels, holographic UI panels"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, historical-to-future mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, historical-to-future mood, shallow depth of field. [Scene & Environment] Cross-dissolve from a sepia old soundstage with film reels to a dim minimalist apartment with blooming holographic UI. [Subject] Crowds of old workers dissolving into one East Asian man late 20s in a plain grey t-shirt speaking casually. [Shot & Action] Cross-dissolve montage of the soundstage resolving into holographic film frames around the lone man."
+    }
+  },
+  {
+    "segment_id": "03",
+    "estimated_duration_seconds": 12,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "如今只需要眨兩次眼 或對著空氣說一句話 三分鐘後就能生成一部九十分鐘的成品 品質 無可挑剔",
+          "tone": "Dry, ironic, a slight shrug on the final phrase"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "SFX",
+        "name": "Voice Command and Render",
+        "description": "Soft synthetic confirmation tone, rapid rendering whoosh, then a completion chime",
+        "timing": "00:00 to 00:12"
+      }
+    ],
+    "camera_movement": {
+      "type": "Rapid cross-cutting",
+      "description": "Fast cuts between a man blinking, speaking to air, a progress bar racing, and a polished film poster snapping into place"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Man blinks twice, lips move silently" },
+      { "time": "00:04-00:08", "action": "Progress bar races across a holographic panel" },
+      { "time": "00:08-00:12", "action": "Finished film cover snaps into place" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Close-up of a man's eyes blinking twice in dim light",
+      "end_frame": "A finished holographic film poster glowing above his palm"
+    },
+    "acting_micro_expressions": {
+      "facial": "Relaxed jaw, eyes half-lidded with casual boredom",
+      "body_language": "Loose posture, one hand lazily gesturing at the air"
+    },
+    "environmental_physics": {
+      "particles": "Holographic light particles scattering from the interface",
+      "fluid_and_fabric": "Loose shirt fabric shifting with a small breath"
+    },
+    "transition_to_next": {
+      "visual_cut": "Whip pan from hologram to a crowded platform homepage",
+      "audio_bridge": "L-Cut: narrator voice carries over the next ambient swell"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Unnamed Man",
+        "appearance": "East Asian male, late 20s, short black hair, tired eyes",
+        "outfit": "Plain grey t-shirt"
+      },
+      "environment": {
+        "location": "Minimalist apartment, holographic media interface",
+        "lighting": "Cool blue-white hologram glow against warm dim room",
+        "key_elements": "Floating UI panels, progress bar, film poster"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, near-future mundane sci-fi mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, near-future mundane sci-fi, shallow depth of field. [Scene & Environment] Minimalist dim apartment with floating holographic media interface. [Subject] East Asian man late 20s, short black hair, plain grey t-shirt, casual bored expression, blinking and gesturing. [Shot & Action] Rapid cross-cutting from his blinking eyes to a racing progress bar to a finished film poster snapping into place."
+    }
+  },
+  {
+    "segment_id": "04",
+    "estimated_duration_seconds": 12,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "每一部都燈光完美 運鏡流暢 情感飽滿 觀眾 幾乎沒有",
+          "tone": "Deadpan, with a deliberate pause before the final phrase"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Empty Theater Silence",
+        "description": "Vast hollow room tone with a faint projector click, no audience",
+        "timing": "00:00 to 00:12"
+      }
+    ],
+    "camera_movement": {
+      "type": "Static wide with slow tilt down",
+      "description": "Wide shot of an empty cinema, rows of vacant seats, screen glow washing over nothing"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Empty cinema, screen flickering with perfect imagery" },
+      { "time": "00:04-00:08", "action": "Camera tilts down across rows of empty seats" },
+      { "time": "00:08-00:12", "action": "Final frame: a single unoccupied seat in center" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Wide shot of a pristine empty cinema, screen glowing with a flawless romantic scene",
+      "end_frame": "Low-angle shot of a single empty red seat, screen light spilling across it"
+    },
+    "acting_micro_expressions": {
+      "facial": "None; absence emphasized",
+      "body_language": "None; stillness of empty chairs"
+    },
+    "environmental_physics": {
+      "particles": "Projector beam dust motes swirling in the light cone",
+      "fluid_and_fabric": "Curtain edges stirring faintly from ventilation"
+    },
+    "transition_to_next": {
+      "visual_cut": "Match cut from empty seat to a cluttered desk chair",
+      "audio_bridge": "J-Cut: keyboard clicking fades in early"
+    },
+    "consistency_anchors": {
+      "character": { "name": "None", "appearance": "None", "outfit": "None" },
+      "environment": {
+        "location": "Empty modern cinema",
+        "lighting": "Projector beam, cool screen glow, deep shadows in aisles",
+        "key_elements": "Red seats, blank screen, projector light cone"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, lonely atmospheric mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, lonely atmospheric mood, shallow depth of field. [Scene & Environment] Empty modern cinema with red seats and a glowing screen, projector beam cutting through haze. [Subject] No audience, a single empty seat centered. [Shot & Action] Static wide shot tilting down to low-angle close-up of the vacant seat."
+    }
+  },
+  {
+    "segment_id": "05",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "林默是這個世界裡一個標準的無名導演 他沒有作品 或者說 他有三萬七千部作品 散落在平台的某個角落 觀看次數加起來不到兩百次",
+          "tone": "Gentle, intimate, introducing the protagonist with quiet sympathy"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Cluttered Room Tone",
+        "description": "Soft hum of old electronics, faint ticking of a wall clock, paper rustle",
+        "timing": "00:00 to 00:14"
+      }
+    ],
+    "camera_movement": {
+      "type": "Slow dolly-in from behind",
+      "description": "Camera approaches from behind a man hunched over a desk, moving over his shoulder to reveal a wall of monitors showing tiny view counts"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Back of a man at a cluttered desk, monitors glowing" },
+      { "time": "00:05-00:10", "action": "Dolly reveals monitor wall, each showing near-zero views" },
+      { "time": "00:10-00:14", "action": "Close on his hand hovering over a mouse, still" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Over-the-shoulder shot of a man at a cluttered desk in a dim room, monitors glowing",
+      "end_frame": "Macro close-up of a hand frozen above a mouse, monitor light reflecting on skin"
+    },
+    "acting_micro_expressions": {
+      "facial": "Profile visible: tired eyes, slight frown, jaw tight",
+      "body_language": "Hunched shoulders, one hand hovering, other resting on knee"
+    },
+    "environmental_physics": {
+      "particles": "Dust motes in monitor glow, faint screen flicker",
+      "fluid_and_fabric": "Loose hoodie fabric bunched at elbows, slight breathing movement"
+    },
+    "transition_to_next": {
+      "visual_cut": "Slow dissolve to a library reading room",
+      "audio_bridge": "L-Cut: page-turning sound leads in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo",
+        "appearance": "East Asian male, early 30s, messy black hair, tired dark eyes, thin frame",
+        "outfit": "Grey hoodie, worn jeans"
+      },
+      "environment": {
+        "location": "Cluttered small apartment workspace",
+        "lighting": "Cool monitor glow, warm desk lamp, low-key",
+        "key_elements": "Wall of monitors, stacked notebooks, empty coffee cups"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, quiet melancholic mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, quiet melancholic mood, shallow depth of field. [Scene & Environment] Cluttered small apartment workspace with a wall of glowing monitors showing near-zero view counts, warm desk lamp and cool screen glow. [Subject] East Asian man early 30s, messy black hair, tired eyes, grey hoodie, hunched at desk. [Shot & Action] Slow dolly-in from behind over his shoulder to macro close-up of his hovering hand."
+    }
+  },
+  {
+    "segment_id": "06",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "他唯一與眾不同的是 他不擅長隨手生成 他喜歡調整 他會花一整個晚上修改提示詞 只為了讓某個角色的眼神多一點猶豫",
+          "tone": "Warm, admiring, slightly wistful"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Foley",
+        "name": "Keyboard and Mouse Clicks",
+        "description": "Rhythmic soft key taps and mouse clicks, intimate close perspective",
+        "timing": "00:00 to 00:14"
+      }
+    ],
+    "camera_movement": {
+      "type": "Macro close-up with rack focus",
+      "description": "Macro shots of fingers typing, screen text scrolling, rack focus from hand to the character's eyes on screen"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Macro of fingers typing prompt text rapidly" },
+      { "time": "00:05-00:10", "action": "Screen shows a character's face, cursor adjusting eye expression" },
+      { "time": "00:10-00:14", "action": "Rack focus from hand to screen eyes, a flicker of hesitation" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Macro close-up of fingers on a backlit keyboard, prompt text glowing on screen",
+      "end_frame": "Extreme close-up of a generated character's eyes on screen, subtle hesitation in the gaze"
+    },
+    "acting_micro_expressions": {
+      "facial": "Not visible; focus on hands and screen",
+      "body_language": "Fingers precise and deliberate, slight wrist tension"
+    },
+    "environmental_physics": {
+      "particles": "Screen glow particles, faint reflection on glasses",
+      "fluid_and_fabric": "Sleeve fabric shifting with typing motion"
+    },
+    "transition_to_next": {
+      "visual_cut": "Match cut from screen eyes to a woman's real eyes in a library",
+      "audio_bridge": "J-Cut: soft library ambience fades in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo",
+        "appearance": "East Asian male, early 30s, messy black hair, tired dark eyes",
+        "outfit": "Grey hoodie sleeve visible"
+      },
+      "environment": {
+        "location": "Cluttered apartment workspace at night",
+        "lighting": "Cool monitor glow, warm desk lamp",
+        "key_elements": "Backlit keyboard, prompt editor screen, generated character face"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, obsessive quiet mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, obsessive quiet mood, shallow depth of field. [Scene & Environment] Night apartment workspace, cool monitor glow and warm lamp, prompt editor on screen. [Subject] Close-up of East Asian man's hands typing, grey hoodie sleeve, screen showing a generated character's hesitant eyes. [Shot & Action] Macro close-up with rack focus from typing fingers to the character's eyes on screen."
+    }
+  },
+  {
+    "segment_id": "07",
+    "estimated_duration_seconds": 15,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "他會反覆調整腦波取樣 只為了讓某個場景的濕度剛好符合他記憶中的那個夏天",
+          "tone": "Tender, precise, a soft nostalgia in the cadence"
+        },
+        {
+          "speaker": "Friend",
+          "type": "dialogue_spoken",
+          "text": "你這樣跟以前那些手工剪膠卷的人有什麼區別",
+          "tone": "Light teasing laughter, affectionate but dismissive"
+        },
+        {
+          "speaker": "Lin Mo",
+          "type": "dialogue_spoken",
+          "text": "區別是他們有觀眾 我沒有",
+          "tone": "Dry, self-deprecating, a faint bitter smile underneath"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Cafe Murmur",
+        "description": "Distant chatter and cup clinks, warm but hollow",
+        "timing": "00:00 to 00:13"
+      }
+    ],
+    "camera_movement": {
+      "type": "Two-shot to slow push-in on Lin Mo",
+      "description": "Medium two-shot of Lin Mo and a friend at a cafe table, then slow push toward Lin Mo's face as he answers"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Friend laughs, gesturing dismissively" },
+      { "time": "00:04-00:08", "action": "Lin Mo looks down at his cup, faint smile" },
+      { "time": "00:08-00:15", "action": "Push-in on Lin Mo's eyes as he delivers the line" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Medium two-shot of two men at a cafe table, warm light, friend laughing",
+      "end_frame": "Close-up of Lin Mo's face, faint sad smile, eyes lowered"
+    },
+    "acting_micro_expressions": {
+      "facial": "Lin Mo: lips curve faintly, eyes avoid contact, brow relaxed but heavy",
+      "body_language": "Shoulders slightly slumped, fingers circling a cup rim"
+    },
+    "environmental_physics": {
+      "particles": "Steam rising from coffee cups, dust in window light",
+      "fluid_and_fabric": "Steam curling, jacket fabric shifting as he leans"
+    },
+    "transition_to_next": {
+      "visual_cut": "Slow dissolve from cup to a library window",
+      "audio_bridge": "L-Cut: library page turn leads in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Lin Mo",
+        "appearance": "East Asian male, early 30s, messy black hair, tired dark eyes",
+        "outfit": "Dark jacket over grey shirt"
+      },
+      "environment": {
+        "location": "Warm cafe interior",
+        "lighting": "Golden afternoon window light, soft shadows",
+        "key_elements": "Coffee cups, wooden table, blurred patrons"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, bittersweet mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, bittersweet mood, shallow depth of field. [Scene & Environment] Warm cafe interior with golden afternoon window light, wooden table and coffee cups. [Subject] East Asian man early 30s, messy black hair, dark jacket, faint sad smile, eyes lowered, sitting across from a blurred laughing friend. [Shot & Action] Medium two-shot slowly pushing in to close-up on his face."
+    }
+  },
+  {
+    "segment_id": "08",
+    "estimated_duration_seconds": 12,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "他沒有說出口的是 他其實只想給一個人看 那個人叫蘇晚",
+          "tone": "Soft, intimate whisper, tender pause on her name"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Library Quiet",
+        "description": "Hushed reading room tone, faint page turns, distant footsteps",
+        "timing": "00:00 to 00:12"
+      }
+    ],
+    "camera_movement": {
+      "type": "Slow reveal pan",
+      "description": "Camera pans from a stack of old books across a reading room to find a woman in the far corner, backlit by window"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Pan across dusty bookshelves and old paper" },
+      { "time": "00:04-00:08", "action": "Reveal a woman seated in the corner, head bowed over a book" },
+      { "time": "00:08-00:12", "action": "Settle on her silhouette against window light" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Close view of old yellowed book pages on a wooden shelf",
+      "end_frame": "Wide shot of a woman reading in a library corner, silhouetted by window light"
+    },
+    "acting_micro_expressions": {
+      "facial": "Profile only: calm, absorbed, faint brow focus",
+      "body_language": "Still posture, one hand resting on a page"
+    },
+    "environmental_physics": {
+      "particles": "Dust motes drifting in window light beams",
+      "fluid_and_fabric": "Curtain edge stirring, hair strands catching light"
+    },
+    "transition_to_next": {
+      "visual_cut": "Match cut from her profile to a close-up of her hand turning a page",
+      "audio_bridge": "J-Cut: page turn sound leads in"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Su Wan",
+        "appearance": "East Asian female, late 20s, long dark hair, calm gentle face",
+        "outfit": "Cream knit sweater"
+      },
+      "environment": {
+        "location": "Old library reading room corner",
+        "lighting": "Warm window backlight, soft dust-filled beams",
+        "key_elements": "Yellowed books, wooden shelves, window"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, tender nostalgic mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, tender nostalgic mood, shallow depth of field. [Scene & Environment] Old library reading room corner with wooden shelves, yellowed books, warm dust-filled window light. [Subject] East Asian woman late 20s, long dark hair, cream knit sweater, seated reading, calm absorbed profile. [Shot & Action] Slow reveal pan from dusty bookshelves to wide shot of her silhouetted in the corner."
+    }
+  },
+  {
+    "segment_id": "09",
+    "estimated_duration_seconds": 14,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "蘇晚是林默的大學同學 現在在一間圖書館工作 她話不多 喜歡在午休時間一個人坐在閱覽室最角落的位置 看那些紙頁發黃的舊書",
+          "tone": "Gentle, observant, affectionate in a restrained way"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Foley",
+        "name": "Page Turn and Clock Tick",
+        "description": "Soft page flip, distant wall clock ticking, quiet breathing",
+        "timing": "00:00 to 00:14"
+      }
+    ],
+    "camera_movement": {
+      "type": "Slow tracking shot",
+      "description": "Camera tracks laterally past empty reading tables toward the corner where Su Wan sits, settling into a medium shot"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:05", "action": "Lateral track past empty tables, soft afternoon light" },
+      { "time": "00:05-00:10", "action": "Su Wan turns a page, eyes scanning old text" },
+      { "time": "00:10-00:14", "action": "Settle on her still profile, breath visible in light" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Lateral view of empty reading tables in a sunlit library",
+      "end_frame": "Medium shot of Su Wan reading, old book in hand, soft window light on her face"
+    },
+    "acting_micro_expressions": {
+      "facial": "Eyes calm and focused, faint lip movement as she reads silently",
+      "body_language": "Relaxed shoulders, one hand supporting the book spine"
+    },
+    "environmental_physics": {
+      "particles": "Dust motes in sunbeams, faint paper fiber floating",
+      "fluid_and_fabric": "Sweater fabric soft folds, hair shifting slightly"
+    },
+    "transition_to_next": {
+      "visual_cut": "Cut to a close-up of the old book's yellowed page",
+      "audio_bridge": "L-Cut: her quiet voice recollection carries over"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Su Wan",
+        "appearance": "East Asian female, late 20s, long dark hair, calm gentle face",
+        "outfit": "Cream knit sweater"
+      },
+      "environment": {
+        "location": "Old library reading room",
+        "lighting": "Warm afternoon sunlight through tall windows",
+        "key_elements": "Old yellowed books, wooden reading tables, empty chairs"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, quiet tender mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, quiet tender mood, shallow depth of field. [Scene & Environment] Old library reading room with warm afternoon sunlight through tall windows, wooden tables, yellowed books. [Subject] East Asian woman late 20s, long dark hair, cream knit sweater, reading in the corner, calm profile. [Shot & Action] Slow lateral tracking shot past empty tables settling into a medium shot of her turning a page."
+    }
+  },
+  {
+    "segment_id": "10",
+    "estimated_duration_seconds": 13,
+    "voiceover": {
+      "type": "dialogue_spoken",
+      "dialogue_lines": [
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "林默有一次問她為什麼不看電子版",
+          "tone": "Casual, curious, gentle"
+        },
+        {
+          "speaker": "Su Wan",
+          "type": "dialogue_spoken",
+          "text": "電子版沒有味道",
+          "tone": "Soft, matter-of-fact, a faint warm smile in the voice"
+        },
+        {
+          "speaker": "Narrator",
+          "type": "narrator",
+          "text": "就是那句話 讓林默記了很多年",
+          "tone": "Warm recollection, lingering, almost a sigh"
+        }
+      ]
+    },
+    "sound_effects": [
+      {
+        "category": "Ambience",
+        "name": "Library Afternoon",
+        "description": "Soft hushed room tone with distant page rustle",
+        "timing": "00:00 to 00:13"
+      }
+    ],
+    "camera_movement": {
+      "type": "Over-the-shoulder to close-up",
+      "description": "Over Lin Mo's shoulder as he asks, then cut to close-up of Su Wan looking up from her book"
+    },
+    "beat_timeline": [
+      { "time": "00:00-00:04", "action": "Over Lin Mo's shoulder, Su Wan reading" },
+      { "time": "00:04-00:08", "action": "She looks up, faint smile, answers softly" },
+      { "time": "00:08-00:13", "action": "Close-up of her eyes returning to the page" }
+    ],
+    "keyframe_anchors": {
+      "start_frame": "Over-the-shoulder view of Su Wan reading, Lin Mo's shoulder in foreground",
+      "end_frame": "Close-up of Su Wan's eyes lowering back to the yellowed page, faint smile"
+    },
+    "acting_micro_expressions": {
+      "facial": "Su Wan: subtle smile, eyes warm then dropping; Lin Mo: still, attentive",
+      "body_language": "Su Wan tilts head slightly, hand resting on the book"
+    },
+    "environmental_physics": {
+      "particles": "Dust in window light, faint paper texture glimmer",
+      "fluid_and_fabric": "Hair strand falling forward as she tilts her head"
+    },
+    "transition_to_next": {
+      "visual_cut": "Dissolve from her eyes to night sky over the city",
+      "audio_bridge": "J-Cut: night ambience fades in early"
+    },
+    "consistency_anchors": {
+      "character": {
+        "name": "Su Wan",
+        "appearance": "East Asian female, late 20s, long dark hair, calm gentle face",
+        "outfit": "Cream knit sweater"
+      },
+      "environment": {
+        "location": "Old library reading room",
+        "lighting": "Warm afternoon sunlight, soft shadows",
+        "key_elements": "Old book, wooden table"
+      },
+      "art_style": "Cinematic film still, photorealistic 8k, shallow depth of field, warm nostalgic mood"
+    },
+    "image_generation_prompt": {
+      "english": "[Style & Mood] Cinematic photorealistic 8k, warm nostalgic mood, shallow depth of field. [Scene & Environment] Old library reading room in warm afternoon light, yellowed book on wooden table. [Subject] East Asian woman late 20s, long dark hair, cream knit sweater, looking up with a faint smile, Lin Mo's shoulder blurred in foreground. [Shot & Action] Over-the-shoulder framing cutting to close-up of her eyes returning to the page."
+    }
+  }
+]

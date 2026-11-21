@@ -560,12 +560,12 @@ function buildJob(segment, id, position) {
     segment_id: _segmentId,
     estimated_duration_seconds: _duration,
     image_generation_prompt: _imagePrompt,
-    //keyframe_anchors: _keyframeAnchors,
+    keyframe_anchors: _keyframeAnchors,
     //sound_effects: _sound_effects,
     //beat_timeline: _beat_timeline,
     acting_micro_expressions: _acting_micro_expressions,
     environmental_physics: _environmental_physics,
-    transition_to_next: _transition_to_next,
+    //transition_to_next: _transition_to_next,
     ...shot
   } = segment;
   const prompt = JSON.stringify(shot);

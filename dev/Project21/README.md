@@ -49,3 +49,18 @@ node .\workspace\tools\concat_renders.mjs --story .\test_story4\ --manifest .\te
 
 node .\workspace\tools\build_subtitles.mjs --story .\test_story4\ --manifast .\test_story4\render_manifest.json
 ```
+
+```
+node .\workspace\tools\method2_segment.mjs --json .\test_story4\prompts.ch0_15s.json --from-index  0 --image --out test_story4/output/refs/ch0_15s    
+
+node .\workspace\tools\method2_segment.mjs --json .\test_story4\prompts.ch0_15s.json --from-index 3 --to-index 3 --video --ref-root .\test_story4\output\refs\ch0_15s --out test_story4/output/video/ch0_15s --seconds -3 --ref-spread 1 --width 608 --height 352
+
+node .\workspace\tools\method2_segment.mjs --json .\test_story4\prompts.ch0_15s.json --from-index 0 --to-index 4 --video --mode t2v --out test_story4/output/video/ch0_15s --seconds -3 --no-turbo
+
+
+node .\workspace\tools\method2_segment.mjs --json .\test_story4\gemini-code-1794495717090.json --from-index 0 --to-index 2 --image --out .\test_story4\output\
+
+node .\workspace\tools\method2_segment.mjs --json .\test_story4\deepseek_json_1.json --video --out .\test_story4\output\ --segment 07 --ref-root .\test_story4\output\
+
+node .\workspace\tools\method2_segment.mjs --json .\test_story4\deepseek_json_1.json --video --out .\test_story4\output\ --ref-root .\test_story4\output\ --mode t2v --from-index 0 --to-index 5 --no-turbo
+```
