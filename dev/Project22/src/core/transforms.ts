@@ -230,8 +230,7 @@ export function crop(canvas: PixelCanvas, rect: Rect): CropResult {
  * Copy a region of the canvas onto another position, optionally flipping it.
  * The source is snapshotted first, so overlapping source/destination is safe.
  */
-export function copyPaste(
-  canvas: PixelCanvas,
+export function copyPaste(  canvas: PixelCanvas,
   rect: Rect,
   dstX: number,
   dstY: number,
@@ -268,4 +267,114 @@ export function copyPaste(
     }
   }
   return { copied, skipped };
+}
+
+export interface ShiftResult {
+  moved: number;
+  skipped: number;
+  cleared: number;
+}
+
+/**
+ * Move the opaque pixels of a region by (dx, dy): the region is snapshotted,
+ * optionally cleared, then stamped at the new position. Transparent source
+ * pixels are skipped so overlapping body parts are not punched out.
+ */
+export function shiftRect(
+  canvas: PixelCanvas,
+  rect: Rect,
+  dx: number,
+  dy: number,
+  clear: RGBA | null,
+): ShiftResult {
+  const rx = Math.floor(rect.x);
+  const ry = Math.floor(rect.y);
+  if (rect.width < 1 || rect.height < 1) {
+    throw new Error("shift_rect needs a positive width and height.");
+  }
+  const x0 = Math.max(0, rx);
+  const y0 = Math.max(0, ry);
+  const x1 = Math.min(canvas.width, rx + Math.floor(rect.width));
+  const y1 = Math.min(canvas.height, ry + Math.floor(rect.height));
+  if (x1 <= x0 || y1 <= y0) {
+    throw new Error(
+      `shift_rect region (${rx},${ry} ${rect.width}x${rect.height}) does not overlap the ${canvas.width}x${canvas.height} canvas.`,
+    );
+  }
+
+  const width = x1 - x0;
+  const height = y1 - y0;
+  const region = new Uint8ClampedArray(width * height * 4);
+  for (let y = 0; y < height; y++) {
+    const start = ((y0 + y) * canvas.width + x0) * 4;
+    region.set(canvas.data.subarray(start, start + width * 4), y * width * 4);
+  }
+
+  let cleared = 0;
+  if (clear) {
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        canvas.setPixel(x0 + x, y0 + y, clear);
+        cleared++;
+      }
+    }
+  }
+
+  let moved = 0;
+  let skipped = 0;
+  const ox = Math.round(dx);
+  const oy = Math.round(dy);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const si = (y * width + x) * 4;
+      if (region[si + 3] === 0) continue;
+      const color: RGBA = [region[si]!, region[si + 1]!, region[si + 2]!, region[si + 3]!];
+      if (canvas.setPixel(x0 + x + ox, y0 + y + oy, color)) moved++;
+      else skipped++;
+    }
+  }
+  return { moved, skipped, cleared };
+}
+
+/** Source-over composite of `src` onto `dst` at (offX, offY) with a global opacity. */
+export function blendCanvas(
+  dst: PixelCanvas,
+  src: PixelCanvas,
+  offX: number,
+  offY: number,
+  opacity = 1,
+): void {
+  const alpha = Math.max(0, Math.min(1, opacity));
+  for (let y = 0; y < src.height; y++) {
+    const targetY = offY + y;
+    if (targetY < 0 || targetY >= dst.height) continue;
+    for (let x = 0; x < src.width; x++) {
+      const targetX = offX + x;
+      if (targetX < 0 || targetX >= dst.width) continue;
+      const si = (y * src.width + x) * 4;
+      const sourceAlpha = (src.data[si + 3]! / 255) * alpha;
+      if (sourceAlpha <= 0) continue;
+      const di = (targetY * dst.width + targetX) * 4;
+      const destAlpha = dst.data[di + 3]! / 255;
+      const outAlpha = sourceAlpha + destAlpha * (1 - sourceAlpha);
+      if (outAlpha <= 0) continue;
+      for (let c = 0; c < 3; c++) {
+        dst.data[di + c] =
+          (src.data[si + c]! * sourceAlpha + dst.data[di + c]! * destAlpha * (1 - sourceAlpha)) / outAlpha;
+      }
+      dst.data[di + 3] = outAlpha * 255;
+    }
+  }
+}
+
+/** Fill a canvas with a two-tone checkerboard, the usual backdrop for transparency. */
+export function checkerboard(canvas: PixelCanvas, cell: number, light: RGBA, dark: RGBA): void {
+  const size = Math.max(1, Math.floor(cell));
+  for (let y = 0; y < canvas.height; y++) {
+    const rowBand = Math.floor(y / size);
+    for (let x = 0; x < canvas.width; x++) {
+      const colBand = Math.floor(x / size);
+      canvas.setPixel(x, y, (rowBand + colBand) % 2 === 0 ? light : dark);
+    }
+  }
 }

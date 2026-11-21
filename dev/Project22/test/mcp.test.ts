@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
-import { readFile, unlink } from "node:fs/promises";
+import { readFile, readdir, rm, unlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -158,4 +158,153 @@ test("pixel studio MCP server end-to-end", async (t) => {
     arguments: { image_id: "img_deadbeef" },
   });
   assert.equal(badCanvas.isError, true);
+});
+
+test("animation tools: frames, shift_rect, contact sheet and exports", async (t) => {
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  const server = createPixelStudioServer();
+  await server.connect(serverTransport);
+
+  const client = new Client({ name: "pixel-studio-animation-test", version: "1.0.0" });
+  await client.connect(clientTransport);
+
+  const stamp = `${process.pid}-${Date.now()}`;
+  const sheetPath = join(tmpdir(), `pixel-anim-sheet-${stamp}.png`);
+  const gifPath = join(tmpdir(), `pixel-anim-${stamp}.gif`);
+  const apngPath = join(tmpdir(), `pixel-anim-${stamp}.apng`);
+  const framesDir = join(tmpdir(), `pixel-anim-frames-${stamp}`);
+  t.after(async () => {
+    for (const path of [sheetPath, gifPath, apngPath]) {
+      if (existsSync(path)) await unlink(path);
+    }
+    await rm(framesDir, { recursive: true, force: true });
+    await client.close().catch(() => {});
+    await server.close().catch(() => {});
+  });
+
+  const names = (await client.listTools()).tools.map((tool) => tool.name);
+  for (const expected of [
+    "add_frame",
+    "clone_frame",
+    "select_frame",
+    "shift_rect",
+    "render_contact_sheet",
+    "export_animation",
+  ]) {
+    assert.ok(names.includes(expected), `missing tool ${expected}`);
+  }
+
+  const created = await client.callTool({
+    name: "create_canvas",
+    arguments: { width: 8, height: 8, palette: { skin: "#ffcd75", ink: "#1a1c2c" } },
+  });
+  const imageId = textMeta(created).imageId as string;
+  assert.equal(textMeta(created).frameCount, 1);
+
+  const leg = await client.callTool({
+    name: "draw_shape",
+    arguments: {
+      image_id: imageId,
+      shape: { kind: "rect", x: 3, y: 5, width: 2, height: 2, color: "skin", fill: true },
+    },
+  });
+  assert.equal(textMeta(leg).result.drawn, 4);
+
+  const cloned = await client.callTool({
+    name: "clone_frame",
+    arguments: { image_id: imageId },
+  });
+  const clonedMeta = textMeta(cloned);
+  assert.equal(clonedMeta.frameCount, 2);
+  assert.equal(clonedMeta.activeFrame, 1);
+  assert.equal(clonedMeta.frames[1].active, true);
+
+  const shifted = await client.callTool({
+    name: "shift_rect",
+    arguments: { image_id: imageId, x: 3, y: 5, width: 2, height: 2, dx: 1, dy: 0 },
+  });
+  const shiftMeta = textMeta(shifted);
+  assert.equal(shiftMeta.moved, 4);
+  assert.equal(shiftMeta.cleared, 4);
+
+  const added = await client.callTool({
+    name: "add_frame",
+    arguments: { image_id: imageId, duration_ms: 80 },
+  });
+  assert.equal(textMeta(added).frameCount, 3);
+  assert.equal(textMeta(added).durationMs, 80);
+
+  const beforeSelect = textMeta(added).version as number;
+  const selected = await client.callTool({
+    name: "select_frame",
+    arguments: { image_id: imageId, index: 0 },
+  });
+  const selectMeta = textMeta(selected);
+  assert.equal(selectMeta.activeFrame, 0);
+  assert.equal(selectMeta.version, beforeSelect, "frame switching should not create an undo step");
+
+  const info = await client.callTool({ name: "get_info", arguments: { image_id: imageId } });
+  const infoMeta = textMeta(info);
+  assert.equal(infoMeta.frames.length, 3);
+  assert.equal(infoMeta.totalDurationMs, 100 + 100 + 80);
+
+  const sheet = await client.callTool({
+    name: "render_contact_sheet",
+    arguments: { image_id: imageId, onion_skin: true },
+  });
+  const sheetMeta = textMeta(sheet);
+  assert.ok(hasImage(sheet), "contact sheet should return an image");
+  assert.equal(sheetMeta.layout.columns, 3);
+  assert.ok(existsSync(sheetMeta.previewPath));
+
+  const asciiSheet = await client.callTool({
+    name: "get_pixels",
+    arguments: { image_id: imageId, x: 3, y: 5, width: 4, height: 2 },
+  });
+  assert.equal(textMeta(asciiSheet).distinctColors, 1);
+
+  const spriteSheet = await client.callTool({
+    name: "export_animation",
+    arguments: { image_id: imageId, format: "sprite_sheet", path: sheetPath, columns: 3, gap: 1, scale: 2 },
+  });
+  const spriteMeta = textMeta(spriteSheet);
+  assert.equal(spriteMeta.sheetWidth, 3 * 16 + 2);
+  assert.equal(spriteMeta.sheetHeight, 16);
+  assert.deepEqual([...(await readFile(sheetPath)).subarray(0, 4)], [137, 80, 78, 71]);
+
+  const gif = await client.callTool({
+    name: "export_animation",
+    arguments: { image_id: imageId, format: "gif", path: gifPath, scale: 4 },
+  });
+  assert.equal(textMeta(gif).bytes > 0, true);
+  const gifBytes = await readFile(gifPath);
+  assert.equal(gifBytes.toString("latin1", 0, 6), "GIF89a");
+
+  const apng = await client.callTool({
+    name: "export_animation",
+    arguments: { image_id: imageId, format: "apng", path: apngPath },
+  });
+  assert.ok(textMeta(apng).bytes > 0);
+  assert.ok((await readFile(apngPath)).toString("latin1").includes("acTL"));
+
+  const sequence = await client.callTool({
+    name: "export_animation",
+    arguments: { image_id: imageId, format: "frames", path: framesDir },
+  });
+  const sequenceMeta = textMeta(sequence);
+  assert.equal(sequenceMeta.files.length, 3);
+  assert.deepEqual((await readdir(framesDir)).sort(), ["frame_00.png", "frame_01.png", "frame_02.png"]);
+
+  const singleFrame = await client.callTool({
+    name: "export_image",
+    arguments: { image_id: imageId, frame: 1, path: `${sheetPath}.frame1.png` },
+  });
+  assert.equal(textMeta(singleFrame).frame, 1);
+  await unlink(`${sheetPath}.frame1.png`);
+
+  const badFrame = await client.callTool({
+    name: "select_frame",
+    arguments: { image_id: imageId, index: 9 },
+  });
+  assert.equal(badFrame.isError, true);
 });

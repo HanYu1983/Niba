@@ -2,9 +2,12 @@ import { extname, isAbsolute, join, resolve } from "node:path";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult, ImageContent, TextContent } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
+import { autoColumns, autoScale, buildSheet } from "./animation/sheet.js";
 import { RGBA, isTransparentInput, parseColor, rgbaToHex } from "./core/color.js";
+import { PixelCanvas } from "./core/pixelCanvas.js";
 import {
   applyPalette,
+  blendCanvas,
   copyPaste,
   crop,
   flipHorizontal,
@@ -13,9 +16,19 @@ import {
   replaceColor,
   resizeNearest,
   rotate,
+  shiftRect,
 } from "./core/transforms.js";
-import { encodePNG, writePNGFile } from "./io/codec.js";
-import { CanvasRecord, CanvasStore, MAX_DIMENSION, PREVIEW_DIR } from "./store/canvasStore.js";
+import { encodeAPNG } from "./io/apng.js";
+import { encodePNG, writeFileBuffer, writePNGFile } from "./io/codec.js";
+import { encodeGIF } from "./io/gif.js";
+import {
+  CanvasRecord,
+  CanvasStore,
+  MAX_DIMENSION,
+  MAX_FRAME_MS,
+  MAX_FRAMES,
+  PREVIEW_DIR,
+} from "./store/canvasStore.js";
 
 const COORD_MIN = -4096;
 const COORD_MAX = 4096;
@@ -61,6 +74,9 @@ interface Metadata {
   undoDepth: number;
   redoDepth: number;
   palette: string[];
+  frameCount: number;
+  activeFrame: number;
+  durationMs: number;
 }
 
 function canvasMeta(record: CanvasRecord): Metadata {
@@ -72,7 +88,58 @@ function canvasMeta(record: CanvasRecord): Metadata {
     undoDepth: record.history.length,
     redoDepth: record.redoStack.length,
     palette: Object.keys(record.paletteSource),
+    frameCount: record.frameCount,
+    activeFrame: record.activeFrame,
+    durationMs: record.durationMs,
   };
+}
+
+function frameList(record: CanvasRecord): Record<string, unknown> {
+  return {
+    totalDurationMs: record.totalDurationMs,
+    frames: record.frames.map((frame, index) => ({
+      index,
+      durationMs: frame.durationMs,
+      active: index === record.activeFrame,
+    })),
+  };
+}
+
+function requireFrame(record: CanvasRecord, index: number): void {
+  if (!Number.isInteger(index) || index < 0 || index >= record.frameCount) {
+    throw new Error(`Frame index ${index} is out of range; this canvas has frames 0..${record.frameCount - 1}.`);
+  }
+}
+
+function resolveFileOutput(
+  input: string | undefined,
+  fallbackName: string,
+  defaultExt: string,
+  allowedExts: string[] = [defaultExt],
+): string {
+  if (!input) return join(PREVIEW_DIR, fallbackName);
+  let candidate = input;
+  if (!extname(candidate)) candidate += defaultExt;
+  if (!allowedExts.includes(extname(candidate).toLowerCase())) {
+    throw new Error(`Output path must end with ${allowedExts.join(" or ")}.`);
+  }
+  return isAbsolute(candidate) ? candidate : resolve(process.cwd(), candidate);
+}
+
+function resolveDirOutput(input: string | undefined, fallbackName: string): string {
+  if (!input) return join(PREVIEW_DIR, fallbackName);
+  return isAbsolute(input) ? input : resolve(process.cwd(), input);
+}
+
+function scaledFrameCanvases(record: CanvasRecord, scale: number): PixelCanvas[] {
+  const width = record.canvas.width * scale;
+  const height = record.canvas.height * scale;
+  if (width > MAX_EXPORT_SIDE || height > MAX_EXPORT_SIDE) {
+    throw new Error(`Scale ${scale} would make each frame ${width}x${height}; maximum side is ${MAX_EXPORT_SIDE}px.`);
+  }
+  return record.frames.map((frame) =>
+    scale === 1 ? frame.canvas : resizeNearest(frame.canvas, width, height),
+  );
 }
 
 async function respond(
@@ -81,12 +148,16 @@ async function respond(
   payload: Record<string, unknown>,
   preview: boolean,
   previewMaxSize = 384,
+  previewCanvas?: PixelCanvas,
+  previewTag?: string,
 ): Promise<CallToolResult> {
   const meta: Record<string, unknown> = { ...canvasMeta(record), ...payload };
   let image: ImageContent | undefined;
 
   if (preview) {
-    const file = await store.savePreview(record, previewMaxSize);
+    const file = previewCanvas
+      ? await store.saveCanvasPreview(previewCanvas, previewMaxSize, previewTag ?? `${record.id}-v${record.version}`)
+      : await store.savePreview(record, previewMaxSize);
     meta.previewPath = file.path;
     meta.previewSize = `${file.width}x${file.height}`;
     image = { type: "image", data: file.png.toString("base64"), mimeType: "image/png" };
@@ -200,7 +271,14 @@ Workflow: create_canvas -> draw_pixels / draw_shape / transform_canvas -> view_i
 - Prefer ASCII matrices (draw_pixels.ascii) or batch pixel lists over one call per pixel.
 - Out-of-bounds pixels are skipped and reported, never fatal.
 - Each mutating call creates one undo checkpoint (version + 1); use undo / redo.
-- preview:true attaches a downscaled PNG thumbnail; view_image does the same without mutating.`;
+- preview:true attaches a downscaled PNG thumbnail; view_image does the same without mutating.
+
+Animation: a canvas holds 1..${MAX_FRAMES} equally sized frames sharing one palette. Drawing tools always edit the ACTIVE frame.
+- Build a cycle by drawing frame 0, then clone_frame, then edit only the parts that move (shift_rect for limbs).
+- select_frame switches the editing cursor (no undo checkpoint unless you pass duration_ms).
+- view_image with onion_skin:true ghosts the previous frame so you can check alignment.
+- render_contact_sheet returns every frame on one image for a continuity check.
+- export_animation writes a sprite sheet, GIF, APNG or a PNG sequence.`;
 
 export function createPixelStudioServer(store: CanvasStore = new CanvasStore()): McpServer {
   const server = new McpServer(
@@ -262,7 +340,8 @@ export function createPixelStudioServer(store: CanvasStore = new CanvasStore()):
     "get_info",
     {
       title: "Get canvas info",
-      description: "Return metadata for one canvas: size, version, palette keys, undo/redo depth. Does not modify it.",
+      description:
+        "Return metadata for one canvas: size, version, palette keys, undo/redo depth, frame count and per-frame durations. Does not modify it.",
       inputSchema: {
         image_id: imageIdSchema,
         preview: previewSchema,
@@ -270,7 +349,12 @@ export function createPixelStudioServer(store: CanvasStore = new CanvasStore()):
     },
     async (args) => {
       const record = store.get(args.image_id);
-      return respond(store, record, { createdAt: record.createdAt.toISOString() }, args.preview ?? false);
+      return respond(
+        store,
+        record,
+        { createdAt: record.createdAt.toISOString(), ...frameList(record) },
+        args.preview ?? false,
+      );
     },
   );
 
@@ -484,8 +568,10 @@ export function createPixelStudioServer(store: CanvasStore = new CanvasStore()):
                   `scale_nearest target ${targetWidth}x${targetHeight} is outside 1x1..${MAX_DIMENSION}x${MAX_DIMENSION}.`,
                 );
               }
-              rec.canvas = resizeNearest(rec.canvas, targetWidth, targetHeight);
-              results.push({ op: op.op, width: targetWidth, height: targetHeight });
+              rec.frames.forEach((frame) => {
+                frame.canvas = resizeNearest(frame.canvas, targetWidth, targetHeight);
+              });
+              results.push({ op: op.op, width: targetWidth, height: targetHeight, frames: rec.frameCount });
               break;
             }
             case "flip_h":
@@ -497,8 +583,14 @@ export function createPixelStudioServer(store: CanvasStore = new CanvasStore()):
               results.push({ op: op.op });
               break;
             case "rotate":
-              rotate(rec.canvas, op.degrees);
-              results.push({ op: op.op, degrees: op.degrees, width: rec.canvas.width, height: rec.canvas.height });
+              rec.frames.forEach((frame) => rotate(frame.canvas, op.degrees));
+              results.push({
+                op: op.op,
+                degrees: op.degrees,
+                width: rec.canvas.width,
+                height: rec.canvas.height,
+                frames: rec.frameCount,
+              });
               break;
             case "outline": {
               const drawn = outline(rec.canvas, parseColor(op.color, rec.palette), op.diagonal ?? true);
@@ -522,19 +614,24 @@ export function createPixelStudioServer(store: CanvasStore = new CanvasStore()):
               break;
             }
             case "crop": {
-              const cropped = crop(rec.canvas, {
-                x: op.x,
-                y: op.y,
-                width: op.width,
-                height: op.height,
-              });
-              rec.canvas = cropped.canvas;
+              let croppedWidth = 0;
+              let croppedHeight = 0;
+              for (const frame of rec.frames) {
+                const cropped = crop(frame.canvas, {
+                  x: op.x,
+                  y: op.y,
+                  width: op.width,
+                  height: op.height,
+                });
+                frame.canvas = cropped.canvas;
+                croppedWidth = cropped.width;
+                croppedHeight = cropped.height;
+              }
               results.push({
                 op: op.op,
-                x: cropped.x,
-                y: cropped.y,
-                width: cropped.width,
-                height: cropped.height,
+                width: croppedWidth,
+                height: croppedHeight,
+                frames: rec.frameCount,
               });
               break;
             }
@@ -705,21 +802,44 @@ export function createPixelStudioServer(store: CanvasStore = new CanvasStore()):
     {
       title: "View image",
       description:
-        "Return a PNG thumbnail (nearest-neighbour downscale, default max 384px) plus its temp file path, " +
-        "so you can visually inspect the canvas without mutating it. Also useful before exporting.",
+        "Return a PNG thumbnail (nearest-neighbour, default max 384px; small sprites are upscaled) plus its temp file path, " +
+        "so you can visually inspect the canvas without mutating it. " +
+        "Pass frame to inspect a specific frame. onion_skin:true ghosts the previous frame underneath at 35% so you can check limb alignment.",
       inputSchema: {
         image_id: imageIdSchema,
+        frame: z.number().int().min(0).max(MAX_FRAMES - 1).optional().describe("Frame to render (default: the active frame)."),
+        onion_skin: z
+          .boolean()
+          .optional()
+          .describe("Composite the previous frame underneath at low opacity (ignored for frame 0)."),
         max_size: z.number().int().min(16).max(1024).optional().describe("Longest side in pixels (default 384)."),
       },
     },
     async (args) => {
       const record = store.get(args.image_id);
-      const file = await store.savePreview(record, args.max_size ?? 384);
+      const frameIndex = args.frame ?? record.activeFrame;
+      requireFrame(record, frameIndex);
+      const onion = args.onion_skin ?? false;
+
+      let canvas = record.frames[frameIndex]!.canvas;
+      if (onion && frameIndex > 0) {
+        const composed = new PixelCanvas(canvas.width, canvas.height);
+        blendCanvas(composed, record.frames[frameIndex - 1]!.canvas, 0, 0, 0.35);
+        blendCanvas(composed, canvas, 0, 0, 1);
+        canvas = composed;
+      }
+
+      const file = await store.saveCanvasPreview(
+        canvas,
+        args.max_size ?? 384,
+        `${record.id}-v${record.version}-f${frameIndex}${onion ? "-onion" : ""}`,
+      );
       const meta = {
         ...canvasMeta(record),
+        viewedFrame: frameIndex,
+        onionSkin: onion && frameIndex > 0,
         previewPath: file.path,
         previewSize: `${file.width}x${file.height}`,
-        note: "Thumbnail uses nearest-neighbour scaling, so it stays crisp.",
       };
       const content: Array<TextContent | ImageContent> = [
         { type: "text", text: JSON.stringify(meta) },
@@ -739,6 +859,7 @@ export function createPixelStudioServer(store: CanvasStore = new CanvasStore()):
         "Existing files at that path are overwritten. Without a path, the file is written to the OS temp directory.",
       inputSchema: {
         image_id: imageIdSchema,
+        frame: z.number().int().min(0).max(MAX_FRAMES - 1).optional().describe("Frame to export (default: the active frame)."),
         path: z.string().min(1).optional().describe("Destination path (PNG). Defaults to a temp file."),
         scale: z
           .number()
@@ -752,16 +873,18 @@ export function createPixelStudioServer(store: CanvasStore = new CanvasStore()):
     },
     async (args) => {
       const record = store.get(args.image_id);
+      const frameIndex = args.frame ?? record.activeFrame;
+      requireFrame(record, frameIndex);
+      const source = record.frames[frameIndex]!.canvas;
       const scale = args.scale ?? 1;
-      const targetWidth = record.canvas.width * scale;
-      const targetHeight = record.canvas.height * scale;
+      const targetWidth = source.width * scale;
+      const targetHeight = source.height * scale;
       if (targetWidth > MAX_EXPORT_SIDE || targetHeight > MAX_EXPORT_SIDE) {
         throw new Error(
           `Export at scale ${scale} would be ${targetWidth}x${targetHeight}; maximum side is ${MAX_EXPORT_SIDE}px.`,
         );
       }
-      const output =
-        scale === 1 ? record.canvas : resizeNearest(record.canvas, targetWidth, targetHeight);
+      const output = scale === 1 ? source : resizeNearest(source, targetWidth, targetHeight);
       const png = encodePNG(output);
 
       let filePath: string;
@@ -773,7 +896,7 @@ export function createPixelStudioServer(store: CanvasStore = new CanvasStore()):
         }
         filePath = isAbsolute(candidate) ? candidate : resolve(process.cwd(), candidate);
       } else {
-        filePath = join(PREVIEW_DIR, `${record.id}-v${record.version}.png`);
+        filePath = join(PREVIEW_DIR, `${record.id}-v${record.version}-f${frameIndex}.png`);
       }
 
       await writePNGFile(filePath, png);
@@ -782,13 +905,321 @@ export function createPixelStudioServer(store: CanvasStore = new CanvasStore()):
         record,
         {
           path: filePath,
+          frame: frameIndex,
           width: output.width,
           height: output.height,
           scale,
           bytes: png.byteLength,
         },
         args.preview ?? false,
+        384,
+        source,
+        `${record.id}-v${record.version}-f${frameIndex}`,
       );
+    },
+  );
+
+  server.registerTool(
+    "add_frame",
+    {
+      title: "Add frame",
+      description:
+        "Append or insert a blank frame and make it active. All frames share the canvas palette and dimensions, " +
+        `so a cycle stays consistent. Up to ${MAX_FRAMES} frames per canvas; duration_ms is 1..${MAX_FRAME_MS} (default 100). ` +
+        "Use clone_frame instead when the new frame should start from an existing pose.",
+      inputSchema: {
+        image_id: imageIdSchema,
+        at: z
+          .number()
+          .int()
+          .min(0)
+          .max(MAX_FRAMES)
+          .optional()
+          .describe("Insert position (default: append at the end). 0 inserts before the first frame."),
+        duration_ms: z.number().int().min(1).max(MAX_FRAME_MS).optional(),
+        bg_color: colorSchema.optional().describe("Fill for the new frame; defaults to the canvas background (usually transparent)."),
+        activate: z.boolean().optional().describe("Make the new frame the active one (default true)."),
+        preview: previewSchema,
+      },
+    },
+    async (args) => {
+      const record = store.get(args.image_id);
+      const background = args.bg_color === undefined ? undefined : parseColor(args.bg_color, record.palette);
+      const { record: updated, index } = store.addFrame(args.image_id, {
+        at: args.at,
+        durationMs: args.duration_ms,
+        background,
+        activate: args.activate ?? true,
+      });
+      return respond(store, updated, { addedFrame: index, ...frameList(updated) }, args.preview ?? false);
+    },
+  );
+
+  server.registerTool(
+    "clone_frame",
+    {
+      title: "Clone frame",
+      description:
+        "Duplicate an existing frame (default: the active one) and insert the copy right after it. " +
+        "This is the core loop for animation: clone, then move only the limbs that change with shift_rect or draw_pixels, " +
+        "so the character's body and colours cannot drift between frames.",
+      inputSchema: {
+        image_id: imageIdSchema,
+        from: z.number().int().min(0).max(MAX_FRAMES - 1).optional().describe("Source frame (default: the active frame)."),
+        at: z.number().int().min(0).max(MAX_FRAMES).optional().describe("Insert position (default: right after the source)."),
+        duration_ms: z
+          .number()
+          .int()
+          .min(1)
+          .max(MAX_FRAME_MS)
+          .optional()
+          .describe("Duration of the copy (default: same as the source frame)."),
+        activate: z.boolean().optional().describe("Make the copy the active frame (default true)."),
+        preview: previewSchema,
+      },
+    },
+    async (args) => {
+      const { record: updated, index } = store.cloneFrame(args.image_id, {
+        from: args.from,
+        at: args.at,
+        durationMs: args.duration_ms,
+        activate: args.activate ?? true,
+      });
+      return respond(store, updated, { clonedFrame: index, ...frameList(updated) }, args.preview ?? false);
+    },
+  );
+
+  server.registerTool(
+    "select_frame",
+    {
+      title: "Select frame",
+      description:
+        "Move the editing cursor to another frame. Switching is not an undoable edit; " +
+        "pass duration_ms to also set that frame's playback duration (which does create an undo checkpoint). " +
+        "Every drawing tool operates on the active frame.",
+      inputSchema: {
+        image_id: imageIdSchema,
+        index: z.number().int().min(0).max(MAX_FRAMES - 1),
+        duration_ms: z.number().int().min(1).max(MAX_FRAME_MS).optional(),
+        preview: previewSchema,
+      },
+    },
+    async (args) => {
+      const record = store.get(args.image_id);
+      requireFrame(record, args.index);
+      const updated = store.selectFrame(args.image_id, args.index, args.duration_ms);
+      return respond(store, updated, frameList(updated), args.preview ?? false);
+    },
+  );
+
+  server.registerTool(
+    "shift_rect",
+    {
+      title: "Shift region",
+      description:
+        "Move the opaque pixels of a rectangle by (dx, dy) inside the active frame. " +
+        'clear controls what stays behind: "transparent" (default) empties the selection, "keep" stamps a copy without ' +
+        "clearing, or a colour fills the vacated area. Transparent pixels inside the selection are not copied, so moving " +
+        "an arm over the torso does not punch holes in it. Ideal for one-pixel limb offsets in a walk cycle.",
+      inputSchema: {
+        image_id: imageIdSchema,
+        x: coordSchema,
+        y: coordSchema,
+        width: positiveSizeSchema,
+        height: positiveSizeSchema,
+        dx: z.number().int().min(COORD_MIN).max(COORD_MAX).describe("Horizontal offset in pixels (may be negative)."),
+        dy: z.number().int().min(COORD_MIN).max(COORD_MAX).describe("Vertical offset in pixels (may be negative)."),
+        clear: z
+          .union([z.literal("keep"), colorSchema])
+          .optional()
+          .describe('What to leave in the vacated area: "transparent" (default), "keep", or a colour.'),
+        preview: previewSchema,
+      },
+    },
+    async (args) => {
+      const record = store.get(args.image_id);
+      const clear: RGBA | null =
+        args.clear === "keep" ? null : parseColor(args.clear ?? "transparent", record.palette);
+
+      const { result, record: updated } = store.mutate(record.id, "shift_rect", (rec) =>
+        shiftRect(
+          rec.canvas,
+          { x: args.x, y: args.y, width: args.width, height: args.height },
+          args.dx,
+          args.dy,
+          clear,
+        ),
+      );
+
+      return respond(
+        store,
+        updated,
+        { dx: args.dx, dy: args.dy, clear: args.clear === "keep" ? "keep" : rgbaToHex(clear!), ...result },
+        args.preview ?? false,
+      );
+    },
+  );
+
+  server.registerTool(
+    "render_contact_sheet",
+    {
+      title: "Render contact sheet",
+      description:
+        "Layout every frame on one image so you can judge motion continuity at a glance. " +
+        'Frames sit on a checkerboard by default. onion_skin:true ghosts each frame\'s predecessor under it, ' +
+        "which makes position drift obvious. Returns the image plus the grid layout; nothing is written to the canvas store.",
+      inputSchema: {
+        image_id: imageIdSchema,
+        columns: z.number().int().min(1).max(MAX_FRAMES).optional().describe("Frames per row (default: single row up to 6, otherwise a near-square grid)."),
+        scale: z.number().int().min(1).max(16).optional().describe("Integer upscale (default: chosen to fit max_size)."),
+        gap: z.number().int().min(0).max(64).optional().describe("Spacing between cells in output pixels (default 2)."),
+        background: z
+          .union([z.literal("checker"), colorSchema])
+          .optional()
+          .describe('Backdrop: "checker" (default) or a colour.'),
+        onion_skin: z.boolean().optional(),
+        onion_opacity: z.number().min(0.05).max(1).optional().describe("Ghost opacity for onion skin (default 0.35)."),
+        max_size: z.number().int().min(64).max(1024).optional().describe("Longest side of the returned preview (default 640)."),
+      },
+    },
+    async (args) => {
+      const record = store.get(args.image_id);
+      const columns = Math.min(record.frameCount, args.columns ?? autoColumns(record.frameCount));
+      const gap = args.gap ?? 2;
+      const rows = Math.ceil(record.frameCount / columns);
+      const maxSize = args.max_size ?? 640;
+      const scale =
+        args.scale ?? autoScale(record.canvas.width, record.canvas.height, columns, rows, gap, maxSize);
+      const background =
+        args.background === undefined || args.background === "checker"
+          ? ("checker" as const)
+          : parseColor(args.background, record.palette);
+
+      const sheet = buildSheet(record.frames, {
+        columns,
+        gap,
+        scale,
+        background,
+        onionSkin: args.onion_skin ?? false,
+        onionOpacity: args.onion_opacity,
+      });
+      const file = await store.saveCanvasPreview(
+        sheet.canvas,
+        maxSize,
+        `${record.id}-sheet-v${record.version}`,
+      );
+      const meta = {
+        ...canvasMeta(record),
+        layout: sheet.layout,
+        totalDurationMs: record.totalDurationMs,
+        onionSkin: args.onion_skin ?? false,
+        previewPath: file.path,
+        previewSize: `${file.width}x${file.height}`,
+      };
+      const content: Array<TextContent | ImageContent> = [
+        { type: "text", text: JSON.stringify(meta) },
+        { type: "image", data: file.png.toString("base64"), mimeType: "image/png" },
+      ];
+      return { content };
+    },
+  );
+
+  server.registerTool(
+    "export_animation",
+    {
+      title: "Export animation",
+      description:
+        "Write the frame sequence to disk. format:\n" +
+        '- "sprite_sheet": one PNG grid; columns defaults to a single row, gap spaces the cells.\n' +
+        '- "gif": looping GIF89a, 1-bit transparency, exact palette while the art uses <=255 colours.\n' +
+        '- "apng": animated PNG, keeps 8-bit alpha (use this for soft edges or semi-transparent ghosts).\n' +
+        '- "frames": one PNG per frame in the given directory.\n' +
+        "path defaults to the OS temp directory; relative paths resolve against the server working directory. " +
+        "scale is an integer nearest-neighbour upscale applied to every frame before encoding.",
+      inputSchema: {
+        image_id: imageIdSchema,
+        format: z.enum(["sprite_sheet", "gif", "apng", "frames"]),
+        path: z
+          .string()
+          .min(1)
+          .optional()
+          .describe("Output file (sprite_sheet/gif/apng) or directory (frames). Defaults to the OS temp directory."),
+        scale: z.number().int().min(1).max(16).optional().describe("Integer upscale per frame (default 1)."),
+        columns: z.number().int().min(1).max(MAX_FRAMES).optional().describe("sprite_sheet only: frames per row (default: one row)."),
+        gap: z.number().int().min(0).max(64).optional().describe("sprite_sheet only: spacing in output pixels (default 0)."),
+        loop: z.boolean().optional().describe("gif/apng only: loop forever (default true)."),
+        background: colorSchema.optional().describe('sprite_sheet only: gap fill, default "transparent".'),
+      },
+    },
+    async (args) => {
+      const record = store.get(args.image_id);
+      const scale = args.scale ?? 1;
+      const frameWidth = record.canvas.width * scale;
+      const frameHeight = record.canvas.height * scale;
+      if (frameWidth > MAX_EXPORT_SIDE || frameHeight > MAX_EXPORT_SIDE) {
+        throw new Error(
+          `Export at scale ${scale} would make each frame ${frameWidth}x${frameHeight}; maximum side is ${MAX_EXPORT_SIDE}px.`,
+        );
+      }
+      const base = {
+        format: args.format,
+        scale,
+        frameWidth,
+        frameHeight,
+        frameCount: record.frameCount,
+        durationsMs: record.frames.map((frame) => frame.durationMs),
+        totalDurationMs: record.totalDurationMs,
+      };
+
+      if (args.format === "sprite_sheet") {
+        const columns = args.columns ?? record.frameCount;
+        const gap = args.gap ?? 0;
+        const background =
+          args.background === undefined ? ([0, 0, 0, 0] as RGBA) : parseColor(args.background, record.palette);
+        const sheet = buildSheet(record.frames, { columns, gap, scale, background });
+        const filePath = resolveFileOutput(args.path, `${record.id}-sheet.png`, ".png");
+        const png = encodePNG(sheet.canvas);
+        await writePNGFile(filePath, png);
+        return respond(
+          store,
+          record,
+          {
+            ...base,
+            path: filePath,
+            bytes: png.byteLength,
+            sheetWidth: sheet.layout.width,
+            sheetHeight: sheet.layout.height,
+            columns: sheet.layout.columns,
+            rows: sheet.layout.rows,
+            spacing: sheet.layout.gap,
+          },
+          false,
+        );
+      }
+
+      if (args.format === "frames") {
+        const directory = resolveDirOutput(args.path, `${record.id}-frames`);
+        const canvases = scaledFrameCanvases(record, scale);
+        const files: string[] = [];
+        for (let i = 0; i < canvases.length; i++) {
+          const filePath = join(directory, `frame_${String(i).padStart(2, "0")}.png`);
+          await writePNGFile(filePath, encodePNG(canvases[i]!));
+          files.push(filePath);
+        }
+        return respond(store, record, { ...base, directory, files }, false);
+      }
+
+      const canvases = scaledFrameCanvases(record, scale);
+      const durations = record.frames.map((frame) => frame.durationMs);
+      const loop = args.loop ?? true;
+      const buffer =
+        args.format === "gif" ? encodeGIF(record.frames.map((frame, i) => ({ canvas: canvases[i]!, durationMs: frame.durationMs })), loop) : encodeAPNG(canvases, durations, loop);
+      const filePath =
+        args.format === "apng"
+          ? resolveFileOutput(args.path, `${record.id}.png`, ".png", [".png", ".apng"])
+          : resolveFileOutput(args.path, `${record.id}.${args.format}`, `.${args.format}`);
+      await writeFileBuffer(filePath, buffer);
+      return respond(store, record, { ...base, path: filePath, bytes: buffer.byteLength, loop }, false);
     },
   );
 

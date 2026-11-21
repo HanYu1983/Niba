@@ -1,9 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { buildSheet } from "../src/animation/sheet.js";
 import { parseColor, rgbaToHex } from "../src/core/color.js";
 import { PixelCanvas } from "../src/core/pixelCanvas.js";
 import {
   applyPalette,
+  blendCanvas,
+  checkerboard,
   copyPaste,
   crop,
   flipHorizontal,
@@ -12,7 +15,10 @@ import {
   replaceColor,
   resizeNearest,
   rotate,
+  shiftRect,
 } from "../src/core/transforms.js";
+import { encodeAPNG } from "../src/io/apng.js";
+import { encodeGIF } from "../src/io/gif.js";
 import { CanvasStore } from "../src/store/canvasStore.js";
 
 const RED = [255, 0, 0, 255] as const;
@@ -208,4 +214,163 @@ test("store tracks versions, undo/redo and rolls back failed mutations", () => {
   );
   assert.deepEqual(record.canvas.cloneData(), before);
   assert.equal(record.version, 2);
+});
+
+test("shiftRect moves opaque pixels, can clear or keep the source", () => {
+  const canvas = new PixelCanvas(6, 4);
+  canvas.fillRect(1, 1, 2, 1, [...RED]);
+
+  const moved = shiftRect(canvas, { x: 1, y: 1, width: 2, height: 1 }, 2, 1, [0, 0, 0, 0]);
+  assert.equal(moved.moved, 2);
+  assert.equal(moved.cleared, 2);
+  assert.deepEqual(canvas.getPixel(1, 1), [...TRANSPARENT]);
+  assert.deepEqual(canvas.getPixel(3, 2), [...RED]);
+  assert.deepEqual(canvas.getPixel(4, 2), [...RED]);
+
+  const kept = shiftRect(canvas, { x: 3, y: 2, width: 2, height: 1 }, 0, 1, null);
+  assert.equal(kept.moved, 2);
+  assert.equal(kept.cleared, 0);
+  assert.deepEqual(canvas.getPixel(3, 2), [...RED]);
+  assert.deepEqual(canvas.getPixel(3, 3), [...RED]);
+
+  const empty = shiftRect(canvas, { x: 0, y: 0, width: 3, height: 1 }, 0, 3, [0, 0, 0, 0]);
+  assert.equal(empty.moved, 0);
+  assert.throws(() => shiftRect(canvas, { x: 20, y: 20, width: 2, height: 2 }, 1, 0, null), /does not overlap/);
+});
+
+test("blendCanvas composites with opacity and checkerboard alternates", () => {
+  const dst = new PixelCanvas(2, 1);
+  const src = new PixelCanvas(2, 1, [255, 255, 255, 255]);
+  blendCanvas(dst, src, 0, 0, 0.5);
+  assert.deepEqual(dst.getPixel(0, 0), [255, 255, 255, 128]);
+
+  const board = new PixelCanvas(4, 4);
+  checkerboard(board, 2, [...RED], [...BLUE]);
+  assert.deepEqual(board.getPixel(0, 0), [...RED]);
+  assert.deepEqual(board.getPixel(2, 0), [...BLUE]);
+  assert.deepEqual(board.getPixel(0, 2), [...BLUE]);
+  assert.deepEqual(board.getPixel(2, 2), [...RED]);
+});
+
+test("buildSheet lays frames on a grid and can ghost the previous frame", () => {
+  const red = new PixelCanvas(2, 2, [255, 0, 0, 255]);
+  const blue = new PixelCanvas(2, 2, [0, 0, 255, 255]);
+
+  const sheet = buildSheet(
+    [
+      { canvas: red, durationMs: 100 },
+      { canvas: blue, durationMs: 100 },
+    ],
+    { columns: 2, scale: 2, gap: 1, background: [0, 0, 0, 0] },
+  );
+  assert.deepEqual(sheet.layout, {
+    columns: 2,
+    rows: 1,
+    cellWidth: 4,
+    cellHeight: 4,
+    gap: 1,
+    scale: 2,
+    width: 9,
+    height: 4,
+  });
+  assert.deepEqual(sheet.cells[1], { index: 1, x: 5, y: 0 });
+  assert.deepEqual(sheet.canvas.getPixel(0, 0), [255, 0, 0, 255]);
+  assert.deepEqual(sheet.canvas.getPixel(5, 0), [0, 0, 255, 255]);
+  assert.deepEqual(sheet.canvas.getPixel(4, 0), [...TRANSPARENT]);
+
+  const first = new PixelCanvas(2, 1);
+  first.setPixel(0, 0, [...RED]);
+  const ghosted = buildSheet(
+    [
+      { canvas: first, durationMs: 100 },
+      { canvas: new PixelCanvas(2, 1), durationMs: 100 },
+    ],
+    { columns: 2, gap: 0, background: [0, 0, 0, 0], onionSkin: true, onionOpacity: 0.5 },
+  );
+  assert.deepEqual(ghosted.canvas.getPixel(2, 0), [255, 0, 0, 128]);
+
+  assert.throws(
+    () =>
+      buildSheet([
+        { canvas: new PixelCanvas(2, 2), durationMs: 100 },
+        { canvas: new PixelCanvas(3, 3), durationMs: 100 },
+      ]),
+    /must match/,
+  );
+});
+
+test("encodeGIF writes a looping GIF89a at the frame size", () => {
+  const red = new PixelCanvas(4, 4, [255, 0, 0, 255]);
+  const blue = new PixelCanvas(4, 4, [0, 0, 255, 255]);
+  const gif = encodeGIF(
+    [
+      { canvas: red, durationMs: 100 },
+      { canvas: blue, durationMs: 120 },
+    ],
+    true,
+  );
+
+  assert.equal(gif.toString("latin1", 0, 6), "GIF89a");
+  assert.equal(gif.readUInt16LE(6), 4);
+  assert.equal(gif.readUInt16LE(8), 4);
+  assert.ok(gif.includes(Buffer.from("NETSCAPE2.0", "latin1")), "looping extension should be present");
+  assert.equal(gif[gif.length - 1], 0x3b);
+  assert.ok(gif.length > 50);
+});
+
+test("encodeAPNG emits acTL/fcTL/fdAT in order", () => {
+  const chunkTypes = (buffer: Buffer): string[] => {
+    const types: string[] = [];
+    let offset = 8;
+    while (offset + 8 <= buffer.length) {
+      const length = buffer.readUInt32BE(offset);
+      types.push(buffer.toString("latin1", offset + 4, offset + 8));
+      offset += 12 + length;
+    }
+    return types;
+  };
+
+  const apng = encodeAPNG(
+    [new PixelCanvas(2, 2, [255, 0, 0, 255]), new PixelCanvas(2, 2, [0, 0, 255, 255])],
+    [100, 120],
+    true,
+  );
+  assert.deepEqual([...apng.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
+  assert.deepEqual(chunkTypes(apng), ["IHDR", "acTL", "fcTL", "IDAT", "fcTL", "fdAT", "IEND"]);
+});
+
+test("store frames: clone, insert, undo and per-frame durations", () => {
+  const store = new CanvasStore();
+  const record = store.create(2, 2, [0, 0, 0, 0], new Map(), {});
+  assert.equal(record.frameCount, 1);
+  assert.equal(record.durationMs, 100);
+
+  const added = store.addFrame(record.id, { durationMs: 80 });
+  assert.equal(added.record.frameCount, 2);
+  assert.equal(added.record.activeFrame, 1);
+  assert.equal(added.record.durationMs, 80);
+  assert.equal(record.totalDurationMs, 180);
+
+  store.mutate(record.id, "dot", (rec) => rec.canvas.setPixel(0, 0, [...RED]));
+  const cloned = store.cloneFrame(record.id, { from: 1 });
+  assert.equal(cloned.record.frameCount, 3);
+  assert.equal(cloned.record.activeFrame, 2);
+  assert.equal(cloned.record.durationMs, 80);
+  assert.deepEqual(cloned.record.canvas.getPixel(0, 0), [...RED]);
+
+  store.undo(record.id);
+  assert.equal(record.frameCount, 2);
+  store.undo(record.id);
+  assert.deepEqual(record.frames[1]!.canvas.getPixel(0, 0), [...TRANSPARENT]);
+  store.undo(record.id);
+  assert.equal(record.frameCount, 1);
+
+  const version = record.version;
+  store.selectFrame(record.id, 0);
+  assert.equal(record.version, version, "switching frames must not create an undo step");
+  assert.equal(store.selectFrame(record.id, 0, 60).durationMs, 60);
+  assert.equal(record.version, version + 1);
+
+  assert.throws(() => store.addFrame(record.id, { at: 5 }), /out of range/);
+  assert.throws(() => store.selectFrame(record.id, 3), /out of range/);
 });
