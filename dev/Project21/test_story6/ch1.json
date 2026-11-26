@@ -1,0 +1,315 @@
+{
+  "references": [
+    {
+      "id": "ref_troy",
+      "prompt": "an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin"
+    },
+    {
+      "id": "ref_injured_man",
+      "prompt": "an East Asian man in his 30s with messy short dark hair, gaunt facial features, and stubble"
+    },
+    {
+      "id": "ref_dino_girl",
+      "prompt": "a petite East Asian teenage girl with messy shoulder-length dark hair, pale skin, and wide startled eyes"
+    },
+    {
+      "id": "bg_riverbank_open",
+      "prompt": "a sun-drenched concrete riverbank with scattered gravel and sparse weeds beside a wide muddy canal under intense overhead midday sunlight with no overhead cover"
+    },
+    {
+      "id": "bg_stranded_trawler_exterior",
+      "prompt": "a large abandoned rusted fishing trawler tilted and stranded on a muddy riverbank with barnacles crusted along its hull under harsh midday sunlight"
+    },
+    {
+      "id": "bg_trawler_corridor",
+      "prompt": "a narrow dim damp wooden corridor inside a derelict fishing trawler with peeling paint, exposed pipes, and shafts of light filtering through rusted portholes"
+    },
+    {
+      "id": "bg_captain_cabin",
+      "prompt": "a cramped derelict ship captain's cabin with weathered wooden paneling, scattered nautical charts, a broken desk, and dusty sunlight streaming through cracked windows"
+    }
+  ],
+  "shots": [
+    {
+      "id": "shot_1_1",
+      "prompt": "Continuing from a wide aerial view of a collapsing city bridge over a wide muddy canal under harsh midday sunlight, the camera sweeps down into a medium shot along the concrete riverbank, showing an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing a fitted olive drab tank top, dark cargo pants, heavy combat boots, and a tactical backpack while gripping a stainless steel pipe and wiping sweat from her forehead, accompanied by distant screeching brakes, crashing metal, and echoing screams, as the woman in the olive tank top looks toward the distant city smoke with a tense expression, her lips parting quickly as she speaks in a sharp female voice: 「這場騷動蔓延得也太快了吧」",
+      "duration": 7,
+      "dialog": "這場騷動蔓延得也太快了吧！",
+      "ref_ids": [
+        "ref_troy",
+        "bg_riverbank_canal"
+      ]
+    },
+    {
+      "id": "shot_1_2",
+      "prompt": "Continuing directly from the previous shot on the sun-drenched riverbank, the camera pans toward the turbulent muddy canal in a wide shot, showing desperate survivors swimming toward shore while pale grey-skinned infected figures thrash violently in the water and attack nearby swimmers, dark red blood blooming briefly in the current before washing away, accompanied by frantic splashing water and inhuman shrieks.",
+      "duration": 6,
+      "dialog": "",
+      "ref_ids": [
+        "bg_riverbank_canal"
+      ]
+    },
+    {
+      "id": "shot_1_3",
+      "prompt": "Continuing from the previous shot of the chaotic canal, the camera tracks alongside in a medium tracking shot, showing an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top, dark cargo pants, and a tactical backpack walking briskly along the exposed riverbank beside dense green bushes, gripping a stainless steel pipe tightly under harsh overhead midday sunlight, accompanied by rustling leaves and footsteps on gravel, as the woman in the olive tank top glances warily at the bushes and speaks in a low tense female voice: 「握槽 還好我落地的點靠近岸邊 看來是某種未知的疾病 絕對不能被咬到」",
+      "duration": 9,
+      "dialog": "握槽……還好我落地的點靠近岸邊。看來是某種未知的疾病……絕對不能被咬到……",
+      "ref_ids": [
+        "ref_troy",
+        "bg_riverbank_bushes"
+      ]
+    },
+    {
+      "id": "shot_1_4",
+      "prompt": "Continuing from the previous shot along the riverbank path, the camera holds a steady medium two-shot as an East Asian man in his 30s with messy short dark hair, gaunt facial features, and stubble wearing a torn grey shirt and dirt-stained slacks crawls painfully out of the thick bushes leaving a dark trail of blood on the concrete, accompanied by heavy rustling branches and labored wheezing, as the pale man on the ground reaches out with a trembling hand and gasps in a weak hoarse male voice: 「救 救命 有 有人嗎」 immediately after, the athletic woman in the olive tank top raises one hand in a sharp shushing gesture and whispers urgently in a low female voice: 「欸 老兄 小聲點」",
+      "duration": 8,
+      "dialog": "「救……救命……有……有人嗎……」 / 「欸！老兄！小聲點！」",
+      "ref_ids": [
+        "ref_troy",
+        "ref_injured_man",
+        "bg_riverbank_bushes"
+      ]
+    },
+    {
+      "id": "shot_1_5",
+      "prompt": "Continuing directly from the previous shot on the riverbank, the camera pushes in into a medium close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top sets down her stainless steel pipe and drags an East Asian man in his 30s with messy short dark hair, gaunt facial features, and stubble out of the bushes, revealing his severely crushed lower legs covered in mud and blood, accompanied by scraping gravel and pained groans, as the woman in the olive tank top widens her eyes in shock and exclaims in a hushed female voice: 「臥槽 你這什麼情形」 immediately after, the injured man trembles violently and whispers in a faint raspy male voice: 「車 車子翻了 我的腳被捲進去」",
+      "duration": 9,
+      "dialog": "「臥槽！你這什麼情形……」 / 「車……車子翻了……我的腳被捲進去……」",
+      "ref_ids": [
+        "ref_troy",
+        "ref_injured_man",
+        "bg_riverbank_bushes"
+      ]
+    },
+    {
+      "id": "shot_1_6",
+      "prompt": "Continuing from the previous shot on the concrete bank, the camera frames a tight medium close-up of an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top pulling a tourniquet from a medical pouch and cinching it tightly around the upper thigh of an East Asian man in his 30s with messy short dark hair, gaunt facial features, and stubble, accompanied by muffled agonizing groans and rustling fabric, as the woman in the olive tank top focuses intently on her hands and speaks in a firm steady female voice: 「你有被咬嗎 會有點痛 你忍一下」 immediately after, the man clenches his teeth and gasps in a strained male voice: 「沒有 我沒被咬 那些怪胎 牠們到處都是」",
+      "duration": 9,
+      "dialog": "「你有被咬嗎？會有點痛，你忍一下。」 / 「沒有……我沒被咬……那些怪胎……牠們到處都是……」",
+      "ref_ids": [
+        "ref_troy",
+        "ref_injured_man",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_7",
+      "prompt": "Continuing from the previous shot, the camera tilts up into a medium shot as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top slides her stainless steel pipe into the side strap of her backpack, wears the backpack strapped across her chest, and hoists an East Asian man in his 30s with messy short dark hair, gaunt facial features, and stubble onto her back, accompanied by heavy footsteps and strained breathing, as the woman in the olive tank top adjusts her grip under his legs and speaks in a determined female voice: 「行了 撐著點 我帶你去醫院 那接下來要麻煩你指路了 老兄 我是遊客 這城市我一點都不熟」",
+      "duration": 9,
+      "dialog": "行了！撐著點，我帶你去醫院。那接下來要麻煩你指路了，老兄。我是遊客，這城市我一點都不熟。",
+      "ref_ids": [
+        "ref_troy",
+        "ref_injured_man",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_8",
+      "prompt": "Continuing from the previous shot along the empty sunlit riverbank, the camera tracks from a side medium close-up showing an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top sweating heavily as she trudges forward carrying an East Asian man in his 30s with messy short dark hair, gaunt facial features, and stubble whose head suddenly slumps forward with dead grey skin, accompanied by heavy panting and crunching gravel, as the woman in the olive tank top turns her head back with an alarmed expression and calls out urgently in a tense female voice: 「欸 老兄 怎麼跟你說的不一樣啊 欸 你別急著死啊 先跟我說怎麼離開這裡啊」",
+      "duration": 9,
+      "dialog": "欸，老兄……怎麼跟你說的不一樣啊？欸！？你別急著死啊！先跟我說怎麼離開這裡啊！",
+      "ref_ids": [
+        "ref_troy",
+        "ref_injured_man",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_9",
+      "prompt": "Continuing directly from the previous shot on the riverbank, the camera snaps into a tight close-up over the shoulder as the East Asian man in his 30s with messy short dark hair, gaunt facial features, and stubble twitches erratically on the woman's back, his eyes snapping open completely bloodshot as his fingernails dig deep into the bare shoulders of the athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin, lunging his jaws toward her neck, accompanied by a terrifying guttural beastly roar.",
+      "duration": 6,
+      "dialog": "",
+      "ref_ids": [
+        "ref_troy",
+        "ref_injured_man",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_10",
+      "prompt": "Continuing directly from the ambush on the riverbank, the camera captures a dynamic medium close-up with rapid handheld motion as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top violently snaps her head backward, delivering a brutal series of headbutts straight into the face of the bloodshot East Asian man in his 30s with messy short dark hair, gaunt facial features, and stubble on her back, shattering his teeth and jaw with spraying blood, accompanied by sickening bone-crushing impacts and fierce female combat grunts.",
+      "duration": 7,
+      "dialog": "",
+      "ref_ids": [
+        "ref_troy",
+        "ref_injured_man",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_11",
+      "prompt": "Continuing directly from the close-quarters struggle, the camera drops to a fast low-angle medium shot as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top draws a tactical military dagger from her waist, slices cleanly across the attacking man's left thumb to break his grip, and hurls the East Asian man in his 30s with messy short dark hair, gaunt facial features, and stubble violently onto the concrete ground, accompanied by a sharp metallic slash, tearing flesh, and a heavy body thud.",
+      "duration": 6,
+      "dialog": "",
+      "ref_ids": [
+        "ref_troy",
+        "ref_injured_man",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_12",
+      "prompt": "Continuing directly from the takedown on the riverbank, the camera pushes into a high-angle medium close-up looking down as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top reverses her grip on the military dagger and plunges it downward straight through the crown of the fallen East Asian man's skull, yet the bloodshot man continues clawing wildly at the air, accompanied by a dull piercing thud and frantic scratching on concrete, as the woman in the olive tank top glares down furiously and shouts in a fierce female voice: 「當老娘吃素的是吧」",
+      "duration": 7,
+      "dialog": "當老娘吃素的是吧！",
+      "ref_ids": [
+        "ref_troy",
+        "ref_injured_man",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_13",
+      "prompt": "Continuing directly from the previous shot on the ground, the camera frames a low-angle medium shot looking up at an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top yanking her stainless steel pipe from her backpack and swinging it downward repeatedly with ruthless cold precision in blurring strikes toward the ground below frame, droplets of dark blood splattering across her face and arms under the midday sun, accompanied by rapid heavy metallic bludgeoning impacts, as she grits her teeth and shouts in a cold furious female voice: 「再來 再來」",
+      "duration": 8,
+      "dialog": "再來！再來！",
+      "ref_ids": [
+        "ref_troy",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_14",
+      "prompt": "Continuing from the aftermath on the sunlit riverbank, the camera holds a steady medium close-up of an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top leaning forward with hands on her knees, gasping heavily for air and wiping sweat from her neck before noticing raw bleeding scratch marks torn into both of her bare shoulders, accompanied by ragged heavy breathing and distant echoing monster shrieks, as the woman in the olive tank top stares down at her bleeding shoulders with a grim tense expression and mutters in a breathless female voice: 「真他媽難搞 腦袋中刀都還死不透 嘖 還好沒被咬到」",
+      "duration": 9,
+      "dialog": "真他媽難搞！腦袋中刀都還死不透……嘖……還好沒被咬到。",
+      "ref_ids": [
+        "ref_troy",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_15",
+      "prompt": "Continuing from the sunlit riverbank, the camera tracks alongside in a medium shot as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top, dark cargo pants, and a tactical backpack walks briskly away from the scene before stopping abruptly with a furrowed brow, accompanied by crunching gravel and distant echoing monster shrieks, as the woman in the olive tank top looks toward the distant city skyline with a calculating expression and speaks in a low steady female voice: 「看來今天 可能會餓肚子啊」",
+      "duration": 7,
+      "dialog": "看來今天……可能會餓肚子啊。",
+      "ref_ids": [
+        "ref_troy",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_16",
+      "prompt": "Continuing directly from the previous shot on the concrete riverbank, the camera pushes in into a medium close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top turns back and crouches beside the motionless body of an East Asian man in his 30s with messy short dark hair, gaunt facial features, and stubble, inspecting his intact skin for bite marks under harsh midday sunlight, accompanied by faint buzzing flies and distant river current, as the woman in the olive tank top tilts her head thoughtfully and mutters in a calm analytical female voice: 「好傢伙 這小子真的沒說謊 他沒被咬 沒傷口 所以說不只是要小心被咬 還有其他傳染途徑」",
+      "duration": 9,
+      "dialog": "好傢伙……這小子真的沒說謊，他沒被咬。沒傷口……所以說不只是要小心被咬，還有其他傳染途徑？",
+      "ref_ids": [
+        "ref_troy",
+        "ref_injured_man",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_17",
+      "prompt": "Continuing from the previous shot on the exposed riverbank, the camera tilts up into a medium shot as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top stands up and gazes toward the distant city under glaring midday sunlight, accompanied by a low windless hum, as the woman in the olive tank top sighs slightly and speaks in a dry composed female voice: 「早知道當初就去考醫官了 總之 盡量避免非必要的交戰吧」",
+      "duration": 8,
+      "dialog": "早知道當初就去考醫官了。總之，盡量避免非必要的交戰吧。",
+      "ref_ids": [
+        "ref_troy",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_18",
+      "prompt": "Continuing directly from the previous shot along the riverbank, the camera snaps into a tight close-up orbiting rapidly around the head of an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin as her pupils dilate sharply, her expression twisting in sudden agony as she drops her stainless steel pipe and clamps both hands tightly over her ears, accompanied by an overwhelming sensory surge of amplified distant women weeping, dying gasps, and overlapping monster roars echoing inside her skull, as she bends forward and groans in a strained pained female voice: 「這是怎麼回事 唔 好吵 閉嘴」",
+      "duration": 9,
+      "dialog": "這是怎麼回事……唔……好吵……閉嘴……",
+      "ref_ids": [
+        "ref_troy",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_19",
+      "prompt": "Continuing directly from the sensory overload on the concrete bank, the camera frames a medium close-up of an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top ripping open her tactical backpack on the ground and frantically stuffing chocolate bars, chips, rice balls, and sweet bread into her mouth with trembling hands while her eyes dart warily around the perimeter, accompanied by frantic crinkling wrappers and rapid chewing.",
+      "duration": 8,
+      "dialog": "",
+      "ref_ids": [
+        "ref_troy",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_20",
+      "prompt": "Continuing directly from the frantic eating on the riverbank, the camera pushes into an extreme close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top wipes her lips and freezes in horror, spotting dark purple veins spreading like spiderwebs beneath the skin around the raw scratch marks on both of her bare shoulders, accompanied by a heavy pounding heartbeat, as the woman in the olive tank top stares at her shoulders with wide devastated eyes and gasps in a trembling female voice: 「臥槽 操 操 操」",
+      "duration": 7,
+      "dialog": "臥槽！操！操！操————！！！",
+      "ref_ids": [
+        "ref_troy",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_21",
+      "prompt": "Continuing directly from the discovery on the gravel riverbank, the camera drops into a low-angle medium close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top collapses onto her knees and slams her fists repeatedly against the rough gravel until her knuckles bleed, accompanied by dull thuds against stones and ragged sobbing breaths, as the woman in the olive tank top bows her head in bitter regret and speaks in a choked furious female voice: 「媽的 早知道就不救人了 我也會變成那種鬼樣子嗎」",
+      "duration": 8,
+      "dialog": "媽的……早知道就不救人了。我也會變成那種鬼樣子嗎……",
+      "ref_ids": [
+        "ref_troy",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_22",
+      "prompt": "Continuing directly from the previous shot on the riverbank, the camera slowly pushes in into a tight close-up as despair fades from the face of an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin, replaced by a cold ruthless glare as she rises to her feet and adjusts the military dagger sheath at her waist, accompanied by a sharp metallic click and quiet river breeze, as she speaks in an icy determined female voice: 「既然要死 那就多拉幾個陪葬的 最後一刀 就留給我自己吧」",
+      "duration": 8,
+      "dialog": "既然要死……那就多拉幾個陪葬的。最後一刀，就留給我自己吧。",
+      "ref_ids": [
+        "ref_troy",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_1_23",
+      "prompt": "Continuing from the riverbank path, the camera frames a wide shot tilting up toward a large abandoned rusted fishing trawler tilted on the muddy shore with barnacles crusted along its hull, as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top and dark cargo pants grips her blood-stained stainless steel pipe and strides purposefully toward the vessel, accompanied by faint sharp scratching sounds echoing from inside the hull, as she narrows her eyes fiercely and mutters in a cold female voice: 「好樣的 就從你開刀」",
+      "duration": 7,
+      "dialog": "好樣的……就從你開刀！",
+      "ref_ids": [
+        "ref_troy",
+        "bg_stranded_trawler_exterior"
+      ]
+    },
+    {
+      "id": "shot_1_24",
+      "prompt": "Continuing into the dim interior of the tilted trawler, the camera tracks behind in a medium tracking shot as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top steps carefully up a damp wooden corridor with her stainless steel pipe raised, closing her eyes briefly to pinpoint faint sounds through the creaking hull, accompanied by murky water sloshing below decks and heavy combat boots echoing on wet wood, as she opens her eyes sharply and whispers in a cold confident female voice: 「很好 一個都別想逃」",
+      "duration": 8,
+      "dialog": "很好……一個都別想逃。",
+      "ref_ids": [
+        "ref_troy",
+        "bg_trawler_corridor"
+      ]
+    },
+    {
+      "id": "shot_1_25",
+      "prompt": "Continuing directly up the narrow corridor, the camera holds a tense medium shot as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top halts outside a weathered white wooden door marked with faded captain's cabin lettering, accompanied by faint rapid rummaging behind the door, as she raises one heavy combat boot and shouts in a fierce commanding female voice: 「來吧 老娘來超渡你啦」",
+      "duration": 6,
+      "dialog": "來吧！老娘來超渡你啦！",
+      "ref_ids": [
+        "ref_troy",
+        "bg_trawler_corridor"
+      ]
+    },
+    {
+      "id": "shot_1_26",
+      "prompt": "Continuing directly from the doorway, the camera snaps into a dynamic wide angle as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top kicks the decayed white wooden door off its hinges into the captain's cabin, revealing a petite East Asian teenage girl with messy shoulder-length dark hair, pale skin, and wide startled eyes wearing a huge bright green dinosaur-shaped backpack crouching beside a dead sailor's body with grey-white hands rummaging frantically, accompanied by a loud splintering door crash and startled gasp.",
+      "duration": 7,
+      "dialog": "",
+      "ref_ids": [
+        "ref_troy",
+        "ref_dino_girl",
+        "bg_captain_cabin"
+      ]
+    },
+    {
+      "id": "shot_1_27",
+      "prompt": "Continuing directly from the breach in the captain's cabin, the camera pushes into an intense fast-motion medium close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top lunges forward in a blur toward the back of a petite East Asian teenage girl with messy shoulder-length dark hair, pale skin, and wide startled eyes wearing a huge bright green dinosaur-shaped backpack, raising her stainless steel pipe high overhead for a lethal strike aimed at the back of the girl's head, accompanied by rushing wind and heavy footsteps, as the woman roars in a furious female voice: 「午餐結束啦 小妞 看棒」",
+      "duration": 6,
+      "dialog": "午餐結束啦！小妞！看棒————！！",
+      "ref_ids": [
+        "ref_troy",
+        "ref_dino_girl",
+        "bg_captain_cabin"
+      ]
+    }
+  ]
+}

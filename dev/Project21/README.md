@@ -82,3 +82,10 @@ node workspace/tools/concat_videos_from_report.mjs .\test_story5\output\video\do
 
 node workspace/tools/build_subtitles_from_json.mjs .\test_story5\story.json --film .\test_story5\output\video\merged.mp
 ```
+
+
+```
+node workspace/tools/generate_refs_from_json.mjs --json .\test_story6\ch1.json --output .\test_story6\output\refs
+
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story6\ch1.json --output .\test_story6\output\video --mode r2v --no-turbo --seed 100 --width 416 --height 736 --force
+```
