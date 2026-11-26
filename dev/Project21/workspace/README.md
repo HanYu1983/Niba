@@ -253,6 +253,17 @@ node workspace/tools/concat_videos_from_report.mjs --report .\test_story5\output
 預設輸出 `<report.output>/merged.mp4`，用 ffmpeg concat demuxer 做 stream copy；
 接縫有問題時加 `--reencode`（H.264 CRF 18 + AAC 192k）。
 
+字幕（由 `story.json.shots[].dialog` 產生，用實際片長縮放時間軸）：
+
+```bat
+node workspace/tools/build_subtitles_from_json.mjs .\test_story5\story.json --duration 144.95
+node workspace/tools/build_subtitles_from_json.mjs .\test_story5\story.json --film .\test_story5\output\video\merged.mp4
+```
+
+`scale = 實際片長 / sum(shot.duration)`；對白依標點切 cue、依每秒字數分配的時間再整體縮放。
+給 `--film` 時 SRT/VTT 寫在影片旁邊，否則寫在 story.json 旁邊；也可 `--out` 指定。
+內部獨白會自動用 `<i>` 標示。
+
 ### 8. 批次渲染
 
 ```bat

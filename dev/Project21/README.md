@@ -71,7 +71,14 @@ node workspace/tools/generate_refs_from_json.mjs --json .\test_story5\story.json
 
 node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\video --mode r2v
 
-node workspace/tools/download_videos_from_json.mjs --jobs .\test_story5\output\video\render_jobs.json --output .\test_story5\output\video
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.json --output .\
+test_story5\output\video --mode r2v --no-turbo --seed 100 --width 416 --height 736 --force
+
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\video --mode r2v --no-turbo --seed 100 --width 416 --height 736 --id shot_3_7 --force
+
+node workspace/tools/download_videos_from_json.mjs --jobs .\test_story5\output\video\render_jobs.json --output .\test_story5\output\video --force
 
 node workspace/tools/concat_videos_from_report.mjs .\test_story5\output\video\download_report.json
+
+node workspace/tools/build_subtitles_from_json.mjs .\test_story5\story.json --film .\test_story5\output\video\merged.mp
 ```
