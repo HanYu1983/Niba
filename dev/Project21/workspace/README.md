@@ -242,6 +242,17 @@ node workspace/tools/download_videos_from_json.mjs --jobs .\test_story5\output\v
 預設會等每個 job 完成再下載到 `<output>/<shot.id>/`；`--no-wait` 只抓已经出現在
 ComfyUI history 的結果，其他列為 pending。摘要寫在 `<output>/download_report.json`。
 
+合併（順序就是 report 裡 `shots[]` 的順序）：
+
+```bat
+node workspace/tools/concat_videos_from_report.mjs .\test_story5\output\video\download_report.json
+node workspace/tools/concat_videos_from_report.mjs --report .\test_story5\output\video\download_report.json --reencode
+node workspace/tools/concat_videos_from_report.mjs --report .\test_story5\output\video\download_report.json --from shot_1_1 --to shot_2_1 --out .\final.mp4
+```
+
+預設輸出 `<report.output>/merged.mp4`，用 ffmpeg concat demuxer 做 stream copy；
+接縫有問題時加 `--reencode`（H.264 CRF 18 + AAC 192k）。
+
 ### 8. 批次渲染
 
 ```bat

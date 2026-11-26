@@ -73,4 +73,5 @@ node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.js
 
 node workspace/tools/download_videos_from_json.mjs --jobs .\test_story5\output\video\render_jobs.json --output .\test_story5\output\video
 
+node workspace/tools/concat_videos_from_report.mjs .\test_story5\output\video\download_report.json
 ```
