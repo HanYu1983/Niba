@@ -64,3 +64,13 @@ node .\workspace\tools\method2_segment.mjs --json .\test_story4\deepseek_json_1.
 
 node .\workspace\tools\method2_segment.mjs --json .\test_story4\deepseek_json_1.json --video --out .\test_story4\output\ --ref-root .\test_story4\output\ --mode t2v --from-index 0 --to-index 5 --no-turbo
 ```
+
+
+```
+node workspace/tools/generate_refs_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\refs
+
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\video --mode r2v
+
+node workspace/tools/download_videos_from_json.mjs --jobs .\test_story5\output\video\render_jobs.json --output .\test_story5\output\video
+
+```

@@ -1,0 +1,185 @@
+{
+    "references": [
+        {
+            "id": "ref_xin_er",
+            "prompt": "a young East Asian woman in her mid-20s with wavy chestnut hair tied in a low ponytail, delicate facial features, almond-shaped eyes, and a soft oval face"
+        },
+        {
+            "id": "ref_mr_liang",
+            "prompt": "a mature East Asian man in his late 30s with neatly combed short black hair, defined jawline, calm deep-set eyes, and a composed facial structure"
+        }
+    ],
+    "shots": [
+        {
+            "id": "shot_1_1",
+            "prompt": "Continuing from the previous shot of dark storm clouds gathering outside a high-rise building, the camera slowly pushes in into a medium shot inside a modern telemarketing office, showing a young East Asian woman in her mid-20s with wavy chestnut hair tied in a low ponytail, delicate facial features, almond-shaped eyes, and a soft oval face wearing a fitted cream-colored blouse and delicate silver earrings while staring intently at a glowing computer monitor displaying a sales progress bar as heavy afternoon rain lashes against the floor-to-ceiling glass window behind her, accompanied by the sharp patter of raindrops on glass and muffled office keyboard clicking.",
+            "duration": 6,
+            "dialog": "",
+            "ref_ids": [
+                "ref_xin_er"
+            ]
+        },
+        {
+            "id": "shot_1_2",
+            "prompt": "Continuing directly from the previous shot of the woman at her desk, the camera orbits smoothly into a medium close-up, showing a young East Asian woman in her mid-20s with wavy chestnut hair tied in a low ponytail, delicate facial features, almond-shaped eyes, and a soft oval face wearing a fitted cream-colored blouse and delicate silver earrings while picking up a smartphone with a calculated gentle smile as cold rainy daylight reflects off her face, accompanied by the steady sound of rain hitting the window, as she holds the phone near her chin and speaks in a soft sweet female voice: 「梁大哥 今天雨好大 剛才去開會 主管說有個專屬老友的限量額度 全公司只有三個」",
+            "duration": 8,
+            "dialog": "梁大哥，今天雨好大。剛才去開會，主管說有個『專屬老友』的限量額度，全公司只有三個。",
+            "ref_ids": [
+                "ref_xin_er"
+            ]
+        },
+        {
+            "id": "shot_1_3",
+            "prompt": "Continuing directly from the previous shot of the woman speaking into her phone, the camera cuts to a tight close-up on her face, showing a young East Asian woman in her mid-20s with wavy chestnut hair tied in a low ponytail, delicate facial features, almond-shaped eyes, and a soft oval face wearing a fitted cream-colored blouse and delicate silver earrings while lowering her gaze slightly to feign hesitation with raindrops streaking the glass in the blurred background, accompanied by distant thunder rumbling softly, as she bites her lower lip subtly and continues in an earnest affectionate female voice: 「我第一個就想幫你留著 因為我覺得你這種對生活有規劃的人 最適合這個方案」",
+            "duration": 8,
+            "dialog": "我第一個就想幫你留著，因為我覺得你這種對生活有規劃的人，最適合這個方案。",
+            "ref_ids": [
+                "ref_xin_er"
+            ]
+        },
+        {
+            "id": "shot_1_4",
+            "prompt": "Continuing directly from the previous shot of the woman's earnest expression, the camera slowly pushes in into an extreme close-up, showing a young East Asian woman in her mid-20s with wavy chestnut hair tied in a low ponytail, delicate facial features, almond-shaped eyes, and a soft oval face wearing a fitted cream-colored blouse and delicate silver earrings with a vulnerable yet calculating glint in her eyes, accompanied by the quiet hum of office air conditioning and rain outside, as she sighs softly and speaks in a hesitant delicate female voice: 「但我又怕跟你提這個 你會覺得我也只是那些想掏你錢的推銷員 我好矛盾」",
+            "duration": 7,
+            "dialog": "但我又怕跟你提這個，你會覺得我也只是那些想掏你錢的推銷員……我好矛盾。",
+            "ref_ids": [
+                "ref_xin_er"
+            ]
+        },
+        {
+            "id": "shot_1_5",
+            "prompt": "Continuing directly from the previous shot of the woman lowering her phone, the camera holds a steady close-up as her vulnerable expression instantly vanishes into cold composure, showing a young East Asian woman in her mid-20s with wavy chestnut hair tied in a low ponytail, delicate facial features, almond-shaped eyes, and a soft oval face wearing a fitted cream-colored blouse while leaning back in her chair with a faint knowing smirk, accompanied by muffled thunder and soft rain, as she gazes calmly at her dark phone screen, her lips barely moving as she whispers internally in a cool analytical female voice: 「這叫防禦性出擊 我先把他的質疑說出來 讓他沒話可說 我利用限量製造緊張感 再用矛盾來博取同情」",
+            "duration": 8,
+            "dialog": "這叫防禦性出擊。我先把他的質疑說出來，讓他沒話可說。我利用限量製造緊張感，再用矛盾來博取同情。",
+            "ref_ids": [
+                "ref_xin_er"
+            ]
+        },
+        {
+            "id": "shot_1_6",
+            "prompt": "Continuing directly from the previous shot of the woman leaning back in her chair, the camera shifts to a side-profile close-up against the rain-streaked window, showing a young East Asian woman in her mid-20s with wavy chestnut hair tied in a low ponytail, delicate facial features, almond-shaped eyes, and a soft oval face wearing a fitted cream-colored blouse while tapping her manicured fingers lightly on the desk, accompanied by the rhythmic patter of rain, as she narrows her eyes slightly, her lips motionless as she thinks internally in a confident calculating female voice: 「這根刺很軟 但如果他有反應 就代表他已經對我產生了保護欲」",
+            "duration": 7,
+            "dialog": "這根刺很軟，但如果他有反應，就代表他已經對我產生了保護欲。",
+            "ref_ids": [
+                "ref_xin_er"
+            ]
+        },
+        {
+            "id": "shot_2_1",
+            "prompt": "Continuing from the previous shot of rain streaking down glass, the camera slowly tracks sideways into a medium shot inside a quiet upscale private office, showing a mature East Asian man in his late 30s with neatly combed short black hair, defined jawline, calm deep-set eyes, and a composed facial structure wearing a crisp dark navy dress shirt, silver-rimmed glasses, and a silver wristwatch while sitting by a panoramic window overlooking a rain-blurred city skyline and smoothly spinning a silver fountain pen between his fingers, accompanied by the low rumble of distant thunder and the faint ticking of a wall clock.",
+            "duration": 6,
+            "dialog": "",
+            "ref_ids": [
+                "ref_mr_liang"
+            ]
+        },
+        {
+            "id": "shot_2_2",
+            "prompt": "Continuing directly from the previous shot of the man spinning his pen, the camera slowly pushes in into a medium close-up, showing a mature East Asian man in his late 30s with neatly combed short black hair, defined jawline, calm deep-set eyes, and a composed facial structure wearing a crisp dark navy dress shirt and silver-rimmed glasses while placing the silver fountain pen down calmly and picking up a smartphone as cool grey window light reflects off his glasses, accompanied by the muted sound of rain against the high-rise glass, as he looks at the phone screen with a composed expression, his lips moving steadily as he speaks in a calm deep male voice: 「妡兒 限量確實誘人 但我記得我說過 我對目前的財務規劃很滿意」",
+            "duration": 8,
+            "dialog": "妡兒，限量確實誘人。但我記得我說過，我對目前的財務規劃很滿意。",
+            "ref_ids": [
+                "ref_mr_liang"
+            ]
+        },
+        {
+            "id": "shot_2_3",
+            "prompt": "Continuing directly from the previous shot of the man holding his phone, the camera cuts to a close-up on his face, showing a mature East Asian man in his late 30s with neatly combed short black hair, defined jawline, calm deep-set eyes, and a composed facial structure wearing a crisp dark navy dress shirt and silver-rimmed glasses while raising one eyebrow slightly with a perceptive half-smile, accompanied by the quiet hum of the room, as he gazes steadily ahead and continues in a measured polite male voice: 「妳說妳矛盾 是因為妳在朋友的關心和業務的職責之間拉扯嗎」",
+            "duration": 7,
+            "dialog": "妳說妳矛盾，是因為妳在『朋友的關心』和『業務的職責』之間拉扯嗎？",
+            "ref_ids": [
+                "ref_mr_liang"
+            ]
+        },
+        {
+            "id": "shot_2_4",
+            "prompt": "Continuing directly from the previous shot of the man's perceptive expression, the camera slowly pushes in into a tight close-up, showing a mature East Asian man in his late 30s with neatly combed short black hair, defined jawline, calm deep-set eyes, and a composed facial structure wearing a crisp dark navy dress shirt and silver-rimmed glasses while leaning slightly forward against the blurred rainy cityscape, accompanied by a soft distant thunderclap, as he speaks smoothly in a gentle yet firm male voice: 「如果是這樣 妳可以把那個名額留給更需要的人 別為了我為難」",
+            "duration": 7,
+            "dialog": "如果是這樣，妳可以把那個名額留給更需要的人，別為了我為難。",
+            "ref_ids": [
+                "ref_mr_liang"
+            ]
+        },
+        {
+            "id": "shot_2_5",
+            "prompt": "Continuing directly from the previous shot of the man lowering his phone, the camera orbits slowly to a three-quarter close-up, showing a mature East Asian man in his late 30s with neatly combed short black hair, defined jawline, calm deep-set eyes, and a composed facial structure wearing a crisp dark navy dress shirt and silver-rimmed glasses while turning his gaze toward the rain-drenched city outside with an unreadable calm expression, accompanied by the faint ticking of a clock and rain pattering on glass, as he rests his chin lightly on his hand, his lips closed as he whispers internally in a composed observant male voice: 「她想收網了 但我還沒打算進籠 我故意把矛盾還給她 這是一種優雅的拒絕 也是一種試探」",
+            "duration": 8,
+            "dialog": "她想收網了，但我還沒打算進籠。我故意把「矛盾」還給她。這是一種優雅的拒絕，也是一種試探。",
+            "ref_ids": [
+                "ref_mr_liang"
+            ]
+        },
+        {
+            "id": "shot_2_6",
+            "prompt": "Continuing directly from the previous shot of the man looking out the window, the camera pushes in into an extreme close-up on his eyes behind silver-rimmed glasses, showing a mature East Asian man in his late 30s with neatly combed short black hair, defined jawline, calm deep-set eyes, and a composed facial structure wearing a crisp dark navy dress shirt while watching raindrops slide down the glass, accompanied by low ambient rain noise, as he maintains a faint detached smirk, his lips motionless as he thinks internally in a dry amused male voice: 「我想看看 當我明確拒絕那個名額時 她的溫柔還能維持多久 如果她立刻冷淡 那這場戲就太無聊了」",
+            "duration": 8,
+            "dialog": "我想看看，當我明確拒絕那個名額時，她的溫柔還能維持多久。如果她立刻冷淡，那這場戲就太無聊了。",
+            "ref_ids": [
+                "ref_mr_liang"
+            ]
+        },
+        {
+            "id": "shot_3_1",
+            "prompt": "Continuing from the previous shot inside the dimly lit telemarketing office, the camera quickly pushes in into a close-up, showing a young East Asian woman in her mid-20s with wavy chestnut hair tied in a low ponytail, delicate facial features, almond-shaped eyes, and a soft oval face wearing a fitted cream-colored blouse while freezing momentarily as her eyes widen slightly in surprise while reading her smartphone screen, accompanied by rain hitting the window and distant office chatter, as she quickly softens her face into a hurt expression and speaks into her phone in a quiet subdued female voice: 「我明白了 梁大哥 可能真的是我想多了 總覺得最好的東西就該留給你」",
+            "duration": 8,
+            "dialog": "我明白了，梁大哥。可能真的是我想多了，總覺得最好的東西就該留給你。",
+            "ref_ids": [
+                "ref_xin_er"
+            ]
+        },
+        {
+            "id": "shot_3_2",
+            "prompt": "Continuing directly from the previous shot of the woman's subdued expression, the camera cuts to a tight close-up on her downcast eyes, showing a young East Asian woman in her mid-20s with wavy chestnut hair tied in a low ponytail, delicate facial features, almond-shaped eyes, and a soft oval face wearing a fitted cream-colored blouse while lowering her head slightly as soft monitor light illuminates her face, accompanied by the gentle patter of rain, as she exhales softly and continues in a fragile apologetic female voice: 「抱歉 我不該在聊天時提這些掃興的事 你忙吧 我不吵你了」",
+            "duration": 6,
+            "dialog": "抱歉，我不該在聊天時提這些掃興的事。你忙吧，我不吵你了。",
+            "ref_ids": [
+                "ref_xin_er"
+            ]
+        },
+        {
+            "id": "shot_3_3",
+            "prompt": "Continuing directly from the previous shot of the woman setting her phone face-down on the desk, the camera holds a tight close-up as her fragile expression hardens into sharp determination, showing a young East Asian woman in her mid-20s with wavy chestnut hair tied in a low ponytail, delicate facial features, almond-shaped eyes, and a soft oval face wearing a fitted cream-colored blouse while clenching her jaw slightly and staring at the screen, accompanied by thunder rumbling outside, as she narrows her eyes, her lips motionless as she whispers internally in a cold determined female voice: 「該死 他比我想像中更難對付 他用專業的理智擋住了我的情感勒索 但我不能斷聯 我得表現得更受傷更卑微 我要讓他覺得 他剛剛那句體面的拒絕 其實深深地刺痛了我的真心」",
+            "duration": 9,
+            "dialog": "該死。他比我想像中更難對付。他用專業的理智擋住了我的情感勒索。但我不能斷聯，我得表現得更受傷、更卑微。我要讓他覺得，他剛剛那句體面的拒絕，其實深深地刺痛了我的真心。",
+            "ref_ids": [
+                "ref_xin_er"
+            ]
+        },
+        {
+            "id": "shot_3_4",
+            "prompt": "Continuing from the previous shot inside the quiet private office as late afternoon storm light turns deep blue, the camera slowly pushes in into a medium close-up, showing a mature East Asian man in his late 30s with neatly combed short black hair, defined jawline, calm deep-set eyes, and a composed facial structure wearing a crisp dark navy dress shirt and silver-rimmed glasses while glancing at his silent smartphone on the wooden desk before picking it up with a slight frown, accompanied by the steady sound of rain and a ticking clock, as he speaks into the phone in a slightly hesitant gentle male voice: 「生氣了 我只是不想讓妳在工作上承擔不必要的期待」",
+            "duration": 7,
+            "dialog": "生氣了？我只是不想讓妳在工作上承擔不必要的期待。",
+            "ref_ids": [
+                "ref_mr_liang"
+            ]
+        },
+        {
+            "id": "shot_3_5",
+            "prompt": "Continuing from the previous shot inside the telemarketing office, the camera slowly orbits into a close-up, showing a young East Asian woman in her mid-20s with wavy chestnut hair tied in a low ponytail, delicate facial features, almond-shaped eyes, and a soft oval face wearing a fitted cream-colored blouse while looking at her glowing phone screen with a slow victorious hunter-like smile and typing deliberately with her thumbs, accompanied by soft keyboard clicks and rain against the glass, as she tilts her head slightly, her voiceover sounding softly in a wounded bitter female voice: 「沒生氣 只是覺得自己很傻 原本以為我們已經超越了那種買與賣的層次」",
+            "duration": 7,
+            "dialog": "沒生氣，只是覺得自己很傻。原本以為我們已經超越了那種『買與賣』的層次。",
+            "ref_ids": [
+                "ref_xin_er"
+            ]
+        },
+        {
+            "id": "shot_3_6",
+            "prompt": "Continuing directly from the previous shot of the woman typing on her phone, the camera pushes in into an extreme close-up on her eyes illuminated by the phone screen, showing a young East Asian woman in her mid-20s with wavy chestnut hair tied in a low ponytail, delicate facial features, almond-shaped eyes, and a soft oval face wearing a fitted cream-colored blouse while maintaining a calm triumphant smirk and sending the message, accompanied by a soft digital send chime and rain outside, as her wounded voiceover continues in a sorrowful disappointed female voice: 「看來 在梁大哥心裡 我始終只是那個打電話的周小姐」",
+            "duration": 6,
+            "dialog": "看來，在梁大哥心裡，我始終只是那個『打電話的周小姐』。",
+            "ref_ids": [
+                "ref_xin_er"
+            ]
+        },
+        {
+            "id": "shot_3_7",
+            "prompt": "Continuing directly from the previous shot inside the quiet dark office, the camera slowly pushes in into a tight close-up on the face of a mature East Asian man in his late 30s with neatly combed short black hair, defined jawline, calm deep-set eyes, and a composed facial structure wearing a crisp dark navy dress shirt and silver-rimmed glasses while staring motionless at the message glowing on his smartphone screen, accompanied by heavy rain streaking the dark window behind him and a low ambient hum, as he furrows his brow slightly with a flicker of guilt in his eyes, his lips motionless as he whispers internally in a conflicted troubled male voice: 「她開始扣帽子了 她在指責我冷血 指責我否定了這段時間的連結 這根刺現在扎到了我身上 我很清楚這是 PUA 的手段 但看著那行字 我的心裡竟然真的泛起了一絲負罪感 我是不是真的太不近人情了」",
+            "duration": 9,
+            "dialog": "她開始「扣帽子」了。她在指責我冷血，指責我否定了這段時間的連結。這根刺現在扎到了我身上。我很清楚這是 PUA 的手段，但看著那行字，我的心裡竟然真的泛起了一絲負罪感。我是不是真的太不近人情了？",
+            "ref_ids": [
+                "ref_mr_liang"
+            ]
+        }
+    ]
+}

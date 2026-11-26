@@ -174,6 +174,16 @@ node workspace/tools/generate_refs.mjs --story my_story --force --dry-run
 成功後把 `plan.entities[*].reference.status` 改成 `ready`，並寫 `refs_report.json`。
 `--dry-run` 只印出每個實體會去哪、多大，不呼叫 ComfyUI。
 
+若故事只有 `story.json.references`（沒有 plan），改用：
+
+```bat
+node workspace/tools/generate_refs_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\refs
+node workspace/tools/generate_refs_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\refs --id ref_xin_er
+```
+
+不給 `--id` 就生成全部 references；`--id` 可用逗號或重複指定。下載路徑是
+`<output>/<reference.id>/`，報告寫在 `<output>/refs_report.json`。
+
 ### 6. 檢查參考圖
 
 ```bat
@@ -205,6 +215,32 @@ t2v 升級成 i2v（`minimax_t2v` + 首幀）。r2v 會把 `segment.reference_im
 status / seed / turbo / width / height / duration_sec / frames / references / files`。
 
 `--async` 只送出不等結果，之後用 `audit_renders` + `download_renders` 收。
+
+#### 7.1 story.json shots 批次送件（异步）
+
+適用於只有 `story.json.shots`、沒有 plan 的故事（例如 `test_story5`）：
+
+```bat
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\video --mode r2v
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\video --id shot_1_1 --mode t2v
+```
+
+不給 `--id` 就是全部 shots。r2v 會依照 `shot.ref_ids` 到 `--refs`（預設為
+`<output>/../refs`）找出**建立日期最新**的對應資料夾，再取該資料夾內最新的圖片。
+每次提交都是 `wait:false`，結果預計下載到 `<output>/<shot.id>/`；`prompt_id` 與
+ComfyUI 連線資訊即時寫入 `<output>/render_jobs.json`，每筆 `download` 欄位可直接交給
+`comfy_job`（或檔案內的 `download_command`）把算好的影片拉回來。已有 `prompt_id` 的
+shot 會跳過，`--force` 才重送。
+
+下載（用上面那份 `render_jobs.json`）：
+
+```bat
+node workspace/tools/download_videos_from_json.mjs --jobs .\test_story5\output\video\render_jobs.json --output .\test_story5\output\video
+node workspace/tools/download_videos_from_json.mjs --jobs .\test_story5\output\video\render_jobs.json --output .\test_story5\output\video --no-wait --id shot_1_1
+```
+
+預設會等每個 job 完成再下載到 `<output>/<shot.id>/`；`--no-wait` 只抓已经出現在
+ComfyUI history 的結果，其他列為 pending。摘要寫在 `<output>/download_report.json`。
 
 ### 8. 批次渲染
 
