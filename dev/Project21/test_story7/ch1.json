@@ -1,0 +1,126 @@
+{
+  "references": [
+    {
+      "id": "ref_char_gu_tang",
+      "type": "character",
+      "prompt": "a 32-year-old East Asian woman with sleek shoulder-length jet-black hair, sharp observant almond eyes, subtle eyebrows, and a slender oval face with fair skin"
+    },
+    {
+      "id": "ref_char_coat_man",
+      "type": "character",
+      "prompt": "a man in his mid-30s with slightly tousled dark hair, deep-set melancholic eyes, a straight nose, and a gaunt angular jawline"
+    },
+    {
+      "id": "ref_char_director",
+      "type": "character",
+      "prompt": "a man in his mid-40s with neatly parted salt-and-pepper short hair, calm narrow eyes, fine forehead lines, and a composed square face"
+    },
+    {
+      "id": "ref_prop_water_glass",
+      "type": "prop",
+      "prompt": "a minimalist clear cylindrical glass half-filled with still water resting on a sleek small round matte-white side table"
+    },
+    {
+      "id": "ref_env_screening_room",
+      "type": "environment",
+      "prompt": "a vast hollowed-out shell-like futuristic chamber with seamless organic walls that subtly pulse and glow with deep bioluminescent ocean-blue light, no seats or screen, with a single plush minimalist armchair at the center"
+    },
+    {
+      "id": "ref_env_train_station",
+      "type": "environment",
+      "prompt": "a moody vintage railway platform filled with drifting coal smoke, warm tungsten overhead lamps, waiting passengers in muted coats, and iron pillars along wet stone tiles"
+    },
+    {
+      "id": "ref_env_server_room",
+      "type": "environment",
+      "prompt": "an immense industrial server hall ten times larger than a theater, packed with towering black data racks covered in thousands of blinking indicator lights under cold overhead LED strips"
+    }
+  ],
+  "shots": [
+    {
+      "id": "shot_1_1",
+      "prompt": "Establishing wide shot inside a vast hollowed-out shell-like futuristic chamber with seamless organic walls that subtly pulse and glow with deep bioluminescent ocean-blue light, no seats or screen, with a single plush minimalist armchair at the center, the camera slowly tracks forward as a 32-year-old East Asian woman with sleek shoulder-length jet-black hair, sharp observant almond eyes, subtle eyebrows, and a slender oval face with fair skin wearing a tailored dark charcoal blazer and trousers steps cautiously into the room, looking around in quiet confusion beside a minimalist clear cylindrical glass half-filled with still water resting on a sleek small round matte-white side table, accompanied by a low rhythmic ambient hum like gentle underwater breathing.",
+      "duration": 7,
+      "dialog": "",
+      "ref_ids": [
+        "ref_env_screening_room",
+        "ref_char_gu_tang",
+        "ref_prop_water_glass"
+      ]
+    },
+    {
+      "id": "shot_1_2",
+      "prompt": "Continuing from the previous shot inside a vast hollowed-out shell-like futuristic chamber with seamless organic walls that subtly pulse and glow with deep bioluminescent ocean-blue light, the camera holds a steady medium shot of a 32-year-old East Asian woman with sleek shoulder-length jet-black hair, sharp observant almond eyes, subtle eyebrows, and a slender oval face with fair skin wearing a tailored dark charcoal blazer standing beside the central plush armchair and a minimalist clear cylindrical glass half-filled with still water resting on a sleek small round matte-white side table, accompanied by soft spatial acoustics as a warm, disembodied male voice echoes softly from all directions around the chamber while she listens attentively: 「顧小姐 請坐」",
+      "duration": 6,
+      "dialog": "顧小姐，請坐。",
+      "ref_ids": [
+        "ref_env_screening_room",
+        "ref_char_gu_tang",
+        "ref_prop_water_glass"
+      ]
+    },
+    {
+      "id": "shot_1_3",
+      "prompt": "Continuing directly as the woman in a tailored dark charcoal blazer sits down in the central armchair inside a vast hollowed-out shell-like futuristic chamber with seamless organic walls, the camera smoothly orbits in a medium close-up as the blue walls suddenly dim and unfold into streams of luminous light that wrap around a 32-year-old East Asian woman with sleek shoulder-length jet-black hair, sharp observant almond eyes, subtle eyebrows, and a slender oval face with fair skin, seamlessly dissolving the chamber into a moody vintage railway platform filled with drifting coal smoke, warm tungsten overhead lamps, waiting passengers in muted coats, and iron pillars along wet stone tiles, accompanied by the sudden rush of distant train brakes, muffled platform chatter, and hissing steam.",
+      "duration": 8,
+      "dialog": "",
+      "ref_ids": [
+        "ref_env_screening_room",
+        "ref_env_train_station",
+        "ref_char_gu_tang"
+      ]
+    },
+    {
+      "id": "shot_1_4",
+      "prompt": "Continuing inside a moody vintage railway platform filled with drifting coal smoke, warm tungsten overhead lamps, waiting passengers in muted coats, and iron pillars along wet stone tiles, the camera tracks alongside in a medium shot as a man in his mid-30s with slightly tousled dark hair, deep-set melancholic eyes, a straight nose, and a gaunt angular jawline wearing a heavy wool grey overcoat brushes right past a 32-year-old East Asian woman with sleek shoulder-length jet-black hair, sharp observant almond eyes, subtle eyebrows, and a slender oval face with fair skin wearing a tailored dark charcoal blazer who instinctively steps aside before realizing she is intangible, accompanied by footsteps and train ambience while a calm disembodied male voice speaks clearly from the surrounding air: 「這是我們最新的即時生成系統 代號繭 它現在正在根據您的生理數據 即時生成一部專屬於您的電影」",
+      "duration": 9,
+      "dialog": "這是我們最新的即時生成系統，代號「繭」。它現在正在根據您的生理數據，即時生成一部專屬於您的電影。",
+      "ref_ids": [
+        "ref_env_train_station",
+        "ref_char_gu_tang",
+        "ref_char_coat_man"
+      ]
+    },
+    {
+      "id": "shot_1_5",
+      "prompt": "Continuing from the previous shot inside a moody vintage railway platform filled with drifting coal smoke, warm tungsten overhead lamps, waiting passengers in muted coats, and iron pillars along wet stone tiles, the camera cuts to a medium close-up at the far end of the platform as a man in his mid-30s with slightly tousled dark hair, deep-set melancholic eyes, a straight nose, and a gaunt angular jawline wearing a heavy wool grey overcoat stops walking and turns his head back toward the camera with a sorrowful, familiar gaze, accompanied by faint platform echoes while the calm disembodied male voice continues smoothly: 「您的心跳是七十二 皮質醇偏高 系統判斷您需要一個溫和但帶有懸念的開場」",
+      "duration": 8,
+      "dialog": "您的心跳是七十二，皮質醇偏高，系統判斷您需要一個溫和但帶有懸念的開場。",
+      "ref_ids": [
+        "ref_env_train_station",
+        "ref_char_coat_man"
+      ]
+    },
+    {
+      "id": "shot_1_6",
+      "prompt": "Cutting to an earlier memory inside an immense industrial server hall ten times larger than a theater, packed with towering black data racks covered in thousands of blinking indicator lights under cold overhead LED strips, the camera slowly tracks in a medium two-shot as a 32-year-old East Asian woman with sleek shoulder-length jet-black hair, sharp observant almond eyes, subtle eyebrows, and a slender oval face with fair skin wearing a white button-down shirt and dark trousers walks beside a man in his mid-40s with neatly parted salt-and-pepper short hair, calm narrow eyes, fine forehead lines, and a composed square face wearing thin silver-rimmed glasses and a dark lab coat, accompanied by the deafening, rain-like roar of thousands of cooling fans, as the man turns slightly toward her and speaks in a steady, measured male voice: 「你知道生成一首三分鐘的 AI 音樂要多少算力嗎」 immediately after, the woman keeps her gaze on the server racks and replies in a crisp, neutral female voice: 「不知道」",
+      "duration": 8,
+      "dialog": "你知道生成一首三分鐘的 AI 音樂要多少算力嗎？／不知道。",
+      "ref_ids": [
+        "ref_env_server_room",
+        "ref_char_gu_tang",
+        "ref_char_director"
+      ]
+    },
+    {
+      "id": "shot_1_7",
+      "prompt": "Continuing from the previous shot inside an immense industrial server hall ten times larger than a theater, packed with towering black data racks covered in thousands of blinking indicator lights under cold overhead LED strips, the camera cuts to a closer angle framing the man as a man in his mid-40s with neatly parted salt-and-pepper short hair, calm narrow eyes, fine forehead lines, and a composed square face wearing thin silver-rimmed glasses and a dark lab coat gestures toward the endless rows of humming servers, accompanied by the relentless roar of cooling fans, his lips moving clearly as he speaks in a calm, authoritative male voice: 「大約等於你手機充一次電 但生成一部九十分鐘的即時電影 每一秒都要重新運算光影 物理 角色一致性 這整個機房 只能同時服務一位觀眾」",
+      "duration": 9,
+      "dialog": "大約等於你手機充一次電。但生成一部九十分鐘的即時電影，每一秒都要重新運算光影、物理、角色一致性——這整個機房，只能同時服務一位觀眾。",
+      "ref_ids": [
+        "ref_env_server_room",
+        "ref_char_director"
+      ]
+    },
+    {
+      "id": "shot_1_8",
+      "prompt": "Continuing directly from the previous shot inside an immense industrial server hall ten times larger than a theater, packed with towering black data racks covered in thousands of blinking indicator lights under cold overhead LED strips, the camera pushes slowly into a tight close-up on a 32-year-old East Asian woman with sleek shoulder-length jet-black hair, sharp observant almond eyes, subtle eyebrows, and a slender oval face with fair skin wearing a white button-down shirt, tiny green and blue server lights reflecting silently across her pupils as her expression shifts into quiet, absurd contemplation, accompanied by the constant rain-like hum of cooling fans.",
+      "duration": 6,
+      "dialog": "",
+      "ref_ids": [
+        "ref_env_server_room",
+        "ref_char_gu_tang"
+      ]
+    }
+  ]
+}

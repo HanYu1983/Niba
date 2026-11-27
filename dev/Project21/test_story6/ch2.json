@@ -1,0 +1,405 @@
+{
+  "references": [
+    {
+      "id": "ref_kairong",
+      "prompt": "a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes"
+    },
+    {
+      "id": "bg_living_room_rain",
+      "prompt": "a cozy modern apartment living room with a plush sofa and large glass windows overlooking wet city streets as golden sunlight breaks through dark rain clouds"
+    },
+    {
+      "id": "bg_home_storage_room",
+      "prompt": "a dimly lit home storage room with metal shelving, cardboard boxes, and warm light spilling from an open doorway"
+    },
+    {
+      "id": "bg_home_kitchen",
+      "prompt": "a clean modern home kitchen with wooden cabinets, a large silver refrigerator, and bright morning sunlight streaming through a window"
+    },
+    {
+      "id": "bg_teen_bedroom",
+      "prompt": "a neat teenager's bedroom with a wooden study desk, stationery organizer, bed, and soft sunlight through curtains"
+    },
+    {
+      "id": "bg_sunny_city_street",
+      "prompt": "a wide urban asphalt street lined with shops and trees under bright post-rain morning sunlight with glistening wet pavement"
+    },
+    {
+      "id": "ref_bus_driver",
+      "prompt": "a middle-aged East Asian man with short thinning dark hair, tired deep-set eyes, and a pale tense face"
+    },
+    {
+      "id": "bg_chaotic_street",
+      "prompt": "a chaotic urban street with traffic lanes, storefronts, and a bus stop under bright sunlight with scattered debris and glistening wet asphalt"
+    },
+    {
+      "id": "bg_bus_interior",
+      "prompt": "the narrow interior of an old city bus with rows of passenger seats, overhead handrails, a steering wheel, and sunlight streaming through side windows"
+    },
+    {
+      "id": "ref_troy",
+      "prompt": "an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin"
+    },
+    {
+      "id": "bg_riverbank_open",
+      "prompt": "a sun-drenched concrete riverbank with scattered gravel and sparse weeds beside a wide muddy canal under intense overhead midday sunlight with no overhead cover"
+    },
+    {
+      "id": "bg_stranded_trawler_exterior",
+      "prompt": "a large abandoned rusted fishing trawler tilted and stranded on a muddy riverbank with barnacles crusted along its hull under harsh midday sunlight"
+    },
+    {
+      "id": "bg_trawler_corridor",
+      "prompt": "a narrow dim damp wooden corridor inside a derelict fishing trawler with peeling paint, exposed pipes, and shafts of light filtering through rusted portholes"
+    },
+    {
+      "id": "bg_captain_cabin",
+      "prompt": "a cramped derelict ship captain's cabin with weathered wooden paneling, scattered nautical charts, a broken desk, and dusty sunlight streaming through cracked windows"
+    }
+  ],
+  "shots": [
+    {
+      "id": "shot_2_1",
+      "prompt": "Continuing from an establishing shot of golden sunlight piercing heavy rain clouds over wet city streets, the camera slowly pushes in through a window into a medium shot inside a cozy apartment living room, showing a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing a casual pastel t-shirt and shorts sitting on a sofa looking down at a new smartphone with a data transfer bar loading, accompanied by gentle fading rain outside and a crisp notification chime, as the girl on the sofa raises her eyebrows in surprise and thinks internally in a soft young female voice: 「是 爸爸 不會又加班了吧」",
+      "duration": 8,
+      "dialog": "（是……爸爸？不會又加班了吧？）",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_living_room_rain"
+      ]
+    },
+    {
+      "id": "shot_2_2",
+      "prompt": "Continuing directly from the previous shot on the living room sofa, the camera cuts to a close-up over the shoulder of a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes swiping open a text message on her smartphone screen with cheerful emoji icons, accompanied by soft screen tapping sounds and quiet room ambience, as a warm playful middle-aged male voice narrates the message gently: 「凱蓉寶貝 爸爸這兩天可能沒辦法回家 生日妳就自己過吧 妳想要很久的恐龍背包 爸爸已經幫妳準備好了 還加了一些終極改裝在裡面喔」",
+      "duration": 9,
+      "dialog": "「凱蓉寶貝（親），爸爸這兩天可能沒辦法回家，生日妳就自己過吧（掩面哭）。妳想要很久的恐龍背包，爸爸已經幫妳準備好了，還加了一些【終極改裝】在裡面喔（笑）。」",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_living_room_rain"
+      ]
+    },
+    {
+      "id": "shot_2_3",
+      "prompt": "Continuing directly from the smartphone message in the living room, the camera shifts to a tight close-up on the face of a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes as she pouts with visible disappointment while reading the rest of the text, accompanied by soft indoor silence, as the warm playful middle-aged male voice concludes: 「穿上它就可以變成超人 背包在倉庫裡 快點去看吧 愛妳的爸比」 immediately after, the girl pouts harder and thinks internally in a sulky young female voice: 「笨蛋爸爸 果然又黃牛了」",
+      "duration": 9,
+      "dialog": "「穿上它就可以變成超人！背包在倉庫裡，快點去看吧。愛妳的爸比（大心）。」 / （笨蛋爸爸！果然又黃牛了。）",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_living_room_rain"
+      ]
+    },
+    {
+      "id": "shot_2_4",
+      "prompt": "Continuing from the living room, the camera tracks behind in a medium shot as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing a casual pastel t-shirt and shorts walks down the hallway and pushes open a heavy storage room door, revealing a massive bright green Tyrannosaurus rex suit standing upright inside, accompanied by the heavy creak of metal hinges.",
+      "duration": 6,
+      "dialog": "",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_home_storage_room"
+      ]
+    },
+    {
+      "id": "shot_2_5",
+      "prompt": "Continuing directly inside the storage room, the camera tilts slowly from bottom to top in a detailed close-up inspection of the giant green T-rex costume, showing a long metal zipper running from its jaw down to its belly, a padded hollow dinosaur head helmet, detachable small front arms, circular side arm openings, and a compact cooling unit built into the upper back, accompanied by subtle metallic clicks.",
+      "duration": 7,
+      "dialog": "",
+      "ref_ids": [
+        "bg_home_storage_room"
+      ]
+    },
+    {
+      "id": "shot_2_6",
+      "prompt": "Continuing inside the storage room, the camera frames a tight close-up as the hands of a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes peel back the green outer fabric to reveal an intricate lightweight metal exoskeleton frame, winding liquid-cooling tubes, custom weld marks, and a heavy battery-packed tail with a concealed universal charging plug, accompanied by quiet rustling fabric and clinking metal.",
+      "duration": 7,
+      "dialog": "",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_home_storage_room"
+      ]
+    },
+    {
+      "id": "shot_2_7",
+      "prompt": "Continuing from the close inspection in the storage room, the camera pulls back into a medium shot as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes raises an eyebrow skeptically while sizing up the giant wearable T-rex exoskeleton without shoulder straps, accompanied by soft indoor ambience, as she furrows her brow and thinks internally in a puzzled young female voice: 「這就是爸爸說的 穿上會變成超人 又是這種奇怪的改裝 就不能直接給一個正常的禮物嗎」",
+      "duration": 9,
+      "dialog": "（這就是爸爸說的，穿上會變成超人……？） / （又是這種奇怪的改裝！就不能直接給一個正常的禮物嗎？）",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_home_storage_room"
+      ]
+    },
+    {
+      "id": "shot_2_8",
+      "prompt": "Continuing in the storage room, the camera holds a medium close-up as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes crouches down to inspect the internal power switch inside the dinosaur head, the hollow detachable forearms, and the spacious leg compartments before breaking into a mischievous little grin, accompanied by soft clicking switches, as she smirks playfully and thinks internally in a scheming young female voice: 「恩 開關在頭裡面 手是中空的 可以放很多東西 哈哈 我有個好主意了」",
+      "duration": 9,
+      "dialog": "（恩…開關在頭裡面，手是中空的，可以拆下來裝在前臂，剛好可以放手機和充電器、身體和腳的空間都很大。可以放很多東西…） / （哈哈～我有個好主意了！）",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_home_storage_room"
+      ]
+    },
+    {
+      "id": "shot_2_9",
+      "prompt": "Continuing from the storage room into the bright kitchen, the camera frames a medium shot of a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes fully suited inside the giant green T-rex exoskeleton with her bare upper arms extending through the side holes and the hollow dinosaur claws fitted over her forearms, stepping effortlessly toward the refrigerator, accompanied by a smooth mechanical servo hum and light footsteps.",
+      "duration": 6,
+      "dialog": "",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_home_kitchen"
+      ]
+    },
+    {
+      "id": "shot_2_10",
+      "prompt": "Continuing directly inside the sunny kitchen, the camera tracks quickly in a dynamic medium shot as the petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton sweeps canned food from cabinets and groceries from the refrigerator straight into the hollow torso of the dinosaur suit, accompanied by clattering tin cans and rustling bags, as she giggles wickedly inside the dinosaur head and thinks internally in a playful young female voice: 「嘿嘿 愛加班是吧 好 我就讓你加個夠」",
+      "duration": 8,
+      "dialog": "（嘿嘿～愛加班是吧！好！我就讓你加個夠！）",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_home_kitchen"
+      ]
+    },
+    {
+      "id": "shot_2_11",
+      "prompt": "Continuing into a neat teenager's bedroom, the camera captures a medium close-up as the petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton grabs her handwritten communication notebook and pencil case from a desk and tucks them neatly inside the suit before tapping her smartphone with exposed fingertips, accompanied by light servo whirring and tapping glass, as she thinks internally in a smug young female voice: 「啊 差點忘了 還有溝通用的筆記本 笨蛋爸爸 你就在辦公室啃乾糧加班到死吧」",
+      "duration": 9,
+      "dialog": "（啊～差點忘了，還有溝通用的筆記本。） / （笨蛋爸爸，你就在辦公室啃乾糧加班到死吧！）",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_teen_bedroom"
+      ]
+    },
+    {
+      "id": "shot_2_12",
+      "prompt": "Continuing out onto the front sidewalk under clear post-rain morning sunlight, the camera frames a wide shot as the petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes fully clad in the bulky green T-rex exoskeleton steps out onto the wet glistening street, accompanied by steady mechanical servo hums and distant ominous sirens.",
+      "duration": 6,
+      "dialog": "",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_sunny_city_street"
+      ]
+    },
+    {
+      "id": "shot_2_13",
+      "prompt": "Continuing from the sunny street, the camera pans across a wide shot of the chaotic urban road where panicked pedestrians scuffle wildly, men pin down a struggling person with bright blood splatters, and cars swerve recklessly, as a speeding motorcycle gets side-swiped by a sedan with screeching metal while uninjured passersby ignore the crash, accompanied by screeching tires, grinding metal, and panicked shouts.",
+      "duration": 7,
+      "dialog": "",
+      "ref_ids": [
+        "bg_chaotic_street"
+      ]
+    },
+    {
+      "id": "shot_2_14",
+      "prompt": "Continuing directly from the crash on the street, the camera pushes into a dynamic medium close-up as the fallen motorcyclist rises in a twisted posture with a guttural shriek, lunges toward the sedan, and smashes the driver's tempered side window bare-handed, accompanied by shattering glass and a terrified scream, as the driver inside screams in a panicked voice: 「啊啊啊啊啊」",
+      "duration": 6,
+      "dialog": "啊啊啊啊啊—————！",
+      "ref_ids": [
+        "bg_chaotic_street"
+      ]
+    },
+    {
+      "id": "shot_2_15",
+      "prompt": "Continuing from the shattered car window, the camera tracks alongside in a medium shot as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton hurries with lowered head toward a bus stop while panicked crowd members and erratic vehicles rush past her completely ignoring the dinosaur suit, accompanied by mechanical servo hums and distant commotion, as she looks around in bewilderment and thinks internally in a confused young female voice: 「大家 都怎麼了」",
+      "duration": 7,
+      "dialog": "（大家……都怎麼了？）",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_chaotic_street"
+      ]
+    },
+    {
+      "id": "shot_2_16",
+      "prompt": "Continuing from the bus stop on the chaotic street, the camera holds a medium shot as an old city bus pulls slowly around the corner and stops, showing a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton stepping inside past dazed pale passengers and a sweating trembling middle-aged East Asian man with short thinning dark hair, tired deep-set eyes, and a pale tense face in a driver uniform, accompanied by a pneumatic door hiss and clinking fare coins.",
+      "duration": 7,
+      "dialog": "",
+      "ref_ids": [
+        "ref_kairong",
+        "ref_bus_driver",
+        "bg_bus_interior"
+      ]
+    },
+    {
+      "id": "shot_2_17",
+      "prompt": "Continuing directly inside the slow-moving bus cabin, the camera frames a medium shot as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton sits in the solo seat directly behind the driver while an agitated male passenger leans over the middle-aged East Asian man with short thinning dark hair, tired deep-set eyes, and a pale tense face and blasts the horn, accompanied by a piercing horn blast and tense murmurs, as the pale driver turns his glazed eyes slowly and stammers in a weak broken male voice: 「客人 請回到 座位上」",
+      "duration": 8,
+      "dialog": "「客人……請回到……座位上……」",
+      "ref_ids": [
+        "ref_kairong",
+        "ref_bus_driver",
+        "bg_bus_interior"
+      ]
+    },
+    {
+      "id": "shot_2_18",
+      "prompt": "Continuing directly from the driver's seat inside the bus, the camera snaps into a tight close-up as the forehead of a middle-aged East Asian man with short thinning dark hair, tired deep-set eyes, and a pale tense face slams hard against the steering wheel, causing the bus to lurch forward before the engine sputters to a dead stall in sudden silence, accompanied by a heavy forehead thud and dying engine rumble.",
+      "duration": 6,
+      "dialog": "",
+      "ref_ids": [
+        "ref_bus_driver",
+        "bg_bus_interior"
+      ]
+    },
+    {
+      "id": "shot_2_19",
+      "prompt": "Continuing inside the stalled bus cabin, the camera pans across a medium shot of angry passengers shouting insults as some yank open the emergency door and leap out into the chaotic street, while nearby passengers suddenly twist with bloodshot eyes and savage snarls, lunging to bite neighbors' faces amidst screams, accompanied by angry shouts, tearing flesh, and piercing screams, as an angry passenger yells in a harsh voice: 「靠 你在幹嘛啊 媽的 老子趕時間 到底會不會開車」",
+      "duration": 8,
+      "dialog": "「靠！你在幹嘛啊！」「媽的！老子趕時間！到底會不會開車？」",
+      "ref_ids": [
+        "bg_bus_interior"
+      ]
+    },
+    {
+      "id": "shot_2_20",
+      "prompt": "Continuing directly inside the bloody bus interior, the camera holds a medium close-up as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton trembles with fear, forces herself to stand up, and walks forward to gently push the slumped shoulder of a middle-aged East Asian man with short thinning dark hair, tired deep-set eyes, and a pale tense face using her dinosaur-forearm-covered hands, accompanied by faint servo whirs and frantic screams behind her.",
+      "duration": 7,
+      "dialog": "",
+      "ref_ids": [
+        "ref_kairong",
+        "ref_bus_driver",
+        "bg_bus_interior"
+      ]
+    },
+    {
+      "id": "shot_2_21",
+      "prompt": "Continuing directly in front of the driver's seat, the camera pushes into a tight close-up as a middle-aged East Asian man with short thinning dark hair, tired deep-set eyes, and a pale tense face snaps his bloodshot eyes open and sits stiffly upright with dark purple veins spreading across ashen skin, accompanied by a sudden raspy snarl, as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes watches him stiffen and thinks internally in a relieved young female voice: 「啊 他醒了」",
+      "duration": 6,
+      "dialog": "（啊……他醒了。）",
+      "ref_ids": [
+        "ref_kairong",
+        "ref_bus_driver",
+        "bg_bus_interior"
+      ]
+    },
+    {
+      "id": "shot_2_22",
+      "prompt": "Continuing directly from the previous shot in the bus cabin, the camera snaps into a fast close-up as a middle-aged East Asian man with short thinning dark hair, tired deep-set eyes, and a pale tense face lunges with bloodshot jaws and bites hard into the bare upper arm of a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton, tearing away flesh as she staggers back clutching her bleeding arm, accompanied by a sharp savage roar and tearing flesh, as she gasps in shock and thinks internally in a terrified young female voice: 「」",
+      "duration": 7,
+      "dialog": "（——！？）",
+      "ref_ids": [
+        "ref_kairong",
+        "ref_bus_driver",
+        "bg_bus_interior"
+      ]
+    },
+    {
+      "id": "shot_2_23",
+      "prompt": "Continuing directly inside the bus cabin, the camera frames a medium close-up as a middle-aged East Asian man with short thinning dark hair, tired deep-set eyes, and a pale tense face thrashing wildly against his fastened seatbelt snaps the metal buckle with a sharp crack while blood splatters across windows and seats and infected passengers drag fleeing people back toward the rear door, accompanied by a loud metallic snap and chaotic shrieks.",
+      "duration": 7,
+      "dialog": "",
+      "ref_ids": [
+        "ref_bus_driver",
+        "bg_bus_interior"
+      ]
+    },
+    {
+      "id": "shot_2_24",
+      "prompt": "Continuing out the front door of the bus onto the sunlit street, the camera pulls back into a wide shot as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton bolts out onto a street overrun by maimed grey-skinned figures chasing screaming people, accompanied by panicked footsteps and distant sirens, as she runs with a pale terrified face and thinks internally in a frantic young female voice: 「到底 發生什麼事了 別 別過來」",
+      "duration": 8,
+      "dialog": "（到底……發生什麼事了？） / （別……別過來！）",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_chaotic_street"
+      ]
+    },
+    {
+      "id": "shot_2_25",
+      "prompt": "Continuing from the chaotic street, the camera tracks swiftly alongside in a medium shot as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton packed with heavy cans sprints nimbly past lunging grey-skinned figures that curiously bypass her to chase other runners, accompanied by steady rhythmic mechanical servo hums and frantic street screams.",
+      "duration": 7,
+      "dialog": "",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_chaotic_street"
+      ]
+    },
+    {
+      "id": "shot_2_26",
+      "prompt": "Continuing directly from the chase, the camera shifts into a subjective point-of-view shot as the sunlit street drains into stark monochrome black-and-white while glowing colored auras in white, bright green, dark green, and grey pulse around people and monsters even behind thin walls, accompanied by steady mechanical servo hums, as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes blinks in shock and thinks internally in a startled young female voice: 「什麼 我的眼睛 到底怎麼了 有顏色的地方 就有人和怪物」",
+      "duration": 8,
+      "dialog": "（什麼……我的眼睛……到底怎麼了？） / 【有顏色的地方，就有人和怪物！】",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_chaotic_street"
+      ]
+    },
+    {
+      "id": "shot_2_27",
+      "prompt": "Continuing from the monochrome aura vision, the camera holds a medium shot along the sun-drenched riverbank as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton slows to catch her breath, spots a dead monochrome grey expanse toward the distant riverbank and stranded trawler, and sprints toward it while steady mechanical servo hums echo inside the suit, accompanied by rhythmic mechanical whirring and crunching gravel, as she thinks internally in a focused young female voice: 「那裡 那裡最安全 好餓 先吃一點罐頭吧 不行 那是留給爸爸的」",
+      "duration": 9,
+      "dialog": "（那裡！那裡最安全！） / （好餓……先吃一點罐頭吧？） / （不行！那是留給爸爸的！）",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_riverbank_open"
+      ]
+    },
+    {
+      "id": "shot_2_28",
+      "prompt": "Continuing into the dim interior of the tilted trawler, the camera tracks behind in a medium close-up as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton searches rooms and dead bodies with pale lifeless hands, then gathers unexpired metal cans from a tilted dining floor and stuffs them inside the wide jaws of the dinosaur helmet like heavy armor, accompanied by creaking hull timber and clinking tin cans, as she thinks internally in a cautious young female voice: 「這個沒有顏色 是 安全的 這 罐頭沒有膨脹變形 應該還可以吃 然後是 三樓」",
+      "duration": 9,
+      "dialog": "（這個沒有顏色……是……安全的……） / （這……罐頭沒有膨脹變形……應該還可以吃。） / （然後是……三樓。）",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_stranded_trawler_exterior"
+      ]
+    },
+    {
+      "id": "shot_2_29",
+      "prompt": "Continuing along a tilted sunlit corridor inside the derelict trawler, the camera frames a medium tracking shot as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton pushes open doors with pale grey hands while shafts of midday light cut through dust, her monochrome vision showing only a faint dark green aura around herself as she reaches a weathered white door marked captain's cabin, accompanied by creaking wood and soft footsteps, as she thinks internally in a hopeful young female voice: 「這裡 應該會有醫藥箱吧」",
+      "duration": 8,
+      "dialog": "（這裡……應該會有醫藥箱吧？）",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_trawler_corridor"
+      ]
+    },
+    {
+      "id": "shot_2_30",
+      "prompt": "Continuing directly inside the cramped captain's cabin, the camera holds a medium close-up as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton kneels beside a stiff intact corpse in a heavy white leather coat, her pale grey hands hastily searching pockets near a white plastic bathroom door, accompanied by quiet rustling fabric and creaking floorboards.",
+      "duration": 6,
+      "dialog": "",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_captain_cabin"
+      ]
+    },
+    {
+      "id": "shot_2_31",
+      "prompt": "Continuing directly inside the captain's cabin, the camera snaps into a dynamic wide angle as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top and dark cargo pants kicks the decayed white wooden door off its hinges and lunges forward raising a stainless steel pipe overhead toward the back of a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton, accompanied by splintering wood and rushing footsteps, as the woman roars in a furious female voice: 「午餐結束啦 小妞 看棒」",
+      "duration": 7,
+      "dialog": "午餐結束啦！小妞！看棒————！！",
+      "ref_ids": [
+        "ref_troy",
+        "ref_kairong",
+        "bg_captain_cabin"
+      ]
+    },
+    {
+      "id": "shot_2_32",
+      "prompt": "Continuing directly from the strike in the captain's cabin, the camera snaps into a tight close-up as the stainless steel pipe slams squarely onto the can-packed dinosaur helmet of a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes with a deafening metallic clang, halting the swing mid-air, accompanied by a loud ringing metallic clang, as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin blinks in surprise and exclaims in a startled female voice: 「握槽 好啊 還有戴頭盔是吧」",
+      "duration": 7,
+      "dialog": "「握槽？！」 / 「好啊～還有戴頭盔是吧！」",
+      "ref_ids": [
+        "ref_troy",
+        "ref_kairong",
+        "bg_captain_cabin"
+      ]
+    },
+    {
+      "id": "shot_2_33",
+      "prompt": "Continuing directly inside the captain's cabin, the camera frames a fast medium shot as a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton scrambles to her feet with lowered head, dashes into the small bathroom, and slams the white plastic door shut while bracing her weight against it, accompanied by frantic scrambling footsteps and a sharp door slam, as she thinks internally in a terrified young female voice: 「不要進來 不要進來」",
+      "duration": 7,
+      "dialog": "（不要進來……不要進來……）",
+      "ref_ids": [
+        "ref_kairong",
+        "bg_captain_cabin"
+      ]
+    },
+    {
+      "id": "shot_2_34",
+      "prompt": "Continuing directly outside the closed bathroom door inside the captain's cabin, the camera pushes into a medium close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top lowers her stainless steel pipe slightly, her fierce posture softening into cautious curiosity as she realizes the pale-handed figure fled and braced the door like a rational human rather than roaring like a feral beast, accompanied by quiet cabin ambience and steady breathing, as she speaks in a tentative softer female voice: 「妳 妳聽得懂我說話吧」",
+      "duration": 8,
+      "dialog": "「妳……妳聽得懂我說話吧？」",
+      "ref_ids": [
+        "ref_troy",
+        "bg_captain_cabin"
+      ]
+    }
+  ]
+}

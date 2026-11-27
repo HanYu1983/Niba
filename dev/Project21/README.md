@@ -80,7 +80,7 @@ node workspace/tools/download_videos_from_json.mjs --jobs .\test_story5\output\v
 
 node workspace/tools/concat_videos_from_report.mjs .\test_story5\output\video\download_report.json
 
-node workspace/tools/build_subtitles_from_json.mjs .\test_story5\story.json --film .\test_story5\output\video\merged.mp
+node workspace/tools/build_subtitles_from_json.mjs .\test_story5\story.json --film .\test_story5\output\video\merged.mp4
 ```
 
 
@@ -88,4 +88,36 @@ node workspace/tools/build_subtitles_from_json.mjs .\test_story5\story.json --fi
 node workspace/tools/generate_refs_from_json.mjs --json .\test_story6\ch1.json --output .\test_story6\output\refs
 
 node workspace/tools/generate_videos_from_json.mjs --json .\test_story6\ch1.json --output .\test_story6\output\video --mode r2v --no-turbo --seed 100 --width 416 --height 736 --force
+
+node workspace/tools/download_videos_from_json.mjs --jobs .\test_story6\output\video\render_jobs.json --output .\test_story6\output\video
+
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story6\ch1.json --output .\test_story6\output\video --mode r2v --no-turbo --seed 101 --width 416 --height 736 --id shot_1_8 --force
+
+node workspace/tools/download_videos_from_json.mjs --jobs .\test_story6\output\video\render_jobs.json --output .\test_story6\output\video --force
+
+node workspace/tools/concat_videos_from_report.mjs .\test_story6\output\video\download_report.json
+
+node workspace/tools/build_subtitles_from_json.mjs .\test_story6\ch1.json --film .\test_story6\output\video\merged.mp4
+
+node workspace/tools/generate_refs_from_json.mjs --json .\test_story6\ch2.json --output .\test_story6\output_ch2\refs
+
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story6\ch2.json --output .\test_story6\output_ch2\video --mode r2v --no-turbo --seed 100 --width 416 --height 736
+
+node workspace/tools/download_videos_from_json.mjs --jobs .\test_story6\output_ch2\video\render_jobs.json --output .\test_story6\output_ch2\video
+
+node workspace/tools/concat_videos_from_report.mjs .\test_story6\output_ch2\video\download_report.jso
+
+node workspace/tools/build_subtitles_from_json.mjs .\test_story6\ch2.json --film .\test_story6\output_ch2\video\merged.mp4
+```
+
+```
+node workspace/tools/generate_refs_from_json.mjs --json .\test_story7\ch1.json --output .\test_story7\output\ch1\refs
+
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story7\ch1.json --output .\test_story7\output\ch1\video --mode r2v --no-turbo --seed 100 --width 416 --height 736
+
+node workspace/tools/download_videos_from_json.mjs --jobs .\test_story7\output\ch1\video\render_jobs.json --output .\test_story7\output\ch1\video
+
+node workspace/tools/concat_videos_from_report.mjs .\test_story7\output\ch1\video\download_report.json
+
+node workspace/tools/build_subtitles_from_json.mjs .\test_story7\ch1.json --film .\test_story7\output\ch1\video\merged.mp4
 ```
