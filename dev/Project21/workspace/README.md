@@ -232,6 +232,17 @@ ComfyUI 連線資訊即時寫入 `<output>/render_jobs.json`，每筆 `download`
 `comfy_job`（或檔案內的 `download_command`）把算好的影片拉回來。已有 `prompt_id` 的
 shot 會跳過，`--force` 才重送。
 
+若某個 shot 是後來才新增並單獨送件，它會被加在 `shots[]` 最後。用下面這招只重排順序，
+**不送 ComfyUI、不下載**：
+
+```bat
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\video --reorder
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\video --reorder --dry-run
+```
+
+`--reorder`（也可用 `--rebuild-order`／`--sync-order`）只依 `story.json.shots` 排序既有
+`render_jobs.json`；不在故事裡的 entry 預設留在最後，`--drop-extra` 可丟棄。
+
 下載（用上面那份 `render_jobs.json`）：
 
 ```bat

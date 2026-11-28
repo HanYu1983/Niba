@@ -3,6 +3,7 @@
  *
  *   node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\video --mode r2v
  *   node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\video --id shot_1_1,shot_2_1 --mode t2v
+ *   node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\video --reorder
  *
  * * `--id` / `--shot` may be repeated or comma separated; without them every shot is submitted.
  * * `--mode t2v|r2v` (default r2v). r2v resolves each `shot.ref_ids` to the reference folder with
@@ -14,7 +15,9 @@
  *
  * Options: --json, --output, --refs / --ref-root, --id / --shot, --mode, --width, --height,
  *          --fps, --duration, --turbo / --no-turbo, --seed, --prefix, --ref-size, --force,
- *          --dry-run, --jobs <file>.
+ *          --dry-run, --jobs <file>, --reorder / --rebuild-order / --sync-order
+ *          (--reorder 只依 story.json 重排既有 render_jobs.json 的 shots[]，不聯絡 ComfyUI；
+ *           不在 story 裡的 entry 預設保留在最後，--drop-extra 可丟棄)。
  */
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -78,6 +81,11 @@ const prefix = String(args.prefix ?? "shot");
 const refSize = String(args["ref-size"] ?? "match");
 const force = boolArg(args, "force", false);
 const dryRun = boolArg(args, "dry-run", false);
+const reorder =
+  boolArg(args, "reorder", false) ||
+  boolArg(args, "rebuild-order", false) ||
+  boolArg(args, "sync-order", false);
+const dropExtra = boolArg(args, "drop-extra", false);
 
 /** Reuse the same folder-name rule as generate_refs_from_json.mjs. */
 function folderName(id) {
@@ -158,6 +166,62 @@ if (existsSync(jobsFile)) {
 const reusable =
   prior && prior.json === jsonFile && prior.output === outputRoot && prior.mode === mode && Array.isArray(prior.shots);
 const byId = new Map((reusable ? prior.shots : []).map((s) => [s.id, s]));
+
+/* ------------------------------------------------------------- reorder-only mode */
+
+if (reorder) {
+  if (!prior || !Array.isArray(prior.shots)) {
+    usage(`--reorder needs an existing ${jobsFile}`, [
+      "run a normal submission first, or pass --jobs <render_jobs.json>"
+    ]);
+  }
+
+  const storyIds = story.shots.map((s) => String(s.id)).filter(Boolean);
+  const existing = new Map(prior.shots.map((s) => [String(s.id), s]));
+  const used = new Set();
+  const ordered = [];
+  for (const id of storyIds) {
+    const entry = existing.get(id);
+    if (entry && !used.has(id)) {
+      ordered.push(entry);
+      used.add(id);
+    }
+  }
+  const extra = prior.shots.filter((s) => !used.has(String(s.id)));
+  const finalShots = dropExtra ? ordered : [...ordered, ...extra];
+  const before = prior.shots.map((s) => s.id);
+  const after = finalShots.map((s) => s.id);
+  const moved = after.reduce((n, id, i) => n + (before[i] === id ? 0 : 1), 0) + Math.abs(after.length - before.length);
+  const missing = storyIds.filter((id) => !existing.has(id));
+
+  if (!dryRun) {
+    prior.shots = finalShots;
+    prior.reordered_at = new Date().toISOString();
+    writeFileSync(jobsFile, JSON.stringify(prior, null, 2) + "\n", "utf8");
+  }
+
+  console.log(
+    JSON.stringify(
+      {
+        reorder: true,
+        jobs_file: jobsFile,
+        json: jsonFile,
+        shots: finalShots.length,
+        order: after,
+        moved,
+        missing_from_jobs: missing,
+        extra_in_jobs: extra.map((s) => s.id),
+        ...(dropExtra ? { extra_dropped: extra.map((s) => s.id) } : {}),
+        submissions: 0,
+        ...(dryRun ? { dry_run: true } : {})
+      },
+      null,
+      2
+    )
+  );
+  // No network sockets have been opened in this mode, so a hard exit is safe here.
+  process.exit(0);
+}
 
 const prepared = [];
 const skippedExisting = [];

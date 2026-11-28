@@ -117,6 +117,8 @@ node workspace/tools/generate_videos_from_json.mjs --json .\test_story6\ch2_test
 node workspace/tools/generate_refs_from_json.mjs --json .\test_story6\ch0.json --output .\test_story6\output\ch0\refs
 
 node workspace/tools/generate_videos_from_json.mjs --json .\test_story6\ch0.json --output .\test_story6\output\ch0\video --mode r2v --seed 103 --force
+
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story6\ch2.json --output .\test_story6\output\ch2\video --reorder
 ```
 
 ```
