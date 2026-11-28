@@ -2,38 +2,47 @@
   "references": [
     {
       "id": "ref_troy",
+      "type": "character",
       "prompt": "an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin"
     },
     {
       "id": "ref_injured_man",
+      "type": "character",
       "prompt": "an East Asian man in his 30s with messy short dark hair, gaunt facial features, and stubble"
     },
     {
       "id": "ref_dino_girl",
+      "type": "character",
       "prompt": "a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes"
     },
     {
       "id": "bg_riverbank_open",
+      "type": "environment",
       "prompt": "a sun-drenched concrete riverbank with scattered gravel and sparse weeds beside a wide muddy canal under intense overhead midday sunlight with no overhead cover"
     },
     {
       "id": "bg_riverbank_canal",
+      "type": "environment",
       "prompt": "a turbulent muddy canal with a collapsing concrete bridge in the distance under harsh midday sunlight with floating debris"
     },
     {
       "id": "bg_riverbank_bushes",
+      "type": "environment",
       "prompt": "a concrete riverbank walkway bordered by dense overgrown green bushes under intense midday sunlight"
     },
     {
       "id": "bg_stranded_trawler_exterior",
+      "type": "environment",
       "prompt": "a large abandoned rusted fishing trawler tilted and stranded on a muddy riverbank with barnacles crusted along its hull under harsh midday sunlight"
     },
     {
       "id": "bg_trawler_corridor",
+      "type": "environment",
       "prompt": "a narrow dim damp wooden corridor inside a derelict fishing trawler with peeling paint, exposed pipes, and shafts of light filtering through rusted portholes"
     },
     {
       "id": "bg_captain_cabin",
+      "type": "environment",
       "prompt": "a cramped derelict ship captain's cabin with weathered wooden paneling, scattered nautical charts, a broken desk, and dusty sunlight streaming through cracked windows"
     }
   ],

@@ -310,7 +310,7 @@
     },
     {
       "id": "shot_0_20",
-      "prompt": "Continuing in a warm cozy apartment living room in gentle morning light with soft rain outside, the camera frames a medium close-up showing a gentle middle-aged East Asian male researcher with neat short dark hair, wire-rimmed glasses, and a warm smile wearing a clean white lab coat preparing his briefcase, while a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing casual pastel loungewear pouts unhappily and rapidly signs with her hands, expressing in a sulky silent young female voice: 「加班笨蛋 工作笨蛋」",
+      "prompt": "Continuing in a warm cozy apartment living room in gentle morning light with soft rain outside, the camera frames a medium close-up showing a gentle middle-aged East Asian male researcher with neat short dark hair, wire-rimmed glasses, and a warm smile wearing a clean white lab coat preparing his briefcase, while a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing casual pastel loungewear pouts unhappily and rapidly signs in sign language with her hands, expressing in a silent young female inner voice: （加班笨蛋 工作笨蛋）",
       "duration": 8,
       "dialog": "（加班笨蛋！工作笨蛋！）",
       "ref_ids": [
@@ -321,9 +321,9 @@
     },
     {
       "id": "shot_0_21",
-      "prompt": "Continuing in the apartment living room, the camera moves into a close-up as a gentle middle-aged East Asian male researcher with neat short dark hair, wire-rimmed glasses, and a warm smile pats the petite teenage girl's head affectionately, handing her a modern sleek smartphone connected by a short cable to a compact black high-capacity power bank while explaining the privilege shelter pass, map, and emergency escape exit, accompanied by gentle domestic ambient sound and soft rain outside, as the father speaks in a warm cheerful male voice: 「哈哈 怎麼了 我的小寶貝 來 這個收好 這可是爸爸利用特權弄到的 裡面有我跟妳說過的那個避難所通行證 還有地圖和緊急逃生口 連那些大人物都不知道喔」",
+      "prompt": "Continuing in the apartment living room, the camera moves into a close-up as a gentle middle-aged East Asian male researcher with neat short dark hair, wire-rimmed glasses, and a warm smile pats the petite teenage girl's head affectionately, handing her a modern sleek smartphone connected by a short cable to a compact black high-capacity power bank while explaining the privilege shelter pass, map, and emergency escape exit, accompanied by gentle domestic ambient sound and soft rain outside, as the father speaks in a warm cheerful male voice: 「哈哈 怎麼了 我的小寶貝 來 這個收好 這可是爸爸利用特權弄到的 裡面有我跟妳說過的那個避難所通行證 地圖和緊急逃生口 連那些大人物都不知道喔」",
       "duration": 9,
-      "dialog": "「哈哈，怎麼了？我的小寶貝。來，這個收好。這可是爸爸利用特權弄到的。裡面有我跟妳說過的那個避難所通行證，還有地圖和緊急逃生口，連那些大人物都不知道喔。」",
+      "dialog": "「哈哈，怎麼了？我的小寶貝。來，這個收好。這可是爸爸利用特權弄到的。裡面有我跟妳說過的那個避難所通行證、地圖和緊急逃生口，連那些大人物都不知道喔。」",
       "ref_ids": [
         "ref_kairong",
         "ref_kairong_father",
@@ -333,7 +333,7 @@
     },
     {
       "id": "shot_0_22",
-      "prompt": "Continuing in the living room, the camera holds a medium two-shot as a gentle middle-aged East Asian male researcher in a white lab coat happily finishes packing his bag, telling her he'll come back right after the ceremony or she can find him at his office, while a petite East Asian teenage girl angrily connects her new phone to charge and signs back with lightning speed, accompanied by soft rain outside, as the father speaks cheerfully: 「等落成典禮結束 爸爸馬上就趕回來陪妳 如果我真的加班太久 妳就順著地圖的路線 來我辦公的地方找我」 immediately after, the girl pouts furiously and signs in sign language, thinking in a sulky young female voice: 「笨蛋爸爸 絕對會黃牛」",
+      "prompt": "Continuing in the living room, the camera holds a medium two-shot as a gentle middle-aged East Asian male researcher in a white lab coat happily finishes packing his bag, speaking warmly to his daughter while she connects her new phone to charge and signs back rapidly in sign language with her hands, accompanied by soft rain outside, as the father speaks cheerfully in a warm male voice: 「等落成典禮結束 爸爸馬上就趕回來陪妳 如果我真的加班太久 妳就順著地圖的路線 來我辦公的地方找我」 immediately after, the girl pouts furiously and signs in sign language with her hands, thinking in a silent young female inner voice: （笨蛋爸爸 絕對會黃牛）",
       "duration": 9,
       "dialog": "「等落成典禮結束，爸爸馬上就趕回來陪妳。如果我真的加班太久，妳就順著地圖的路線，來我辦公的地方找我。」 / （笨蛋爸爸！絕對會黃牛！）",
       "ref_ids": [
