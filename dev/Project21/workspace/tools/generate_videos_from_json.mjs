@@ -6,8 +6,9 @@
  *   node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.json --output .\test_story5\output\video --reorder
  *
  * * `--id` / `--shot` may be repeated or comma separated; without them every shot is submitted.
- * * `--mode t2v|r2v` (default r2v). r2v resolves each `shot.ref_ids` to the reference folder with
- *   the newest creation time under `--refs`, then the newest image inside that folder.
+ * * `--mode t2v|r2v` (default r2v). r2v resolves each `shot.ref_ids` to the newest folder owned
+ *   by that id under `--refs` (exact id or a non-id `_...` / `-...` take), then the newest image
+ *   inside it. Overlapping ids such as `ref_kairong` / `ref_kairong_father` stay distinct.
  * * Downloads are meant to land in `<output>/<shot.id>/` (e.g. video/shot_1_1/shot_00001.mp4).
  * * Submission is async (`wait:false`). `<output>/render_jobs.json` holds prompt_ids + ComfyUI
  *   connection info so the clips can be downloaded later, e.g.:
@@ -25,6 +26,7 @@ import { dirname, resolve } from "node:path";
 import { jobsDir } from "../../comfyui_mcp/jobs.mjs";
 import { runTool, runtime } from "../../comfyui_mcp/runner.mjs";
 import { boolArg, listArg, numArg, parseArgs, usage } from "../lib/args.mjs";
+import { created, folderName, newestOwnedFolder } from "../lib/folders.mjs";
 
 const IMAGE_RE = /\.(png|jpe?g|webp)$/i;
 const args = parseArgs();
@@ -62,6 +64,12 @@ try {
 if (!Array.isArray(story?.shots)) {
   usage(`${jsonFile} has no shots[] array`, ["expected a top-level \"shots\": [{ id, prompt, duration, ref_ids }]"]);
 }
+// All reference ids are known up front so overlapping ids (e.g. ref_kairong /
+// ref_kairong_father) cannot be treated as takes of one another.
+const knownRefIds = [
+  ...(Array.isArray(story.references) ? story.references.map((r) => r?.id) : []),
+  ...story.shots.flatMap((s) => (Array.isArray(s?.ref_ids) ? s.ref_ids : []))
+].filter(Boolean);
 
 const requestedIds = [...new Set([...listArg(args, "id"), ...listArg(args, "shot"), ...listArg(args, "shots")])];
 const availableIds = story.shots.map((s) => s?.id).filter(Boolean);
@@ -87,37 +95,10 @@ const reorder =
   boolArg(args, "sync-order", false);
 const dropExtra = boolArg(args, "drop-extra", false);
 
-/** Reuse the same folder-name rule as generate_refs_from_json.mjs. */
-function folderName(id) {
-  const safe = String(id).replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^\.+/, "");
-  if (!safe || safe === "." || safe === "..") throw new Error(`unsafe id: ${JSON.stringify(id)}`);
-  return safe;
-}
 const dirFor = (id) => resolve(outputRoot, folderName(id));
 
-const created = (stat) => stat.birthtimeMs || stat.ctimeMs || stat.mtimeMs;
-
-/** Newest reference folder for an id: exact match or `<id>_...` / `<id>-...` variants. */
-function newestRefFolder(id) {
-  if (!existsSync(refsRoot)) return null;
-  const safe = folderName(id);
-  return readdirSync(refsRoot, { withFileTypes: true })
-    .filter((e) => e.isDirectory())
-    .map((e) => {
-      const dir = resolve(refsRoot, e.name);
-      try {
-        return { dir, stat: statSync(dir) };
-      } catch {
-        return null;
-      }
-    })
-    .filter(Boolean)
-    .filter(({ dir }) => {
-      const name = dir.slice(refsRoot.length + 1);
-      return name === safe || name.startsWith(`${safe}_`) || name.startsWith(`${safe}-`);
-    })
-    .sort((a, b) => created(b.stat) - created(a.stat) || b.stat.mtimeMs - a.stat.mtimeMs)[0]?.dir ?? null;
-}
+/** Newest folder owned by this ref id, never another overlapping id. */
+const newestRefFolder = (id) => newestOwnedFolder(refsRoot, id, knownRefIds);
 
 function newestImage(dir) {
   if (!dir || !existsSync(dir)) return null;

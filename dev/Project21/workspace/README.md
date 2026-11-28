@@ -227,6 +227,8 @@ node workspace/tools/generate_videos_from_json.mjs --json .\test_story5\story.js
 
 不給 `--id` 就是全部 shots。r2v 會依照 `shot.ref_ids` 到 `--refs`（預設為
 `<output>/../refs`）找出**建立日期最新**的對應資料夾，再取該資料夾內最新的圖片。
+資料夾可為 `<id>` 或 `<id>_...`／`<id>-...`；若有前綴重疊的 id（例如 `ref_kairong` 與
+`ref_kairong_father`），會以最長且完全符合的 id 為準，不會拿到別人的資料夾。
 每次提交都是 `wait:false`，結果預計下載到 `<output>/<shot.id>/`；`prompt_id` 與
 ComfyUI 連線資訊即時寫入 `<output>/render_jobs.json`，每筆 `download` 欄位可直接交給
 `comfy_job`（或檔案內的 `download_command`）把算好的影片拉回來。已有 `prompt_id` 的
@@ -262,8 +264,9 @@ node workspace/tools/concat_videos_from_report.mjs --jobs .\test_story5\output\v
 ```
 
 每個 shot 會在 `<jobs.output>` 下找建立日期最新的 `<id>`（或 `<id>_...`／`<id>-...`）資料夾，
-再取該資料夾裡建立日期最新的影片檔。預設輸出 `<jobs.output>/merged.mp4`，用 ffmpeg
-concat demuxer 做 stream copy；接縫有問題時加 `--reencode`（H.264 CRF 18 + AAC 192k）。
+再取該資料夾裡建立日期最新的影片檔；前綴重疊的 id 同樣以最長符合者為準。
+預設輸出 `<jobs.output>/merged.mp4`，用 ffmpeg concat demuxer 做 stream copy；
+接縫有問題時加 `--reencode`（H.264 CRF 18 + AAC 192k）。
 
 字幕（由 `story.json.shots[].dialog` 產生，用實際片長縮放時間軸）：
 

@@ -119,17 +119,26 @@
   "shots": [
     {
       "id": "shot_0_1",
-      "prompt": "Continuing from an establishing wide shot of a sun-drenched military parade ground, the camera sweeps along marching soldiers into a medium shot, showing a muscular middle-aged East Asian male military officer with broad shoulders, slightly aging face, short dark hair, and sharp stern eyes wearing a crisp dark green officer uniform standing on a command stand yelling forcefully, while nearby engineers adjust a heavy military hydraulic exoskeleton mechanical arm with liquid tubes, metal joints, and custom weld marks holding a large-caliber rifle, accompanied by booming male shouting and loud hydraulic whirring, as the officer yells forcefully in a booming male voice: 「一群菜雞 死老百姓 跑起來 還敢掉隊啊 沒睡飽嗎 不想休假了是不是」",
+      "prompt": "Continuing from an establishing wide shot of a sun-drenched military parade ground, the camera sweeps along marching soldiers into a medium shot, showing a muscular middle-aged East Asian male military officer with broad shoulders, slightly aging face, short dark hair, and sharp stern eyes wearing a crisp dark green officer uniform standing on a command stand yelling forcefully toward a marching formation, accompanied by booming shouting and parade ambience, as the officer yells in a booming male voice: 「跑起來 還敢掉隊啊 沒睡飽嗎 不想休假了是不是」",
       "duration": 8,
-      "dialog": "「一群菜雞！死老百姓！跑起來！還敢掉隊啊？沒睡飽嗎？不想休假了是不是！」",
+      "dialog": "「跑起來！還敢掉隊啊？沒睡飽嗎？不想休假了是不是！」",
       "ref_ids": [
         "ref_floss",
-        "ref_exo_arm",
         "bg_military_parade_ground"
       ]
     },
     {
       "id": "shot_0_2",
+      "prompt": "Continuing in the center of the parade ground, the camera frames a medium close-up of a military engineer clapping his hands to signal an operator, standing beside a heavy military hydraulic exoskeleton mechanical arm with liquid tubes, metal joints, and custom weld marks, accompanied by metallic rustling and hydraulic hums, as the engineer speaks in a clear male voice: 「好 試試看」",
+      "duration": 6,
+      "dialog": "「好，試試看。」",
+      "ref_ids": [
+        "ref_exo_arm",
+        "bg_military_parade_ground"
+      ]
+    },
+    {
+      "id": "shot_0_3",
       "prompt": "Continuing directly on the parade ground, the camera cuts to a close-up of a heavy military hydraulic exoskeleton mechanical arm with liquid tubes, metal joints, and custom weld marks holding a large-caliber rifle as it automatically aims and fires three rapid shots into a paper target 100 meters away, three bullet holes overlapping in the bullseye center, accompanied by harsh metallic clicks, mechanical servo whirs, and three loud rifle gunshots.",
       "duration": 7,
       "dialog": "",
@@ -139,7 +148,7 @@
       ]
     },
     {
-      "id": "shot_0_3",
+      "id": "shot_0_4",
       "prompt": "Continuing from the target range, the camera pushes into a medium shot as a muscular middle-aged East Asian male military officer with broad shoulders, slightly aging face, short dark hair, and sharp stern eyes wearing a dark green officer uniform lowers his binoculars with a satisfied smile, turning toward the exoskeleton operator with a hearty laugh, accompanied by outdoor parade ground wind and distant marching footsteps, as the officer speaks in a booming hearty male voice: 「嗯 真不錯 這新玩具把菜雞都變成戰神 以後你就穿著這玩意上廁所吧 哈哈哈哈」",
       "duration": 8,
       "dialog": "「嗯，真不錯。這新玩具把菜雞都變成戰神。以後你就穿著這玩意上廁所吧！哈哈哈哈！」",
@@ -149,7 +158,7 @@
       ]
     },
     {
-      "id": "shot_0_4",
+      "id": "shot_0_5",
       "prompt": "Continuing directly on the parade ground stand, the camera frames a medium two-shot as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing a dark green military dress uniform with her hair styled in a high ponytail steps forward with a straight posture, extending a leave request form toward a muscular middle-aged East Asian male military officer with broad shoulders, slightly aging face, short dark hair, and sharp stern eyes, accompanied by crisp foot clicks and parade ambience, as the woman speaks in a clear steady female voice: 「上校 這是休長假的假單 請您批准」 immediately after, the officer turns around with raised eyebrows and replies in a gruff teasing male voice: 「哎喲 我們的大姑娘要休長假了 妳這是打算直接休到退伍嗎」",
       "duration": 9,
       "dialog": "「上校，這是休長假的假單，請您批准。」 / 「哎喲，我們的大姑娘要休長假了？妳這是打算直接休到退伍嗎？」",
@@ -160,10 +169,10 @@
       ]
     },
     {
-      "id": "shot_0_5",
-      "prompt": "Continuing from the leave request on the stand, the camera moves into a medium close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing a military dress uniform chuckles softly as she accepts the signed form, as the woman speaks in a clear female voice: 「是啊 把積假一次用完 回來剛好領退伍令 不過 還沒想好要去哪裡玩呢」 immediately after, a muscular middle-aged East Asian male military officer with broad shoulders, slightly aging face, short dark hair, and sharp stern eyes wearing a dark green officer uniform snaps his fingers and suggests with a grin, as the officer speaks in a hearty male voice: 「那去一趟艾伯塔市怎麼樣 那可是有名的恐龍之都 記得 幫我帶個土產回來 綠色的暴龍造型背包」 immediately after, the woman smirks and replies in a playful female voice: 「嘖 你這是在私事公辦啊 行行行 幫你帶 我這就去收行李」 while the officer watches her back with a dark complex expression, his smile fading into sinister contemplation.",
-      "duration": 9,
-      "dialog": "「是啊，把積假一次用完，回來剛好領退伍令。不過……還沒想好要去哪裡玩呢。」 / 「那去一趟艾伯塔市怎麼樣？那可是有名的恐龍之都。記得，幫我帶個土產回來——綠色的暴龍造型背包！」 / 「嘖，你這是在私事公辦啊。行行行，幫你帶。我這就去收行李。」",
+      "id": "shot_0_6",
+      "prompt": "Continuing on the parade stand, the camera holds a medium close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing a military dress uniform receives the signed form from the officer, smiling with subtle excitement while gazing toward the horizon, accompanied by soft paper rustling and distant breeze, as the woman speaks in a bright female voice: 「是啊 把積假一次用完 回來剛好領退伍令 不過 還沒想好要去哪裡玩呢」",
+      "duration": 8,
+      "dialog": "「是啊。把積假一次用完，回來剛好領退伍令。不過……還沒想好要去哪裡玩呢。」",
       "ref_ids": [
         "ref_troy",
         "ref_floss",
@@ -171,7 +180,37 @@
       ]
     },
     {
-      "id": "shot_0_6",
+      "id": "shot_0_7",
+      "prompt": "Continuing from the leave request on the stand, the camera shifts to a medium shot as a muscular middle-aged East Asian male military officer with broad shoulders, slightly aging face, short dark hair, and sharp stern eyes wearing a dark green officer uniform snaps his fingers enthusiastically, suggesting a trip to Alberta City and asking for a dinosaur backpack souvenir, accompanied by a sharp finger snap, as the officer speaks in a warm hearty male voice: 「這樣啊 那去一趟艾伯塔市怎麼樣 那可是有名的恐龍之都 發現的化石數量全球之冠 一年一度的恐龍嘉年華也差不多要開始了 記得 幫我帶個土產回來 綠色的暴龍造型背包」",
+      "duration": 9,
+      "dialog": "「這樣啊……那去一趟艾伯塔市怎麼樣？那可是有名的恐龍之都，發現的化石數量全球之冠，一年一度的恐龍嘉年華也差不多要開始了。記得，幫我帶個土產回來——綠色的暴龍造型背包！」",
+      "ref_ids": [
+        "ref_floss",
+        "bg_military_parade_ground"
+      ]
+    },
+    {
+      "id": "shot_0_8",
+      "prompt": "Continuing on the stand, the camera pushes into a medium close-up of an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing a military dress uniform touching her chin thoughtfully before breaking into a light smirk, as she agrees to bring the gift and turns to leave with buoyant steps, accompanied by a soft chuckle and light footsteps, as the woman speaks in a dry humorous female voice: 「喔 我對死掉的骨頭並不是那麼感興趣 不過嘉年華的熱鬧倒是值得一看 嘖 你這是在私事公辦啊 行行行 幫你帶 我這就去收行李」",
+      "duration": 9,
+      "dialog": "「喔……我對死掉的骨頭並不是那麼感興趣。不過嘉年華的熱鬧倒是值得一看。嘖，你這是在私事公辦啊。行行行，幫你帶。我這就去收行李。」",
+      "ref_ids": [
+        "ref_troy",
+        "bg_military_parade_ground"
+      ]
+    },
+    {
+      "id": "shot_0_9",
+      "prompt": "Continuing on the command stand, the camera tracks slowly behind a muscular middle-aged East Asian male military officer with broad shoulders, slightly aging face, short dark hair, and sharp stern eyes wearing a dark green officer uniform as he watches the departing woman's back, his hearty smile gradually dissolving into a dark, complex, and sinister expression under the bright morning sun, accompanied by silent wind and low ominous ambient synth hum.",
+      "duration": 7,
+      "dialog": "",
+      "ref_ids": [
+        "ref_floss",
+        "bg_military_parade_ground"
+      ]
+    },
+    {
+      "id": "shot_0_10",
       "prompt": "Continuing into a dimly lit luxury military office at night, the camera slowly pushes in into a medium shot showing a muscular middle-aged East Asian male military officer with broad shoulders, slightly aging face, short dark hair, and sharp stern eyes wearing a tight dark green military uniform sitting on a leather sofa, swirling ice in a whiskey glass while holding a smartphone to his ear, accompanied by ice clinking in glass and quiet room hum, as the officer speaks in a low thick commanding male voice: 「嗯 就位了嗎 很好 直接投入 完事後趕緊撤 別讓人看見了」",
       "duration": 8,
       "dialog": "「嗯——就位了嗎？很好，直接投入。完事後趕緊撤，別讓人看見了。」",
@@ -181,7 +220,7 @@
       ]
     },
     {
-      "id": "shot_0_7",
+      "id": "shot_0_11",
       "prompt": "Continuing directly at midnight on a desolate concrete water reservoir dam under a dark starry sky, the camera frames a wide shot as two technicians wearing bulky yellow biohazard suits heave a withered decayed human corpse over a metal guardrail, plunging it straight into the deep dark water below, accompanied by night wind, heavy splashing water, and eerie ripples reflecting faint moonlight.",
       "duration": 7,
       "dialog": "",
@@ -190,17 +229,27 @@
       ]
     },
     {
-      "id": "shot_0_8",
-      "prompt": "Continuing in a shadowy room at night, the camera pushes into a medium close-up of a lean dangerous East Asian woman in her 30s with sharp cold eyes, pale skin, and sleek dark hair wearing a black tank top injecting a clear vaccine vial into her bare upper arm while holding a phone against her shoulder, checking a bank balance on her smartphone screen with a greedy smirk, accompanied by liquid syringe sound and faint phone chatter, as a muscular middle-aged male officer's voice instructs gently over speakerphone: 「可以了 記得注射疫苗 找到目標就直接下手 存貨有多少全帶出來」 immediately after, the woman smirks and speaks in a cold raspy female voice: 「老狐狸 算了大單子再來兩筆就能退休了 殺人越貨 速戰速決」",
+      "id": "shot_0_12",
+      "prompt": "Continuing in a shadowy room at night, the camera pushes into a medium close-up of a lean dangerous East Asian woman in her 30s with sharp cold eyes, pale skin, and sleek dark hair wearing a black tank top holding a phone against her shoulder while preparing a syringe, accompanied by faint phone static, as the woman speaks in a cold sharp female voice: 「上校 我等你的電話一整天了 可以出發了嗎」 immediately after, a muscular middle-aged male officer's voice instructs over speakerphone: 「可以了 記得注射疫苗 一會那些傢伙瘋起來可是六親不認 找到目標就直接下手 別跟他廢話 存貨有多少全帶出來」",
       "duration": 9,
-      "dialog": "「可以了。記得注射疫苗，一會那些傢伙瘋起來可是六親不認。找到目標就直接下手，別跟他廢話。存貨有多少全帶出來。」 / 「哼，老狐狸。算了，殺人越貨，速戰速決……這種大單子再來兩筆就能退休了。」",
+      "dialog": "「上校，我等你的電話一整天了。可以出發了嗎？」 / 「可以了。記得注射疫苗，一會那些傢伙瘋起來可是六親不認。找到目標就直接下手，別跟他廢話。存貨有多少全帶出來。」",
       "ref_ids": [
         "ref_female_assassin",
         "bg_dim_command_office"
       ]
     },
     {
-      "id": "shot_0_9",
+      "id": "shot_0_13",
+      "prompt": "Continuing in the shadowy room, the camera holds a close-up as a lean dangerous East Asian woman in her 30s with sharp cold eyes, pale skin, and sleek dark hair injects a clear vaccine vial into her bare upper arm while tapping her smartphone screen to confirm a massive bank balance deposit, accompanied by liquid syringe sound and digital screen chimes, as the woman speaks in a cold businesslike female voice: 「那我們說好的酬勞」 immediately after, the officer's voice replies over speakerphone: 「放心 我已經先匯一半過去了 妳查一下戶頭 完事了再給另一半」 immediately after, the woman smirks with greedy delight and mutters: 「哼 老狐狸 算了 殺人越貨 速戰速決 哎喲 這可真是大手筆 軍方的活 給錢真不是開玩笑 這種大單子再來兩筆就能退休了」",
+      "duration": 9,
+      "dialog": "「那我們說好的酬勞……」 / 「放心，我已經先匯一半過去了。妳查一下戶頭，完事了再給另一半。」 / 「哼，老狐狸。算了，殺人越貨，速戰速決……哎喲，這可真是大手筆……軍方的活，給錢真不是開玩笑！這種大單子再來兩筆就能退休了。」",
+      "ref_ids": [
+        "ref_female_assassin",
+        "bg_dim_command_office"
+      ]
+    },
+    {
+      "id": "shot_0_14",
       "prompt": "Continuing along a dark desolate multi-lane highway at night under flickering streetlights, the camera tracks alongside in a dynamic low-angle wide shot as a lean dangerous East Asian woman in her 30s with sharp cold eyes, pale skin, and sleek dark hair wearing a full black tight tactical combat suit speeds past on a sleek black motorcycle toward distant city neon lights, accompanied by a roaring motor engine and rushing night wind.",
       "duration": 6,
       "dialog": "",
@@ -210,20 +259,20 @@
       ]
     },
     {
-      "id": "shot_0_10",
-      "prompt": "Continuing inside a lavish 100-story penthouse club under pink neon ambient lighting, the camera pans across a medium shot of wealthy elites in tuxedos sipping wine, showing an arrogant young East Asian man in his late 20s with styled dark hair, sharp eyebrows, and a smirk wearing a tailored black tuxedo proudly displaying a glowing blue QR code pass on his smartphone screen to surrounding envious guests, accompanied by upbeat club music, clinking wine glasses, and condescending laughter, as the young man speaks in a smug male voice: 「看到沒 哥們 我也搶到門票了 底層那些牛馬真是可憐 還在為房貸車貸拼命」",
-      "duration": 8,
-      "dialog": "「看到沒？哥們！我也搶到門票了。哈哈哈哈，底層那些牛馬真是可憐，還在為房貸車貸拼命。」",
+      "id": "shot_0_15",
+      "prompt": "Continuing inside a lavish 100-story penthouse club under pink neon ambient lighting, the camera pans across a medium shot of wealthy elites in tuxedos sipping wine, showing an arrogant young East Asian man in his late 20s with styled dark hair, sharp eyebrows, and a smirk wearing a tailored black tuxedo proudly displaying a glowing blue QR code pass on his smartphone screen to surrounding envious guests, accompanied by upbeat club music, clinking wine glasses, and condescending laughter, as the young man boasts in a smug male voice: 「看到沒 哥們 我也搶到門票了」 immediately after, an envious guest exclaims: 「哎呀 小莊真有本事」 immediately after, the young man winks and whispers loudly: 「噓 低調點 這可是上流社會的秘密 哈哈哈哈 底層那些牛馬真是可憐 還在為房貸車貸拼命」",
+      "duration": 9,
+      "dialog": "「看到沒？哥們！我也搶到門票了。」 / 「哎呀，小莊真有本事！」 / 「噓——低調點，這可是上流社會的秘密。哈哈哈哈，底層那些牛馬真是可憐，還在為房貸車貸拼命。」",
       "ref_ids": [
         "ref_young_elite",
         "bg_luxury_club_penthouse"
       ]
     },
     {
-      "id": "shot_0_11",
-      "prompt": "Continuing in a secluded lounge corner of the penthouse club, the camera holds a medium two-shot showing a heavy-set obese middle-aged East Asian businessman with slicked dark hair, puffy cheeks, and double chin wearing a pinstripe suit exhaling thick cigar smoke, while a thin nervous young East Asian man in his early 20s with messy hair and hesitant eyes wearing a cheap suit listens intently, accompanied by low lounge jazz and ambient chatter, as the obese businessman speaks in an arrogant gravelly male voice: 「小劉啊 兩天後方舟落成典禮 很多大人物會帶著家屬去劃位 那是給這座城市的精英階層打造的避難所」",
+      "id": "shot_0_16",
+      "prompt": "Continuing in a secluded lounge corner of the penthouse club, the camera holds a medium two-shot showing a heavy-set obese middle-aged East Asian businessman with slicked dark hair, puffy cheeks, and double chin wearing a pinstripe suit exhaling thick cigar smoke toward a thin nervous young East Asian man in his early 20s with messy hair and hesitant eyes, accompanied by low lounge jazz and ambient chatter, as the obese businessman speaks in an arrogant gravelly male voice: 「小劉啊 兩天後方舟落成典禮 很多大人物會帶著家屬去劃位 我帶你走一趟 你把握機會去攀關係 看能不能也卡個位子」 immediately after, the nervous young man scratches his head and asks in a puzzled male voice: 「方舟 楊董 那是什麼 這跟升遷有關係嗎」",
       "duration": 9,
-      "dialog": "「小劉啊，兩天後方舟落成典禮，很多大人物會帶著家屬去劃位。那是給這座城市的精英階層打造的避難所。」",
+      "dialog": "「小劉啊，兩天後方舟落成典禮，很多大人物會帶著家屬去劃位。我帶你走一趟，你把握機會去攀關係，看能不能也卡個位子。」 / 「方舟？楊董，那是什麼？這跟升遷有關係嗎？」",
       "ref_ids": [
         "ref_boss_yang",
         "ref_subordinate_liu",
@@ -231,28 +280,50 @@
       ]
     },
     {
-      "id": "shot_0_12",
-      "prompt": "Continuing down on a noisy crowded urban street at night lined with neon storefront signs, the camera tracks abruptly into a dynamic medium shot as a sedan side-swipes a delivery motorcycle with screeching metal, sending the courier flying onto wet asphalt, before the uninjured driver staggers out like a feral beast with bloodshot eyes and bites hard into the shoulder of a helpful passerby, blood spraying onto asphalt, accompanied by screeching tires, metal crunching, and horrified street shrieks.",
-      "duration": 7,
-      "dialog": "",
-      "ref_ids": [
-        "bg_night_city_street"
-      ]
-    },
-    {
-      "id": "shot_0_13",
-      "prompt": "Continuing on the chaotic night street, the camera pushes into a tight medium close-up as the bitten passerby struggles frantically while the feral driver lunges onto a second citizen, biting straight into his neck and tearing away a chunk of muscle with blood arterial spray across the cold asphalt, accompanied by piercing screams, traffic horn blares, and frantic crowd commotion, as the bitten passerby screams frantically in a panicked male voice: 「啊啊啊啊 媽的 你咬我幹嘛 操」",
-      "duration": 7,
-      "dialog": "「啊啊啊啊！媽的！你咬我幹嘛！操！」",
-      "ref_ids": [
-        "bg_night_city_street"
-      ]
-    },
-    {
-      "id": "shot_0_14",
-      "prompt": "Continuing in a warm cozy apartment living room in gentle morning light with soft rain outside, the camera frames a medium close-up showing a gentle middle-aged East Asian male researcher with neat short dark hair, wire-rimmed glasses, and a warm smile wearing a clean white lab coat over a dress shirt handing a modern sleek smartphone connected by a short cable to a compact black high-capacity power bank to a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing casual pastel loungewear, as the girl pouts and rapidly signs with her hands, expressing in a sulky silent young female voice: 「加班笨蛋 工作笨蛋」 immediately after, the father speaks in a warm cheerful male voice: 「來 這個收好 裡面有避難所通行證 地圖和緊急逃生口 等落成典禮結束 爸爸馬上就趕回來陪妳」 immediately after, the girl plugs in the phone and signs angrily: 「笨蛋爸爸 絕對會黃牛」",
+      "id": "shot_0_17",
+      "prompt": "Continuing in the secluded lounge corner, the camera pushes into a close-up of a heavy-set obese middle-aged East Asian businessman looking out the window at city lights with cold condescension, as he explains the sanctuary for the upper class while the thin nervous young man nearly chokes on his whiskey, accompanied by clinking ice glasses, as the obese businessman speaks in a cold harsh male voice: 「哼 傻小子 那是給這座城市的精英階層打造的 應付未來可能發生的天災 海嘯或是全球疫情 總之 那是上等人的避難所 所以你啊 放聰明點 別說我沒照顧你」 immediately after, the young man gasps in awe: 「我的老天 那我可得好好把握機會了」",
       "duration": 9,
-      "dialog": "（加班笨蛋！工作笨蛋！） / 「來，這個收好。裡面有避難所通行證、地圖和緊急逃生口。等落成典禮結束，爸爸馬上就趕回來陪妳。」 / （笨蛋爸爸！絕對會黃牛！）",
+      "dialog": "「哼，傻小子。那是給這座城市的精英階層打造的！應付未來可能發生的天災、海嘯或是全球疫情。總之，那是『上等人』的避難所。所以你啊，放聰明點，別說我沒照顧你。」 / 「我的老天……那我可得好好把握機會了。」",
+      "ref_ids": [
+        "ref_boss_yang",
+        "ref_subordinate_liu",
+        "bg_luxury_club_penthouse"
+      ]
+    },
+    {
+      "id": "shot_0_18",
+      "prompt": "Continuing down on a noisy crowded urban street at night lined with neon storefront signs, the camera tracks abruptly into a dynamic medium shot as a sedan side-swipes a delivery motorcycle with screeching metal, sending the courier flying onto wet asphalt, while alarmed bystanders crowd around, accompanied by screeching tires, crashing metal, and frantic shouts, as bystanders yell in panicked voices: 「臥槽 快叫救護車 報警啊 先報警」",
+      "duration": 7,
+      "dialog": "「臥槽！快叫救護車！」「報警啊！先報警！」",
+      "ref_ids": [
+        "bg_night_city_street"
+      ]
+    },
+    {
+      "id": "shot_0_19",
+      "prompt": "Continuing on the chaotic night street, the camera pushes into a tight medium close-up as the uninjured driver staggers out like a feral beast with bloodshot eyes, lunging onto bystanders and biting viciously into a citizen's neck with blood arterial spray across asphalt, accompanied by piercing screams and traffic horns, as the bitten victim screams in agony: 「啊啊啊啊 媽的 你咬我幹嘛 操」 while nearby crowd members shout in terror: 「靠 這是吸毒吸瘋了嗎 壓住他 別讓他跑了」",
+      "duration": 8,
+      "dialog": "「啊啊啊啊！媽的！你咬我幹嘛！操！」 / 「靠！這是吸毒吸瘋了嗎？」「壓住他！別讓他跑了！」",
+      "ref_ids": [
+        "bg_night_city_street"
+      ]
+    },
+    {
+      "id": "shot_0_20",
+      "prompt": "Continuing in a warm cozy apartment living room in gentle morning light with soft rain outside, the camera frames a medium close-up showing a gentle middle-aged East Asian male researcher with neat short dark hair, wire-rimmed glasses, and a warm smile wearing a clean white lab coat preparing his briefcase, while a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing casual pastel loungewear pouts unhappily and rapidly signs with her hands, expressing in a sulky silent young female voice: 「加班笨蛋 工作笨蛋」",
+      "duration": 8,
+      "dialog": "（加班笨蛋！工作笨蛋！）",
+      "ref_ids": [
+        "ref_kairong",
+        "ref_kairong_father",
+        "bg_apartment_living_room_morning"
+      ]
+    },
+    {
+      "id": "shot_0_21",
+      "prompt": "Continuing in the apartment living room, the camera moves into a close-up as a gentle middle-aged East Asian male researcher with neat short dark hair, wire-rimmed glasses, and a warm smile pats the petite teenage girl's head affectionately, handing her a modern sleek smartphone connected by a short cable to a compact black high-capacity power bank while explaining the privilege shelter pass, map, and emergency escape exit, accompanied by gentle domestic ambient sound and soft rain outside, as the father speaks in a warm cheerful male voice: 「哈哈 怎麼了 我的小寶貝 來 這個收好 這可是爸爸利用特權弄到的 裡面有我跟妳說過的那個避難所通行證 還有地圖和緊急逃生口 連那些大人物都不知道喔」",
+      "duration": 9,
+      "dialog": "「哈哈，怎麼了？我的小寶貝。來，這個收好。這可是爸爸利用特權弄到的。裡面有我跟妳說過的那個避難所通行證，還有地圖和緊急逃生口，連那些大人物都不知道喔。」",
       "ref_ids": [
         "ref_kairong",
         "ref_kairong_father",
@@ -261,17 +332,29 @@
       ]
     },
     {
-      "id": "shot_0_15",
-      "prompt": "Continuing outside the apartment building, the camera tracks a medium shot as a gentle middle-aged East Asian male researcher with neat short dark hair, wire-rimmed glasses, and a warm smile wearing a white lab coat and carrying a briefcase waves goodbye with a bright smile, stepping into a waiting yellow taxi that pulls slowly into the wet morning street, accompanied by rain splashing on pavement and quiet engine idle, as the father turns back with a sunny expression and speaks in a reassuring male voice: 「好啦 這次絕對不黃牛 爸爸過兩天就回來」",
-      "duration": 7,
-      "dialog": "「好啦，這次絕對不黃牛。爸爸過兩天就回來。」",
+      "id": "shot_0_22",
+      "prompt": "Continuing in the living room, the camera holds a medium two-shot as a gentle middle-aged East Asian male researcher in a white lab coat happily finishes packing his bag, telling her he'll come back right after the ceremony or she can find him at his office, while a petite East Asian teenage girl angrily connects her new phone to charge and signs back with lightning speed, accompanied by soft rain outside, as the father speaks cheerfully: 「等落成典禮結束 爸爸馬上就趕回來陪妳 如果我真的加班太久 妳就順著地圖的路線 來我辦公的地方找我」 immediately after, the girl pouts furiously and signs in sign language, thinking in a sulky young female voice: 「笨蛋爸爸 絕對會黃牛」",
+      "duration": 9,
+      "dialog": "「等落成典禮結束，爸爸馬上就趕回來陪妳。如果我真的加班太久，妳就順著地圖的路線，來我辦公的地方找我。」 / （笨蛋爸爸！絕對會黃牛！）",
+      "ref_ids": [
+        "ref_kairong",
+        "ref_kairong_father",
+        "ref_smartphone_powerbank",
+        "bg_apartment_living_room_morning"
+      ]
+    },
+    {
+      "id": "shot_0_23",
+      "prompt": "Continuing outside the apartment building in drizzling morning rain, the camera tracks a medium shot as a gentle middle-aged East Asian male researcher in a white lab coat waves goodbye with a bright sunny smile before stepping into a yellow taxi, where the taxi driver asks for destination and the researcher points to a coordinate on his phone, accompanied by rain splashing on pavement and taxi door shut, as the father speaks in a reassuring male voice: 「哈哈哈 我的小寶貝生氣了 好啦 這次絕對不黃牛 爸爸過兩天就回來」 immediately after, the taxi driver asks in a polite male voice: 「客人 去哪」 immediately after, the researcher replies warmly: 「這裡 那間舊書攤」",
+      "duration": 9,
+      "dialog": "「哈哈哈，我的小寶貝生氣了。好啦，這次絕對不黃牛。爸爸過兩天就回來。」 / 「客人，去哪？」 / 「這裡，那間舊書攤。」",
       "ref_ids": [
         "ref_kairong_father",
         "bg_rainy_city_street_morning"
       ]
     },
     {
-      "id": "shot_0_16",
+      "id": "shot_0_24",
       "prompt": "Continuing along a quiet urban street in drizzling morning rain, the camera pans across low-headed pedestrians carrying umbrellas, completely ignoring smartphone screens broadcasting news of the wild driver biting incident, as rainwater flows steadily down rooftops into street drains under a grey morning sky, accompanied by gentle rainfall and low traffic rumbles.",
       "duration": 6,
       "dialog": "",
@@ -280,17 +363,27 @@
       ]
     },
     {
-      "id": "shot_0_17",
-      "prompt": "Continuing on a massive concrete suspension bridge jammed with frozen lines of vehicles under hazy midday sunlight, the camera pushes into a medium shot inside a sedan cabin, showing an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing a casual dark jacket over a fitted olive top holding her smartphone out the window in video call mode, accompanied by blaring traffic horns and tense crowd chatter, as the woman speaks into the phone in an annoyed sharp female voice: 「佛羅斯上校 我轉視訊通話 你看看外面 老狐狸 難怪你叫我來這裡」 immediately after, a middle-aged male officer's voice laughs over speakerphone: 「哈哈哈 我們的大姑娘真幽默 等等進城別忘了先幫我買恐龍背包啊」",
-      "duration": 9,
-      "dialog": "「佛羅斯上校……我轉視訊通話，你看看外面。老狐狸～難怪你叫我來這裡！」 / 「哈哈哈！我們的大姑娘真幽默！等等進城別忘了先幫我買恐龍背包啊！」",
+      "id": "shot_0_25",
+      "prompt": "Continuing on a massive concrete suspension bridge jammed with frozen lines of vehicles under hazy midday sunlight, the camera pushes into a medium shot inside a sedan cabin, showing an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing a casual dark jacket over a fitted olive top leaning against her steering wheel in frustration, accompanied by blaring traffic horns and tense crowd chatter, as the woman grumbles in an annoyed female voice: 「握了個 這都什麼跟什麼 什麼鬼度假勝地 這是塞車聖地吧」",
+      "duration": 8,
+      "dialog": "「握了個……這都什麼跟什麼？什麼鬼度假勝地？這是塞車聖地吧？」",
       "ref_ids": [
         "ref_troy",
         "bg_bridge_traffic_jam"
       ]
     },
     {
-      "id": "shot_0_18",
+      "id": "shot_0_26",
+      "prompt": "Continuing inside the sedan cabin on the jammed bridge, the camera holds a medium close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin answers a ringing phone call from Colonel Floss and holds her smartphone out the window in video call mode, accompanied by blaring traffic horns and phone chimes, as a middle-aged male officer's voice greets over speakerphone: 「嘿喲 泰洛伊上士 我的大姑娘 休假順利嗎」 immediately after, the woman retorts sharply: 「佛羅斯上校 我轉視訊通話 你看看外面 老狐狸 難怪你叫我來這裡」 immediately after, the officer laughs over speakerphone: 「哈哈哈 我們的大姑娘真幽默 竟然特地排了休假來體驗塞車 等等進城別忘了先幫我買恐龍背包啊 哈哈哈哈 那你慢慢塞 我就不打擾你休假了」 immediately after, the woman yells angrily before being cut off: 「欸靠 老不修 你給我」",
+      "duration": 9,
+      "dialog": "「嘿喲～～～泰洛伊上士～我的大姑娘～休假順利嗎？」 / 「佛羅斯上校……我轉視訊通話，你看看外面。老狐狸～難怪你叫我來這裡！」 / 「哈哈哈！我們的大姑娘真幽默！竟然特地排了休假來體驗塞車。等等進城別忘了先幫我買恐龍背包啊！哈哈哈哈！那你慢慢塞，我就不打擾你休假了。」 / 「欸靠！老不修～你給我——」",
+      "ref_ids": [
+        "ref_troy",
+        "bg_bridge_traffic_jam"
+      ]
+    },
+    {
+      "id": "shot_0_27",
       "prompt": "Continuing on the congested bridge, the camera abruptly shifts into a dramatic wide aerial shot as massive explosions erupt beneath the bridge support pillars with deafening roars, shattering concrete roadways and buckling steel girders, sending screaming crowds and tumbling vehicles sliding off the broken bridge into the muddy riverbed below, accompanied by thunderous explosions, screeching metal, and chaotic screams.",
       "duration": 8,
       "dialog": "",
@@ -299,18 +392,18 @@
       ]
     },
     {
-      "id": "shot_0_19",
-      "prompt": "Continuing down on a desolate gravel riverbed beside a muddy canal, the camera tracks inside an overturned sedan resting on its side amidst wreckage, showing an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing a fitted olive drab tank top struggling to unbuckle her seatbelt, tumbling onto the crumpled roof before righting her posture, accompanied by gasoline fumes, heavy breathing, and metallic creaks, as the woman in the olive tank top winces in dizziness and mutters in a frustrated female voice: 「我 靠 什麼鬼 沒受傷 真是幸運 啊不對 是真他媽倒楣」",
-      "duration": 8,
-      "dialog": "「我……靠……什麼鬼……沒受傷……真是幸運……啊不對，是真他媽倒楣！」",
+      "id": "shot_0_28",
+      "prompt": "Continuing down on a desolate gravel riverbed beside a muddy canal, the camera tracks inside an overturned sedan resting on its side amidst wreckage, showing an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing a fitted olive drab tank top struggling to unbuckle her seatbelt, tumbling onto the crumpled roof before righting her posture, accompanied by gasoline fumes, heavy breathing, and metallic creaks, as the woman in the olive tank top winces in dizziness and mutters in a frustrated female voice: 「我 靠 什麼鬼 沒受傷 真是幸運 啊不對 是真他媽倒楣 等我回去 一定要罵死那死老頭 嗯 那是什麽東西」",
+      "duration": 9,
+      "dialog": "「我……靠……」 / 「什麼鬼……沒受傷……真是幸運……啊不對，是真他媽倒楣！等我回去，一定要罵死那死老頭！嗯……那是什麽東西？」",
       "ref_ids": [
         "ref_troy",
         "bg_riverbed_crash_site"
       ]
     },
     {
-      "id": "shot_0_20",
-      "prompt": "Continuing through the spiderweb-cracked windshield of the overturned sedan, the camera pushes into a tight point-of-view close-up as a bleeding male survivor crawls painfully across the riverbed gravel pleading for help, before a feral male figure with pale grey-purple skin, deep tearing wounds, bloodshot eyes, and torn gut tissue lunges downward and bites viciously into the crawling man's back, tearing away flesh until blood coats his bare spine, accompanied by agonizing victim shrieks and tearing flesh, as the crawling victim screams out in an agonizing male voice: 「啊啊啊啊啊」",
+      "id": "shot_0_29",
+      "prompt": "Continuing through the spiderweb-cracked windshield of the overturned sedan, the camera pushes into a tight point-of-view close-up as a bleeding male survivor crawls painfully across the riverbed gravel pleading for help, before a feral male figure with pale grey-purple skin, deep tearing wounds, bloodshot eyes, and torn gut tissue lunges downward and bites viciously into the crawling man's back, tearing away flesh until blood coats his bare spine, accompanied by agonizing victim shrieks and tearing flesh, as the crawling victim screams in an agonizing male voice: 「啊啊啊啊啊」",
       "duration": 8,
       "dialog": "「啊啊啊啊啊——————！」",
       "ref_ids": [
@@ -320,7 +413,18 @@
       ]
     },
     {
-      "id": "shot_0_21",
+      "id": "shot_0_30",
+      "prompt": "Continuing inside the overturned sedan, the camera holds a medium close-up of an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top pressing her back against the seat while observing the monster with military composure, eyeing her stainless steel pipe package in the back, accompanied by quiet heavy breathing, as the woman mutters in a tense low female voice: 「媽的 這都什麼跟什麼 狂犬病 神經病 幸好把祖傳的不鏽鋼棍帶來了 等等可以派上用場」",
+      "duration": 8,
+      "dialog": "「媽的……這都什麼跟什麼？狂犬病？神經病？幸好把祖傳的不鏽鋼棍帶來了。等等可以派上用場。」",
+      "ref_ids": [
+        "ref_troy",
+        "ref_steel_pipe",
+        "bg_riverbed_crash_site"
+      ]
+    },
+    {
+      "id": "shot_0_31",
       "prompt": "Continuing directly on the riverbed gravel, the camera holds a high-angle medium close-up as the victim man's skin rapidly drains of blood to an ashen pale grey, his eyes snapping open completely bloodshot as he rises stiffly with a guttural animal snarl and shambles rigidly after the departing grey-skinned monster toward distant screaming sounds, accompanied by a raspy beastly growl and crunching gravel.",
       "duration": 7,
       "dialog": "",
@@ -330,10 +434,10 @@
       ]
     },
     {
-      "id": "shot_0_22",
-      "prompt": "Continuing inside the crumpled sedan cabin, the camera frames a medium close-up of an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top hastily unstrapping a thick heavy stainless steel pipe with polished silver metallic luster from her luggage, packing water bottles and a medical pouch into a tactical backpack, accompanied by zipper pulls and metallic clinks, as the woman in the olive tank top grits her teeth and curses in a furious female voice: 「武器 棍子 還有水 隨身醫療包 馬的 沒想到會在這種地方用上這玩意 搞屁啊 就不能讓我好好休個假嗎」",
-      "duration": 8,
-      "dialog": "「武器……棍子……還有水、隨身醫療包。馬的！沒想到會在這種地方用上這玩意！搞屁啊！就不能讓我好好休個假嗎！」",
+      "id": "shot_0_32",
+      "prompt": "Continuing inside the crumpled sedan cabin, the camera frames a medium close-up of an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top hastily unstrapping a thick heavy stainless steel pipe with polished silver metallic luster from her luggage, packing water bottles and a medical pouch into a tactical backpack, accompanied by zipper pulls and metallic clinks, as the woman in the olive tank top grits her teeth and curses in a furious female voice: 「武器 棍子 還有水 隨身醫療包 馬的 沒想到會在這種地方用上這玩意 搞屁啊 就不能讓我好好休個假嗎 準備好了 哈啊」",
+      "duration": 9,
+      "dialog": "「武器……棍子……還有水、隨身醫療包。馬的！沒想到會在這種地方用上這玩意！搞屁啊！就不能讓我好好休個假嗎！準備好了——哈啊！！」",
       "ref_ids": [
         "ref_troy",
         "ref_steel_pipe",
@@ -341,7 +445,7 @@
       ]
     },
     {
-      "id": "shot_0_23",
+      "id": "shot_0_33",
       "prompt": "Continuing outside the overturned sedan, the camera pulls back into a wide shot as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top, dark cargo pants, heavy combat boots, and a tactical backpack delivers a hard kick with combat boots, shattering the cracked windshield glass, crawling nimbly out onto the dry gravel riverbed while gripping a thick heavy stainless steel pipe with silver metallic luster, under glaring midday sunlight as dark smoke rises over the distant city skyline, accompanied by shattering glass and heavy footsteps on gravel, as she speaks in a resolute female voice: 「好了 冷靜 先想辦法回到橋上 這鬼地方老娘一秒都不想待了 去你的恐龍包」",
       "duration": 9,
       "dialog": "「好了……冷靜。先想辦法回到橋上。這鬼地方老娘一秒都不想待了！去你的恐龍包！」",

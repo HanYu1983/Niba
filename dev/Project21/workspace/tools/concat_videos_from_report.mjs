@@ -14,6 +14,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { basename, dirname, extname, resolve } from "node:path";
 
 import { boolArg, parseArgs, usage } from "../lib/args.mjs";
+import { created, newestOwnedFolder } from "../lib/folders.mjs";
 import { concat } from "../lib/media.mjs";
 
 const VIDEO_RE = /\.(mp4|webm|mov|mkv)$/i;
@@ -36,6 +37,9 @@ try {
 if (!Array.isArray(jobs?.shots)) {
   usage(`${jobsFile} has no shots[] array`, ["expected the render_jobs.json written by generate_videos_from_json.mjs"]);
 }
+// Use every job id, not just the selected range, so overlapping ids cannot
+// steal another shot's folder.
+const knownShotIds = jobs.shots.map((s) => s?.id).filter(Boolean);
 
 const rootArg = args.root ?? args.output ?? args["output-root"];
 const outputRoot = rootArg && rootArg !== true ? resolve(String(rootArg)) : resolve(String(jobs.output ?? dirname(jobsFile)));
@@ -55,35 +59,8 @@ if (args.to && args.to !== true) {
   shots = shots.slice(0, idx + 1);
 }
 
-/** Same folder-name rule as generate_videos_from_json.mjs. */
-function folderName(id) {
-  const safe = String(id).replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^\.+/, "");
-  if (!safe || safe === "." || safe === "..") throw new Error(`unsafe id: ${JSON.stringify(id)}`);
-  return safe;
-}
-const created = (stat) => stat.birthtimeMs || stat.ctimeMs || stat.mtimeMs;
-
-/** Newest folder for an id: exact match or `<id>_...` / `<id>-...` variants. */
-function newestDirFor(id) {
-  if (!existsSync(outputRoot)) return null;
-  const safe = folderName(id);
-  return readdirSync(outputRoot, { withFileTypes: true })
-    .filter((e) => e.isDirectory())
-    .map((e) => {
-      const dir = resolve(outputRoot, e.name);
-      try {
-        return { dir, stat: statSync(dir) };
-      } catch {
-        return null;
-      }
-    })
-    .filter(Boolean)
-    .filter(({ dir }) => {
-      const name = dir.slice(outputRoot.length + 1);
-      return name === safe || name.startsWith(`${safe}_`) || name.startsWith(`${safe}-`);
-    })
-    .sort((a, b) => created(b.stat) - created(a.stat) || b.stat.mtimeMs - a.stat.mtimeMs)[0]?.dir ?? null;
-}
+/** Newest folder owned by this shot id, never another overlapping id. */
+const newestDirFor = (id) => newestOwnedFolder(outputRoot, id, knownShotIds);
 
 function newestVideo(dir) {
   if (!dir || !existsSync(dir)) return null;
