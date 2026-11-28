@@ -10,11 +10,19 @@
     },
     {
       "id": "ref_dino_girl",
-      "prompt": "a petite East Asian teenage girl with messy shoulder-length dark hair, pale skin, and wide startled eyes"
+      "prompt": "a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes"
     },
     {
       "id": "bg_riverbank_open",
       "prompt": "a sun-drenched concrete riverbank with scattered gravel and sparse weeds beside a wide muddy canal under intense overhead midday sunlight with no overhead cover"
+    },
+    {
+      "id": "bg_riverbank_canal",
+      "prompt": "a turbulent muddy canal with a collapsing concrete bridge in the distance under harsh midday sunlight with floating debris"
+    },
+    {
+      "id": "bg_riverbank_bushes",
+      "prompt": "a concrete riverbank walkway bordered by dense overgrown green bushes under intense midday sunlight"
     },
     {
       "id": "bg_stranded_trawler_exterior",
@@ -241,7 +249,7 @@
     },
     {
       "id": "shot_1_21",
-      "prompt": "Continuing directly from the discovery on the gravel riverbank, the camera drops into a low-angle medium close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top collapses onto her knees and slams her fists repeatedly against the rough gravel until her knuckles bleed, accompanied by dull thuds against stones and ragged sobbing breaths, as the woman in the olive tank top bows her head in bitter regret and speaks in a choked furious female voice: 「媽的 早知道就不救人了 我也會變成那種鬼樣子嗎」",
+      "prompt": "Continuing directly from the discovery on the gravel riverbank, the camera drops into a low-angle medium close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top with dark purple veins spreading like spiderwebs across her bare shoulders collapses onto her knees and slams her fists repeatedly against the rough gravel until her knuckles bleed, accompanied by dull thuds against stones and ragged sobbing breaths, as the woman in the olive tank top bows her head in bitter regret and speaks in a choked furious female voice: 「媽的 早知道就不救人了 我也會變成那種鬼樣子嗎」",
       "duration": 8,
       "dialog": "媽的……早知道就不救人了。我也會變成那種鬼樣子嗎……",
       "ref_ids": [
@@ -251,7 +259,7 @@
     },
     {
       "id": "shot_1_22",
-      "prompt": "Continuing directly from the previous shot on the riverbank, the camera slowly pushes in into a tight close-up as despair fades from the face of an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin, replaced by a cold ruthless glare as she rises to her feet and adjusts the military dagger sheath at her waist, accompanied by a sharp metallic click and quiet river breeze, as she speaks in an icy determined female voice: 「既然要死 那就多拉幾個陪葬的 最後一刀 就留給我自己吧」",
+      "prompt": "Continuing directly from the previous shot on the riverbank, the camera slowly pushes in into a tight close-up as despair fades from the face of an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top with dark purple veins spreading like spiderwebs across her bare shoulders, replaced by a cold ruthless glare as she rises to her feet, retrieves her blood-stained stainless steel pipe from the ground, and adjusts the military dagger sheath at her waist, accompanied by a sharp metallic click and quiet river breeze, as she speaks in an icy determined female voice: 「既然要死 那就多拉幾個陪葬的 最後一刀 就留給我自己吧」",
       "duration": 8,
       "dialog": "既然要死……那就多拉幾個陪葬的。最後一刀，就留給我自己吧。",
       "ref_ids": [
@@ -261,7 +269,7 @@
     },
     {
       "id": "shot_1_23",
-      "prompt": "Continuing from the riverbank path, the camera frames a wide shot tilting up toward a large abandoned rusted fishing trawler tilted on the muddy shore with barnacles crusted along its hull, as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top and dark cargo pants grips her blood-stained stainless steel pipe and strides purposefully toward the vessel, accompanied by faint sharp scratching sounds echoing from inside the hull, as she narrows her eyes fiercely and mutters in a cold female voice: 「好樣的 就從你開刀」",
+      "prompt": "Continuing from the riverbank path, the camera frames a wide shot tilting up toward a large abandoned rusted fishing trawler tilted on the muddy shore with barnacles crusted along its hull, as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top with dark purple veins spreading like spiderwebs across her bare shoulders, dark cargo pants grips her blood-stained stainless steel pipe and strides purposefully toward the vessel, accompanied by faint sharp scratching sounds echoing from inside the hull, as she narrows her eyes fiercely and mutters in a cold female voice: 「好樣的 就從你開刀」",
       "duration": 7,
       "dialog": "好樣的……就從你開刀！",
       "ref_ids": [
@@ -271,7 +279,7 @@
     },
     {
       "id": "shot_1_24",
-      "prompt": "Continuing into the dim interior of the tilted trawler, the camera tracks behind in a medium tracking shot as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top steps carefully up a damp wooden corridor with her stainless steel pipe raised, closing her eyes briefly to pinpoint faint sounds through the creaking hull, accompanied by murky water sloshing below decks and heavy combat boots echoing on wet wood, as she opens her eyes sharply and whispers in a cold confident female voice: 「很好 一個都別想逃」",
+      "prompt": "Continuing into the dim interior of the tilted trawler, the camera tracks behind in a medium tracking shot as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top with dark purple veins spreading like spiderwebs across her bare shoulders steps carefully up a damp wooden corridor with her stainless steel pipe raised, closing her eyes briefly to pinpoint faint sounds through the creaking hull, accompanied by murky water sloshing below decks and heavy combat boots echoing on wet wood, as she opens her eyes sharply and whispers in a cold confident female voice: 「很好 一個都別想逃」",
       "duration": 8,
       "dialog": "很好……一個都別想逃。",
       "ref_ids": [
@@ -281,7 +289,7 @@
     },
     {
       "id": "shot_1_25",
-      "prompt": "Continuing directly up the narrow corridor, the camera holds a tense medium shot as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top halts outside a weathered white wooden door marked with faded captain's cabin lettering, accompanied by faint rapid rummaging behind the door, as she raises one heavy combat boot and shouts in a fierce commanding female voice: 「來吧 老娘來超渡你啦」",
+      "prompt": "Continuing directly up the narrow corridor, the camera holds a tense medium shot as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top with dark purple veins spreading like spiderwebs across her bare shoulders halts outside a weathered white wooden door marked with faded captain's cabin lettering, accompanied by faint rapid rummaging behind the door, as she raises one heavy combat boot and shouts in a fierce commanding female voice: 「來吧 老娘來超渡你啦」",
       "duration": 6,
       "dialog": "來吧！老娘來超渡你啦！",
       "ref_ids": [
@@ -291,7 +299,7 @@
     },
     {
       "id": "shot_1_26",
-      "prompt": "Continuing directly from the doorway, the camera snaps into a dynamic wide angle as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top kicks the decayed white wooden door off its hinges into the captain's cabin, revealing a petite East Asian teenage girl with messy shoulder-length dark hair, pale skin, and wide startled eyes wearing a huge bright green dinosaur-shaped backpack crouching beside a dead sailor's body with grey-white hands rummaging frantically, accompanied by a loud splintering door crash and startled gasp.",
+      "prompt": "Continuing directly from the doorway, the camera snaps into a dynamic wide angle as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top with dark purple veins spreading like spiderwebs across her bare shoulders kicks the decayed white wooden door off its hinges into the captain's cabin, revealing a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton with green dinosaur forearm sleeves and a raw laceration wound on her bare upper arm kneeling beside a dead corpse with pale grey fingers extending from dinosaur sleeves rummaging hastily, accompanied by a loud splintering door crash and startled gasp.",
       "duration": 7,
       "dialog": "",
       "ref_ids": [
@@ -302,7 +310,7 @@
     },
     {
       "id": "shot_1_27",
-      "prompt": "Continuing directly from the breach in the captain's cabin, the camera pushes into an intense fast-motion medium close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top lunges forward in a blur toward the back of a petite East Asian teenage girl with messy shoulder-length dark hair, pale skin, and wide startled eyes wearing a huge bright green dinosaur-shaped backpack, raising her stainless steel pipe high overhead for a lethal strike aimed at the back of the girl's head, accompanied by rushing wind and heavy footsteps, as the woman roars in a furious female voice: 「午餐結束啦 小妞 看棒」",
+      "prompt": "Continuing directly from the breach in the captain's cabin, the camera pushes into an intense fast-motion medium close-up as an athletic East Asian woman in her late 20s with short tousled black hair, sharp determined eyes, strong jawline, and sun-kissed skin wearing an olive drab tank top with dark purple veins spreading like spiderwebs across her bare shoulders lunges forward in a blur toward the back of a petite East Asian teenage girl with messy shoulder-length dark hair, delicate facial features, and wide expressive eyes wearing the giant green T-rex exoskeleton with a can-packed dinosaur helmet and a raw laceration wound on her bare upper arm, raising her stainless steel pipe high overhead for a lethal strike, accompanied by rushing wind and heavy footsteps, as the woman roars in a furious female voice: 「午餐結束啦 小妞 看棒」",
       "duration": 6,
       "dialog": "午餐結束啦！小妞！看棒————！！",
       "ref_ids": [

@@ -108,6 +108,15 @@ node workspace/tools/download_videos_from_json.mjs --jobs .\test_story6\output_c
 node workspace/tools/concat_videos_from_report.mjs .\test_story6\output_ch2\video\render_jobs.json
 
 node workspace/tools/build_subtitles_from_json.mjs .\test_story6\ch2.json --film .\test_story6\output_ch2\video\merged.mp4
+
+
+node workspace/tools/generate_refs_from_json.mjs --json .\test_story6\ch2_test.json --output .\test_story6\output\ch2_test\refs
+
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story6\ch2_test.json --output .\test_story6\output\ch2_test\video --mode r2v --seed 100
+
+node workspace/tools/generate_refs_from_json.mjs --json .\test_story6\ch0.json --output .\test_story6\output\ch0\refs
+
+node workspace/tools/generate_videos_from_json.mjs --json .\test_story6\ch0.json --output .\test_story6\output\ch0\video --mode r2v --seed 103 --force
 ```
 
 ```

@@ -1,0 +1,121 @@
+{
+  "references": [
+    {
+      "id": "ref_char_kairong",
+      "type": "character",
+      "prompt": "a young East Asian woman in her mid-20s with messy shoulder-length dark brown hair, wide expressive dark eyes, and a petite oval face"
+    },
+    {
+      "id": "ref_char_driver",
+      "type": "character",
+      "prompt": "a middle-aged East Asian man in his late 40s with short graying black hair, weary gaunt cheeks, deep-set eyes, and heavy under-eye circles"
+    },
+    {
+      "id": "ref_char_angry_passenger",
+      "type": "character",
+      "prompt": "a stocky East Asian man in his late 30s with a buzz cut, furrowed thick eyebrows, and a square jaw"
+    },
+    {
+      "id": "ref_prop_bus",
+      "type": "prop",
+      "prompt": "an aging municipal city bus with scuffed white and blue paint, large windshield, folding pneumatic front doors, and a black metal coin farebox beside the driver seat"
+    },
+    {
+      "id": "ref_env_street",
+      "type": "environment",
+      "prompt": "a chaotic gridlocked city avenue under an overcast dusty sky lined with concrete storefronts, abandoned cars, scattered debris, and a metal bus stop sign pole"
+    },
+    {
+      "id": "ref_env_bus_interior",
+      "type": "environment",
+      "prompt": "the cramped interior of an aging city bus with worn blue vinyl seats, scratched metal handrails, a large driver steering wheel and dashboard, and overcast daylight filtering through dusty windows"
+    }
+  ],
+  "shots": [
+    {
+      "id": "shot_1_1",
+      "prompt": "Opening tracking medium shot on a chaotic gridlocked city avenue under an overcast dusty sky lined with concrete storefronts, abandoned cars, scattered debris, and a metal bus stop sign pole, the camera weaves alongside a young East Asian woman in her mid-20s with messy shoulder-length dark brown hair, wide expressive dark eyes, and a petite oval face wearing a bulky bright green Tyrannosaurus rex onesie costume with an open hood framing her face, exposed human hands, and a stuffed dinosaur tail as she keeps her head down and hurries past frantic shoving pedestrians carrying bags who completely ignore her absurd outfit, accompanied by panicked crowd commotion, hurried footsteps, distant crashes, and a low ominous synth drone.",
+      "duration": 9,
+      "dialog": "",
+      "ref_ids": [
+        "ref_char_kairong"
+      ]
+    },
+    {
+      "id": "shot_1_2",
+      "prompt": "Continuing directly from the previous shot on a chaotic gridlocked city avenue under an overcast dusty sky lined with concrete storefronts, abandoned cars, scattered debris, and a metal bus stop sign pole, the camera pans from a low angle as an aging municipal city bus with scuffed white and blue paint, large windshield, folding pneumatic front doors, and a black metal coin farebox beside the driver seat slowly rounds the street corner through scattered debris and pulls toward the bus stop where a young East Asian woman in her mid-20s with messy shoulder-length dark brown hair, wide expressive dark eyes, and a petite oval face wearing a bulky bright green Tyrannosaurus rex onesie costume with an open hood and exposed human hands stands waiting with coins in hand while a middle-aged East Asian man in his late 40s with short graying black hair, weary gaunt cheeks, deep-set eyes, and heavy under-eye circles in a dark uniform shirt sits visible behind the windshield, accompanied by distant shouts, rumbling diesel engine noise, hissing air brakes, and subtle tense strings.",
+      "duration": 8,
+      "dialog": "",
+      "ref_ids": [
+        "ref_prop_bus",
+        "ref_char_kairong",
+        "ref_char_driver"
+      ]
+    },
+    {
+      "id": "shot_1_3",
+      "prompt": "Continuing from the previous shot inside the cramped interior of an aging city bus with worn blue vinyl seats, scratched metal handrails, a large driver steering wheel and dashboard, and overcast daylight filtering through dusty windows, the camera follows in a handheld medium shot as a young East Asian woman in her mid-20s with messy shoulder-length dark brown hair, wide expressive dark eyes, and a petite oval face wearing a bulky bright green Tyrannosaurus rex onesie costume with an open hood and exposed human hands steps quickly through the open folding doors and glances past rows of pale blank-eyed passengers toward a middle-aged East Asian man in his late 40s with short graying black hair, weary gaunt cheeks, deep-set eyes, and heavy under-eye circles wearing a sweat-stained dark uniform shirt whose chalk-white face drips with sweat and whose trembling hands grip the steering wheel, accompanied by pneumatic door hissing, hushed tense breathing, and a muffled rapid heartbeat.",
+      "duration": 9,
+      "dialog": "",
+      "ref_ids": [
+        "ref_prop_bus",
+        "ref_char_kairong",
+        "ref_char_driver"
+      ]
+    },
+    {
+      "id": "shot_1_4",
+      "prompt": "Continuing directly from the previous shot inside the cramped interior of an aging city bus with worn blue vinyl seats, scratched metal handrails, a large driver steering wheel and dashboard, and overcast daylight filtering through dusty windows, the camera tilts down then tracks in a medium close-up as the exposed human hand of a young East Asian woman in her mid-20s with messy shoulder-length dark brown hair, wide expressive dark eyes, and a petite oval face wearing a bulky bright green Tyrannosaurus rex onesie costume drops metal coins into a black metal coin farebox beside the driver seat before she quickly sits in the single seat directly behind the trembling driver and pulls her green stuffed tail and limbs inward to avoid touching nearby passengers, accompanied by crisp metallic coin clinks, rustling fabric, and low idling engine rumble.",
+      "duration": 8,
+      "dialog": "",
+      "ref_ids": [
+        "ref_prop_bus",
+        "ref_char_kairong",
+        "ref_char_driver"
+      ]
+    },
+    {
+      "id": "shot_1_5",
+      "prompt": "Continuing from the previous shot inside the cramped interior of an aging city bus with worn blue vinyl seats, scratched metal handrails, a large driver steering wheel and dashboard, and overcast daylight filtering through dusty windows, the camera slowly pushes in from behind the front seats showing a middle-aged East Asian man in his late 40s with short graying black hair, weary gaunt cheeks, deep-set eyes, and heavy under-eye circles in a dark uniform shirt struggling to steer through gridlocked traffic visible outside while a young East Asian woman in her mid-20s with messy shoulder-length dark brown hair, wide expressive dark eyes, and a petite oval face wearing a bulky bright green Tyrannosaurus rex onesie costume sits tense and hunched directly behind him surrounded by restless passengers, accompanied by heavy straining engine hum, muffled street gridlock, and rising dissonant strings.",
+      "duration": 8,
+      "dialog": "",
+      "ref_ids": [
+        "ref_char_driver",
+        "ref_char_kairong"
+      ]
+    },
+    {
+      "id": "shot_1_6",
+      "prompt": "Continuing directly from the previous shot inside the cramped interior of an aging city bus with worn blue vinyl seats, scratched metal handrails, a large driver steering wheel and dashboard, and overcast daylight filtering through dusty windows, the camera whips to a medium shot beside the cockpit as restless passengers shout impatiently and a stocky East Asian man in his late 30s with a buzz cut, furrowed thick eyebrows, and a square jaw wearing a rumpled casual jacket storms up to the driver seat, reaches aggressively over a weakened middle-aged East Asian man in his late 40s with short graying black hair, weary gaunt cheeks, deep-set eyes, and heavy under-eye circles in a dark uniform shirt, and slams his palm onto the steering wheel horn while a young East Asian woman in her mid-20s with messy shoulder-length dark brown hair, wide expressive dark eyes, and a petite oval face in a bulky bright green Tyrannosaurus rex onesie costume flinches in the seat right behind them, accompanied by angry overlapping murmurs, heavy footsteps, and a sudden deafening bus horn blast.",
+      "duration": 9,
+      "dialog": "",
+      "ref_ids": [
+        "ref_char_angry_passenger",
+        "ref_char_driver",
+        "ref_char_kairong"
+      ]
+    },
+    {
+      "id": "shot_1_7",
+      "prompt": "Continuing directly from the previous shot inside the cramped interior of an aging city bus with worn blue vinyl seats, scratched metal handrails, a large driver steering wheel and dashboard, and overcast daylight filtering through dusty windows, the camera cuts to a tight close-up on a middle-aged East Asian man in his late 40s with short graying black hair, weary gaunt cheeks, deep-set eyes, and heavy under-eye circles wearing a sweat-soaked dark uniform shirt as his chalk-white skin turns ashen gray and he slowly turns his head toward the aisle with unfocused glassy eyes while a stocky East Asian man in his late 30s with a buzz cut, furrowed thick eyebrows, and a square jaw freezes beside him and a young East Asian woman in her mid-20s with messy shoulder-length dark brown hair, wide expressive dark eyes, and a petite oval face in a bulky bright green Tyrannosaurus rex onesie costume watches in horror from the seat behind, accompanied by eerie ringing silence and low engine vibration, as the ashen-faced man in the dark uniform shirt parts his dry lips weakly and speaks in a raspy faltering middle-aged male voice: 「客人 請回到 座位上」",
+      "duration": 7,
+      "dialog": "客人……請回到……座位上……",
+      "ref_ids": [
+        "ref_char_driver",
+        "ref_char_angry_passenger",
+        "ref_char_kairong"
+      ]
+    },
+    {
+      "id": "shot_1_8",
+      "prompt": "Continuing immediately from the previous shot inside the cramped interior of an aging city bus with worn blue vinyl seats, scratched metal handrails, a large driver steering wheel and dashboard, and overcast daylight filtering through dusty windows, the camera holds a tense medium close-up from behind the driver seat as a middle-aged East Asian man in his late 40s with short graying black hair, weary gaunt cheeks, deep-set eyes, and heavy under-eye circles in a dark uniform shirt loses consciousness and slams his forehead heavily onto the steering wheel while a stocky East Asian man in his late 30s with a buzz cut, furrowed thick eyebrows, and a square jaw stumbles back in shock and a young East Asian woman in her mid-20s with messy shoulder-length dark brown hair, wide expressive dark eyes, and a petite oval face wearing a bulky bright green Tyrannosaurus rex onesie costume gasps in terror just behind the seat, accompanied by a heavy dull thud against the steering wheel followed by abrupt dead silence and low idling bus hum.",
+      "duration": 5,
+      "dialog": "",
+      "ref_ids": [
+        "ref_char_driver",
+        "ref_char_angry_passenger",
+        "ref_char_kairong"
+      ]
+    }
+  ]
+}
